@@ -1,0 +1,22 @@
+models:
+  core:
+    name: qwen3.5-9b-core
+    base_model: Qwen/Qwen3.5-9B
+    repository: bartowski/Qwen_Qwen3.5-9B-GGUF
+    path: models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf
+    quantization: Q6_K
+    sha256: 073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef
+
+    inference:
+      engine: llama.cpp
+      backend: cuda
+      gpu_layers: 99
+      context_size: 16384
+      parallel: 1
+      reasoning: "off"
+      host: 127.0.0.1
+      port: 8080
+
+  unrestricted:
+    name: qwen3.5-9b-unrestricted
+    status: pending_benchmark

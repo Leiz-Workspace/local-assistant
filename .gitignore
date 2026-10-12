@@ -1,0 +1,22 @@
+
+# Local AI Models
+models/
+*.gguf
+*.safetensors
+
+# Runtime build files
+runtimes/llama.cpp/
+
+# Local data
+data/
+logs/
+benchmarks/results/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+secrets/
