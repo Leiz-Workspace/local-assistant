@@ -1,17 +1,17 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.0 · **Updated:** 2026-10-16 (Asia/Ho_Chi_Minh)  
+> **Version:** 3.2 · **Updated:** 2026-10-17 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **DAY 15 — D15-T04 PASSED; NEXT = D15-T05 (Conversation REST API), THEN D15-T06 (Hardening/E2E).**  
-> **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results confirmed in conversation through 2026-10-16.  
+> **CURRENT POSITION:** **DAY 15 — D15-T05 PASS (localhost acceptance); NEXT = D15-T06 (Hardening/E2E).**
+> **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-17 local implementation checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
 ---
 
 ## 0. How to use with VS Code + Codex
 
-1. Put this file at `docs/MASTER_ROADMAP.md` (or root `ROADMAP.md`). Keep the existing `dev_log/dev_log.md` as the factual chronological record; do **not** overwrite it.
+1. The tracked roadmap is `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`; `docs/MASTER_ROADMAP.md` is not present in this checkout. Keep the existing `dev_log/dev_log.md` as the factual chronological record; do **not** overwrite it.
 2. At the start of a Codex work session, ask it to read this roadmap, the active day's tests/code, and applicable `docs/ADR/` before changing anything.
 3. Work on **one task ID at a time**. After implementing, run the listed acceptance tests, paste/summarize the actual result and update status. Do not mark PASS without evidence.
 4. Keep an append-only entry in `dev_log/dev_log.md`: timestamp, task ID, code changes, commands/tests, actual output summary, decisions, known issues, next action.
@@ -22,16 +22,16 @@
 
 **Codex briefing (paste into a Codex prompt):**
 
-> Read `docs/MASTER_ROADMAP.md`, `dev_log/dev_log.md`, `docs/conversation_schema_design.md`, existing `docs/ADR/`, and the affected source files. Identify the next unchecked task and prerequisites. Preserve currently working code, all containers and shared home-server infrastructure. Never create another PostgreSQL/Vault/Qdrant/MinIO/RabbitMQ/Keycloak/MongoDB service. Make the smallest reviewable change; provide full-file contents when explicitly requested; run specific tests and record evidence. Do not mark PASS for skipped tests. Do not invent endpoints, secret values or model metrics. Observe Vault least-privilege and approval gates.
+> Read `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`, `dev_log/dev_log.md`, `docs/conversation_schema_design.md`, existing `docs/ADR/`, and the affected source files. Identify the next unchecked task and prerequisites. Preserve currently working code, all containers and shared home-server infrastructure. Never create another PostgreSQL/Vault/Qdrant/MinIO/RabbitMQ/Keycloak/MongoDB service. Make the smallest reviewable change; provide full-file contents when explicitly requested; run specific tests and record evidence. Do not mark PASS for skipped tests. Do not invent endpoints, secret values or model metrics. Observe Vault least-privilege and approval gates.
 
 ---
 
-## 1. Executive status (as of 2026-10-16)
+## 1. Executive status (as of 2026-10-17)
 
 | Stage | Development days | Status | Evidence / next work |
 |---|---:|---|---|
 | P1 — Machine, inference, two-profile baseline | D1–D14 | **PARTIAL / substantially implemented** | D1–D10 documented in dev log; later 32K, vision, MTP and runtime presets exercised. Full original D14 model quality/safety release gate not evidenced. |
-| P2a — Conversation persistence foundation | **D15** | **IN PROGRESS (4/6 tasks PASS)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. REST API and hardening remain. |
+| P2a — Conversation persistence foundation | **D15** | **IN PROGRESS (5/6 tasks PASS)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. REST API passed real PostgreSQL, CORE E2E and actual API process restart; hardening remains. |
 | P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | TODO | Originally scheduled D15–D28, shifted by persistence prerequisite. |
 | P3 — Coding agent | D33–D46 | TODO | Scoped reads, patch approval, isolated tests. |
 | P4 — Web research | D47–D60 | TODO | Citation provenance, research tool controls and artifacts. |
@@ -49,10 +49,10 @@
 | D15-T02 | Alembic V001; `assistant` schema + tables; runtime grants | **PASS** | `0001 (head)`, four relations, DML privileges true and TRUNCATE false. |
 | D15-T03 | Domain, repository ports, SQLAlchemy models, PostgreSQL repositories | **PASS** | Real PostgreSQL lifecycle integration test passed. |
 | D15-T04 | Conversation Manager, inference port + adapter, replay/failure persistence | **PASS for defined tests** | 2 integration tests passed; 42 API/runtime regression tests passed. Concurrency/crash/context boundary **not** proven. |
-| **D15-T05** | **Persistent Conversation REST API** | **NEXT / TODO** | Endpoints with valid responses, errors, credentials and access controls; preserve stateless API. |
+| **D15-T05** | **Persistent Conversation REST API** | **PASS (localhost)** | Vault-backed app credential; 4/4 integration PASS including CORE; full suite 94 PASS, zero SKIP; history/list/replay verified across two Uvicorn processes. |
 | D15-T06 | Concurrency, crash recovery, context trimming, actual LLM E2E, regressions | TODO | Independent tests including failure injection and restart. |
 
-**Currently demonstrated:** `IMPORTS PASS`; 2/2 focused integration; 42/42 focused regression. **Not demonstrated:** full-project green suite, real-model persisted-chat end-to-end, multiworker safety, user identity authorization, production Vault bootstrap, pending-run lease recovery.
+**Currently demonstrated:** 2026-10-17 Vault-backed verification: **4/4 integration PASS; full `pytest tests/`: 94 passed, zero skipped**. Real CORE persistent chat and list/history/idempotent replay across two actual Uvicorn processes passed. The old core smoke script still prints results without asserting them; pytest success is not a model-quality certification. **Not demonstrated:** multiworker safety, user identity authorization, production Vault bootstrap, pending-run lease recovery, whole-turn context trimming and PostgreSQL container restart.
 
 ---
 
@@ -210,26 +210,28 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 - [ ] Full dependency inversion/Unit of Work and finish-state retry semantics.
 - [ ] Timeout/cancellation/race/process-crash recovery.
 
-### **D15-T05 — Conversation REST API — NEXT**
+### **D15-T05 — Conversation REST API — PASS for localhost (2026-10-17)**
 
 **Deliverables** (`apps/api/` remains HTTP adapter):
 
-- [ ] Resolve runtime credential delivery without embedding Vault root token or passwords in Git. For early local tests, temporarily inject `DATABASE_URL` from Vault; production mechanism requires scoped credentials/AppRole or secret agent/injector.
-- [ ] Add FastAPI app lifespan for async DB engine and session factory; close pools on shutdown.
-- [ ] Add composition root/dependency wiring for `ConversationManager` and `LlamaInferenceAdapter`.
-- [ ] `POST /api/v1/conversations` — create profile/preset/title.
-- [ ] `GET /api/v1/conversations` — paginated listing with archive policy.
-- [ ] `GET /api/v1/conversations/{id}` — detail.
-- [ ] `PATCH /api/v1/conversations/{id}` — update title/preset.
-- [ ] `GET /api/v1/conversations/{id}/messages` — sequence pagination.
-- [ ] `POST /api/v1/conversations/{id}/messages` — persistent chat; optional idempotency key.
-- [ ] `POST /api/v1/conversations/{id}/archive` — archive.
-- [ ] `DELETE /api/v1/conversations/{id}` — soft-delete.
-- [ ] Preserve `POST /api/v1/chat/completions` exactly; do not replace its stateless behavior.
-- [ ] Consistent error mapping (404, 409, 422, 502/503/504), validation and response schemas.
-- [ ] Before external exposure: authN/authZ with owner boundary; localhost-only development until implemented.
+- [x] Local acceptance credential delivery: operator retrieved the existing app credential from Vault and injected DATABASE_URL into test/API child processes only. No Vault token was delivered to FastAPI/tests and no password was printed or committed. Production scoped AppRole/secret-agent delivery remains open.
+- [x] Add FastAPI app lifespan for async DB engine and session factory; close pools on shutdown.
+- [x] Add composition root/dependency wiring for `ConversationManager` and `LlamaInferenceAdapter`.
+- [x] `POST /api/v1/conversations` — create profile/preset/title.
+- [x] `GET /api/v1/conversations` — paginated listing with archive policy.
+- [x] `GET /api/v1/conversations/{id}` — detail.
+- [x] `PATCH /api/v1/conversations/{id}` — update title/preset.
+- [x] `GET /api/v1/conversations/{id}/messages` — sequence pagination.
+- [x] `POST /api/v1/conversations/{id}/messages` — persistent chat; optional idempotency key.
+- [x] `POST /api/v1/conversations/{id}/archive` — archive.
+- [x] `DELETE /api/v1/conversations/{id}` — soft-delete.
+- [x] Preserve `POST /api/v1/chat/completions` exactly; do not replace its stateless behavior.
+- [x] Consistent error mapping (404, 409, 422, 502/503/504), validation and response schemas.
+- [x] Localhost-only development boundary: direct peer guard, Origin/proxy rejection and error redaction tested. External exposure remains prohibited until authN/authZ with owner boundary exists; this local PASS does not certify authentication.
 
 **Exit criteria:** local HTTP request → DB conversation → gateway → assistant response; list/history survive FastAPI restart; no regression of existing stateless endpoint; no credentials in logs or repo; no anonymous external history access.
+
+**Acceptance evidence:** `pytest tests/integration/ -q -rs --tb=short`: **4 passed in 1.18s** with LIVE_E2E enabled. Full `pytest tests/ -q -rs --tb=short`: **94 passed in 6.48s**, no exclusions/SKIPs. Separate HTTP check created a CORE response in process A, terminated A, launched process B and verified exact stored history, list visibility and cached replay with unchanged assistant ID. Temporary processes and test rows were cleaned up. T05 is PASS for localhost; Day 15 remains ACTIVE pending T06. See the append-only dev-log follow-up, ADR-016 and the local runbook.
 
 ### D15-T06 — Hardening, E2E & resilience
 
@@ -372,7 +374,7 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 
 ```mermaid
 flowchart LR
-  P1["D01–D14\nInference + Models\nPARTIAL"] --> P2["D15\nConversation Foundation\n4/6 PASS"]
+  P1["D01–D14\nInference + Models\nPARTIAL"] --> P2["D15\nConversation Foundation\n5/6 PASS"]
   P2 --> F["D16–D32\nDocuments / RAG / Memory"]
   F --> C["D33–D46\nCoding Agent"]
   C --> W["D47–D60\nWeb Research"]
@@ -407,7 +409,7 @@ sequenceDiagram
   participant CM as Conversation Manager
   participant PG as PostgreSQL
   participant LLM as Llama Gateway
-  UI->>API: POST persistent message (planned T05)
+  UI->>API: POST persistent message (T05 accepted locally)
   API->>CM: send_message()
   CM->>PG: BEGIN, lock & check idempotency
   CM->>PG: insert user message + pending run
@@ -508,13 +510,13 @@ uv run python -m pytest \
 
 ## 10. Next-session execution order (Codex handoff)
 
-1. **D15-T05:** inspect current FastAPI code and security boundary, implement persistent conversation routes with minimal changes. Design `DATABASE_URL` bootstrap from Vault without root token and avoid accidental external exposure.
-2. Run persistence integration + HTTP tests with a fake model adapter, then a verified CORE real-model E2E; keep the old stateless chat endpoint working.
+1. **D15-T05 is PASS for localhost. D15-T06 is NEXT:** retain the tested HTTP contract and app-only credential injection. Production Vault identity remains unconfigured; the API must never receive an operator/root token. Follow ADR-016 and the local runbook.
+2. Preserve the verified 4/4 integration and 94/94 full regression evidence. Extend hardening tests for concurrency, failure injection and crash recovery; keep stateless chat working.
 3. **D15-T06:** repair/extend the architecture for whole-turn context trimming, token cap, concurrent request safety and pending recovery; test the failure cases explicitly.
 4. Record the results, commit reviewed changes, write an ADR for identity/permissions and credential provisioning.
 5. Advance to D16+ documents only after the D15 release gate is clearly accepted or unfinished issues are intentionally deferred with risk ownership.
 
-**Current formal checkpoint:** `D15-T04 = PASS (focused tests)`, **`D15-T05 = NEXT`**, `D15-T06 = TODO`, **Day 15 remains ACTIVE**.
+**Current formal checkpoint:** `D15-T04 = PASS (focused tests)`, **`D15-T05 = PASS (localhost)`**, `D15-T06 = NEXT / TODO`, **Day 15 remains ACTIVE**.
 
 ---
 
@@ -524,4 +526,5 @@ uv run python -m pytest \
 |---|---|---|
 | v2.0 | 2026-10-11 | Original two-model, 90-development-day plan (initial state was planning-only). |
 | **v3.0** | **2026-10-16** | Reconciled original roadmap with terminal/dev-log evidence, recorded real D15 PostgreSQL/Vault/Alembic/Repository/Conversation Manager progress, moved file ingestion, and re-baselined remaining 90-day execution plan with codex-readable gates. |
-
+| **v3.1** | **2026-10-17** | Implemented T05 HTTP contracts, pool lifespan, safe local access and tests; 90 passed / 4 skipped with legacy live script excluded. T05 remains PARTIAL; no advance to T06/D16. Added ADR-016 and local runbook. |
+| **v3.2** | **2026-10-17** | Read existing app credential from Vault after operator unseal; corrected live test max_tokens to the existing 512-token minimum; 4/4 integration and 94/94 full suite PASS; verified actual API process restart and replay. T05 PASS for localhost; T06 NEXT. |

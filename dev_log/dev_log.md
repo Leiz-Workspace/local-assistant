@@ -1492,3 +1492,128 @@ uv run python -m pytest tests/ -q
 **Yêu cầu chính:** lưu conversation ID, messages theo thứ tự, atomic write, idempotent send, restart recovery, lưu metadata inference mà không lưu reasoning trace theo mặc định, giới hạn context trước inference, không phá endpoint `/api/v1/chat/completions`.
 
 **Thứ tự triển khai:** schema/migration -> repository & manager -> conversation endpoints -> context builder -> integration/live restart test. Không đánh dấu DONE cho tới khi có test thực tế.
+
+---
+
+# CHECKPOINT — 2026-10-17 — D15-T05 Conversation REST API
+
+**Purpose:** Ghi nhận thay đổi đã thực hiện trực tiếp trong workspace, kết quả kiểm thử và các Acceptance Criteria còn thiếu.
+
+**Trạng thái: PARTIAL. Day 15 vẫn ACTIVE; chưa chuyển sang D15-T06 hoặc D16.**
+
+## Căn cứ và phạm vi
+
+- Không tồn tại `docs/MASTER_ROADMAP.md` trong checkout. Đã đọc roadmap thực tế `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`, toàn bộ dev log, thiết kế schema, repository, manager, inference adapter và API/runtime hiện tại.
+- Roadmap checkpoint mới hơn dev log cũ: D15-T01–T04 có focused PASS trong lịch sử; task tiếp theo là D15-T05. Không triển khai lại SQLite theo ghi chú cũ đã bị supersede.
+- Tại thời điểm bắt đầu, Git working tree sạch. Không đổi model runtime, preset, stateless router/gateway, migration, Vault policy hoặc container.
+
+## Thay đổi đầy đủ trong workspace
+
+- `apps/api/routes/conversations.py`: tám routes create/list/detail/update/history/send/archive/delete; UUID và validation; schema output rõ ràng; phân trang; mã lỗi nhất quán.
+- `apps/api/services/conversations.py`: composition trên repositories và ConversationManager hiện hữu; dùng profile/preset đã lưu; ngăn update/archive/delete khi inference pending theo locking convention sẵn có.
+- `apps/api/storage/lifecycle.py`: tạo pool/session factory khi có DATABASE_URL, dispose khi shutdown, trả conversation 503 nếu chưa cấu hình; khởi tạo lỗi được redact. Không tự chạy migration hoặc lấy Vault token.
+- `apps/api/main.py`: đăng ký lifespan và conversation router; stateless chat vẫn được giữ nguyên.
+- `.gitignore`: đổi `models/` thành `/models/`. Pattern cũ vô tình bỏ qua `src/infrastructure/models/`; năm file ORM hiện hữu giờ có thể version-control. Bổ sung module/class/method descriptions, không thay mappings, DDL hay logic chuyển đổi entity.
+- `tests/test_conversation_api.py`: HTTP/unit tests cho tám routes, validation, pagination, peer/origin/proxy access, redaction, pool disposal, stored defaults, busy mutations, ORM mapping và endpoint stateless.
+- `tests/integration/test_conversation_http_persistence.py`: HTTP qua PostgreSQL thật, multi-turn, idempotency/replay/conflict, pool/lifespan restart, archive/delete và variant gọi CORE thật khi opt-in. Cleanup chỉ theo UUID của conversation do test tạo.
+- `docs/ADR/016-conversation-http-composition.md`: lý do, tác động và giới hạn composition, credential delivery và local access boundary. POST archive theo roadmap mới thay PATCH archive của bản thiết kế gốc.
+- `docs/CONVERSATION_API_LOCAL_RUNBOOK.md`: cách chạy local một worker, không trust proxy headers; hợp đồng API và lệnh acceptance.
+- Cập nhật roadmap cùng chú thích checkpoint trong schema design; giữ nguyên nội dung lịch sử dev log phía trên.
+
+## Bằng chứng kiểm thử thực tế
+
+Đã chạy từ `ai/` bằng uv:
+
+```sh
+uv run python -m pytest tests/test_conversation_api.py tests/test_api_health.py tests/test_llama_gateway.py tests/test_runtime_presets.py tests/test_runtime_auto.py -q
+```
+
+**Kết quả cuối:** `85 passed in 0.53s`.
+
+```sh
+uv run python -m pytest tests/ --ignore=tests/test_core_acceptance.py -q -rs
+```
+
+**Kết quả cuối:** `90 passed, 4 skipped in 0.48s`.
+
+Bốn ca SKIP đều do DATABASE_URL chưa được inject: hai variant HTTP persistence mới, manager integration và repository integration. Đây **không phải PASS cho PostgreSQL/restart/live inference**. Variant live còn yêu cầu `LOCAL_ASSISTANT_LIVE_E2E=1` và CORE đang chạy.
+
+```sh
+uv run python -m pytest tests/ -q
+```
+
+**Kết quả:** exit 2, `1 error during collection`, `ConnectionRefusedError`/`URLError` trong `tests/test_core_acceptance.py:44`. Script lịch sử gọi trực tiếp model tại `127.0.0.1:8080` ngay khi import; không có listener tại lần chạy. Lỗi này đã tồn tại ở baseline trước thay đổi và vẫn được giữ nguyên để không sửa thành phần ngoài task. Không tuyên bố full-suite green.
+
+```sh
+uv run python -m compileall -q apps/api src tests/test_conversation_api.py tests/integration/test_conversation_http_persistence.py
+uvx ruff format apps/api/main.py apps/api/routes/conversations.py apps/api/services/conversations.py apps/api/storage/lifecycle.py src/infrastructure/models tests/test_conversation_api.py tests/integration/test_conversation_http_persistence.py
+uvx ruff check --select E9,F63,F7,F82,F401 apps/api/main.py apps/api/routes/conversations.py apps/api/services/conversations.py apps/api/storage/lifecycle.py tests/test_conversation_api.py tests/integration/test_conversation_http_persistence.py
+```
+
+Compile thành công; formatter đã áp dụng; lint phạm vi trên `All checks passed!`. Ruff chạy qua uvx, không thêm dependency/đổi uv.lock.
+
+Trong quá trình kiểm thử, đã sửa việc Pydantic kế thừa cấu hình trim khiến transcript/answer bị mất whitespace, và đổi tên integration test để tránh trùng module basename. Các kết quả cuối ở trên được chạy sau các sửa này.
+
+## Acceptance còn thiếu và bước tiếp theo
+
+- [x] HTTP contracts, validation, DI/pool lifecycle, safe error mapping và local boundary có tests thực thi.
+- [x] Stateless endpoint có regression kiểm tra delegation và response.
+- [ ] Inject DATABASE_URL từ credential app hiện hữu bằng phương thức được cấp quyền; không dùng Vault root token/unseal file hoặc migrator credential.
+- [ ] Chạy integration thật và local HTTP → PostgreSQL → gateway → assistant với CORE. Không đánh dấu PASS cho ca đang SKIP.
+- [ ] Chứng minh persistence qua restart process FastAPI thật; test mới tự động tái tạo lifespan/pool nhưng chưa được chạy với DB.
+- [ ] Production Vault identity/secret delivery theo least privilege chưa cấu hình. Environment injection là interface local, không phải chứng nhận production bootstrap.
+- [ ] D15-T06 vẫn gồm cross-connection concurrency, orphan lease/recovery, whole-turn token trimming, process/DB restart và auth ownership.
+
+Không có user ownership trong V001. Guard hiện tại chỉ bảo vệ local development: từ chối peer ngoài loopback, Origin và forwarding headers; không thay thế authentication. Local process vẫn có thể đọc history. Không publish qua reverse proxy hoặc Internet trước khi có owner boundary.
+
+**Task kế tiếp vẫn là hoàn tất acceptance của D15-T05.** Hướng dẫn và lệnh chạy nằm trong runbook; không tự đánh dấu Day 15 hoàn thành.
+
+---
+
+# FOLLOW-UP — 2026-10-17 — Vault-backed acceptance for D15-T05
+
+**Purpose:** Ghi nhận lần kiểm tra credential Vault thực tế theo chỉ dẫn tiếp theo của người dùng và thay thế trạng thái SKIP bằng bằng chứng chạy thật; giữ nguyên checkpoint trước như lịch sử.
+
+**Trạng thái mới: D15-T05 PASS trong phạm vi localhost; Day 15 vẫn ACTIVE; D15-T06 là NEXT.**
+
+## Credential và runtime thực tế
+
+Người dùng xác nhận password đã lưu trong Vault và yêu cầu kiểm tra. Đã dùng helper hiện hữu tại `infras/scripts/vault_static_secret.py` để kiểm tra có TLS verification. Vault ban đầu initialized nhưng **sealed**, nên health/secret trả HTTP 503. Đã dùng riêng hàm load bootstrap/unseal hiện hữu của `infras/vault-server/scripts/initialize-vault.py` để unseal; không initialize lại, không thay policy, mount, token, password hoặc audit configuration.
+
+Sau unseal, đọc thành công đúng secret `secret/server/local-assistant/postgresql`, xác minh identity `local_assistant_app` / `local_assistant`. Tạo URL với SQLAlchemy URL builder để encode credential; chỉ giữ trong bộ nhớ và environment của tiến trình tests/API. Operator token không truyền cho tiến trình con. Không in password, URL có credential, token hoặc unseal shares; không ghi chúng vào file. Đây là operator verification được người dùng chỉ định, không phải production Vault auth implementation.
+
+CORE container hiện hữu `local-assistant-core-1` ban đầu Exited; đã `docker start` container này, không recreate/build/đổi Compose. VRAM free trước start: 15173 MiB. Đợi `/health` HTTP 200 trước vòng acceptance cuối. Vault được giữ unsealed, CORE đang chạy sau kiểm tra; hai process API tạm đã dừng. Không restart PostgreSQL hoặc các service khác.
+
+## Lỗi phát hiện và sửa tối thiểu
+
+- Vòng đầu: `3 passed, 1 failed` vì CORE đang load, live endpoint nhận 502.
+- Sau khi CORE ready: `3 passed, 1 failed` vì request test đặt `max_tokens=128`, thấp hơn answer reserve 512 của policy hiện hữu, nên API trả 422 đúng thiết kế.
+- Chỉ sửa fixture trong `tests/integration/test_conversation_http_persistence.py`: `max_tokens=512`. Giữ nguyên runtime/preset/gateway/manager đã PASS. Bản file đầy đủ nằm tại đường dẫn trên.
+
+## Kết quả cuối đã chạy
+
+Qua `uv run python`, operator wrapper đọc Vault và inject DATABASE_URL vào subprocess dùng cùng Python environment; bật `LOCAL_ASSISTANT_LIVE_E2E=1`. Không dùng `--ignore`, không skip integration.
+
+```sh
+python -m pytest tests/integration/ -q -rs --tb=short
+# 4 passed in 1.18s
+
+python -m pytest tests/ -q -rs --tb=short
+# 94 passed in 6.48s
+```
+
+Cả **4 ca trước đây SKIP nay PASS**: repository lifecycle, ConversationManager persistence/idempotency/failure, HTTP persistence với inference giả, HTTP persistence với CORE thật. Full suite exit 0, không SKIP, không lỗi collection. Script core acceptance lịch sử chỉ print PASS/FAIL, không assert, nên kết quả pytest không được diễn giải thành chứng nhận chất lượng toàn diện của model.
+
+## Restart process thật
+
+Đã thực thi kiểm tra HTTP riêng với Uvicorn bind loopback trên cổng tạm, một worker, `--no-proxy-headers`:
+
+1. Process A PID 785554: tạo conversation, gọi CORE thành công, đọc lịch sử hai messages.
+2. Terminate và chờ process A thoát.
+3. Process B PID 785601: đọc list/history giữ nguyên dữ liệu; gửi cùng request_key nhận `cached=true`, assistant_message_id giữ nguyên và không thêm message.
+4. Kết quả audit: `actual_process_restart_acceptance=PASS history_count=2 cached_replay=true`.
+5. Dừng process B; xóa đúng conversation của kiểm tra cùng inference/message rows theo FK order, không đụng dữ liệu người dùng.
+
+## Tiến độ và giới hạn
+
+Roadmap, schema checkpoint, ADR-016 và runbook đã cập nhật T05 PASS cho localhost với bằng chứng trên. Không đánh dấu Day 15 DONE. Production AppRole/secret delivery, owner-based auth, concurrency/crash recovery, context trimming và PostgreSQL restart vẫn là các gate mở; chưa triển khai T06 trong lượt này.
