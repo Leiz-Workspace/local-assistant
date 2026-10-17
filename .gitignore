@@ -1,6 +1,6 @@
 
 # Local AI Models
-models/
+/models/
 *.gguf
 *.safetensors
 
