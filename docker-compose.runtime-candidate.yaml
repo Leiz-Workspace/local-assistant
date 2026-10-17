@@ -1,0 +1,70 @@
+# OPTIONAL runtime candidate override; use with: docker compose -f docker-compose.yaml -f docker-compose.runtime-candidate.yaml --profile core ...
+# Do not replace source Compose; start only one profile at a time.
+services:
+  core:
+    command:
+      - --model
+      - /models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf
+      - --alias
+      - qwen3.5-9b-core
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --n-gpu-layers
+      - '99'
+      - --ctx-size
+      - '16384'
+      - --parallel
+      - '1'
+      - --mmproj
+      - /models/core/qwen3.5-9b/mmproj-Qwen_Qwen3.5-9B-bf16.gguf
+      - --reasoning
+      - auto
+      - --reasoning-format
+      - auto
+      - --reasoning-effort
+      - default
+      - --reasoning-budget
+      - '-1'
+      - --cache-type-k
+      - f16
+      - --cache-type-v
+      - f16
+      - --flash-attn
+      - auto
+      # Enable only after integration and stress benchmark pass:
+      # - --spec-type
+      # - draft-mtp
+  unrestricted:
+    command:
+      - --model
+      - /models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf
+      - --alias
+      - qwen3.5-9b-unrestricted
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --n-gpu-layers
+      - '99'
+      - --ctx-size
+      - '16384'
+      - --parallel
+      - '1'
+      - --mmproj
+      - /models/unrestricted/qwen3.5-9b/mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf
+      - --reasoning
+      - auto
+      - --reasoning-format
+      - auto
+      - --reasoning-effort
+      - default
+      - --reasoning-budget
+      - '-1'
+      - --cache-type-k
+      - f16
+      - --cache-type-v
+      - f16
+      - --flash-attn
+      - auto

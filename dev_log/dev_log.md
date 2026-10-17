@@ -4,7 +4,7 @@
 > **Workspace trên máy Ubuntu của chủ dự án:** `/home/korosaki-ryukai/Workspace/Server/ai`  
 > **Vị trí lưu tài liệu trên máy Ubuntu:** `/home/korosaki-ryukai/Workspace/Server/ai/dev_log/dev_log.md`  
 > **Giai đoạn:** Phase 1 — Infrastructure, Inference & Model Evaluation  
-> **Phạm vi ghi nhận:** Ngày 1–7  
+> **Phạm vi ghi nhận:** Ngày 1–10  
 > **Lần biên soạn:** 2026-10-12 (giờ Việt Nam)  
 > **Nguyên tắc:** Phân biệt **đã xác nhận từ terminal**, **đã hướng dẫn**, và **chưa xác minh**. Không coi câu lệnh được đề xuất là câu lệnh chắc chắn đã chạy.
 
@@ -19,7 +19,7 @@ Xây dựng trợ lý AI cá nhân chạy chủ yếu tại máy riêng: chat ti
 Chiến lược model đã chọn để thử nghiệm:
 
 1. **CORE:** Qwen3.5-9B gốc, bản GGUF Q6_K lượng tử hóa từ repository cộng đồng `bartowski/Qwen_Qwen3.5-9B-GGUF`.
-2. **UNRESTRICTED (đang chờ):** `HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive`, dự kiến GGUF Q6_K. **Chưa có bằng chứng đã tải, chạy hoặc benchmark model này**; chưa cấp quyền shell/file cho profile này.
+2. **UNRESTRICTED (đã kiểm thử bước đầu):** `HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive` GGUF Q6_K, đã chạy inference, đối chiếu SHA-256 và benchmark throughput tới 16K sau khi giải phóng VRAM; chưa cấp quyền shell/file cho profile này.
 3. **Inference engine:** `llama.cpp` / `llama-server` với CUDA, API tương thích OpenAI; Ollama tùy chọn, không bắt buộc.
 4. **Python:** `uv` quản lý dependency, `.venv` và lockfile; editor là `micro`.
 
@@ -33,7 +33,10 @@ Chiến lược model đã chọn để thử nghiệm:
 | 4 | Synthetic benchmark 512/4K/8K/16K | **Đã xác nhận** |
 | 5 | Real API context 16K, retrieval ~12K | **Đã xác nhận** |
 | 6 | YAML manifest, Python startup, runtime hash | **Đã xác nhận server `/health` và runtime hash; việc chạy chính xác từ script sau khi sửa YAML chưa có log riêng để đối chiếu** |
-| 7 | CORE acceptance smoke tests | **Người dùng cho biết đã đến cuối Ngày 7; chưa thấy output PASS/FAIL của `tests/test_core_acceptance.py` trong hội thoại** |
+| 7 | CORE acceptance smoke tests | **Chưa có output riêng từ `tests/test_core_acceptance.py`; sang Ngày 10 đã có benchmark chất lượng 10 test/model** |
+| 8 | Uncensored model download, SHA-256, first inference | **Đã xác nhận hội thoại và SHA-256 theo output gửi** |
+| 9 | Uncensored throughput 512/4K/8K/16K, xử lý CUDA OOM | **Đã xác nhận; 16K chạy thành công sau khi dừng tiến trình cạnh tranh VRAM** |
+| 10 | CORE vs Uncensored quality smoke benchmark v0.1 | **Đã có output tổng hợp: hai model đều 8/10; chưa đủ để kết luận tương đương năng lực** |
 
 > **Cảnh báo về lịch:** Các nhãn “Ngày 1–7” là các chặng của roadmap, không được hiểu là mỗi chặng diễn ra đúng một ngày dương lịch. Lệnh và kết quả được ghi theo thứ tự thảo luận. Thời gian thực của từng benchmark chỉ được ghi khi có dữ liệu.
 
@@ -951,7 +954,260 @@ Roadmap điều chỉnh: sau benchmark Uncensored ngày 8–14, dự kiến Fast
 
 ---
 
-## 8. Known issues, fixes & lessons learned
+## Ngày 8 — Tải, xác minh và chạy Qwen3.5-9B Uncensored
+
+**Mục tiêu:** triển khai profile `unrestricted` tách khỏi CORE; xác nhận nguồn GGUF, checksum và khả năng sinh phản hồi qua API. **Trạng thái:** xác nhận inference và SHA-256; chưa benchmark đầy đủ năng lực, tool safety, vision, refusal.
+
+### 8.1. Model và quyết định thiết kế
+
+| Thuộc tính | Giá trị |
+|---|---|
+| Profile | `unrestricted` |
+| Model GGUF | `Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf` |
+| Hugging Face repo | `HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive` |
+| Base model công bố | `Qwen/Qwen3.5-9B` |
+| Đường dẫn local | `models/unrestricted/qwen3.5-9b/` |
+| Backend | `llama.cpp` CUDA, commit `5c8854fd8` (b11557) |
+| Inference | `--n-gpu-layers 99 --ctx-size 16384 --parallel 1 --reasoning off` |
+| Quyền agent | **Chưa cho phép thực thi shell/file tự động** |
+
+### 8.2. Các lệnh triển khai
+
+```bash
+cd /home/korosaki-ryukai/Workspace/Server/ai
+mkdir -p models/unrestricted/qwen3.5-9b
+
+# Tải riêng GGUF Q6_K, không tải toàn bộ repository
+uv run hf download \
+  HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive \
+  Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf \
+  --local-dir models/unrestricted/qwen3.5-9b
+
+# Tính checksum tại máy
+sha256sum \
+  models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf
+```
+
+**SHA-256 do Terminal của người dùng trả về (đã xác nhận):**
+
+```text
+c0ba7beb68fd3fe47891bd549486d38dcf62d00817296ea314ad37017f5a4986
+```
+
+Giá trị trên trùng checksum repository đã ghi nhận trong quá trình triển khai. **Checksum khớp không bảo đảm model không bị can thiệp ở cấp nguồn phát hành hay không suy giảm năng lực.** Chưa có commit/revision repo cụ thể được pin.
+
+Chạy server bằng cách **dừng CORE trước** (`Ctrl+C` tại terminal tương ứng) rồi:
+
+```bash
+cd /home/korosaki-ryukai/Workspace/Server/ai
+./runtimes/llama.cpp/build-cuda/bin/llama-server \
+  --model models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf \
+  --alias qwen3.5-9b-unrestricted \
+  --host 127.0.0.1 --port 8080 \
+  --n-gpu-layers 99 --ctx-size 16384 --parallel 1 --reasoning off
+```
+
+Request kiểm tra tương ứng:
+
+```bash
+curl -s http://127.0.0.1:8080/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "model":"qwen3.5-9b-unrestricted",
+    "messages":[{"role":"user","content":"Giải thích AI Agent là gì trong đúng 3 câu tiếng Việt."}],
+    "temperature":0,"max_tokens":256,"stream":false
+  }'
+```
+
+### 8.3. Kết quả quan sát
+
+- Model trả lời bằng tiếng Việt với **3 câu** giải thích AI Agent.
+- `Reasoning: None` → chế độ non-thinking hoạt động trong phép thử.
+- `Finish reason: stop` → phản hồi hoàn tất.
+- `Generation speed: 79.56130500682313 tok/s` → **một request**, không phải TPS trung bình.
+- Chưa có log VRAM riêng tại lần này; **không ghi thành số đo đã xác nhận**.
+
+**Đánh giá:** đạt smoke test hội thoại; chưa kết luận chất lượng uncensored so với CORE.
+
+---
+
+## Ngày 9 — Benchmark hiệu năng bản Uncensored và xử lý CUDA OOM
+
+**Mục tiêu:** đo throughput theo prompt 512, 4K, 8K, 16K; lưu raw log và kiểm tra giới hạn VRAM. **Trạng thái:** hoàn thành cả bốn mức sau khi xử lý vấn đề tranh chấp VRAM.
+
+### 9.1. Lệnh benchmark và lưu log
+
+```bash
+cd /home/korosaki-ryukai/Workspace/Server/ai
+mkdir -p benchmarks/results/qwen3.5-9b-unrestricted/raw
+
+MODEL='models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf'
+BENCH='./runtimes/llama.cpp/build-cuda/bin/llama-bench'
+
+"$BENCH" -m "$MODEL" -ngl 99 -p 512 -n 128 -r 5 \
+  2>&1 | tee benchmarks/results/qwen3.5-9b-unrestricted/raw/pp512.txt
+
+for TOKENS in 4096 8192 16384; do
+  "$BENCH" -m "$MODEL" -ngl 99 -p "$TOKENS" -n 128 -r 3 \
+    2>&1 | tee "benchmarks/results/qwen3.5-9b-unrestricted/raw/pp${TOKENS}.txt"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    echo "Benchmark thất bại ở $TOKENS tokens"
+    break
+  fi
+done
+```
+
+**Chú ý:** lệnh `tee` ghi đè file cùng tên. Để giữ lịch sử benchmark thất bại và chạy lại, nên dùng hậu tố theo thời gian hoặc tên thử nghiệm khác nhau. Các log của lần chạy lại có thể đã thay thế log cũ nếu dùng chính xác đường dẫn trên.
+
+### 9.2. Benchmark Uncensored đã quan sát
+
+| Số token prompt | PP (tok/s) | TG 128 (tok/s) | Số lần lặp | Trạng thái |
+|---:|---:|---:|---:|---|
+| 512 | 5.492,73 ± 121,07 | 80,97 ± 0,46 | 5 | PASS |
+| 4.096 — lần đầu | 5.503,48 ± 3,43 | 81,09 ± 0,26 | 3 | PASS |
+| 8.192 — lần đầu | 5.406,93 ± 26,88 | 80,59 ± 0,57 | 3 | PASS |
+| 16.384 — lần đầu | — | — | 3 dự kiến | **CUDA OOM** |
+| 4.096 — chạy lại | **5.510,67 ± 27,60** | **80,39 ± 0,67** | 3 | PASS |
+| 8.192 — chạy lại | **5.427,26 ± 24,04** | **80,38 ± 0,61** | 3 | PASS |
+| 16.384 — chạy lại | **5.244,77 ± 9,78** | **80,32 ± 0,63** | 3 | **PASS** |
+
+Thiết bị: RTX 4070 Ti SUPER (CUDA 8.9); model hiển thị trong `llama-bench`: **8,95 B params, 6,84 GiB**. Runtime: `5c8854fd8` (11557).
+
+### 9.3. Lỗi OOM và cách khắc phục
+
+Lần đầu tại 16K:
+
+```text
+ggml_backend_cuda_buffer_type_alloc_buffer: allocating 533.02 MiB on device 0: cudaMalloc failed: out of memory
+ggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 558913664
+graph_reserve: failed to allocate compute buffers
+llama_bench: error: failed to create context
+```
+
+Kiểm tra tiến trình và VRAM:
+
+```bash
+pgrep -af 'llama-server|llama-bench'
+nvidia-smi --query-gpu=memory.used,memory.free --format=csv
+```
+
+Người dùng xác nhận **dừng tiến trình đang chạy thì thử lại được**. Điều này là bằng chứng mạnh về tranh chấp VRAM giữa các tiến trình, không phải giới hạn kiến trúc cố định của Uncensored. Lần chạy lại 16K hoàn thành, nhưng **tham số batch/micro-batch của lần chạy lại chưa được gửi nguyên văn**, nên không khẳng định mọi điều kiện đo giống hệt CORE. Gợi ý `-b 512 -ub 128` trước đó là **đã hướng dẫn**, không mặc định là đã dùng.
+
+### 9.4. So sánh với CORE (theo số liệu đã báo)
+
+| Prompt | CORE PP (tok/s) | Uncensored PP mới nhất (tok/s) | Chênh lệch tương đối |
+|---:|---:|---:|---:|
+| 512 | 5.808,53 | 5.492,73 | −5,4% |
+| 4.096 | 5.837,81 | 5.510,67 | −5,6% |
+| 8.192 | 5.787,35 | 5.427,26 | −6,2% |
+| 16.384 | 5.603,16 | 5.244,77 | −6,4% |
+
+Không suy ra bản Uncensored bị suy giảm **năng lực nhận thức** từ chênh lệch PP/TG. Hai file GGUF khác nhau về số tham số và dung lượng: CORE 9,20B/7,40 GiB; Uncensored 8,95B/6,84 GiB. Cần xác minh model metadata/chat template và điều kiện đo trước khi diễn giải chênh lệch như tác động riêng của abliteration.
+
+**Quyết định:** GPU 16GB nên chạy **một model 9B Q6_K tại một thời điểm** khi cần dành VRAM cho context dài; router về sau phải hỗ trợ unload/load model.
+
+---
+
+## Ngày 10 — Quality Benchmark v0.1: CORE so với Uncensored
+
+**Mục tiêu:** kiểm tra sơ bộ reasoning, toán, coding, tiếng Việt, tuân thủ chỉ dẫn, JSON và tool calling trên cùng bộ prompt. **Trạng thái:** đã chạy xong 10 bài cho mỗi model; kết quả bằng nhau nhưng bộ kiểm thử còn nhỏ.
+
+### 10.1. Bộ kiểm thử và thao tác
+
+Script được hướng dẫn tạo tại:
+
+```text
+benchmarks/scripts/quality_benchmark.py
+```
+
+Gồm **9 bài hỏi đáp** với chấm điểm tự động và **1 bài tool calling** tới `get_weather(city)`. Dùng `temperature=0`, `max_tokens=256`, `stream=false`, server `--reasoning off`. **Tool test chỉ kiểm tra model phát sinh lời gọi công cụ; không thực thi công cụ ngoài đời.**
+
+```bash
+# Với Uncensored đã khởi động và đúng model alias
+uv run python benchmarks/scripts/quality_benchmark.py \
+  --model qwen3.5-9b-unrestricted --profile unrestricted
+
+# Dừng Uncensored trước, khởi động lại CORE ở terminal khác:
+uv run python scripts/start-core.py
+
+# Tại terminal benchmark:
+uv run python benchmarks/scripts/quality_benchmark.py \
+  --model qwen3.5-9b-core --profile core
+```
+
+File kết quả được báo cáo từ script:
+
+```text
+benchmarks/results/quality/core.json
+benchmarks/results/quality/unrestricted.json
+```
+
+### 10.2. Kết quả thực tế
+
+| Tiêu chí | CORE | Uncensored |
+|---|---:|---:|
+| Toán học | 2/2 | 2/2 |
+| Reasoning | 2/2 | 2/2 |
+| Coding | 1/2 | 1/2 |
+| Tiếng Việt | 1/1 | 1/1 |
+| Instruction following | 1/1 | 1/1 |
+| JSON strict | 0/1 | 0/1 |
+| Tool calling | 1/1 | 1/1 |
+| **Tổng** | **8/10 = 80,0%** | **8/10 = 80,0%** |
+
+Hai model **cùng sai hai bài**:
+
+1. **`code_02` — lỗi nội dung:** prompt `Python: print(10 // 3). Chỉ trả về kết quả được in.`; cả hai trả `2`, trong khi Python 3 đúng là **`3`**. Đây là lỗi thực, không chỉnh điểm sau khi xem giải thích.
+2. **`json_01` — lỗi strict formatting:** cả hai tạo đúng object `{"status":"ok","count":3}`, nhưng bọc trong Markdown fenced code block (```json ... ```), khiến `json.loads(answer)` không parse được trực tiếp. **JSON semantic: đúng; raw JSON strict: sai.**
+
+Phân biệt hai thước đo JSON trong vòng kiểm thử tiếp:
+
+| Thước đo | Ý nghĩa | CORE | Uncensored |
+|---|---|---|---|
+| `json_semantic` | Object được diễn đạt đúng sau khi tách fence | PASS | PASS |
+| `json_strict` | `json.loads(raw_content)` thành công nguyên bản | FAIL | FAIL |
+
+### 10.3. Tập lệnh xem các FAIL đã dùng
+
+```bash
+cd /home/korosaki-ryukai/Workspace/Server/ai
+uv run python - <<'PYCODE'
+import json
+from pathlib import Path
+root = Path('benchmarks/results/quality')
+for name in ('core', 'unrestricted'):
+    d = json.loads((root / f'{name}.json').read_text(encoding='utf-8'))
+    print(f"\nMODEL: {name}")
+    print(f"SCORE: {d['passed']}/{d['test_count']}")
+    print(f"ACCURACY: {d['score']:.1%}")
+    for case in d['results']:
+        if not case['passed']:
+            print('FAIL:', case['id'])
+            print('ERROR:', case.get('error'))
+            print('ANSWER:', str(case.get('answer'))[:500])
+PYCODE
+```
+
+### 10.4. Quyết định và giới hạn
+
+- **Chưa có model thắng:** cùng 8/10 chỉ cho biết cùng đạt ở **mẫu nhỏ 10 bài**, không đủ chứng minh chất lượng tương đương trong coding agent thực tế hoặc sai khác dưới 5 điểm phần trăm.
+- Giữ **CORE làm model mặc định**, Uncensored làm profile tùy chọn, chưa có quyền thực thi tool/file/shell tự động.
+- Ngày 11–12 mở rộng coding tests thực thi trong sandbox, tool calling nhiều bước, structured outputs với schema, vision khi có mmproj và kiểm tra hồi quy khả năng tuân thủ chỉ dẫn.
+- `json_01` trong điểm 8/10 **không được tự động đổi thành PASS**: có thể thêm metric semantic bên cạnh strict score.
+- Chưa có bộ kiểm thử NSFW/refusal hợp pháp đủ lớn và chưa có đánh giá security prompt-injection.
+
+### 10.5. Kết quả cần giữ nguyên để tái lập
+
+```text
+CORE:         8/10 (80.0%)
+UNRESTRICTED: 8/10 (80.0%)
+Shared FAIL:  code_02, json_01
+Decision:     No winner. Keep CORE default pending expanded evaluation.
+```
+
+---
+
+## 11. Known issues, fixes & lessons learned
 
 | Mã | Vấn đề | Root cause / quan sát | Cách xử lý |
 |---|---|---|---|
@@ -967,9 +1223,9 @@ Roadmap điều chỉnh: sau benchmark Uncensored ngày 8–14, dự kiến Fast
 
 ---
 
-## 9. Cấu hình, bảo mật và tái lập
+## 12. Cấu hình, bảo mật và tái lập
 
-### 9.1. Files quan trọng
+### 12.1. Files quan trọng
 
 ```text
 configs/models.yaml                          # Model/profile manifest
@@ -981,7 +1237,7 @@ benchmarks/results/qwen3.5-9b-q6k/...      # Logs/results
 models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf  # File trọng số (không commit)
 ```
 
-### 9.2. Health và version commands
+### 12.2. Health và version commands
 
 ```bash
 cd /home/korosaki-ryukai/Workspace/Server/ai
@@ -993,7 +1249,7 @@ uv run python -c 'import huggingface_hub; print(huggingface_hub.__version__)'
 nvidia-smi
 ```
 
-### 9.3. Khởi động và dừng
+### 12.3. Khởi động và dừng
 
 ```bash
 # Mở terminal thứ nhất; bảo đảm server cũ không chạy cùng cổng
@@ -1006,7 +1262,7 @@ curl -s http://127.0.0.1:8080/health
 
 Dừng ở terminal đang chạy bằng `Ctrl+C`. Không chạy đồng thời hai model 9B Q6_K khi chưa có VRAM budget rõ ràng.
 
-### 9.4. Git hygiene
+### 12.4. Git hygiene
 
 - Giữ `.env`, `secrets`, model weights và local private data ngoài Git.
 - Kiểm tra `.gitignore`: trước đó có mẫu bỏ qua `benchmarks/results/`; muốn commit `summary.csv`, `metadata.json` hoặc `dev_log.md` phải điều chỉnh ignore có chủ đích.
@@ -1015,30 +1271,28 @@ Dừng ở terminal đang chạy bằng `Ctrl+C`. Không chạy đồng thời h
 
 ---
 
-## 10. Checklist sau ngày 7 / trước ngày 8
+## 13. Checklist kết thúc Ngày 10 / trước Ngày 11
 
-- [x] Ubuntu/GPU/CUDA xác minh.
-- [x] llama.cpp CUDA build và version ghi lại.
-- [x] Qwen3.5-9B Q6_K tải và nạp thành công.
-- [x] Chat API và non-thinking mode hoạt động.
-- [x] Synthetic PP/TG 512/4K/8K/16K có kết quả.
-- [x] Server 16K + retrieval gần 12K đạt 3/3 facts.
-- [x] API health và full runtime commit có output xác nhận.
-- [ ] Xác nhận `start-core.py` sau sửa YAML là tiến trình đang phục vụ API (nếu cần kiểm toán chặt).
-- [ ] Chạy và lưu output Ngày 7 của `tests/test_core_acceptance.py`.
-- [ ] Kiểm tra `metadata.json`/`summary.csv` và các raw log đã tồn tại.
-- [ ] Đối chiếu checksum/revision model với nguồn phát hành.
-- [ ] Ghi nhận VRAM peak thực tế và TTFT trên prompt dài, nhiều seed.
-- [ ] Ngày 8–14: xác minh nguồn, tải, chạy và benchmark Uncensored cùng bộ test; chỉ chốt sau khi có kết quả.
+- [x] Ngày 1–6: phần cứng, runtime CUDA, CORE Q6_K, API, benchmark PP/TG và long-context 12K.
+- [x] Đã ghi commit `5c8854fd88319125125dc4b836c98b1b215b0f23` cho `llama.cpp`.
+- [x] Ngày 8: bản Uncensored đã sinh phản hồi tiếng Việt; SHA-256 đã đối chiếu.
+- [x] Ngày 9: throughput Uncensored 512/4K/8K/16K đã có số đo; xử lý OOM bằng dừng tiến trình cạnh tranh GPU.
+- [x] Ngày 10: 10 bài/model, cả CORE và Uncensored 8/10, cùng FAIL `code_02`, `json_01`.
+- [ ] Chưa nhận log riêng của bài Ngày 7 `tests/test_core_acceptance.py`; không đánh dấu là PASS.
+- [ ] Chưa pin revision của model repositories và xác minh metadata/architecture giữa hai GGUF.
+- [ ] Chưa xác nhận batch/micro-batch của lần chạy lại Uncensored 16K, cần lưu lệnh đầy đủ.
+- [ ] Cải tiến benchmark JSON semantic/strict, tool-call validation, coding execution, nhiều test/seed và vision.
+- [ ] Ngày 11–12: mở rộng benchmark chất lượng trước khi chốt model.
+- [ ] Ngày 13–14: weighted scorecard, release gate và cập nhật dev log.
 
 ---
 
-## 11. Mẫu nhật ký cho ngày tiếp theo
+## 14. Mẫu nhật ký cho ngày tiếp theo
 
-> **Cách cập nhật:** Sau mỗi ngày triển khai, bổ sung một mục vào **cuối tài liệu này**, không ghi đè dữ liệu benchmark cũ. Phân biệt lệnh đã chạy, output quan sát, thay đổi cấu hình và open issues. Ngày 8 sẽ nằm trong cùng Phase 1; sang Phase 2 thêm heading giai đoạn mới.
+> **Cách cập nhật:** Sau mỗi ngày triển khai, bổ sung một mục vào phần nhật ký theo thứ tự ngày (trước mục Known issues nếu cần), không ghi đè dữ liệu đã xác nhận, không ghi đè dữ liệu benchmark cũ. Phân biệt lệnh đã chạy, output quan sát, thay đổi cấu hình và open issues. Ngày 11 sẽ nằm trong cùng Phase 1; sang Phase 2 thêm heading giai đoạn mới.
 
 ```markdown
-## Ngày 8 — [Tên công việc]
+## Ngày 11 — [Tên công việc]
 
 **Ngày ghi nhận:** YYYY-MM-DD  
 **Mục tiêu:** ...  
@@ -1072,9 +1326,169 @@ Tài liệu này là snapshot được tạo từ hội thoại. Trợ lý **kh�
 
 ---
 
-## 12. Nguồn nội bộ / giới hạn xác minh
+## 15. Nguồn nội bộ / giới hạn xác minh
 
 - Lệnh, số liệu, SHA-256 và trích xuất output: lấy từ các đoạn Terminal người dùng đã gửi trong cuộc hội thoại triển khai Giai đoạn 1.
 - Các lệnh chưa có output xác nhận được gắn nhãn “đã hướng dẫn”, “mẫu” hoặc “chưa xác minh”.
 - Không có quyền kiểm tra trực tiếp workspace ở máy Ubuntu của người dùng; đường dẫn `/home/korosaki-ryukai/...` là vị trí **để người dùng lưu**, không phải vị trí trợ lý đã ghi trực tiếp.
-- Model quality/NSFW refusals, coding benchmark, tool-call reliability và multimodal chưa được thử nghiệm đủ tại checkpoint này.
+- Đã có quality smoke benchmark 10 bài/model đến Ngày 10; NSFW refusal hợp pháp, coding thực thi, tool-call reliability đa bước, vision và multimodal chưa được thử nghiệm đủ tại checkpoint này.
+
+
+---
+
+# BỔ SUNG — Checkpoint Runtime V1 (ghi nhận 2026-10-16)
+
+> **Nguyên tắc lịch sử:** Bản gốc Ngày 1–10 và các checklist trước đó được giữ nguyên ở trên. Mục này ghi nhận các bước đã thực sự được báo cáo sau snapshot cũ. Ngày ghi nhận là 2026-10-16, **không khẳng định tất cả công việc dưới đây đều được thực hiện đúng ngày đó**. Checklist cũ ở phần 13 phản ánh trạng thái tại thời điểm snapshot cũ, không thay thế checkpoint mới.
+
+## Ngày 11 — Multimodal, long-context và Docker runtime (bổ sung lịch sử)
+
+**Trạng thái:** Đã có xác nhận từng phần qua terminal; một số benchmark trước checkpoint chưa đủ raw log để tái dựng chi tiết tuyệt đối.
+
+- CORE: `Qwen_Qwen3.5-9B-Q6_K.gguf`, projector `mmproj-Qwen_Qwen3.5-9B-bf16.gguf`; Unrestricted: `Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf` và projector tương ứng.
+- 32K CORE: synthetic needle retrieval tại các vị trí 8K, 16K, 24K, 30K đều 4/4 PASS; input dài nhất ghi nhận khoảng 30.608 tokens; VRAM sampled peak ~11.270 MiB. Những số liệu này không thay cho acceptance suite toàn diện.
+- Multimodal: CORE vision và bài frame-video có kết quả; benchmark video không đủ cơ sở để kết luận model đọc video liên tục một cách đáng tin cậy. Tách frame là preprocessing ngoài model, không phải năng lực xem video native đã nghiệm thu.
+- Backend container: image `local-assistant/llama-cuda:5c8854fd8`, commit llama.cpp `5c8854fd88319125125dc4b836c98b1b215b0f23`; dùng external Docker network `home-net`; publish `127.0.0.1:8080:8080`.
+- Không khởi chạy CORE và Unrestricted cùng lúc vì hai service cùng bind port và giới hạn VRAM; với Unrestricted dùng `--spec-type none` vì GGUF hiện tại thiếu MTP layers; CORE dùng `--spec-type draft-mtp`.
+
+**Lệnh thực thi/kiểm tra liên quan:**
+
+```bash
+cd ~/Workspace/Server/ai
+# Kiểm tra Compose; với zsh có thể dùng `nocorrect` nếu bị hỏi sửa lệnh
+nocorrect docker compose -f docker-compose.yaml config --quiet
+# Chỉ tái tạo CORE khi cần thay cấu hình; KHÔNG chạy lệnh này để kiểm tra thường xuyên
+# docker compose -f docker-compose.yaml --profile core up -d --no-build --force-recreate core
+curl -sS http://127.0.0.1:8080/health
+curl -sS http://127.0.0.1:8080/v1/models | uv run python -m json.tool
+nocorrect docker compose -f docker-compose.yaml --profile core logs --tail=40 core
+```
+
+**Kết quả khởi động đã ghi nhận:** `model loaded`, `n_slots=1`, `n_ctx_slot=32768`, projector multimodal loaded, MTP draft context initialized, `/health` trả `{"status":"ok"}`. Lần đầu ngay sau recreate có thể trả HTTP 503 `Loading model`; phải chờ health OK.
+
+## Ngày 12 — FastAPI Gateway và Runtime Presets
+
+**Trạng thái:** PASS regression + live smoke. **Không tạo endpoint mới**; giữ `POST /api/v1/chat/completions` và hai profile `core` / `unrestricted`.
+
+**Các file hiện hữu được giữ/tích hợp:**
+- `apps/api/main.py` — giữ router health/chat.
+- `apps/api/core/model_config.py` — đọc `configs/models.yaml`, bắt buộc loopback.
+- `apps/api/routes/chat.py` — nhận `profile`, `messages`, `temperature`, `preset`, optional `max_tokens`.
+- `apps/api/services/llama_gateway.py` — `httpx.AsyncClient`, `/v1/models`, `/apply-template`, `/tokenize`, `/v1/chat/completions`, báo lỗi khi response không hoàn tất.
+- `apps/api/runtime/presets.py` + `apps/api/runtime/__init__.py` — chính sách preset và token budget.
+- `tests/test_runtime_presets.py` — unit tests.
+
+| Preset | Thinking | Reasoning budget | Maximum completion tokens |
+|---|---|---:|---:|
+| Fast | Off | N/A | 4096 |
+| Balanced (default) | On | 4096 | 8192 |
+| Deep | On | 8192 | 16384 |
+| Unlimited | On | -1 | Context còn lại (trừ reserve) |
+
+**Budget policy:** 32.768 context, 256 safety reserve, ít nhất 512 answer reserve. Budget finite yêu cầu còn đủ chỗ cho tối đa reasoning cộng tối thiểu answer. Tính bằng chat template + tokenizer của llama.cpp, không đo theo số ký tự. `reasoning_budget_requested` trong response là tham số đã **yêu cầu**, không phải proof về nội bộ backend.
+
+**Lệnh build/test:**
+
+```bash
+cd ~/Workspace/Server/ai
+uv run python -m compileall -q apps/api
+uv run python -m pytest tests/test_runtime_presets.py tests/test_api_health.py tests/test_llama_gateway.py -v
+# Output được người dùng báo cáo: 23 passed in 0.25s
+
+# FastAPI ở terminal riêng
+uv run uvicorn apps.api.main:app --host 127.0.0.1 --port 8000
+# terminal kiểm tra
+curl --fail --silent --show-error http://127.0.0.1:8000/openapi.json -o /dev/null
+```
+
+**Live smoke:** Fast `FAST-PRESET-OK` trả đúng, `finish_reason=stop`, `prompt_tokens=20` bằng `input_tokens_counted=20`, không có reasoning. Balanced `125*16=2000`, reasoning bật, `prompt_tokens=24` bằng token counted, `completion_tokens=1277`, `finish_reason=stop`. Deep `37*48=1776`, `budget=8192`, `max_output=16384`; Unlimited cùng đáp án, `budget=-1`, `max_output=32490`. Hai ca đều `finish_reason=stop`. Số tokens là số trên từng case, không phải tốc độ benchmark.
+
+## Ngày 13 — Auto Router V1
+
+**Trạng thái:** PASS unit test, smoke test, extended benchmark; không tuyên bố accuracy tổng quát.
+
+- `auto` chọn trong Fast/Balanced/Deep, **không tự chọn Unlimited**. Default vẫn Balanced.
+- Greeting độc lập rất ngắn -> `simple_greeting_rule` -> Fast.
+- Các yêu cầu khác -> một lần phân loại bằng LLM `temperature=0`, `max_tokens=96`, thinking off; classifier chỉ thấy 6 messages gần nhất, tối đa 1200 ký tự/message.
+- Classifier sai format/lỗi -> fallback Balanced; nhãn bắt buộc khớp chính xác.
+- Metadata: `preset_requested`, `preset_selected`, `auto_source`.
+- Thêm `tests/test_runtime_auto.py`; giữ regression cũ.
+
+**Unit tests:** 42/42 PASS sau Auto V1; cuối checkpoint 47/47 PASS trên `uv run python -m pytest tests/ -q`.
+
+**Smoke tests:** `Xin chào!` -> Fast rule; `What is the capital of France?` -> Fast classifier; complex multi-agent architecture -> Deep classifier, HTTP 200, 27.9s, 4188 completion tokens, reasoning 18418 ký tự, `finish_reason=stop`.
+
+**Benchmark mở rộng đã chạy:**
+
+```bash
+cd ~/Workspace/Server/ai
+uv run python -m compileall -q benchmarks/scripts
+uv run python benchmarks/scripts/auto_router_validation.py
+uv run python -m pytest tests/ -q
+# 47 passed in 5.49s ở lượt đã báo cáo
+```
+
+**Results:** `benchmarks/results/runtime/auto-router.json`
+
+| Case | Selected | Latency | Routing | Completion |
+|---|---|---:|---|---|
+| python_easy_debug | balanced | 12.09s | PASS | PASS |
+| distributed_debug | deep | 50.78s | PASS | PASS |
+| long_translation | balanced | 30.56s | PASS | PASS |
+| easy_multistep | fast | 0.88s | PASS | PASS |
+| complex_architecture | deep | 14.13s | PASS | PASS |
+| constrained_planning | deep | 23.20s | PASS | PASS |
+| multiturn_debug | balanced | 30.08s | PASS | PASS |
+| classification_injection | deep | 17.40s | PASS | PASS |
+
+**Summary:** `Routing acceptable: 8/8`, `Completions OK: 8/8`. `classification_injection` qua một ca không chứng minh miễn nhiễm prompt injection nói chung. Latency là end-to-end (gồm classify + inference), chưa được phân rã.
+
+**Sự cố vận hành quan trọng:** Lượt benchmark đầu `0/8` vì cổng FastAPI `127.0.0.1:8000` không có listener; `/health` llama-server `127.0.0.1:8080` vẫn OK. Sau khi bật lại Uvicorn, benchmark Auto đạt 8/8. Không xem lỗi `All connection attempts failed` là lỗi phân loại của Auto.
+
+## Ngày 14 — Reasoning hard-budget validation & release gate
+
+**Trạng thái:** Xác minh thực nghiệm hard cap ở mức nhỏ; 4096/8192 **chưa chạm ngưỡng để kiểm chứng riêng**. Runtime V1 đủ điều kiện chuyển phát triển tiếp theo với giới hạn này được ghi rõ.
+
+**Script và lệnh đã chạy:**
+
+```bash
+cd ~/Workspace/Server/ai
+uv run python benchmarks/scripts/reasoning_budget_validation.py
+# Saved: benchmarks/results/runtime/reasoning-budget.json
+uv run python benchmarks/scripts/auto_router_validation.py
+# Saved: benchmarks/results/runtime/auto-router.json
+uv run python -m pytest tests/ -q
+# 47 passed in 5.49s
+```
+
+**Result từ llama.cpp trực tiếp:**
+
+| Reasoning budget | Visible reasoning tokens qua /tokenize | Completion tokens | Finish reason | Interpretation |
+|---:|---:|---:|---|---|
+| 64 | 64 | 1088 | length | Bằng cap đo được |
+| 256 | 255 | 1280 | length | Gần bằng cap |
+| 512 | 512 | 1536 | length | Bằng cap đo được |
+| 4096 | 2797 | 5120 | length | Chạm tổng max_tokens (4096+1024), không chạm reasoning cap |
+| 8192 | 2797 | 5325 | stop | Dừng tự nhiên |
+
+**Giới hạn diễn giải:** số visible reasoning tokens là phép tokenize lại nội dung đã trả, không phải counter nội bộ của sampler. Ở các case `finish_reason=length`, dù `has_final_answer=True` vẫn không được đánh dấu completion hoàn chỉnh. Không được diễn giải các mức 4096/8192 thành chứng nhận cưỡng chế đã chạm ngưỡng.
+
+**Release gate Runtime V1:**
+- [x] CORE 32K với runtime CUDA + MTP hoạt động theo log và benchmark đã ghi nhận.
+- [x] Fast/Balanced/Deep/Unlimited hoạt động live trong các case đã báo cáo.
+- [x] Auto V1: 3/3 smoke, 8/8 extended routing & completion.
+- [x] 47/47 pytest regression PASS.
+- [x] Đếm prompt token khớp response usage ở 2 bài kiểm thử.
+- [x] Hard reasoning cap hoạt động thực nghiệm tại 64/256/512.
+- [ ] Chưa có test chạm cap tại chính 4096 và 8192.
+- [ ] Chưa đo accuracy routing bằng dữ liệu lớn, chưa phân rã latency classifier/inference.
+- [ ] Chưa nghiệm thu conversation persistence sau restart.
+
+**Quyết định:** Kết thúc Runtime V1, bước tiếp theo là Conversation Storage & Multi-turn Chat Engine. Không thay đổi Docker Compose, không cần triển khai PostgreSQL hay thêm service; dùng SQLite V1.
+
+## Ngày 15 — Conversation Storage & Multi-turn Chat Engine (DESIGN ONLY)
+
+**Ngày mở thiết kế:** 2026-10-16. **Trạng thái:** Chưa triển khai, chưa migrate, chưa có persistence test. Bản thiết kế chi tiết nằm trong `conversation_schema_design_day15.md` đính kèm checkpoint này.
+
+**Yêu cầu chính:** lưu conversation ID, messages theo thứ tự, atomic write, idempotent send, restart recovery, lưu metadata inference mà không lưu reasoning trace theo mặc định, giới hạn context trước inference, không phá endpoint `/api/v1/chat/completions`.
+
+**Thứ tự triển khai:** schema/migration -> repository & manager -> conversation endpoints -> context builder -> integration/live restart test. Không đánh dấu DONE cho tới khi có test thực tế.

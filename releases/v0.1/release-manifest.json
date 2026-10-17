@@ -1,0 +1,166 @@
+{
+  "release": "shldd-personal-ai-v0.1",
+  "stage": "phase_1_runtime_and_evaluation",
+  "created_at_utc": "2026-10-13T03:04:37.147638+00:00",
+  "status": "runtime_baseline_accepted",
+  "default_profile": "core",
+  "optional_profiles": [
+    "unrestricted"
+  ],
+  "runtime": {
+    "engine": "llama.cpp",
+    "git_commit": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+    "build": 11557,
+    "backend": "cuda"
+  },
+  "models": {
+    "core": {
+      "name": "qwen3.5-9b-core",
+      "base_model": "Qwen/Qwen3.5-9B",
+      "repository": "bartowski/Qwen_Qwen3.5-9B-GGUF",
+      "path": "models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf",
+      "quantization": "Q6_K",
+      "sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+      "size_bytes": 7958818848,
+      "inference": {
+        "engine": "llama.cpp",
+        "backend": "cuda",
+        "gpu_layers": 99,
+        "context_size": 16384,
+        "parallel": 1,
+        "reasoning": "off",
+        "host": "127.0.0.1",
+        "port": 8080
+      }
+    },
+    "unrestricted": {
+      "name": "qwen3.5-9b-unrestricted",
+      "base_model": "Qwen/Qwen3.5-9B",
+      "repository": "HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive",
+      "path": "models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf",
+      "quantization": "Q6_K",
+      "sha256": "c0ba7beb68fd3fe47891bd549486d38dcf62d00817296ea314ad37017f5a4986",
+      "size_bytes": 7359259008,
+      "inference": {
+        "engine": "llama.cpp",
+        "backend": "cuda",
+        "gpu_layers": 99,
+        "context_size": 16384,
+        "parallel": 1,
+        "reasoning": "off",
+        "host": "127.0.0.1",
+        "port": 8080
+      }
+    }
+  },
+  "docker_sandbox": {
+    "image": "python:3.12-slim",
+    "image_id": "sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+  },
+  "benchmark": {
+    "scorecard": "benchmarks/results/scorecards/day13-scorecard.json",
+    "scorecard_sha256": "8b9dc3361bb54b5957d0423f83912a886313d372b9989d3e2348bc7d0027a6e1",
+    "profiles": {
+      "core": {
+        "profile": "core",
+        "categories": {
+          "reasoning": {
+            "passed": 4,
+            "total": 4,
+            "rate": 1.0,
+            "weight": 20
+          },
+          "coding": {
+            "passed": 4,
+            "total": 5,
+            "rate": 0.8,
+            "weight": 20
+          },
+          "agent": {
+            "passed": 5,
+            "total": 5,
+            "rate": 1.0,
+            "weight": 20
+          },
+          "vietnamese": {
+            "passed": 1,
+            "total": 1,
+            "rate": 1.0,
+            "weight": 10
+          }
+        },
+        "structured_output": true,
+        "covered_weight": 70,
+        "earned_weight": 66.0,
+        "provisional_rate": 0.9428571428571428,
+        "unscored_categories": [
+          "multimodal",
+          "performance",
+          "memory_context",
+          "provenance"
+        ]
+      },
+      "unrestricted": {
+        "profile": "unrestricted",
+        "categories": {
+          "reasoning": {
+            "passed": 4,
+            "total": 4,
+            "rate": 1.0,
+            "weight": 20
+          },
+          "coding": {
+            "passed": 4,
+            "total": 5,
+            "rate": 0.8,
+            "weight": 20
+          },
+          "agent": {
+            "passed": 5,
+            "total": 5,
+            "rate": 1.0,
+            "weight": 20
+          },
+          "vietnamese": {
+            "passed": 1,
+            "total": 1,
+            "rate": 1.0,
+            "weight": 10
+          }
+        },
+        "structured_output": true,
+        "covered_weight": 70,
+        "earned_weight": 66.0,
+        "provisional_rate": 0.9428571428571428,
+        "unscored_categories": [
+          "multimodal",
+          "performance",
+          "memory_context",
+          "provenance"
+        ]
+      }
+    },
+    "release_gates": {
+      "core": {
+        "passed": 9,
+        "total": 9,
+        "report": "benchmarks/results/release/day14-core-gate.json",
+        "report_sha256": "885744bfe099ba8f4c352744b075b5f4e56eaffb75e90cee0864d4b0ed5c991a"
+      },
+      "unrestricted": {
+        "passed": 9,
+        "total": 9,
+        "report": "benchmarks/results/release/day14-unrestricted-gate.json",
+        "report_sha256": "f9b0940f072bd6389a9dd6e6c9a210d3a04aacd368a406054aaae5714fbe1fae"
+      }
+    }
+  },
+  "limitations": [
+    "No comprehensive reasoning benchmark",
+    "No vision acceptance benchmark",
+    "No complete provenance audit",
+    "No production-grade agent sandbox",
+    "No real file-editing agent authorization",
+    "Network exposure and firewall not audited"
+  ]
+}

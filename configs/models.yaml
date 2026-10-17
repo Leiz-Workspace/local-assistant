@@ -5,13 +5,14 @@ models:
     repository: bartowski/Qwen_Qwen3.5-9B-GGUF
     path: models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf
     quantization: Q6_K
+    mmproj_path: models/core/qwen3.5-9b/mmproj-Qwen_Qwen3.5-9B-bf16.gguf
     sha256: 073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef
 
     inference:
       engine: llama.cpp
       backend: cuda
       gpu_layers: 99
-      context_size: 16384
+      context_size: 32768
       parallel: 1
       reasoning: "off"
       host: 127.0.0.1
@@ -19,4 +20,20 @@ models:
 
   unrestricted:
     name: qwen3.5-9b-unrestricted
-    status: pending_benchmark
+    base_model: Qwen/Qwen3.5-9B
+    repository: HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive
+    path: models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf
+    quantization: Q6_K
+    mmproj_path: models/unrestricted/qwen3.5-9b/mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf
+    sha256: c0ba7beb68fd3fe47891bd549486d38dcf62d00817296ea314ad37017f5a4986
+    status: testing
+
+    inference:
+      engine: llama.cpp
+      backend: cuda
+      gpu_layers: 99
+      context_size: 32768
+      parallel: 1
+      reasoning: "off"
+      host: 127.0.0.1
+      port: 8080

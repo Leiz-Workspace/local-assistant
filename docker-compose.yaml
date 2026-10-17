@@ -1,0 +1,206 @@
+
+name: local-assistant
+
+# ============================================================
+# SHARED LLAMA.CPP CONFIGURATION
+# ============================================================
+#
+# Settings shared by CORE and UNRESTRICTED.
+#
+# Docker Compose manages:
+#   - Model loading
+#   - GPU allocation
+#   - Context window
+#   - KV Cache
+#   - Flash Attention
+#   - Speculative decoding / MTP
+#   - Default reasoning configuration
+#
+# Runtime presets (Fast/Balanced/Deep/Unlimited)
+# are selected by FastAPI, not Docker Compose.
+#
+# IMPORTANT:
+# Both profiles bind host port 8080.
+# Start only ONE profile at a time.
+
+x-llama-common: &llama-common
+  image: local-assistant/llama-cuda:5c8854fd8
+
+  # Do not automatically load the model after reboot.
+  restart: "no"
+
+  # Enable NVIDIA GPU access.
+  gpus: all
+
+  # Read-only model files.
+  volumes:
+    - ./models:/models:ro
+
+  networks:
+    - home-net
+
+  # Expose llama.cpp only on localhost.
+  ports:
+    - "127.0.0.1:8080:8080"
+
+  stop_grace_period: 30s
+
+# ============================================================
+# MODEL SERVICES
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # CORE — Qwen3.5-9B Q6_K
+  # ----------------------------------------------------------
+  core:
+    <<: *llama-common
+
+    profiles:
+      - core
+
+    command:
+      # Model
+      - --model
+      - /models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf
+
+      # OpenAI-compatible model name
+      - --alias
+      - qwen3.5-9b-core
+
+      # Bind inside Docker
+      - --host
+      - 0.0.0.0
+
+      - --port
+      - "8080"
+
+      # GPU offloading
+      - --n-gpu-layers
+      - "99"
+
+      # 32K context window
+      - --ctx-size
+      - "32768"
+
+      # Single inference slot
+      - --parallel
+      - "1"
+
+      # Automatically enable Flash Attention when supported
+      - --flash-attn
+      - auto
+
+      # FP16 KV Cache
+      - --cache-type-k
+      - f16
+
+      - --cache-type-v
+      - f16
+
+      # Multimodal projector: images / vision
+      - --mmproj
+      - /models/core/qwen3.5-9b/mmproj-Qwen_Qwen3.5-9B-bf16.gguf
+
+      # Enable Multi-Token Prediction for CORE.
+      # This GGUF was previously verified with MTP.
+      - --spec-type
+      - draft-mtp
+
+      # Enable reasoning support at the server level.
+      # The actual per-request Thinking mode is selected
+      # by FastAPI through chat_template_kwargs.
+      - --reasoning
+      - auto
+
+      # Keep server-side reasoning effort at default.
+      # Presets primarily use a reasoning token budget.
+      - --reasoning-effort
+      - default
+
+      # No global reasoning limit.
+      # FastAPI sends a per-request thinking budget
+      # where the installed llama.cpp build supports it.
+      - --reasoning-budget
+      - "-1"
+
+  # ----------------------------------------------------------
+  # UNRESTRICTED — Qwen3.5-9B Uncensored Q6_K
+  # ----------------------------------------------------------
+  unrestricted:
+    <<: *llama-common
+
+    profiles:
+      - unrestricted
+
+    command:
+      # Model
+      - --model
+      - /models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf
+
+      # OpenAI-compatible model name
+      - --alias
+      - qwen3.5-9b-unrestricted
+
+      # Bind inside Docker
+      - --host
+      - 0.0.0.0
+
+      - --port
+      - "8080"
+
+      # GPU offloading
+      - --n-gpu-layers
+      - "99"
+
+      # 32K context window
+      - --ctx-size
+      - "32768"
+
+      # Single inference slot
+      - --parallel
+      - "1"
+
+      # Flash Attention
+      - --flash-attn
+      - auto
+
+      # FP16 KV Cache
+      - --cache-type-k
+      - f16
+
+      - --cache-type-v
+      - f16
+
+      # Multimodal projector for unrestricted model
+      - --mmproj
+      - /models/unrestricted/qwen3.5-9b/mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf
+
+      # IMPORTANT:
+      # This unrestricted GGUF has no MTP layers.
+      # draft-mtp causes model loading to fail.
+      - --spec-type
+      - none
+
+      # Server-side reasoning support
+      - --reasoning
+      - auto
+
+      - --reasoning-effort
+      - default
+
+      - --reasoning-budget
+      - "-1"
+
+# ============================================================
+# EXTERNAL DOCKER NETWORK
+# ============================================================
+#
+# Created/managed outside this Compose project.
+# Do not recreate or remove it here.
+
+networks:
+  home-net:
+    external: true
+    name: home-net
