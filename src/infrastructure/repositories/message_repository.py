@@ -1,10 +1,12 @@
+"""Persist ordered messages and retrieve bounded, intact conversation context."""
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.entities.message import Message
@@ -13,7 +15,10 @@ from src.infrastructure.models.message_model import MessageModel
 
 
 class PostgresMessageRepository:
+    """Persist ordered messages under the conversation row-lock convention."""
+
     def __init__(self, session: AsyncSession) -> None:
+        """Use the caller-owned transaction for every repository operation."""
         self.session = session
 
     async def append(
@@ -25,6 +30,7 @@ class PostgresMessageRepository:
         request_key: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> Message:
+        """Allocate a sequence under the conversation lock and append a message."""
         if role not in {"system", "user", "assistant"}:
             raise ValueError(f"Unsupported message role: {role}")
 
@@ -41,19 +47,16 @@ class PostgresMessageRepository:
         )
 
         if conversation is None:
-            raise ValueError(
-                "Conversation does not exist or is not active"
-            )
+            raise ValueError("Conversation does not exist or is not active")
 
         next_sequence = await self.session.scalar(
             select(
                 func.coalesce(
                     func.max(MessageModel.sequence),
                     0,
-                ) + 1
-            ).where(
-                MessageModel.conversation_id == conversation_id
-            )
+                )
+                + 1
+            ).where(MessageModel.conversation_id == conversation_id)
         )
 
         model = MessageModel(
@@ -78,6 +81,7 @@ class PostgresMessageRepository:
         self,
         message_id: UUID,
     ) -> Message | None:
+        """Read a persisted record by its primary key."""
         model = await self.session.get(
             MessageModel,
             message_id,
@@ -90,6 +94,7 @@ class PostgresMessageRepository:
         conversation_id: UUID,
         request_key: str,
     ) -> Message | None:
+        """Find the idempotent user message within its conversation scope."""
         model = await self.session.scalar(
             select(MessageModel).where(
                 MessageModel.conversation_id == conversation_id,
@@ -106,13 +111,12 @@ class PostgresMessageRepository:
         limit: int = 100,
         after_sequence: int = 0,
     ) -> list[Message]:
+        """Read a bounded page of messages ordered by server-assigned sequence."""
         if not 1 <= limit <= 500:
             raise ValueError("limit must be between 1 and 500")
 
         if after_sequence < 0:
-            raise ValueError(
-                "after_sequence must be non-negative"
-            )
+            raise ValueError("after_sequence must be non-negative")
 
         stmt = (
             select(MessageModel)
@@ -126,4 +130,27 @@ class PostgresMessageRepository:
 
         result = await self.session.scalars(stmt)
 
+        return [model.to_entity() for model in result.all()]
+
+    async def list_for_context(
+        self, conversation_id: UUID, *, limit: int = 24
+    ) -> list[Message]:
+        """Read recent transcript plus all system messages without a first-page cutoff."""
+        recent = (
+            select(MessageModel.id)
+            .where(
+                MessageModel.conversation_id == conversation_id,
+                MessageModel.role != "system",
+            )
+            .order_by(MessageModel.sequence.desc())
+            .limit(limit)
+        )
+        result = await self.session.scalars(
+            select(MessageModel)
+            .where(
+                MessageModel.conversation_id == conversation_id,
+                or_(MessageModel.role == "system", MessageModel.id.in_(recent)),
+            )
+            .order_by(MessageModel.sequence.asc())
+        )
         return [model.to_entity() for model in result.all()]

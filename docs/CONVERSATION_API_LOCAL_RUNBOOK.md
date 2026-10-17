@@ -57,3 +57,23 @@ That exclusion is not a full-suite PASS. Missing DATABASE_URL causes integration
 The existing app password was available in Vault. Vault was sealed and needed the established operator unseal procedure before reading the app secret. The authorized operator parent used the protected local bootstrap mechanism; only the application DATABASE_URL entered the API/test child environment. Never pass the operator token to application runtime.
 
 With CORE ready and `LOCAL_ASSISTANT_LIVE_E2E=1`, integration completed **4 passed in 1.18s** and full pytest completed **94 passed in 6.48s**, zero skipped and no exclusions. A separate real process restart check confirmed exact history and cached replay. The live test now requests 512 output tokens to satisfy the unchanged runtime answer reserve; the earlier 128-token fixture correctly received HTTP 422.
+
+## T06 lease and context behavior
+
+Each persistent inference now has an owner UUID, a 120-second database-clock lease and a 30-second heartbeat. A cancelled request is recorded as interrupted when cleanup succeeds. A killed worker is recovered lazily on a later send, or by an explicit manager `recover_expired(conversation_id)` call, once its owned lease expires. A completed request replays; failed/interrupted requests retain 409 semantics under the same key. A new intentional attempt uses a new key. No automatic resend is performed.
+
+Historical pending records without lease ownership are left unchanged. Verify the owning worker is gone before any operator repair. Do not bulk-interrupt pending records on startup. Before rolling back to pre-lease code, drain active inference; old/new writers must not overlap. API remains restricted to one worker and direct localhost access until the remaining authorization/deployment gates are accepted.
+
+The manager reads recent history beyond the old first-500 cutoff, preserves system instructions and selects complete prior user/assistant pairs. Persistent inference then trims oldest pairs using CORE's actual chat template/tokenizer and the unchanged preset policy. Original messages remain in PostgreSQL. Irreducible current/system input overflow returns 422 and a failed run; it is never silently truncated. Invalid output limits are rejected without attempting to prune history.
+
+With the same environment injection used above:
+
+```sh
+uv run python -m pytest tests/test_conversation_context.py tests/test_llama_adapter.py -q
+LOCAL_ASSISTANT_LIVE_E2E=1 uv run python -m pytest tests/integration/test_conversation_hardening.py -q -rs
+LOCAL_ASSISTANT_LIVE_E2E=1 uv run python -m pytest tests/ -q -rs --tb=short
+```
+
+Hardening tests use isolated conversation UUIDs and clean them in FK order. The crash test SIGKILLs only its own temporary Python worker, never PostgreSQL, Vault or CORE. The pool probe runs 12 blocked fake inferences and records zero checked-out DB connections during inference; this is an acceptance probe, not production pool metrics export.
+
+Latest T06 result: **127 passed in 9.27s**, zero skipped. ADR-017 defines the remaining owner isolation, runtime telemetry and shared DB backup/restore/restart gates; T06 remains PARTIAL.

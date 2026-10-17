@@ -1617,3 +1617,75 @@ Cả **4 ca trước đây SKIP nay PASS**: repository lifecycle, ConversationMa
 ## Tiến độ và giới hạn
 
 Roadmap, schema checkpoint, ADR-016 và runbook đã cập nhật T05 PASS cho localhost với bằng chứng trên. Không đánh dấu Day 15 DONE. Production AppRole/secret delivery, owner-based auth, concurrency/crash recovery, context trimming và PostgreSQL restart vẫn là các gate mở; chưa triển khai T06 trong lượt này.
+
+---
+
+# CHECKPOINT — 2026-10-17 — Commit T05 and implement D15-T06 hardening
+
+**Purpose:** Ghi nhận commit được yêu cầu, code hardening mới, kiểm thử thực tế và các release gates còn thiếu.
+
+## Git và phạm vi
+
+- Đã commit toàn bộ checkpoint D15-T05, ORM source bị ignore trước đó, tests, ADR-016, roadmap và dev log trên branch `develop`.
+- Commit thực tế: **`18f3175` — `feat(ai): add persistent conversation API and record verified T05 acceptance`**; 17 files, 1698 insertions, 33 deletions.
+- Tiếp tục đúng task kế tiếp D15-T06. Không chuyển Day 16; không thay preset policy, stateless router, LlamaGateway implementation, model/container configuration hoặc shared database schema.
+- Credential vẫn lấy đúng secret app trong Vault, tạo URL bằng SQLAlchemy và inject trong bộ nhớ vào child test environment. Không đưa operator token vào application/test children hoặc ghi secret vào output/Git.
+
+## Code đã triển khai
+
+- `src/application/services/conversation_context.py`: chọn system instructions và các cặp user/assistant nguyên vẹn; bỏ những user turn cũ chưa có câu trả lời; luôn giữ current user. Fit bằng token count qua callback và budget policy hiện hữu, loại từng cặp cũ nếu cần, trả 422 nếu current/system không thể fit.
+- `src/infrastructure/repositories/message_repository.py`: thêm bounded recent-context query cùng system instructions; khắc phục lỗi đọc first-500 khiến new message ngoài trang đầu bị báo inconsistent. Không xóa hay cắt text transcript.
+- `src/infrastructure/inference/llama_adapter.py`: resolve Auto một lần, dùng template/tokenizer và preset policy hiện hữu để fit trước inference; gateway vẫn recheck final input. Map timeout/connect/HTTP/malformed response thành InferenceFailure có status an toàn. Không thay logic model gateway đã PASS.
+- `src/infrastructure/repositories/inference_run_repository.py`: owner UUID + lease expiry trong JSONB có sẵn, DB clock để claim/renew/check; interrupted transition và expiry recovery có khóa. Không cần migration. Dữ liệu lease không lộ qua HTTP response schemas.
+- `src/application/services/conversation_manager.py`: lease mặc định 120s, heartbeat 30s qua transaction ngắn; race model coroutine với heartbeat, cancel và await tasks khi kết thúc; finalization khóa conversation rồi fence pending/owner/live lease trước khi insert assistant. Cancellation lưu interrupted; failed/finalization rollback có log an toàn. Recovery commit riêng trước reservation để 409 không rollback việc expire.
+- Các file Python đã đụng có module/class/function descriptions tiếng Anh; log theo ID/counter/code, không log prompt/reasoning/credential.
+- `docs/ADR/017-conversation-hardening.md`: rationale, locking/lease policy, lazy recovery, rollback/drain constraints, context strategy, helper coupling và các giới hạn. Roadmap, schema checkpoint và runbook đã cập nhật.
+
+## Tests mới và bằng chứng đã chạy
+
+Thêm ba test files:
+
+- `tests/test_conversation_context.py`: nguyên cặp, system/current preservation, tokenizer budget, irreducible overflow và invalid output settings.
+- `tests/test_llama_adapter.py`: actual gateway helpers qua HTTP mock transport; Auto chỉ resolve một lần, whole-turn trim, không lưu reasoning, timeout/connect/model-not-loaded/malformed responses.
+- `tests/integration/test_conversation_hardening.py`: PostgreSQL thật; cùng/khác request key, simultaneous reservation race với hai `pg_backend_pid()` khác nhau; rollback reservation/finalization; length/model/preset mismatch; cancellation; heartbeat renewal/loss; expiry fencing; legacy unowned pending preservation; history >500; pending update/archive/delete; pool capacity; SIGKILL disposable worker và real CORE tokenizer overflow.
+
+Mọi lệnh Python chạy qua uv. Operator wrapper gọi child bằng cùng interpreter của uv, chỉ inject credential app và `LOCAL_ASSISTANT_LIVE_E2E=1`:
+
+```sh
+uv run python -m pytest tests/test_conversation_context.py tests/test_llama_adapter.py -q --tb=short
+# 12 passed in 0.07s
+
+python -m pytest tests/ -q -rs --tb=short
+# Final: 127 passed in 9.27s
+# Exit 0, zero skipped, no exclusions
+
+python -m pytest tests/integration/test_conversation_hardening.py::test_pool_capacity_is_available_during_many_inferences -q -o log_cli=true --log-cli-level=INFO --tb=short
+# 1 passed in 0.36s
+# pool_saturation_probe blocked_inferences=12 checked_out=0
+```
+
+Các lượt integration trước đó đạt 21 PASS; sau khi bổ sung race barrier qua hai backend connections, legacy pending và heartbeat-loss tests, full suite cuối ở trên có 127 cases. Pool probe cleanup đủ 12 conversation do test tạo. Mỗi test cleanup theo UUID riêng, không xóa dữ liệu người dùng.
+
+Crash test thật khởi động một Python worker tạm với app credential, đợi marker sau reservation commit, SIGKILL đúng worker đó, đợi lease hết hạn rồi recovery. Kết quả: interrupted/lease_expired, không fake assistant, same-key không tự replay và intentional new-key chạy được. Không kill process API hiện hữu, CORE hay dịch vụ dùng chung.
+
+Live overflow test dùng current input 40000 lần `x ` qua template/tokenizer của CORE: nhận `context_overflow`/422, giữ nguyên user content trong DB, run failed và không có assistant_message_id. Đây là token-boundary evidence, không phải benchmark chất lượng model.
+
+Đã chạy formatter/lint qua uvx và compileall cho source/tests. Ruff phát hiện hai unused imports trong test mới và đã loại bỏ trước lượt full regression cuối. Import sorting/formatting và bổ sung descriptions không thay logic. `git diff --check` được dùng trước commit.
+
+## Kết luận Acceptance Criteria
+
+- [x] Race cùng/khác key, hai DB backend connections, đúng một inference, sequence không trùng, replay/conflict xác định.
+- [x] Rollback khi lỗi trước reserve commit và sau assistant insert/trước run complete.
+- [x] Không completed giả cho length/model/preset mismatch; current context overflow kiểm tra bằng tokenizer thật.
+- [x] Lease/heartbeat/expiry/fencing; cancellation và disposable-process crash; không tự replay pending/failed/interrupted.
+- [x] Không giữ DB session/transaction trong thời gian chờ model; pool probe 12 inferences/zero checked-out connections.
+- [x] Recent whole-turn context, system/current preservation và lịch sử hơn 500 messages.
+- [x] Pending update/archive/delete bị chặn; CORE E2E và gateway error mapping/regression còn PASS.
+- [x] Full suite 127/127 PASS, zero skipped.
+- [ ] Owner-based authentication/authorization và user-to-user negative access tests: V001 vẫn chưa có owner identity. Local peer/proxy/origin denial không thay cho quyền sở hữu.
+- [ ] Shared PostgreSQL restart: phải có backup, isolated restore verification và maintenance/recovery plan được review trước khi restart. Chưa thực hiện thao tác ảnh hưởng các consumer dùng chung.
+- [ ] Production pool metrics export/load SLOs, production scoped Vault bootstrap và definition-of-done review tổng thể vẫn mở.
+
+**Trạng thái: D15-T06 PARTIAL, Day 15 ACTIVE (5/6 tasks PASS).** Recovery mới là lazy-on-send hoặc explicit per-conversation; pending cũ không lease cần xác minh thủ công. T04 Auto pending vẫn lưu provisional balanced theo schema bắt buộc, full dependency inversion/Unit of Work vẫn chưa hoàn chỉnh. Khi rollback phải drain active runs trước, không chạy lẫn old/new writers không hiểu lease.
+
+**Bước tiếp theo:** hoàn tất owner identity/schema/access policy design và kế hoạch backup/isolated restore/maintenance cho shared PostgreSQL, rồi thực thi các gate còn lại với bằng chứng. Không đánh dấu DONE hoặc nhảy Day 16 khi các gate này còn mở.

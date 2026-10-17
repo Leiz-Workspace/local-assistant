@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.2 · **Updated:** 2026-10-17 (Asia/Ho_Chi_Minh)
+> **Version:** 3.3 · **Updated:** 2026-10-17 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **DAY 15 — D15-T05 PASS (localhost acceptance); NEXT = D15-T06 (Hardening/E2E).**
+> **CURRENT POSITION:** **DAY 15 — D15-T05 PASS; D15-T06 PARTIAL (hardening tested). NEXT = remaining T06 security/operations gates.**
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-17 local implementation checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
@@ -31,7 +31,7 @@
 | Stage | Development days | Status | Evidence / next work |
 |---|---:|---|---|
 | P1 — Machine, inference, two-profile baseline | D1–D14 | **PARTIAL / substantially implemented** | D1–D10 documented in dev log; later 32K, vision, MTP and runtime presets exercised. Full original D14 model quality/safety release gate not evidenced. |
-| P2a — Conversation persistence foundation | **D15** | **IN PROGRESS (5/6 tasks PASS)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. REST API passed real PostgreSQL, CORE E2E and actual API process restart; hardening remains. |
+| P2a — Conversation persistence foundation | **D15** | **IN PROGRESS (5/6 tasks PASS)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. REST API passed PostgreSQL/CORE/restart acceptance. T06 leases, races, cancellation and token-aware context verified; identity and DB restart gates remain. |
 | P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | TODO | Originally scheduled D15–D28, shifted by persistence prerequisite. |
 | P3 — Coding agent | D33–D46 | TODO | Scoped reads, patch approval, isolated tests. |
 | P4 — Web research | D47–D60 | TODO | Citation provenance, research tool controls and artifacts. |
@@ -50,9 +50,9 @@
 | D15-T03 | Domain, repository ports, SQLAlchemy models, PostgreSQL repositories | **PASS** | Real PostgreSQL lifecycle integration test passed. |
 | D15-T04 | Conversation Manager, inference port + adapter, replay/failure persistence | **PASS for defined tests** | 2 integration tests passed; 42 API/runtime regression tests passed. Concurrency/crash/context boundary **not** proven. |
 | **D15-T05** | **Persistent Conversation REST API** | **PASS (localhost)** | Vault-backed app credential; 4/4 integration PASS including CORE; full suite 94 PASS, zero SKIP; history/list/replay verified across two Uvicorn processes. |
-| D15-T06 | Concurrency, crash recovery, context trimming, actual LLM E2E, regressions | TODO | Independent tests including failure injection and restart. |
+| D15-T06 | Concurrency, crash recovery, context trimming, actual LLM E2E, regressions | **PARTIAL** | 127/127 full-suite PASS, zero SKIP; real cross-backend races, worker SIGKILL recovery, pool probe, tokenizer overflow. Ownership/auth and shared DB backup/restore/restart gates remain. |
 
-**Currently demonstrated:** 2026-10-17 Vault-backed verification: **4/4 integration PASS; full `pytest tests/`: 94 passed, zero skipped**. Real CORE persistent chat and list/history/idempotent replay across two actual Uvicorn processes passed. The old core smoke script still prints results without asserting them; pytest success is not a model-quality certification. **Not demonstrated:** multiworker safety, user identity authorization, production Vault bootstrap, pending-run lease recovery, whole-turn context trimming and PostgreSQL container restart.
+**Currently demonstrated:** 2026-10-17 Vault-backed verification: **127/127 full-suite PASS, zero skipped** after T06 hardening (T05 checkpoint was 94/94). Real CORE persistent chat and list/history/idempotent replay across two actual Uvicorn processes passed. The old core smoke script still prints results without asserting them; pytest success is not a model-quality certification. **Not demonstrated:** production multiworker operation, user ownership/authorization, production Vault bootstrap, runtime pool metrics export and shared PostgreSQL backup/restore/restart. Per-run leases, whole-turn context and a disposable-worker crash are now tested; see ADR-017.
 
 ---
 
@@ -206,9 +206,9 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 - [x] `src/application/services/conversation_manager.py` with two-transaction flow.
 - [x] Fake-inference test for persistence, replay, differing-key conflict and failure.
 - [x] Focused regression: 42 tests PASS plus 2 integration tests PASS.
-- [ ] Token-aware, whole-turn history trimming (currently message-count limit).
+- [x] Token-aware whole-turn trimming implemented in T06; keep system/current input, use actual gateway template/tokenizer, reject irreducible overflow.
 - [ ] Full dependency inversion/Unit of Work and finish-state retry semantics.
-- [ ] Timeout/cancellation/race/process-crash recovery.
+- [x] Defined T06 timeout mapping/cancellation/cross-backend races/leased disposable-process crash tests passed; broader operations/identity gates remain open.
 
 ### **D15-T05 — Conversation REST API — PASS for localhost (2026-10-17)**
 
@@ -233,23 +233,23 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 
 **Acceptance evidence:** `pytest tests/integration/ -q -rs --tb=short`: **4 passed in 1.18s** with LIVE_E2E enabled. Full `pytest tests/ -q -rs --tb=short`: **94 passed in 6.48s**, no exclusions/SKIPs. Separate HTTP check created a CORE response in process A, terminated A, launched process B and verified exact stored history, list visibility and cached replay with unchanged assistant ID. Temporary processes and test rows were cleaned up. T05 is PASS for localhost; Day 15 remains ACTIVE pending T06. See the append-only dev-log follow-up, ADR-016 and the local runbook.
 
-### D15-T06 — Hardening, E2E & resilience
+### D15-T06 — Hardening, E2E & resilience — PARTIAL (2026-10-17)
 
-- [ ] Concurrent same-key requests: exactly one inference and deterministic replay/conflict (test across connections).
-- [ ] Concurrent different-key requests same conversation: no duplicate sequence and at most one pending.
-- [ ] Failure injection between reservation / inference / finalization; ensure consistent rollback/error codes.
-- [ ] No incomplete `finish_reason=length` answer committed; verify model mismatch and context overflow.
-- [ ] Pending-orphan policy: lease/heartbeat/expiry, no unsafe restart replay; explicit interrupted state.
-- [ ] Do not hold transaction while waiting on LLM; instrument pool saturation.
-- [ ] Whole-turn history trimming and 32K actual tokenizer budgeting, including system context.
-- [ ] Prevent archive/delete during pending inference from causing a logically inconsistent committed answer.
-- [ ] Real CORE model E2E; model-not-loaded and gateway timeout paths.
-- [ ] Persistence test across API restart and, with backup/recovery precautions, DB restart.
-- [ ] Full `uv run python -m pytest` regression; record exact counts and skipped cases.
-- [ ] Security test: no user-to-user history access; no default external/public API exposure.
-- [ ] Dev log + ADR update + definition-of-done review.
+- [x] Concurrent same-key requests: exactly one inference and deterministic replay/conflict (test across connections).
+- [x] Concurrent different-key requests same conversation: no duplicate sequence and at most one pending.
+- [x] Failure injection between reservation / inference / finalization; ensure consistent rollback/error codes.
+- [x] No incomplete `finish_reason=length` answer committed; verify model mismatch and context overflow.
+- [x] Pending-orphan policy: owner/120s lease/30s heartbeat using DB time; lazy expiry recovery and explicit interrupted state. SIGKILLed test worker recovered; legacy unowned pending records require manual ownership review.
+- [x] No transaction/session held while waiting on LLM; acceptance logs show 12 blocked inferences with checked_out=0 against the 5+5 pool. Production metrics export/load SLOs remain open.
+- [x] Whole-turn history trimming and 32K actual tokenizer budgeting, including system context.
+- [x] Prevent archive/delete during pending inference from causing a logically inconsistent committed answer.
+- [x] Real CORE model E2E; model-not-loaded and gateway timeout paths.
+- [ ] API process restart verified in T05; shared PostgreSQL restart remains untested pending verified backup/isolated restore and a reviewed maintenance plan.
+- [x] Full `uv run python -m pytest` regression; record exact counts and skipped cases.
+- [ ] External peer/origin/proxy denial tests pass; user-to-user ownership isolation remains unimplemented. Keep the API localhost-only until identity/schema/negative-access tests are designed and verified.
+- [ ] ADR-017 and dev log updated; definition-of-done review remains incomplete until ownership and DB recovery/restart gates pass.
 
-**Important open risks in T04 implementation:** provisional `balanced` value stored while Auto still deciding; duplicate-key behavior for a previously failed run is conflict rather than auto-retry; last-N-messages can split user/assistant turns; crash may leave `pending`; current schema has no ownership identity. Do not declare production-ready before explicit mitigation/testing.
+**Remaining risks after T06 hardening:** pending Auto still stores the required provisional balanced field; old unowned pending runs cannot be automatically declared dead; recovery is lazy on send/explicit per-conversation invocation; old/new writer versions must not overlap during rollback. No user ownership, production credential bootstrap, production pool telemetry or shared-DB restore/restart certification. Test evidence: full suite **127 passed in 9.27s**; dedicated pool probe **1 passed in 0.36s**. No migration, policy or shared DB restart was performed. Day 15 remains ACTIVE.
 
 ---
 
@@ -434,8 +434,8 @@ sequenceDiagram
 | Priority | Risk / debt | Mitigation / owner task |
 |---|---|---|
 | P0 | V001 has no user/tenant ownership; UUID alone does not constitute authorization | D15-T05 local-only; D15-T06/D82 owner identity + access policy + schema migration |
-| P0 | Orphan `pending` inference after crash | D15-T06 lease/heartbeat/reconciliation; concurrency tests |
-| P0 | Conversation Manager currently trims last N messages, not whole turns or tokenizer-budgeted | D15-T06 correct truncation and context 32K tests |
+| P1 | Legacy unowned pending runs; old/new writer overlap during rollback | T06 leased runs now recover after expiry; manually verify legacy ownership and drain active runs before rollback (ADR-017) |
+| P1 | Persistent adapter depends on gateway private context/Auto helpers | Whole-turn/tokenizer budgeting now tested; extract a public planning port during planned dependency inversion |
 | P0 | Production Vault auth for FastAPI not yet configured | Scoped AppRole or Vault Agent/injector; never root in runtime |
 | P0 | User-provided files and web pages may contain hostile instructions | D17 onward sanitization/provenance; approval gate D33/D75 |
 | P0 | UNRESTRICTED profile could get side-effecting tools if policy accidentally shared | Enforce policy server-side with negative tests |
@@ -510,13 +510,13 @@ uv run python -m pytest \
 
 ## 10. Next-session execution order (Codex handoff)
 
-1. **D15-T05 is PASS for localhost. D15-T06 is NEXT:** retain the tested HTTP contract and app-only credential injection. Production Vault identity remains unconfigured; the API must never receive an operator/root token. Follow ADR-016 and the local runbook.
-2. Preserve the verified 4/4 integration and 94/94 full regression evidence. Extend hardening tests for concurrency, failure injection and crash recovery; keep stateless chat working.
-3. **D15-T06:** repair/extend the architecture for whole-turn context trimming, token cap, concurrent request safety and pending recovery; test the failure cases explicitly.
+1. **D15-T05 is PASS for localhost; D15-T06 remains PARTIAL:** define the owner identity/access contract, migration/backfill plan and negative authorization tests. Prepare shared DB backup/isolated restore/maintenance review before restart. Retain the tested HTTP contract and app-only credential injection. Production Vault identity remains unconfigured; the API must never receive an operator/root token. Follow ADR-016 and the local runbook.
+2. Preserve the verified 127/127 full regression evidence, including real PostgreSQL/CORE and disposable-worker crash tests. Keep stateless chat working and avoid changing validated runtime policy.
+3. **D15-T06:** complete remaining identity, production pool observability and DB restore/restart gates. Core concurrency, lease/cancellation, failure injection and whole-turn tokenizer budgeting are now implemented and tested.
 4. Record the results, commit reviewed changes, write an ADR for identity/permissions and credential provisioning.
 5. Advance to D16+ documents only after the D15 release gate is clearly accepted or unfinished issues are intentionally deferred with risk ownership.
 
-**Current formal checkpoint:** `D15-T04 = PASS (focused tests)`, **`D15-T05 = PASS (localhost)`**, `D15-T06 = NEXT / TODO`, **Day 15 remains ACTIVE**.
+**Current formal checkpoint:** `D15-T04 = PASS (focused tests)`, **`D15-T05 = PASS (localhost)`**, `D15-T06 = PARTIAL (remaining gates open)`, **Day 15 remains ACTIVE**.
 
 ---
 
@@ -528,3 +528,4 @@ uv run python -m pytest \
 | **v3.0** | **2026-10-16** | Reconciled original roadmap with terminal/dev-log evidence, recorded real D15 PostgreSQL/Vault/Alembic/Repository/Conversation Manager progress, moved file ingestion, and re-baselined remaining 90-day execution plan with codex-readable gates. |
 | **v3.1** | **2026-10-17** | Implemented T05 HTTP contracts, pool lifespan, safe local access and tests; 90 passed / 4 skipped with legacy live script excluded. T05 remains PARTIAL; no advance to T06/D16. Added ADR-016 and local runbook. |
 | **v3.2** | **2026-10-17** | Read existing app credential from Vault after operator unseal; corrected live test max_tokens to the existing 512-token minimum; 4/4 integration and 94/94 full suite PASS; verified actual API process restart and replay. T05 PASS for localhost; T06 NEXT. |
+| **v3.3** | **2026-10-17** | Committed T05 as 18f3175. Implemented T06 leases/heartbeat/fencing, cancellation, recent whole-turn context and tokenizer budgeting; 127/127 PASS, zero SKIP. ADR-017 records limits; owner isolation and shared DB restore/restart keep T06 PARTIAL. |
