@@ -1,10 +1,13 @@
+"""Coordinate leased, transactional conversation inference and safe replay."""
+
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
+import logging
 from dataclasses import dataclass
-from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -16,23 +19,31 @@ from src.application.ports.inference import (
     InferenceFailure,
     InferencePort,
 )
+from src.application.services.conversation_context import select_whole_turns
 from src.infrastructure.repositories.conversation_repository import (
     PostgresConversationRepository,
-)
-from src.infrastructure.repositories.message_repository import (
-    PostgresMessageRepository,
 )
 from src.infrastructure.repositories.inference_run_repository import (
     PostgresInferenceRunRepository,
 )
+from src.infrastructure.repositories.message_repository import (
+    PostgresMessageRepository,
+)
 
+logger = logging.getLogger(__name__)
 
 VALID_PRESETS = {
-    "auto", "fast", "balanced", "deep", "unlimited",
+    "auto",
+    "fast",
+    "balanced",
+    "deep",
+    "unlimited",
 }
 
 
 class ConversationError(Exception):
+    """Carry stable application error codes and HTTP status semantics."""
+
     def __init__(
         self,
         message: str,
@@ -40,6 +51,7 @@ class ConversationError(Exception):
         code: str,
         status_code: int,
     ) -> None:
+        """Attach the safe application code and status to an operation failure."""
         super().__init__(message)
         self.code = code
         self.status_code = status_code
@@ -47,6 +59,8 @@ class ConversationError(Exception):
 
 @dataclass(frozen=True, slots=True)
 class ConversationReply:
+    """Return persisted message identities, selected runtime and replay status."""
+
     conversation_id: UUID
     user_message_id: UUID
     assistant_message_id: UUID
@@ -60,6 +74,8 @@ class ConversationReply:
 
 @dataclass(frozen=True, slots=True)
 class _ReservedRun:
+    """Carry the committed reservation and selected model context."""
+
     run_id: UUID
     user_message_id: UUID
     messages: list[dict[str, str]]
@@ -93,12 +109,20 @@ class ConversationManager:
         session_factory: async_sessionmaker[AsyncSession],
         inference: InferencePort,
         max_history_messages: int = 24,
+        lease_seconds: float = 120,
+        heartbeat_seconds: float = 30,
     ) -> None:
+        """Initialize the configured dependencies and execution limits."""
         if max_history_messages < 1:
-            raise ValueError(
-                "max_history_messages must be positive"
-            )
+            raise ValueError("max_history_messages must be positive")
 
+        if not 0 < heartbeat_seconds < lease_seconds:
+            raise ValueError(
+                "heartbeat_seconds must be positive and shorter than lease_seconds"
+            )
+        self.owner_id = str(uuid4())
+        self.lease_seconds = lease_seconds
+        self.heartbeat_seconds = heartbeat_seconds
         self.session_factory = session_factory
         self.inference = inference
         self.max_history_messages = max_history_messages
@@ -112,6 +136,7 @@ class ConversationManager:
         temperature: float,
         max_tokens: int | None,
     ) -> str:
+        """Hash all generation-affecting parameters for deterministic request replay."""
         request = {
             "content": content,
             "profile": profile,
@@ -127,9 +152,7 @@ class ConversationManager:
             separators=(",", ":"),
         )
 
-        return hashlib.sha256(
-            serialized.encode("utf-8")
-        ).hexdigest()
+        return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     async def _reserve(
         self,
@@ -143,6 +166,7 @@ class ConversationManager:
         max_tokens: int | None,
         model_id: str,
     ) -> _ReservedRun | ConversationReply:
+        """Lock the conversation and atomically reserve a leased user inference."""
         fingerprint = self._fingerprint(
             content=content,
             profile=profile,
@@ -153,17 +177,13 @@ class ConversationManager:
 
         async with self.session_factory() as session:
             async with session.begin():
-                conversations = PostgresConversationRepository(
-                    session
-                )
+                conversations = PostgresConversationRepository(session)
                 messages = PostgresMessageRepository(session)
                 runs = PostgresInferenceRunRepository(session)
 
                 # Lock BEFORE checking request_key. Concurrent calls
                 # for the same conversation must serialize here.
-                conversation = await conversations.lock_active(
-                    conversation_id
-                )
+                conversation = await conversations.lock_active(conversation_id)
 
                 if conversation is None:
                     raise ConversationError(
@@ -187,10 +207,8 @@ class ConversationManager:
                     )
 
                     if existing is not None:
-                        stored_fingerprint = (
-                            existing.metadata.get(
-                                "request_fingerprint"
-                            )
+                        stored_fingerprint = existing.metadata.get(
+                            "request_fingerprint"
                         )
 
                         if stored_fingerprint != fingerprint:
@@ -201,11 +219,7 @@ class ConversationManager:
                                 status_code=409,
                             )
 
-                        previous = (
-                            await runs.get_by_user_message_id(
-                                existing.id
-                            )
-                        )
+                        previous = await runs.get_by_user_message_id(existing.id)
 
                         if previous is None:
                             raise ConversationError(
@@ -216,8 +230,7 @@ class ConversationManager:
 
                         if (
                             previous.status == "completed"
-                            and previous.assistant_message_id
-                            is not None
+                            and previous.assistant_message_id is not None
                         ):
                             assistant = await messages.get(
                                 previous.assistant_message_id
@@ -236,12 +249,8 @@ class ConversationManager:
                                 assistant_message_id=assistant.id,
                                 inference_run_id=previous.id,
                                 content=assistant.content,
-                                preset_requested=(
-                                    previous.preset_requested
-                                ),
-                                preset_selected=(
-                                    previous.preset_selected
-                                ),
+                                preset_requested=(previous.preset_requested),
+                                preset_selected=(previous.preset_selected),
                                 model_id=previous.model_id,
                                 cached=True,
                             )
@@ -250,22 +259,18 @@ class ConversationManager:
                         # request must not invoke the LLM again
                         # under the same idempotency key.
                         raise ConversationError(
-                            "This request already exists and "
-                            "is not completed.",
+                            "This request already exists and is not completed.",
                             code="request_already_exists",
                             status_code=409,
                         )
 
                 # Only one inference may be pending per
                 # conversation, regardless of request_key.
-                pending = await runs.get_pending(
-                    conversation_id
-                )
+                pending = await runs.get_pending(conversation_id)
 
                 if pending is not None:
                     raise ConversationError(
-                        "Another inference is pending for "
-                        "this conversation.",
+                        "Another inference is pending for this conversation.",
                         code="conversation_busy",
                         status_code=409,
                     )
@@ -284,11 +289,7 @@ class ConversationManager:
                 # LlamaGateway.complete() executes.
                 # The existing schema requires a non-null
                 # concrete preset while status is pending.
-                provisional_preset = (
-                    "balanced"
-                    if preset == "auto"
-                    else preset
-                )
+                provisional_preset = "balanced" if preset == "auto" else preset
 
                 run = await runs.create_pending(
                     conversation_id=conversation_id,
@@ -298,34 +299,29 @@ class ConversationManager:
                     model_id=model_id,
                 )
 
-                # Read persisted context and keep the latest
-                # complete messages; do not modify DB history.
-                history = await messages.list(
+                await runs.claim_lease(run.id, self.owner_id, self.lease_seconds)
+                history = await messages.list_for_context(
                     conversation_id,
-                    limit=500,
+                    limit=self.max_history_messages,
                 )
-
-                if history[-1].id != user_message.id:
+                if not history or history[-1].id != user_message.id:
                     raise ConversationError(
                         "Conversation history is inconsistent.",
                         code="inconsistent_history",
                         status_code=500,
                     )
-
-                context = [
-                    {
-                        "role": message.role,
-                        "content": message.content,
-                    }
-                    for message in history
-                ]
-
-                # Do not split messages or truncate message text.
-                # This is a bounded-history strategy, not an
-                # exact token-budget guarantee.
-                context = context[
-                    -self.max_history_messages:
-                ]
+                context = select_whole_turns(
+                    [
+                        {"role": message.role, "content": message.content}
+                        for message in history
+                    ],
+                    self.max_history_messages,
+                )
+                logger.info(
+                    "conversation_run_reserved conversation_id=%s run_id=%s",
+                    conversation_id,
+                    run.id,
+                )
 
                 return _ReservedRun(
                     run_id=run.id,
@@ -341,10 +337,8 @@ class ConversationManager:
         completion: CompletionResult,
         preset_requested: str,
     ) -> ConversationReply:
-        if (
-            completion.finish_reason != "stop"
-            or not completion.content.strip()
-        ):
+        """Fence ownership and atomically persist the verified assistant response."""
+        if completion.finish_reason != "stop" or not completion.content.strip():
             raise InferenceFailure(
                 "Cannot persist an incomplete model answer.",
                 code="incomplete_completion",
@@ -355,9 +349,17 @@ class ConversationManager:
                 messages = PostgresMessageRepository(session)
                 runs = PostgresInferenceRunRepository(session)
 
-                pending = await runs.get(
-                    reserved.run_id
-                )
+                conversations = PostgresConversationRepository(session)
+                conversation = await conversations.lock_active(conversation_id)
+                if conversation is None or not await runs.require_live_lease(
+                    reserved.run_id, self.owner_id
+                ):
+                    raise ConversationError(
+                        "Inference ownership or conversation state changed.",
+                        code="inference_state_conflict",
+                        status_code=409,
+                    )
+                pending = await runs.get(reserved.run_id)
 
                 if (
                     pending is None
@@ -383,9 +385,7 @@ class ConversationManager:
                     preset_selected=completion.preset_selected,
                     input_tokens=completion.input_tokens,
                     output_tokens=completion.output_tokens,
-                    reasoning_tokens=(
-                        completion.reasoning_tokens
-                    ),
+                    reasoning_tokens=(completion.reasoning_tokens),
                     latency_ms=completion.latency_ms,
                 )
 
@@ -396,6 +396,11 @@ class ConversationManager:
                         status_code=409,
                     )
 
+                logger.info(
+                    "conversation_run_completed conversation_id=%s run_id=%s",
+                    conversation_id,
+                    reserved.run_id,
+                )
                 return ConversationReply(
                     conversation_id=conversation_id,
                     user_message_id=reserved.user_message_id,
@@ -414,6 +419,7 @@ class ConversationManager:
         run_id: UUID,
         code: str,
     ) -> None:
+        """Record a failed inference using an independent committed transaction."""
         async with self.session_factory() as session:
             async with session.begin():
                 runs = PostgresInferenceRunRepository(session)
@@ -434,6 +440,7 @@ class ConversationManager:
         temperature: float = 0.7,
         max_tokens: int | None = None,
     ) -> ConversationReply:
+        """Validate, reserve, infer and finalize one idempotent conversation turn."""
         if not content or not content.strip():
             raise ConversationError(
                 "Message content must not be empty.",
@@ -462,9 +469,7 @@ class ConversationManager:
                 status_code=422,
             )
 
-        if request_key is not None and (
-            not request_key or len(request_key) > 128
-        ):
+        if request_key is not None and (not request_key or len(request_key) > 128):
             raise ConversationError(
                 "request_key must be 1–128 characters.",
                 code="invalid_request_key",
@@ -478,15 +483,14 @@ class ConversationManager:
                 status_code=422,
             )
 
-        if max_tokens is not None and not (
-            1 <= max_tokens <= 32768
-        ):
+        if max_tokens is not None and not (1 <= max_tokens <= 32768):
             raise ConversationError(
                 "max_tokens must be between 1 and 32768.",
                 code="invalid_max_tokens",
                 status_code=422,
             )
 
+        await self.recover_expired(conversation_id)
         reserved = await self._reserve(
             conversation_id=conversation_id,
             content=content,
@@ -502,7 +506,8 @@ class ConversationManager:
             return reserved
 
         try:
-            completion = await self.inference.complete(
+            completion = await self._run_inference(
+                reserved.run_id,
                 profile=profile,
                 messages=reserved.messages,
                 preset=preset,
@@ -518,15 +523,12 @@ class ConversationManager:
                     code="model_mismatch",
                 )
 
-            if (
-                completion.preset_selected not in {
-                    "fast", "balanced", "deep", "unlimited"
-                }
-                or (
-                    preset != "auto"
-                    and completion.preset_selected != preset
-                )
-            ):
+            if completion.preset_selected not in {
+                "fast",
+                "balanced",
+                "deep",
+                "unlimited",
+            } or (preset != "auto" and completion.preset_selected != preset):
                 raise InferenceFailure(
                     "Invalid preset selected by inference.",
                     code="preset_mismatch",
@@ -539,7 +541,24 @@ class ConversationManager:
                 preset_requested=preset,
             )
 
+        except asyncio.CancelledError:
+            logger.warning("conversation_request_cancelled run_id=%s", reserved.run_id)
+            try:
+                await asyncio.shield(
+                    self._interrupt(reserved.run_id, "request_cancelled")
+                )
+            except Exception:
+                logger.error(
+                    "conversation_interruption_persistence_failed run_id=%s",
+                    reserved.run_id,
+                )
+            raise
         except Exception as exc:
+            logger.warning(
+                "conversation_run_failed run_id=%s type=%s",
+                reserved.run_id,
+                type(exc).__name__,
+            )
             # Inference failures must not leave a reusable
             # pending reservation where possible.
             code = (
@@ -556,10 +575,65 @@ class ConversationManager:
                     code=code,
                 )
             except Exception:
-                # Preserve the original exception. If recovery
-                # fails, the run may remain pending; automated
-                # crash recovery belongs to the next hardening
-                # phase, not to this happy-path test.
-                pass
+                logger.error(
+                    "conversation_failure_persistence_failed run_id=%s", reserved.run_id
+                )
+                # Preserve the original error; the committed lease enables later recovery.
 
             raise
+
+    async def recover_expired(self, conversation_id: UUID) -> bool:
+        """Commit safe expiry recovery separately so a replay conflict cannot undo it."""
+        async with self.session_factory() as session, session.begin():
+            conversations = PostgresConversationRepository(session)
+            if await conversations.lock_active(conversation_id) is None:
+                return False
+            return await PostgresInferenceRunRepository(session).expire_pending(
+                conversation_id
+            )
+
+    async def _interrupt(self, run_id: UUID, code: str) -> None:
+        """Mark a cancelled owned reservation interrupted in a separate transaction."""
+        async with self.session_factory() as session, session.begin():
+            await PostgresInferenceRunRepository(session).interrupt(
+                run_id, error_code=code
+            )
+
+    async def _heartbeat(self, run_id: UUID) -> None:
+        """Renew the run lease using short independent transactions during inference."""
+        while True:
+            await asyncio.sleep(self.heartbeat_seconds)
+            async with self.session_factory() as session, session.begin():
+                valid = await PostgresInferenceRunRepository(session).renew_lease(
+                    run_id,
+                    self.owner_id,
+                    self.lease_seconds,
+                )
+            if not valid:
+                raise InferenceFailure(
+                    "Inference lease lost.", code="lease_lost", status_code=503
+                )
+
+    async def _run_inference(self, run_id: UUID, **parameters) -> CompletionResult:
+        """Stop inference on heartbeat loss and always await cancellation of child tasks."""
+        heartbeat = asyncio.create_task(self._heartbeat(run_id))
+        inference = asyncio.create_task(self.inference.complete(**parameters))
+        try:
+            done, _ = await asyncio.wait(
+                {heartbeat, inference}, return_when=asyncio.FIRST_COMPLETED
+            )
+            if heartbeat in done:
+                try:
+                    heartbeat.result()
+                except Exception as error:
+                    raise InferenceFailure(
+                        "Inference lease could not be renewed.",
+                        code="lease_lost",
+                        status_code=503,
+                    ) from error
+            return await inference
+        finally:
+            for task in (heartbeat, inference):
+                if not task.done():
+                    task.cancel()
+            await asyncio.gather(heartbeat, inference, return_exceptions=True)
