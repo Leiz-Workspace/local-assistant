@@ -272,3 +272,13 @@ ADR-029 adds per-page native/OCR/explicit VLM modes, source UUID/hash/page locat
 One OCR operation/response slot is owned through CPU/model completion and delivery; cancellation joins CPU threads and the deadline-bounded async model request before source FD close. Namespace/ready/hash fences apply before CPU/model disclosure and after processing. Earlier PDF/DOCX/XLSX contracts remain unchanged; output is ephemeral, schema/quota/source identity unchanged.
 
 English-only OCR raw scores are not calibrated probabilities; VLM always requires review/no numeric confidence. Table rows are unverified model data. Clean/scanned transcription, blank/blur uncertainty and actual Vietnamese table row/cell accuracy have independent golden criteria; degraded OCR errors must be retained rather than relabeled as successful transcription. Runbook/quality script specify bounds, limitations, failure semantics and reproducible artifacts.
+
+## 20. D22 deterministic private document chunks
+
+**Purpose:** Define the source-consumer extension implemented by ADR-030.
+
+The on-demand chunk API consumes accepted native PDF, DOCX, XLSX, UTF-8 text and D21 OCR views without changing source bytes, quota, schema or persistence. Text boundaries remain within a page/paragraph; declared DOCX heading ancestry supplies section references. Table/sheet rows remain atomic canonical JSON with exact paragraph/cell field spans, merge metadata and unchanged formulas/cache. Nested/overlapping table membership and cyclic section ancestry fail closed.
+
+Source/hash/parser/chunker/byte policy and complete chunk fields participate in deterministic IDs together with private owner/namespace/file identity. Public private/principal/opaque-scope labels describe authorization already performed by the server; neither IDs nor labels confer retrieval authority. Chunk text remains untrusted. OCR/VLM uncertainty, always-review and spreadsheet stale-cache flags survive transformation. Locators address extracted Unicode code points, not original binary bytes or rendered DOCX pages.
+
+One response-lifetime chunk slot retains the independently verified outer source FD plus reused parser contexts. FileService task tracking counts nested contexts so inner completion cannot remove an outer resource owner from shutdown inventory. Joined thread/model work and post-transform hash/ready checks fence deletion/corruption/cancellation. Incremental response metadata accounting bounds repeated merge/quality fields before final serialization. No dependency, service, migration, embedding, index or durable chunk lifecycle is introduced; D23 evaluation and later ingestion remain separate acceptance gates.
