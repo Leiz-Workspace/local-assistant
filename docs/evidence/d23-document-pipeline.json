@@ -1,0 +1,1137 @@
+{
+  "description": "Synthetic D23 pipeline evidence; case acceptance is distinct from transcription accuracy, API authorization and production load certification.",
+  "version": "mixed-document-evaluation-v1",
+  "corpus_version": "mixed-documents-v1",
+  "corpus_sha256": "13cf04393c2992de67a6d72fde843f6273a4ca52fa775661c77df6d53334a612",
+  "measured_at": "2026-10-18T13:27:02.403124+00:00",
+  "scope": "trusted_synthetic_offline_production_parsers_and_chunker",
+  "vision_explicitly_requested": true,
+  "complete": true,
+  "passed": true,
+  "cases": [
+    {
+      "id": "unicode",
+      "fixture": "pipeline/unicode.txt",
+      "source_sha256": "22893520c7aceb577bab6829b9a9f8d963900ebf17a6f9f7cb95cbf42b353495",
+      "input_bytes": 732,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true
+      },
+      "metrics": {
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 3,
+        "empty_sources": 0,
+        "reply_bytes": 2223
+      },
+      "processor": "utf8-text-v1",
+      "chunk_input_sha256": "22893520c7aceb577bab6829b9a9f8d963900ebf17a6f9f7cb95cbf42b353495",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.464
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 0.003
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.004
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.19
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.13
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.123
+        }
+      ],
+      "resources": {
+        "wall_ms": 115.981,
+        "child_cpu_ms": 1.915,
+        "child_peak_rss_kib_cumulative": 39828
+      }
+    },
+    {
+      "id": "notes",
+      "fixture": "pipeline/notes.md",
+      "source_sha256": "778b7dcc10187b9bd6bc217fc94001e634024ec63ef9c429eba37fab6cf97ca6",
+      "input_bytes": 95,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true
+      },
+      "metrics": {
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 1,
+        "empty_sources": 0,
+        "reply_bytes": 868
+      },
+      "processor": "utf8-text-v1",
+      "chunk_input_sha256": "778b7dcc10187b9bd6bc217fc94001e634024ec63ef9c429eba37fab6cf97ca6",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.139
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 0.001
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.003
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.092
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.052
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.069
+        }
+      ],
+      "resources": {
+        "wall_ms": 114.74,
+        "child_cpu_ms": 1.848,
+        "child_peak_rss_kib_cumulative": 39972
+      }
+    },
+    {
+      "id": "rows",
+      "fixture": "pipeline/rows.csv",
+      "source_sha256": "dfb7822f93623227ed815e44aff7749b0ba3117a2843113826083eb1f63127ea",
+      "input_bytes": 72,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true
+      },
+      "metrics": {
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 1,
+        "empty_sources": 0,
+        "reply_bytes": 849
+      },
+      "processor": "utf8-text-v1",
+      "chunk_input_sha256": "dfb7822f93623227ed815e44aff7749b0ba3117a2843113826083eb1f63127ea",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.129
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 0.001
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.003
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.091
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.06
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.069
+        }
+      ],
+      "resources": {
+        "wall_ms": 114.695,
+        "child_cpu_ms": 1.978,
+        "child_peak_rss_kib_cumulative": 39972
+      }
+    },
+    {
+      "id": "native-pdf",
+      "fixture": "pdf/native-pages.pdf",
+      "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "input_bytes": 1565,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true
+      },
+      "metrics": {
+        "source_fields": 3,
+        "covered_fields": 3,
+        "coverage_ratio": 1.0,
+        "chunks": 2,
+        "empty_sources": 1,
+        "reply_bytes": 1279
+      },
+      "processor": "native-pdf-v1:pypdf-6.21.1",
+      "chunk_input_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.159
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 114.306
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.007
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.132
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.078
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.084
+        }
+      ],
+      "resources": {
+        "wall_ms": 229.286,
+        "child_cpu_ms": 3.924,
+        "child_peak_rss_kib_cumulative": 39972
+      }
+    },
+    {
+      "id": "scan-native",
+      "fixture": "ocr/scanned.pdf",
+      "source_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "input_bytes": 33949,
+      "expected_outcome": "empty",
+      "checks": {
+        "exact_text": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true
+      },
+      "metrics": {
+        "source_fields": 2,
+        "covered_fields": 2,
+        "coverage_ratio": 1.0,
+        "chunks": 0,
+        "empty_sources": 2,
+        "reply_bytes": 726
+      },
+      "processor": "native-pdf-v1:pypdf-6.21.1",
+      "chunk_input_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "outcome": "empty",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.154
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 114.167
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.007
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.083
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.056
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.067
+        }
+      ],
+      "resources": {
+        "wall_ms": 229.079,
+        "child_cpu_ms": 3.637,
+        "child_peak_rss_kib_cumulative": 39972
+      }
+    },
+    {
+      "id": "docx-read",
+      "fixture": "docx/styled-table.docx",
+      "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+      "input_bytes": 38082,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "table_structure": true,
+        "styles": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "row_structure": true,
+        "section_mapping": true
+      },
+      "metrics": {
+        "source_fields": 7,
+        "covered_fields": 7,
+        "coverage_ratio": 1.0,
+        "chunks": 5,
+        "empty_sources": 0,
+        "reply_bytes": 4358
+      },
+      "processor": "docx-runs-v1:lxml-6.1.3",
+      "chunk_input_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.123
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 214.887
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.233
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.242
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.162
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.17
+        }
+      ],
+      "resources": {
+        "wall_ms": 330.313,
+        "child_cpu_ms": 3.424,
+        "child_peak_rss_kib_cumulative": 39972
+      }
+    },
+    {
+      "id": "xlsx-read",
+      "fixture": "xlsx/styled-formulas.xlsx",
+      "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "input_bytes": 5914,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_cells": true,
+        "formula_cache_uncertainty": true,
+        "formula_attributes": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "row_structure": true,
+        "cache_flag_propagation": true
+      },
+      "metrics": {
+        "source_fields": 11,
+        "covered_fields": 11,
+        "coverage_ratio": 1.0,
+        "chunks": 5,
+        "empty_sources": 0,
+        "reply_bytes": 6340
+      },
+      "processor": "xlsx-literals-v1:lxml-6.1.3",
+      "chunk_input_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.214
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 164.743
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.082
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.234
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.193
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.207
+        }
+      ],
+      "resources": {
+        "wall_ms": 280.208,
+        "child_cpu_ms": 3.697,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "ocr-clean",
+      "fixture": "ocr/clean.png",
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "input_bytes": 19636,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "character_error_rate": 0.0,
+        "word_error_rate": 0.0,
+        "transcription_passed": true,
+        "review_required": false,
+        "method": "tesseract",
+        "engine": "tesseract 5.5.0:eng",
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 1,
+        "empty_sources": 0,
+        "reply_bytes": 1271
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:tesseract:tesseract 5.5.0:eng",
+      "chunk_input_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.185
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 314.62
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.037
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.082
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.048
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.058
+        }
+      ],
+      "resources": {
+        "wall_ms": 429.789,
+        "child_cpu_ms": 3.521,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "scan-ocr",
+      "fixture": "ocr/scanned.pdf",
+      "source_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "input_bytes": 33949,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_text": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "character_error_rate": 0.0,
+        "word_error_rate": 0.0,
+        "transcription_passed": true,
+        "review_required": false,
+        "method": "tesseract",
+        "engine": "tesseract 5.5.0:eng",
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 1,
+        "empty_sources": 0,
+        "reply_bytes": 1271
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:tesseract:tesseract 5.5.0:eng",
+      "chunk_input_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.095
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 464.985
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.04
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.081
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.049
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.058
+        }
+      ],
+      "resources": {
+        "wall_ms": 580.062,
+        "child_cpu_ms": 3.58,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "ocr-blank",
+      "fixture": "ocr/blank.png",
+      "source_sha256": "43376ce08514b0af97854f51ca5dda6668ea49fe53f4e2ab7ecc73d4685294bd",
+      "input_bytes": 2898,
+      "expected_outcome": "empty",
+      "checks": {
+        "exact_text": true,
+        "empty_review": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "character_error_rate": 0.0,
+        "word_error_rate": 0.0,
+        "transcription_passed": true,
+        "review_required": true,
+        "method": "tesseract",
+        "engine": "tesseract 5.5.0:eng",
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 0,
+        "empty_sources": 1,
+        "reply_bytes": 1068
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:tesseract:tesseract 5.5.0:eng",
+      "chunk_input_sha256": "43376ce08514b0af97854f51ca5dda6668ea49fe53f4e2ab7ecc73d4685294bd",
+      "outcome": "empty",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.157
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 264.451
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.038
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.062
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.035
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.048
+        }
+      ],
+      "resources": {
+        "wall_ms": 379.318,
+        "child_cpu_ms": 3.539,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "scan-blank",
+      "fixture": "ocr/scanned.pdf",
+      "source_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "input_bytes": 33949,
+      "expected_outcome": "empty",
+      "checks": {
+        "exact_text": true,
+        "empty_review": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "character_error_rate": 0.0,
+        "word_error_rate": 0.0,
+        "transcription_passed": true,
+        "review_required": true,
+        "method": "tesseract",
+        "engine": "tesseract 5.5.0:eng",
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 0,
+        "empty_sources": 1,
+        "reply_bytes": 1068
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:tesseract:tesseract 5.5.0:eng",
+      "chunk_input_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "outcome": "empty",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.039
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 364.563
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.04
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.064
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.034
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.051
+        }
+      ],
+      "resources": {
+        "wall_ms": 479.298,
+        "child_cpu_ms": 3.385,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "ocr-degraded",
+      "fixture": "ocr/unclear.png",
+      "source_sha256": "1d98d3bb6dddcadae9b4fc891521edd449f6338c4fcd867950f5a458fb4b34ed",
+      "input_bytes": 2373,
+      "expected_outcome": "degraded",
+      "checks": {
+        "uncertainty_detection": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "character_error_rate": 1.0,
+        "word_error_rate": 1.0,
+        "transcription_passed": false,
+        "review_required": true,
+        "method": "tesseract",
+        "engine": "tesseract 5.5.0:eng",
+        "source_fields": 1,
+        "covered_fields": 1,
+        "coverage_ratio": 1.0,
+        "chunks": 0,
+        "empty_sources": 1,
+        "reply_bytes": 1067
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:tesseract:tesseract 5.5.0:eng",
+      "chunk_input_sha256": "1d98d3bb6dddcadae9b4fc891521edd449f6338c4fcd867950f5a458fb4b34ed",
+      "outcome": "degraded",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.223
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 214.277
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.035
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.062
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.035
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.047
+        }
+      ],
+      "resources": {
+        "wall_ms": 329.14,
+        "child_cpu_ms": 3.668,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "vision-table",
+      "fixture": "ocr/table-vie.png",
+      "source_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "input_bytes": 14009,
+      "expected_outcome": "accepted",
+      "checks": {
+        "exact_table": true,
+        "model_review": true,
+        "page_mapping": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "quality_propagation": true,
+        "row_structure": true
+      },
+      "metrics": {
+        "matched_cells": 6,
+        "expected_cells": 6,
+        "review_required": true,
+        "method": "local_vlm",
+        "engine": "qwen3.5-9b-core",
+        "source_fields": 7,
+        "covered_fields": 7,
+        "coverage_ratio": 1.0,
+        "chunks": 3,
+        "empty_sources": 1,
+        "reply_bytes": 3725
+      },
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0:local_vlm:qwen3.5-9b-core",
+      "chunk_input_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.081
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 164.234
+        },
+        {
+          "stage": "vision",
+          "wall_ms": 687.917
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.04
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.16
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.131
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.13
+        }
+      ],
+      "resources": {
+        "wall_ms": 967.236,
+        "child_cpu_ms": 3.447,
+        "child_peak_rss_kib_cumulative": 40228
+      }
+    },
+    {
+      "id": "docx-rewrite",
+      "fixture": "docx/styled-table.docx",
+      "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+      "input_bytes": 38082,
+      "expected_outcome": "accepted",
+      "checks": {
+        "independent_reopen": true,
+        "untouched_members": true,
+        "exact_text": true,
+        "table_structure": true,
+        "styles": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "row_structure": true,
+        "section_mapping": true
+      },
+      "metrics": {
+        "source_fields": 7,
+        "covered_fields": 7,
+        "coverage_ratio": 1.0,
+        "chunks": 5,
+        "empty_sources": 0,
+        "reply_bytes": 4363
+      },
+      "processor": "docx-runs-v1:lxml-6.1.3",
+      "chunk_input_sha256": "5a34829dcbf5129155efeeaf98cdfa344643c0d5e9759a7daa7f10a66acdca50",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.192
+        },
+        {
+          "stage": "rewrite",
+          "wall_ms": 214.582
+        },
+        {
+          "stage": "independent_reopen",
+          "wall_ms": 25.817
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 214.794
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.121
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.224
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.161
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.173
+        }
+      ],
+      "resources": {
+        "wall_ms": 570.907,
+        "child_cpu_ms": 5.595,
+        "child_peak_rss_kib_cumulative": 57932
+      }
+    },
+    {
+      "id": "xlsx-rewrite",
+      "fixture": "xlsx/styled-formulas.xlsx",
+      "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "input_bytes": 5914,
+      "expected_outcome": "accepted",
+      "checks": {
+        "independent_reopen": true,
+        "untouched_members": true,
+        "exact_cells": true,
+        "formula_cache_uncertainty": true,
+        "formula_attributes": true,
+        "span_valid": true,
+        "span_coverage": true,
+        "text_projection": true,
+        "identity_digest": true,
+        "source_binding": true,
+        "access_labels": true,
+        "byte_limits": true,
+        "deterministic_repeat": true,
+        "row_structure": true,
+        "cache_flag_propagation": true
+      },
+      "metrics": {
+        "source_fields": 11,
+        "covered_fields": 11,
+        "coverage_ratio": 1.0,
+        "chunks": 5,
+        "empty_sources": 0,
+        "reply_bytes": 6344
+      },
+      "processor": "xlsx-literals-v1:lxml-6.1.3",
+      "chunk_input_sha256": "277375e635f5c56df6d6fa59c816c5a887a484404744dd1afacc81d274ddf2dc",
+      "outcome": "accepted",
+      "passed": true,
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.098
+        },
+        {
+          "stage": "rewrite",
+          "wall_ms": 164.405
+        },
+        {
+          "stage": "independent_reopen",
+          "wall_ms": 83.419
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 164.406
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.155
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.371
+        },
+        {
+          "stage": "repeat_chunk",
+          "wall_ms": 0.239
+        },
+        {
+          "stage": "score",
+          "wall_ms": 0.217
+        }
+      ],
+      "resources": {
+        "wall_ms": 528.177,
+        "child_cpu_ms": 5.593,
+        "child_peak_rss_kib_cumulative": 73676
+      }
+    },
+    {
+      "id": "nested-table",
+      "fixture": "pipeline/nested.docx",
+      "source_sha256": "bdb7ca829c3266697e6d74bba8fee96ac5c1d100049a25d84fbe53507a65ce73",
+      "input_bytes": 36760,
+      "expected_outcome": "rejected",
+      "checks": {},
+      "metrics": {},
+      "error": {
+        "stage": "adapt",
+        "code": "unsupported_chunk_structure",
+        "status": 422
+      },
+      "passed": true,
+      "outcome": "expected_rejection",
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.032
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 215.048
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.073
+        }
+      ],
+      "resources": {
+        "wall_ms": 329.593,
+        "child_cpu_ms": 3.407,
+        "child_peak_rss_kib_cumulative": 73676
+      }
+    },
+    {
+      "id": "large-row",
+      "fixture": "xlsx/styled-formulas.xlsx",
+      "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "input_bytes": 5914,
+      "expected_outcome": "rejected",
+      "checks": {},
+      "metrics": {},
+      "error": {
+        "stage": "chunk",
+        "code": "chunk_row_too_large",
+        "status": 413
+      },
+      "passed": true,
+      "outcome": "expected_rejection",
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.126
+        },
+        {
+          "stage": "parse",
+          "wall_ms": 164.444
+        },
+        {
+          "stage": "adapt",
+          "wall_ms": 0.083
+        },
+        {
+          "stage": "chunk",
+          "wall_ms": 0.082
+        }
+      ],
+      "resources": {
+        "wall_ms": 279.166,
+        "child_cpu_ms": 3.484,
+        "child_peak_rss_kib_cumulative": 73804
+      }
+    },
+    {
+      "id": "invalid-pdf",
+      "fixture": "pipeline/invalid.pdf",
+      "source_sha256": "9705f62364996b9ce51d2758214d72c5c14b4d995598ee962180f4e4af619a39",
+      "input_bytes": 85,
+      "expected_outcome": "rejected",
+      "checks": {},
+      "metrics": {},
+      "error": {
+        "stage": "verify",
+        "code": "invalid_file_content",
+        "status": 415
+      },
+      "passed": true,
+      "outcome": "expected_rejection",
+      "stages": [
+        {
+          "stage": "verify",
+          "wall_ms": 114.082
+        }
+      ],
+      "resources": {
+        "wall_ms": 114.343,
+        "child_cpu_ms": 1.755,
+        "child_peak_rss_kib_cumulative": 73804
+      }
+    }
+  ],
+  "failures": [],
+  "quality_failures": [
+    {
+      "case": "ocr-degraded",
+      "code": "transcription_inaccurate",
+      "character_error_rate": 1.0,
+      "word_error_rate": 1.0
+    }
+  ],
+  "resource_notes": "Sequential wall/child CPU measurements; child peak RSS is cumulative Linux KiB, not per-case memory or CORE GPU usage. Parser kernel budgets are certified by regression, not inferred from these timings."
+}
