@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 
 from starlette.requests import ClientDisconnect
 
+from apps.api.services.vision_ocr import transcribe_image
 from src.application.services.docx_contract import DOCX_MEDIA, validate_plan
 from src.application.services.file_storage_policy import (
     DEFAULT_POLICY,
@@ -15,6 +16,7 @@ from src.application.services.file_storage_policy import (
     StoragePolicyError,
     plan_reservation,
 )
+from src.application.services.ocr_contract import validate_page
 from src.application.services.xlsx_contract import XLSX_MEDIA
 from src.application.services.xlsx_contract import validate_plan as validate_xlsx_plan
 from src.infrastructure.docx_processor import process_docx
@@ -24,6 +26,7 @@ from src.infrastructure.local_blob_storage import (
     BlobStorageError,
     LocalBlobStorage,
 )
+from src.infrastructure.page_ocr import prepare_page
 from src.infrastructure.pdf_extractor import EXTRACTOR_VERSION, extract_pdf
 from src.infrastructure.repositories.file_journal import (
     SAFE_ERRORS,
@@ -96,6 +99,25 @@ def process_xlsx_reader(reader, operation, plan):
         return process_xlsx(source, operation, plan)
 
 
+def prepare_ocr_reader(reader, suffix, number, mode):
+    """Retain the locked source throughout bounded rasterization/OCR subprocess work."""
+    with reader.extraction_reader() as source:
+        return prepare_page(source, suffix, number, mode)
+
+
+async def transcribe_owned_page(image_base64):
+    """Join the deadline-bounded local model request before releasing admission on cancellation."""
+    task = asyncio.create_task(transcribe_image(image_base64))
+    try:
+        return await asyncio.shield(task)
+    except asyncio.CancelledError:
+        try:
+            await finish_task(task)
+        except Exception:
+            logger.warning("vision_cancelled_operation_failed")
+        raise
+
+
 class FileService:
     """Own a single process's file operations, guarded I/O and bounded shutdown joins."""
 
@@ -118,6 +140,7 @@ class FileService:
         self._extractions = 0
         self._docx_operations = 0
         self._xlsx_operations = 0
+        self._ocr_operations = 0
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -493,6 +516,74 @@ class FileService:
             finally:
                 if admitted:
                     self._xlsx_operations -= 1
+                self.untrack(task)
+
+    @asynccontextmanager
+    async def ocr_operation(self, owner_id, file_id, *, number=1, mode="auto"):
+        """Own one page operation through source revalidation, optional local vision and response delivery."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            formats = {
+                "application/pdf": "pdf",
+                "image/png": "png",
+                "image/jpeg": "jpg",
+                "image/webp": "webp",
+            }
+            suffix = formats.get(row["detected_media_type"])
+            if suffix is None:
+                raise StoragePolicyError("ocr_source_required", 415)
+            if self._ocr_operations >= 1:
+                raise StoragePolicyError("ocr_processing_busy", 429)
+            self._ocr_operations += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            page = await file_io(prepare_ocr_reader, reader, suffix, number, mode)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if page["method"] == "vlm_pending":
+                vision = await transcribe_owned_page(page["image_base64"])
+                page.update(
+                    method="local_vlm",
+                    engine=vision["engine"],
+                    text=vision["text"],
+                    tables=vision["tables"],
+                    table_structure_status="unverified_vlm",
+                    uncertainties=page["uncertainties"] + vision["uncertain_regions"],
+                )
+                await file_io(
+                    reader.verify_integrity,
+                    row["actual_size_bytes"],
+                    row["actual_sha256"],
+                )
+                current = await self.journal.get(owner_id, file_id)
+                if current["state"] != "ready":
+                    raise StoragePolicyError("file_not_ready", 409)
+            page["image_base64"] = None
+            page = validate_page(page)
+            page.pop("image_base64")
+            logger.info(
+                "file_ocr_processed file_id=%s page=%d method=%s",
+                file_id,
+                number,
+                page["method"],
+            )
+            yield row, page
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._ocr_operations -= 1
                 self.untrack(task)
 
     async def shutdown(self):

@@ -2170,3 +2170,57 @@ D17 absolute package-root relationships/external/macro/DTD/nested-package restri
 Một lượt integration đầu còn tên `DocxResponse` trong XLSX construction-failure test; đã sửa thành `XlsxResponse`, rerun focused16 và full587 PASS. Chỉ final full sau sửa và golden refinement được dùng chốt milestone. Roadmap v3.13, ADR-028, design/runbook/golden README cập nhật cùng evidence; source-only full-file archive tại `/tmp` không chứa key/data/backup.
 
 **Next D21:** đánh giá P1 OCR/VLM fallback cho scans/images/tables, existing CORE vision/mmproj, bounded rasterization/model/VRAM budgets và uncertainty measurement. ADR trước backend/API mới; golden scanned/native comparisons, page/source mapping và full regression bắt buộc trước PASS. Có thể tách nhiều milestone nếu Acceptance Criteria chưa đạt; không tự nhảy D22.
+
+---
+
+# Ngày 21 — Per-page OCR/VLM fallback, confidence và uncertainty (2026-10-18)
+
+**Mục đích:** Ghi lại triển khai D21, ranh giới renderer/model và bằng chứng chất lượng thực tế sau D20 PASS.
+
+**Kết quả:** **D21 PASS trong phạm vi localhost/one worker: native PDF, English OCR và explicit local CORE VLM fallback**. Final full regression **641 passed in66.51s**, exit0, **0 SKIP**, không exclusions, real PostgreSQL/CORE;587 baseline +28 page/parser/kernel +10 vision protocol +12 HTTP/lifecycle +4 metric/live =641. D22 chunking là NEXT; chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox, D18 native page provenance và D19 response-lifetime ownership. ADR-029 được ghi trước code; rủi ro renderer hostile input, CPU/pixels/GPU budgets, hallucination/document instructions, uncertainty và delete/cancel races. Chọn xử lý **một trang mỗi request**; native-first `auto`, forced `ocr`, explicit `vlm`. Không tự model-call khi upload hoặc khi OCR confidence thấp. Không tools/history/context/indexing/remote URLs; source và quota/schema giữ nguyên.
+
+Máy có sẵn Tesseract5.5.0 (eng/osd, chưa có Vietnamese traineddata), Poppler26.01.0 và CORE alias qwen3.5-9b-core. Existing CORE thực sự đọc được image/table trong live drill; không restart/thêm inference container. Reuse Pillow/pypdf/bwrap hiện có, không thêm runtime/dev dependency hay migration. Scope tiếng Anh của OCR và unverified/always-review VLM được ghi rõ, không coi đây là chứng nhận arbitrary-language/layout accuracy.
+
+## Code và source/model boundary
+
+- `src/application/services/ocr_contract.py`: strict bounded page/word/box/table/model schemas, version/provenance, confidence/review invariants và safe validation. OCR score là character-weighted engine score, **không phải calibrated correctness probability**; VLM confidence luôn null, review luôn true.
+- `src/infrastructure/page_ocr.py`/`ocr_worker.py`: D17 verify source trước parse; PDF native text hoặc selected-page Poppler render; EXIF orientation/RGB/thumbnail và **xóa mọi metadata gồm ICC** trước PNG; Tesseract TSV nhận sanitized pixels, trả text/word boxes trong rendered pixel space. Read-only private sandbox, no private host paths/network/credentials. Child output dùng inherited anonymous bounded stdout, không writable scratch directory.
+- `apps/api/services/vision_ocr.py`: configured loopback CORE alias verified; no environment proxies/redirects; strict JSON Schema, fixed transcription-only prompt, no tools/history,1024 output tokens/temperature0/thinking off,45s total/64 KiB response. Finish reason/incomplete/schema failures fail closed, không trả model exception/text trong error/log. Chỉ sanitized raster vào explicit vision mode.
+- `FileService.ocr_operation()` giữ1 slot/active task/SH FD đến xong model/response hoặc cancellation. Owner/namespace/ready/size/hash trước CPU, hash/ready trước model disclosure và sau model. CPU thread được join; model async request bị client cancel cũng được join tới bounded completion trước release, tránh submit lặp do cancel. Không khẳng định server-side inference chắc chắn aborted sau network timeout; không restart shared server để xử lý cancel.
+- `apps/api/routes/ocr.py` + main: authenticated `POST /api/v1/files/{id}/ocr?page=1&mode=auto|ocr|vlm`. File UUID/hash/page locator/untrusted label, normalized boxes, engine/version, uncertainty/table status; không lộ raster/base64/path; private/no-store/nosniff. JSON cap sau provenance, construction failure/slow send/cancel đều đóng operation.
+- `scripts/ocr_acceptance.py`, golden README và tracked `docs/evidence/d21-ocr-acceptance.json`: reproducible synthetic-only quality drill. Metric artifact chỉ giữ version/hash/numeric evidence, không source/model text/image/keys. Default benchmark output vẫn ignored theo repository; retained evidence dùng explicit `--output docs/evidence/...`, không force-add private benchmark directories.
+
+## Resource và product limits
+
+Input image20M-pixel D17 bound; selected page normalized side≤2000/≤4M pixels, PNG≤4 MiB. Worker512 MiB RAM,8/9s per-process CPU,25s parent wall,32FD,zero core,8 MiB stdout; renderer/OCR child deadlines8/10s. Native/OCR/model lexical text64 KiB;5000 words;20 tables/100 rows/20 cells;public JSON1 MiB kể cả locator. Reject thay vì truncate; parent timeout test chứng minh namespace worker và nested child không giữ FD sau kill. One operation/response, no queue, excess429.
+
+`auto` chỉ dùng native PDF text nếu có; mixed pages có thể thiếu text trong image và được báo limitation, caller phải force OCR/VLM. OCR không infer table grid; điểm<85 hoặc không text cần review, English-only/order/table limitations luôn hiện. Empty output không chứng minh trang visual blank. VLM tables là unverified model data; source instructions không có quyền trở thành tools/actions. Calibrated confidence, arbitrary language/layout, load SLO và model server cancellation guarantees vẫn ngoài scope.
+
+## Chất lượng được đo, không che lỗi
+
+Retained metric artifact đã chạy lại bằng actual production parser/client:
+
+- clean.png và scanned.pdf/page1: **CER0/WER0** trên exact known English text; engine scores lần lượt95.634/95.898, không được diễn giải thành xác suất đúng. Source page1/2 và normalized word boxes đúng.
+- blank.png và scanned.pdf/page2: empty output, no numeric score, review required; không khẳng định mọi trang blank sẽ luôn được phân loại đúng.
+- unclear.png chứa ground truth `uncertain 7381`, bị blur mạnh: OCR không đọc được, **CER1.0/WER1.0 (100% error)**. Gate riêng là `uncertainty_detection`: review required và score absent/low. Không đổi ground truth thành empty để tạo accuracy giả, không gộp case này thành transcription success.
+- table-vie.png: actual CORE trả đúng **6/6 cells và exact row order** của table tiếng Việt. Đây là một clean golden, không general Vietnamese OCR benchmark; confidence vẫn null và review required. D18 native extraction trên scanned.pdf thật sự không có text, xác nhận cần fallback.
+
+## Tests và operational evidence
+
+1. **28 page/parser/kernel cases**: actual image/scan/native/blank/degraded/selected-page/error mapping, measured text/box quality, orientation/metadata stripping, forged page/box/nonfinite confidence/review/text/model-schema negatives; worker protocol failures, combined text/word/separator cap, actual kernel/private mount/env bounds và real nested-child timeout/reaping. Logs không lộ recognized text.
+2. **10 vision protocol cases**: actual request has strict schema/no tools/history/fixed token/thinking limits; alias/status/redirect/timeout/truncated/malformed/schema/oversized/choice failures safe. Prompt alone không được coi là security certificate.
+3. **12 real PostgreSQL HTTP/lifecycle cases**: auth/owner/namespace/ready/hash/source/page/provenance/private headers, no raster exposure, immutable source/quota; wrong type/corrupt/reply cap; delete/cancel/shutdown/post-parser tamper fenced **trước model disclosure**; pending model cancellation join giữ slot/FD, slow response giữ single slot và deletion quota; namespace/construction cleanup đúng.
+4. **4 metric/live-quality cases**: known character/word edit-distance oracles và actual CORE/Tesseract/Poppler golden evaluation, retained temp metric artifact không chứa source image/text. Full live flag được cấp qua existing Vault wrapper nên không skip model/DB acceptance.
+5. **Final:641 passed in66.51s**,0 skip/no exclusions. Intermediate641/66.34s và641/67.59s chỉ giữ lịch sử; final chạy sau sửa degraded-case oracle và ICC stripping. Focused37/5.42s +16/8.51s trước cuối; final thêm combined-separator budget case và expanded ICC metadata assertion. Operator `uv run python -m scripts.ocr_acceptance --output docs/evidence/d21-ocr-acceptance.json` exit0, retained5 cases +actual table6/6, degraded CER1.0, source SHA/engine versions verified.
+6. Ruff selected correctness/import `E4,E7,E9,F,I` (fixture re-export exceptionF811), format12 files, AST descriptions95 definitions, uv lock/diff checks PASS. Không tuyên bố full-repository policy lint ngoài phạm vi. Không dependency/lockfile/schema change.
+7. Post-test global file usage `(0,0,0)`, restore probes0; existing shared containers/CORE vẫn running/healthy, không restart/new instance. Private namespace/auth/paired backup không bị thay thế; tests dùng root/UUID riêng và cleanup đúng owner. Vault TLS helper chỉ giao app DATABASE_URL/live flag cho pytest, strip VAULT env/redact; parser/env không nhận keys.
+
+## Các phát hiện đã sửa trước PASS
+
+VLM JSON-object-only probe ban đầu sai schema và bị từ chối502; strict JSON Schema generation sửa được protocol, actual table6/6 PASS. Review scoring phát hiện blurred-case oracle không nên là empty: sửa thành actual source text và giữ CER100% với uncertainty gate riêng. Expanded JPEG test tái hiện Pillow giữ ICC profile dù đã re-encode PNG; assertion FAIL trước fix, `normalized.info.clear()` làm test PASS, rồi chạy lại full641. Chỉ final evidence sau tất cả sửa được dùng chốt D21.
+
+Roadmap v3.14, ADR-029, design/runbook/golden README và retained evidence cập nhật cùng tiến độ. Full-version source archive tại `/tmp` tách khỏi credentials/user data/backups. **Next D22:** P1 deterministic chunks theo page/paragraph/table/sheet, stable source/hash/version/span IDs và ACL labels; carry OCR/VLM review/uncertainty. ADR trước persistence/API mới; golden source mapping/size/idempotence/access tests +full regression phải PASS trước khi chuyển D23.
