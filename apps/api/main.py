@@ -18,6 +18,7 @@ from fastapi import FastAPI
 from apps.api.core.logging_config import configure_application_logging
 from apps.api.routes.chat import router as chat_router
 from apps.api.routes.conversations import router as conversation_router
+from apps.api.routes.files import router as file_router
 from apps.api.routes.health import router as health_router
 from apps.api.storage.lifecycle import conversation_lifespan
 
@@ -43,4 +44,5 @@ app.include_router(
 )
 
 app.include_router(conversation_router, prefix="/api/v1")
+app.include_router(file_router, prefix="/api/v1")
 logging.getLogger(__name__).info("api_routers_registered")

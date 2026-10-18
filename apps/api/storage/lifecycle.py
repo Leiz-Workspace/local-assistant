@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from apps.api.services.conversations import ConversationService
+from apps.api.storage.files import initialize_file_service
 from src.infrastructure.database.connection import (
     create_database_engine,
     create_session_factory,
@@ -25,11 +26,15 @@ async def conversation_lifespan(app: FastAPI):
     sampler = None
     app.state.pool_telemetry = None
     app.state.conversation_service = None
+    app.state.file_service = None
     try:
         if os.environ.get("DATABASE_URL"):
             try:
                 engine = create_database_engine()
                 app.state.conversation_service = ConversationService(
+                    create_session_factory(engine)
+                )
+                app.state.file_service = await initialize_file_service(
                     create_session_factory(engine)
                 )
                 telemetry = PoolTelemetry(engine)
@@ -45,6 +50,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.file_service is not None:
+            await app.state.file_service.shutdown()
+            app.state.file_service = None
         app.state.conversation_service = None
         if sampler is not None:
             sampler.cancel()

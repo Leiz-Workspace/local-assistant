@@ -750,3 +750,65 @@ def test_context_entry_failure_closes_its_handle(storage, tmp_path):
         with writer:
             pytest.fail("Unsafe inode was admitted")
     assert len(os.listdir("/proc/self/fd")) == before
+
+
+@pytest.mark.parametrize("fault", ["size", "hash"])
+def test_ready_integrity_check_rejects_metadata_mismatch(storage, fault):
+    """Detect corrupt metadata/bytes through an already locked reader before download admission."""
+    identity = write_ready(storage)
+    with storage.open_reader(identity) as reader:
+        reader.verify_integrity(len(PAYLOAD), hashlib.sha256(PAYLOAD).hexdigest())
+        with pytest.raises(BlobStorageError, match="blob_integrity_mismatch"):
+            reader.verify_integrity(
+                len(PAYLOAD) + (fault == "size"),
+                "0" * 64 if fault == "hash" else hashlib.sha256(PAYLOAD).hexdigest(),
+            )
+
+
+def test_writer_uses_admitted_snapshot_after_current_policy_change(storage):
+    """Honor a reservation snapshot even when the process's new-admission limits differ."""
+    original = DEFAULT_POLICY
+    storage.policy = replace(original, max_file_bytes=10, chunk_bytes=1)
+    plan = make_plan()
+    with pytest.raises(StoragePolicyError, match="file_too_large"):
+        storage.create_writer(plan, uuid4())
+    with storage.create_writer(plan, uuid4(), policy=original) as writer:
+        writer.write(PAYLOAD)
+        writer.seal()
+        writer.publish()
+
+
+def test_root_namespace_survives_reopen_and_supports_explicit_paired_restore(tmp_path):
+    """Preserve root identity across restart and only copy it by explicit trusted restore input."""
+    with LocalBlobStorage(tmp_path / "source") as source:
+        namespace = source.namespace_id
+    with LocalBlobStorage(tmp_path / "source") as reopened:
+        assert reopened.namespace_id == namespace
+    with LocalBlobStorage(tmp_path / "restored", namespace_id=namespace) as restored:
+        assert restored.namespace_id == namespace
+    with pytest.raises(BlobStorageError, match="storage_namespace_mismatch"):
+        LocalBlobStorage(tmp_path / "source", namespace_id=uuid4())
+
+
+@pytest.mark.parametrize("kind", ["corrupt", "public", "hardlink", "symlink"])
+def test_bad_namespace_marker_fails_closed_without_fd_leak(tmp_path, kind):
+    """Refuse damaged or aliased identity markers instead of assigning a fresh root identity."""
+    root = tmp_path / "blobs"
+    with LocalBlobStorage(root):
+        pass
+    marker = root / ".storage-namespace"
+    original = marker.read_bytes()
+    if kind == "corrupt":
+        marker.write_bytes(b"bad")
+    elif kind == "public":
+        marker.chmod(0o644)
+    elif kind == "hardlink":
+        os.link(marker, tmp_path / "alias")
+    else:
+        marker.rename(tmp_path / "identity")
+        marker.symlink_to(tmp_path / "identity")
+    before = len(os.listdir("/proc/self/fd"))
+    with pytest.raises((BlobStorageError, OSError)):
+        LocalBlobStorage(root)
+    assert len(os.listdir("/proc/self/fd")) == before
+    assert marker.read_bytes() == (b"bad" if kind == "corrupt" else original)
