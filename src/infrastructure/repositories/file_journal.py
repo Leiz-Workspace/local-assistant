@@ -54,13 +54,48 @@ def usage(row) -> UsageSnapshot:
     )
 
 
+def policy_from_snapshot(snapshot) -> StoragePolicy:
+    """Separate immutable storage context from validated reservation policy limits."""
+    values = dict(snapshot)
+    namespace = values.pop("_storage_namespace", None)
+    if namespace is not None and (
+        not isinstance(namespace, str) or str(UUID(namespace)) != namespace
+    ):
+        raise ValueError("Invalid storage namespace snapshot")
+    return StoragePolicy(**values)
+
+
 class PostgresFileJournal:
     """Own atomic file admission, fencing and counter release without payload I/O."""
 
-    def __init__(self, session_factory, policy: StoragePolicy = DEFAULT_POLICY):
+    def __init__(
+        self,
+        session_factory,
+        policy: StoragePolicy = DEFAULT_POLICY,
+        *,
+        namespace_id: UUID | None = None,
+    ):
         """Reuse the existing bounded application pool and versioned admission policy."""
         self.sessions = session_factory
         self.policy = policy
+        if namespace_id is not None and not isinstance(namespace_id, UUID):
+            raise ValueError("Invalid storage namespace")
+        self.namespace_id = namespace_id
+
+    def _belongs(self, row) -> bool:
+        """Bind runtime operations to their root while preserving trusted unscoped maintenance."""
+        return self.namespace_id is None or row["policy_snapshot"].get(
+            "_storage_namespace"
+        ) == str(self.namespace_id)
+
+    @property
+    def _namespace_filter(self) -> str:
+        """Return only static SQL for an optional internal storage-namespace scope."""
+        return (
+            " AND policy_snapshot->>'_storage_namespace'=:namespace"
+            if self.namespace_id is not None
+            else ""
+        )
 
     async def _lock_usage(self, session, owner_id: UUID):
         """Lock global then owner counters, initializing an owner under the global lock."""
@@ -109,7 +144,7 @@ class PostgresFileJournal:
             .mappings()
             .one_or_none()
         )
-        if row is None:
+        if row is None or not self._belongs(row):
             raise StoragePolicyError("file_not_found", 404)
         return dict(row)
 
@@ -159,6 +194,8 @@ class PostgresFileJournal:
                     .one_or_none()
                 )
                 if existing is not None:
+                    if not self._belongs(existing):
+                        raise StoragePolicyError("file_storage_namespace_mismatch", 503)
                     if existing["request_fingerprint"] != plan.fingerprint:
                         raise StoragePolicyError("file_request_conflict", 409)
                     if existing["state"] == "ready" or (
@@ -196,7 +233,16 @@ class PostgresFileJournal:
                             "key": plan.request_key,
                             "fingerprint": plan.fingerprint,
                             "storage": plan.storage_key,
-                            "policy": json.dumps(asdict(self.policy)),
+                            "policy": json.dumps(
+                                {
+                                    **asdict(self.policy),
+                                    **(
+                                        {"_storage_namespace": str(self.namespace_id)}
+                                        if self.namespace_id is not None
+                                        else {}
+                                    ),
+                                }
+                            ),
                             "ttl": self.policy.reservation_seconds,
                         },
                     )
@@ -231,7 +277,7 @@ class PostgresFileJournal:
                 .mappings()
                 .one_or_none()
             )
-        if row is None:
+        if row is None or not self._belongs(row):
             raise StoragePolicyError("file_not_found", 404)
         logger.info("file_metadata_read file_id=%s", file_id)
         return dict(row)
@@ -250,10 +296,15 @@ class PostgresFileJournal:
                 (
                     await session.execute(
                         text(
-                            f"SELECT * FROM assistant.files WHERE owner_id=:owner AND {VISIBLE} "
+                            f"SELECT * FROM assistant.files WHERE owner_id=:owner AND {VISIBLE} {self._namespace_filter} "
                             "ORDER BY created_at DESC,id DESC LIMIT :limit OFFSET :offset"
                         ),
-                        {"owner": owner_id, "limit": limit, "offset": offset},
+                        {
+                            "owner": owner_id,
+                            "limit": limit,
+                            "offset": offset,
+                            "namespace": str(self.namespace_id),
+                        },
                     )
                 )
                 .mappings()
@@ -269,7 +320,7 @@ class PostgresFileJournal:
         async with self.sessions() as session, session.begin():
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
-            policy = StoragePolicy(**row["policy_snapshot"])
+            policy = policy_from_snapshot(row["policy_snapshot"])
             result = (
                 (
                     await session.execute(
@@ -308,7 +359,7 @@ class PostgresFileJournal:
         async with self.sessions() as session, session.begin():
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
-            policy = StoragePolicy(**row["policy_snapshot"])
+            policy = policy_from_snapshot(row["policy_snapshot"])
             result = (
                 (
                     await session.execute(
@@ -527,12 +578,13 @@ class PostgresFileJournal:
                 (
                     await session.execute(
                         text(
-                            "SELECT * FROM assistant.files WHERE state='purging' OR "
+                            "SELECT * FROM assistant.files WHERE (state='purging' OR "
                             "(state='reserved' AND reservation_expires_at<=clock_timestamp()) OR "
-                            "(state IN ('receiving','verifying') AND lease_expires_at<=clock_timestamp()) "
+                            "(state IN ('receiving','verifying') AND lease_expires_at<=clock_timestamp())) "
+                            f"{self._namespace_filter} "
                             "ORDER BY updated_at,id LIMIT :limit"
                         ),
-                        {"limit": limit},
+                        {"limit": limit, "namespace": str(self.namespace_id)},
                     )
                 )
                 .mappings()

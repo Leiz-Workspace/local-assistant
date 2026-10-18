@@ -1972,3 +1972,27 @@ Tests `tests/test_file_verifier.py`: **62 passed in 6.05s**. Bao gồm đủ 10 
 Full Vault-backed suite: **389 passed in 17.53s**, exit0, zero SKIP/no exclusions, PostgreSQL + CORE thật. 389 = 327 prior + 62 verifier. Ruff/format, AST descriptions và git diff --check PASS. Không đổi schema hoặc runtime Day 15 trong T03.
 
 **Tiếp tục ngay T04:** owner-authenticated reserve/raw PUT/list/detail/download/delete, metadata/body bounds, heartbeat/deadline/cancellation, FD-safe off-event-loop I/O và honest pending cleanup. Sau đó T05 reconciliation/paired restore; D17 còn mở.
+
+
+---
+
+# CHECKPOINT — 2026-10-18 — D17-T04 authenticated file HTTP and durable root binding
+
+**Purpose:** Ghi nhận HTTP/service/lifespan có tests thật và fix wrong-root cleanup trước recovery; tiếp tục T05 ngay.
+
+**Trạng thái:** T04 local HTTP scope PASS. D17 IN PROGRESS; T05 recovery/paired restore/process restart chưa PASS. Feature mặc định disabled.
+
+- T03 commit `d28a111`. Thêm `apps/api/services/files.py`, `routes/files.py`, `storage/files.py`; chỉ sửa main/lifespan Day 15 ở chỗ cần register optional router/resources, dùng lại auth UUID/loopback và pool cũ.
+- POST metadata bounded8KiB trước JSON parse, reject duplicate/unknown fields; raw PUT không multipart/pre-admission spooling; actual bytes/hash/MIME enforced. List/detail/download/delete luôn owner scoped; explicit DTO không lộ internal owner/path/key/fingerprint/lease/purge token.
+- File I/O/hash/verifier chạy thread ngoài SQL transaction. Shield+join trước propagate cancel; đóng cả guard/handle mà caller bị cancel trước khi nhận kết quả. Response close reader ngay cả khi send header bị cancel trước generator entry. Shutdown join request trước pool dispose.
+- Heartbeat sample serialized chống progress regression; idle và absolute wall deadline không được kéo dài bởi byte progress. Dùng policy snapshot cho writer; ready release slot, physical purge mới release bytes/files. Delete202 khi reader/writer/FS lỗi giữ quota, 204 sau cleanup thật.
+- Download lock SH, verify size/SHA từ FD rồi recheck owned-ready trước header; attachment/nosniff/private no-store. Missing/corrupt blob503 không gửi bytes sai hoặc tự trả quota.
+- Review phát hiện rủi ro cấu hình root rỗng/test root làm cleanup nhầm: thêm private durable `.storage-namespace` marker, namespace context immutable trong JSONB snapshot; runtime journal và recovery scoped; startup từ chối root khác cho allocations của current principals. Không sửa migration V002; không auto-adopt legacy/unbound rows. ADR-023/024 ghi rationale/P0/dependency/effort/risk/rollback.
+
+`tests/integration/test_file_http.py`: **31 cases** với PostgreSQL/FS thật. `tests/test_local_blob_storage.py` thêm **8 cases**, tổng FS74. Bao gồm HTTP roundtrip text/image/PDF/provenance/replay, owner/auth/proxy, malformed/chunked metadata, short/overflow/hash/MIME, held-reader delete202, bad blob503, pool/write/publish fault injection, verifier FD/guard cancellation, header-before-generator cancel, idle/wall deadlines, shutdown joins và root namespace restart/restore/tamper/cross-root denial.
+
+Focused đầu có một test MIME khai báo hash của text khác payload binary nên đúng ra dừng ở hash422; sửa fixture để declared hash khớp binary rồi test thực sự đi tới MIME415, không nới code để chiều test.
+
+Full Vault-backed regression sau fix/binding: **428 passed in 24.12s**, exit0, zero SKIP/no exclusions, PostgreSQL + CORE thật. Các lượt trước 419/20.83s và421/23.98s là intermediate; 428 là final checkpoint. 428=389 prior+31 HTTP+8 FS. Ruff/format/AST descriptions/compile/git diff checks thực hiện; không tạo production payload root hoặc bật API deployment.
+
+**Tiếp tục T05:** namespace-scoped recovery/fair pending retries; paired DB/blob/identity snapshot và isolated restore; actual authenticated API process restart/cleanup; full regression và final D17 acceptance review.

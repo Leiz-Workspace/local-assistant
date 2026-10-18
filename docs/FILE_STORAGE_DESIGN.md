@@ -216,3 +216,12 @@ All **24 real journal cases** passed in the full **327 passed in 11.41s** regres
 The isolated verifier now handles every allowed format from a sealed FD. [ADR-022](ADR/022-isolated-file-verification.md) defines read-only runtime/code mounts, cleared environment, separate Linux namespaces/network, no host data mounts, CPU/RAM/FD/file-output/wall limits, exact format subsets and fail-closed behavior. Existing Bubblewrap 0.11.1 was reused; uv added only pypdf 6.21.1 and defusedxml 0.7.1. No routes or live payload root enabled.
 
 **62 tests passed in 6.05s** for valid formats/hostile containers, real host-file/environment/network isolation and kernel resource limits, real timeout with no leftover process, malformed worker verdicts and log privacy. Complete regression: **389 passed in 17.53s**, zero skipped/no exclusions with existing PostgreSQL/CORE. T04 HTTP integration and T05 paired restore/reconciliation remain open; D17 is not complete.
+
+
+## 14. D17-T04 HTTP and root identity checkpoint — 2026-10-18
+
+Authenticated direct-loopback POST reservation, raw PUT, list/detail/download/delete are implemented behind `ASSISTANT_FILES_ENABLED=1`; default remains disabled. Explicit DTOs hide internal keys/leases/owner overrides. Service joins offloaded I/O on cancellation, preserves FD locks through fenced publication, uses per-reservation policy, enforces idle/wall deadlines and serves only size/hash-verified ready bytes. Delete returns 202 while physical cleanup is pending and 204 only after purge/release.
+
+[ADR-023](ADR/023-file-http-and-cancellation.md) specifies the HTTP/FD/cancellation protocol. [ADR-024](ADR/024-storage-root-identity.md) binds immutable snapshots to a durable private `.storage-namespace` marker, scopes runtime journal/recovery and rejects startup against a wrong root for outstanding current-principal allocations. This closes wrong-root quota release without modifying V002. Restore must preserve namespace and principal UUIDs explicitly.
+
+Full regression: **428 passed in 24.12s**, zero skipped/no exclusions (389 prior + 31 HTTP/service + 8 additional FS cases). Tests prove owner/auth/proxy negatives, streaming metadata/body bounds, byte/hash/MIME failures, reader-held delete, missing/corrupt ready blobs, I/O/DB error sanitization, verifier/guard cancellation joins, idle/wall deadlines, joined shutdown and wrong-root denial. T05 reconciliation, paired restore and actual API process restart remain open; D17 is IN PROGRESS.

@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.8 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
+> **Version:** 3.9 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **D17 IN PROGRESS — T01 filesystem and T02 V002/journal/quota accepted; T03 isolated MIME verifier accepted; T04 HTTP is NEXT. Paired restore remains TODO. Do not advance to D18.**
+> **CURRENT POSITION:** **D17 IN PROGRESS — T01 filesystem and T02 V002/journal/quota accepted; T03 verifier and T04 authenticated HTTP/root binding accepted; T05 recovery/paired restore is NEXT. Do not advance to D18.**
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
@@ -54,7 +54,7 @@
 | **D16** | **Bounded file metadata/storage design and policy** | **PASS (design/policy)** | Spec + ADR-019 reviewed; 86 policy cases PASS; full suite 237/237 PASS; V001 unchanged. No migration, blob adapter or upload API introduced in D16. |
 | **D17-T01** | **Private local filesystem adapter** | **PASS (FS-only); D17 IN PROGRESS** | 66 FS tests; full 303/303 PASS; real process locks/SIGKILL at 8 publication boundaries; ADR-020. No DB migration or HTTP route applied. |
 
-**Currently demonstrated:** 2026-10-18 **389 passed in 17.53s**, zero skipped/no exclusions, with real PostgreSQL and CORE (327 prior + 62 verifier cases). D17-T01 FS, T02 repository and T03 verifier scopes are accepted. Reviewed V002 adds three tables after fresh backup/restore; existing conversation/message/run rows and owner/ACL fingerprints are unchanged. HTTP and paired blob restore remain TODO; D17 is IN PROGRESS. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
+**Currently demonstrated:** 2026-10-18 **428 passed in 24.12s**, zero skipped/no exclusions, with real PostgreSQL and CORE (389 prior + 31 HTTP/service cases + 8 additional FS cases). D17-T01 through T04 local scopes are accepted, including durable root namespace binding. Reviewed V002 adds three tables after fresh backup/restore; existing conversation/message/run rows and owner/ACL fingerprints are unchanged. Restart reconciliation and paired blob restore remain TODO; D17 is IN PROGRESS. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
 
 ---
 
@@ -283,8 +283,8 @@ Keep D17 open until all acceptance gates pass. Implement one task ID at a time; 
 | D17-T01 | Private descriptor-based local adapter, bounded writes/hash, durable no-replace publication, reader/writer/resource locks and physical purge | **PASS for FS-only scope**; 66 tests with real files/processes, 8 SIGKILL publication boundaries, injected I/O failures; ADR-020. Not imported by runtime. |
 | D17-T02 | Reviewed V002, app grants and owner/global atomic quota/replay/journal repositories | **PASS (repository scope)**; verified fresh backup/restore, V002 applied by existing migrator, 24 real journal cases and full 327 PASS; retain guard through post-lock DB claim |
 | D17-T03 | Bounded MIME/container verification for every allowed format | **PASS (verifier scope)**; 62 cases, actual Bubblewrap namespaces/resource bounds; 389 full-suite PASS/0 SKIP |
-| D17-T04 | Authenticated owner-scoped reserve/raw PUT/list/detail/download/delete HTTP, deadlines and cancellation | **NEXT / TODO**; T02/T03, off-event-loop FS work, honest pending cleanup |
-| D17-T05 | DB/FS restart reconciliation, quota/HTTP races, paired metadata/blob restore and full regression | TODO; T02–T04; required before D17 PASS or enabling routes |
+| D17-T04 | Authenticated owner-scoped reserve/raw PUT/list/detail/download/delete HTTP, deadlines and cancellation | **PASS (local HTTP scope)**; 31 HTTP/service cases, root identity binding; full 428 PASS/0 SKIP; default feature disabled |
+| D17-T05 | DB/FS restart reconciliation, quota/HTTP races, paired metadata/blob restore and full regression | **NEXT / TODO**; T02–T04; required before D17 PASS or deployment enablement |
 
 No production blob root, migration, new service or HTTP route was introduced by T01. T02 subsequently applied reviewed additive V002 after verified backup/restore; HTTP admission remains disabled. Its test roots are disposable. Protected auth/backups/model directories are never used by blob cleanup. Empty resource lock directories remain intentionally stable; retention requires a separate reviewed policy.
 
@@ -293,7 +293,7 @@ No production blob root, migration, new service or HTTP route was introduced by 
 | Day | Concrete task | Acceptance gate |
 |---|---|---|
 | D16 | **PASS — design/policy:** owner-typed metadata, private local blobs, quotas, provenance, journal and rollback | ADR-019/spec review complete; 86 policy tests, full 237/237 PASS; no runtime file feature claimed |
-| D17 | **IN PROGRESS:** FS and V002/journal accepted; isolated MIME verification accepted; bounded raw upload/download and HTTP ACL remain TODO | Follow FILE_STORAGE_DESIGN.md; real DB/FS/HTTP/quota/crash/FD-lock/paired-restore tests; invalid inputs rejected and no arbitrary path writes |
+| D17 | **IN PROGRESS:** FS and V002/journal accepted; isolated MIME verification accepted; authenticated raw HTTP accepted; recovery/paired restore remain TODO | Follow FILE_STORAGE_DESIGN.md; real DB/FS/HTTP/quota/crash/FD-lock/paired-restore tests; invalid inputs rejected and no arbitrary path writes |
 | D18 | PDF native text extraction with page provenance | Page and source mapping works on golden PDFs |
 | D19 | DOCX read/write, tables, styles and round-trip tests | Valid output opens; sample content preserved |
 | D20 | XLSX read/write, sheets, formula preservation and security | No macro execution; sample workbook round trip |
@@ -543,12 +543,12 @@ uv run python -m pytest \
 ## 10. Next-session execution order (Codex handoff)
 
 1. **D17 is IN PROGRESS; T01 FS, T02 journal and T03 verifier accepted.** Read `docs/FILE_STORAGE_DESIGN.md`, ADR-019 and ADR-020. Preserve Day 15 behavior; keep file HTTP admission disabled. Do not skip DB/MIME/HTTP/restore gates or advance to D18.
-2. NEXT T04: integrate journal/FS/verifier with bounded reserve/raw PUT/download/delete HTTP, off-event-loop I/O, cancellation joins and honest pending cleanup. V002 is already applied; never rerun V001/reset counters. Use app credentials from Vault.
+2. NEXT T05: implement namespace-scoped recovery with fair retries, paired metadata/blob/auth-identity backup and isolated restore, then actual API process restart acceptance. Retain marker identities, quotas and ownership; V002 is already applied.
 3. Integrate the tested `LocalBlobStorage` using its stable directory guard and post-lock DB lease recheck, then build verifier/raw-body HTTP flow. Apply the detailed D17 matrix: owner isolation, quota/idempotency races, MIME/container validation, inode locks, no-replace publish, every crash boundary and paired metadata/blob restore. Do not substitute policy-unit PASS for these runtime gates.
 4. Keep localhost/one-worker deployment, no public proxy exposure, no silent adoption, no operator token in runtime and no new shared-service instances. No MinIO backend until its scoped identity/dependency/parity review is scheduled.
 5. Record exact test counts, code/architecture/rollback decisions and open issues before marking D17 complete or moving to extraction.
 
-**Current formal checkpoint:** `D15-T01..T06 = PASS for defined local acceptance`, **`D16 = PASS (design/policy)`**, **`D17 = IN PROGRESS (T01/T02/T03 accepted)`**. HTTP file upload, service integration and extraction are not yet implemented.
+**Current formal checkpoint:** `D15-T01..T06 = PASS for defined local acceptance`, **`D16 = PASS (design/policy)`**, **`D17 = IN PROGRESS (T01–T04 accepted)`**. HTTP exists behind default-disabled admission; T05 recovery/paired restore remains open. Extraction is not implemented.
 
 ---
 
@@ -566,3 +566,4 @@ uv run python -m pytest \
 | **v3.6** | **2026-10-18** | D17-T01 private FS adapter and stable resource locks accepted; 66 real FS tests, full 303/303 PASS, zero SKIP. ADR-020 covers creation/purge race and unknown-stage quarantine. D17-T02 DB journal/quota NEXT; D17 remains IN PROGRESS, D18 not started. |
 | **v3.7** | **2026-10-18** | D17-T02 additive V002/journal/quota accepted after verified backup/restore and unchanged prior rows/ACLs; 24 real journal cases, full 327 PASS/0 SKIP. MIME T03 NEXT; HTTP and paired blob restore remain unaccepted. |
 | **v3.8** | **2026-10-18** | D17-T03 isolated bounded MIME/container verifier accepted; 62 cases, full 389 PASS/0 SKIP; ADR-022 and uv-locked parser dependencies. T04 HTTP NEXT; D17 remains open pending service/recovery/paired restore. |
+| **v3.9** | **2026-10-18** | D17-T04 HTTP/cancellation/root namespace binding accepted; 31 HTTP/service + 8 additional FS cases, full 428 PASS/0 SKIP. ADR-023/024; T05 recovery/paired restore NEXT, feature default disabled. |

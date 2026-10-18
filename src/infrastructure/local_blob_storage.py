@@ -2,7 +2,7 @@
 
 This adapter does not authorize users or release quotas. Its caller must fence the
 PostgreSQL journal before creation/publication/purge and keep allocation charged
-until purge returns True. No runtime route uses this adapter yet.
+until purge returns True. Runtime admission requires explicit operator enablement.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import BinaryIO, Iterator
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from src.application.services.file_storage_policy import (
     DEFAULT_POLICY,
@@ -160,6 +160,25 @@ class BlobReader(BlobHandle):
         logger.debug("blob_chunk_read size_bytes=%d", len(result))
         return result
 
+    def verify_integrity(self, size_bytes: int, expected_sha256: str) -> None:
+        """Check immutable ready bytes through the locked FD before HTTP headers are sent."""
+        info = self._check()
+        if info.st_size != size_bytes:
+            raise BlobStorageError("blob_integrity_mismatch")
+        digest = hashlib.sha256()
+        offset = 0
+        while offset < size_bytes:
+            chunk = os.pread(
+                self._fd, min(DEFAULT_POLICY.chunk_bytes, size_bytes - offset), offset
+            )
+            if not chunk:
+                break
+            digest.update(chunk)
+            offset += len(chunk)
+        if offset != size_bytes or digest.hexdigest() != expected_sha256:
+            raise BlobStorageError("blob_integrity_mismatch")
+        logger.info("blob_integrity_verified size_bytes=%d", size_bytes)
+
 
 class BlobResourceLock:
     """Fence file creation and cleanup through a persistent private directory inode."""
@@ -210,6 +229,7 @@ class BlobWriter(BlobHandle):
         self.sealed = False
         self.published = False
         self.failed = False
+        self.policy = storage.policy
 
     def write(self, chunk: bytes) -> None:
         """Write one policy-bounded chunk, checking size and free space before allocation."""
@@ -218,13 +238,13 @@ class BlobWriter(BlobHandle):
             raise BlobStorageError("writer_not_writable")
         if (
             not isinstance(chunk, bytes)
-            or not 0 < len(chunk) <= self.storage.policy.chunk_bytes
+            or not 0 < len(chunk) <= self.policy.chunk_bytes
         ):
             raise BlobStorageError("invalid_write_size")
         if self.bytes_written + len(chunk) > self.plan.size_bytes:
             self.failed = True
             raise StoragePolicyError("file_size_mismatch", 413)
-        if self.storage.free_bytes() - len(chunk) < self.storage.policy.min_free_bytes:
+        if self.storage.free_bytes() - len(chunk) < self.policy.min_free_bytes:
             self.failed = True
             raise BlobStorageError("insufficient_disk_space")
         try:
@@ -345,7 +365,7 @@ class BlobWriter(BlobHandle):
         while offset < self.plan.size_bytes:
             chunk = os.pread(
                 self._fd,
-                min(self.storage.policy.chunk_bytes, self.plan.size_bytes - offset),
+                min(self.policy.chunk_bytes, self.plan.size_bytes - offset),
                 offset,
             )
             if not chunk:
@@ -364,7 +384,13 @@ class BlobWriter(BlobHandle):
 class LocalBlobStorage:
     """Anchor private local storage to a no-follow root descriptor on Linux."""
 
-    def __init__(self, root: Path, policy: StoragePolicy = DEFAULT_POLICY):
+    def __init__(
+        self,
+        root: Path,
+        policy: StoragePolicy = DEFAULT_POLICY,
+        *,
+        namespace_id: UUID | None = None,
+    ):
         """Open or create only the final private root, refusing symlink ancestors."""
         self.policy = policy
         self._root_fd = -1
@@ -391,7 +417,59 @@ class LocalBlobStorage:
         finally:
             if descriptor >= 0:
                 os.close(descriptor)
-        logger.info("blob_storage_opened")
+        try:
+            self.namespace_id = self._load_namespace(namespace_id)
+        except BaseException:
+            self.close()
+            raise
+        logger.info("blob_storage_opened namespace_id=%s", self.namespace_id)
+
+    def _load_namespace(self, expected: UUID | None) -> UUID:
+        """Read/create a durable private namespace marker without replacing an existing identity."""
+        if expected is not None and not isinstance(expected, UUID):
+            raise BlobStorageError("invalid_storage_namespace")
+        name = ".storage-namespace"
+        try:
+            descriptor = os.open(name, os.O_RDONLY | FILE_FLAGS, dir_fd=self._root_fd)
+        except FileNotFoundError:
+            identifier = expected or uuid4()
+            try:
+                descriptor = os.open(
+                    name,
+                    os.O_WRONLY | os.O_CREAT | os.O_EXCL | FILE_FLAGS,
+                    0o600,
+                    dir_fd=self._root_fd,
+                )
+            except FileExistsError:
+                return self._load_namespace(expected)
+            try:
+                data = memoryview((str(identifier) + "\n").encode("ascii"))
+                while data:
+                    written = os.write(descriptor, data)
+                    if written <= 0:
+                        raise BlobStorageError("namespace_write_failed")
+                    data = data[written:]
+                os.fsync(descriptor)
+                os.fsync(self._root_fd)
+            finally:
+                os.close(descriptor)
+            descriptor = os.open(name, os.O_RDONLY | FILE_FLAGS, dir_fd=self._root_fd)
+        try:
+            info = os.fstat(descriptor)
+            _validate_file(info, self._device)
+            if info.st_nlink != 1 or info.st_size != 37:
+                raise BlobStorageError("invalid_storage_namespace")
+            data = os.read(descriptor, 38)
+            identifier = UUID(data[:36].decode("ascii"))
+            if data != (str(identifier) + "\n").encode("ascii") or (
+                expected is not None and identifier != expected
+            ):
+                raise BlobStorageError("storage_namespace_mismatch")
+            return identifier
+        except (ValueError, UnicodeError):
+            raise BlobStorageError("invalid_storage_namespace") from None
+        finally:
+            os.close(descriptor)
 
     def __enter__(self):
         """Keep the trusted root anchored across a scoped adapter lifetime."""
@@ -486,6 +564,7 @@ class LocalBlobStorage:
         lease_id: UUID,
         *,
         guard: BlobResourceLock | None = None,
+        policy: StoragePolicy | None = None,
     ) -> BlobWriter:
         """Create a staged inode while retaining a resource lock through writer close.
 
@@ -493,12 +572,15 @@ class LocalBlobStorage:
         acquire it first, validate/claim their DB lease under it, then pass it here.
         """
         identity = BlobIdentity(plan.owner_id, plan.file_id, lease_id)
-        validate_size(plan.size_bytes, self.policy)
+        selected_policy = policy or self.policy
+        validate_size(plan.size_bytes, selected_policy)
         if plan.storage_key != "/".join(identity.object_parts):
             raise BlobStorageError("invalid_storage_key")
         if guard is None:
             with self.lock_resource(identity) as acquired:
-                return self.create_writer(plan, lease_id, guard=acquired)
+                return self.create_writer(
+                    plan, lease_id, guard=acquired, policy=selected_policy
+                )
         if guard._fd < 0 or guard.identity != identity:
             raise BlobStorageError("invalid_resource_lock")
         parent = self._directory(identity.staging_parts[:-1], create=True)
@@ -526,6 +608,7 @@ class LocalBlobStorage:
                 self,
             )
             handle._guard_fd = guard_fd
+            handle.policy = selected_policy
             handle._check()
             os.fsync(parent)
             logger.info("blob_writer_created file_id=%s", plan.file_id)
