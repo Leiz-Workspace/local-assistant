@@ -55,3 +55,17 @@ The operator CLI needs existing local Docker PostgreSQL administrative access fo
 Accepted retained evidence: `data/backups/d17-paired-20261018/manifest.json` has paired/database/security/identity verification true, one 53-byte fixture, seven restored tables, matching hashes/permissions and no remaining DB probe. The actual API process drill stopped both owned workers and removed only its test resource; final allocation is zero and existing conversation rows/ACLs are unchanged.
 
 For real recovery, verify the complete paired set in isolated targets first, preserve namespace/principal UUIDs and current credential-revocation policy, then review activation while the old deployment is drained. Existing DB-only Day 15 backups are insufficient once blobs exist. Rollback disables admission and preserves tables/bytes; never downgrade populated V002 as a code rollback.
+
+## Native PDF extraction (D18)
+
+**Purpose:** Operate the owner-scoped, on-demand PDF text API defined by ADR-026.
+
+With the existing file feature enabled, upload a verified PDF through the reservation/content endpoints, then send authenticated `POST /api/v1/files/{file_id}/extract`. There is no request payload. The response contains `file_id`, source `sha256`, versioned `extractor`, `content_trust: untrusted`, and `pages`. Each page has one-based `page_number`, `text`, `locator: file:<uuid>#page=<number>` and `status` (`native_text` or `no_native_text`). Empty pages remain in position. `no_native_text` is not visual blankness or an OCR result. Response uses `Cache-Control: private, no-store`.
+
+The API rechecks owner/namespace/ready state and source size/hash before parsing, then checks integrity/owned ready state again before responding. No text cache, DB migration, ingestion, conversation attachment or model invocation occurs. Runtime audit records UUID/count/version/errors, never page text. Keep source text untrusted in all downstream consumers.
+
+Two extractions may run concurrently in the supported one-worker deployment; excess returns429 without queueing. Each sandbox has 512 MiB address space, 5/6s CPU, 10s wall, 32 FDs, zero core and 8 MiB bounded stdout. Reject rather than truncate above1000 pages,128 KiB UTF-8/page or1 MiB UTF-8/document. Parser reuses D17's structure/stream and active-content restrictions. Cancellation/shutdown joins in-flight I/O before releasing shared blob locks; delete can return202 while extraction owns a reader. Retry delete/recovery after the reader closes.
+
+Expected failures:401 anonymous;404 missing/foreign/deleted/wrong namespace;409 not ready;415 non-PDF/invalid PDF;413 text/resource limit or wall timeout;429 parser capacity;503 storage/sandbox unavailable or integrity mismatch. Error details contain stable codes only. Repeated extraction computes from the verified bytes each time. A scan without native text needs the separately planned D21 OCR/VLM workflow. Native font mappings and plain-mode reading order have finite coverage; this milestone does not certify arbitrary visual layout or table reconstruction.
+
+Rollback drains requests and removes the extraction route/code; retain V002/root namespace/auth/blobs. Existing backup and paired restore procedures are unchanged because no extraction artifacts are persisted.

@@ -151,6 +151,14 @@ class BlobHandle:
 class BlobReader(BlobHandle):
     """Read bounded chunks while keeping a shared inode lock against deletion."""
 
+    @contextmanager
+    def extraction_reader(self):
+        """Borrow a read-only FD while the caller retains this handle's shared inode lock."""
+        self._check()
+        with os.fdopen(os.dup(self._fd), "rb") as source:
+            logger.info("blob_extraction_reader_opened")
+            yield source
+
     def read(self, size: int = DEFAULT_POLICY.chunk_bytes) -> bytes:
         """Read a bounded amount from the locked FD without reopening its path."""
         if type(size) is not int or not 1 <= size <= DEFAULT_POLICY.chunk_bytes:

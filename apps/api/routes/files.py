@@ -226,3 +226,16 @@ async def delete_file(file_id: UUID, principal: Principal, service: Service):
     return JSONResponse(
         status_code=202, content={"id": str(file_id), "state": "purging"}
     )
+
+
+@router.post("/{file_id}/extract")
+async def extract_file(file_id: UUID, principal: Principal, service: Service):
+    """Return untrusted native PDF pages with stable source provenance and private cache policy."""
+    result = await service.extract(principal, file_id)
+    return JSONResponse(
+        result,
+        headers={
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )

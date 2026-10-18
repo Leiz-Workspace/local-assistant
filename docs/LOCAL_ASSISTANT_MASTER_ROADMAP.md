@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.10 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
+> **Version:** 3.11 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **D17 PASS — authenticated bounded file persistence/upload/download, recovery and paired restore accepted for localhost/one worker. NEXT = D18 native PDF extraction with page provenance.**
+> **CURRENT POSITION:** **D18 PASS — bounded native PDF extraction with page provenance accepted for localhost/one worker. D15–D17 remain PASS. NEXT = D19 DOCX read/write and round-trip preservation.**
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
@@ -32,7 +32,7 @@
 |---|---:|---|---|
 | P1 — Machine, inference, two-profile baseline | D1–D14 | **PARTIAL / substantially implemented** | D1–D10 documented in dev log; later 32K, vision, MTP and runtime presets exercised. Full original D14 model quality/safety release gate not evidenced. |
 | P2a — Conversation persistence foundation | **D15** | **PASS (6/6 local tasks)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. Authenticated owner-scoped API, PostgreSQL/CORE/restart, leases/context and real pool export verified. Backup restore checked rows/owner/ACL before shared restart; Keycloak recovered. 151/151 regression PASS. |
-| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | **IN PROGRESS (D16/D17 PASS)** | File foundation, authenticated raw HTTP, scoped recovery and paired restore accepted; full 443 PASS/0 SKIP. D18 native PDF extraction NEXT. |
+| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | **IN PROGRESS (D16–D18 PASS)** | Owned file foundation/recovery plus isolated native PDF extraction accepted; full 476 PASS/0 SKIP. D19 DOCX read/write NEXT. |
 | P3 — Coding agent | D33–D46 | TODO | Scoped reads, patch approval, isolated tests. |
 | P4 — Web research | D47–D60 | TODO | Citation provenance, research tool controls and artifacts. |
 | P5 — Multimodal + voice | D61–D74 | PARTIAL foundations / TODO products | CORE vision smoke done earlier; full image, video and speech workflows unbuilt. |
@@ -54,7 +54,7 @@
 | **D16** | **Bounded file metadata/storage design and policy** | **PASS (design/policy)** | Spec + ADR-019 reviewed; 86 policy cases PASS; full suite 237/237 PASS; V001 unchanged. No migration, blob adapter or upload API introduced in D16. |
 | **D17** | **Bounded authenticated file storage/HTTP/recovery** | **PASS (localhost, one worker; T01–T05)** | Full 443/443 PASS, zero SKIP; V002, owner/quota/replay, private FDs, isolated format verification, cancellation/deadlines, real crash/HTTP races, paired DB/blob/identity restore and two-process API restart; ADR-019–025. |
 
-**Currently demonstrated:** 2026-10-18 **443 passed in 30.14s**, zero skipped/no exclusions with real PostgreSQL/CORE. D17-T01–T05 local gates accepted: 77 FS + 24 journal + 62 verifier + 31 HTTP/service + 12 recovery cases, alongside 237 prior tests. V002 is applied; previous conversation/message/run rows and owner/ACL fingerprints match. Retained paired backup `data/backups/d17-paired-20261018` verifies seven tables, one 53-byte fixture, namespace/principal bindings and blob/archive hashes/permissions. Actual authenticated upload/replay/download/delete survives API process restart; owned workers/canary/probes are cleaned and allocation is zero. File feature remains operator opt-in; no public/multiworker/off-host certification is implied. D18 extraction is NEXT and unimplemented. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
+**Currently demonstrated:** 2026-10-18 **476 passed in 34.23s**, zero skipped/no exclusions with real PostgreSQL/CORE. D17-T01–T05 local gates accepted: 77 FS + 24 journal + 62 verifier + 31 HTTP/service + 12 recovery cases, alongside 237 prior tests. V002 is applied; previous conversation/message/run rows and owner/ACL fingerprints match. Retained paired backup `data/backups/d17-paired-20261018` verifies seven tables, one 53-byte fixture, namespace/principal bindings and blob/archive hashes/permissions. Actual authenticated upload/replay/download/delete survives API process restart; owned workers/canary/probes are cleaned and allocation is zero. File feature remains operator opt-in; no public/multiworker/off-host certification is implied. D18 is accepted with 33 additional tests (25 parser/protocol/resource + 8 real DB/HTTP/lifecycle): exact golden page/Unicode/blank mapping, owned/namespace/hash revalidation, two-slot isolated parsing and cancellation/delete/shutdown gates. Native text remains untrusted; no extraction cache, model context or schema change. D19 is NEXT. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
 
 ---
 
@@ -276,7 +276,7 @@ Artifacts: `docs/FILE_STORAGE_DESIGN.md`, `docs/ADR/019-bounded-local-file-stora
 
 ### D17 — File persistence/upload/download — PASS (2026-10-18, local acceptance)
 
-All T01–T05 local acceptance gates below have observed evidence. FS was implemented first to prove absent-inode locking before schema mutation; subsequent tasks were accepted only after real tests. D18 is next; production scope remains separately tracked.
+All T01–T05 local acceptance gates below have observed evidence. FS was implemented first to prove absent-inode locking before schema mutation; subsequent tasks were accepted only after real tests. D18 was subsequently accepted below; production scope remains separately tracked.
 
 | ID | Scope | Status / dependency |
 |---|---|---|
@@ -294,7 +294,7 @@ T01 introduced no production runtime change. T02 applied reviewed V002 after ver
 |---|---|---|
 | D16 | **PASS — design/policy:** owner-typed metadata, private local blobs, quotas, provenance, journal and rollback | ADR-019/spec review complete; 86 policy tests, full 237/237 PASS; no runtime file feature claimed |
 | D17 | **PASS (local):** V002/quota/private FS/isolated verification, authenticated raw HTTP, bounded recovery and paired restore | 443 full-suite PASS/0 SKIP; retained paired/process-restart evidence and ADR-019–025; owner/path/quota/FD/crash gates accepted |
-| D18 | **NEXT / TODO:** PDF native text extraction with page provenance | Page/source mapping on golden PDFs; owner+namespace+ready/hash recheck and bounded isolated parsing |
+| D18 | **PASS (local):** on-demand native PDF text with UUID/hash/version/page provenance | Golden multi-page/Unicode/blank mapping; owner/namespace/ready/hash, real sandbox/resource/lifecycle gates; 33 new tests, full 476 PASS/0 SKIP; ADR-026 |
 | D19 | DOCX read/write, tables, styles and round-trip tests | Valid output opens; sample content preserved |
 | D20 | XLSX read/write, sheets, formula preservation and security | No macro execution; sample workbook round trip |
 | D21 | OCR/VLM fallback for scans, images and tables | Confidence/uncertainty reporting, measurable examples |
@@ -542,13 +542,13 @@ uv run python -m pytest \
 
 ## 10. Next-session execution order (Codex handoff)
 
-1. **D17 is PASS for authenticated localhost/one worker; D18 is NEXT.** Read FILE_STORAGE_DESIGN, FILE_STORAGE_LOCAL_RUNBOOK and ADR-019–025. Preserve 443/443 regression evidence and existing Day 15 behavior.
-2. D18 priority P1, dependent on D17 verified owned files and sealed FD isolation; estimate one or more milestones. Design bounded native-PDF text extraction with file UUID/content hash, page locators and extractor version; record architectural decisions before persistence/API changes. Risks include font/text ordering, malformed streams, resource use and hostile source instructions.
-3. Reuse the isolated parser boundary; source content remains untrusted. Recheck owner/namespace/ready/hash and keep FD locks correctly. Native extraction only; OCR/VLM fallback belongs to D21 and no implicit model context/ingestion is added.
-4. Validate page/source mapping against golden multi-page PDFs, Unicode/blank/error cases, limits and cross-owner negatives; run full Vault-backed PostgreSQL/CORE regression before D18 PASS. Do not substitute a blank-PDF smoke test for extraction quality evidence.
-5. Keep direct localhost/one worker and no new infrastructure instances; preserve namespace/principal identity and paired rollback. Roadmap days remain sequenced milestones, extend/re-estimate when acceptance needs more work.
+1. **D18 is PASS for localhost/one worker; D19 is NEXT.** Read FILE_STORAGE_DESIGN/LOCAL_RUNBOOK and ADR-019–026; preserve the observed 476/476 regression and existing Day15/D17 behavior.
+2. D19 priority P1, dependent on the D17 owned ready FD/sandbox and source provenance conventions. Estimate one or more milestones; assess OOXML round-trip fidelity, ZIP expansion/relationships, styles/tables, output ownership/quota and package support before scheduling implementation.
+3. Define supported DOCX read/write semantics and record an ADR before adding output persistence or APIs. Keep hostile documents isolated, bounded and untrusted. No macro/external relationship execution or implicit model context. Do not promise arbitrary Word fidelity from a text-only round trip.
+4. Golden paragraphs/tables/styles and generated-output open/round-trip tests, cross-owner/namespace/error/resource/lifecycle negatives and full Vault-backed regression must pass before D19 PASS. Retain source hash/version/locators; evaluate dependencies with uv before adding packages.
+5. Preserve direct localhost/one worker, existing DB/root/auth identity and shared services. Extend milestones when acceptance requires more work; no automatic progression merely because code exists.
 
-**Current formal checkpoint:** `D15-T01..T06 = PASS (defined local scope)`, **`D16 = PASS (design/policy)`**, **`D17 = PASS (T01–T05 local gates)`**, **`D18 = NEXT/TODO`**. Native extraction is not implemented.
+**Current formal checkpoint:** `D15-T01..T06 = PASS (defined local scope)`, **`D16 = PASS`**, **`D17 = PASS`**, **`D18 = PASS (native PDF local scope)`**, **`D19 = NEXT/TODO`**. OCR/VLM remains D21; no cache/ingestion/model attachment is implemented by D18.
 
 ---
 
@@ -568,3 +568,4 @@ uv run python -m pytest \
 | **v3.8** | **2026-10-18** | D17-T03 isolated bounded MIME/container verifier accepted; 62 cases, full 389 PASS/0 SKIP; ADR-022 and uv-locked parser dependencies. T04 HTTP NEXT; D17 remains open pending service/recovery/paired restore. |
 | **v3.9** | **2026-10-18** | D17-T04 HTTP/cancellation/root namespace binding accepted; 31 HTTP/service + 8 additional FS cases, full 428 PASS/0 SKIP. ADR-023/024; T05 recovery/paired restore NEXT, feature default disabled. |
 | **v3.10** | **2026-10-18** | D17 T01–T05 accepted for localhost/one worker: namespace-scoped fair recovery, actual uploader/FS crash cases, HTTP quota/delete races, paired DB/blob/identity restore and actual API process restart. Full443 PASS/0 SKIP; ADR-025/runbook, protected artifacts/canary cleanup. D18 native PDF extraction NEXT. |
+| **v3.11** | **2026-10-18** | D18 native PDF extraction accepted with ADR-026, on-demand owner/namespace/ready/hash checks, bounded isolated worker, page provenance and 33 new tests; full 476 PASS/0 SKIP in 34.23s. D19 DOCX read/write NEXT; no schema/dependency/model-context changes. |
