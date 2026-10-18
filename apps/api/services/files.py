@@ -134,6 +134,7 @@ class FileService:
         self.storage = storage
         self.policy = policy
         self.active = set()
+        self._active_depth = {}
         self.closing = False
         self._recovery_task = None
         self._ready_cursor = None
@@ -141,6 +142,7 @@ class FileService:
         self._docx_operations = 0
         self._xlsx_operations = 0
         self._ocr_operations = 0
+        self._chunk_operations = 0
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -148,11 +150,17 @@ class FileService:
             raise StoragePolicyError("file_storage_closing", 503)
         task = asyncio.current_task()
         self.active.add(task)
+        self._active_depth[task] = self._active_depth.get(task, 0) + 1
         return task
 
     def untrack(self, task):
         """Remove only completed resource-owning work from the shutdown inventory."""
-        self.active.discard(task)
+        depth = self._active_depth.get(task, 0)
+        if depth > 1:
+            self._active_depth[task] = depth - 1
+        else:
+            self._active_depth.pop(task, None)
+            self.active.discard(task)
 
     async def reserve(
         self, owner_id, *, filename, size_bytes, sha256, request_key=None
