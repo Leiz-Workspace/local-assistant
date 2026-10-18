@@ -160,9 +160,11 @@ class BlobReader(BlobHandle):
         logger.debug("blob_chunk_read size_bytes=%d", len(result))
         return result
 
-    def verify_integrity(self, size_bytes: int, expected_sha256: str) -> None:
+    def verify_integrity(
+        self, size_bytes: int, expected_sha256: str, *, links: int = 1
+    ) -> None:
         """Check immutable ready bytes through the locked FD before HTTP headers are sent."""
-        info = self._check()
+        info = self._check(links=links)
         if info.st_size != size_bytes:
             raise BlobStorageError("blob_integrity_mismatch")
         digest = hashlib.sha256()
@@ -534,6 +536,106 @@ class LocalBlobStorage:
         self._ensure_open()
         info = os.fstatvfs(self._root_fd)
         return info.f_bavail * info.f_frsize
+
+    def inventory(self, *, max_entries=100000) -> dict[str, int]:
+        """Inventory private payload names through FDs without following links or adopting data."""
+        self._ensure_open()
+        if type(max_entries) is not int or max_entries <= 0:
+            raise BlobStorageError("invalid_inventory_bound")
+        result = {}
+        visited = 0
+        marker_seen = False
+
+        def walk(directory, parts):
+            """Traverse bounded private directory depth and close every child FD on failure."""
+            nonlocal visited, marker_seen
+            with os.scandir(directory) as entries:
+                for entry in entries:
+                    visited += 1
+                    if visited > max_entries or len(parts) > 3:
+                        raise BlobStorageError("inventory_limits_exceeded")
+                    info = os.stat(entry.name, dir_fd=directory, follow_symlinks=False)
+                    if stat.S_ISDIR(info.st_mode):
+                        child = os.open(entry.name, DIRECTORY_FLAGS, dir_fd=directory)
+                        try:
+                            self._validate_directory(os.fstat(child))
+                            walk(child, (*parts, entry.name))
+                        finally:
+                            os.close(child)
+                    else:
+                        _validate_file(info, self._device)
+                        if info.st_nlink != 1:
+                            raise BlobStorageError("unowned_blob_link")
+                        if not parts and entry.name == ".storage-namespace":
+                            marker_seen = True
+                            descriptor = os.open(
+                                entry.name, os.O_RDONLY | FILE_FLAGS, dir_fd=directory
+                            )
+                            try:
+                                if os.read(descriptor, 38) != (
+                                    str(self.namespace_id) + "\n"
+                                ).encode("ascii"):
+                                    raise BlobStorageError("storage_namespace_mismatch")
+                            finally:
+                                os.close(descriptor)
+                        else:
+                            result["/".join((*parts, entry.name))] = info.st_size
+
+        walk(self._root_fd, ())
+        if not marker_seen:
+            raise BlobStorageError("missing_storage_namespace")
+        logger.info("blob_inventory_completed payloads=%d", len(result))
+        return result
+
+    def reconcile_ready(
+        self, identity: BlobIdentity, size_bytes: int, expected_sha256: str
+    ) -> bool:
+        """Remove only a proven redundant known staging link, retaining the ready blob and quota."""
+        try:
+            guard = self.lock_resource(identity)
+        except BlockingIOError:
+            return False
+        with guard:
+            self._check_staging_inventory(guard._fd, identity)
+            parent = self._directory(identity.object_parts[:-1])
+            descriptor = -1
+            try:
+                descriptor = os.open(
+                    identity.object_parts[-1], os.O_RDONLY | FILE_FLAGS, dir_fd=parent
+                )
+                try:
+                    stage = os.stat(
+                        identity.staging_parts[-1],
+                        dir_fd=guard._fd,
+                        follow_symlinks=False,
+                    )
+                except FileNotFoundError:
+                    info = os.fstat(descriptor)
+                    _validate_file(info, self._device)
+                    if info.st_size != size_bytes or info.st_nlink != 1:
+                        raise BlobStorageError("blob_integrity_mismatch")
+                    return True
+                try:
+                    fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    return False
+                _validate_file(stage, self._device)
+                if not _same_inode(stage, os.fstat(descriptor)):
+                    raise BlobStorageError("object_collision")
+                reader = BlobReader(
+                    descriptor, parent, identity.object_parts[-1], self._device
+                )
+                reader.verify_integrity(size_bytes, expected_sha256, links=2)
+                os.unlink(identity.staging_parts[-1], dir_fd=guard._fd)
+                os.fsync(guard._fd)
+                logger.info(
+                    "blob_ready_staging_link_removed file_id=%s", identity.file_id
+                )
+                return True
+            finally:
+                if descriptor >= 0:
+                    os.close(descriptor)
+                os.close(parent)
 
     def _check_staging_inventory(self, directory: int, identity: BlobIdentity) -> None:
         """Quarantine unexpected lease names instead of treating their bytes as absent."""

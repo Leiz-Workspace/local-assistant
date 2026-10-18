@@ -88,6 +88,8 @@ class FileService:
         self.policy = policy
         self.active = set()
         self.closing = False
+        self._recovery_task = None
+        self._ready_cursor = None
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -292,8 +294,14 @@ class FileService:
             purged = await file_io(self.storage.purge, identity_for(row))
         except (OSError, BlobStorageError):
             logger.error("file_purge_pending file_id=%s", row["id"])
+            await self.journal.note_purge_retry(
+                row["owner_id"], row["id"], row["purge_token"]
+            )
             return False
         if not purged:
+            await self.journal.note_purge_retry(
+                row["owner_id"], row["id"], row["purge_token"]
+            )
             return False
         await self.journal.release_purged(
             row["owner_id"], row["id"], row["purge_token"]
@@ -328,6 +336,10 @@ class FileService:
     async def shutdown(self):
         """Cancel and join resource owners before closing the root or disposing the DB pool."""
         self.closing = True
+        if self._recovery_task is not None:
+            self._recovery_task.cancel()
+            await asyncio.gather(self._recovery_task, return_exceptions=True)
+            self._recovery_task = None
         tasks = [task for task in self.active if task is not asyncio.current_task()]
         for task in tasks:
             task.cancel()
@@ -335,3 +347,63 @@ class FileService:
             await asyncio.gather(*tasks, return_exceptions=True)
         await file_io(self.storage.close)
         logger.info("file_storage_shutdown active_operations=%d", len(self.active))
+
+    async def start(self):
+        """Reconcile a bounded startup batch and schedule one process-local recovery loop."""
+        await self.recover_once()
+        self._recovery_task = asyncio.create_task(self._recover_periodically())
+
+    async def _recover_periodically(self):
+        """Retry known journal resources without adopting or deleting unknown filesystem data."""
+        while not self.closing:
+            await asyncio.sleep(5)
+            try:
+                await self.recover_once()
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                logger.error("file_recovery_batch_failed")
+
+    async def recover_once(self, *, limit=50):
+        """Fence only expired/scoped resources and preserve busy allocations for fair retry."""
+        completed = pending = 0
+        for row in await self.journal.recovery_candidates(limit=limit):
+            try:
+                if row["state"] != "purging":
+                    row = await self.journal.begin_purge(
+                        row["owner_id"],
+                        row["id"],
+                        uuid4(),
+                        target="interrupted",
+                        error_code="upload_interrupted",
+                        expired_only=True,
+                    )
+                if await self.cleanup(row):
+                    completed += 1
+                else:
+                    pending += 1
+            except StoragePolicyError as error:
+                if error.code not in {"file_lease_active", "file_not_found"}:
+                    logger.error("file_recovery_resource_failed file_id=%s", row["id"])
+                pending += 1
+            except (OSError, BlobStorageError):
+                logger.error("file_recovery_resource_failed file_id=%s", row["id"])
+                pending += 1
+        ready = await self.journal.ready_candidates(
+            after_id=self._ready_cursor, limit=limit
+        )
+        self._ready_cursor = ready[-1]["id"] if ready else None
+        for row in ready:
+            try:
+                await file_io(
+                    self.storage.reconcile_ready,
+                    identity_for(row),
+                    row["actual_size_bytes"],
+                    row["actual_sha256"],
+                )
+            except (OSError, BlobStorageError):
+                logger.error("file_ready_reconciliation_pending file_id=%s", row["id"])
+        logger.info(
+            "file_recovery_completed completed=%d pending=%d", completed, pending
+        )
+        return {"completed": completed, "pending": pending}

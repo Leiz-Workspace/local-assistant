@@ -1996,3 +1996,57 @@ Focused đầu có một test MIME khai báo hash của text khác payload binar
 Full Vault-backed regression sau fix/binding: **428 passed in 24.12s**, exit0, zero SKIP/no exclusions, PostgreSQL + CORE thật. Các lượt trước 419/20.83s và421/23.98s là intermediate; 428 là final checkpoint. 428=389 prior+31 HTTP+8 FS. Ruff/format/AST descriptions/compile/git diff checks thực hiện; không tạo production payload root hoặc bật API deployment.
 
 **Tiếp tục T05:** namespace-scoped recovery/fair pending retries; paired DB/blob/identity snapshot và isolated restore; actual authenticated API process restart/cleanup; full regression và final D17 acceptance review.
+
+
+---
+
+# CHECKPOINT — 2026-10-18 — D17-T05 recovery/paired restore và final D17 acceptance
+
+**Purpose:** Ghi kết quả cuối sau khi làm liên tục T02→T03→T04→T05, đủ kiểm thử và operational evidence trước khi chốt D17.
+
+**Trạng thái:** **D17 T01–T05 PASS trong phạm vi authenticated direct localhost, một API worker. D18 native PDF extraction NEXT/TODO.** Không suy diễn production multiworker/load/off-host DR/model quality là PASS.
+
+## Triển khai và review hệ thống
+
+- T04 commit `da28890`; tiếp tục namespace-scoped startup recovery và loop5s, batch bounded50. Chỉ fence expired reserved/receiving/verifying theo DB clock; purging giữ quota khi FD/guard bận hoặc cleanup lỗi. Retry timestamp được rotate sau resource khác để không starvation. Ready paging theo UUID chỉ gỡ staging link nếu cùng inode/private/size/SHA và exclusive locks; không trả quota ready hoặc xóa/adopt unknown/collision.
+- `LocalBlobStorage.inventory`: FD no-follow/private/device/single-link, marker bắt buộc đúng, depth/entry ceilings; backup phải khớp exact known ready inventory. Thêm tests inventory bounds/symlink/missing marker và colliding ready-stage inode.
+- `scripts/file_storage_recovery_acceptance.py`: operator CLI, không API/model tool; yêu cầu dừng consumer, no pending states, counters consistent, nonempty ready/current principal bindings/same namespace. App-role read-only repeatable-read exported snapshot; Docker PostgreSQL hiện hữu dump cùng snapshot; private archive bounded64MiB trước helper restore, chunked hash/copy, exact inventory/SHA/perms, namespace và digest-only identity preserved.
+- Independent restored blob root cùng source namespace; DB restore probe trên cùng instance so 7 tables và owner/ACL, drop đúng generated probe. Manifest chỉ ghi success sau tất cả checks. Không restart shared PostgreSQL/Keycloak hoặc tạo service/role/credential mới.
+- Paired tests clone **schema only** vào source DB probe riêng, seed V002/version/global0, dùng app role; tránh giả định database thật trống file hoặc chạm blob user. Probe source/target được dọn bằng guard prefix UUID. Các runtime tests còn lại owner/root-scoped.
+- ADR-025 và FILE_STORAGE_LOCAL_RUNBOOK ghi decisions/P0/dependency/effort/risk/limits/rollout/rollback. Default feature vẫn off; bật rõ flag và root/auth/app credential đúng mới khởi tạo. V001/old business schema/code behavior giữ regression PASS; V002 là additive đã review/backup ở T02.
+
+## Tests cuối
+
+`tests/integration/test_file_recovery.py`: **12 cases**. Actual partial/published uploader process bị kill; expired live guard giữ quota trước kill, sau kill cleanup/release đúng một lần. Fair retry khi reader giữ file; ready same-inode link cleanup; actual unlink/fsync failure giữ allocation; real counter UPDATE rồi forced SQL transaction rollback, retry về0; concurrent HTTP same-key/quota; DELETE đồng thời raw PUT receiving trả202/hide ngay, PUT409 không thành ready và cleanup về0. Paired restore + API readback hai principals và negative owner access; unknown/corrupt/pending source từ chối backup với lỗi cụ thể, không che infra failure bằng broad assertion.
+
+```sh
+# Vault TLS helper delivers only app DATABASE_URL/live-test flag to child
+python -m pytest tests/ -q -rs --tb=short
+# FINAL: 443 passed in 30.14s
+# Exit 0; zero SKIP; no exclusions; real PostgreSQL + CORE
+```
+
+443 = **151 Day15 + 86 D16 policy + 77 FS + 24 journal + 62 verifier + 31 HTTP/service + 12 recovery**. Các lượt intermediate 439/28.20s và443/28.64s giữ làm lịch sử; final443/30.14s chạy sau khi cô lập paired source probes. Focused recovery cuối12/12 PASS6.60s. Ruff/format/AST file/function/class descriptions/py_compile/uv lock/diff checks PASS.
+
+## Operational drill giữ artifacts thực tế
+
+Dùng đúng existing app DB/API credential từ Vault; xác minh token digest ↔ principal UUID khớp protected `data/auth/principals.json`. Parent giữ operator token trong memory; Uvicorn/pytest/verifier không nhận operator Vault token hoặc raw key trong code/log.
+
+1. Actual Uvicorn worker1 trên loopback: anonymous401; reserve201; raw upload200 ready; download bytes53/SHA đúng. Root production riêng `data/files` được khởi tạo0700 với namespace marker/payload0600.
+2. Stop/drain worker1, pool đóng. Paired backup `data/backups/d17-paired-20261018`: archive28231bytes; 1 fixture53bytes; DB exported-snapshot dump, 7-table restored rows/normalized owners/ACLs giống; independent copied/restored blobs hashes và stable namespace/principal binding đúng; DB probe được dọn.
+3. Actual worker2 mở lại cùng root/auth/V002: metadata/download200 đúng bytes; POST same key replay201 cùng ID không charge thêm; DELETE204 sau cleanup, subsequent download404.
+4. Dừng worker2. Cleanup chỉ resource test có exact owner/UUID/request key và released/deleted marker; không đụng user resources. So existing conversation/message/run fingerprints và owner/ACL trước/sau: giống nhau.
+5. Recheck protected backup archive SHA, mọi inventory blob SHA/size, owner UID, file0600/dir0700, no symlink; manifest paired/database/security/identity flags true. Global usage `(0,0,0)`, zero process canary journal, zero source/restore DB probes. CORE/PostgreSQL/Keycloak và shared containers vẫn healthy; không restart shared service.
+
+Artifacts riêng tư giữ ngoài Git/source archive: `data/backups/d17-paired-20261018/`; API logs0600 trong `/tmp/local-assistant-d17-q21k55og/`. Globals preflight vẫn ở backup T02, không đóng gói credential/backup/payload. Không activate overwrite production DB từ archive; chỉ isolated restore verification.
+
+## Final acceptance review
+
+- [x] Typed owner/key/provenance/state constraints; atomic owner/global quota và same-key replay; independent-session/HTTP races PASS.
+- [x] Guard/inode/no-follow/permissions/no-replace, bounded body/hash/format, namespace binding và unknown-data quarantine PASS.
+- [x] Isolated bounded verifier mọi allowed family; raw HTTP owner/auth/pagination/headers/short/overflow/hash/MIME/deadline/cancel/shutdown gates PASS.
+- [x] Held reader/writer/expired worker không trả quota; real crash boundaries, physical/DB-release failures, fair retry/ready-stage recovery PASS.
+- [x] Paired metadata/blob/namespace/identity restore, restored API readback và actual API process restart/replay/download/delete PASS.
+- [x] Full443/443, zero SKIP; ADR-019–025/design/runbook/roadmap/dev log phản ánh evidence; source-only full-file artifact tách khỏi secrets/backups.
+
+**D17 hoàn tất đúng local acceptance. Bước kế tiếp D18:** P1 native PDF extraction có file UUID/content hash/page locators/extractor version, owner/namespace/ready/hash recheck và isolated resource bounds. Review ADR trước thay đổi kiến trúc/persistence; golden multi-page/Unicode/blank/error/page mapping và full regression phải PASS trước khi chốt D18. OCR/VLM thuộc D21, không auto-ingest hoặc coi file content là instruction.
