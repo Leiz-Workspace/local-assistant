@@ -1,0 +1,2 @@
+# Preserve exact Unicode fixture bytes and its intentional trailing tab/CRLF whitespace.
+unicode.txt -text whitespace=-blank-at-eol,cr-at-eol
