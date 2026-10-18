@@ -185,3 +185,18 @@ D17 must supply observed results for:
 - Existing API/runtime/owner/lease/recovery source files and dependencies remained unchanged. D16 adds only this specification, ADR-019, the isolated policy module/tests and progress records.
 
 D16 is accepted as a design/policy milestone. D17 is NEXT; all actual upload/DB/FS/container/HTTP/paired-backup behaviors in section 9 remain implementation acceptance, not inferred PASS from this review.
+
+
+## 11. D17-T01 implementation checkpoint — 2026-10-18
+
+`src/infrastructure/local_blob_storage.py` now implements the standalone Linux filesystem foundation. `tests/test_local_blob_storage.py` has **66 passing cases**; the final complete Vault-backed PostgreSQL/CORE regression has **303 passed in 10.38s**, zero skipped/no exclusions. This supersedes the earlier no-adapter current-state statement for D17 only; section 10 remains the historical D16 acceptance.
+
+The adapter anchors a 0700 root and generated directories with no-follow directory FDs, writes exclusive 0600 staging files in bounded chunks, checks observed size/hash and actual disk floor, lends a sealed verifier FD, rechecks bytes after verification, fsyncs and publishes using no-replace hard links. It holds exclusive writer/shared reader locks and purges only after all exact payload inodes can be exclusively locked. Link/permission/inode errors, collisions and unknown staging entries fail closed. Purge closes payload FDs and syncs directories before returning true; a failed unlink/sync remains pending and retry resyncs absent names.
+
+[ADR-020](ADR/020-resource-directory-locks.md) adds a persistent resource-directory lock to close the absent-name/create-before-inode-lock gap. **Required integration:** acquire its guard outside SQL transactions, recheck/claim the DB lease under the guard, then pass the guard to `create_writer`. The writer retains its duplicate until close. Deletion must fence the journal before purge and release counters once in a final fenced transaction. Guard directories are intentionally retained. Standalone adapter calls without a journal do not provide authorization, DB fencing, quota reservation or exactly-once release.
+
+Actual filesystem process tests kill an uploader at creation, write, seal, link, object-directory sync, staging unlink, staging-directory sync and completed publication. Separate writer/reader processes retain their locks while SIGSTOPped and release them after SIGKILL. ENOSPC/short-write/EXDEV/fsync errors are injected against disposable real files; they do not prove physical power-loss durability or a real full-disk event. Inventory/FD-count/log-privacy tests run without production data.
+
+No production blob root, V002 migration, parser dependency, runtime route or new infrastructure service was introduced. Read-only app-credential inspection still shows `0001` and four existing assistant tables. Day 15 runtime source/config is unchanged.
+
+**Remaining D17 gates:** V002 and atomic owner/global quota/idempotency journal; live lease/recovery integration; every allowed format's bounded MIME/container verification; HTTP owner ACL/deadlines/cancellation/download/delete races; paired metadata/blob backup and isolated restore. T01's FS evidence does not complete those gates. D17 remains IN PROGRESS and D18 is not started.
