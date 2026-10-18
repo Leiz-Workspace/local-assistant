@@ -1,0 +1,28 @@
+{
+  "description": "Pinned official MIT multilingual E5 CPU-int8 shortlist for D24 synthetic benchmarking; no automatic runtime model selection.",
+  "version": "e5-onnx-int8-v1",
+  "candidates": [
+    {
+      "id": "e5-small-int8",
+      "repository": "intfloat/multilingual-e5-small",
+      "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+      "license": "mit",
+      "dimension": 384,
+      "artifacts": [
+        {"source": "onnx/model_qint8_avx512_vnni.onnx", "local": "model.onnx", "bytes": 118346824, "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"},
+        {"source": "tokenizer.json", "local": "tokenizer.json", "bytes": 17082730, "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"}
+      ]
+    },
+    {
+      "id": "e5-base-int8",
+      "repository": "intfloat/multilingual-e5-base",
+      "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+      "license": "mit",
+      "dimension": 768,
+      "artifacts": [
+        {"source": "onnx/model_qint8_avx512_vnni.onnx", "local": "model.onnx", "bytes": 278686411, "sha256": "2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503"},
+        {"source": "tokenizer.json", "local": "tokenizer.json", "bytes": 17082660, "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"}
+      ]
+    }
+  ]
+}
