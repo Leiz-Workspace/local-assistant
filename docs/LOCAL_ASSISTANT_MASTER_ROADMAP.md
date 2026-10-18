@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.4 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
+> **Version:** 3.5 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **DAY 15 — PASS for authenticated localhost operation (6/6 tasks). NEXT = D16 bounded file metadata/storage design.**
+> **CURRENT POSITION:** **D16 — bounded file metadata/storage DESIGN + POLICY PASS. Day 15 stays PASS. NEXT = D17 file persistence and upload/download acceptance.**
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
@@ -32,7 +32,7 @@
 |---|---:|---|---|
 | P1 — Machine, inference, two-profile baseline | D1–D14 | **PARTIAL / substantially implemented** | D1–D10 documented in dev log; later 32K, vision, MTP and runtime presets exercised. Full original D14 model quality/safety release gate not evidenced. |
 | P2a — Conversation persistence foundation | **D15** | **PASS (6/6 local tasks)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. Authenticated owner-scoped API, PostgreSQL/CORE/restart, leases/context and real pool export verified. Backup restore checked rows/owner/ACL before shared restart; Keycloak recovered. 151/151 regression PASS. |
-| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | TODO | Originally scheduled D15–D28, shifted by persistence prerequisite. |
+| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | **IN PROGRESS (D16 design PASS)** | ADR-019/spec and executable policy boundaries accepted; D17 runtime file storage/upload/download remains TODO. |
 | P3 — Coding agent | D33–D46 | TODO | Scoped reads, patch approval, isolated tests. |
 | P4 — Web research | D47–D60 | TODO | Citation provenance, research tool controls and artifacts. |
 | P5 — Multimodal + voice | D61–D74 | PARTIAL foundations / TODO products | CORE vision smoke done earlier; full image, video and speech workflows unbuilt. |
@@ -41,7 +41,7 @@
 
 **Scheduling semantics:** these are **sequenced milestones**, not promises to finish each task in 24 hours. D15 has six subtasks. If D15 remains open tomorrow, do not relabel unfinished tasks as D16 merely because calendar time passed. The original document had D15 = file upload; **v3 explicitly changes that decision** and shifts file ingestion later. Later days are a planning baseline, subject to recorded re-estimation, not fake completion.
 
-### Progress of current day
+### Verified milestones and current task
 
 | ID | Task | Status | Acceptance evidence |
 |---|---|---|---|
@@ -51,8 +51,9 @@
 | D15-T04 | Conversation Manager, inference port + adapter, replay/failure persistence | **PASS for defined tests** | 2 integration tests passed; 42 API/runtime regression tests passed. T06 subsequently verified defined race/crash/context cases; production multiworker remains unaccepted. |
 | **D15-T05** | **Persistent Conversation REST API** | **PASS (localhost)** | Vault-backed app credential; 4/4 integration PASS including CORE; full suite 94 PASS, zero SKIP; history/list/replay verified across two Uvicorn processes. |
 | D15-T06 | Concurrency, crash recovery, context, auth and recovery | **PASS (authenticated localhost)** | Full suite 151/151 PASS, zero SKIP; two-principal negative access, real pool export/reconnect, owner/ACL/data restore, shared PostgreSQL restart, Keycloak recovery and authenticated API process restart accepted. |
+| **D16** | **Bounded file metadata/storage design and policy** | **PASS (design/policy)** | Spec + ADR-019 reviewed; 86 policy cases PASS; full suite 237/237 PASS; V001 unchanged. No migration, blob adapter or upload API applied. |
 
-**Currently demonstrated:** 2026-10-18 **151 passed in 9.45s**, zero skipped, no exclusions, with real PostgreSQL and CORE. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
+**Currently demonstrated:** 2026-10-18 **237 passed in 9.48s**, zero skipped, no exclusions, with real PostgreSQL and CORE (151 existing cases + 86 D16 policy cases). D16 schema/storage/rollback design and policy boundaries are accepted; actual file upload/FS/DB integration is D17 and unimplemented. V001 remains unchanged. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
 
 ---
 
@@ -259,12 +260,25 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 
 > The **original** 2026-10-11 plan allocated D15–D28 entirely to files/RAG/memory. Because D15 actually delivered persistent conversation foundations, the remaining work below is re-sequenced. Day numbering describes *milestones*, not guaranteed time-to-complete. At a weekly review, change estimates in this file rather than silently dropping features or declaring them finished.
 
+### D16 — File storage design/policy — PASS (2026-10-18)
+
+- [x] Ownership/provenance and additive V002 metadata/usage proposal reviewed against Day 15 principals; no migration executed.
+- [x] Private local root and UUID-only object keys; labels never used as paths; descriptor/no-follow/no-replace and file-lock cleanup contract specified.
+- [x] Versioned 25 MiB/file, 1 GiB/owner, 10 GiB global quotas, count/concurrency/free-space/deadline/archive bounds and deterministic same-key semantics specified and pure policy cases executed.
+- [x] Global -> owner -> file transaction ordering, no SQL transaction over streaming/fsync, cross-resource journal/crash matrix and exactly-once allocation release reviewed.
+- [x] Rollout/rollback and paired DB/blob backup/identity restoration plan reviewed; D17 failure/race/MIME/FS/HTTP acceptance matrix explicit.
+- [x] `tests/test_file_storage_policy.py`: 86 PASS; full Vault-backed PostgreSQL/CORE regression 237 PASS, zero SKIP. Read-only DB check: V001/four tables unchanged.
+
+Artifacts: `docs/FILE_STORAGE_DESIGN.md`, `docs/ADR/019-bounded-local-file-storage.md`, `src/application/services/file_storage_policy.py`, `tests/test_file_storage_policy.py`.
+
+**Scope boundary:** snapshot helpers do not implement atomic quota reservation, MIME sniffing, FD-safe blob I/O, durable publication or recovery. Those remain D17 acceptance. Existing Day 15 source/dependencies/services were preserved. No MinIO credential/policy, new service, file route, migration or payload directory was introduced in D16.
+
 ### Phase 2b — Documents, retrieval and memory (D16–D32)
 
 | Day | Concrete task | Acceptance gate |
 |---|---|---|
-| D16 | Design bounded file metadata/storage with principal ownership, path isolation, quotas and provenance | D15 local gate accepted; review schema/storage/rollback plan before upload implementation |
-| D17 | File upload/download APIs, MIME sniff, size caps, checksum, ACL | Invalid/malicious inputs rejected; no arbitrary path writes |
+| D16 | **PASS — design/policy:** owner-typed metadata, private local blobs, quotas, provenance, journal and rollback | ADR-019/spec review complete; 86 policy tests, full 237/237 PASS; no runtime file feature claimed |
+| D17 | **NEXT / TODO:** implement V002/repositories/private FS adapter, bounded raw upload/download, MIME/container verification, hash and ACL | Follow FILE_STORAGE_DESIGN.md; real DB/FS/HTTP/quota/crash/FD-lock/paired-restore tests; invalid inputs rejected and no arbitrary path writes |
 | D18 | PDF native text extraction with page provenance | Page and source mapping works on golden PDFs |
 | D19 | DOCX read/write, tables, styles and round-trip tests | Valid output opens; sample content preserved |
 | D20 | XLSX read/write, sheets, formula preservation and security | No macro execution; sample workbook round trip |
@@ -439,7 +453,8 @@ sequenceDiagram
 | P1 | Legacy unowned pending runs; old/new writer overlap during rollback | T06 leased runs now recover after expiry; manually verify legacy ownership and drain active runs before rollback (ADR-017) |
 | P1 | Persistent adapter depends on gateway private context/Auto helpers | Whole-turn/tokenizer budgeting now tested; extract a public planning port during planned dependency inversion |
 | P0 | Production Vault auth for FastAPI not yet configured | Scoped AppRole or Vault Agent/injector; never root in runtime |
-| P0 | User-provided files and web pages may contain hostile instructions | D17 onward sanitization/provenance; approval gate D33/D75 |
+| P0 | File upload can cross DB/FS crash, quota, open-inode or MIME boundaries | D16 design/policy accepted; D17 must execute real journal/FD-lock/quota/container/HTTP failure tests before enabling routes |
+| P0 | User-provided files and web pages may contain hostile instructions | D17 onward verification/provenance; content remains untrusted, tool approval gate D33/D75 |
 | P0 | UNRESTRICTED profile could get side-effecting tools if policy accidentally shared | Enforce policy server-side with negative tests |
 | P1 | App Service imports concrete PostgreSQL repositories | Refactor to Unit of Work/factory injected at composition root |
 | P1 | Existing API stateless and conversation API separate | Preserve old behavior and versioned contracts |
@@ -512,12 +527,13 @@ uv run python -m pytest \
 
 ## 10. Next-session execution order (Codex handoff)
 
-1. **Day 15 is PASS for authenticated localhost; D16 is NEXT.** Read ADR-018 and the current runbook. Preserve the bearer principal boundary, JSONB owner scope, runtime pool logs and 151/151 regression evidence.
-2. Design bounded file metadata/storage: reuse authenticated principal IDs; define source provenance, safe paths, allowed types, size/quota limits, checksum/idempotency and cleanup lifecycle. Do not add upload APIs before the D16 design/rollback acceptance is reviewed.
-3. Keep Day 15 local deployment limits: one loopback worker; no proxy/public exposure, silent legacy adoption, operator tokens in runtime or unreviewed shared infrastructure changes.
-4. Record new decisions, tests and changes in ADR/dev log. Evaluate priority/dependency/effort/risk before scheduling scope additions.
+1. **D16 design/policy is PASS; D17 is NEXT.** Read `docs/FILE_STORAGE_DESIGN.md` and ADR-019. Preserve Day 15 owner/auth/runtime behavior and 237/237 full-suite evidence.
+2. Implement the additive file journal and owner/global quota repositories behind disabled admission. Retrieve only the needed app/migrator credential from Vault; prepare fresh protected backup and reviewed DDL/rollback before any migration.
+3. Build the descriptor-safe private FS adapter and bounded two-step raw-body HTTP flow. Apply the detailed D17 matrix: owner isolation, quota/idempotency races, MIME/container validation, inode locks, no-replace publish, every crash boundary and paired metadata/blob restore. Do not substitute policy-unit PASS for these runtime gates.
+4. Keep localhost/one-worker deployment, no public proxy exposure, no silent adoption, no operator token in runtime and no new shared-service instances. No MinIO backend until its scoped identity/dependency/parity review is scheduled.
+5. Record exact test counts, code/architecture/rollback decisions and open issues before marking D17 complete or moving to extraction.
 
-**Current formal checkpoint:** `D15-T01..T06 = PASS for defined local acceptance`, **Day 15 local gate accepted**, **`D16 = NEXT / TODO`**. Production deployment and model-quality certification remain separate gates.
+**Current formal checkpoint:** `D15-T01..T06 = PASS for defined local acceptance`, **`D16 = PASS (design/policy)`**, **`D17 = NEXT / TODO`**. File upload and extraction are not yet implemented.
 
 ---
 
@@ -531,3 +547,4 @@ uv run python -m pytest \
 | **v3.2** | **2026-10-17** | Read existing app credential from Vault after operator unseal; corrected live test max_tokens to the existing 512-token minimum; 4/4 integration and 94/94 full suite PASS; verified actual API process restart and replay. T05 PASS for localhost; T06 NEXT. |
 | **v3.3** | **2026-10-17** | Committed T05 as 18f3175. Implemented T06 leases/heartbeat/fencing, cancellation, recent whole-turn context and tokenizer budgeting; 127/127 PASS, zero SKIP. ADR-017 records limits; owner isolation and shared DB restore/restart keep T06 PARTIAL. |
 | **v3.4** | **2026-10-18** | Closed T06 local gates: bearer principal/owner isolation, periodic pool export, protected data/owner/ACL restore and shared DB restart with Keycloak recovery. Authenticated CORE process restart/replay accepted; 151/151 PASS, zero SKIP. Day 15 local gate PASS; D16 design NEXT. |
+| **v3.5** | **2026-10-18** | D16 schema/storage/rollback design and isolated policy accepted: ADR-019/spec, 86 policy cases and full 237/237 PASS; V001 unchanged. D17 actual file journal/FS/upload/download NEXT; no runtime file feature declared PASS. |
