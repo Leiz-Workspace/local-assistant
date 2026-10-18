@@ -19,6 +19,7 @@ from src.infrastructure.local_blob_storage import (
     BlobStorageError,
     LocalBlobStorage,
 )
+from src.infrastructure.pdf_extractor import EXTRACTOR_VERSION, extract_pdf
 from src.infrastructure.repositories.file_journal import (
     SAFE_ERRORS,
     PostgresFileJournal,
@@ -71,6 +72,12 @@ def identity_for(row) -> BlobIdentity:
     return BlobIdentity(row["owner_id"], row["id"], row["lease_owner"] or UUID(int=0))
 
 
+def extract_reader(reader):
+    """Keep the borrowed FD alive until the isolated extraction process exits."""
+    with reader.extraction_reader() as source:
+        return extract_pdf(source)
+
+
 class FileService:
     """Own a single process's file operations, guarded I/O and bounded shutdown joins."""
 
@@ -90,6 +97,7 @@ class FileService:
         self.closing = False
         self._recovery_task = None
         self._ready_cursor = None
+        self._extractions = 0
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -332,6 +340,58 @@ class FileService:
         except BaseException:
             await file_io(reader.close)
             raise
+
+    async def extract(self, owner_id, file_id):
+        """Extract owned ready PDF pages with bounded admission and final source revalidation."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if row["detected_media_type"] != "application/pdf":
+                raise StoragePolicyError("pdf_required", 415)
+            if self._extractions >= 2:
+                raise StoragePolicyError("extraction_busy", 429)
+            self._extractions += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            pages = await file_io(extract_reader, reader)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            result = {
+                "file_id": str(file_id),
+                "sha256": row["actual_sha256"],
+                "extractor": EXTRACTOR_VERSION,
+                "content_trust": "untrusted",
+                "pages": [
+                    dict(
+                        page,
+                        locator=f"file:{file_id}#page={page['page_number']}",
+                        status="native_text"
+                        if page["text"].strip()
+                        else "no_native_text",
+                    )
+                    for page in pages
+                ],
+            }
+            logger.info(
+                "file_extraction_served file_id=%s pages=%d", file_id, len(pages)
+            )
+            return result
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._extractions -= 1
+                self.untrack(task)
 
     async def shutdown(self):
         """Cancel and join resource owners before closing the root or disposing the DB pool."""

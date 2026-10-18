@@ -2050,3 +2050,40 @@ Artifacts riêng tư giữ ngoài Git/source archive: `data/backups/d17-paired-2
 - [x] Full443/443, zero SKIP; ADR-019–025/design/runbook/roadmap/dev log phản ánh evidence; source-only full-file artifact tách khỏi secrets/backups.
 
 **D17 hoàn tất đúng local acceptance. Bước kế tiếp D18:** P1 native PDF extraction có file UUID/content hash/page locators/extractor version, owner/namespace/ready/hash recheck và isolated resource bounds. Review ADR trước thay đổi kiến trúc/persistence; golden multi-page/Unicode/blank/error/page mapping và full regression phải PASS trước khi chốt D18. OCR/VLM thuộc D21, không auto-ingest hoặc coi file content là instruction.
+
+---
+
+# Ngày 18 — Native PDF extraction có provenance từng trang (2026-10-18)
+
+**Mục đích:** Ghi lại triển khai, quyết định kiến trúc và kết quả kiểm thử thực tế của D18 sau D17 PASS.
+
+**Kết quả:** **D18 PASS trong phạm vi localhost/one worker**. Full regression **476 passed in34.23s**, exit0, **0 SKIP**, không exclude test. D19 DOCX read/write là task tiếp theo; chưa đánh dấu PASS hay triển khai D19. Ngày trong roadmap là milestone, không phải hạn buộc phải nhảy task.
+
+## Đánh giá phạm vi và ADR
+
+P1, phụ thuộc owned ready files/namespace/FD/sandbox đã PASS của D17. Rủi ro: font/text ordering, page mapping, malformed streams, resource exhaustion, concurrent delete và hostile document instructions. ADR-026 chốt trích xuất native PDF **theo yêu cầu, không lưu cache/persist extraction**; không cần migration hoặc dependency mới. Không auto-ingest/attach/model call. OCR/VLM vẫn D21. Không đổi schema, config hay hành vi Day15 đã PASS; chỉ bổ sung reader FD API cần cho extraction và service/router liên quan của D17.
+
+## Code đầy đủ trong checkout
+
+- `src/infrastructure/pdf_extractor.py`: parent sandbox invocation, wall/output bounds, exact protocol/version/page numbering/UTF-8 validation, safe errors và audit counts/version.
+- `src/infrastructure/pdf_extractor_worker.py`: kernel limits trước import parser, D17 PDF structure/active-content validation, plain native text từng trang, reject overflow thay vì truncate.
+- `src/infrastructure/local_blob_storage.py`: `BlobReader.extraction_reader()` giữ read-only borrowed FD trên shared locked inode; không reopen user pathname.
+- `apps/api/services/files.py`: tối đa2 extraction đồng thời, không queue; track/join request và thread trước close; owner/namespace/ready/hash trước parsing và integrity/ready sau parsing. Delete có thể hide/202 khi reader còn giữ lock; không trả stale extracted text.
+- `apps/api/routes/files.py`: authenticated `POST /api/v1/files/{id}/extract`, private/no-store và nosniff; response UUID/SHA/extractor/version, `content_trust=untrusted`, pages với one-based number/text/locator/status. Không có native text trả `no_native_text`, không khẳng định visual page blank.
+- Tests/golden/ADR/design/runbook/roadmap cập nhật đồng bộ. Source archive cuối chứa full versions của các file thay đổi, không phải patch; không kèm key/data/backup.
+
+## Giới hạn thực thi
+
+Reuse Bubblewrap read-only runtime/code, isolated network/PID/user/IPC, cleared environment, không mount home/data/auth/Vault.512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;8 MiB regular stdout. Tối đa1000 pages,128 KiB UTF-8/page,1 MiB UTF-8/document. Parser errors không lộ exception text. Logs chỉ UUID/count/version/error code, không page text. Đây là native/plain extraction có golden coverage cụ thể; chưa chứng nhận arbitrary font/layout/table fidelity.
+
+## Kiểm thử đã quan sát
+
+1. **25 parser/protocol/resource cases PASS**: independent hand-assembled3-page PDF có2 dòng, explicit Unicode CMap U+1EC7, trang không text; exact page/text oracle. Actual malformed/encrypted/active/1003-page/per-page text/document text limits. Wrong schemas/numbering/version/surrogate/oversized replies, sanitized process failures/source rewind. Actual kernel-limit entrypoint, real stalled sandbox timeout không còn worker và log privacy. Golden README ghi rõ coverage và limitations.
+2. **8 real PostgreSQL HTTP/service cases PASS**: auth401, foreign owner404, reserved409, non-PDF415, source tamper503; exact UUID/hash/version/page locators/status, private headers, repeat determinism/source download/quota unchanged; concurrent delete, cancellation, shutdown, tamper **sau parser hoàn thành** giữ lock/join và final revalidation;2-slot admission/429/release; foreign storage namespace từ chối trước parser.
+3. **Full regression:476 passed in34.23s**,0 skip, real PostgreSQL + CORE.443 baseline +25 parser +8 HTTP/service. Credential đọc từ Vault bằng TLS helper, parent chỉ cấp app DATABASE_URL/live flag cho pytest; strip VAULT env, redact secrets trước output. Không hardcode/print key.
+4. Ruff selected correctness/import rules (`E4,E7,E9,F,I`, fixture re-export exceptionF811), format7 files, AST descriptions112 definitions, uv lock check và git diff check PASS. Không tuyên bố toàn bộ repository lint sạch; các policy lint legacy không thuộc thay đổi này.
+5. Sau regression: global file usage `(0,0,0)`, restore probes0; shared containers vẫn running/healthy, không restart/new service. Tests dùng UUID/root riêng và cleanup đúng owner; production namespace/auth/paired backup không bị thay thế.
+
+Lượt thử đầu phát hiện oversized-PDF fixture thiếu font nên không sinh native text; đã sửa fixture dùng font thật từ golden rồi cả per-page/document caps được kiểm chứng bằng actual sandbox. Một fixture tamper dùng reservation chưa có lease đã được sửa bằng ready identity từ journal; một lượt lint loại fixture imports đã được phục hồi bằng explicit re-export. Chỉ kết quả full476 sau các sửa này được dùng chốt PASS.
+
+**Tiếp theo D19:** review supported DOCX paragraphs/tables/styles/read-write/round-trip semantics; đánh giá dependency/effort/security/output ownership-quota; ADR trước persistence/API mới. Giữ476 baseline và chỉ chuyển milestone sau Acceptance Criteria có kết quả thực tế.

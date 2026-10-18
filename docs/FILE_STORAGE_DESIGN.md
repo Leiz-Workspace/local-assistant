@@ -236,3 +236,11 @@ Startup/periodic recovery now scopes by root namespace, fences only expired work
 The retained operational drill at `data/backups/d17-paired-20261018` used the existing Vault API principal: authenticated upload, graceful process stop, seven-table row/owner/ACL restore, copied/restored namespace/blob/hash/identity proof, new Uvicorn process, same-key replay/download/delete. Manifest flags paired/database/security/identity verified; archive/blob hashes and 0700/0600 permissions independently checked. Both API workers stopped; canary/journal and DB probes removed; final global allocation zero; existing conversation/message/run rows/ACLs unchanged. No shared container restart or new service occurred.
 
 The file feature is operator opt-in, with [local runbook](FILE_STORAGE_LOCAL_RUNBOOK.md). Conservative verifier subsets, same-UID cooperation, stuck-kernel-I/O limits, retention/encryption/off-host DR and production multiworker/load remain explicit limits. Acceptance is not malware/semantic-trust or power-loss certification. **D18 native PDF extraction is next, not implemented in D17.**
+
+## 16. D18 native PDF extraction extension
+
+**Purpose:** Record how extraction consumes the accepted D17 foundation without changing its persistence contract.
+
+ADR-026 adds on-demand authenticated native PDF extraction with immutable file UUID/hash, extractor version and one-based page locators. It reuses the namespace-scoped journal, owned ready/hash admission, shared locked FD and isolated parser mounts. The reader now exposes a context-managed read-only duplicate specifically for bounded extraction; existing download/upload/quota/recovery behavior remains intact.
+
+No schema/migration/cache/index/model context is added. Worker text and stdout budgets, two-slot process-local admission, final integrity/ownership revalidation and cancellation/shutdown joins are specified in ADR-026 and the local runbook. Page text is explicitly untrusted. Golden multi-page/Unicode/blank fixtures and real owner/hash/state/delete/cancellation/namespace tests are required alongside the prior full regression before acceptance. OCR/VLM remains D21; durable extraction/chunk lifecycle belongs to later pipeline design.
