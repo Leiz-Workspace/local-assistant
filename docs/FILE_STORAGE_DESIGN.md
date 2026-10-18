@@ -244,3 +244,13 @@ The file feature is operator opt-in, with [local runbook](FILE_STORAGE_LOCAL_RUN
 ADR-026 adds on-demand authenticated native PDF extraction with immutable file UUID/hash, extractor version and one-based page locators. It reuses the namespace-scoped journal, owned ready/hash admission, shared locked FD and isolated parser mounts. The reader now exposes a context-managed read-only duplicate specifically for bounded extraction; existing download/upload/quota/recovery behavior remains intact.
 
 No schema/migration/cache/index/model context is added. Worker text and stdout budgets, two-slot process-local admission, final integrity/ownership revalidation and cancellation/shutdown joins are specified in ADR-026 and the local runbook. Page text is explicitly untrusted. Golden multi-page/Unicode/blank fixtures and real owner/hash/state/delete/cancellation/namespace tests are required alongside the prior full regression before acceptance. OCR/VLM remains D21; durable extraction/chunk lifecycle belongs to later pipeline design.
+
+## 17. D19 structured DOCX read/write extension
+
+**Purpose:** Extend the file-consumer boundary with conservative OOXML round-trip preservation.
+
+ADR-027 adds main-body paragraph/run/table/style inspection and source-hash-conditioned text replacement in existing plain runs. Run/paragraph/table properties and all non-document.xml package-member bytes are retained. Unsupported complex paragraphs are reported non-editable and rejected for rewrite. File UUID/hash/version and paragraph/table locators identify the exact source; no rendered-page mapping is claimed.
+
+A bounded read-only anonymous request mount avoids putting edit content into process arguments/environment. Runtime lxml preserves namespace mappings with network/entity/DTD loading disabled after D17 verification. Dev-only python-docx and trusted LibreOffice golden conversion independently check that rewritten output opens and preserves sample formatting/content. Source/ready/hash revalidation and cancellation joins reuse D17's owned FD boundary.
+
+New two-slot DOCX admission is retained through complete response delivery to bound slow-client output retention. Generated output is ephemeral, at most 25 MiB, with source/output hashes; no journal/cache/migration or persistent-quota change. A caller must explicitly reserve/upload to retain it. PDF behavior remains unchanged. Limits, unsupported structures, direct-format semantics, response lifecycle and rollback are defined in ADR-027 and the local runbook.

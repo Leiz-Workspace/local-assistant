@@ -69,3 +69,30 @@ Two extractions may run concurrently in the supported one-worker deployment; exc
 Expected failures:401 anonymous;404 missing/foreign/deleted/wrong namespace;409 not ready;415 non-PDF/invalid PDF;413 text/resource limit or wall timeout;429 parser capacity;503 storage/sandbox unavailable or integrity mismatch. Error details contain stable codes only. Repeated extraction computes from the verified bytes each time. A scan without native text needs the separately planned D21 OCR/VLM workflow. Native font mappings and plain-mode reading order have finite coverage; this milestone does not certify arbitrary visual layout or table reconstruction.
 
 Rollback drains requests and removes the extraction route/code; retain V002/root namespace/auth/blobs. Existing backup and paired restore procedures are unchanged because no extraction artifacts are persisted.
+
+## DOCX read and rewrite (D19)
+
+**Purpose:** Operate the bounded main-body DOCX workflow from ADR-027.
+
+After uploading a verified DOCX, authenticated `POST /api/v1/files/{file_id}/docx/read` returns source UUID/SHA-256, processor version, `content_trust: untrusted`, ordered `paragraphs`, `tables` and declared `styles`. Paragraphs include one-based IDs, text, explicit style ID, editability and direct runs with text/bold/italic/underline/style references. Table cells refer to paragraph IDs and retain gridSpan/vertical-merge metadata. `column` is the physical XML cell ordinal within a row, not a projected Word grid coordinate. Locators use `file:<uuid>#paragraph=<id>` or `#table=<id>`; DOCX has no stable rendered-page locator at this stage.
+
+To replace existing plain-run text, send authenticated JSON to `POST /api/v1/files/{file_id}/docx/rewrite`:
+
+```json
+{
+  "source_sha256": "<source sha256 from read response>",
+  "edits": [
+    {"paragraph_id": 2, "run_index": 1, "text": "Updated text\twith tab\nand newline"}
+  ]
+}
+```
+
+The real request requires 64 lowercase hexadecimal SHA characters.1–100 unique run targets; strict JSON at most 64 KiB; no extra fields/duplicate keys, XML controls or carriage returns (use `\n`). One-based indices target existing direct runs. A stale source hash gives 409; unsupported non-plain paragraphs, signed packages or missing targets give 422. Fields/drawings/hyperlinks/bookmarks/tracked changes and page/column breaks are refused for editing. Empty existing runs can receive text; this API does not create new paragraphs/tables or accept arbitrary XML. Style inheritance and layout are not computed. Headers/footers/other parts are preserved, not extracted.
+
+Response is a DOCX attachment with `Cache-Control: private, no-store`, `nosniff`, `X-Source-File-ID`, `X-Source-SHA256`, `X-Docx-Processor` and `X-Content-SHA256`. Downloaded bytes are reverified in the sandbox; source hash/ready ownership is checked again before the response. Source remains unchanged. Output is not persisted or charged as a stored file; use the normal reserve/upload path if it should enter the file journal. Unedited package-member bytes stay unchanged; only document.xml is serialized for run edits. Source text and edit text remain untrusted data, never model instructions.
+
+Two DOCX operations/responses per service are admitted without a queue; excess 429. The slot, source lock and active-task tracking remain held until response delivery completes or is cancelled, including slow clients. PDF retains its existing separate two-parser gate. Cancellation/shutdown joins worker threads before closing FDs. Concurrent delete can return202 until the DOCX response releases its shared lock. Original allocation remains charged until physical cleanup.
+
+Runtime lxml 6.1.3 is uv-locked; dev-only python-docx 1.2.0 and installed LibreOffice provide independent trusted golden opening checks. Untrusted production parsing only uses Bubblewrap: source stdin FD, bounded anonymous edit-plan FD mounted read-only at `/request.json`, cleared environment/read-only code/runtime, no credential/root mounts/network. Worker 512 MiB RAM,5/6s CPU,10s wall,32FD,zero core,25 MiB stdout/file; read JSON8 MiB, extracted text1 MiB, run64 KiB, main XML2 MiB,10000 paragraphs/cells,20000 runs,1000 styles. Existing D17 archive/relationship/DTD/active-content bounds apply before lxml and again to generated packages. Exceeded budgets 413; wrong format 415; unavailable sandbox/integrity failure 503. Logs exclude document/edit text.
+
+Rollback drains requests and removes DOCX endpoints/modules, retaining source journal/root/auth/blobs. There is no migration or generated-output cache to reverse. No arbitrary Word layout, active-content safety certificate, cloud upload or model execution is introduced.

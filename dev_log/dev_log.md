@@ -2087,3 +2087,44 @@ Reuse Bubblewrap read-only runtime/code, isolated network/PID/user/IPC, cleared 
 Lượt thử đầu phát hiện oversized-PDF fixture thiếu font nên không sinh native text; đã sửa fixture dùng font thật từ golden rồi cả per-page/document caps được kiểm chứng bằng actual sandbox. Một fixture tamper dùng reservation chưa có lease đã được sửa bằng ready identity từ journal; một lượt lint loại fixture imports đã được phục hồi bằng explicit re-export. Chỉ kết quả full476 sau các sửa này được dùng chốt PASS.
 
 **Tiếp theo D19:** review supported DOCX paragraphs/tables/styles/read-write/round-trip semantics; đánh giá dependency/effort/security/output ownership-quota; ADR trước persistence/API mới. Giữ476 baseline và chỉ chuyển milestone sau Acceptance Criteria có kết quả thực tế.
+
+---
+
+# Ngày 19 — DOCX read/write, tables, styles và round-trip (2026-10-18)
+
+**Mục đích:** Ghi quyết định phạm vi, triển khai và acceptance thực tế cho D19 sau D18 PASS.
+
+**Kết quả:** **D19 PASS trong phạm vi localhost/one worker và plain direct-run editing**. Final full regression **529 passed in 43.90s**, exit0, **0 SKIP**, không exclusions; PostgreSQL/CORE thật, credential từ Vault. D20 XLSX là task NEXT, chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox và conventions provenance/lifecycle D18. Rủi ro: ZIP/XML expansion, external relationships, mất formatting hoặc package parts, ambiguous edit targets, source thay đổi/xóa trong lúc parse và slow-client giữ output. ADR-027 được viết trước API/persistence changes; chọn đọc cấu trúc và sửa text **trong existing plain direct runs**, giữ run/paragraph/table/style properties, serialize riêng `word/document.xml`, giữ mọi member khác nguyên bytes sau decompression. Không hứa arbitrary Word layout/pagination hoặc tính toán inherited formatting.
+
+Output là bounded ephemeral attachment; không cache/journal/migration hay charge persistent quota mới. Caller muốn lưu phải reserve/upload như file bình thường. Không sửa source, không model/ingestion, không thay đổi Day15/PDF code đã PASS. Chỉ mở rộng service/router cần cho D19. D19 được hoàn thành trong một milestone sau acceptance; roadmap không ép một milestone tương ứng một ngày lịch.
+
+Dependencies thêm bằng uv: runtime `lxml>=6,<7` khóa6.1.3 để giữ namespace khi sửa XML; dev-only `python-docx>=1.2,<2` khóa1.2.0 làm independent reopen oracle/golden generator. Dùng LibreOffice có sẵn để mở/render trusted test fixture, không đưa LibreOffice vào runtime untrusted parsing và không tạo service/container mới. Lockfile purpose header được giữ lại sau uv update.
+
+## Code và contract
+
+- `src/application/services/docx_contract.py`: strict plans/views, source SHA precondition, unique one-based paragraph/run targets, XML-valid Unicode/tab/newline, numbering/reference/text/count bounds và versioned processor ID.
+- `src/infrastructure/docx_content.py`: đọc ordered main-body paragraphs/runs/tables/cells/merges/style references; direct bold/italic/underline dùng tri-state để không nhầm inherited formatting. Rewrite chỉ selected text/tab/line-break nodes, giữ rPr và các phần không sửa. Unsupported fields/drawings/hyperlinks/bookmarks/tracked changes/page-column breaks không được edit; signed packages bị từ chối rewrite.
+- `src/infrastructure/docx_processor.py` và `docx_worker.py`: borrowed read-only source FD vào stdin; bounded anonymous request FD được bwrap mount read-only tại `/request.json`, không nhét edit text vào argv/env. D17 OOXML preflight trước lxml (`resolve_entities/load_dtd/huge_tree=False`, `no_network=True`); reverify generated DOCX trước release. Parent bounded output/schema, safe allowlisted errors; không log parser diagnostics/text.
+- `FileService.docx_operation()` giữ tối đa2 DOCX slots, active task và shared source lock **đến khi gửi xong response hoặc cancel**, tránh tích tụ output25 MiB do client chậm. Recheck owner/namespace/ready/size/hash trước parsing và hash/ready sau parsing. Cancellation/shutdown join thread rồi mới close FD. PDF giữ gate riêng như cũ.
+- Authenticated `POST /api/v1/files/{id}/docx/read`: file UUID/hash, processor version, untrusted label, paragraphs/runs/tables/styles và source locators.
+- Authenticated `POST /api/v1/files/{id}/docx/rewrite`: strict JSON tối đa64 KiB,1–100 unique edits, source hash; trả DOCX attachment private/no-store/nosniff với source/output SHA và processor headers. Không đổi nguồn/quota. Chỉ có native source indices, không tự tạo page citations cho Word.
+
+## Giới hạn
+
+512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;25 MiB output/stdout. Read JSON8 MiB; native text1 MiB; run64 KiB; main XML2 MiB;10000 paragraphs/cells;20000 runs;1000 styles. Mọi overflow reject, không truncate. D17 archive/DTD/macro/external/nested-package bounds vẫn áp dụng. Các phần không sửa giữ nguyên, không phải chứng nhận mọi nội dung Word là an toàn hay mọi visual layout giống nhau.
+
+## Kết quả kiểm thử đã quan sát
+
+1. **37 processor/contract/resource/opening cases PASS**: genuine styled Unicode golden,3 differently formatted runs, custom paragraph style, table cells/gridSpan merge, source main-body order; source hash/unique targets/invalid XML chars/strict types; exact run edits và no-op/empty/multiple runs. Independent python-docx reopen chứng minh bold/italic/underline/style/table/header/footer còn đúng; mọi non-document.xml member bytes giống nguồn. Actual LibreOffice mở trusted rewritten DOCX và convert PDF; pypdf xác minh edited text/table values. Không coi extract-only smoke là đủ.
+2. Actual hostile variants: malformed/external relationship/DTD/macro/nested package; XML/paragraph/run/document text limits; unsupported field/signature/missing target/stale hash. Assert **exact safe code/status**, không chấp nhận broad infrastructure503 cho negative input. Resource XML dùng ZIP_STORED để chứng minh native budgets thay vì vô tình chạm ZIP ratio trước.
+3. Kernel limit probe ở production worker parser entrypoint; read-only metadata mount, host/private paths absent, credential-free environment; real stalled sandbox timeout không còn worker. Parent timeout/OS/crash/malformed/oversized/error-type replies và log privacy fail closed. Oversized serialized edit plan bị chặn trước scheduling worker.
+4. **16 real PostgreSQL HTTP/service cases PASS**: owned read/rewrite/reopen/provenance/headers, auth401/foreign404/reserved409/deleted404/non-DOCX415, immutable source và chỉ1 original blob/quota unchanged. Stale hash/unknown fields/duplicate targets/duplicate JSON keys/oversize/media/tamper safe errors. Concurrent delete/cancel/shutdown/tamper sau parse không trả stale content và join/release đúng. Hai actual slow rewrite responses giữ cả2 slots, request3 trả429, delete giữ allocation, cancellation đóng FD rồi cleanup về0. Wrong namespace và response-construction failure không leak operation. JSON response budget được kiểm tra sau khi thêm provenance; exceeded413 giải phóng slot và giữ nguyên nguồn.
+5. **Final full:529 passed in 43.90s**,0 skip, no exclusions;476 baseline +37 processor +16 integration. Intermediate528/43.32s và528/43.41s giữ làm lịch sử; final529 chạy sau khi bổ sung cap8 MiB cho HTTP JSON kể cả source locators và test cleanup, cùng kiểm tra independent LibreOffice subprocess cũng dùng credential-free environment (`PATH/LANG/XDG_CACHE_HOME` only). Runtime sandbox từ đầu không nhận DB/Vault/API env. Vault TLS helper chỉ giao app DATABASE_URL/live flag cho pytest; strip VAULT env và redact trước output, không print/hardcode key.
+6. Ruff selected correctness/import rules `E4,E7,E9,F,I` (explicit fixture re-export exceptionF811), format8 files, AST descriptions102 definitions, uv lock và diff checks PASS. Không tuyên bố toàn repository lint sạch ngoài phạm vi.
+7. Post-test audit: global file allocation `(0,0,0)`, restore probes0; existing shared services vẫn running/healthy, không restart/new instance. D19 không đụng production schema/root/auth/retained paired backup; tests dùng root/UUID riêng và cleanup đúng owner.
+
+Roadmap v3.12, ADR-027, design/runbook và golden README được cập nhật theo final evidence; full-file source archive tại `/tmp` không chứa key/data/backup. **Next D20:** P1 XLSX sheets/cells/styles/formula-source preservation; đánh giá dependency/effort/risk và ADR trước API mới, không execute formula/macro hay tự recalculation; golden workbook round-trip và full regression bắt buộc trước PASS.
