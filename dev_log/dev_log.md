@@ -1950,3 +1950,25 @@ python -m pytest tests/ -q -rs --tb=short
 327 = 303 prior + 24 journal cases. Owner-specific test cleanup khóa global và chỉ trừ allocations của các UUID test; không reset counters của app/owner khác. Ruff/format, AST descriptions, py_compile và git diff --check thực hiện cho các file mới. Source/config/runtime Day 15 giữ nguyên; schema chỉ thêm V002 đã review/backup.
 
 **Tiếp tục ngay:** D17-T03 verifier MIME/container trong process riêng có resource/deadline bounds; sau đó T04 raw HTTP và T05 recovery/paired restore. Không mark D17 PASS trước các gate đó.
+
+
+---
+
+# CHECKPOINT — 2026-10-18 — D17-T03 isolated MIME/container verification
+
+**Purpose:** Ghi nhận verifier có bounds và môi trường cô lập thật; tiếp tục T04 ngay trong D17.
+
+**Trạng thái:** T03 PASS ở verifier scope; D17 IN PROGRESS, HTTP/paired restore chưa PASS.
+
+- T02 đã commit `1a9ce17`; tiếp tục theo chỉ dẫn làm liên tục, không đợi user nhắc task kế tiếp.
+- `file_verifier.py`, `file_verifier_worker.py`, `file_content_verifier.py`: sealed payload FD vào subprocess; không truyền original filename/path/credential; Bubblewrap namespaces thật với read-only system runtime/venv/src, không mount home/data/Vault, clearenv, network riêng, caps dropped, readonly tmp, die-with-parent. Không fallback parse trong API nếu sandbox lỗi.
+- Worker limits: 512 MiB address space, CPU soft/hard 5/6s, wall 10s, 32 FDs, core 0, file output 4096 bytes. Anonymous regular verdict file + parent đọc tối đa 4097 bytes tránh PIPE capture không giới hạn. Timeout test thật chứng minh không còn worker/supervisor giữ FD.
+- TXT/MD/CSV incremental UTF-8/control/prefix checks; PNG/JPEG/WebP verify+decode đúng format, single frame/max20M pixels; PDF strict/encryption/pages/indirect traversal/expanded streams/active-feature checks; DOCX/XLSX ZIP directory preflight, header+actual expansion/CRC limits, path/duplicate/symlink/encryption/macro/nested archive checks, bounded defused XML, required types/main parts/local relationships và workbook sheets.
+- `uv add 'pypdf>=6,<7' 'defusedxml>=0.7,<1'`: lock 6.21.1/0.7.1, chỉ 2 dependencies mới; Pillow giữ nguyên. Bubblewrap 0.11.1 có sẵn và namespace probe PASS. pyproject/uv.lock có purpose descriptions; `uv lock --check` PASS.
+- ADR-022 ghi P0/dependency/effort/risk, conservative V1 limits, integration/cancellation và rollback. Runtime feature chưa bật; không certificate malware/semantic trust hoặc production multiworker.
+
+Tests `tests/test_file_verifier.py`: **62 passed in 6.05s**. Bao gồm đủ 10 suffix formats, fake headers, malformed UTF-8/controls/leading markup, macro/encrypted/bomb/traversal/symlink/duplicate/nested ZIP, DTD/entity/external relationships/missing parts, encrypted/active/truncated PDF; real namespace network/host secret/env isolation, worker kernel limits, real timeout cleanup và malformed JSON verdicts. Review thêm typed verdict checks để không phát sinh raw TypeError.
+
+Full Vault-backed suite: **389 passed in 17.53s**, exit0, zero SKIP/no exclusions, PostgreSQL + CORE thật. 389 = 327 prior + 62 verifier. Ruff/format, AST descriptions và git diff --check PASS. Không đổi schema hoặc runtime Day 15 trong T03.
+
+**Tiếp tục ngay T04:** owner-authenticated reserve/raw PUT/list/detail/download/delete, metadata/body bounds, heartbeat/deadline/cancellation, FD-safe off-event-loop I/O và honest pending cleanup. Sau đó T05 reconciliation/paired restore; D17 còn mở.
