@@ -111,6 +111,7 @@ class ConversationManager:
         max_history_messages: int = 24,
         lease_seconds: float = 120,
         heartbeat_seconds: float = 30,
+        principal_id: UUID | None = None,
     ) -> None:
         """Initialize the configured dependencies and execution limits."""
         if max_history_messages < 1:
@@ -120,6 +121,7 @@ class ConversationManager:
             raise ValueError(
                 "heartbeat_seconds must be positive and shorter than lease_seconds"
             )
+        self.principal_id = principal_id
         self.owner_id = str(uuid4())
         self.lease_seconds = lease_seconds
         self.heartbeat_seconds = heartbeat_seconds
@@ -183,7 +185,9 @@ class ConversationManager:
 
                 # Lock BEFORE checking request_key. Concurrent calls
                 # for the same conversation must serialize here.
-                conversation = await conversations.lock_active(conversation_id)
+                conversation = await conversations.lock_active(
+                    conversation_id, **self._principal_scope()
+                )
 
                 if conversation is None:
                     raise ConversationError(
@@ -350,7 +354,9 @@ class ConversationManager:
                 runs = PostgresInferenceRunRepository(session)
 
                 conversations = PostgresConversationRepository(session)
-                conversation = await conversations.lock_active(conversation_id)
+                conversation = await conversations.lock_active(
+                    conversation_id, **self._principal_scope()
+                )
                 if conversation is None or not await runs.require_live_lease(
                     reserved.run_id, self.owner_id
                 ):
@@ -586,7 +592,12 @@ class ConversationManager:
         """Commit safe expiry recovery separately so a replay conflict cannot undo it."""
         async with self.session_factory() as session, session.begin():
             conversations = PostgresConversationRepository(session)
-            if await conversations.lock_active(conversation_id) is None:
+            if (
+                await conversations.lock_active(
+                    conversation_id, **self._principal_scope()
+                )
+                is None
+            ):
                 return False
             return await PostgresInferenceRunRepository(session).expire_pending(
                 conversation_id
@@ -637,3 +648,7 @@ class ConversationManager:
                 if not task.done():
                     task.cancel()
             await asyncio.gather(heartbeat, inference, return_exceptions=True)
+
+    def _principal_scope(self) -> dict:
+        """Keep conversation authorization separate from inference lease ownership."""
+        return {} if self.principal_id is None else {"owner_id": self.principal_id}

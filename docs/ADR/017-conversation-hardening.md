@@ -56,3 +56,7 @@ Owner-based authentication/authorization requires an explicit identity contract,
 Shared PostgreSQL restart requires a maintenance plan: enumerate dependent consumers, create a protected backup, prove restore in an isolated target, record recovery/rollback commands and only then schedule the shared restart. This session does not restart the shared DB, create another service, or claim an untested dump is a verified backup.
 
 Do not mark D15-T06 or Day 15 PASS until these gates and the remaining operational telemetry/review checks have evidence.
+
+## Superseding checkpoint — 2026-10-18
+
+ADR-018 closes the previously open local identity, pool-export and shared-DB restore/restart gates. Day 15 now passes authenticated localhost acceptance (151/151 tests). Earlier limits in this ADR describe its original checkpoint; ADR-018 and the current master roadmap govern present status. Production scoped identity/OIDC, multiworker and off-host recovery remain separate work.

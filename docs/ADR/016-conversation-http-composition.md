@@ -41,3 +41,7 @@ See the 2026-10-17 checkpoint in `dev_log/dev_log.md` for actual commands and re
 The user explicitly directed this session to use the existing Vault-held password for verification. Vault was initialized but sealed; the operator used the existing unseal helpers and protected bootstrap material, then read only `secret/server/local-assistant/postgresql`. The operator credential remained in the parent process; API/test children received only DATABASE_URL for `local_assistant_app`. This authorized operator verification does not change the runtime prohibition on giving FastAPI a root token or turn operator bootstrap into production credential delivery.
 
 Four real integrations passed, including CORE. Full pytest completed with 94 passed and zero skipped. A separate actual two-process Uvicorn check verified retained list/history and idempotent replay after restart. The original missing-environment result remains historical in the dev log. Production scoped identity and D15-T06 hardening remain open.
+
+## Superseding checkpoint — 2026-10-18
+
+ADR-018 closes the previously open local identity, pool-export and shared-DB restore/restart gates. Day 15 now passes authenticated localhost acceptance (151/151 tests). Earlier limits in this ADR describe its original checkpoint; ADR-018 and the current master roadmap govern present status. Production scoped identity/OIDC, multiworker and off-host recovery remain separate work.

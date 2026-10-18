@@ -1,10 +1,12 @@
+"""Persist conversations with optional authenticated ownership filters and lifecycle locking."""
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, true
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.entities.conversation import Conversation
@@ -12,7 +14,10 @@ from src.infrastructure.models.conversation_model import ConversationModel
 
 
 class PostgresConversationRepository:
+    """Persist owner-scoped conversation records in caller-owned transactions."""
+
     def __init__(self, session: AsyncSession) -> None:
+        """Retain the caller-owned transaction session."""
         self.session = session
 
     async def create(
@@ -22,13 +27,18 @@ class PostgresConversationRepository:
         profile: str = "core",
         preset_default: str = "balanced",
         metadata: dict[str, Any] | None = None,
+        owner_id: UUID | None = None,
     ) -> Conversation:
+        """Create a conversation and assign server-controlled ownership when supplied."""
         model = ConversationModel(
             title=title,
             profile=profile,
             preset_default=preset_default,
             status="active",
-            metadata_=metadata or {},
+            metadata_={
+                **(metadata or {}),
+                **({"owner_id": str(owner_id)} if owner_id is not None else {}),
+            },
         )
         self.session.add(model)
         await self.session.flush()
@@ -40,14 +50,16 @@ class PostgresConversationRepository:
         conversation_id: UUID,
         *,
         include_deleted: bool = False,
+        owner_id: UUID | None = None,
     ) -> Conversation | None:
+        """Read a visible conversation constrained to the requested owner."""
         stmt = select(ConversationModel).where(
-            ConversationModel.id == conversation_id
+            ConversationModel.id == conversation_id, self._owner_filter(owner_id)
         )
 
         if not include_deleted:
             stmt = stmt.where(
-                ConversationModel.deleted_at.is_(None)
+                ConversationModel.deleted_at.is_(None), self._owner_filter(owner_id)
             )
 
         model = await self.session.scalar(stmt)
@@ -56,6 +68,8 @@ class PostgresConversationRepository:
     async def lock_active(
         self,
         conversation_id: UUID,
+        *,
+        owner_id: UUID | None = None,
     ) -> Conversation | None:
         """
         Lock an active conversation until the caller commits.
@@ -67,6 +81,7 @@ class PostgresConversationRepository:
             select(ConversationModel)
             .where(
                 ConversationModel.id == conversation_id,
+                self._owner_filter(owner_id),
                 ConversationModel.status == "active",
                 ConversationModel.deleted_at.is_(None),
             )
@@ -80,7 +95,9 @@ class PostgresConversationRepository:
         limit: int = 50,
         offset: int = 0,
         include_archived: bool = False,
+        owner_id: UUID | None = None,
     ) -> list[Conversation]:
+        """List bounded visible conversations scoped to the requested owner."""
         if not 1 <= limit <= 100:
             raise ValueError("limit must be between 1 and 100")
 
@@ -88,13 +105,11 @@ class PostgresConversationRepository:
             raise ValueError("offset must be non-negative")
 
         stmt = select(ConversationModel).where(
-            ConversationModel.deleted_at.is_(None)
+            ConversationModel.deleted_at.is_(None), self._owner_filter(owner_id)
         )
 
         if not include_archived:
-            stmt = stmt.where(
-                ConversationModel.status == "active"
-            )
+            stmt = stmt.where(ConversationModel.status == "active")
 
         stmt = (
             stmt.order_by(
@@ -114,11 +129,14 @@ class PostgresConversationRepository:
         *,
         title: str | None = None,
         preset_default: str | None = None,
+        owner_id: UUID | None = None,
     ) -> Conversation | None:
+        """Lock and update an active conversation owned by the caller."""
         model = await self.session.scalar(
             select(ConversationModel)
             .where(
                 ConversationModel.id == conversation_id,
+                self._owner_filter(owner_id),
                 ConversationModel.deleted_at.is_(None),
                 ConversationModel.status == "active",
             )
@@ -141,11 +159,15 @@ class PostgresConversationRepository:
     async def archive(
         self,
         conversation_id: UUID,
+        *,
+        owner_id: UUID | None = None,
     ) -> Conversation | None:
+        """Lock and archive a visible conversation owned by the caller."""
         model = await self.session.scalar(
             select(ConversationModel)
             .where(
                 ConversationModel.id == conversation_id,
+                self._owner_filter(owner_id),
                 ConversationModel.deleted_at.is_(None),
             )
             .with_for_update()
@@ -162,11 +184,15 @@ class PostgresConversationRepository:
     async def soft_delete(
         self,
         conversation_id: UUID,
+        *,
+        owner_id: UUID | None = None,
     ) -> bool:
+        """Lock and hide a visible conversation owned by the caller."""
         model = await self.session.scalar(
             select(ConversationModel)
             .where(
                 ConversationModel.id == conversation_id,
+                self._owner_filter(owner_id),
                 ConversationModel.deleted_at.is_(None),
             )
             .with_for_update()
@@ -181,3 +207,12 @@ class PostgresConversationRepository:
 
         await self.session.flush()
         return True
+
+    @staticmethod
+    def _owner_filter(owner_id: UUID | None):
+        """Constrain end-user access while allowing explicit trusted maintenance callers."""
+        return (
+            true()
+            if owner_id is None
+            else ConversationModel.metadata_["owner_id"].astext == str(owner_id)
+        )

@@ -60,7 +60,7 @@ async def cleanup_conversation(identifier):
 @pytest.mark.parametrize(
     "live_model", [False, True], ids=["postgres-fake-inference", "postgres-live-model"]
 )
-def test_http_persistence_after_pool_restart(live_model):
+def test_http_persistence_after_pool_restart(live_model, auth_settings):
     """Recreate API resources and prove history, replay and lifecycle through HTTP."""
     if not os.environ.get("DATABASE_URL"):
         pytest.skip(
@@ -82,7 +82,9 @@ def test_http_persistence_after_pool_restart(live_model):
         "max_tokens": 512,
     }
     try:
-        with TestClient(app, client=("127.0.0.1", 41000)) as client:
+        with TestClient(
+            app, client=("127.0.0.1", 41000), headers=auth_settings["headers"][0]
+        ) as client:
             if not live_model:
                 app.state.conversation_service.manager.inference = inference
             created = client.post(
@@ -122,7 +124,9 @@ def test_http_persistence_after_pool_restart(live_model):
             assert "reasoning_content" not in str(history)
             assert client.patch(root, json={"title": "Updated"}).status_code == 200
 
-        with TestClient(app, client=("127.0.0.1", 41001)) as client:
+        with TestClient(
+            app, client=("127.0.0.1", 41001), headers=auth_settings["headers"][0]
+        ) as client:
             if not live_model:
                 app.state.conversation_service.manager.inference = inference
             assert client.get(root).json()["title"] == "Updated"

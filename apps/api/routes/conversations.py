@@ -10,7 +10,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import TimeoutError as PoolTimeout
 
+from apps.api.core.conversation_auth import authenticate_principal
 from apps.api.core.model_config import ModelConfigError
 from apps.api.runtime.presets import RuntimePreset
 from apps.api.services.conversations import ConversationService
@@ -21,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 async def require_local_client(request: Request) -> None:
-    """Deny external peers, browser origins and proxied requests until ownership exists."""
+    """Preserve direct-loopback access even when bearer authentication is enabled."""
     try:
         local = (
             request.client is not None
@@ -45,7 +47,9 @@ async def require_local_client(request: Request) -> None:
         )
 
 
-async def get_service(request: Request) -> AsyncIterator[ConversationService]:
+async def get_service(
+    request: Request, principal: Annotated[UUID, Depends(authenticate_principal)]
+) -> AsyncIterator[ConversationService]:
     """Inject application resources and sanitize conversation-specific failures."""
     service = getattr(request.app.state, "conversation_service", None)
     if service is None:
@@ -58,7 +62,7 @@ async def get_service(request: Request) -> AsyncIterator[ConversationService]:
             },
         )
     try:
-        yield service
+        yield service.for_owner(principal)
     except (ConversationError, InferenceFailure) as exc:
         logger.warning(
             "conversation_operation_failed code=%s status=%s", exc.code, exc.status_code
@@ -77,6 +81,18 @@ async def get_service(request: Request) -> AsyncIterator[ConversationService]:
             detail={
                 "code": "model_configuration_error",
                 "message": "Model configuration unavailable.",
+            },
+        ) from None
+    except PoolTimeout:
+        telemetry = getattr(request.app.state, "pool_telemetry", None)
+        if telemetry is not None:
+            telemetry.note_timeout()
+        logger.warning("conversation_pool_timeout")
+        raise HTTPException(
+            503,
+            detail={
+                "code": "pool_timeout",
+                "message": "Conversation storage capacity unavailable.",
             },
         ) from None
     except SQLAlchemyError:
