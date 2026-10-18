@@ -1913,3 +1913,40 @@ Dùng helper TLS hiện hữu đọc đúng app secret `secret/server/local-assi
 - [ ] D17-T05 DB/FS reconciliation, quota/HTTP/delete/download races và paired metadata/blob backup/isolated restore.
 
 **Chưa có HTTP upload feature hoặc live file journal. Không mark D17 hoàn tất và không bắt đầu D18 khi các gate trên chưa đạt.**
+
+
+---
+
+# CHECKPOINT — 2026-10-18 — D17-T02 V002 and atomic file journal/quota
+
+**Purpose:** Ghi nhận triển khai/migrate/kiểm thử journal và quota thật; tiếp tục D17, không chuyển D18.
+
+**Trạng thái:** T02 PASS ở phạm vi repository; D17 IN PROGRESS. T03 MIME NEXT, HTTP/reconciliation/paired blob restore còn mở.
+
+## Thực hiện và rollout
+
+- Đọc credential app và migrator hiện hữu từ đúng Vault app paths qua TLS; không tạo key, không hỏi lại user, không truyền operator token vào app/tests.
+- Fresh backup `data/backups/d17-v002-preflight-20261018`: 4 database archives + globals, file 0600/dir 0700, hashes verified; isolated app restore so rows và owner/ACL đạt. Probe/canary cleanup hoàn tất; không restart shared PostgreSQL.
+- Review offline `alembic upgrade 0001:0002 --sql` với placeholder không credential: đúng 3 additive tables, indexes/CHECKs/owner-key uniqueness, explicit DML/revoke TRUNCATE, local lock/statement timeout. Không sửa V001 hoặc bảng conversation cũ.
+- Apply V002 bằng `local_assistant_migrator` lấy từ Vault. So sánh fingerprints của conversation/message/run rows và owner/ACL trước/sau bằng kết nối migrator: giống nhau. Revision hiện tại `0002`; không tạo production blob root hoặc bật HTTP file admission.
+- `migrations/versions/0002_file_journal.py`: files/owner usage/global singleton, typed ownership/provenance/key, hash/size/state/release invariants, guarded downgrade từ chối bất kỳ file row/tombstone hoặc allocation chưa sạch.
+- `src/infrastructure/repositories/file_journal.py`: short transactions global -> owner -> file; capacity/replay atomic, immutable policy snapshot, DB-clock claim/heartbeat, verifying/ready, purge fencing và release markers đúng một lần. Ready chỉ trả upload slot; bytes/files giữ đến physical purge.
+- ADR-021 ghi decision/dependency/P0/effort/risk/rollout/rollback; spec/roadmap/dev log cập nhật. Không có FS I/O trong SQL transaction; caller phải giữ ADR-020 guard qua post-lock DB claim và chỉ release sau purge true.
+
+## Kiểm thử và sửa lỗi
+
+Focused lượt đầu phát hiện annotation `list[dict]` bị method `list` trong class che tên built-in; đã thêm deferred annotations. Initial claim dùng một DB timestamp để lease=wall không lỗi CHECK do drift microseconds. Sau fix, focused 21/21 PASS; thêm 3 tests actual FS+DB protocol rồi chạy đủ suite.
+
+`tests/integration/test_file_journal.py`: **24 cases** về same-key race chỉ một allocation, key conflict/cross-owner independence, byte/file/owner-slot/global-slot/global-byte admission race, CRUD/lease/ready/purge owner checks, progress monotonic/oversize/expiry, ready/terminal structural CHECKs, app grants/non-superuser, populated downgrade guard, ready slot release và concurrent exactly-once terminal release.
+
+Ba tests dùng adapter filesystem thật: writer còn mở giữ quota/purge pending; delayed worker recheck dưới guard sau cleanup bị từ chối trước create; published-but-not-ready vẫn hidden/charged rồi cleanup conservative sau expiry. Không coi đây là full HTTP/DB/FS crash/paired-restore certification.
+
+```sh
+# Vault operator wrapper, child chỉ có app DATABASE_URL và live-test flag
+python -m pytest tests/ -q -rs --tb=short
+# 327 passed in 11.41s; exit 0; zero SKIP; real PostgreSQL + CORE
+```
+
+327 = 303 prior + 24 journal cases. Owner-specific test cleanup khóa global và chỉ trừ allocations của các UUID test; không reset counters của app/owner khác. Ruff/format, AST descriptions, py_compile và git diff --check thực hiện cho các file mới. Source/config/runtime Day 15 giữ nguyên; schema chỉ thêm V002 đã review/backup.
+
+**Tiếp tục ngay:** D17-T03 verifier MIME/container trong process riêng có resource/deadline bounds; sau đó T04 raw HTTP và T05 recovery/paired restore. Không mark D17 PASS trước các gate đó.

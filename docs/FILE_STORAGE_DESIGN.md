@@ -200,3 +200,12 @@ Actual filesystem process tests kill an uploader at creation, write, seal, link,
 No production blob root, V002 migration, parser dependency, runtime route or new infrastructure service was introduced. Read-only app-credential inspection still shows `0001` and four existing assistant tables. Day 15 runtime source/config is unchanged.
 
 **Remaining D17 gates:** V002 and atomic owner/global quota/idempotency journal; live lease/recovery integration; every allowed format's bounded MIME/container verification; HTTP owner ACL/deadlines/cancellation/download/delete races; paired metadata/blob backup and isolated restore. T01's FS evidence does not complete those gates. D17 remains IN PROGRESS and D18 is not started.
+
+
+## 12. D17-T02 journal checkpoint — 2026-10-18
+
+Additive V002 is now applied by the existing Vault migrator after fresh protected backup plus isolated app row/owner/ACL restore verification (`data/backups/d17-v002-preflight-20261018`, no shared restart). Existing conversation/message/run row and owner/ACL fingerprints match before/after migration. Three new tables contain the file journal and global/owner usage; no production blob root or HTTP route is enabled.
+
+`PostgresFileJournal` implements serialized admission/replay, immutable policy snapshots, owner-scoped reads/locks, monotonic DB-clock upload leases, verification/ready transitions, deletion/expiry fencing and exactly-once counter release. [ADR-021](ADR/021-file-journal-and-quota-transactions.md) records schema, rollout/rollback and caller obligations. Empty-only downgrade refuses populated journals, including tombstones.
+
+All **24 real journal cases** passed in the full **327 passed in 11.41s** regression, zero skipped/no exclusions. Tests include independent-connection quota/replay races, typed-owner isolation, stale lease/progress, structural checks/grants, populated downgrade rejection and actual guard/FD/DB cleanup interactions. These tests do not bypass the need for a real HTTP service, bounded MIME verifier or paired metadata/blob restore. D17 remains IN PROGRESS; T03 is next.
