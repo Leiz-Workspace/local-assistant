@@ -2128,3 +2128,45 @@ Dependencies thêm bằng uv: runtime `lxml>=6,<7` khóa6.1.3 để giữ namesp
 7. Post-test audit: global file allocation `(0,0,0)`, restore probes0; existing shared services vẫn running/healthy, không restart/new instance. D19 không đụng production schema/root/auth/retained paired backup; tests dùng root/UUID riêng và cleanup đúng owner.
 
 Roadmap v3.12, ADR-027, design/runbook và golden README được cập nhật theo final evidence; full-file source archive tại `/tmp` không chứa key/data/backup. **Next D20:** P1 XLSX sheets/cells/styles/formula-source preservation; đánh giá dependency/effort/risk và ADR trước API mới, không execute formula/macro hay tự recalculation; golden workbook round-trip và full regression bắt buộc trước PASS.
+
+---
+
+# Ngày 20 — XLSX read/write, sheets, formula preservation và security (2026-10-18)
+
+**Mục đích:** Ghi lại phạm vi, triển khai và bằng chứng acceptance của D20 sau D19 PASS.
+
+**Kết quả:** **D20 PASS trong phạm vi localhost/one worker, existing literal-cell edits và D17 conservative OOXML subset**. Final full regression **587 passed in52.87s**, exit0, **0 SKIP**, không exclusions; PostgreSQL/CORE thật với credential từ Vault.529 baseline +42 processor/contract/sandbox +16 HTTP/service =587. D21 OCR/VLM là NEXT, chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox và D19 bounded response lifecycle. ADR-028 viết trước code/API; đánh giá rủi ro ZIP/XML expansion, formula execution/cache corruption, mất styles/package parts, ambiguous sheet/cell identity và slow/cancelled response. Chọn native XML read và sửa **existing literals**, giữ nguyên source, formula source/attributes/cache và các phần không sửa. Không thực thi formula/macro, không remote fetch, không model/ingestion. Cache không được tính lại; output báo `preserved_not_recalculated` kể cả khi sửa input khiến cache cũ có thể stale. Không coi cache preservation là correctness của kết quả tính toán.
+
+Reuse runtime lxml6.1.3 và existing bwrap/verifier; chỉ thêm **dev-only openpyxl3.1.5 + et-xmlfile2.0.0** bằng uv để independent reopen và tạo golden. Không thêm runtime dependency, schema/migration/service/container. Không sửa parser/PDF/DOCX endpoints đã PASS; FileService bổ sung XLSX operation riêng và main đăng ký router mới. Output ephemeral attachment, caller muốn persist phải dùng normal reserve/upload; source/persistent quota không đổi.
+
+## Triển khai và liên kết hệ thống
+
+- `src/application/services/xlsx_contract.py`: strict source-hash plans,1–100 unique native sheet/A1 targets; explicit string/number/boolean kinds. Number nhận lexical string, reject NaN/overflow/underflow/coercion; XML-valid Unicode/tab/newline và UTF-8/UTF-16 bounds. Read schema kiểm numbering/identity/style refs, formulas/cache, counts/text budget.
+- `src/infrastructure/xlsx_content.py`: resolve unique workbook-sheet relationships, inline/shared/rich strings, lexical native values, formula attributes/cache, style indices và merged ranges. Reject ambiguous rows/cells/shared/style references; không expand full cell grid. Rewrite literal hiện hữu, giữ cell style/row/column/workbook properties; serialize changed sheet XML mà thôi, byte-identical các member khác và formula XML trong sheet đã sửa. Formula/merged/rich/metadata cells, signed package hoặc target thiếu bị từ chối.
+- `xlsx_processor.py`/`xlsx_worker.py`: credential-free isolated source FD + bounded anonymous read-only `/request.json`; edit/cell/formula text không vào argv/env/log. D17 preflight trước strict lxml, output reverified trước release; parent schema/output limits và safe errors. Không import openpyxl runtime.
+- `FileService.xlsx_operation()` giữ2-slot admission/active task/SH FD đến hết response hoặc cancellation; owner/namespace/ready/size/hash recheck trước và hash/ready sau parse; join thread trước close. Existing PDF/DOCX gates giữ nguyên.
+- `apps/api/routes/xlsx.py` và main: authenticated `/api/v1/files/{id}/xlsx/read` + `/xlsx/rewrite`, UUID/hash/version/untrusted label/native sheet-cell locators. Attachment có source/output hashes và cache-status header; private/no-store/nosniff. JSON cap bao gồm locators; response construction failure/cancel đóng operation đúng.
+
+## Bounds và phạm vi hỗ trợ
+
+512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;25 MiB output. Read JSON8 MiB kể cả provenance; lexical text1 MiB; cell64 KiB UTF-8/32767 UTF-16 units;100 sheets;50000 cells;100000 shared strings;10000 styles; existing2 MiB/XML part/archive limits. Reject thay vì truncate. Canonical addresses trong A1–XFD1048576. Chỉ edit ô đã tồn tại, không thêm sheet/cell/formula/style. String bắt đầu `=` luôn ghi inlineStr để không biến thành formula. Workbook application bên ngoài có calculation policy riêng khi mở file.
+
+D17 absolute package-root relationships/external/macro/DTD/nested-package restrictions giữ nguyên. Golden độc lập chuẩn hóa OPC relationship targets sang relative để nằm trong supported subset; runtime **không tự repair/adopt** package user. Mọi cached result giữ nguyên, không chứng nhận calculation freshness/visual fidelity của mọi workbook. Đây là limitation được ghi rõ trong ADR/runbook/golden README, không sửa bừa thành phần PASS để mở rộng phạm vi.
+
+## Kiểm thử thực tế
+
+1. **42 processor/contract/sandbox cases PASS**: trusted multi-sheet Unicode/numeric/boolean/shared-string/styled/merged golden, cross-sheet formulas, explicit caches30/60 và native formula attribute `ca=1`. Independent openpyxl reopen cả `data_only=False/True`: edited literals đúng, number format/bold/color/fill/freeze pane/column width/merged ranges giữ đúng; formula/cache giữ nguyên mặc dù input đổi. Toàn bộ member ngoài changed sheet byte-identical; formula XML trong changed sheet byte-identical. Chuỗi `=SUM(1,2)` mở lại là text, không formula.
+2. Actual malformed/external/DTD/macro/nested/oversized XML/cell-count/text-budget/bad shared-style refs/duplicate cells; formula/merged/signed/missing/stale edits đều assert exact safe code/status. Native resource variants dùng stored XML; cell-count fixture dùng nhiều cells mỗi row để không vô tình chạm XML-size bound trước. Strict plan từ chối duplicate/coercion/invalid coordinates/XML/number types.
+3. Parent process failure/malformed/oversized reply/error-type probes; log privacy. Production worker kernel budgets, read-only metadata mount/private host paths absent/cleared env; actual stalled sandbox timeout không còn worker. Không chạy spreadsheet calculation engine để kiểm chứng parser.
+4. **16 real PostgreSQL HTTP/service cases PASS**: auth/owner/namespace/ready/hash, native locators/headers/cache uncertainty, immutable download/quota/one original blob. Stale/extra/duplicate/oversize/media/tamper errors, concurrent delete/cancel/shutdown/post-parser tamper; hai slow rewrite responses giữ slots, request3 trả429, delete pending giữ allocation rồi cancellation release/cleanup. Construction failure và JSON limit sau provenance không leak source/slot.
+5. **Final full:587 passed in52.87s**,0 skip, no exclusions; real PostgreSQL + CORE. Focused42/4.30s và16/4.97s PASS trước final full; final thêm explicit formula-attribute golden assertion. Vault TLS helper chỉ cấp app DATABASE_URL/live flag cho pytest, strip VAULT env và redact output. Production worker nhận env rỗng; không hardcode/print key.
+6. Ruff selected correctness/import rules `E4,E7,E9,F,I` với fixture re-export exceptionF811; format9 files; AST descriptions82 definitions; uv lock/diff checks PASS. Lockfile purpose header giữ lại. Không tuyên bố toàn repo lint sạch ngoài phạm vi.
+7. Post-test audit global file usage `(0,0,0)`, restore probes0; CORE/shared containers vẫn running/healthy, không restart hay new instance. Production DB schema/root/auth/retained paired backup không bị thay thế; tests dùng root/UUID riêng và cleanup đúng owner.
+
+Một lượt integration đầu còn tên `DocxResponse` trong XLSX construction-failure test; đã sửa thành `XlsxResponse`, rerun focused16 và full587 PASS. Chỉ final full sau sửa và golden refinement được dùng chốt milestone. Roadmap v3.13, ADR-028, design/runbook/golden README cập nhật cùng evidence; source-only full-file archive tại `/tmp` không chứa key/data/backup.
+
+**Next D21:** đánh giá P1 OCR/VLM fallback cho scans/images/tables, existing CORE vision/mmproj, bounded rasterization/model/VRAM budgets và uncertainty measurement. ADR trước backend/API mới; golden scanned/native comparisons, page/source mapping và full regression bắt buộc trước PASS. Có thể tách nhiều milestone nếu Acceptance Criteria chưa đạt; không tự nhảy D22.
