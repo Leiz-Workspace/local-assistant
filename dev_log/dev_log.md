@@ -1778,3 +1778,68 @@ Restore dùng database tạm UUID trên đúng instance PostgreSQL hiện hữu 
 **Kết luận:** D15-T06 PASS trong phạm vi authenticated localhost và Day 15 local release gate được chấp nhận. Các khoản nợ production scoped Vault/OIDC, RLS/typed-owner migration, explicit legacy adoption, Unit of Work inversion, multiworker/load SLO và off-host DR tiếp tục được theo dõi riêng. Không cần kéo dài Day 15 cho những capability production chưa thuộc local acceptance đã chốt.
 
 **Bước kế tiếp:** D16 — bounded file metadata/storage design, tái sử dụng principal ownership, xác định path isolation, quota/size/type/checksum/provenance và rollback trước khi thêm upload API. Chưa triển khai D16 trong checkpoint này.
+
+---
+
+# CHECKPOINT — 2026-10-18 — D16 bounded file metadata/storage design
+
+**Purpose:** Ghi nhận task kế tiếp đã hoàn tất đúng phạm vi roadmap: thiết kế schema/storage/rollback và policy có tests, trước khi triển khai upload/download D17.
+
+**Trạng thái:** D16 PASS ở phạm vi design/policy. Day 15 giữ PASS; D17 NEXT/TODO. File persistence/HTTP upload/download chưa được triển khai hoặc tuyên bố PASS.
+
+## Kiểm tra hiện trạng và quyết định
+
+Working tree ban đầu sạch, commit Day 15 `60c431b`. Đã đọc roadmap, dev log, ADR-018, auth/owner/schema/repository ports, Alembic V001 và dependencies. Chưa có file metadata/storage/upload implementation. Filesystem `/dev/sda4` tại inspection: khoảng 617 GiB available, 29% used. Đây là quan sát capacity, không phải throughput benchmark.
+
+Chọn private local filesystem V1 + shared PostgreSQL journal/usage. Tái sử dụng UUID principal Day 15; không dùng filenames làm path; không cần MinIO credential/bucket/policy trong D16. ADR-019 so sánh các phương án và ghi rõ priority/dependency/effort/risk, giới hạn, rollout/rollback và D17 acceptance. Các feature phát sinh như cross-owner dedup, remote URL import, macro/archives, MinIO adapter đều chưa xếp lịch khi chưa có assessment riêng.
+
+## File tạo mới và nội dung thực hiện
+
+- `docs/FILE_STORAGE_DESIGN.md`: owner-typed metadata/usage V002 proposal, quota/global locking, provenance, canonical replay fingerprint, bounded formats/bytes/count/stream/archive policy, private root/UUID keys, lifecycle/crash journal, no-follow/FD/file-lock/no-replace contract, cleanup, backup/identity restore và D17 acceptance matrix.
+- `docs/ADR/019-bounded-local-file-storage.md`: lý do chọn FS local; PostgreSQL source-of-truth; không implicit attachment/dedup; không giữ transaction khi chờ client/I/O; không trả quota chỉ vì lease hết hạn hoặc đã unlink nhưng inode vẫn mở.
+- `src/application/services/file_storage_policy.py`: dataclasses policy/usage/plan; positive/consistent limits; NFC/UTF-8 filename validation; UUID key generation; SHA-256 declaration and semantic fingerprint; byte/quota/concurrency/disk bounds; detected-vs-declared media contract; archive totals limits; safe audit events không log tên file/digest/request key.
+- `tests/test_file_storage_policy.py`: 86 cases về traversal/control/portable filenames, UTF-8 byte cap, file types, canonical fingerprints, owner/key separation, invalid IDs/hash/keys/sizes/config/usage, exact quota/free-space boundaries, MIME spoofing, expansion bounds và log privacy.
+- Roadmap/dev log cập nhật task D16 và handoff D17. Existing Day 15 source, migrations, manifests, dependencies và services không bị thay đổi.
+
+Default design limits: reservation JSON 8 KiB trước parse; 25 MiB/file; 1 GiB + 1,000 allocated files/owner; 10 GiB + 10,000 global; 2 owner/4 global active upload reservations; 2 GiB physical free-space floor; 64 KiB chunks; 300s reservation/stream wall, 30s idle, 60s lease/15s heartbeat; OOXML expanded 100 MiB, 1,000 entries, ratio 100:1. Đây là initial product policy, không phải capability/performance đã đo trên uploader chưa triển khai.
+
+## Review các invariant quan trọng
+
+- Owner của file luôn từ authenticated principal, typed UUID trong new schema; không backfill conversation owner hay nhận client path/owner override.
+- Fingerprint bao gồm owner/NFC label/declared size/hash, không gồm generated file UUID hoặc request key; retry cùng key trỏ resource cũ, không collision do UUID mới. Không cross-owner dedup/existence leak.
+- Reserve/usage changes atomic theo global -> owner -> file; helper snapshot không tự bảo đảm concurrency. D17 phải chứng minh bằng PostgreSQL connections/races thật.
+- Giữ allocated bytes/files từ reservation qua ready/purging, chỉ release sau cleanup/close và commit marker một lần. Ready chỉ trả upload slot. Paused writer hoặc download reader còn giữ inode không được làm quota trông như đã rảnh.
+- DB/file lease + cooperative exclusive/shared FD lock; không chờ lock trong transaction. Publish durable no-replace trước DB ready; crash ở giữa vẫn hidden/charged và có journal để reconcile.
+- Review đã bổ sung rõ delete trong receiving/verifying phải fence/cancel rồi chờ FD đóng; tombstone chưa phải physical delete. Backup/restore phải giữ principal UUID ổn định qua Vault/auth, không gán resources cho identity mới.
+- Sau D17 có blob, DB-only backup Day 15 không đủ: metadata + blob inventory/hashes + payload restore phải được kiểm chứng cùng nhau. Rollback disable admission/drain/fence và giữ bảng/blob; không drop hoặc xóa dữ liệu để rollback code.
+
+## Vault và kiểm thử thực tế
+
+Theo chỉ dẫn người dùng, lấy credential app từ đúng `secret/server/local-assistant/postgresql` qua helper TLS hiện hữu; không yêu cầu gửi lại key. Chỉ inject DATABASE_URL và live-test flag vào child pytest, không truyền operator token. Không in/ghi password, URL có credential hoặc key vào output/Git. Không cần đọc MinIO/other-app secrets vì milestone hiện tại chưa dùng chúng.
+
+Read-only query bằng `local_assistant_app`: Alembic version `0001`; đúng bốn bảng `alembic_version`, `conversations`, `messages`, `inference_runs`. Không tạo/migrate file tables, không tạo blob root hoặc chạy DB restart/restore mới trong D16.
+
+```sh
+uv run python -m pytest tests/test_file_storage_policy.py -q --tb=short
+# Final focused: 86 passed in 0.06s
+
+# Via uv operator wrapper with existing app URL injected in memory:
+python -m pytest tests/ -q -rs --tb=short
+# 237 passed in 9.48s
+# Exit 0, zero skipped, no exclusions; real PostgreSQL and ready CORE
+```
+
+237 = 151 existing Day 15 cases + 86 new pure policy cases. Existing auth/owner/conversation/lease/CORE/recovery regression vẫn PASS. Bộ test mới không giả vờ MIME sniff, upload streaming, FS durability hoặc SQL quota race đã tồn tại.
+
+Đã format/lint bằng uvx Ruff, compile và kiểm tra descriptions cho mọi function/class/file Python mới; `git diff --check` trước commit. Ruff đã loại hai unused imports trước focused test cuối.
+
+## Acceptance và bước tiếp theo
+
+- [x] Schema/ownership/provenance/quota design, limits và request replay contract đã review.
+- [x] Path/FD/publish/journal/cleanup/rollback/paired-backup plan cụ thể, kể cả open-inode quota và identity restore edge cases.
+- [x] Priority/dependency/effort/risk và deferred scope minh bạch; không thêm service/credential/dependency ngoài nhu cầu.
+- [x] Executable policy boundaries 86/86 PASS; full regression 237/237 PASS; V001 và Day 15 source giữ nguyên.
+- [ ] D17 sẽ triển khai V002/repositories/FS adapter/HTTP với admission disabled trước; fresh protected backup và reviewed DDL/grants/rollback trước apply.
+- [ ] D17 phải test actual owner/SQL/FS/stream/container/crash/cleanup/race và paired blob+metadata restore rồi mới mark runtime upload/download PASS.
+
+**D16 hoàn tất ở phạm vi design/policy đã chốt. D17 là task tiếp theo, chưa triển khai trong checkpoint này.**
