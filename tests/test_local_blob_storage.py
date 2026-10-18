@@ -812,3 +812,38 @@ def test_bad_namespace_marker_fails_closed_without_fd_leak(tmp_path, kind):
         LocalBlobStorage(root)
     assert len(os.listdir("/proc/self/fd")) == before
     assert marker.read_bytes() == (b"bad" if kind == "corrupt" else original)
+
+
+def test_inventory_reports_exact_payloads_and_rejects_symlinks(storage, tmp_path):
+    """Inventory only private FDs without traversing a link to another directory."""
+    identity = write_ready(storage)
+    assert storage.inventory() == {"/".join(identity.object_parts): len(PAYLOAD)}
+    outside = tmp_path / "outside"
+    outside.mkdir(mode=0o700)
+    (tmp_path / "blobs" / "unexpected").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(BlobStorageError, match="unsafe_blob"):
+        storage.inventory()
+
+
+def test_inventory_bounds_and_required_marker(storage, tmp_path):
+    """Reject excessive directory traversal and a missing root marker without repairing it."""
+    write_ready(storage)
+    with pytest.raises(BlobStorageError, match="inventory_limits_exceeded"):
+        storage.inventory(max_entries=1)
+    (tmp_path / "blobs" / ".storage-namespace").unlink()
+    with pytest.raises(BlobStorageError, match="missing_storage_namespace"):
+        storage.inventory()
+
+
+def test_ready_reconciliation_never_removes_colliding_inode(storage, tmp_path):
+    """Quarantine a distinct staging inode instead of deleting it as a redundant ready link."""
+    identity = write_ready(storage)
+    stage = (tmp_path / "blobs").joinpath(*identity.staging_parts)
+    stage.write_bytes(b"collision")
+    stage.chmod(0o600)
+    with pytest.raises(BlobStorageError, match="object_collision"):
+        storage.reconcile_ready(
+            identity, len(PAYLOAD), hashlib.sha256(PAYLOAD).hexdigest()
+        )
+    assert stage.read_bytes() == b"collision"
+    assert (tmp_path / "blobs").joinpath(*identity.object_parts).read_bytes() == PAYLOAD

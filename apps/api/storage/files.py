@@ -54,5 +54,11 @@ async def initialize_file_service(session_factory):
     except BaseException:
         await file_io(storage.close)
         raise
+    service = FileService(PostgresFileJournal(session_factory), storage)
+    try:
+        await service.start()
+    except BaseException:
+        await service.shutdown()
+        raise
     logger.info("file_storage_initialized")
-    return FileService(PostgresFileJournal(session_factory), storage)
+    return service

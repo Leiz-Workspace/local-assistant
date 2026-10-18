@@ -592,3 +592,41 @@ class PostgresFileJournal:
             )
         logger.info("file_recovery_candidates count=%d", len(rows))
         return [dict(row) for row in rows]
+
+    async def note_purge_retry(self, owner_id, file_id, purge_token):
+        """Rotate blocked cleanup behind older work without changing its quota or fencing token."""
+        async with self.sessions() as session, session.begin():
+            await self._lock_usage(session, owner_id)
+            row = await self._lock_file(session, owner_id, file_id)
+            if row["state"] == "purging" and row["purge_token"] == purge_token:
+                await session.execute(
+                    text(
+                        "UPDATE assistant.files SET updated_at=clock_timestamp() WHERE id=:id AND owner_id=:owner"
+                    ),
+                    {"id": file_id, "owner": owner_id},
+                )
+        logger.info("file_purge_retry_scheduled file_id=%s", file_id)
+
+    async def ready_candidates(self, *, after_id=None, limit=50):
+        """Page through immutable ready records for bounded redundant-staging reconciliation."""
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise StoragePolicyError("invalid_pagination", 422)
+        cursor_filter = " AND id>:after" if after_id is not None else ""
+        async with self.sessions() as session:
+            rows = (
+                (
+                    await session.execute(
+                        text(
+                            f"SELECT * FROM assistant.files WHERE state='ready' AND deleted_at IS NULL {self._namespace_filter} {cursor_filter} ORDER BY id LIMIT :limit"
+                        ),
+                        {
+                            "namespace": str(self.namespace_id),
+                            "after": after_id,
+                            "limit": limit,
+                        },
+                    )
+                )
+                .mappings()
+                .all()
+            )
+        return [dict(row) for row in rows]
