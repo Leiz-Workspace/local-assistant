@@ -2,17 +2,20 @@
 
 import asyncio
 import logging
+from contextlib import asynccontextmanager
 from functools import partial
 from uuid import UUID, uuid4
 
 from starlette.requests import ClientDisconnect
 
+from src.application.services.docx_contract import DOCX_MEDIA, validate_plan
 from src.application.services.file_storage_policy import (
     DEFAULT_POLICY,
     FileReservationPlan,
     StoragePolicyError,
     plan_reservation,
 )
+from src.infrastructure.docx_processor import process_docx
 from src.infrastructure.file_verifier import verify_file
 from src.infrastructure.local_blob_storage import (
     BlobIdentity,
@@ -78,6 +81,12 @@ def extract_reader(reader):
         return extract_pdf(source)
 
 
+def process_docx_reader(reader, operation, plan):
+    """Retain the locked read-only source until DOCX subprocess I/O has completed."""
+    with reader.extraction_reader() as source:
+        return process_docx(source, operation, plan)
+
+
 class FileService:
     """Own a single process's file operations, guarded I/O and bounded shutdown joins."""
 
@@ -98,6 +107,7 @@ class FileService:
         self._recovery_task = None
         self._ready_cursor = None
         self._extractions = 0
+        self._docx_operations = 0
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -391,6 +401,47 @@ class FileService:
             finally:
                 if admitted:
                     self._extractions -= 1
+                self.untrack(task)
+
+    @asynccontextmanager
+    async def docx_operation(self, owner_id, file_id, *, operation="read", plan=None):
+        """Hold a bounded DOCX slot and source lock through processing and complete response delivery."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if row["detected_media_type"] != DOCX_MEDIA:
+                raise StoragePolicyError("docx_required", 415)
+            if operation == "rewrite":
+                plan = validate_plan(plan).model_dump()
+                if plan["source_sha256"] != row["actual_sha256"]:
+                    raise StoragePolicyError("docx_source_changed", 409)
+            if self._docx_operations >= 2:
+                raise StoragePolicyError("docx_processing_busy", 429)
+            self._docx_operations += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            result = await file_io(process_docx_reader, reader, operation, plan)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            logger.info(
+                "file_docx_processed file_id=%s operation=%s", file_id, operation
+            )
+            yield row, result
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._docx_operations -= 1
                 self.untrack(task)
 
     async def shutdown(self):
