@@ -96,3 +96,32 @@ Two DOCX operations/responses per service are admitted without a queue; excess 4
 Runtime lxml 6.1.3 is uv-locked; dev-only python-docx 1.2.0 and installed LibreOffice provide independent trusted golden opening checks. Untrusted production parsing only uses Bubblewrap: source stdin FD, bounded anonymous edit-plan FD mounted read-only at `/request.json`, cleared environment/read-only code/runtime, no credential/root mounts/network. Worker 512 MiB RAM,5/6s CPU,10s wall,32FD,zero core,25 MiB stdout/file; read JSON8 MiB, extracted text1 MiB, run64 KiB, main XML2 MiB,10000 paragraphs/cells,20000 runs,1000 styles. Existing D17 archive/relationship/DTD/active-content bounds apply before lxml and again to generated packages. Exceeded budgets 413; wrong format 415; unavailable sandbox/integrity failure 503. Logs exclude document/edit text.
 
 Rollback drains requests and removes DOCX endpoints/modules, retaining source journal/root/auth/blobs. There is no migration or generated-output cache to reverse. No arbitrary Word layout, active-content safety certificate, cloud upload or model execution is introduced.
+
+## XLSX inspection and literal rewrite (D20)
+
+**Purpose:** Operate the bounded formula-preserving workbook contract from ADR-028.
+
+Upload a verified XLSX, then authenticated `POST /api/v1/files/{id}/xlsx/read` returns source UUID/SHA, processor version, `content_trust: untrusted`, `formula_cache_status: preserved_not_recalculated`, style count and native sheets/cells. Each cell exposes canonical A1 address, storage kind, lexical value, formula source/attributes, cached value, style index and editability. Sheet/cell locators use `file:<uuid>#sheet=<native-sheet-id>` and `&cell=<A1>`. Merged ranges retain their native references. Styles are preserved/referenced, not rendered.
+
+Authenticated `POST /api/v1/files/{id}/xlsx/rewrite` accepts strict bounded JSON:
+
+```json
+{
+  "source_sha256": "<64 lowercase hexadecimal source SHA characters>",
+  "edits": [
+    {"sheet_id": 1, "cell": "A2", "kind": "number", "value": "99.5"},
+    {"sheet_id": 1, "cell": "A1", "kind": "string", "value": "=literal text"},
+    {"sheet_id": 1, "cell": "A3", "kind": "boolean", "value": false}
+  ]
+}
+```
+
+Numeric values are lexical strings with finite representable decimal values, never JSON float coercion. Boolean values are strict JSON booleans. Strings are explicitly inlineStr, including leading `=`; no formula input/evaluation occurs. Text must be XML-valid, at most64 KiB UTF-8/32767 UTF-16 units per cell; use newline, not carriage return. Plans are at most64 KiB with1–100 unique sheet/cell targets. Only existing literal cells are editable; formula, merged-range, rich-text, metadata/unsupported cells and signed packages are refused. Missing targets/unsupported edits422, stale source409, wrong format415, exceeded budget413, capacity429, unavailable sandbox/integrity failure503. Read JSON limit8 MiB includes locators.
+
+Output is an ephemeral XLSX attachment with private/no-store/nosniff, `X-Source-File-ID`, `X-Source-SHA256`, `X-Xlsx-Processor`, `X-Content-SHA256`, and `X-Formula-Cache-Status: preserved_not_recalculated`. Formula source/attributes/cache remain unchanged even if edited inputs make caches stale. The service never calculates formulas, runs macros or fetches remote content. An application opening the download has its own calculation policy. Persist output explicitly with normal reserve/upload if needed; original bytes/quota are unchanged.
+
+Two XLSX operation/response slots per service, no waiting queue; slot/active task/source SH FD remain held through delivery or cancellation. Owner/namespace/ready/size/hash are checked before parsing and hash/ready after parsing; thread work is joined before close. Concurrent delete may return202 until the response closes. Existing PDF/DOCX gates remain unchanged, scoped to one API worker.
+
+Runtime uses existing lxml with entities/DTD/network/huge-tree disabled after D17 verifier. Read-only anonymous metadata mount keeps text out of argv/env; source stdin FD, no private host mounts/network. Worker512 MiB RAM,5/6s CPU,10s wall,32FD,zero core,25 MiB output; lexical text1 MiB,100 sheets,50000 cells,100000 shared strings,10000 styles and existing2 MiB/XML part/archive bounds. openpyxl3.1.5/et-xmlfile2.0.0 are uv-locked dev-only independent reopen tools, not runtime parsers.
+
+D17's existing conservative OOXML subset is unchanged: absolute package-root relationship targets, external relationships, macro/nested/DTD content remain rejected. No automatic source repair or arbitrary Excel fidelity is claimed. Rollback drains XLSX operations and removes endpoints/modules; no schema/root/auth/cache or source rollback is needed.

@@ -254,3 +254,11 @@ ADR-027 adds main-body paragraph/run/table/style inspection and source-hash-cond
 A bounded read-only anonymous request mount avoids putting edit content into process arguments/environment. Runtime lxml preserves namespace mappings with network/entity/DTD loading disabled after D17 verification. Dev-only python-docx and trusted LibreOffice golden conversion independently check that rewritten output opens and preserves sample formatting/content. Source/ready/hash revalidation and cancellation joins reuse D17's owned FD boundary.
 
 New two-slot DOCX admission is retained through complete response delivery to bound slow-client output retention. Generated output is ephemeral, at most 25 MiB, with source/output hashes; no journal/cache/migration or persistent-quota change. A caller must explicitly reserve/upload to retain it. PDF behavior remains unchanged. Limits, unsupported structures, direct-format semantics, response lifecycle and rollback are defined in ADR-027 and the local runbook.
+
+## 18. D20 XLSX structure and formula-preserving literal edits
+
+**Purpose:** Add conservative workbook consumption without formula execution or source mutation.
+
+ADR-028 defines native sheet/cell/formula/cache/style/merge inspection and source-hash-bound edits of existing literals. Runtime reuses lxml and D17 OOXML validation; dev-only openpyxl independently reopens golden output. Changed worksheet XML is serialized; formula XML/cache and every other package member remain unchanged. Cache status is always `preserved_not_recalculated`, because edited inputs may make old cache values stale.
+
+A separate XLSX router and bounded worker preserve accepted PDF/DOCX modules. FileService adds the same two-slot response-lifetime/source-FD ownership pattern, namespace/ready/hash rechecks and cancellation joins. Output is ephemeral and bounded with source/output hashes; persistent quota/schema/identity are unchanged. Strict coordinate/type/style/string/reference validation and conservative unsupported-edit rejection are specified in ADR-028/runbook. No formula/macro evaluation, implicit model context, remote fetch or arbitrary Excel layout certification is added.
