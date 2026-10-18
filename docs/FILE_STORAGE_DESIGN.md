@@ -209,3 +209,10 @@ Additive V002 is now applied by the existing Vault migrator after fresh protecte
 `PostgresFileJournal` implements serialized admission/replay, immutable policy snapshots, owner-scoped reads/locks, monotonic DB-clock upload leases, verification/ready transitions, deletion/expiry fencing and exactly-once counter release. [ADR-021](ADR/021-file-journal-and-quota-transactions.md) records schema, rollout/rollback and caller obligations. Empty-only downgrade refuses populated journals, including tombstones.
 
 All **24 real journal cases** passed in the full **327 passed in 11.41s** regression, zero skipped/no exclusions. Tests include independent-connection quota/replay races, typed-owner isolation, stale lease/progress, structural checks/grants, populated downgrade rejection and actual guard/FD/DB cleanup interactions. These tests do not bypass the need for a real HTTP service, bounded MIME verifier or paired metadata/blob restore. D17 remains IN PROGRESS; T03 is next.
+
+
+## 13. D17-T03 verifier checkpoint — 2026-10-18
+
+The isolated verifier now handles every allowed format from a sealed FD. [ADR-022](ADR/022-isolated-file-verification.md) defines read-only runtime/code mounts, cleared environment, separate Linux namespaces/network, no host data mounts, CPU/RAM/FD/file-output/wall limits, exact format subsets and fail-closed behavior. Existing Bubblewrap 0.11.1 was reused; uv added only pypdf 6.21.1 and defusedxml 0.7.1. No routes or live payload root enabled.
+
+**62 tests passed in 6.05s** for valid formats/hostile containers, real host-file/environment/network isolation and kernel resource limits, real timeout with no leftover process, malformed worker verdicts and log privacy. Complete regression: **389 passed in 17.53s**, zero skipped/no exclusions with existing PostgreSQL/CORE. T04 HTTP integration and T05 paired restore/reconciliation remain open; D17 is not complete.
