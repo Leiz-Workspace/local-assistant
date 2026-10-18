@@ -290,3 +290,11 @@ One response-lifetime chunk slot retains the independently verified outer source
 The [evaluation specification](DOCUMENT_PIPELINE_EVALUATION.md) and synthetic manifest exercise actual D17 verification, native PDF/DOCX/XLSX reads, fixed independently reopened rewrites, English OCR/explicit CORE VLM and D22 chunks. Independent content/structure and interval-coverage oracles detect incorrect output; expected rejections require exact stage/code/status. Retained [D23 evidence](evidence/d23-document-pipeline.json) keeps hashes/checks/counts/errors and observed resource timings while excluding content and credentials.
 
 Acceptance of an evaluation case does not erase transcription failure: blurred OCR remains a measured quality failure with review required; scanned native output can be empty; nested tables and atomic-row overflow remain intentional refusals. This milestone adds no production/API/schema/dependency change or silent repair. Follow-up candidates carry explicit priority/dependency/effort/risk assessments, and existing ADR-026–030 supported boundaries remain authoritative.
+
+## 22. D24 measured embedding choice and vector schema boundary
+
+**Purpose:** Link the measured model/collection design to source ownership without prematurely adding ingestion.
+
+[ADR-031](ADR/031-cpu-embedding-selection-and-vector-schema.md) and [selection specification](EMBEDDING_SELECTION.md) define the pinned CPU-int8 multilingual E5 comparison, tokenizer/overflow rules, model/runtime fingerprint and proposed private Qdrant schema. Independent20-source/40-query retrieval oracles select768-dimensional multilingual-e5-base over the smaller candidate's failed quality gates; actual empty schema/index probe uses existing Qdrant and is removed afterwards.
+
+D24 adds dev-only benchmark dependencies/scripts/config/evidence, no file/API/schema/source mutation or production vector collection. D22 byte chunks remain unchanged; D25 must preflight actual512-token prefixed inputs, build a durable idempotent generation/outbox lifecycle and enforce final source fences before publication. Future search must combine trusted owner/namespace/model/generation filters with PostgreSQL ready/hash checks; vector labels/IDs and shared Qdrant keys are not tenant authorization. Existing OCR/cache/unsupported-row/table limits remain explicit.

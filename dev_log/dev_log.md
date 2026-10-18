@@ -2309,3 +2309,60 @@ Staged diff ban đầu phát hiện trailing tab/CRLF có chủ đích trong Uni
 `docs/DOCUMENT_PIPELINE_EVALUATION.md` ghi priority/dependency/effort/risk trước xếp lịch cho các giới hạn có thể phát sinh feature: degraded/multilingual OCR P2/2–4 milestones phụ thuộc corpus/routing/model budgets, nested table P2/1–3 phụ thuộc hierarchy/locators, row splitting P2/1–2 phụ thuộc D24 tokenizer/versioned span contract. Chưa đưa vào current milestone; OCR/nested backlog sau D32 nếu không có blocker thực tế, row splitting đánh giá sau D24. Không auto-repair/embedding/indexing/context attachment.
 
 Roadmap v3.16, evaluation spec, corpus README, file design/runbook và retained report cập nhật cùng evidence. Full-version source-only archive `/tmp/local-assistant-d23-complete-full-files.zip` chứa toàn bộ file thay đổi, không runtime data/backup/keys. **Next D24:** P1 đo shortlist embedding bằng independent multilingual retrieval oracles, actual local accuracy/memory/latency/tokenizer constraints và ADR collection schema/ACL/model-version/distance/update-delete/rollback. Reuse existing Qdrant, không new container/replace user collections; D25 ingestion và D26 search vẫn các gate riêng. Chỉ chuyển sau Acceptance Criteria thực sự đạt.
+
+---
+
+# Ngày 24 — Measured CPU embeddings và private Qdrant collection design (2026-10-18)
+
+**Mục đích:** Ghi lại model shortlist/corpus độc lập, lựa chọn có số đo thực tế và ADR/schema/lifecycle trước khi triển khai ingestion.
+
+**Kết quả:** **D24 PASS cho local selection/design**, chọn **intfloat/multilingual-e5-base, official ONNX int8 AVX512-VNNI,768 dimensions**. Final full Vault-backed regression **783 passed in95.11s**, exit0, **0 SKIP**, không exclusions;748 baseline +33 unit/negative +2 real CPU/Qdrant. Existing PostgreSQL/CORE/Qdrant được kiểm tra thật. **D25 durable ingest/upsert/delete/worker là NEXT**; chưa worker/production collection/vector points/search API.
+
+## Priority, dependency, effort, inventory và ADR
+
+P1 phụ thuộc D17 owned journal/source FD, D22 chunks/hash/access labels và D23 independent corpus. Effort một hoặc nhiều milestone; rủi ro Vietnamese/cross-language quality, silent truncation, model/runtime drift, CORE GPU contention, stale vectors/cross-owner data và shared collection mutation. Đã đọc roadmap/devlog/code/config/infra/Qdrant/Vault helper. ADR-031 ghi trước dependency/model/probe changes; nguồn primary là official E5 cards, ONNX Runtime/tokenizers API và Qdrant collections/multitenancy docs, có links trong ADR/spec.
+
+Máy Ryzen7 7700/16 logical CPUs, AVX512-VNNI, khoảng30GiB RAM; RTX4070Ti SUPER16GiB còn khoảng5GiB VRAM tại inventory khi CORE chạy. Existing Qdrant1.18.2 dùng chung, không new container/restart. Chọn shortlist CPU-only2-thread ONNX int8 chính thức small384/base768, cả hai upstream MIT, pin repository commit và từng model/tokenizer SHA/size. Dev-only `onnxruntime1.31.0`, `tokenizers0.23.3`, transitives `flatbuffers25.12.19`/`protobuf7.36.2` qua uv; uv.lock purpose header giữ lại. Không Torch/CUDA stack/runtime service/app source/DB schema/auth/root/model CORE config change.
+
+## Corpus và ngưỡng cố định trước khi đo
+
+`tests/fixtures/embedding/retrieval.json` gồm20 related synthetic passages và40 handwritten Vietnamese/English/cross-language queries, relevance source ID độc lập. Có distractors gần nhau: backup/restore, OCR/VLM, chunks/tokens, delete/retry, health/quality. Không lấy D23 reconstruction làm retrieval accuracy oracle. Labels/gates không đổi sau khi thấy kết quả.
+
+Ngưỡng ADR/corpus: Recall@3≥0.90, MRR@10≥0.80, mỗi language group Recall@3≥0.80, peak child RSS≤2048MiB, warm single-query p95≤500ms. Trong eligible candidates, chọn RSS thấp nhất nếu cách best MRR≤0.05; không có eligible thì milestone không PASS. Exact ID tie-break/rank/fractional recall và reciprocal rank≤10 có independent unit oracles.
+
+## Kết quả thực đo và lựa chọn
+
+Retained `docs/evidence/d24-embedding-selection.json`, generated bằng actual isolated CPU sessions, không mock model:
+
+| Candidate | Recall@3 / MRR@10 | cross / en / vi Recall@3 | Peak child RSS | Warm query p50 / p95 | Cold load | Gate |
+|---|---|---|---|---|---|---|
+| multilingual-e5-small int8/384 |0.750 /0.655377 |0.500 /0.9375 /0.6875 |558.156MiB |2.051 /2.409ms |648.092ms | FAIL chất lượng |
+| multilingual-e5-base int8/768 |0.925 /0.874405 |0.875 /1.000 /0.875 |802.863MiB |6.321 /7.378ms |888.308ms | PASS, selected |
+
+Small nhẹ/nhanh hơn nhưng không đạt các ngưỡng quality; không hạ ngưỡng để làm xanh. Base là eligible duy nhất, vẫn top3 miss `delete-en` rank6, `ocr-vi` rank7, `embedding-vi` rank11; mọi query rank/top3 được giữ lại. Đây là20/40 synthetic short-query local selection, không phải general Vietnamese/MTEB accuracy hay global-best model. D26/D27 phải mở rộng independent retrieval/quality/reranking, giữ nguyên lịch sử miss.
+
+Selected repo revision `d128750597153bb5987e10b1c3493a34e5a4502a`, model SHA `2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503`, tokenizer SHA `62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626`. Base model+tokenizer295769071 bytes; small135429554. Fingerprint `e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc` bind toàn bộ pins/prefix/pooling/norm/token/runtime-format/package versions. `configs/embedding-selected.json` ghi **selected_not_deployed**, full-fingerprint collection name; không tự enable service.
+
+## Code, token/resource contracts và probe
+
+- `embedding_runtime.py`: explicit public pinned downloads atomic publish/hash/size, remove partial; missing/changed artifact reject, không implicit API startup/test downloads. Weights trong ignored models/embedding, không source archive. No remote Python code/private Hub key. Provision lần đầu có HTTP signed public-CDN redirect logs của public assets; CLI hiện giảm HTTP logger xuống WARNING, không liên quan user/Vault credential.
+- CPUExecutionProvider only,2 intra-op/1 inter-op/sequential, batch≤4. Thật sự disable tokenizer truncation/padding, thêm `query: `/`passage: ` kể cả tiếng Việt, mask mean pool/L2 normalize, finite/nonzero/exactdimension checks. Empty/over32768-byte text hoặc>512 total prefix/special tokens reject; không silenttruncate. Corpus max passage/query45/24 tokens; cả hai measured overflow rejected, repeat delta0, unit norm error≈5.96e-8. Đây không chứng nhận long-context performance.
+- `embedding_acceptance.py`: mỗi candidate là child process mới, env whitelist không keys/VAULT/Hub/proxy, fixed180s wall/120–121s CPU/4GiB virtual memory. RSS là per-child process, latency excludes download;20-passage encode60.812/167.112ms. Không claim load SLO/GPU/model-server CPU. Parent report không raw text/query/vector/private exception.
+- `qdrant_embedding_design.py`: plan named dense768/Cosine/on_disk,1 shard/replica,10 indexes owner UUID `is_tenant=true`, namespace/file UUID và hash/chunk/chunker/processor/model/generation/state keywords. Only fresh random la_d24_probe name, collision reject, cleanup chỉ khi create acknowledged; schema/index lỗi vẫn remove owned probe. Lost create acknowledgement cần scoped audit, không tự nhận/xóa collection khác.
+- Actual Vault `secret/server/qdrant/admin` chỉ đọc vào memory; existing loopback6333, no proxy/redirect, bounded reply/timeouts/error sanitation. Retained `docs/evidence/d24-qdrant-design.json`: actual1.18.2 schema/10 indexes/UUID tenant accepted, zero points, probe removed; existing collections0, before/after fingerprints identical. Không production collection/point/ingestion hoặc shared-data mutation.
+
+## Lifecycle/ACL design chưa bị nhầm thành implementation
+
+ADR-031 mô tả payload server-derived owner/namespace/file/source SHA/chunk/chunker/processor/model/index-generation, UUIDv5 point identity, pending→active publication sau complete upsert/final ready/hash fence, durable job/outbox/idempotency/retry/reconcile và tombstone cleanup. PostgreSQL/Qdrant không có distributed atomic transaction; delete phải ẩn PostgreSQL ngay và retrieval sau này luôn rehydrate/revalidate source, không tin vector alone hoặc caller access labels. Shared Qdrant admin key không phải user ACL.
+
+Đây là design cho **D25/D26**, chưa code production. D25 cần ADR/migration/journal/admission/worker thật, token preflight (D22 byte cap không đảm bảo512 tokens), source/hash/owner/namespace fencing, crash/retry/update/delete/generation consistency và rollback. Không chunk truncation, implicit embed/index/model-context attachment. Nguồn đã PASS, OCR blurred failure/stale formula cache/nested422/row413 giữ nguyên.
+
+## Tests, evidence và post-audit
+
+1. **33 unit/negative PASS:** independent known ties/multi-relevance/rank/recall/MRR và malformed/nonfinite/foreign/duplicate labels; frozen quality/group/memory/latency/overflow/repeat gates, quality-tolerance/RSS selection, masked mean hand vector và invalid mask/norm/dimension; prefix/special token512/513, actual full input retained; fingerprint invalidates revision/tokenizer/runtime; mock public download exactbytes/hash/oversize/partial cleanup và no Authorization.
+2. Probe tests giữ synthetic shared collection7 points, never mutate foreign names; index/schema/server errors cleanup acknowledged probe, creation conflict không delete, existing-name collision không mutating call, changed inventory không PASS, server bodies không lộ. **2 live**: actual two pinned CPU models và actual Vault-authenticated Qdrant empty schema/index/cleanup. Model report giữ smaller-candidate failure.
+3. Focused **35 PASS in3.03s**; final full **783 PASS in95.11s**,0 skip/no exclusions. Existing wrapper mở rộng đọc Qdrant key từ Vault vào pytest env và redact cùng DB/key/token; embedding children whitelist env, production parsers vẫn clear env. Không hardcode/in key; không dùng missing-key skip như acceptance.
+4. Ruff correctness/import `E4,E7,E9,F,I`/format6 files, AST descriptions6 files/44 definitions, `uv lock --check`, artifact/corpus/report/selected-config fingerprint/privacy và diff checks PASS. Không tuyên bố full-repo lint. Runtime dependencies không tăng, chỉ dev group.
+5. Post-test file global usage **(0,0,0)**, restore probes **0**, Qdrant collection count **0**, remaining D24 probes **0**. Existing CORE/shared containers running/healthy, không restart/new instance; private root/namespace/auth/paired backups giữ nguyên. Không đổi apps/src/source schema để phục vụ benchmark.
+
+Roadmap v3.17, ADR-031, selection spec/fixture README, file design/runbook và retained reports cập nhật cùng acceptance. Full-version source-only archive `/tmp/local-assistant-d24-complete-full-files.zip` chứa file thay đổi đầy đủ, không weights/runtime data/backup/credentials. **Next D25:** P1 durable incremental ingestion/worker; estimate nhiều milestones nếu cần, ADR trước persistence/API/schema, actual token/source/owner/generation/crash/retry/delete tests và full Vault-backed regression mới được đánh dấu PASS. D26 ACL search, D27 retrieval evaluation là gates riêng.
