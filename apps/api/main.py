@@ -15,11 +15,13 @@ import logging
 
 from fastapi import FastAPI
 
-from apps.api.routes.health import router as health_router
+from apps.api.core.logging_config import configure_application_logging
 from apps.api.routes.chat import router as chat_router
 from apps.api.routes.conversations import router as conversation_router
+from apps.api.routes.health import router as health_router
 from apps.api.storage.lifecycle import conversation_lifespan
 
+configure_application_logging()
 
 app = FastAPI(
     lifespan=conversation_lifespan,

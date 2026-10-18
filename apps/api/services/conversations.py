@@ -12,10 +12,10 @@ from src.infrastructure.inference.llama_adapter import LlamaInferenceAdapter
 from src.infrastructure.repositories.conversation_repository import (
     PostgresConversationRepository,
 )
-from src.infrastructure.repositories.message_repository import PostgresMessageRepository
 from src.infrastructure.repositories.inference_run_repository import (
     PostgresInferenceRunRepository,
 )
+from src.infrastructure.repositories.message_repository import PostgresMessageRepository
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +23,15 @@ logger = logging.getLogger(__name__)
 class ConversationService:
     """Expose transactional CRUD and delegate persistent inference to the manager."""
 
-    def __init__(self, session_factory, inference=None):
+    def __init__(
+        self, session_factory, inference=None, *, principal_id: UUID | None = None
+    ):
         """Retain the application pool and compose the established inference manager."""
+        self.principal_id = principal_id
         self.session_factory = session_factory
         self.manager = ConversationManager(
             session_factory=session_factory,
+            principal_id=principal_id,
             inference=inference if inference is not None else LlamaInferenceAdapter(),
         )
 
@@ -45,14 +49,18 @@ class ConversationService:
     async def create(self, **values):
         """Commit a new conversation without invoking inference."""
         async with self.session_factory() as session, session.begin():
-            result = await PostgresConversationRepository(session).create(**values)
+            result = await PostgresConversationRepository(session).create(
+                **values, **self._scope()
+            )
         logger.info("conversation_created conversation_id=%s", result.id)
         return result
 
     async def list(self, **pagination):
         """List visible conversations using the repository archive policy."""
         async with self.session_factory() as session, session.begin():
-            result = await PostgresConversationRepository(session).list(**pagination)
+            result = await PostgresConversationRepository(session).list(
+                **pagination, **self._scope()
+            )
         logger.info("conversations_listed count=%d", len(result))
         return result
 
@@ -60,7 +68,9 @@ class ConversationService:
         """Read a conversation while hiding soft-deleted records."""
         async with self.session_factory() as session, session.begin():
             result = self.require_conversation(
-                await PostgresConversationRepository(session).get(conversation_id)
+                await PostgresConversationRepository(session).get(
+                    conversation_id, **self._scope()
+                )
             )
         logger.info("conversation_read conversation_id=%s", conversation_id)
         return result
@@ -69,7 +79,9 @@ class ConversationService:
         """Return sequence-ordered history only for a visible conversation."""
         async with self.session_factory() as session, session.begin():
             self.require_conversation(
-                await PostgresConversationRepository(session).get(conversation_id)
+                await PostgresConversationRepository(session).get(
+                    conversation_id, **self._scope()
+                )
             )
             result = await PostgresMessageRepository(session).list(
                 conversation_id, **pagination
@@ -86,10 +98,12 @@ class ConversationService:
         async with self.session_factory() as session, session.begin():
             repository = PostgresConversationRepository(session)
             conversation = self.require_conversation(
-                await repository.get(conversation_id)
+                await repository.get(conversation_id, **self._scope())
             )
             if conversation.status == "active":
-                self.require_conversation(await repository.lock_active(conversation_id))
+                self.require_conversation(
+                    await repository.lock_active(conversation_id, **self._scope())
+                )
             if await PostgresInferenceRunRepository(session).get_pending(
                 conversation_id
             ):
@@ -100,14 +114,14 @@ class ConversationService:
                 )
             if action == "update":
                 result = self.require_conversation(
-                    await repository.update(conversation_id, **values)
+                    await repository.update(conversation_id, **values, **self._scope())
                 )
             elif action == "archive":
                 result = self.require_conversation(
-                    await repository.archive(conversation_id)
+                    await repository.archive(conversation_id, **self._scope())
                 )
             elif action == "delete":
-                result = await repository.soft_delete(conversation_id)
+                result = await repository.soft_delete(conversation_id, **self._scope())
                 if not result:
                     self.require_conversation(None)
             else:
@@ -136,3 +150,13 @@ class ConversationService:
             result.cached,
         )
         return result
+
+    def _scope(self) -> dict:
+        """Pass authenticated ownership into every conversation repository operation."""
+        return {} if self.principal_id is None else {"owner_id": self.principal_id}
+
+    def for_owner(self, principal_id: UUID):
+        """Bind a fresh request-scoped service to an authenticated principal."""
+        return ConversationService(
+            self.session_factory, self.manager.inference, principal_id=principal_id
+        )

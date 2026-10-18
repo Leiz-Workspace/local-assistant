@@ -1689,3 +1689,92 @@ Live overflow test dùng current input 40000 lần `x ` qua template/tokenizer c
 **Trạng thái: D15-T06 PARTIAL, Day 15 ACTIVE (5/6 tasks PASS).** Recovery mới là lazy-on-send hoặc explicit per-conversation; pending cũ không lease cần xác minh thủ công. T04 Auto pending vẫn lưu provisional balanced theo schema bắt buộc, full dependency inversion/Unit of Work vẫn chưa hoàn chỉnh. Khi rollback phải drain active runs trước, không chạy lẫn old/new writers không hiểu lease.
 
 **Bước tiếp theo:** hoàn tất owner identity/schema/access policy design và kế hoạch backup/isolated restore/maintenance cho shared PostgreSQL, rồi thực thi các gate còn lại với bằng chứng. Không đánh dấu DONE hoặc nhảy Day 16 khi các gate này còn mở.
+
+---
+
+# CHECKPOINT — 2026-10-18 — D15-T06 remaining gates accepted
+
+**Purpose:** Ghi lại owner authorization, pool telemetry và backup/restore/restart thực tế; kết thúc local acceptance Day 15 bằng bằng chứng, không thay lịch sử các checkpoint trước.
+
+**Trạng thái:** D15-T06 PASS cho authenticated localhost; Day 15 local gate PASS (6/6 tasks). D16 là NEXT, chưa viết code D16.
+
+## Quyết định và phạm vi
+
+Đã đọc lại roadmap, source, tests và ADR-016/017. Working tree ban đầu sạch. ADR-018 được viết trước operational drill, nêu rõ identity contract, không silent backfill, backup/recovery/rollback và điều kiện restart. Không thêm service/DB instance, không thay shared Keycloak realm, preset thresholds, LlamaGateway implementation, model configuration hoặc migration V001.
+
+Owner UUID lưu trong JSONB metadata hiện hữu. Phạm vi local API dùng bearer credential ngẫu nhiên entropy cao, file digest có quyền owner-only và owner filters tại service/repository/manager locks. Đây là phương án V1 không cần DDL; PostgreSQL RLS/typed-owner migration và OIDC là bước deployment sau, không giả vờ đã triển khai. Hội thoại cũ không owner được giữ nguyên và ẩn khỏi HTTP, không gán đại cho user đầu tiên.
+
+## Source thay đổi
+
+- `apps/api/core/conversation_auth.py`: file regular owner-UID/0600, từ chối final symlink; validate UUID/digest schema; reload mỗi request; constant-time digest comparison; fail closed 503 config và 401 auth; từ chối duplicate Authorization headers. Không log bearer/digest.
+- `apps/api/services/conversations.py`, `src/infrastructure/repositories/conversation_repository.py`, `src/application/services/conversation_manager.py`: request-scoped principal, owner filter cho create/list/detail/history/update/archive/delete; lock reservation/recovery/finalization kiểm tra owner độc lập để tránh bypass/TOCTOU. Owner từ server, không từ body/header tự khai báo. Trusted maintenance interfaces giữ khả năng unscoped; HTTP luôn bind principal.
+- `apps/api/routes/conversations.py`: require bearer principal sau direct-localhost guard; an toàn khi pool timeout, record telemetry counter và trả 503. API stateless giữ contract cũ.
+- `src/infrastructure/database/pool_telemetry.py`: checkout/checkin/invalidation/timeout/peak + current utilization; sample JSON log định kỳ 30s và timeout/shutdown; không giữ connection/SQL/exception payload.
+- `src/infrastructure/database/connection.py`: pool wait 10s và hide SQL parameters; lifecycle quản lý sampler/listeners, cancel/await khi shutdown.
+- `apps/api/core/logging_config.py`, `apps/api/main.py`: app INFO logs và pool export thực sự xuất hiện khi chạy Uvicorn mặc định; tôn trọng handler có sẵn, không nhân đôi handler hoặc bật SQL echo.
+- `scripts/postgres_recovery_acceptance.py`: guarded operator drill, private/exclusive backup files, SHA-256 manifest, restore probe guard, source fingerprint, owner/ACL checks, quiet gate, optional explicit restart và consumer verification. Không tự restore đè production nếu lỗi.
+- Tests mới: `tests/conftest.py`, `tests/test_conversation_auth.py`, `tests/test_application_logging.py`, `tests/test_postgres_recovery_acceptance.py`, `tests/integration/test_conversation_ownership.py`, `tests/integration/test_pool_telemetry.py`. Các tests HTTP cũ được cấp credential test hợp lệ thay vì bỏ qua auth.
+
+## Credential/runtime thực tế
+
+Máy đã reboot: Vault initialized nhưng sealed, CORE stopped. Dùng đúng helper unseal hiện hữu theo quyền operator đã được người dùng chỉ định trước đó; không initialize lại, rotate key/password hay sửa Vault policy. Đọc credential `local_assistant_app` trong Vault vào bộ nhớ; API/test children chỉ nhận DATABASE_URL và auth-file path, không nhận operator token. Khởi động lại container CORE hiện hữu và đợi health 200.
+
+Đã tạo stable principal/API token trong KV v2 `secret/server/local-assistant/api`, fields `principal_id` và `api_token`, bằng helper CAS/static-secret hiện hữu. Raw token chỉ nằm trong Vault/bộ nhớ; `ai/data/auth/principals.json` chứa UUID và SHA-256 digest, file 0600, thư mục 0700. Namespace app được dùng lại, không tạo policy/consumer identity production mới. File runtime/auth/backups nằm trong Git ignore; không ghi token, password, URL có credential hoặc unseal shares vào Git/output.
+
+## Bằng chứng tests
+
+Tất cả chạy bằng uv; child pytest dùng cùng interpreter và DATABASE_URL app được inject trong bộ nhớ, `LOCAL_ASSISTANT_LIVE_E2E=1`:
+
+```sh
+python -m pytest tests/ -q -rs --tb=short
+# Final after shared PostgreSQL restart: 151 passed in 9.45s
+# Exit 0; zero skipped; no exclusions
+```
+
+Có lượt trung gian 147 PASS trước khi bổ sung ACL-mismatch guard, duplicate auth header, stale-backend reconnect và fresh-runtime logging test. Lượt integration đầu sau reboot nhận 26 PASS/2 FAIL vì CORE chưa chạy; sau khi start và đợi ready, lỗi môi trường đó đã được kiểm tra lại trong full suite cuối, không bỏ qua hoặc đổi thành SKIP.
+
+Hai principal thật trên PostgreSQL: tất cả cross-owner detail/history/update/send/replay/archive/delete trả 404; own operations/replay hoạt động; không gọi inference trái phép; unowned legacy rows bị ẩn; owner injection bị 422; manager lock trực tiếp cũng chặn principal khác. Revocation reload, unsafe file permissions/symlink/malformed config và duplicate headers được kiểm tra.
+
+Pool test thật: saturate pool size 1 -> timeout, invalidation, periodic samples, peak/counters chính xác; HTTP timeout được map 503 không lộ driver details. Một test chỉ terminate backend PID do chính nó tạo, rồi pool_pre_ping thay connection và query thành công với `local_assistant_app`.
+
+Kiểm tra Uvicorn độc lập dùng credential app thực tế từ Vault và private auth file: anonymous list trả 401; CORE trả completed answer; hai messages giữ nguyên qua hai process; same-key replay cached với cùng assistant ID; startup/shutdown có `database_pool_metrics`, logs không chứa raw token/DB password/URL/operator token. Hai process tạm và conversation của test đã dọn.
+
+## Backup/restore/restart thực tế
+
+Trước drill, PostgreSQL chỉ có 5 connection Keycloak idle, không có active consumer transaction hoặc pending inference. ADR-018 đã ghi plan và rollback trước khi thực thi. Không force-kill consumer transaction hoặc restart Keycloak.
+
+```sh
+uv run python scripts/postgres_recovery_acceptance.py --backup-directory data/backups/t06-preflight-20261018
+# Protected backups + app data restore comparison PASS; no restart
+
+uv run python scripts/postgres_recovery_acceptance.py --backup-directory data/backups/t06-restart-20261018 --execute-restart
+# Data restore, source persistence and Keycloak recovery PASS
+
+uv run python scripts/postgres_recovery_acceptance.py --backup-directory data/backups/t06-acl-verified-20261018 --execute-restart
+# Final strengthened drill: preserve/compare ownership and ACLs as well as rows
+# postgres_isolated_restore_verified tables=4
+# postgres_shared_restart_started verified_restore=true
+# postgres_restart_persistence_verified dependent_keycloak_ready=true
+# postgres_restore_probe_removed / postgres_acceptance_canary_removed
+# postgres_recovery_acceptance_passed
+```
+
+Vòng đầu chỉ so data; khi review backup correctness, đã bỏ flags loại ownership/ACL và bổ sung security fingerprint + test mismatch. Final drill sau cải tiến mới là evidence đầy đủ. Đây là lý do có hai controlled restart; không che giấu lượt data-only trước đó. Mỗi vòng dùng backup directory mới, không overwrite backup cũ.
+
+Final manifest: `ai/data/backups/t06-acl-verified-20261018/manifest.json`; `restore_verified=true`, `restore_security_verified=true`, `restart_verified=true`. Có 4 custom database archives và globals, file 0600/thư mục 0700. Đã xác minh lại SHA-256 từng file, owner/ACL fingerprint sau restart, zero remaining canary và zero restore-probe databases. Restored Local Assistant có 4 bảng so khớp rows và normalized schema/table/sequence owners/ACLs. Archive giữ metadata owner/privilege; globals có role password hashes nên chỉ giữ protected, không commit/đóng gói artifacts review.
+
+Restore dùng database tạm UUID trên đúng instance PostgreSQL hiện hữu rồi drop đúng probe; không có PostgreSQL service/instance thứ hai. Shared container được restart graceful với named volume giữ nguyên; Keycloak discovery 200 trước/sau và container healthy. Chỉ canary/test rows do drill tạo bị xóa. Backup all-DB archives được tạo, nhưng chỉ Local Assistant được restore-verify; off-host/full-cluster disaster recovery không được suy diễn là đã chứng nhận.
+
+## Definition-of-done review
+
+- [x] V001 còn nguyên; runtime app role đúng và không dùng superuser trong API.
+- [x] Persistence/multi-turn/idempotency, concurrency, failure atomicity, lease/cancellation/crash fencing và tokenizer/context gates từ checkpoint trước vẫn regression PASS.
+- [x] Two-principal auth/owner negative access, private auth config/revocation, giữ localhost boundary.
+- [x] Runtime pool metrics xuất thật; timeout/saturation/invalidation/reconnect được kiểm tra.
+- [x] Authenticated API process restart + CORE/replay và shared PostgreSQL restart sau verified data/owner/ACL restore.
+- [x] Full 151/151 PASS, zero SKIP; ADR-018/runbook/roadmap/dev log phản ánh kết quả thực tế.
+- [x] Không đưa secrets/private backups vào Git; không mark production multiworker/OIDC/off-host DR/model quality là PASS.
+
+**Kết luận:** D15-T06 PASS trong phạm vi authenticated localhost và Day 15 local release gate được chấp nhận. Các khoản nợ production scoped Vault/OIDC, RLS/typed-owner migration, explicit legacy adoption, Unit of Work inversion, multiworker/load SLO và off-host DR tiếp tục được theo dõi riêng. Không cần kéo dài Day 15 cho những capability production chưa thuộc local acceptance đã chốt.
+
+**Bước kế tiếp:** D16 — bounded file metadata/storage design, tái sử dụng principal ownership, xác định path isolation, quota/size/type/checksum/provenance và rollback trước khi thêm upload API. Chưa triển khai D16 trong checkpoint này.

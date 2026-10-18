@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime, timezone
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 from uuid import uuid4
 
 import pytest
@@ -34,6 +34,7 @@ def service():
         metadata={"private": "must-not-appear"},
     )
     result = AsyncMock()
+    result.for_owner = Mock(return_value=result)
     result.conversation = conversation
     result.create.return_value = conversation
     result.list.return_value = [conversation]
@@ -65,10 +66,12 @@ def service():
 
 
 @pytest.fixture
-def client(service, monkeypatch):
+def client(service, monkeypatch, auth_settings):
     """Run application lifespan without real credentials and inject its service."""
     monkeypatch.delenv("DATABASE_URL", raising=False)
-    with TestClient(app, client=("127.0.0.1", 41000)) as connection:
+    with TestClient(
+        app, client=("127.0.0.1", 41000), headers=auth_settings["headers"][0]
+    ) as connection:
         app.state.conversation_service = service
         yield connection
     logger.info("conversation_api_test_completed")
@@ -231,6 +234,9 @@ async def test_pool_disposal(monkeypatch):
     service = object()
     monkeypatch.setenv("DATABASE_URL", "private-value")
     monkeypatch.setattr(lifecycle, "create_database_engine", lambda: engine)
+    observer = Mock()
+    observer.sample = AsyncMock()
+    monkeypatch.setattr(lifecycle, "PoolTelemetry", lambda engine: observer)
     monkeypatch.setattr(lifecycle, "create_session_factory", lambda value: object())
     monkeypatch.setattr(lifecycle, "ConversationService", lambda factory: service)
     with pytest.raises(RuntimeError, match="test failure"):
@@ -275,6 +281,7 @@ async def test_send_uses_stored_defaults(monkeypatch):
 def repository_service(monkeypatch):
     """Compose the real service against isolated transaction and repository doubles."""
     from unittest.mock import MagicMock
+
     from apps.api.services import conversations
 
     session = AsyncMock()
@@ -368,8 +375,8 @@ async def test_repository_reads_and_creation(repository_service):
 def test_orm_domain_mapping():
     """Verify restored ORM sources map transcript and run state without losing fields."""
     from src.infrastructure.models.conversation_model import ConversationModel
-    from src.infrastructure.models.message_model import MessageModel
     from src.infrastructure.models.inference_run_model import InferenceRunModel
+    from src.infrastructure.models.message_model import MessageModel
 
     now = datetime.now(timezone.utc)
     identifier = uuid4()
