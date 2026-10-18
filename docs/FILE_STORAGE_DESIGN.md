@@ -262,3 +262,13 @@ New two-slot DOCX admission is retained through complete response delivery to bo
 ADR-028 defines native sheet/cell/formula/cache/style/merge inspection and source-hash-bound edits of existing literals. Runtime reuses lxml and D17 OOXML validation; dev-only openpyxl independently reopens golden output. Changed worksheet XML is serialized; formula XML/cache and every other package member remain unchanged. Cache status is always `preserved_not_recalculated`, because edited inputs may make old cache values stale.
 
 A separate XLSX router and bounded worker preserve accepted PDF/DOCX modules. FileService adds the same two-slot response-lifetime/source-FD ownership pattern, namespace/ready/hash rechecks and cancellation joins. Output is ephemeral and bounded with source/output hashes; persistent quota/schema/identity are unchanged. Strict coordinate/type/style/string/reference validation and conservative unsupported-edit rejection are specified in ADR-028/runbook. No formula/macro evaluation, implicit model context, remote fetch or arbitrary Excel layout certification is added.
+
+## 19. D21 page OCR and explicit local vision
+
+**Purpose:** Extend immutable file consumption to scanned/image/table sources with measurable uncertainty.
+
+ADR-029 adds per-page native/OCR/explicit VLM modes, source UUID/hash/page locators and normalized pixel-word provenance. Source verification/rendering remains in the private sandbox, including bounded Poppler/Tesseract children and all-metadata removal before normalized PNG leaves the sandbox. Only the explicit VLM mode calls existing loopback CORE; no credentials/private mounts, arbitrary URLs, tools, model context or indexing are introduced.
+
+One OCR operation/response slot is owned through CPU/model completion and delivery; cancellation joins CPU threads and the deadline-bounded async model request before source FD close. Namespace/ready/hash fences apply before CPU/model disclosure and after processing. Earlier PDF/DOCX/XLSX contracts remain unchanged; output is ephemeral, schema/quota/source identity unchanged.
+
+English-only OCR raw scores are not calibrated probabilities; VLM always requires review/no numeric confidence. Table rows are unverified model data. Clean/scanned transcription, blank/blur uncertainty and actual Vietnamese table row/cell accuracy have independent golden criteria; degraded OCR errors must be retained rather than relabeled as successful transcription. Runbook/quality script specify bounds, limitations, failure semantics and reproducible artifacts.
