@@ -1843,3 +1843,73 @@ python -m pytest tests/ -q -rs --tb=short
 - [ ] D17 phải test actual owner/SQL/FS/stream/container/crash/cleanup/race và paired blob+metadata restore rồi mới mark runtime upload/download PASS.
 
 **D16 hoàn tất ở phạm vi design/policy đã chốt. D17 là task tiếp theo, chưa triển khai trong checkpoint này.**
+
+
+---
+
+# CHECKPOINT — 2026-10-18 14:47 +07:00 — D17-T01 private local filesystem adapter
+
+**Purpose:** Ghi nhận triển khai và kiểm thử thực tế filesystem foundation của D17, giữ các gate PostgreSQL/MIME/HTTP/restore còn mở.
+
+**Trạng thái:** D17-T01 PASS trong phạm vi adapter FS độc lập. **D17 IN PROGRESS**, chưa hoàn thành ngày và không chuyển sang D18. D15/D16 vẫn PASS theo acceptance đã ghi trước đó.
+
+## Hiện trạng, scope và thứ tự thực hiện
+
+Bắt đầu từ working tree sạch tại `2a6be5a`. Đọc roadmap, dev log, FILE_STORAGE_DESIGN, ADR-019, policy, database/repositories/auth/API/lifespan và dependencies. D17 ban đầu chưa có file implementation. Chia D17 thành T01 FS, T02 journal/quota/migration, T03 MIME/container, T04 HTTP, T05 reconciliation/paired restore. Đây là phân rã scope đã có, không cắt bớt acceptance hoặc tự chuyển ngày.
+
+Thực hiện T01 trước DDL để kiểm chứng các invariant absent inode, open FD và purge trên filesystem thật. Không cần migration, credential mới, dependency parser hoặc production payload directory cho task này. Không đổi source/config/runtime đã PASS của Day 15.
+
+## Code và các file liên quan
+
+- `src/infrastructure/local_blob_storage.py`: private root 0700; no-follow descriptor walk từ root path, generated directories 0700/same device/process UID; payload regular 0600, O_EXCL/O_NOFOLLOW/O_NONBLOCK/CLOEXEC; tên chỉ từ UUID.
+- Writer giới hạn chunk, declared/actual bytes, kernel short writes, SHA-256, actual free-space floor; file fsync; sealed verifier FD và rehash trước publish để phát hiện verifier sửa bytes; không buffer cả payload.
+- Publish dùng hard link không replace trên cùng device, inode/link checks, sync object parent, unlink staging, sync staging parent. Collision/EXDEV/fsync failure không overwrite/copy fallback hoặc báo ready.
+- Writer giữ EX payload + resource guard đến close; reader giữ SH inode; purge nonblocking EX mọi inode trước unlink. Close idempotent/context-manager; không dùng SQL session trong adapter.
+- `tests/test_local_blob_storage.py`: 66 cases chạy trên file/FD/locks thật; có spawned processes, SIGSTOP/SIGKILL và injected syscall failures.
+- `docs/ADR/020-resource-directory-locks.md`: quyết định resource directory guard và contract tích hợp journal; cập nhật spec/roadmap/dev log để không suy diễn FS-only PASS thành runtime upload PASS.
+
+## Review và sửa lỗi correctness
+
+Payload flock không bảo vệ tên chưa tồn tại: purge có thể chạy giữa open/create và flock. Bổ sung EX guard trên directory inode ổn định `staging/<owner>/<file>`, không xóa directory này khi purge. Writer duplicate guard FD để tiếp tục giữ lock sau admission context. Reject guard đóng, guard identity sai hoặc guard từ root/inode khác. Test xen purge chính xác trước payload open chứng minh busy thay vì cleanup thành công.
+
+**Contract bắt buộc cho T02/T04:** acquire resource guard ngoài SQL transaction; recheck/claim DB lease dưới guard rồi mới create writer/đọc body. Fence row trước purge; chỉ release counter trong final fenced transaction sau purge true. Nếu chỉ check lease trước khi chờ filesystem guard thì stale worker vẫn có thể tạo file sau cleanup; adapter độc lập không thay thế bước DB recheck.
+
+Không coi staging của lease lạ là không có bytes: inventory đúng resource directory, báo `untracked_staging_entry`, không xóa/adopt và không báo purge thành công. Distinct staging/final inodes báo `object_collision`; untracked hard links/permissions/inode substitution fail closed. Không glob-delete, không đụng auth/backups/models. Failed unlink/fsync giữ cleanup pending; retry sync parent ngay cả khi tên đã vắng. Event `blob_purged` chỉ log sau khi local payload FDs đã đóng.
+
+ADR-020 ghi P0/dependency/effort/risk: extra directory FDs/fsync, busy responses và empty lock directories được giữ lâu dài; retention cần review riêng. Không thêm lock service hoặc PostgreSQL instance. Các process cùng OS UID phải hợp tác; không tuyên bố chống root/malicious same-UID process.
+
+## Tests thực tế
+
+```sh
+uv run python -m pytest tests/test_local_blob_storage.py -q --tb=short
+# 66 passed in 0.90s
+
+# uv operator wrapper: app credential lấy từ Vault, chỉ truyền DATABASE_URL/live flag vào child
+python -m pytest tests/ -q -rs --tb=short
+# 303 passed in 10.38s
+# Exit 0, zero SKIP, no exclusions; real PostgreSQL + CORE
+
+uvx ruff check --select E9,F63,F7,F82,F401,I src/infrastructure/local_blob_storage.py tests/test_local_blob_storage.py
+uvx ruff format --check src/infrastructure/local_blob_storage.py tests/test_local_blob_storage.py
+# PASS after final formatting
+```
+
+303 = 151 prior + 86 D16 policy + 66 D17-T01 FS. Các lượt trước là 293 PASS/9.82s và 301 PASS/10.42s. Review cuối sửa FD leak ở missing-name fsync failure và đóng handle khi context entry thất bại; bổ sung hai tests tương ứng rồi chạy lại đủ 303 cases. Lượt 303 là evidence cuối.
+
+Hai reader/writer process riêng bị SIGSTOP vẫn chặn purge; SIGKILL đóng FDs mới cho cleanup. Uploader process bị kill tại **8 boundary**: create, write, seal, link, object-parent fsync, stage unlink, stage-parent fsync, publish-return. Sau kill, cleanup exact keys và retry đều thành công. Kiểm tra symlink ancestor/subdirectory/payload, FIFO/directory, hardlink, collision, substituted inode, root/file permissions, owner namespace, tampered key/size, unknown lease, closed handles, descriptor inventory và audit privacy.
+
+ENOSPC, short writes, EXDEV và file/parent fsync failures là **fault injection trên file thật**; không giả vờ đã làm đầy disk chung hoặc chứng minh physical power-loss durability. FS crash tests không phải DB/FS cross-resource crash certification.
+
+Dùng helper TLS hiện hữu đọc đúng app secret `secret/server/local-assistant/postgresql`; không yêu cầu user cung cấp key. Không truyền operator Vault token vào pytest hoặc in credential. Read-only query xác nhận Alembic `0001` và đúng 4 bảng assistant cũ; không apply DDL, restart container hoặc tạo production `data/files`. CORE/PostgreSQL hiện hữu được tái sử dụng. Kiểm tra AST descriptions mọi file/function/class mới, py_compile, Ruff và git diff --check.
+
+## Acceptance và bước tiếp theo
+
+- [x] D17-T01 standalone descriptor/permission/byte/hash/no-replace/locks/purge contract có 66 tests PASS.
+- [x] Real process crash/held-FD cases, creation/purge race và unknown-stage fail-closed đã kiểm chứng.
+- [x] Full 303/303 PASS, zero SKIP; ADR-020/spec/roadmap/dev log cập nhật; Day 15 source/dependencies/V001 không thay đổi.
+- [ ] **NEXT D17-T02:** fresh protected backup; lấy existing migrator credential từ Vault; review offline V002 DDL/grants/rollback; implement journal và atomic global -> owner -> file quota/replay/lease/counter-release với real PostgreSQL races.
+- [ ] D17-T03 bounded MIME/container verification cho đủ formats đã chốt.
+- [ ] D17-T04 authenticated raw upload/download/list/detail/delete, HTTP bounds/deadlines/cancellation/owner ACL và off-event-loop FS work.
+- [ ] D17-T05 DB/FS reconciliation, quota/HTTP/delete/download races và paired metadata/blob backup/isolated restore.
+
+**Chưa có HTTP upload feature hoặc live file journal. Không mark D17 hoàn tất và không bắt đầu D18 khi các gate trên chưa đạt.**
