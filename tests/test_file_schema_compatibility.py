@@ -25,7 +25,7 @@ def sessions_for(revision):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("revision", ["0002", "0003", "0004"])
+@pytest.mark.parametrize("revision", ["0002", "0003", "0004", "0005"])
 async def test_reviewed_additive_revision_reaches_root_boundary(monkeypatch, revision):
     """Preserve V002 file behavior while admitting reviewed additive ingestion schemas."""
     monkeypatch.setenv("ASSISTANT_FILES_ENABLED", "1")
@@ -41,7 +41,7 @@ async def test_reviewed_additive_revision_reaches_root_boundary(monkeypatch, rev
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("revision", [None, "0001", "0005", "unreviewed"])
+@pytest.mark.parametrize("revision", [None, "0001", "0006", "unreviewed"])
 async def test_unknown_revision_fails_before_root_side_effect(monkeypatch, revision):
     """Reject unreviewed schemas without reading auth or opening a source storage root."""
     monkeypatch.setenv("ASSISTANT_FILES_ENABLED", "1")

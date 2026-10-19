@@ -40,3 +40,8 @@ D28's full1334 PASS/1387.90s plus2 native-field PASS remain the unchanged system
 Review additive migration/grants/indexes/downgrade refusal, fresh protected backup/isolated restore, current schema compatibility and least-privilege startup before applying any migration. Explicit grants must override inherited defaults, following V004. Use the existing PostgreSQL/Vault identities; no new service or credential. Preserve every accepted source/model configuration.
 
 Implement default-off authenticated owner APIs for settings/consent and inspect/create/edit/delete/disable; use expected revisions and fresh locked authorization. Implement separately opt-in bounded extraction through existing CORE and exact source proofs, without implicit model replacement or automatic history scanning. Define deterministic expiry/purge scheduling and reversible disable/drain rollback. D31 independently verifies injection, deletion, export and source propagation. Model-use injection and vector memory require their own actual acceptance, not merely this schema.
+
+
+## D30-T01 implementation checkpoint — 2026-10-19
+
+[D30 journal guide](D30_MEMORY_JOURNAL.md): V005 is now applied after protected pre/post backup/restore; old data/security preserved. Local repository/schema123 focused+113 related cases PASS/0 SKIP, clean audit. D29's earlier unapplied-schema statements describe its historical design checkpoint. Memory runtime/APIs/extraction remain disabled/unimplemented in T01; D30 stays open for T02/T03 and final whole-system acceptance. Original contract/model choices remain unchanged.
