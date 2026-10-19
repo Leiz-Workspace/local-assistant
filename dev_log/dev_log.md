@@ -2721,3 +2721,27 @@ All254 preexisting tracked code/tests/config/models/migrations/dependencies from
 [Design](../docs/MEMORY_DESIGN.md), [validation](../docs/evidence/d29-contract-validation.json), [post-audit](../docs/evidence/d29-final-post-audit.json), ADR-044 and proposed relational/JSON schemas retained. Roadmap v3.31 updated. Full-version source-only archive `/tmp/local-assistant-d29-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D29 PASS for design/contract only; D30 NEXT.** Memory persistence/APIs/extraction/retention cleanup and D31 privacy/propagation are not implemented or claimed PASS. Continue with implementation ADR, backup/restore/grants/startup review before additive D30 migration. No manual relevance task or model replacement is required.
+
+
+# 2026-10-19 — D30-T01 additive memory journal, rollout preparation
+
+**Purpose:** Continue after D29 commit `ab6cff9`; implement storage/controls first without claiming the whole D30 API/extraction milestone complete.
+
+ADR-045 precedes V005 additive memory schema/narrow grants/downgrade refusal and an unused owner-scoped repository for explicit settings epochs, receipts, manual capture/inspect/edit/delete and bounded expiry purge. Server hashes/UUIDs/time; compare-and-swap settings/record revisions, owner locks, receipt revoke/expiry/epoch checks and owner/global admission caps. No memory service/API/model prompt/extraction or feature flag enabled. Necessary existing file/ingestion schema guards accept reviewed0005 while retaining unknown-revision and immutable-ingestion-grant refusal; source/index behavior unchanged.
+
+Related unit/startup/contracts **91 PASS/0.55s,0 SKIP**. Actual PostgreSQL tests are prepared for four classes, foreign/unowned scope denial, immutable runtime grants, quota and concurrent disable/revoke/version fencing; not yet run. V005 offline SQL rendered/reviewed without connecting. Fresh protected cluster/app backup plus isolated app restore verifies all9 old tables and ownership/ACLs, source unchanged after canary cleanup; no shared restart. Backup paths/checksums in `docs/evidence/d30-t01-pre-migration-restore.json`. Pre-rollout source/DDL snapshot retained. Migration/repository acceptance and D30 remain IN PROGRESS; no PASS without actual rollout/tests.
+
+
+## Verified D30-T01 repository/schema checkpoint — 2026-10-19
+
+**Purpose:** Accept the additive journal/control task from actual rollout and tests while continuing open D30.
+
+Reviewed V005 applied through existing Vault migrator after fresh quiet pre-backup/isolated restore of9 original tables/security. Original8 data-table fingerprints and all old relation/schema owners/ACLs preserved; new12-table post-backup restores rows/security and removes its owned probe. No shared restart, old-table DDL, role/credential/Vault/model change. File/ingestion guards only add reviewed0005; unknown-schema and immutable-ingestion checks remain. Applied migration source hash unchanged after rollout.
+
+First focused121 PASS/2.85s; source-related113 PASS/218.66s,0 SKIP on0005: file journal/HTTP/crash/recovery, ingestion journal/worker/HTTP, dense retrieval and existing actual CORE grounded ASGI/TCP/native-field gates. Pre-API review found missing receipt inventory caps; add1000 owner/10000 global using existing global-before-owner admission, no schema change. Two actual full receipt inventory cases added. Final focused **123 PASS/3.21s,0 SKIP**; real app-role four-class CRUD, exact Unicode hashes, foreign/unowned/session refusal, immutable grants, version/epoch/revoke/expiry, rollback, actual record/receipt quotas and concurrent settings/disable/revoke ordering pass. Fixture quota seeding is actual constrained SQL, not10000 model/HTTP calls.
+
+T01 adds38 unique cases; prior D28 full1334 plus2 new native-field and D29 new63 remain baseline: **1437 unique tests across checkpoints, not a new1437 full invocation**. Final whole-system regression still required before D30 acceptance. Nine current Python files/72 descriptions and Ruff checks pass. New schema/repository/control scope acceptance only; no memory API, source extraction, prompt injection or background retention service enabled.
+
+Read-only final audit: revision0005, memory settings/receipts/records0; files/jobs/heads/quota/probe DBs/Qdrant collections/live workers/advisory locks0. Old owners/ACL unchanged; app TEMP false, memory owner/receipt expiry UPDATE denied/text allowed, ingestion immutable UPDATE denied/state allowed/TRUNCATE denied. Original registry/models/embedding/E5 rollback/locks/dependencies unchanged. [T01 guide](../docs/D30_MEMORY_JOURNAL.md), [acceptance](../docs/evidence/d30-t01-journal-acceptance.json), pre/post restore/rollout/source hashes/raw actual grounded evidence retained. Full-file archive `/tmp/local-assistant-d30-t01-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D30-T01 PASS local repository/schema; D30 IN PROGRESS, T02 authenticated default-off APIs NEXT, T03 source-verified opt-in extraction/retention later.** No day advancement or unavailable human review task. Continue T02 after this checkpoint.
