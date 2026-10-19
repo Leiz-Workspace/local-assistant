@@ -73,3 +73,9 @@ The subsequent [Qwen/E5 comparison and transition review](QWEN_E5_COMPARISON_AND
 **Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
 
 D25 now passes the local opt-in source/Qwen/Qdrant lifecycle with979 PASS/0 SKIP. The approved selected JSON/hash, model profile/runtime, exact E5 rollback and original D24 evidence are unchanged by T03. Separate frozen offline encoder, owned vector adapter and source-held journal worker are implemented; flags remain disabled, no production collection or model routing enabled. Selection status remains `selected_not_deployed`. D26 retrieval is NEXT; no automatic fallback/replacement. See [acceptance](evidence/d25-ingestion-acceptance.json) and [operating guide](INCREMENTAL_INGESTION.md).
+
+## D26 local retrieval checkpoint — 2026-10-19
+
+**Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
+
+D26 local opt-in dense retrieval now passes1030 PASS/0 SKIP. Query instruction and complete token budget come from the unchanged approved Qwen profile; original query bytes enter the existing empty-prefix passage worker through shared encoder admission. No second model/runtime, download, dtype, fallback or selected-configuration edit. Actual source/SQL/Qdrant/HTTP tests are lifecycle acceptance, not an expanded model-quality benchmark. D27 original reranker candidate remains planned; [guide](RETRIEVAL.md).

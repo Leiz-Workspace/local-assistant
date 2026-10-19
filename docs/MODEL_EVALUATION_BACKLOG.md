@@ -105,3 +105,9 @@ A single fresh10-point synthetic CPU/Qdrant drill after regression measured enco
 | INGEST-OPS-002 — tombstone retention/compaction policy | P2; repeated terminal repair, demonstrated safe retirement/writer fencing |1 milestone; deleting durable obligations can revive stale late writes | Unscheduled; retain tombstones until separately reviewed |
 
 Future model replacement still requires benchmark, performance/resources, compatibility, migration/rollback and explicit owner approval. D26/D27 do not authorize changing the approved embedding model or removing registry candidates.
+
+## D26 local retrieval checkpoint — 2026-10-19
+
+**Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
+
+D26 local opt-in retrieval PASS with1030 tests/0 SKIP; [retained acceptance](evidence/d26-retrieval-acceptance.json). Earlier D26 NEXT references are historical checkpoints. D27-T01 is NEXT: freeze independent corpus/labels/thresholds and measure the existing no-reranker baseline; P1, dependent on accepted D26, effort1–2 milestones, risks quality bias/latency/memory/context/tenant drift. Original Qwen3-Reranker-0.6B (MODEL-EVAL-002) remains the planned candidate, NOT EVALUATED. Identify exact artifact/license/runtime and resource/provisioning scope before candidate execution. D26 downloaded/deployed no reranker and changed no model choice. A later replacement requires measured comparison, performance/resources, migration/rollback and owner approval. Existing populated DR/load/long-input/compaction debts remain open.

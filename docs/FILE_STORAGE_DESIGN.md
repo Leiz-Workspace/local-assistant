@@ -320,3 +320,9 @@ Fresh protected seven-table pre-migration restore and nine-table post-migration 
 **Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
 
 D25 local opt-in indexing now holds the existing FileService source-reader/integrity context through reconstruction, actual CPU Qwen encoding and owned Qdrant writes, then publishes only with a final SQL source/lease/generation fence. FileService upload/delete/root/quota logic is unchanged. Source replacement remains a new immutable file UUID/hash plus explicit admission/deletion; deleted sources are hidden immediately in SQL while repeated terminal sweeps repair physical vectors, including late writes after a cleanup acknowledgement. D26 must rehydrate/revalidate source provenance before delivery. Full979 PASS/0 SKIP; [operating guide](INCREMENTAL_INGESTION.md).
+
+## D26 local retrieval checkpoint — 2026-10-19
+
+**Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
+
+D26 reconstructs indexed chunks under the existing FileService contract, retains separately verified source readers through response delivery and checks all active generations in one final SQL snapshot after integrity I/O. Sequential chunk extraction preserves the single chunk slot; retrieval tracks its complete lifetime in FileService and drains before ingestion/files. Source deletion/supersession fences delivery; stale vector hints cannot substitute source content. FileService/journal/source schema and quota contracts are unchanged. Full1030 PASS/0 SKIP; [ADR-037](ADR/037-acl-filtered-source-revalidated-retrieval.md).
