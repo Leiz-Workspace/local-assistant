@@ -33,12 +33,9 @@ async def memory_context():
     conversations = []
     journal = PostgresMemoryJournal(sessions)
     async with sessions() as session:
-        assert (
-            await session.scalar(
-                text("SELECT version_num FROM assistant.alembic_version")
-            )
-            == "0005"
-        )
+        assert await session.scalar(
+            text("SELECT version_num FROM assistant.alembic_version")
+        ) in {"0005", "0006"}
         assert (
             await session.scalar(text("SELECT current_user")) == "local_assistant_app"
         )

@@ -56,7 +56,10 @@ class IngestionService:
                     )
                 )
             ).one()
-            if row[0] not in {"0004", "0005"} or tuple(row)[1:] != (False, True):
+            if row[0] not in {"0004", "0005", "0006"} or tuple(row)[1:] != (
+                False,
+                True,
+            ):
                 raise StoragePolicyError("ingestion_schema_unavailable", 503)
         try:
             await self.guard.open()

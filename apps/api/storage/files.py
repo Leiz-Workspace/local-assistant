@@ -12,7 +12,7 @@ from src.infrastructure.local_blob_storage import LocalBlobStorage
 from src.infrastructure.repositories.file_journal import PostgresFileJournal
 
 logger = logging.getLogger(__name__)
-COMPATIBLE_FILE_REVISIONS = frozenset({"0002", "0003", "0004", "0005"})
+COMPATIBLE_FILE_REVISIONS = frozenset({"0002", "0003", "0004", "0005", "0006"})
 
 
 async def initialize_file_service(session_factory):

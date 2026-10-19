@@ -43,7 +43,7 @@ async def test_default_off_and_explicit_dependencies(monkeypatch):
     with pytest.raises(RuntimeError):
         await initialize_memory_service(None)
     service = await initialize_memory_service(
-        sessions_for(("0005", False, True, False, True, False))
+        sessions_for(("0006", False, True, False, True, False))
     )
     assert not service.closing and not service.operations
     await service.shutdown()
@@ -54,11 +54,12 @@ async def test_default_off_and_explicit_dependencies(monkeypatch):
     "row",
     [
         ("0004", False, True, False, True, False),
-        ("0006", False, True, False, True, False),
-        ("0005", True, True, False, True, False),
-        ("0005", False, False, False, True, False),
-        ("0005", False, True, True, True, False),
-        ("0005", False, True, False, True, True),
+        ("0005", False, True, False, True, False),
+        ("0007", False, True, False, True, False),
+        ("0006", True, True, False, True, False),
+        ("0006", False, False, False, True, False),
+        ("0006", False, True, True, True, False),
+        ("0006", False, True, False, True, True),
     ],
 )
 async def test_startup_refuses_unknown_schema_and_broadened_grants(monkeypatch, row):

@@ -30,9 +30,9 @@ async def initialize_memory_service(sessions):
                 )
             )
         ).one()
-        if tuple(row) != ("0005", False, True, False, True, False):
+        if tuple(row) != ("0006", False, True, False, True, False):
             raise RuntimeError(
-                "Memory management requires reviewed V005 and least-privilege grants"
+                "Memory management requires reviewed V006 source privacy and least-privilege grants"
             )
     logger.info("memory_management_initialized")
     journal = PostgresMessageMemoryJournal(sessions)

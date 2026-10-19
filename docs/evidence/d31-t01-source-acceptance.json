@@ -1,0 +1,92 @@
+{
+  "description": "D31-T01 local transactional source-memory privacy repair acceptance only; whole D31 injection/export/purge/full gates remain open.",
+  "status": "PASS_LOCAL_T01_ONLY",
+  "base_commit": "478bec0",
+  "initial_baseline": {
+    "failed": 3,
+    "seconds": 0.84,
+    "skipped": 0
+  },
+  "final_related": {
+    "passed": 271,
+    "seconds": 11.0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "source_system_related": {
+    "passed": 140,
+    "seconds": 216.58,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "initial_proposal": {
+    "passed": 14,
+    "seconds": 0.48,
+    "skipped": 0
+  },
+  "prior_post_rollout_related": {
+    "passed": 262,
+    "seconds": 10.23,
+    "skipped": 0
+  },
+  "new_unique_tests": 29,
+  "unique_tests_across_checkpoints": 1599,
+  "new_full_suite_invocation": false,
+  "whole_d31_acceptance_pending": true,
+  "python_files": 11,
+  "function_class_descriptions": 83,
+  "source_sha256": {
+    "apps/api/services/ingestion.py": "4b94f0e4250a59480f2add3d1cce23f65d800a3a3b27c5d02b1c839ff7ed6cc6",
+    "apps/api/storage/files.py": "b2d8af8d3cef42efd03b59ce613f4f46d4f89e59617d63fb8615d8ffce39b702",
+    "apps/api/storage/memory.py": "aa7edbb222223d75413a46b38b3b1fa14665e8b4649656742f12a82fee759573",
+    "migrations/versions/0006_memory_source_invalidation.py": "2f21c16ade332a777d42b6c67cc69ae39ff36626673072e989ca5429e997e4b0",
+    "tests/integration/test_memory_journal_postgres.py": "408a59cf8f517bce39bad18729e6c41668e2dc8a2a7a07e496f99d8dc2847715",
+    "tests/integration/test_memory_source_ordering.py": "7e8a58dfe3555a971e7457ab291227145af785e3ee0f04e80da7beb6e6730f0b",
+    "tests/integration/test_memory_source_privacy.py": "5888dddd235d8dd4443828863cebffa13009fbd3a2a2f79b7234b6f1cc632a88",
+    "tests/integration/test_memory_source_trigger_proposal.py": "4be279a3fa7439e664e89db203475a2580dbdbf2a5fccad5c7f5c778145203bc",
+    "tests/test_file_schema_compatibility.py": "270e812d33cba5818ac5b9926df3f1603fa5003fa16f34825b3d0634f283c7ad",
+    "tests/test_ingestion_schema_compatibility.py": "f14b1ccc283265c5af9ccd02f3d57bd7c8400a28ce0fa2be7b00ccbe0859229b",
+    "tests/test_memory_api.py": "1f05127b022c2b5642c441a81a5f055d1b0ea9ef06dd82acbdca2089dc2be07d"
+  },
+  "protected_sha256": {
+    "docs/MODEL_REGISTRY.md": "0f5022f0a36186cf34ffe97b4e8461a586b36608c1a71effe1558393165fada9",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+    "configs/embedding-e5-rollback.json": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+    "uv.lock": "84ebcd30727cbb47bd8279f11ab79ca1e0c3271500734222c49e10fa93e00795",
+    "pyproject.toml": "51a08088e26106c72dfd6f3b5d7dbddc8cb0cffb28b05f67d3de49ee1dbee255",
+    "migrations/versions/0004_ingestion_column_grants.py": "fed1c51f519a754ee30462647ba4ec906d1a0dacf482c32e06142e2f724a505c",
+    "migrations/versions/0001_initial_conversation_schema.py": "063e8c98f288e8dfb2de1e14656766748d527c40e35c6bbacf0505e602d3520c",
+    "migrations/versions/0002_file_journal.py": "24a0913e3b15478f69d598098535d53b2a68c5c0c1fbc4d3b0b856fc08b93070",
+    "migrations/versions/0003_ingestion_journal.py": "a9bb5193c1d7b3906ec8f56015fd18cea80db9f93cd84a76610b9fa01e6b5a4f",
+    "migrations/versions/0005_memory_journal.py": "b228bf23acb034e8849b40f47a994044f703b10eb2df55c9500b05650008a652",
+    "migrations/versions/0006_memory_source_invalidation.py": "2f21c16ade332a777d42b6c67cc69ae39ff36626673072e989ca5429e997e4b0"
+  },
+  "rollout": "d31-t01-v006-rollout.json",
+  "post_audit": "d31-t01-final-post-audit.json",
+  "actual_postgres_lock_wait_observed": true,
+  "actual_inventory_rows_invalidated": 1000,
+  "inventory_rows_are_sql_fixtures_not_model_calls": true,
+  "original_failed_oracles_preserved": true,
+  "production_flags_enabled": false,
+  "limitations": [
+    "Source repair only; no full D31 or production privacy/secure erasure claim.",
+    "Conversation DELETE remains accepted soft-delete; original history/recovery copies not erased.",
+    "Independent explicit manual preferences retained, session scope removed with conversation.",
+    "No memory prompt/vector integration or model change."
+  ],
+  "logs": {
+    "data/backups/d31-t01-final-related.log": {
+      "sha256": "1966550025bb86943cef2847629f834962d8dfb08f77ee25df2cf797a2fe152a",
+      "bytes": 341
+    },
+    "data/backups/d31-t01-source-system-related.log": {
+      "sha256": "452ddddc457ffd42ac88800cbbe1173dec7c00c96e44b16e0b9602c896ed0058",
+      "bytes": 192
+    },
+    "data/backups/d31-t01-source-baseline.log": {
+      "sha256": "8fa411c532fb212eb6ccfee5634a4b09ed06024a4a05d5401e956b945dcb9b38",
+      "bytes": 39893
+    }
+  }
+}
