@@ -41,7 +41,7 @@ Compare identical frozen top10 candidates/source bytes/queries/labels. Reranker 
 | Milestone | Priority/dependency | Effort/risk | Status |
 |---|---|---|---|
 | T01 frozen baseline | P1; D26 and approved CPU embedding |1 milestone; agent-authored small-corpus bias/cache timing confusion | **PASS local frozen baseline**;1052 full PASS/0 SKIP |
-| T02 isolated original-candidate comparison | P1; T01 frozen candidates, pinned artifacts/runtime and separately reviewed provisioning scope |1–2 milestones; pair truncation, incorrect logits, CPU/RAM cost and quality regressions | NEXT; NOT PROVISIONED / NOT EVALUATED |
+| T02 isolated original-candidate comparison | P1; T01 frozen candidates, pinned artifacts/runtime and separately reviewed provisioning scope |1–2 milestones; pair truncation, incorrect logits, CPU/RAM cost and quality regressions | **Batch4 local measurement PASS**;1096 full PASS/0 SKIP; batch1 FAILED CPU/incomplete; no adoption |
 | T03 decision and authorized integration | P1; real T02 results, independent judgments, migration/rollback/owner decision |1–2 milestones if adopted; stale/foreign delivery and response/model lifetime | TODO; no adoption authorized |
 | Conditional lexical/hybrid experiment | P2; demonstrated exact-term/numeric retrieval gap and separately frozen benchmark/ADR |1–2 milestones; fusion bias, extra index/state/resource and scope leakage | Unscheduled; no new search engine/configuration implied |
 
@@ -51,4 +51,10 @@ D27 remains IN PROGRESS, D28 not started. Do not change any agreed model/routing
 
 **Purpose:** Distinguish validated measurement from production/model adoption.
 
-Final replay p50≈110.446ms/p95≈116.020ms over72 observations; actual tokenizer/encoder batch times and full counts are retained in baseline evidence. All source/candidate hashes were independently matched to corpus bytes after regression. Post-audit schema0004, source/jobs/heads/quota0, collections0, restore probes0, encoder processes0 and worker advisory locks0; prior owners/ACLs and grants preserved. Three Python files/22 function-class descriptions and Ruff/format checks PASS. No application, dependency, model/runtime/configuration/schema/Docker/Vault change. D27-T02 remains NEXT, candidate NOT PROVISIONED/NOT EVALUATED.
+Final replay p50≈110.446ms/p95≈116.020ms over72 observations; actual tokenizer/encoder batch times and full counts are retained in baseline evidence. All source/candidate hashes were independently matched to corpus bytes after regression. Post-audit schema0004, source/jobs/heads/quota0, collections0, restore probes0, encoder processes0 and worker advisory locks0; prior owners/ACLs and grants preserved. Three Python files/22 function-class descriptions and Ruff/format checks PASS. No application, dependency, model/runtime/configuration/schema/Docker/Vault change. At this historical T01 checkpoint T02 was NEXT; subsequent candidate execution is recorded below.
+
+## T02 measured follow-up — 2026-10-19
+
+**Purpose:** Supersede historical provisioning/evaluation status without changing frozen T01 data or gates.
+
+Original candidate was subsequently provisioned under the owner's continuation and evaluated in isolation. Batch1 v1/v2 failed to complete the three-round CPU budget; failures/source manifests retained. Separate CPU BF16 batch4 variant completed all three repetitions: diagnostic R@3/MRR@10/nDCG@10=1, same frozen candidates/labels; actual resource/quality gates pass, full1096 PASS/540.75s,0 SKIP. [Comparison and exact definitions](D27_RERANKER_COMPARISON.md). T01 plan's pre-execution NOT_PROVISIONED status is an immutable historical field, not current deployment evidence. No production/selection change; D27 remains IN PROGRESS, T03 independent/adoption review NEXT, D28 not started. [Review proposal](D27_RERANKER_ADOPTION_REVIEW.md).
