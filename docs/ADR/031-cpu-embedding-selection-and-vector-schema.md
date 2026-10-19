@@ -32,3 +32,31 @@ Frozen20-passage/40-query corpus: small Recall@3=.750/MRR@10=.655377 fails quali
 Selected full fingerprint `e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc` binds actual package versions and pinned model/tokenizer semantics. Both reject measured overflow and repeat exact vectors. configs/embedding-selected.json is selected_not_deployed. Retained docs/evidence/d24-embedding-selection.json and d24-qdrant-design.json record all metrics and actual Qdrant1.18.2 schema/10-index/UUID tenant compatibility; owned empty probe removed, inventory unchanged and final probe count0. Existing instance had no collections; no production collection/vector was created.
 
 Thirty-three unit/negative plus2 live cases added; final full783 PASS/0 SKIP. No source/API/DB schema/auth/root change. D25 must implement and test durable job/generation/outbox/update/delete consistency separately; D26 search must apply trusted scope filters plus final source revalidation. Runtime model/package/tokenizer changes require a new fingerprint/measurement/generation, never in-place reinterpretation.
+
+## Scope clarification and model-change governance — 2026-10-18 (review draft)
+
+**Purpose:** Reconcile the owner-provided model registry with the actual D24 evidence without superseding the accepted E5 decision or rewriting its history.
+
+D24 at commit `a88584b` evaluated only `intfloat/multilingual-e5-small` and `intfloat/multilingual-e5-base`. The candidate configuration, runner/live test and retained report contain those two models. **Qwen3-Embedding-0.6B was originally nominated for evaluation in MODEL_REGISTRY.md but was NOT EVALUATED against E5 in D24.** Its accuracy/performance/resources and superiority/inferiority have no measured result here. E5-base's eligible result is a choice within the measured E5 shortlist, not evidence that it beat Qwen or an approval to erase the original candidate.
+
+The accepted D24 status, commit, pins/fingerprint, metrics, tests and E5 choice remain unchanged. configs/embedding-selected.json remains `selected_not_deployed`; its collection plan is not proof of a production deployment. The historical D24 probe was empty and removed; this reconciliation makes no current live-collection claim and leaves every existing collection/vector/data/configuration intact. No new model is downloaded, benchmarked or deployed, and no source/Docker/Vault/database changes are made by this documentation task.
+
+[MODEL-EVAL-001](../MODEL_EVALUATION_BACKLOG.md#model-eval-001--qwen3-embedding-06b-versus-current-e5) is the separate **P1 / TODO / NOT EVALUATED** comparison task. It requires identical documents/chunks/queries/relevance/retrieval settings, each model's own documented preprocessing, Recall@3/5/10/MRR and Vietnamese/English/cross-language analysis, latency/RAM/VRAM/storage/index-throughput measurements, plus compatibility/migration/rollback planning. Exact Qwen artifacts, dimensions and preprocessing must be verified rather than inferred from E5. Preserve all current E5 data; incompatible spaces require a separately authorized isolated test index, never in-place vector mixing.
+
+**Registry lineup clarification from the owner:** MODEL_REGISTRY.md names the agreed strategy and candidate constraints. Keep its models and their recorded statuses intact; do not replace or remove a registry model merely because an alternative was benchmarked. Qwen3-Embedding-0.6B and Qwen3-Reranker-0.6B retain their original nominated roles. The D24 E5 decision is a preserved measured technical baseline, **not an owner-approved replacement of the Qwen registry nomination**. This clarification does not deploy Qwen, alter E5 or change either model’s benchmark status.
+
+**Owner's binding policy:** No agreed model selection may be changed unilaterally. Any proposed replacement of CORE, UNRESTRICTED, embedding, reranker, ASR, VAD, TTS or VLM requires an evidence-backed benchmark, performance/resource analysis, compatibility, migration and rollback, then **explicit owner approval before implementation/configuration/deployment/cutover**. A benchmark win alone does not authorize a switch. This review draft is not authorization to provision/execute MODEL-EVAL-001. Keeping E5 or reporting an inconclusive comparison remains valid.
+
+**Next milestone remains D25**, implementing durable incremental ingestion/upsert/delete with the current selected E5 configuration under its own reviewed lifecycle ADR/tests. The missing original-candidate comparison neither reverts D24 nor blocks D25 unless the owner explicitly changes the schedule. This addendum and the roadmap/backlog patch are left for owner review; the original accepted decision above is preserved verbatim.
+
+## 2026-10-18 — Later authorized comparison, original decision retained
+
+**Purpose:** Link subsequent evidence without rewriting D24 acceptance or its E5-only historical shortlist.
+
+The owner subsequently authorized downloading Qwen and comparing it offline. [ADR-032](032-qwen-e5-comparison-and-transition-review.md) records the frozen procedure, actual measurements and recommendation to propose Qwen, with higher measured CPU/RAM cost. [Separate transition proposal](../QWEN_E5_COMPARISON_AND_TRANSITION.md) remains owner-approval-pending. D24 itself did not compare Qwen; its accepted E5 config, original evidence and commit a88584b remain unchanged. No collection/data migration or selected-model switch has occurred.
+
+## Subsequent approved selection
+
+**Purpose:** Preserve D24's historical E5 decision while linking the owner's later approved Qwen selection.
+
+After separate measurements and migration/rollback review, the owner approved Qwen. ADR-032 and `docs/evidence/model-eval-001-selection-approval.json` record that decision. Current selected config now pins Qwen1024, `selected_not_deployed`; `configs/embedding-e5-rollback.json` preserves the original E5 file exactly. D24 evidence/commit and all existing data remain unchanged. This does not implement D25/D26 or a live collection migration.
