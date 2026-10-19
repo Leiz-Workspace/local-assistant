@@ -207,3 +207,11 @@ Indexing remains off by default. [INCREMENTAL_INGESTION.md](INCREMENTAL_INGESTIO
 **Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
 
 `ASSISTANT_RETRIEVAL_ENABLED=1` requires already enabled approved ingestion/files and existing owned collection. Default is0; no new secret/bootstrap/configuration file. Strict authenticated loopback POST `/api/v1/retrieval/search` accepts query/top_k/optional file UUID narrowing; unknown caller ACL/filter/model inputs are rejected. The exact instructed512-token cap remains; no truncation or fallback. Read [RETRIEVAL.md](RETRIEVAL.md) for underfilled candidate budgets and delivery fencing. Disable/drain retrieval before ingestion, files or pool maintenance. D26 accepted locally with1030 PASS/0 SKIP, clean state; production flags remain disabled.
+
+
+## D28 grounded answers — acceptance running
+
+`ASSISTANT_GROUNDED_ENABLED=1` additionally requires already enabled approved dense retrieval. Default0 creates no grounded resources. Authenticated local `POST /api/v1/grounded/answer` accepts query/top_k1–3/optional owned-file narrowing. The model may select opaque evidence IDs and exact quotes; it cannot supply authoritative file IDs/offsets: see [D28 guide](D28_GROUNDED_GENERATION.md) for opaque evidence IDs, exact quotes, native field spans, uncertainty and explicit semantic/privacy limits. Grounded operations must drain before retrieval/ingestion/files/pool maintenance. Source/vector/model/configuration choices remain unchanged; no production flag or collection was enabled. Focused82+TCP1 PASS; full regression and final acceptance pending.
+
+
+**D28 final update — 2026-10-19:** Local opt-in grounded generation PASS: full1334/1387.90s plus2 additional native-field tests/1.21s,0 SKIP;1336 unique tests across checkpoints, not one1336 full invocation. [Acceptance](evidence/d28-grounded-acceptance.json), [guide](D28_GROUNDED_GENERATION.md), clean audit. Original models/source/schema/configuration preserved; production remains off. D29 memory contract NEXT. Earlier running-status paragraphs are historical checkpoints.

@@ -1,4 +1,4 @@
-"""Own optional persistent-chat database resources for each FastAPI process."""
+"""Own optional conversation, source, retrieval and grounded resources with ordered joined shutdown."""
 
 import asyncio
 import logging
@@ -9,6 +9,7 @@ from fastapi import FastAPI
 
 from apps.api.services.conversations import ConversationService
 from apps.api.storage.files import initialize_file_service
+from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
 from apps.api.storage.retrieval import initialize_retrieval_service
 from src.infrastructure.database.connection import (
@@ -31,6 +32,7 @@ async def conversation_lifespan(app: FastAPI):
     app.state.file_service = None
     app.state.ingestion_service = None
     app.state.retrieval_service = None
+    app.state.grounded_service = None
     try:
         if os.environ.get("DATABASE_URL"):
             try:
@@ -47,6 +49,9 @@ async def conversation_lifespan(app: FastAPI):
                 app.state.retrieval_service = await initialize_retrieval_service(
                     app.state.ingestion_service
                 )
+                app.state.grounded_service = await initialize_grounded_service(
+                    app.state.retrieval_service
+                )
                 telemetry = PoolTelemetry(engine)
                 app.state.pool_telemetry = telemetry
                 sampler = asyncio.create_task(telemetry.sample())
@@ -60,6 +65,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.grounded_service is not None:
+            await app.state.grounded_service.shutdown()
+            app.state.grounded_service = None
         if app.state.retrieval_service is not None:
             await app.state.retrieval_service.shutdown()
             app.state.retrieval_service = None

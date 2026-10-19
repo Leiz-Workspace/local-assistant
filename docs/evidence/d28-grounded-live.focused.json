@@ -1,0 +1,388 @@
+{
+  "description": "Actual approved dense/source/embedding and unchanged CORE/fast generation on synthetic golden PDF/text; exact citation/provenance, Unicode, two-owner isolation, absence and replacement. No universal semantic factuality/human or production-quality claim.",
+  "cases": [
+    {
+      "case": "native_pdf_page",
+      "result": {
+        "answer": "123",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_9531644ed0568e4a124285cc219bdca04b7842d539b3a6c0a82de5155c1054ee",
+            "content_trust": "untrusted",
+            "file_id": "0a91dd69-e39f-4334-b323-9a238fc56ed4",
+            "generation": "6ff3e82929c5eea9682b906cba203922cdfdd3558c30fb2d10a1c2401497b21b",
+            "point_id": "6f7ebd6b-0c25-5143-8bb8-258c2d955fcb",
+            "provenance": {
+              "chunk_id": "chk_9531644ed0568e4a124285cc219bdca04b7842d539b3a6c0a82de5155c1054ee",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0a91dd69-e39f-4334-b323-9a238fc56ed4",
+              "index_generation": "6ff3e82929c5eea9682b906cba203922cdfdd3558c30fb2d10a1c2401497b21b",
+              "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "bdfd8d76-6245-4d4f-a127-3b02fa856dd0",
+              "owner_id": "6026159c-602e-4d06-90ce-80623ad1cb4a",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 32,
+                  "field": "text",
+                  "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Alpha 123",
+            "quote_span": {
+              "end": 19,
+              "reference": "chunk_text",
+              "start": 10,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "source_span": {
+              "end": 19,
+              "field": "text",
+              "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=1",
+              "start": 10,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      }
+    },
+    {
+      "case": "native_pdf_unicode",
+      "result": {
+        "answer": "Xin ệ",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_a65b13b990d3558ededb57d368c390105a91aa5ed26a86135ffedd6cc3fd20c4",
+            "content_trust": "untrusted",
+            "file_id": "0a91dd69-e39f-4334-b323-9a238fc56ed4",
+            "generation": "6ff3e82929c5eea9682b906cba203922cdfdd3558c30fb2d10a1c2401497b21b",
+            "point_id": "31e73597-4e75-5e52-a796-7c027f65d3f0",
+            "provenance": {
+              "chunk_id": "chk_a65b13b990d3558ededb57d368c390105a91aa5ed26a86135ffedd6cc3fd20c4",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0a91dd69-e39f-4334-b323-9a238fc56ed4",
+              "index_generation": "6ff3e82929c5eea9682b906cba203922cdfdd3558c30fb2d10a1c2401497b21b",
+              "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "bdfd8d76-6245-4d4f-a127-3b02fa856dd0",
+              "owner_id": "6026159c-602e-4d06-90ce-80623ad1cb4a",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 5,
+                  "field": "text",
+                  "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=2",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Xin ệ",
+            "quote_span": {
+              "end": 5,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s2",
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "source_span": {
+              "end": 5,
+              "field": "text",
+              "locator": "file:0a91dd69-e39f-4334-b323-9a238fc56ed4#page=2",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      }
+    },
+    {
+      "case": "owned_text",
+      "result": {
+        "answer": "Project Lumen uses port 7443.",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_801f646d93ff62e2bc0adab46be1518b4d5126f7d388f07632773df6c4d8fa35",
+            "content_trust": "untrusted",
+            "file_id": "81ac4f2c-daaa-48e1-af8d-24fbe4bb76b7",
+            "generation": "3a463bb48fcb8f21d891329654e45c7cb5330dda4063e8ddb2ae655ecfbbe154",
+            "point_id": "b85ae8d8-0266-5c6d-bbdb-77ec9a439d11",
+            "provenance": {
+              "chunk_id": "chk_801f646d93ff62e2bc0adab46be1518b4d5126f7d388f07632773df6c4d8fa35",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "81ac4f2c-daaa-48e1-af8d-24fbe4bb76b7",
+              "index_generation": "3a463bb48fcb8f21d891329654e45c7cb5330dda4063e8ddb2ae655ecfbbe154",
+              "locator": "file:81ac4f2c-daaa-48e1-af8d-24fbe4bb76b7#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "bdfd8d76-6245-4d4f-a127-3b02fa856dd0",
+              "owner_id": "6026159c-602e-4d06-90ce-80623ad1cb4a",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "226010677854606a3b17efa89eec6b928b3379f759e13d9ddc5764c1eac46ea5",
+              "spans": [
+                {
+                  "end": 102,
+                  "field": "text",
+                  "locator": "file:81ac4f2c-daaa-48e1-af8d-24fbe4bb76b7#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Project Lumen uses port 7443.",
+            "quote_span": {
+              "end": 29,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "226010677854606a3b17efa89eec6b928b3379f759e13d9ddc5764c1eac46ea5",
+            "source_span": {
+              "end": 29,
+              "field": "text",
+              "locator": "file:81ac4f2c-daaa-48e1-af8d-24fbe4bb76b7#text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      }
+    },
+    {
+      "case": "foreign_principal_own_source",
+      "result": {
+        "answer": "Project Lumen uses port 9333.",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_0390fa31e5bb86873393a840accc71c5094d009780e6c473cd0a363edf11f7b8",
+            "content_trust": "untrusted",
+            "file_id": "738eb600-9a22-45ff-90f8-e932abf53561",
+            "generation": "dbe4078c038f53270c55b4a4419e13ec3d0620281fdf4351e767e14b413bb0a5",
+            "point_id": "8f719d23-d954-5592-ab03-317a1f913a48",
+            "provenance": {
+              "chunk_id": "chk_0390fa31e5bb86873393a840accc71c5094d009780e6c473cd0a363edf11f7b8",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "738eb600-9a22-45ff-90f8-e932abf53561",
+              "index_generation": "dbe4078c038f53270c55b4a4419e13ec3d0620281fdf4351e767e14b413bb0a5",
+              "locator": "file:738eb600-9a22-45ff-90f8-e932abf53561#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "bdfd8d76-6245-4d4f-a127-3b02fa856dd0",
+              "owner_id": "456936aa-cc33-4a87-9993-5953a177013d",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "4fe3fe7023738c1521a890d4a6f7e0be076ad621ccdf988471db92607d88a6b6",
+              "spans": [
+                {
+                  "end": 29,
+                  "field": "text",
+                  "locator": "file:738eb600-9a22-45ff-90f8-e932abf53561#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Project Lumen uses port 9333.",
+            "quote_span": {
+              "end": 29,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "4fe3fe7023738c1521a890d4a6f7e0be076ad621ccdf988471db92607d88a6b6",
+            "source_span": {
+              "end": 29,
+              "field": "text",
+              "locator": "file:738eb600-9a22-45ff-90f8-e932abf53561#text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      }
+    },
+    {
+      "case": "absent_fact",
+      "result": {
+        "answer": null,
+        "answer_trust": "model_generated",
+        "citations": [],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "insufficient_evidence"
+      }
+    },
+    {
+      "case": "immutable_replacement",
+      "result": {
+        "answer": "Project Lumen uses port 8443.",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_526ee764a645f1ce777b3814d35d47067c2b0d699f38487dc7cc9809db7b67e1",
+            "content_trust": "untrusted",
+            "file_id": "89b1660f-0fe6-458b-b9fa-79809d9f19d4",
+            "generation": "8e5aa6b7bed210e49ccb512b224ed8cc8eb93bc4abbeee17a171d1273d8dc19c",
+            "point_id": "76c2a15e-530f-5bb5-bca4-cc5130aeb9e6",
+            "provenance": {
+              "chunk_id": "chk_526ee764a645f1ce777b3814d35d47067c2b0d699f38487dc7cc9809db7b67e1",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "89b1660f-0fe6-458b-b9fa-79809d9f19d4",
+              "index_generation": "8e5aa6b7bed210e49ccb512b224ed8cc8eb93bc4abbeee17a171d1273d8dc19c",
+              "locator": "file:89b1660f-0fe6-458b-b9fa-79809d9f19d4#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "bdfd8d76-6245-4d4f-a127-3b02fa856dd0",
+              "owner_id": "6026159c-602e-4d06-90ce-80623ad1cb4a",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "52739ae3337cd13dc1c8ddd58c0eb5ea921a48cf0e860fc1290a3b82822493ab",
+              "spans": [
+                {
+                  "end": 33,
+                  "field": "text",
+                  "locator": "file:89b1660f-0fe6-458b-b9fa-79809d9f19d4#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Project Lumen now uses port 8443.",
+            "quote_span": {
+              "end": 33,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "52739ae3337cd13dc1c8ddd58c0eb5ea921a48cf0e860fc1290a3b82822493ab",
+            "source_span": {
+              "end": 33,
+              "field": "text",
+              "locator": "file:89b1660f-0fe6-458b-b9fa-79809d9f19d4#text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      }
+    }
+  ],
+  "actual_core_calls": [
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 391,
+      "output_tokens": 30,
+      "latency_ms": 576
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 392,
+      "output_tokens": 30,
+      "latency_ms": 495
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 476,
+      "output_tokens": 43,
+      "latency_ms": 674
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 319,
+      "output_tokens": 43,
+      "latency_ms": 718
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 477,
+      "output_tokens": 17,
+      "latency_ms": 332
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 321,
+      "output_tokens": 44,
+      "latency_ms": 746
+    }
+  ],
+  "foreign_narrowing_no_generation": true,
+  "deleted_narrowing_no_generation": true,
+  "selected_embedding_unchanged": true,
+  "source_prompt_injection_present": true,
+  "injected_instruction_not_followed_in_answer": true
+}

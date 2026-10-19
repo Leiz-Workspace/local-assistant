@@ -35,3 +35,11 @@ D27 is IN PROGRESS: T01 baseline and T02 offline batch4 reranker diagnostic meas
 **Purpose:** Distinguish measured test composition from deployed retrieval behavior.
 
 [ADR-041](ADR/041-isolated-http-reranker-trial.md) defines isolated source-held ASGI ranking and bounded existing CORE traffic. Only test instances are wrapped; this guide's actual app startup/flags/routes/dense behavior are unchanged. [ADR-042](ADR/042-owner-delegated-relevance-evaluation.md) records owner-delegated AI judgments; no current manual label action or human-independent claim. [T03 evidence and scope](D27_OWNER_DELEGATED_EVALUATION.md) retain original frozen inputs/failures and distinguish ASGI timing from network/persistent/load certification. No production reranker or model/routing change.
+
+
+## D28 grounded composition — acceptance running
+
+[Grounded generation](D28_GROUNDED_GENERATION.md) composes this unchanged dense operation with existing CORE behind an additional default-off flag. It holds source readers through model generation and final delivery and maps unique exact quotes to authoritative native fields. This does not add a reranker, change embedding or enable production collections. Focused82+TCP1 PASS/0 SKIP; full1334-case regression and final audit pending. D26's own source/ACL/underfilled-candidate behavior remains unchanged.
+
+
+**D28 final update — 2026-10-19:** Local opt-in grounded generation PASS: full1334/1387.90s plus2 additional native-field tests/1.21s,0 SKIP;1336 unique tests across checkpoints, not one1336 full invocation. [Acceptance](evidence/d28-grounded-acceptance.json), [guide](D28_GROUNDED_GENERATION.md), clean audit. Original models/source/schema/configuration preserved; production remains off. D29 memory contract NEXT. Earlier running-status paragraphs are historical checkpoints.

@@ -1,0 +1,56 @@
+{
+  "description": "Freeze default-off D28 source-held CORE generation/citation implementation and synthetic known-fact/absence/injection/lifecycle tests before actual model acceptance.",
+  "scope": "LOCAL_OPT_IN_GROUNDED_CITATION_ACCEPTANCE_NO_MODEL_CHANGE",
+  "base_commit": "b69172f",
+  "model_policy": {
+    "profile": "core",
+    "preset": "fast",
+    "temperature": 0,
+    "max_tokens": 512,
+    "model_timeout_seconds": 60,
+    "no_sources_no_generation": true
+  },
+  "source_policy": {
+    "top_k_max": 3,
+    "file_ids_max": 16,
+    "complete_prompt_bytes_max": 32768,
+    "raw_model_output_bytes_max": 16384,
+    "answer_bytes_max": 4096,
+    "quote_bytes_max": 2048,
+    "quote_count_max": 3,
+    "exact_unique_unicode_quote": true,
+    "source_fences_before_after_generation_and_before_headers": true
+  },
+  "actual_cases": [
+    "nativePDF_page",
+    "nativePDF_Unicode",
+    "owned_port_with_instruction_injection",
+    "other_owner_own_port",
+    "absent_identifier",
+    "immutable_source_replacement",
+    "foreign_narrowing_no_generation",
+    "deleted_narrowing_no_generation"
+  ],
+  "control_cases": [
+    "realSQL_delete_supersede_during_model_delay",
+    "cancel_shutdown_join",
+    "post_parse_real_source_deletion_final_delivery_fence",
+    "malformed_quote_HTTP_refusal"
+  ],
+  "human_or_universal_semantic_quality_claim": false,
+  "production_enablement": false,
+  "sha256": {
+    "src/application/services/grounded_answer.py": "209c65a212d787b935dcb741f9a053b43c63944004124480f2e753f56316af96",
+    "apps/api/services/grounded.py": "b90ce366b30e3a1adbbf68558512d4874f6139a08d065820e746e70d811819bd",
+    "apps/api/storage/grounded.py": "a61acd2145ecdbf0d12e9e11555c615f93b052e1e712a22058a7fa1feac89fdf",
+    "apps/api/routes/grounded.py": "d6e20473bdabab085e016b71a821ad3f22dbfad0b40a15af7e170bbfb7b503c0",
+    "apps/api/main.py": "6ace4377aa1e1fb7ff4f16cffdde5828e075d6ad9a2c0f5301b42f270f567ba1",
+    "apps/api/storage/lifecycle.py": "88776e92b4fb5a88d9466480c2505d26324e74bc1b6d5592b3c262308ec14904",
+    "tests/test_grounded_answer.py": "24266cf6fbe06614266b982158b6f3da279138dd667f80330d7bbe871aaac528",
+    "tests/test_grounded_service.py": "e3b05017f3ac580d928ebdaf55cc9b415ff4c350482f733f2efa6e17446c552c",
+    "tests/test_grounded_startup.py": "b693293b311221b03d8302863d42787ffe41991d658a5f853c033fe0c27ec84d",
+    "tests/integration/test_grounded_http.py": "5918f55ade2eb2df8b4f16777afb2f7418b8dbef50c11efbefde76da41b38ee1",
+    "docs/ADR/043-source-held-grounded-generation.md": "f301a93b512b4164e57399231380568fd3aadabedbc80a230916f2ba8de285d4",
+    "tests/fixtures/pdf/native-pages.pdf": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a"
+  }
+}
