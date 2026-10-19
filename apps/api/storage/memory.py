@@ -6,7 +6,11 @@ import os
 from sqlalchemy import text
 
 from apps.api.services.memory import MemoryService
-from src.infrastructure.repositories.memory_journal import PostgresMemoryJournal
+from apps.api.services.memory_extraction import MemoryExtractor
+from apps.api.services.memory_retention import MemoryRetention
+from src.infrastructure.repositories.message_memory_journal import (
+    PostgresMessageMemoryJournal,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -31,4 +35,10 @@ async def initialize_memory_service(sessions):
                 "Memory management requires reviewed V005 and least-privilege grants"
             )
     logger.info("memory_management_initialized")
-    return MemoryService(PostgresMemoryJournal(sessions))
+    journal = PostgresMessageMemoryJournal(sessions)
+    retention = MemoryRetention(journal)
+    service = MemoryService(
+        journal, extractor=MemoryExtractor(journal), retention=retention
+    )
+    retention.start()
+    return service

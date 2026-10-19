@@ -50,3 +50,13 @@ Implement default-off authenticated owner APIs for settings/consent and inspect/
 ## D30-T02 management checkpoint — 2026-10-19
 
 [Memory API](MEMORY_API.md) now implements default-off local authenticated manual settings/consent/record controls, accepted109 related cases/0 SKIP. Owner opt-in is separate from the operator flag; disabled owners retain inspect/delete. No extraction, automatic learning, prompt injection or retention worker is implemented yet; T03 remains open. Original D29 design-only statements remain historical.
+
+
+## D30-T03 implementation checkpoint
+
+[Message-memory selection](D30_MESSAGE_MEMORY_SELECTION.md) implements explicit existing-user-message CORE selection, bounded retention and read-only owner export under ADR-047/048. Focused147 PASS/0 SKIP; final regression/audit pending. File-to-memory and prompt/vector use remain assessed future backlog, not implemented adapters. Original D29/T01/T02 statuses above remain historical; D31 privacy/source propagation remains open.
+
+
+## D30 final acceptance
+
+[D30 acceptance](evidence/d30-memory-acceptance.json): **1570 full-suite PASS/1357.69s,0 SKIP**, after147 focused PASS and clean post-audit. Explicit message selection, bounded retention and owner export are locally accepted; previous checkpoint descriptions above remain historical. Production flag off; no model/schema change in T03. D31 source deletion/injection/export propagation NEXT.

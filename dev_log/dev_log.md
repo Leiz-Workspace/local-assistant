@@ -2760,3 +2760,33 @@ Actual V005 two-principal HTTP proves four-class manual CRUD, disabled inspect/d
 [T02 guide](../docs/MEMORY_API.md), [acceptance](../docs/evidence/d30-t02-api-acceptance.json), [post-audit](../docs/evidence/d30-t02-final-post-audit.json), actual TCP evidence retained; roadmap v3.33 updated. T02 adds38 unique tests: **1475 unique across checkpoints, not a new full-suite invocation**; D30 final full regression remains required after T03. Full-version source archive `/tmp/local-assistant-d30-t02-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D30-T02 PASS local management APIs; D30 IN PROGRESS, T03 explicit source-verified model selection and bounded retention NEXT.** No automatic memory use/extraction, source propagation or export claimed. Continue T03 under a source/lifecycle ADR before implementation; preserve agreed models.
+
+
+# 2026-10-19 — D30-T03 explicit source selection, acceptance in progress
+
+**Purpose:** Continue T03 after `701530c` without advancing D30 before actual model and full regression results.
+
+ADR-047 precedes explicit single-user-message CORE/fast quote selection, fresh owner/consent/source fences through delivery, joined cancellation and bounded expiry retention. Default off; no automatic learning, file-memory adapter, prompt memory injection, model replacement or migration. Future additions assessed in MEMORY_BACKLOG.md.
+
+Source/contracts and related SQL/API checks: **128 PASS/4.92s,0 SKIP**. Earlier108 PASS/1 FAIL exposed strict UUID decoding of extracted JSONB provenance; targeted tagged UUID decoder and five regression cases correct that boundary while preserving strict contract and applied V005. Original failure retained privately. Tests include controlled cancellation, exact Unicode/hash proof, actual SQL source/epoch/revoke/expiry and bounded cleanup. These results do not yet establish actual CORE selection quality.
+
+**Status: D30-T03 IN PROGRESS.** Freeze source and synthetic English/Vietnamese/greeting/TCP oracles before real existing CORE runs. Actual model, final whole-system regression and final audit pending; no D30 PASS or D31 advancement.
+
+T03 live first attempt: Vault HTTP503 after host/container restart; existing protected initializer unsealed existing Vault without rotation/config change. Existing CORE was absent; resumed original configured CORE with vision, no model download/configuration change. Initial live attempt while CORE still loading produced2 FAIL/10 fixture setup errors/2.44s; these are not acceptance results. Added explicit upstream fixture import so the new live module can run standalone; exact model oracles unchanged. Wait for health200 before retry. Failure log retained at `data/backups/d30-t03-live-initial.log`.
+
+Healthy retry:12 actual SQL/CORE/HTTP/TCP cases PASS/2.62s; combined source/control/API checkpoint **140 PASS/6.78s,0 SKIP**. Actual CORE made four source-literal calls (English project/Vietnamese preference/greeting insufficiency/TCP preference); no new model or human-independence claim. ADR-044 audit found missing owner-export obligation; ADR-048 adds bounded read-only consistent snapshot export before day acceptance. Initial export6 PASS/1 FAIL/.73s was a fixture comparison of equivalent UTC `Z` and `+00:00` spellings; compare actual aware instants, unchanged serialization. Actual SQL/HTTP export cases already passed. Final full regression still pending.
+
+
+## D30 final local acceptance — 2026-10-19
+
+**Purpose:** Close D30 only after real model, full regression and post-audit results; continue D31 afterward.
+
+ADR-047/048 implementation: explicit single-owned-user-message CORE/fast source-literal selection with fresh source/consent/version fences through delivery; joined model/SQL cancellation and owner-control drain; bounded rotating expiry/orphan worker; read-only repeatable-read principal-only export while disabled. No file-memory adapter, automatic learning, memory prompt/vector use, new dependency/model/schema in T03. Necessary tagged JSONB UUID decoder repairs only extracted record reads; original strict contract/manual behavior and applied V005 retained.
+
+Final focused **147 PASS/6.91s,0 SKIP**. Final whole-system **1570 PASS/1357.69s (22:37),0 SKIP, exit0**, including95 new T03 cases and every prior case in one actual invocation. Four real CORE calls per focused/full run establish literal English/Vietnamese facts, greeting insufficiency and TCP preference; synthetic same-agent evidence is not human-independent/general model quality. Controlled model ports remain explicitly distinguished from actual inference. All17 changed Python files/166 function-class descriptions, Ruff correctness/import/format and diff whitespace checks pass.
+
+Post-audit:0005, memory settings/consents/records0; files/jobs/heads/quota/probe DBs/Qdrant collections/model workers/advisory locks0; no active app transaction/pending inference. Original owners/ACLs and narrow app TEMP/identity/expiry/ingestion grants preserved. Model registry/profiles/approved Qwen embedding/exact E5 rollback/dependencies/all applied migrations unchanged. Existing Vault was unsealed and original CORE/vision resumed after external host restart; no rotation/model download/config change. Original JSONB/setup/UTC fixture failures and healthy retries retained in focused ledger.
+
+[Guide](../docs/D30_MESSAGE_MEMORY_SELECTION.md), [acceptance](../docs/evidence/d30-memory-acceptance.json), [post-audit](../docs/evidence/d30-final-post-audit.json), frozen source and actual CORE/HTTP/TCP evidence retained. Full-version source archive `/tmp/local-assistant-d30-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D30 PASS (local opt-in), D31 NEXT.** Continue privacy/injection/source deletion/export propagation from actual code; production flags off, no agreed-model replacement or manual relevance task.

@@ -14,6 +14,7 @@ from starlette.responses import JSONResponse, Response
 
 from apps.api.routes.conversations import require_local_client
 from apps.api.routes.files import Principal
+from src.application.ports.inference import InferenceFailure
 from src.application.services.memory_contract import MemoryPolicyError
 
 logger = logging.getLogger(__name__)
@@ -98,6 +99,14 @@ class EditInput(StrictInput):
     text: str = Field(min_length=1, max_length=4096)
 
 
+class ExtractionInput(StrictInput):
+    """Accept only explicit message/receipt IDs without caller source text, hash or producer metadata."""
+
+    consent_id: JsonUUID
+    conversation_id: JsonUUID
+    message_id: JsonUUID
+
+
 async def get_memory_service(request: Request):
     """Require enabled management and translate policy/storage errors without private driver diagnostics."""
     service = getattr(request.app.state, "memory_service", None)
@@ -108,21 +117,48 @@ async def get_memory_service(request: Request):
     try:
         yield service
     except MemoryPolicyError as error:
-        if error.code in {"memory_not_found", "memory_scope_not_found"}:
+        if error.code in {
+            "memory_not_found",
+            "memory_scope_not_found",
+            "memory_source_not_found",
+        }:
             status = 404
         elif error.code in {"memory_disabled", "memory_extraction_disabled"}:
             status = 403
-        elif error.code in {"memory_conflict", "memory_consent_inactive"}:
+        elif error.code in {
+            "memory_conflict",
+            "memory_consent_inactive",
+            "memory_source_changed",
+        }:
             status = 409
-        elif error.code in {"memory_limit", "memory_consent_limit"}:
+        elif error.code in {
+            "memory_limit",
+            "memory_consent_limit",
+            "memory_busy",
+            "memory_export_limit",
+        }:
             status = 429
-        elif error.code == "memory_unavailable":
+        elif error.code == "memory_source_limit":
+            status = 413
+        elif error.code == "memory_model_timeout":
+            status = 504
+        elif error.code in {
+            "memory_unavailable",
+            "memory_model_invalid",
+            "memory_selection_invalid",
+            "memory_source_invalid",
+        }:
             status = 503
         else:
             status = 422
         raise HTTPException(
             status, detail=dict(code=error.code), headers=HEADERS
         ) from None
+    except InferenceFailure as error:
+        logger.warning("memory_selection_inference_failed_safely")
+        status = 422 if error.code == "context_overflow" else 503
+        code = "memory_context_limit" if status == 422 else "memory_model_unavailable"
+        raise HTTPException(status, detail=dict(code=code), headers=HEADERS) from None
     except (SQLAlchemyError, ValueError, TypeError, KeyError, RuntimeError, OSError):
         logger.warning("memory_management_failed_safely")
         raise HTTPException(
@@ -133,6 +169,72 @@ async def get_memory_service(request: Request):
 def private_result(value, *, status=200):
     """Encode bounded owner data with private delivery headers rather than exposing database objects."""
     return JSONResponse(jsonable_encoder(value), status_code=status, headers=HEADERS)
+
+
+class MemorySelectionResponse(JSONResponse):
+    """Retain extraction ownership through response delivery and a final source/consent fence."""
+
+    def __init__(self, context, extractor, owner, consent_id, payload, retained):
+        """Encode only bounded selected-record data while preserving its live operation context."""
+        self.context, self.extractor, self.owner, self.consent_id, self.retained = (
+            context,
+            extractor,
+            owner,
+            consent_id,
+            retained,
+        )
+        super().__init__(jsonable_encoder(payload), headers=HEADERS)
+
+    async def __call__(self, scope, receive, send):
+        """Fail closed before headers on source/consent/version drift and always close owned work after send."""
+        try:
+            try:
+                await self.extractor.validate(
+                    self.owner, self.consent_id, self.retained
+                )
+            except (
+                MemoryPolicyError,
+                SQLAlchemyError,
+                ValueError,
+                TypeError,
+                KeyError,
+                RuntimeError,
+                OSError,
+            ):
+                logger.warning("memory_selection_delivery_fenced")
+                await JSONResponse(
+                    dict(detail=dict(code="memory_selection_changed")),
+                    status_code=409,
+                    headers=HEADERS,
+                )(scope, receive, send)
+                return
+            await super().__call__(scope, receive, send)
+        finally:
+            await self.context.__aexit__(None, None, None)
+            logger.info("memory_selection_response_closed")
+
+
+@router.post("/extractions")
+async def extract_message(
+    body: ExtractionInput, principal: Principal, service=Depends(get_memory_service)
+):
+    """Explicitly select a literal quote from one current owned user message under independent extraction consent."""
+    extractor = service.extractor
+    if extractor is None or extractor.closing:
+        raise HTTPException(
+            503, detail=dict(code="memory_unavailable"), headers=HEADERS
+        )
+    context = extractor.operation(
+        principal, body.consent_id, body.conversation_id, body.message_id
+    )
+    payload, retained = await context.__aenter__()
+    try:
+        return MemorySelectionResponse(
+            context, extractor, principal, body.consent_id, payload, retained
+        )
+    except BaseException:
+        await context.__aexit__(None, None, None)
+        raise
 
 
 @router.get("/settings")
@@ -233,3 +335,13 @@ async def delete_record(
     """Hard-delete an owned expected version while preserving controls for disabled owners."""
     await service.run(principal, "delete", record_id, expected_version=expected_version)
     return Response(status_code=204, headers=HEADERS)
+
+
+@router.get("/export")
+async def export_memory(principal: Principal, service=Depends(get_memory_service)):
+    """Download only the authenticated owner's complete bounded retained memory snapshot without enabling use."""
+    response = private_result(await service.run(principal, "export"))
+    response.headers["Content-Disposition"] = (
+        'attachment; filename="memory-export.json"'
+    )
+    return response
