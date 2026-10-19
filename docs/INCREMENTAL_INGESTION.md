@@ -13,7 +13,7 @@ D25 now has a real worker and authenticated loopback admission/status routes in 
 5. DB-time heartbeat/source/lease/latest-request fences govern publication. Only complete acknowledged IDs can atomically change the active pointer. Lost vector acknowledgement retries the same IDs; lost SQL publication acknowledgement reads durable ready state. Busy source slots defer without consuming model attempts or extending deadline. Other failures retain bounded retry/terminal obligations.
 6. Source deletion hides active status immediately through the SQL ready/hash/root join; physical vector deletion is asynchronous. Repeat bounded terminal sweeps include previously acknowledged cleanup, repairing a late write even after a process restart. Tombstones are retained; no one-shot cleanup acknowledgement is treated as proof that future late writes are impossible.
 
-`GET /api/v1/ingestion/{job_id}` exposes only the authenticated owner's namespace job: status, current active flag, counts, attempts, safe error and timestamps. Historical ready status is distinct from current source visibility. No retrieval/generation API is implemented here; D26 must combine trusted scope, SQL active-generation and final source revalidation.
+`GET /api/v1/ingestion/{job_id}` exposes only the authenticated owner's namespace job: status, current active flag, counts, attempts, safe error and timestamps. Historical ready status is distinct from current source visibility. These indexing/status routes do not generate answers. D26 now supplies separate opt-in dense search combining trusted scope, SQL active-generation, exact source rehydration and final delivery revalidation; see [retrieval guide](RETRIEVAL.md).
 
 ## Resource and lifetime contract
 
@@ -39,4 +39,4 @@ Final full **979 PASS in162.02s,0 SKIP**, actual PostgreSQL/CORE/Qdrant/Qwen. Re
 
 [Acceptance](evidence/d25-ingestion-acceptance.json), [post-audit](evidence/d25-post-audit.json), [small index probe](evidence/d25-qwen-index-probe.json), [ADR-035](ADR/035-qwen-vector-worker-adapters.md) and [ADR-036](ADR/036-ingestion-worker-and-terminal-sweeps.md) retain scope/evidence. The10-point isolated probe encoded in3.014031s, wrote+verified in0.123681s (80.853 points/s), and deleted+verified zero in0.047804s. These are one tiny synthetic sample, not a production/HNSW throughput claim. Apparent directory bytes353055814 include WAL/preallocation and are **not allocated filesystem bytes or steady-state large-index cost**; flat float32 vectors alone40960 bytes.
 
-D25 PASS only for this local opt-in lifecycle. D26 trusted retrieval is NEXT; no search, reranker, citation or generalized model-quality gate is implied.
+D25 PASS only for this local opt-in lifecycle. D26 trusted dense retrieval is separately accepted at1030 PASS/0 SKIP; no reranker, generated citation or generalized model-quality gate is implied.

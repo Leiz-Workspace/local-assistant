@@ -201,3 +201,9 @@ T02 accepted2026-10-19 after full914 PASS/120.13s,0 SKIP. File startup now accep
 **Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
 
 Indexing remains off by default. [INCREMENTAL_INGESTION.md](INCREMENTAL_INGESTION.md) defines `ASSISTANT_INGESTION_ENABLED` and the owner-only operator credential/ownership JSON file; no such production file/collection was provisioned during acceptance. API reads no Vault root material. Explicit authenticated `POST /api/v1/files/{file_id}/index?max_bytes=256` and owner-scoped job status reuse existing source/root/auth contracts; `/chunks` default2048 remains unchanged. Do not silently truncate token overflow. Disable/drain ingestion before closing file resources or maintenance; retain source/journal/vector ownership for forward repair. Existing0004 includes no extra migration in T03. Final979 PASS/0 SKIP, cleaned probes and no residual encoder/advisory lock.
+
+## D26 local retrieval checkpoint — 2026-10-19
+
+**Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
+
+`ASSISTANT_RETRIEVAL_ENABLED=1` requires already enabled approved ingestion/files and existing owned collection. Default is0; no new secret/bootstrap/configuration file. Strict authenticated loopback POST `/api/v1/retrieval/search` accepts query/top_k/optional file UUID narrowing; unknown caller ACL/filter/model inputs are rejected. The exact instructed512-token cap remains; no truncation or fallback. Read [RETRIEVAL.md](RETRIEVAL.md) for underfilled candidate budgets and delivery fencing. Disable/drain retrieval before ingestion, files or pool maintenance. D26 accepted locally with1030 PASS/0 SKIP, clean state; production flags remain disabled.
