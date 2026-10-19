@@ -25,3 +25,7 @@ P1; dependencies complete T02 evidence, independent relevance review and owner d
 Possible decisions: defer for evidence, keep dense baseline, or authorize a separately scoped local opt-in integration after missing gates. Successful benchmark scores alone do not authorize adoption. D27 remains IN PROGRESS and D28 is not started; no candidate has replaced the registry model lineup or current selected configuration.
 
 [Actual comparison](evidence/d27-t02-reranker-comparison.json) and [T02 acceptance](evidence/d27-t02-acceptance.json) retain raw class logits/counts/query timings/three repetitions, execution identities and failed batch1 attempts. No adoption decision is implied by the local test result.
+
+## T03 review preparation follow-up
+
+[Independent review packet and protocol](D27_INDEPENDENT_RELEVANCE_REVIEW.md) now make64 unlabeled pairs on a new8/8 authored challenge reviewable without model scores. Human judgments remain pending. A separately frozen resource-only probe uses original diagnostic inputs and meaningless512-token stress input, not this new challenge. These preparations do not authorize integration or satisfy HTTP/concurrent-service or independent quality gates. See T03 evidence and dev log for actual checks/results; original T02 measurements and failed attempts remain immutable.

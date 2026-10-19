@@ -1,0 +1,91 @@
+{
+  "description": "Accept verified review preparation and isolated request-resource measurement only; D27 human/HTTP/concurrent-service/adoption gates remain open.",
+  "observed_date": "2026-10-19",
+  "base_commit": "2a663e6",
+  "milestone": "D27-T03 review preparation and resource probe",
+  "status": "PREPARATION_AND_RESOURCE_PROBE_VERIFIED_REVIEW_PENDING",
+  "day27_status": "IN_PROGRESS",
+  "day28_status": "NOT_STARTED",
+  "tests": {
+    "focused": {
+      "passed": 61,
+      "skipped": 0,
+      "seconds": 15.65
+    },
+    "full": {
+      "passed": 1157,
+      "skipped": 0,
+      "seconds": 553.32,
+      "exit_code": 0
+    },
+    "new_cases": 61,
+    "new_protocol_and_control_cases": 60,
+    "new_actual_model_resource_cases": 1
+  },
+  "review": {
+    "authorship": "agent_authored_unlabeled_challenge_proposal",
+    "reviewer": "owner_volunteered",
+    "documents": 8,
+    "queries": 8,
+    "pairs": 64,
+    "human_labels_supplied": 0,
+    "independent_quality_validated": false,
+    "new_challenge_inference_executed": false,
+    "human_identity_cryptographically_authenticated": false
+  },
+  "resource_probe": {
+    "old_frozen_query_id": "restore-q1",
+    "model_fingerprint": "c8cbd74cfcfa2e9ab2873466228defb519e3afb057623790c2e8f140652a40cb",
+    "profile_sha256": "63aabb1c2e1a9c7fd64d526047ac1e5444fdbf66c00e8c3aa79aa941d30f3bbc",
+    "worker_start_to_first_request_seconds": 4.451424548999057,
+    "model_initialization_seconds": 2.2362338109996927,
+    "warm_ten_pair_seconds": [
+      2.2342175800004043,
+      2.211714443001256,
+      2.2205806800011487
+    ],
+    "actual_512_token_forward_seconds": 1.1137127809997764,
+    "boundary_513_rejected": true,
+    "peak_worker_rss_mib": 1549.25,
+    "worker_cpu_seconds": 22.222974,
+    "candidate_gpu_allocation_bytes": 0,
+    "parent_total_all_probes_seconds": 12.639595090000512,
+    "http_e2e_measured": false,
+    "sustained_core_contention_measured": false,
+    "long_input_semantic_quality_measured": false
+  },
+  "initial_failed_probe_retained": "d27-t03-request-probe-initial-failure.json",
+  "source_sha256": {
+    "scripts/retrieval_relevance_review.py": "998bcf445344d8afa1db3d9f8b6b3cdac0aac1ec7d012fe1b540ac44487b8ba9",
+    "scripts/reranker_request_probe.py": "f41ea472cfe1606a774097c46958ed0fdabe0d593a4be157de5e831eddcb677a",
+    "tests/test_retrieval_relevance_review.py": "223c45297d514050dd86bb6bc926f2603769a40b9bd0afae01d6bd1c7dc80827",
+    "tests/test_reranker_request_probe.py": "9eb82cbb99f76cdef205797d4228dab8b2c662790e7caa85fd9ee6df0885e2f6",
+    "scripts/reranker_request_probe.py.lock": "7d70d277fad737fc0c251de290463e8aaedc46b33fff54c8392af293a8c96f88",
+    "tests/fixtures/retrieval/d27-review-challenge.json": "1150b9606c8dcd6e6471471b08f7497ce9a3ccf047320ef8e98ccea475816483"
+  },
+  "static_checks": {
+    "ruff_correctness_imports": "PASS",
+    "ruff_format": "PASS",
+    "module_purposes": "PASS",
+    "function_class_descriptions": 48
+  },
+  "latest_prior_accepted_source_hashes_unchanged": 38,
+  "preserved": {
+    "registry_and_model_roles": true,
+    "approved_embedding_and_e5_rollback": true,
+    "old_frozen_inputs_and_reports": true,
+    "all_preexisting_application_code": true,
+    "project_dependencies_and_locks": true,
+    "database_and_service_configuration": true,
+    "production_routing": true
+  },
+  "post_audit": "d27-t03-post-audit.json",
+  "full_private_log_sha256": "823a6e7a059134040482de00707138967c99fc2833794d5664bee5a324ec3d59",
+  "open_gates": [
+    "Actual independently supplied human labels/attestation and adjudication.",
+    "Separate paired plan including absent-answer scoring before new inference.",
+    "Actual singleton HTTP/source/delivery and sustained concurrent CORE/resource validation.",
+    "Owner adoption decision and separate integration ADR before agreed model/routing changes."
+  ],
+  "adoption_approved": false
+}
