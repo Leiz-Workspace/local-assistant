@@ -1,0 +1,11 @@
+{
+  "description": "Retain actual initial D28 failure before source-location prompt correction; no completion claim.",
+  "passed": 71,
+  "failed": 1,
+  "seconds": 52.6,
+  "diagnosis": "Actual CORE returned insufficient_evidence for page-two text question; source prompt supplied IDs/text but omitted authoritative native page locator. Add source location context without altering questions/source bytes/model/quote rules.",
+  "source_archive_sha256": "bee5d2e930be95e48c13f0b17cac34440581053628ba04c43de3d129639c1e24",
+  "private_log_sha256": "71c12234ae53d73b41b2362882d655640484ba06594dbd92481bea184a98e98f",
+  "v1_manifest_sha256": "88ce3a865bf72f5d4c39e152aaace9e010edd69cef8b9919ed4c72146598b3f6",
+  "acceptance_complete": false
+}
