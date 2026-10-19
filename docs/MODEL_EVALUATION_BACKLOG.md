@@ -1,0 +1,107 @@
+# Model evaluation backlog and approval gates
+
+**Purpose:** Restore the model candidates from MODEL_REGISTRY.md, record the missing E5/Qwen comparison and define reviewable future work without changing any model or deployment.
+
+**Review state:** Updated 2026-10-19 after the owner separately authorized downloading Qwen and running the offline comparison. Download and comparison are complete. The owner subsequently approved Qwen selection, now applied with `selected_not_deployed`; production/index migration and deployment gates remain open. The earlier documentation-only restriction is superseded only for this authorized evaluation. This file complements the [single master roadmap](LOCAL_ASSISTANT_MASTER_ROADMAP.md) and the owner-provided [model registry](MODEL_REGISTRY.md); it is not a competing roadmap. The registry is preserved unchanged.
+
+**Registry preservation rule:** The models named in MODEL_REGISTRY.md retain their agreed roles and recorded candidate/decision statuses. This backlog must not substitute E5 or another model for an original registry model, delete that original candidate, or describe the substitution as approved. Qwen3-Embedding-0.6B and Qwen3-Reranker-0.6B stay in the strategy. E5 is the preserved D24 measured technical baseline, not an approved replacement of the Qwen embedding candidate. Any future change to those roles requires the owner’s explicit decision after the evidence/migration/rollback review below.
+
+## MODEL-EVAL-001 — Qwen3-Embedding-0.6B versus current E5
+
+**Purpose:** Close the omitted original-candidate comparison without rewriting D24 acceptance.
+
+| Field | Proposed task contract |
+|---|---|
+| State | **OFFLINE COMPARISON COMPLETE / OWNER-APPROVED SELECTION APPLIED / DEPLOYMENT GATES OPEN**. D24 itself remains E5-only; the later comparison has separate retained evidence |
+| Priority | **P1**, restoring the originally nominated embedding candidate |
+| Preserved technical baseline, not a registry replacement | D24 commit `a88584b`: pinned multilingual-e5-base ONNX int8/768, config `selected_not_deployed`; preserve model/tokenizer/runtime pins, fingerprint, source/chunk IDs, all existing collections/data |
+| Candidate | `Qwen3-Embedding-0.6B` as nominated in MODEL_REGISTRY.md; official pinned revision `97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3`, Apache2.0, BF16/CPU,1024 dimensions; native32768 context, comparison capped at512 tokens |
+| Dependencies | D22 source/chunk/provenance contracts, D23 independent evaluation, D24 frozen retrieval corpus/E5 evidence; a reviewed evaluation plan and resource budget before executing candidate provisioning/benchmark |
+| Initial effort | **1–2 evaluation milestones**, excluding any deployment/migration; re-estimate after confirming runtime/model availability |
+| Risks | Unfair preprocessing/quantization/hardware comparison; Vietnamese/cross-language regression; CORE VRAM/latency contention; context truncation; changed vector space; reindex cost/ACL leaks; rollback/data loss |
+| Proposed scheduling | Owner scheduled the earlier offline comparison; it is now complete. Remaining deployment/index gates precede any approved cutover. **D25 now targets the approved Qwen selection** |
+| Decision authority | Report/proposal only; changing any agreed model/configuration requires explicit owner approval after benchmark and migration/rollback review |
+
+Acceptance criteria and remaining gates (the offline evidence below does not certify deployment):
+
+1. Freeze plan, corpus/chunks, queries, relevance judgments, split/group definitions, retrieval settings and decision thresholds before scoring. Reuse D24's20-passage/40-query corpus as a reproducibility baseline, and version any larger independent Vietnamese/English/cross-language corpus separately. Preserve D24's existing results and misses.
+2. Compare both models on the **same documents, exact chunks, query IDs and relevance labels**, without silently changing content or relevance to favor a candidate. Record input hashes and any rejected/overlong cases. Define a fair common input budget plus a separately reported long-input suite; never truncate one model's text or change its chunks without disclosure.
+3. Verify each model's official model card/license/revision and actual runtime/artifact hash/precision. Use its own documented query/document instruction formatting, pooling and normalization. **Do not apply E5 prefixes or pooling blindly to Qwen.** Record actual dimensions/tokenizer/context limits rather than guessing them.
+4. Measure Recall@3, Recall@5, Recall@10, MRR@10 and per-language/cross-language results; retain ranks, misses, expected failures and uncertainty. D24 currently records Recall@3/MRR@10 only; missing Qwen/Recall@5/10 results must remain **NOT EVALUATED**, not invented or represented as0.
+5. Measure cold load, warm query/document latency (p50/p95), embedding/index throughput, peak RAM/VRAM, disk/artifact/index size and resource impact while CORE is available. Separate same-hardware comparisons from feasible deployment configurations; disclose CPU/GPU/thread/batch/precision differences. A faster result on different hardware is not a model-only improvement.
+6. Run any future candidate index experiment in a separately owned, explicitly authorized test collection/index generation. Validate dimensions, distance, model/tokenizer fingerprint, tenant/source filters and cleanup. Do not write candidate vectors into the current E5 vector space even if dimensions match; never overwrite/delete/adopt existing collections or user data.
+7. Produce an evidence-backed recommendation with old/new model, reason, accuracy/performance/resource tradeoffs, compatibility and risk analysis. **Keep E5** and **inconclusive** are valid outcomes. Neither a higher score nor completion of this task authorizes replacement.
+8. If replacement is proposed, supply migration and rollback before approval: retained backup/current pins and collection state, isolated full reindex, point/source/owner/hash/count validation, dual-validation/cutover plan, failure/abort conditions, rollback to the original E5/config/collection generation and explicit cleanup/retention ownership. No mixed embedding spaces or automatic deletion of old generations.
+9. Obtain **explicit owner approval** for any agreed-model/configuration change, record it with the evidence/ADR, and only then schedule a separately scoped implementation. Update roadmap/dev_log during that authorized work; do not retroactively claim D24 compared Qwen.
+
+Evidence explaining the gap: [D24 shortlist](../configs/embedding-candidates.json), [recorded benchmark](evidence/d24-embedding-selection.json), [preserved D24 selection](../configs/embedding-e5-rollback.json), [ADR-031](ADR/031-cpu-embedding-selection-and-vector-schema.md) and the D24 dev-log entry list only `intfloat/multilingual-e5-small` and `intfloat/multilingual-e5-base`. The model runner iterates that shortlist; its live test expects exactly those two candidates. `Qwen3-Embedding-0.6B` has **no result in that comparison**. E5-base beating E5-small does not establish E5-base beating Qwen.
+
+## Other restored candidate work
+
+**Purpose:** Keep the complete registry strategy visible with priority, dependencies, effort and risk before scheduling new capabilities.
+
+All entries below are **planned candidates/conditional proposals**, not deployed models or benchmark winners. Priorities/effort are initial scheduling proposals, not new sign-offs or permission to download. Exact artifacts, licensing and capability claims require verification when their evaluation is authorized.
+
+| Task ID | Candidate or strategy | Priority / dependency | Initial effort / main risk | Proposed milestone |
+|---|---|---|---|---|
+| MODEL-EVAL-002 | Original `Qwen3-Reranker-0.6B` versus no-reranker retrieval baseline | P1; D26 ACL-filtered retrieval, independent relevance corpus; evaluate separately from embedding replacement |1–2 milestones; latency/VRAM, incorrect relevance, throughput and tenant-scope leakage | D27; NOT EVALUATED |
+| MODEL-EVAL-003 | `Qwen3-ASR-0.6B` versus Whisper/faster-whisper | P2; explicit audio consent/segmentation and labeled Vietnamese/English speech |1–2 milestones; WER/CER, timestamps, noise, latency/memory/license | D68; NOT EVALUATED |
+| MODEL-EVAL-004 | Silero VAD v5 | P2; audio capture/ASR segmentation requirements |1 milestone; false speech/silence, timestamp drift/noise and recording privacy | D69; candidate, no deployment evidence |
+| MODEL-EVAL-005 | `Qwen3-TTS-0.6B` versus Piper | P2; verified Vietnamese/English output capability/license and reviewed voice corpus |1–2 milestones; naturalness, first-audio/total latency, RAM/VRAM and voice licensing | D70; NOT EVALUATED |
+| MODEL-EVAL-006 | Optional `Qwen3-VL-4B/8B` only if current CORE native vision/mmproj has a measured gap | P2, conditional; D21/D23/D61–D63 visual/task evidence and resource budget |1–2 milestones; hallucination, quality regression, duplicate model/CORE VRAM pressure | D62–D67 only if evidence warrants; no default switch |
+| MODEL-EVAL-007 | Specialist coding model only after CORE plus deterministic Git/search/patch/test baseline | P2, conditional; D38 coding golden tasks and approval/sandbox harness |1–2 milestones; task accuracy, unsafe tool assumptions, latency/VRAM and integration cost | D38/phase3 review; no specialist selected |
+| MODEL-EVAL-008 | Optional larger LLMs `Qwen3-14B`, approximately20B and27B+ options | P3, conditional; demonstrated CORE gap, exact candidate/license, memory/offload and quality budget |2+ milestones; OOM, long latency, concurrent-service impact and rollback cost | Unscheduled future phase or Day91+ if justified; not a CORE replacement by default |
+
+Preserve the remaining pipeline strategies: native PDF parsing first with OCR/VLM fallback (current D21 English Tesseract plus explicit CORE VLM, no invented dedicated OCR-model choice); web = search/fetch/browser tools plus CORE, no separate web-search model requirement; video = FFmpeg frames/timestamps plus vision and ASR, not a single deployed video model. These remain in the master roadmap at D47–D60 and D61–D74. CORE/UNRESTRICTED profile isolation and existing runtime presets remain unchanged; do not assume all candidate models fit or stay resident together on16GiB VRAM/32GB nominal RAM.
+
+## Historical selection-review boundary
+
+**Purpose:** Keep this documentation review separate from execution and preserve accepted progress.
+
+- D24 stays **PASS for its existing E5-only local selection/design scope** at `a88584b`; the historical783 PASS/0 SKIP is retained, not rerun or expanded by this edit.
+- MODEL-EVAL-001 now has a completed authorized offline comparison; Qdrant throughput/disk, concurrent CORE impact, long-input validation and actual migration remain open. It does not reopen/revert D24 or mark D25 complete. Qwen remains in the registry strategy; retaining E5 operational state is not permission to replace the registry nomination.
+- D25 stays **NEXT/TODO**; implement the durable ingestion lifecycle against approved Qwen, with the exact E5 rollback retained; D26 search and D27 reranking remain later gates.
+- The subsequent authorized evaluation adds isolated benchmark scripts/tests, a Qwen evaluation-only profile, pinned downloaded artifacts and separate evidence/ADR-032/dev_log. The selected E5 config, original D24 evidence, registry, application source, Docker, Vault, database and collections/data remain unchanged. No stateful service tests were run.
+- The patch remains uncommitted; owner approval of the Qwen selection is recorded in ADR-032 and the separate selection approval evidence. Future replacement of CORE, UNRESTRICTED, embedding, reranker, ASR, TTS or VLM requires benchmark, performance/resources, compatibility, migration/rollback and explicit owner approval.
+
+## MODEL-EVAL-001 measured follow-up — 2026-10-18
+
+**Purpose:** Record actual later evaluation without rewriting historical D24.
+
+Three fresh CPU processes per candidate used the unchanged20-passage/40-query corpus,512-token cap and two CPU threads. E5 int8/ONNX scored Recall@3 **0.925**, MRR@10 **0.874405**, max RSS **803.305 MiB**, worst-run query p95 **6.744 ms**. Qwen BF16/PyTorch scored **0.975**, **0.968750**, **1318.086 MiB**, **113.928 ms**, respectively. Rankings were stable; both met frozen D24 reference gates. Different precision/runtime and a small synthetic corpus limit interpretation. This is not a model-only speed comparison or production acceptance.
+
+**Decision:** The owner approved Qwen as the registry-aligned embedding target after reviewing measured CPU/RAM cost and migration/rollback. The selection is applied; deployment validation remains open. See [measured report](evidence/model-eval-001-qwen-e5-comparison.json), [transition analysis](QWEN_E5_COMPARISON_AND_TRANSITION.md), [complete proposed config and exact E5 rollback](evidence/model-eval-001-transition-proposal.json), and [ADR-032](ADR/032-qwen-e5-comparison-and-transition-review.md). The selected configuration now pins Qwen; the exact E5 configuration is retained in `configs/embedding-e5-rollback.json`. Qdrant throughput/disk and live migration are **NOT MEASURED / NOT EXECUTED**. D25 remains NEXT; implement against the approved Qwen target and accept the durable ingestion adapter before deployment.
+
+## Applied selection after owner approval
+
+**Purpose:** Distinguish the approved model decision from still-unimplemented ingestion/search deployment.
+
+The latest owner “Làm đi” followed the measured recommendation, concrete transition plan and CPU RAM clarification. [Approval audit](evidence/model-eval-001-selection-approval.json) records the approved scope and before/after selected-file hashes. `configs/embedding-selected.json` now selects Qwen CPU/1024 with status `selected_not_deployed`. `configs/embedding-e5-rollback.json` preserves the exact original E5 file. The original proposal remains an immutable preapproval review artifact. No collection, source data or live routing changed. D24 historical acceptance stays intact; D25 remains NEXT.
+
+## D25 dependency follow-up
+
+**Purpose:** Track actual ingestion progress without promoting model selection into a deployed pipeline.
+
+D25-T01 now passes local trusted source/model-bound planning and actual Qwen tokenizer admission. [ADR-033](ADR/033-incremental-ingestion-lifecycle.md) and [lifecycle gates](INGESTION_LIFECYCLE.md) retain T02 journal and T03 embedding/upsert/delete/recovery as mandatory open work. Full regression870 PASS/0 SKIP does not certify an unimplemented worker. Qwen remains `selected_not_deployed`; selected model and E5 rollback are unchanged.
+
+## D25-T02 dependency checkpoint — 2026-10-19
+
+**Purpose:** Keep selected-model evaluation separate from durable metadata and actual vector deployment.
+
+T02 journal/schema now passes local scope under ADR-034: final914 PASS/0 SKIP, V003/V004, protected restores and clean post-audit. T03 actual Qwen embedding/Qdrant upsert/delete/recovery is NEXT; no whole-Day or vector-worker PASS. Qwen selection, E5 rollback and registry remain unchanged.
+
+## Current D25 checkpoint and evaluated remaining work — 2026-10-19
+
+**Purpose:** Separate verified functional indexing from broader model-quality and production validation.
+
+D25 local opt-in lifecycle **PASS**,979 PASS/0 SKIP; D26 ACL retrieval **NEXT**. Earlier NEXT/TODO/unimplemented statements are historical selection/T01/T02 checkpoints. MODEL-EVAL-001 offline comparison/owner selection is complete, functional ingestion now accepted separately, production rollout remains open. Original registry and agreed model roles are unchanged.
+
+A single fresh10-point synthetic CPU/Qdrant drill after regression measured encoder3.014031s, schema/index creation0.303696s, upsert plus complete verification0.123681s (80.853 points/s), delete/zero verification0.047804s. Apparent collection directory353055814 bytes includes WAL/preallocation; it is **not allocated filesystem storage or steady-state large-index cost**. Flat float32 vectors total40960 bytes. [Exact evidence](evidence/d25-qwen-index-probe.json) retains the measurement definition and unchanged inventory; owned probe removed, no production index. This supersedes the earlier blanket NOT MEASURED claim only for this small drill. It supplies no independent large-corpus, HNSW, long-context, sustained load or concurrent CORE-impact certification. No live migration executed.
+
+| Remaining task | Priority / dependencies | Initial effort / risk | Scheduling |
+|---|---|---|---|
+| INGEST-OPS-001 — populated paired SQL/blob/vector/ownership backup and restore | P1; D25 accepted lifecycle, existing protected restore contracts and operator deployment plan |1–2 milestones; generation/source/ownership drift or incomplete vector recovery | Before production rollout; ADR and isolated restore gates required |
+| INGEST-EVAL-001 — extended independent quality/long-input and sustained index/load/storage validation | P1; accepted pipeline, separately frozen labeled corpus and resource budget |1–2 milestones; misleading synthetic throughput, RSS/VRAM contention, long-input failures and WAL/storage growth | Before production SLO claims; does not authorize a new model or changed precision |
+| INGEST-OPS-002 — tombstone retention/compaction policy | P2; repeated terminal repair, demonstrated safe retirement/writer fencing |1 milestone; deleting durable obligations can revive stale late writes | Unscheduled; retain tombstones until separately reviewed |
+
+Future model replacement still requires benchmark, performance/resources, compatibility, migration/rollback and explicit owner approval. D26/D27 do not authorize changing the approved embedding model or removing registry candidates.

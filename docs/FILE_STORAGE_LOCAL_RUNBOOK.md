@@ -175,3 +175,29 @@ See [selection specification](EMBEDDING_SELECTION.md), [ADR-031](ADR/031-cpu-emb
 A Vault-delivered admin key may run `probe_design()` or the live regression's owned empty Qdrant probe. It only creates/indexes/removes a fresh `la_d24_probe_...` collection on existing loopback6333; no permanent collection/points, service restart or user-data mutation. Creation acknowledgement is required before cleanup ownership; unknown outcomes require an explicit scoped audit. Retained evidence records server/schema/index/cleanup and before/after inventory hashes without names/keys/payloads. Full regression requires the existing Vault wrapper to deliver both DB/live flag and `LOCAL_ASSISTANT_QDRANT_PROBE_KEY`, with key redaction/credential-free embedding children. Omitting live credentials produces skips and is not acceptance.
 
 Model quality, resource gates, known misses and the distinction between UTF-8 bytes and512 prefixed tokens are documented in the spec/report. Do not silently truncate D22 chunks or call indexing complete after installing weights. Durable ingest/upsert/delete is D25, trusted ACL-filtered retrieval D26; each has its own ADR/tests/source lifecycle gate.
+
+## D25-T01 source-bound Qwen token admission
+
+**Purpose:** Explain the newly implemented admission tooling and preserve the boundary before durable indexing.
+
+Current selected model is owner-approved Qwen CPU/1024, still `selected_not_deployed`; D24's ONNX E5 comparison remains historical and its exact rollback file is retained. [Ingestion lifecycle](INGESTION_LIFECYCLE.md) documents trusted input, deterministic point/job/generation identity, stale-source fences and the isolated Qwen tokenizer protocol. Use only D22 output obtained through the retained FileService source/integrity context; chunk IDs and access labels from clients are not authorization.
+
+The tokenizer worker uses separate frozen uv dependencies and already-provisioned local assets, no download/network/GPU/credentials. It counts512 total tokens including special tokens, returning422 on overflow; it never truncates. One slot per process, no queue, busy429; failures503. Parent kills/joins the entire owned process group on timeout/interruption. This synchronous helper must eventually run through joined service work rather than block an async request.
+
+No admission HTTP route, PostgreSQL ingestion journal, embedding worker or Qdrant mutation is present yet. Do not manually upsert planned points or treat token preflight as publication. T02 journal and T03 worker/consistency gates remain mandatory before D25 PASS; rollback of T01 tooling leaves all source/config/collection state untouched.
+
+## D25-T02 ingestion journal operations
+
+**Purpose:** Distinguish applied durable metadata from undeployed embedding/index workers.
+
+Schema head is0004: V003 adds ingestion jobs/heads, V004 removes inherited table-level UPDATE on only those tables and permits mutable columns. [Journal specification](INGESTION_JOURNAL.md) records rollout/restore evidence and lease/generation/reconciliation protocol. Existing file journal/source endpoints and approved Qwen/E5 rollback are unchanged. No automatic ingestion, worker, vector collection/upsert or live routing is enabled.
+
+Before future rollout, use the existing Vault migrator only after reviewed DDL and protected restore verification. Retain backups under `data/backups/d25-t02-*`; no shared restart was performed. Do not assume column grants override existing default table privileges: inspect effective app-role rights. Recovery must preserve both new tables and column ACLs with sources; verified post-V004 restore covers all nine tables. Do not downgrade populated journals or broaden immutable-column rights. T03 must consume only namespace-scoped due/reconciliation/cleanup pages, verify actual generation acknowledgements and maintain final source fences.
+
+T02 accepted2026-10-19 after full914 PASS/120.13s,0 SKIP. File startup now accepts only reviewed0002/0003/0004; unknown versions still fail before opening a root. No change to file enablement, namespace validation, upload/delete/quota logic. Post-audit jobs/heads/files/probes0, quota `(0,0,0)`, Qdrant collections0 and old owners/ACLs unchanged. T03 must validate the ingestion schema/grants and implement actual vector operations before declaring indexing live.
+
+## D25 final local lifecycle — 2026-10-19
+
+**Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
+
+Indexing remains off by default. [INCREMENTAL_INGESTION.md](INCREMENTAL_INGESTION.md) defines `ASSISTANT_INGESTION_ENABLED` and the owner-only operator credential/ownership JSON file; no such production file/collection was provisioned during acceptance. API reads no Vault root material. Explicit authenticated `POST /api/v1/files/{file_id}/index?max_bytes=256` and owner-scoped job status reuse existing source/root/auth contracts; `/chunks` default2048 remains unchanged. Do not silently truncate token overflow. Disable/drain ingestion before closing file resources or maintenance; retain source/journal/vector ownership for forward repair. Existing0004 includes no extra migration in T03. Final979 PASS/0 SKIP, cleaned probes and no residual encoder/advisory lock.

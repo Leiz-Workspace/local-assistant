@@ -11,6 +11,8 @@ from uuid import uuid4
 
 import pytest
 import pytest_asyncio
+from alembic.config import Config
+from alembic.script import ScriptDirectory
 from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError, IntegrityError
 
@@ -44,7 +46,9 @@ async def context():
                 await session.scalar(
                     text("SELECT version_num FROM assistant.alembic_version")
                 )
-                == "0002"
+                == ScriptDirectory.from_config(
+                    Config(str(Path(__file__).parents[2] / "alembic.ini"))
+                ).get_current_head()
             )
         yield PostgresFileJournal(sessions), owners, sessions
     finally:

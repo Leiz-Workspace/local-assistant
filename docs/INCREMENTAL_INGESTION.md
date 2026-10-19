@@ -1,0 +1,42 @@
+# D25 — Explicit incremental source indexing
+
+**Purpose:** Document the implemented local opt-in source/Qwen/Qdrant lifecycle, operational boundaries and observed acceptance.
+
+## Implemented path
+
+D25 now has a real worker and authenticated loopback admission/status routes in addition to the T01/T02 plans/journal. Existing files remain immutable: content replacement uploads a new file UUID/hash, explicitly indexes it and deletes the obsolete source. Re-admitting the same source/projection/model returns the durable job; a changed declared projection creates a new generation. There is no filesystem watcher, automatic conversation attachment or in-place source-byte update.
+
+1. `POST /api/v1/files/{file_id}/index?max_bytes=256` verifies authenticated owner/root/ready/hash through the existing retained source reader, builds unchanged D22 chunks and counts actual full Qwen tokens. Persist an immutable job only after complete preflight. Return202 with private/no-store job metadata. No client chunks, vectors, owner or access labels are accepted.
+2. The namespace/model worker reconstructs the same auto projection and manifest under its retained source context; reject drift instead of rewriting IDs. Index defaults explicitly use the existing source-preserving256-byte policy, distinct from the unchanged on-demand `/chunks` default2048. Larger declared byte budgets remain bounded by512 actual tokens; rows retain existing atomic413/422 failures. No silent truncation or token-driven source repair.
+3. An isolated offline CPU worker uses the exact approved Qwen weights/runtime/fingerprint, complete instructed-model semantics (unprefixed documents), last-token float32/L2 and batches of four. Parent validates every vector/count/identity. API/Qdrant/Vault credentials never enter the model environment or stdin. Parent death is supervised with an exact PID/start identity and pidfd, including uv's intermediate launcher; normal cancel/timeout kills and joins the owned group.
+4. Write deterministic points in an explicitly owned fingerprint collection with matching metadata/schema/tenant indexes. Use bounded wait/strong-order batches, then verify complete stored IDs/payload/vectors and activate payloads before final SQL publication. Payload allowlist stores identity plus text/provenance digests, not structured-row text. Full source provenance/uncertainty is rehydration work for D26; `quality_present` is conservative metadata, not confidence.
+5. DB-time heartbeat/source/lease/latest-request fences govern publication. Only complete acknowledged IDs can atomically change the active pointer. Lost vector acknowledgement retries the same IDs; lost SQL publication acknowledgement reads durable ready state. Busy source slots defer without consuming model attempts or extending deadline. Other failures retain bounded retry/terminal obligations.
+6. Source deletion hides active status immediately through the SQL ready/hash/root join; physical vector deletion is asynchronous. Repeat bounded terminal sweeps include previously acknowledged cleanup, repairing a late write even after a process restart. Tombstones are retained; no one-shot cleanup acknowledgement is treated as proof that future late writes are impossible.
+
+`GET /api/v1/ingestion/{job_id}` exposes only the authenticated owner's namespace job: status, current active flag, counts, attempts, safe error and timestamps. Historical ready status is distinct from current source visibility. No retrieval/generation API is implemented here; D26 must combine trusted scope, SQL active-generation and final source revalidation.
+
+## Resource and lifetime contract
+
+One nonqueued encoder slot per adapter and one namespace/model worker through a dedicated PostgreSQL session advisory lock; duplicate workers fail. Commit after lock acquisition, so parsing/model/HTTP never hold a long SQL transaction. Shield/join control-connection checks so request cancellation cannot accidentally release the worker lock. Shutdown stops admissions and joins source/model/network work before releasing lock/client/file resources.
+
+Existing T02 bounds remain128 globally/32 owner-root outstanding jobs, five attempts,120s renewable lease within a one-hour deadline,2–30s retry and short5s lock/15s SQL/idle waits. Encoder request≤8MiB/text≤1MiB/1000 passages, reply≤32MiB,600s wall/480–481s CPU/8GiB virtual-address limit. Virtual-address cap is not measured resident RAM or VRAM. Exact actual512 tokens accepted/513 rejected. No model is downloaded at startup or switched to E5 on failure.
+
+Terminal sweeps are bounded keyset pages and repeat after acknowledgement. This trades extra local cleanup traffic for durable repair; historical tombstone retention/compaction is separately reviewed. Local lifecycle correctness does not certify production multiworker throughput, arbitrary network partitions or large-corpus performance.
+
+## Operator enablement and rollback
+
+The feature stays **off by default**. No production collection or key/ownership file was created by this acceptance. Current selection artifact remains `selected_not_deployed`; tests enabled the real lifecycle only against fresh removable probes.
+
+Operator prerequisites: accepted files/auth/root, schema0004/effective immutable-column grants, approved selected-file hash, already provisioned pinned model and offline locked encoder/preflight environments, existing CORE as required for other services. Provide an owner-only regular JSON file via `ASSISTANT_INGESTION_CONFIG_FILE` with exactly `owner_id` (stable installation UUID) and `api_key` (existing Qdrant key delivered from Vault). Use0600/current API UID/no symlink or hardlink. Preserve the ownership UUID with protected backups; never replace it merely to adopt an existing collection. The API does not read Vault root/bootstrap material.
+
+Set `ASSISTANT_INGESTION_ENABLED=1` alongside existing explicit file enablement only for an operator-approved deployment. Startup checks source resources, schema/grants and approved model before preparing the matching owned collection. Missing/foreign ownership or incompatible schema fails closed. Current local tests use the existing shared Qdrant credential; that credential itself is not per-user ACL. Dedicated least-privilege deployment policy remains separate production work.
+
+To stop/roll back, disable admissions and drain/join worker tasks before file/pool shutdown. Keep additive journal/tombstones, source data, selected Qwen/E5 rollback and old generations for forward repair. Never drop populated tables or delete shared collections/source data. Maintenance backup drills require the worker drained because its advisory-lock connection is intentionally pinned. Future paired SQL/source/Qdrant disaster recovery must preserve generation/control identity; no off-host or populated multi-system snapshot certification is claimed here.
+
+## Observed local acceptance — 2026-10-19
+
+Final full **979 PASS in162.02s,0 SKIP**, actual PostgreSQL/CORE/Qdrant/Qwen. Real HTTP upload/admission/replay/source replacement/delete, wrong owner/default-off/local-auth boundaries, actual CPU encoding/stored vectors, partial/lost vector and SQL acknowledgements, source drift/heartbeat delete, duplicate namespace workers, cancel/shutdown/guard join, SIGKILL after actual upsert and SIGKILL of an encoder parent passed. Expiry was advanced only on the owned crash-test lease to avoid a120-second sleep; actual state/reclaim/repeated IDs used real PostgreSQL/Qdrant. Fault cases inject explicit unit vectors, while separate actual Qwen cases certify the production encoder path.
+
+[Acceptance](evidence/d25-ingestion-acceptance.json), [post-audit](evidence/d25-post-audit.json), [small index probe](evidence/d25-qwen-index-probe.json), [ADR-035](ADR/035-qwen-vector-worker-adapters.md) and [ADR-036](ADR/036-ingestion-worker-and-terminal-sweeps.md) retain scope/evidence. The10-point isolated probe encoded in3.014031s, wrote+verified in0.123681s (80.853 points/s), and deleted+verified zero in0.047804s. These are one tiny synthetic sample, not a production/HNSW throughput claim. Apparent directory bytes353055814 include WAL/preallocation and are **not allocated filesystem bytes or steady-state large-index cost**; flat float32 vectors alone40960 bytes.
+
+D25 PASS only for this local opt-in lifecycle. D26 trusted retrieval is NEXT; no search, reranker, citation or generalized model-quality gate is implied.

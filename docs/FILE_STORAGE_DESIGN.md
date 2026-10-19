@@ -298,3 +298,25 @@ Acceptance of an evaluation case does not erase transcription failure: blurred O
 [ADR-031](ADR/031-cpu-embedding-selection-and-vector-schema.md) and [selection specification](EMBEDDING_SELECTION.md) define the pinned CPU-int8 multilingual E5 comparison, tokenizer/overflow rules, model/runtime fingerprint and proposed private Qdrant schema. Independent20-source/40-query retrieval oracles select768-dimensional multilingual-e5-base over the smaller candidate's failed quality gates; actual empty schema/index probe uses existing Qdrant and is removed afterwards.
 
 D24 adds dev-only benchmark dependencies/scripts/config/evidence, no file/API/schema/source mutation or production vector collection. D22 byte chunks remain unchanged; D25 must preflight actual512-token prefixed inputs, build a durable idempotent generation/outbox lifecycle and enforce final source fences before publication. Future search must combine trusted owner/namespace/model/generation filters with PostgreSQL ready/hash checks; vector labels/IDs and shared Qdrant keys are not tenant authorization. Existing OCR/cache/unsupported-row/table limits remain explicit.
+
+## 23. D25 ingestion admission and identity boundary
+
+**Purpose:** Link source lifecycle to the implemented planner/tokenizer milestone without claiming durable indexing.
+
+After the separately approved Qwen selection, [D25 lifecycle](INGESTION_LIFECYCLE.md) and [ADR-033](ADR/033-incremental-ingestion-lifecycle.md) introduce a source-bound immutable planner and actual offline Qwen tokenizer preflight. The planner consumes trusted D22 output with existing source-reader/integrity checks, rechecks owner/namespace/ready/hash and chunk identities, and assigns deterministic generation/job/point IDs. Token counts include special tokens and reject overflow rather than truncating. Empty source generations and untrusted quality/provenance remain explicit. Existing FileService/source/parser endpoints are unchanged.
+
+This is T01 admission tooling only. T02 must persist/lease/fence admission and publication under real PostgreSQL locks; T03 must implement acknowledged Qwen/Qdrant upsert/delete/recovery. No ingestion journal/worker/collection/active pointer is enabled by T01. D25 remains IN PROGRESS; D26 retrieval remains later work. Selected Qwen/E5 rollback and all existing data are preserved.
+
+## 24. D25-T02 durable ingestion repository
+
+**Purpose:** Record additive indexing metadata without changing accepted file lifecycle or claiming vector writes.
+
+[ADR-034](ADR/034-durable-ingestion-journal.md) and [journal specification](INGESTION_JOURNAL.md) define V003 jobs/heads and V004 immutable-column grants. Source-locked admission/publication, desired-generation revision, bounded database-time lease/retry and terminal cleanup records persist without source text/vectors. Source FK retains metadata; source-ready/hash joins hide deleted/stale generations before reconciliation. Existing FileService/delete/root/quota code is unchanged; T03 must drive reconciliation and actual vector writes/cleanup.
+
+Fresh protected seven-table pre-migration restore and nine-table post-migration restore including column ACLs were verified without restarting shared PostgreSQL. Old source/model/owner/ACL state is preserved. No new service/credential or collection is introduced. Code rollback retains populated additive journals; D25 remains open pending T03/whole-Day acceptance.
+
+## D25 final local lifecycle — 2026-10-19
+
+**Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
+
+D25 local opt-in indexing now holds the existing FileService source-reader/integrity context through reconstruction, actual CPU Qwen encoding and owned Qdrant writes, then publishes only with a final SQL source/lease/generation fence. FileService upload/delete/root/quota logic is unchanged. Source replacement remains a new immutable file UUID/hash plus explicit admission/deletion; deleted sources are hidden immediately in SQL while repeated terminal sweeps repair physical vectors, including late writes after a cleanup acknowledgement. D26 must rehydrate/revalidate source provenance before delivery. Full979 PASS/0 SKIP; [operating guide](INCREMENTAL_INGESTION.md).
