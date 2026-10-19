@@ -1,0 +1,118 @@
+{
+  "description": "Frozen pre-inference D32 synthetic native-field relevance plan; no human-independent labels.",
+  "base_commit": "f010abc",
+  "sources": {
+    "txt": {
+      "filename": "cedar.txt",
+      "text": "Project Cedar uses TCP port 7443.\nOwner memo: keep the archive local.\n",
+      "golden_fields": {
+        "text:text": "Project Cedar uses TCP port 7443.\nOwner memo: keep the archive local.\n"
+      },
+      "sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+      "max_bytes": 2048
+    },
+    "pdf": {
+      "filename": "native-pages.pdf",
+      "path": "tests/fixtures/pdf/native-pages.pdf",
+      "golden_fields": {
+        "page=1:text": "Page one: Alpha 123\nSecond line."
+      },
+      "sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "max_bytes": 2048
+    },
+    "docx": {
+      "filename": "styled-table.docx",
+      "path": "tests/fixtures/docx/styled-table.docx",
+      "golden_fields": {
+        "paragraph=5:text": "một",
+        "paragraph=6:text": "42"
+      },
+      "sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+      "max_bytes": 2048
+    },
+    "xlsx": {
+      "filename": "styled-formulas.xlsx",
+      "path": "tests/fixtures/xlsx/styled-formulas.xlsx",
+      "golden_fields": {
+        "sheet=1&cell=C2:formula": "SUM(A2:B2)",
+        "sheet=1&cell=C2:cached_value": "30"
+      },
+      "sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "max_bytes": 2048
+    }
+  },
+  "answerable": [
+    {
+      "id": "txt",
+      "source": "txt",
+      "query": "What TCP port does Project Cedar use?",
+      "expected": "7443",
+      "required_field": "text:text",
+      "relevant_fields": [
+        "text:text"
+      ],
+      "scoped": true
+    },
+    {
+      "id": "pdf",
+      "source": "pdf",
+      "query": "What number follows Alpha on page one?",
+      "expected": "123",
+      "required_field": "page=1:text",
+      "relevant_fields": [
+        "page=1:text"
+      ],
+      "scoped": true
+    },
+    {
+      "id": "docx",
+      "source": "docx",
+      "query": "Trong bảng Báo cáo D19, giá trị tương ứng tên một là gì?",
+      "expected": "42",
+      "required_field": "paragraph=6:text",
+      "relevant_fields": [
+        "paragraph=5:text",
+        "paragraph=6:text"
+      ],
+      "scoped": true
+    },
+    {
+      "id": "xlsx",
+      "source": "xlsx",
+      "query": "Trong sheet Dữ liệu, cached value của ô C2 là gì? Không tính lại công thức.",
+      "expected": "30",
+      "required_field": "sheet=1&cell=C2:cached_value",
+      "relevant_fields": [
+        "sheet=1&cell=C2:formula",
+        "sheet=1&cell=C2:cached_value"
+      ],
+      "scoped": true
+    },
+    {
+      "id": "cross_file_txt",
+      "source": "txt",
+      "query": "What TCP port does Project Cedar use?",
+      "expected": "7443",
+      "required_field": "text:text",
+      "relevant_fields": [
+        "text:text"
+      ],
+      "scoped": false
+    }
+  ],
+  "foreign": {
+    "filename": "foreign.txt",
+    "text": "Private Project Cedar recovery canary D32-FOREIGN-7719.\n",
+    "sha256": "f99e7acf3b11e88534207a27d8f2b952cd8fe3cabe08f66e7279376d8a344ee4",
+    "max_bytes": 2048
+  },
+  "foreign_query": "What is the private Project Cedar recovery canary?",
+  "absent_query": "Which snapshot generation is required to restore Atlas release 2.4?",
+  "thresholds": {
+    "answerable": 5,
+    "absent": 1,
+    "foreign": 1,
+    "citation_precision": 1.0,
+    "actual_core_calls": 6
+  }
+}

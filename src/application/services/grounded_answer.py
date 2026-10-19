@@ -125,13 +125,37 @@ def build_messages(query, hits):
         )
         for unit in units
     ]
-    content = json.dumps(
-        dict(question=query, sources=sources), ensure_ascii=False, allow_nan=False
-    )
+    payload = dict(question=query, sources=sources)
+    groups = []
+    for hit in hits:
+        provenance = hit["provenance"]
+        structure = provenance.get("structure", {})
+        if "rows" in structure:
+            groups.append(
+                dict(
+                    source_ids=[
+                        unit["source_id"] for unit in units if unit["hit"] is hit
+                    ],
+                    locator=provenance["locator"],
+                    section_path=provenance.get("section_path", []),
+                    structure=structure,
+                )
+            )
+    if groups:
+        payload["source_groups"] = groups
+    content = json.dumps(payload, ensure_ascii=False, allow_nan=False)
     if len(content.encode()) > 32768:
         raise StoragePolicyError("grounded_prompt_limit", 413)
     logger.info("grounded_prompt_prepared sources=%d", len(sources))
-    return [dict(role="system", content=SYSTEM), dict(role="user", content=content)]
+    system = SYSTEM
+    if groups:
+        system += (
+            " Optional source_groups retain untrusted native table row, cell and sheet "
+            "relationships for the listed source IDs. Use these relationships as context, "
+            "but quote only text from a listed source, never group metadata."
+        )
+    logger.info("grounded_structured_context_prepared groups=%d", len(groups))
+    return [dict(role="system", content=system), dict(role="user", content=content)]
 
 
 def parse_answer(content, hits):

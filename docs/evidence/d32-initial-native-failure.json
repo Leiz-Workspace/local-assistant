@@ -1,0 +1,15 @@
+{
+  "description": "Original frozen D32 live failure on unchanged f010abc: DOCX row relationship omitted from prompt despite relevant retrieved row.",
+  "exit_code": 1,
+  "elapsed_seconds": 70.64,
+  "targets": [
+    "tests/integration/test_knowledge_gate.py"
+  ],
+  "log_sha256": "6ac99c6c8acf91835b035bb232c13299398f4f00cd2c3f9f5455bd8510659942",
+  "status": "failed",
+  "failed_case": "docx",
+  "expected": "42",
+  "actual_status": "insufficient_evidence",
+  "unchanged_plan_sha256": "6e8aa64be96454409d0ef6cd5899b3be3430f6718b868f1086ee20799150eb37",
+  "private_result_sha256": "9027f90ae8dc19a8eb1b4a896ba9496df906b88a5cfbde71d6dbd96a577a953b"
+}

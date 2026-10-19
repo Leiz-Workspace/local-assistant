@@ -1,0 +1,39 @@
+{
+  "description": "Read-only D32 post-focused-regression source/security and persistent-service inventory audit; reviewed structured-only prompt delta, no credentials/payload retained.",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "old_schema_owners_acls_unchanged": true,
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "app_temp": false,
+  "memory_identity_update": false,
+  "memory_text_update": true,
+  "receipt_expiry_update": false,
+  "ingestion_immutable_update": false,
+  "ingestion_state_update": true,
+  "ingestion_truncate": false,
+  "source_trigger_security_definer": false,
+  "source_trigger_direct_app_execute": false,
+  "source_trigger_fixed_search_path": true,
+  "accepted_runtime_delta_only_structured_prompt": true,
+  "all_other_frozen_files_and_protected_migrations_models_unchanged": true,
+  "new_d32_test_and_plan_hashes_unchanged": true,
+  "production_flags_enabled": false,
+  "regression_scope": "Actual D32 focused regression; historical D31 full1608 separate, no fresh full claim."
+}
