@@ -1,0 +1,114 @@
+{
+  "description": "D32 local integrated native knowledge acceptance with unchanged frozen questions/goldens and necessary ADR-050 structured-only prompt repair; no universal model-quality or production claim.",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "f010abc",
+  "status": "PASS (defined local scope)",
+  "focused": {
+    "passed": 90,
+    "skipped": 0,
+    "pytest_seconds": 108.24,
+    "description": "Actual pytest invocation exit metadata; secrets removed from captured output.",
+    "exit_code": 0,
+    "elapsed_seconds": 108.62,
+    "targets": [
+      "tests/test_grounded_answer.py",
+      "tests/test_grounded_source_groups.py",
+      "tests/test_grounded_service.py",
+      "tests/test_grounded_startup.py",
+      "tests/integration/test_grounded_native_fields.py",
+      "tests/integration/test_knowledge_gate.py"
+    ],
+    "log_sha256": "990fe039a381f72403faf67bbcf11a4d1b9d32cbc820d591c1c80824b2461300"
+  },
+  "transport_privacy": {
+    "passed": 9,
+    "skipped": 0,
+    "pytest_seconds": 105.51,
+    "description": "Actual pytest invocation exit metadata; secrets removed from captured output.",
+    "exit_code": 0,
+    "elapsed_seconds": 105.87,
+    "targets": [
+      "tests/integration/test_grounded_http.py",
+      "tests/integration/test_grounded_tcp.py",
+      "tests/integration/test_memory_privacy_core_live.py"
+    ],
+    "log_sha256": "9639a139b5004fd419fc2fd92ef9fc7fe31625fcb2dfbbdfe78ee0e5aff9d7bd"
+  },
+  "total_focused_passed": 99,
+  "new_unique_tests": 13,
+  "application_tests_collected": 1621,
+  "historical_full": {
+    "passed": 1608,
+    "seconds": 1361.93,
+    "completed_on": "2026-10-19",
+    "source_commit": "f010abc",
+    "fresh_full_run": false,
+    "warning": "D32 changes one structured prompt file; 99 related tests revalidated, not a fresh1621 full invocation."
+  },
+  "native_formats": {
+    "txt": {
+      "chunks": 1,
+      "sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907"
+    },
+    "pdf": {
+      "chunks": 2,
+      "sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a"
+    },
+    "docx": {
+      "chunks": 5,
+      "sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988"
+    },
+    "xlsx": {
+      "chunks": 5,
+      "sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2"
+    }
+  },
+  "metrics": {
+    "answerable": "5/5",
+    "absent": "1/1",
+    "foreign": "1/1",
+    "exact_relevant_citations": "5/5",
+    "citation_precision": 1.0,
+    "actual_core_calls": 6,
+    "foreign_core_calls": 0
+  },
+  "failures_retained": [
+    "Private wrapper initial1 setup error: asyncpg driver versus required psycopg; wrapper fixed only.",
+    "Unchanged baseline actual1 FAIL/70.32s: DOCX row retrieved but relationships omitted; original frozen question/oracles retained.",
+    "New unit86 PASS/1 FAIL/.79s: synthetic OCR second-group native locator mismatch; fixture corrected only.",
+    "Unscoped collection accidentally entered vendored llama.cpp tests and reported2 missing optional upstream dependencies; scoped application collection1621 succeeds, no dependency/runtime changes."
+  ],
+  "runtime_delta": [
+    "src/application/services/grounded_answer.py: structured-only verified source_groups, plain-source system/user payload unchanged"
+  ],
+  "unchanged": [
+    "agreed model selections/profiles/registry",
+    "approved Qwen embedding and exact E5 rollback",
+    "dependencies",
+    "applied V001-V006",
+    "existing source/chunker/vector/database schemas",
+    "production opt-in flags"
+  ],
+  "limits": [
+    "Small same-agent synthetic set, not human-independent/general accuracy/model comparison/SLO.",
+    "Four document-scoped cases and one cross-file answerable query; dense top3 can miss other facts.",
+    "Exact quotes do not prove arbitrary generated claims.",
+    "Native PDF only; OCR and unsupported Office package/layout cases not expanded.",
+    "XLSX30 is preserved cache, not fresh formula execution.",
+    "Structured metadata increases prompt size under unchanged byte/token budgets.",
+    "Memory/backup/export/cache and conversation soft-delete limits remain D31 scope."
+  ],
+  "post_audit": "docs/evidence/d32-final-post-audit.json",
+  "next": "D33 repo/workspace discovery and configured scope allowlist; no approved-model change.",
+  "evidence_sha256": {
+    "docs/evidence/d32-evaluation-freeze.json": "c3146777487a794254187b4c465fa3f9968b635a7ccbecdf4109861438e0b968",
+    "docs/evidence/d32-knowledge-plan.json": "6e8aa64be96454409d0ef6cd5899b3be3430f6718b868f1086ee20799150eb37",
+    "docs/evidence/d32-native-knowledge-live.json": "a01a777bbedf37d8a7ea7dfa8e90e40e9f621a4aebb702f40c8f68d365e088d7",
+    "docs/evidence/d32-initial-native-failure.json": "c8ba39614a09564e8aa19e42aa137a15a1e7c73275866795d13ab3506bc70cdc",
+    "docs/evidence/d32-initial-native-result.json": "9027f90ae8dc19a8eb1b4a896ba9496df906b88a5cfbde71d6dbd96a577a953b",
+    "docs/evidence/d32-final-post-audit.json": "9536305210f91b9b6186b1bc0c566b16cf365b9415721140c820a6f28170b870",
+    "docs/evidence/d32-grounded-tcp.json": "696a2b68decad3331212b5ba76abae8278b5994b3d7c79e3ad5c047da4c2626b",
+    "docs/evidence/d32-memory-core-privacy.json": "753e55cab05ea7dc2d54c0aba73c99db0f026725f4533430975219b41652f30c"
+  }
+}

@@ -2850,3 +2850,29 @@ T02 focused9 PASS/20.90s and actual full-run artifacts confirm CORE malicious-so
 [Final acceptance](../docs/evidence/d31-privacy-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), [current audit](../docs/evidence/d31-final-post-audit.json) and actual evidence retained. Full-version combined D31 source archive `/tmp/local-assistant-d31-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D31 PASS for documented local privacy gates; D32 NEXT.** Conversation soft-delete, independent manual decisions and protected recovery/export/cache retention domains remain explicit limits, not secure-erasure certification. Continue actual integrated RAG/citation/limitations gate, preserving agreed models and existing PASS code.
+
+
+# 2026-10-20 — D32 frozen native knowledge gate
+
+**Purpose:** Verify the composed native-format RAG path with the agreed existing models before advancing D33.
+
+Pre-inference [plan](../docs/evidence/d32-knowledge-plan.json) freezes TXT/PDF/DOCX/XLSX hashes, manual native field relevance, five answerable questions, absent and foreign-only refusal. Existing independent source fixtures, same-agent labels, no human-independent/general model-quality claim. All four actual Qwen publications succeed:1/2/5/5 chunks. First wrapper invocation1 setup ERROR/1.02s used asyncpg URL despite application's psycopg requirement; fixed private wrapper only, retained redacted log/exit metadata.
+
+Actual unchanged baseline gate **1 FAIL/70.32s,0 SKIP**: TXT/PDF answer correctly; DOCX returns insufficient_evidence despite top3 including table1 row2 (`một`→`42`). `build_messages` flattened fields without row/column relationships. [Original failure](../docs/evidence/d32-initial-native-failure.json) and initial source freeze retained; no query/golden/top3/model change. ADR-050 precedes necessary structured-only source-group prompt repair in one runtime file. Plain TXT/PDF prompt remains identical; strict native quote authority, deadlines and prompt/token budgets retained. Initial new unit86 PASS/1 FAIL/.79s: synthetic OCR second-group locator changed without corresponding native spans; fix only fixture consistency, unchanged runtime fences. Final combined actual model/regression and cleanup audit pending.
+
+**Status: D32 IN PROGRESS; D33 not started.** No new model/download/dependency/configuration/schema/vector generation rewrite.
+
+
+## D32 final local knowledge acceptance — 2026-10-20
+
+**Purpose:** Accept the frozen integrated gate only after actual inference, related regression and cleanup; continue D33.
+
+Necessary ADR-050 repair adds verified native structure/source-ID groups only to structured prompts, preserving exact lexical quote authority and unchanged plain TXT/PDF system/user JSON. No model/question/golden/relevance/top3/budget/source-fence change. Actual final **90 focused PASS/108.24s +9 HTTP/TCP/privacy PASS/105.51s,0 SKIP, both exit0**. Four actual Qwen publications1/2/5/5 chunks;6 unchanged CORE/fast calls yield5/5 answers and5/5 exact relevant native citations (precision1.0 on this limited frozen set), absent insufficiency and foreign no_sources with0 generation. Native DOCX42 and XLSX cached30 are source-verified; cache is not recomputed/current truth. Synthetic same-agent data is not human-independent/general quality.
+
+Initial70.32s native failure and unchanged original plan retained; corrected synthetic OCR locator fixture and private wrapper driver setup error remain disclosed. An accidental unscoped collect entered vendored llama.cpp tests and found2 missing optional upstream dependencies; proper application `pytest tests --collect-only` succeeds1621, no dependency/vendor change.13 new cases; historical D31 full1608 remains separate, **no fresh1621 full invocation claimed**. Three Python files/14 function-class descriptions, Ruff correctness/import/format and whitespace pass. Related D28 guide/ADR cross-reference updated without rewriting history.
+
+Readonly final audit:0006, files/jobs/heads/memory/quota/restore probes/Qdrant collections/model workers/advisory locks0, no app/pending work; original owners/ACLs/narrow grants/fixed invoker-only trigger functions retained. Only accepted runtime baseline delta is the grounded structured prompt; all other frozen bytes/protected models/E5 rollback/dependencies/applied migrations unchanged. No production flags or shared infrastructure changed.
+
+[Acceptance](../docs/evidence/d32-knowledge-acceptance.json), [demo/limits](../docs/D32_KNOWLEDGE_GATE.md), [actual native evidence](../docs/evidence/d32-native-knowledge-live.json), [audit](../docs/evidence/d32-final-post-audit.json). Full-version changed-file ZIP `/tmp/local-assistant-d32-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D32 PASS (defined local knowledge scope), D33 NEXT.** Next work is explicit repository/workspace scope isolation, not coding tools or a model replacement.
