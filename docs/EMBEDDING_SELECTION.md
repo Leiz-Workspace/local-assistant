@@ -79,3 +79,9 @@ D25 now passes the local opt-in source/Qwen/Qdrant lifecycle with979 PASS/0 SKIP
 **Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
 
 D26 local opt-in dense retrieval now passes1030 PASS/0 SKIP. Query instruction and complete token budget come from the unchanged approved Qwen profile; original query bytes enter the existing empty-prefix passage worker through shared encoder admission. No second model/runtime, download, dtype, fallback or selected-configuration edit. Actual source/SQL/Qdrant/HTTP tests are lifecycle acceptance, not an expanded model-quality benchmark. D27 original reranker candidate remains planned; [guide](RETRIEVAL.md).
+
+## D27-T01 diagnostic baseline — 2026-10-19
+
+**Purpose:** Record new evaluation of the existing model without changing model selection or evidence scope.
+
+Frozen24-document/36-query agent-authored corpus: R@3=.972222/MRR@10=.949074/nDCG@10=.961613; actual existing CPU encoder plus evaluation-only vector replay through source/SQL/Qdrant/D26. Full1052 PASS/0 SKIP; candidate/label/source hashes and misses retained. Batch/cache scores/timing are not singleton API latency or independent production quality. No selected-config/profile/runtime/dependency/vector-space change, new RAM/VRAM measurement or model download/adoption. D27-T01 PASS local measurement; D27 open, T02 original reranker NOT EVALUATED. [Plan](D27_RETRIEVAL_EVALUATION.md), [evidence](evidence/d27-retrieval-baseline.json).

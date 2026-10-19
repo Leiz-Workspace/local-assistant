@@ -1,0 +1,92 @@
+{
+  "description": "Observed D27-T01 frozen synthetic diagnostic baseline acceptance; not full D27, reranker quality/adoption or production validation.",
+  "observed_date": "2026-10-19",
+  "milestone": "D27-T01",
+  "status": "PASS_LOCAL_FROZEN_BASELINE",
+  "day27_status": "IN_PROGRESS",
+  "next": "D27-T02 separately scoped original Qwen3-Reranker-0.6B offline comparison",
+  "base_commit": "7fa311b",
+  "database_revision": "0004",
+  "tests": {
+    "new_unit": 21,
+    "new_actual_cpu_source_sql_qdrant": 1,
+    "new_total": 22,
+    "focused_passed": 22,
+    "focused_seconds": 89.34,
+    "full_passed": 1052,
+    "full_seconds": 306.02,
+    "skipped": 0,
+    "exit_code": 0,
+    "command_description": "Existing Vault-backed uv run --no-sync python -m pytest tests/ -q -rs --tb=short; existing actual PostgreSQL/CORE/Qdrant credentials and explicit offline Qwen evaluation flag; no credential skips."
+  },
+  "metrics": {
+    "recall_at_3": 0.9722222222222222,
+    "recall_at_5": 0.9722222222222222,
+    "recall_at_10": 1.0,
+    "mrr_at_10": 0.949074074074074,
+    "ndcg_at_10": 0.9616129637291926
+  },
+  "groups": {
+    "cross_language": {
+      "recall_at_3": 0.9166666666666666,
+      "recall_at_5": 0.9166666666666666,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.8472222222222222,
+      "ndcg_at_10": 0.8848388911875781
+    },
+    "en": {
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 1.0
+    },
+    "vi": {
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 1.0
+    }
+  },
+  "protocol_passed": true,
+  "replay_rankings_stable": true,
+  "focused_full_metrics_identical": true,
+  "diagnostic_quality_gates_met": true,
+  "corpus_scope": "Agent-authored24 documents/36 queries/12 intents, evenly vi/en/cross-language; binary labels frozen before inference; not human-blinded/production-held-out.",
+  "vector_scope": "One actual60-input CPU encoding batch, existing batch4; exact real vectors replayed only in evaluation harness through real source/journal/Qdrant/D26. Singleton API metrics not asserted identical.",
+  "resource_scope": "Cached retrieval timing excludes per-request token/model startup and HTTP; new child RAM/VRAM not measured (null).",
+  "static_checks": {
+    "python_files": 3,
+    "documented_functions_and_classes": 22,
+    "ruff_correctness_imports_format": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "preserved": {
+    "D26_source_hashes_unchanged": true,
+    "application_source_unchanged": true,
+    "model_registry_selected_profile_and_exact_e5_rollback_unchanged": true,
+    "dependencies_runtime_locks_schema_grants_unchanged": true,
+    "production_configuration_changed": false,
+    "reranker_weights_or_tokenizer_downloaded": false,
+    "reranker_executed_or_selected": false
+  },
+  "source_sha256": {
+    "scripts/retrieval_baseline.py": "03ebe6ef898b4953ad1bd84cfdf0472ebf8ddec66f7a041d4a7e9ed3d253c54d",
+    "tests/test_retrieval_baseline.py": "0be1ce90638d24ebc658190b658fa541f195b2de4cd1196c8ab46a976a1f08a2",
+    "tests/integration/test_retrieval_baseline_live.py": "0ace55f200d2584ca43424fdf0d8fa61873a7b8c60f409073e46307554b19d88",
+    "tests/fixtures/retrieval/d27-corpus.json": "0bc96e6c5bebacb3ffbd3eedd4fed466c730f2f540eef556aeb4654949bd7ee8",
+    "tests/fixtures/retrieval/d27-plan.json": "4f39578e917b8a07175ea86946e21e76f577a0d7c6ffd5397ad1a6aaf6423048"
+  },
+  "full_private_log_sha256": "66d6ce35f75468c7892d3f7d90477c954f180ca33d5f8d1aff9b57aa4ae13b6c",
+  "baseline_evidence": "docs/evidence/d27-retrieval-baseline.json",
+  "metadata_review": "docs/evidence/d27-reranker-metadata-review.json",
+  "post_audit": "docs/evidence/d27-post-audit.json",
+  "adr": "docs/ADR/038-frozen-retrieval-baseline-and-reranker-evaluation.md",
+  "open_gates": [
+    "Actual isolated pinned original-candidate provisioning/comparison; no fabricated reranker scores",
+    "Independent human-reviewed corpus and paired quality/latency/resources",
+    "Owner-approved adoption and integration/rollback if justified",
+    "Production load/DR/long-input/compaction; D28 not started"
+  ]
+}

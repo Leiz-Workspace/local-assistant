@@ -44,7 +44,7 @@ All entries below are **planned candidates/conditional proposals**, not deployed
 
 | Task ID | Candidate or strategy | Priority / dependency | Initial effort / main risk | Proposed milestone |
 |---|---|---|---|---|
-| MODEL-EVAL-002 | Original `Qwen3-Reranker-0.6B` versus no-reranker retrieval baseline | P1; D26 ACL-filtered retrieval, independent relevance corpus; evaluate separately from embedding replacement |1–2 milestones; latency/VRAM, incorrect relevance, throughput and tenant-scope leakage | D27; NOT EVALUATED |
+| MODEL-EVAL-002 | Original `Qwen3-Reranker-0.6B` versus no-reranker retrieval baseline | P1; D26 ACL-filtered retrieval, independent relevance corpus; evaluate separately from embedding replacement |1–2 milestones; latency/VRAM, incorrect relevance, throughput and tenant-scope leakage | D27 IN PROGRESS: T01 baseline PASS; candidate comparison NOT EVALUATED |
 | MODEL-EVAL-003 | `Qwen3-ASR-0.6B` versus Whisper/faster-whisper | P2; explicit audio consent/segmentation and labeled Vietnamese/English speech |1–2 milestones; WER/CER, timestamps, noise, latency/memory/license | D68; NOT EVALUATED |
 | MODEL-EVAL-004 | Silero VAD v5 | P2; audio capture/ASR segmentation requirements |1 milestone; false speech/silence, timestamp drift/noise and recording privacy | D69; candidate, no deployment evidence |
 | MODEL-EVAL-005 | `Qwen3-TTS-0.6B` versus Piper | P2; verified Vietnamese/English output capability/license and reviewed voice corpus |1–2 milestones; naturalness, first-audio/total latency, RAM/VRAM and voice licensing | D70; NOT EVALUATED |
@@ -111,3 +111,11 @@ Future model replacement still requires benchmark, performance/resources, compat
 **Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
 
 D26 local opt-in retrieval PASS with1030 tests/0 SKIP; [retained acceptance](evidence/d26-retrieval-acceptance.json). Earlier D26 NEXT references are historical checkpoints. D27-T01 is NEXT: freeze independent corpus/labels/thresholds and measure the existing no-reranker baseline; P1, dependent on accepted D26, effort1–2 milestones, risks quality bias/latency/memory/context/tenant drift. Original Qwen3-Reranker-0.6B (MODEL-EVAL-002) remains the planned candidate, NOT EVALUATED. Identify exact artifact/license/runtime and resource/provisioning scope before candidate execution. D26 downloaded/deployed no reranker and changed no model choice. A later replacement requires measured comparison, performance/resources, migration/rollback and owner approval. Existing populated DR/load/long-input/compaction debts remain open.
+
+## D27-T01 frozen baseline checkpoint — 2026-10-19
+
+**Purpose:** Record measured baseline while keeping original candidate/approval gates distinct.
+
+T01 PASS for local frozen synthetic diagnostic measurement:24 documents/36 queries, explicit vi/en/cross-language judgments fixed before inference;1052 full PASS/0 SKIP. Actual existing CPU embeddings are replayed through source/journal/Qdrant/D26 with exact source/ACL/final fences; no application/model change. R@3=.972222, MRR@10=.949074, nDCG@10=.961613, R@10=1; retain rank6/rank2 misses. Batch/cache timing excludes singleton query startup/HTTP and newly measured RAM/VRAM remain null. No human-blinded/general quality claim. [Plan and evidence](D27_RETRIEVAL_EVALUATION.md).
+
+MODEL-EVAL-002/D27 remains IN PROGRESS: **T02 original Qwen3-Reranker-0.6B comparison NEXT, NOT PROVISIONED/NOT EVALUATED**. P1; T01 frozen top10/labels plus pinned public artifacts/runtime and separate provisioning scope; effort1–2 milestones; risks pair truncation/incorrect logits/latency/RAM/VRAM/tenant drift and diagnostic bias. T03 decision/integration remains conditional on measured paired gates, independent judgments and owner-approved adoption/migration/rollback. Conditional lexical/hybrid evaluation is P2, requires demonstrated exact-term/numeric gap, independent frozen benchmark/ADR; effort1–2 milestones, fusion/state/resource/ACL risks; unscheduled. D28 not started. Original registry/models stay unchanged.
