@@ -1,4 +1,4 @@
-"""Own optional conversation, source, retrieval and grounded resources with ordered joined shutdown."""
+"""Own optional conversation, source, retrieval, grounded and memory resources with ordered joined shutdown."""
 
 import asyncio
 import logging
@@ -11,6 +11,7 @@ from apps.api.services.conversations import ConversationService
 from apps.api.storage.files import initialize_file_service
 from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
+from apps.api.storage.memory import initialize_memory_service
 from apps.api.storage.retrieval import initialize_retrieval_service
 from src.infrastructure.database.connection import (
     create_database_engine,
@@ -33,6 +34,7 @@ async def conversation_lifespan(app: FastAPI):
     app.state.ingestion_service = None
     app.state.retrieval_service = None
     app.state.grounded_service = None
+    app.state.memory_service = None
     try:
         if os.environ.get("DATABASE_URL"):
             try:
@@ -52,6 +54,9 @@ async def conversation_lifespan(app: FastAPI):
                 app.state.grounded_service = await initialize_grounded_service(
                     app.state.retrieval_service
                 )
+                app.state.memory_service = await initialize_memory_service(
+                    create_session_factory(engine)
+                )
                 telemetry = PoolTelemetry(engine)
                 app.state.pool_telemetry = telemetry
                 sampler = asyncio.create_task(telemetry.sample())
@@ -65,6 +70,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.memory_service is not None:
+            await app.state.memory_service.shutdown()
+            app.state.memory_service = None
         if app.state.grounded_service is not None:
             await app.state.grounded_service.shutdown()
             app.state.grounded_service = None

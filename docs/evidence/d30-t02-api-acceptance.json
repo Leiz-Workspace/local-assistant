@@ -1,0 +1,65 @@
+{
+  "description": "D30-T02 local authenticated default-off manual memory API acceptance; extraction/retention worker/final whole-day regression remain pending.",
+  "base_commit": "89ceb18",
+  "status": "PASS_LOCAL_T02_ONLY",
+  "final_related": {
+    "passed": 109,
+    "seconds": 9.11,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "new_unique_tests": 38,
+  "new_cases_included_in_final_related": true,
+  "unique_tests_across_checkpoints": 1475,
+  "new_full_suite_invocation": false,
+  "initial_before_repeated_cancel_hardening": {
+    "focused_passed": 37,
+    "seconds": 1.63,
+    "related_passed": 108,
+    "related_seconds": 9.19
+  },
+  "repeated_cancel_fault": {
+    "passed": 25,
+    "failed": 1,
+    "seconds": 0.58,
+    "diagnosis": "Inline awaited SQL cleanup could be interrupted by repeated parent cancellation; own shielded child and finish_task join added before removing tracking."
+  },
+  "subsequent_unit": {
+    "passed": 26,
+    "seconds": 0.53,
+    "skipped": 0
+  },
+  "actual_postgresql_sleep_observed_before_cancel": true,
+  "pool_checkout_after_cancel": 0,
+  "actual_tcp": true,
+  "source_sha256": {
+    "apps/api/main.py": "fefc5732231a9c97d0f3c08562d189f8582d052da21d9e3a499b45dbed6629e8",
+    "apps/api/storage/lifecycle.py": "b791330dc8cf1a7549702d56c63569a76049fa783e414a1476464ac38f368059",
+    "apps/api/services/memory.py": "42fce4128ba9e94ad9b38493e402060242b8d49f8b1250ea3727bfb05f7465fb",
+    "apps/api/storage/memory.py": "bfcf30321b869b021109a132547d716dc0b7dd2f4d8fe8296cfda5e9618e0f69",
+    "apps/api/routes/memory.py": "b16fc1c55f027146eb1ecd8a487c11526499dffccde960db4790b3106c6d1d11",
+    "tests/test_memory_api.py": "c655956587f1abd14b7695ef43a5b9eb7c00d68ea266ff2fae7dfd9cd1b6cf40",
+    "tests/integration/test_memory_http.py": "3ec70139a0e3f9aff204a3fd266ec73d2f531571071a80c69047cf861dedddd1"
+  },
+  "function_class_descriptions": 51,
+  "post_audit": "d30-t02-final-post-audit.json",
+  "production_memory_flag_enabled": false,
+  "model_or_schema_change": false,
+  "extraction_or_retention_worker_implemented": false,
+  "limitations": [
+    "Manual management only; no extraction, prompt injection, export or source deletion propagation claimed.",
+    "Management reads/mutations linearize at SQL; no long generated source response is implemented here.",
+    "TCP uses ephemeral Uvicorn on the same fixture event loop, not separate-process/load certification.",
+    "Full D30 regression remains pending after T03."
+  ],
+  "protected_sha256": {
+    "docs/MODEL_REGISTRY.md": "0f5022f0a36186cf34ffe97b4e8461a586b36608c1a71effe1558393165fada9",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+    "configs/embedding-e5-rollback.json": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+    "uv.lock": "84ebcd30727cbb47bd8279f11ab79ca1e0c3271500734222c49e10fa93e00795",
+    "pyproject.toml": "51a08088e26106c72dfd6f3b5d7dbddc8cb0cffb28b05f67d3de49ee1dbee255",
+    "src/infrastructure/repositories/memory_journal.py": "312eb5654f71fb28c31f95e4cea8cb3f47f62e3967923ce6820c3bf67fffe916",
+    "migrations/versions/0005_memory_journal.py": "b228bf23acb034e8849b40f47a994044f703b10eb2df55c9500b05650008a652"
+  }
+}

@@ -45,3 +45,8 @@ Implement default-off authenticated owner APIs for settings/consent and inspect/
 ## D30-T01 implementation checkpoint — 2026-10-19
 
 [D30 journal guide](D30_MEMORY_JOURNAL.md): V005 is now applied after protected pre/post backup/restore; old data/security preserved. Local repository/schema123 focused+113 related cases PASS/0 SKIP, clean audit. D29's earlier unapplied-schema statements describe its historical design checkpoint. Memory runtime/APIs/extraction remain disabled/unimplemented in T01; D30 stays open for T02/T03 and final whole-system acceptance. Original contract/model choices remain unchanged.
+
+
+## D30-T02 management checkpoint — 2026-10-19
+
+[Memory API](MEMORY_API.md) now implements default-off local authenticated manual settings/consent/record controls, accepted109 related cases/0 SKIP. Owner opt-in is separate from the operator flag; disabled owners retain inspect/delete. No extraction, automatic learning, prompt injection or retention worker is implemented yet; T03 remains open. Original D29 design-only statements remain historical.

@@ -1,0 +1,26 @@
+{
+  "description": "Actual V005/runtime app owner-memory manual management over ephemeral loopback Uvicorn/TCP; no inference or production enablement.",
+  "actual_tcp": true,
+  "manual_record": {
+    "id": "052ea7d2-f722-43e7-a715-d889d9e3081e",
+    "owner_id": "1e4d390d-0614-4fb9-b7be-fddf996c1a13",
+    "kind": "preference",
+    "scope_id": "1e4d390d-0614-4fb9-b7be-fddf996c1a13",
+    "consent_id": "ea8e05dd-52f6-4488-9e71-9a5a4b612321",
+    "text": "TCP-owned manual preference.",
+    "method": "manual",
+    "model_id": null,
+    "provenance": {
+      "kind": "manual",
+      "content_sha256": "30853828e58ce995b1c437fb66bd955806cebc9cba28c2560a8de406b67f3077"
+    },
+    "created_at": "2026-10-19T16:04:51.947094+07:00",
+    "updated_at": "2026-10-19T16:04:51.947094+07:00",
+    "expires_at": "2026-11-18T16:04:51.902731+07:00",
+    "version": 1,
+    "content_trust": "untrusted"
+  },
+  "temporary_server_joined": true,
+  "owned_operations_joined": true,
+  "independent_human_or_model_quality_claim": false
+}
