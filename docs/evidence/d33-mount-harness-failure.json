@@ -1,0 +1,17 @@
+{
+  "description": "Actual local D33 filesystem and unchanged source-policy/blob/parser sandbox regression invocation.",
+  "targets": [
+    "tests/test_workspace_policy.py",
+    "tests/test_readonly_workspace.py",
+    "tests/test_file_storage_policy.py",
+    "tests/test_local_blob_storage.py",
+    "tests/test_file_verifier.py"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 7.26,
+  "log_sha256": "e34719422ddb840955728d24bbbb7c9e2608d2f7c2086eb5aa952a5b38756a4a",
+  "passed": 287,
+  "failed": 1,
+  "pytest_seconds": 7.03,
+  "cause": "Strengthened private mount child harness lacked os/errno/open_beneath imports; fixed imports only, native EXDEV/same-device oracle and runtime retained."
+}

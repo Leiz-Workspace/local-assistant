@@ -1,0 +1,62 @@
+{
+  "description": "D33 accepted local owner-bound workspace capability/discovery foundation, not authenticated application inventory/search or an execution sandbox.",
+  "status": "PASS (defined local foundation scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "9928957",
+  "passed": 288,
+  "skipped": 0,
+  "pytest_seconds": 7.02,
+  "new_unique_cases": 63,
+  "application_tests_collected": 1684,
+  "invocation": {
+    "description": "Actual local D33 filesystem and unchanged source-policy/blob/parser sandbox regression invocation.",
+    "targets": [
+      "tests/test_workspace_policy.py",
+      "tests/test_readonly_workspace.py",
+      "tests/test_file_storage_policy.py",
+      "tests/test_local_blob_storage.py",
+      "tests/test_file_verifier.py"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 7.21,
+    "log_sha256": "01c11189e31ed74e02361da08e3ec5e123f862f539a5c233f20e4270340a14ad"
+  },
+  "actual_cases": [
+    "read-only single-link in-root regular file and CLOEXEC",
+    "foreign/unknown/untyped owner or workspace denied before filesystem access",
+    "external/internal/ancestor symlink denied",
+    "outside hard link denied",
+    "FIFO/socket denied without blocking",
+    "configured root replacement invalidates further admission",
+    "symlink swap at native admission denied",
+    "same-device bind mount under root raises native EXDEV in private credential-free namespace",
+    "git marker classification without command/config/pointer read",
+    "descriptor cleanup on success, caller interruption and controlled fstat failure",
+    "empty/duplicate/overcapacity catalog and hidden/traversal/unbounded/invalid Unicode paths"
+  ],
+  "controlled_cases": [
+    "unsupported architecture",
+    "native ENOSYS adapter injection",
+    "initial root fstat failure"
+  ],
+  "limitations": [
+    "No HTTP/CLI/tool endpoint or runtime registration; authenticated composition is D34.",
+    "Only explicit root git marker classification, not full git validity; worktree pointers unresolved.",
+    "Linux x86_64 openat2 required, no weaker fallback.",
+    "All hidden public components and hard-link aliases denied conservatively.",
+    "Admission-time descriptor capabilities do not sandbox arbitrary same-UID host processes or guarantee post-admission path membership.",
+    "No file inventory/search/write/command/git/hooks/model execution provided.",
+    "Application1684 collection is not a fresh1684 full run; D31 full1608, D32 focused99 and D33 related288 are separate checkpoints."
+  ],
+  "original_failure": "docs/evidence/d33-mount-harness-failure.json",
+  "post_audit": "docs/evidence/d33-final-post-audit.json",
+  "all_prior_accepted_runtime_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "next": "D34 bounded authenticated read-only inventory/text search and exact source-line provenance; no new model.",
+  "evidence_sha256": {
+    "docs/evidence/d33-workspace-freeze.json": "30ad272b6db805d2e94d6bb2072e684312dd913efa0ac72be20fa4fa81517017",
+    "docs/evidence/d33-final-post-audit.json": "d3844abd56108e4fc421b5d0142f4efcb82621662f0f7600606bf659c6f7f21f",
+    "docs/evidence/d33-mount-harness-failure.json": "1dfb3a929c880c59c1689699afd6d87685e54e93be49fd74e05b4bd3b7f694e6"
+  }
+}

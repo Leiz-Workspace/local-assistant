@@ -2876,3 +2876,18 @@ Readonly final audit:0006, files/jobs/heads/memory/quota/restore probes/Qdrant c
 [Acceptance](../docs/evidence/d32-knowledge-acceptance.json), [demo/limits](../docs/D32_KNOWLEDGE_GATE.md), [actual native evidence](../docs/evidence/d32-native-knowledge-live.json), [audit](../docs/evidence/d32-final-post-audit.json). Full-version changed-file ZIP `/tmp/local-assistant-d32-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D32 PASS (defined local knowledge scope), D33 NEXT.** Next work is explicit repository/workspace scope isolation, not coding tools or a model replacement.
+
+
+# 2026-10-20 — D33 local workspace scope foundation
+
+**Purpose:** Continue after D32 commit `9928957`, establishing actual filesystem boundaries before D34 exposes repository reads.
+
+ADR-051 precedes new immutable owner/workspace UUID specifications and explicit clean absolute roots (max8), plus unused readonly Linux openat2 capability/discovery adapter. No cwd/home/parent inference, runtime registration, endpoint, CLI identity shortcut, git/config/hooks execution, model call, file modification, database/config/dependency change. Authorize owner before root opens; kernel BENEATH/NO_SYMLINKS/NO_MAGICLINKS/NO_XDEV resolve beneath pinned root. Public hidden/traversal/unbounded paths, regular hard-link aliases and IPC targets denied; root identity rechecked, all FDs joined. Discovery returns only configured metadata and directory/git marker kind; worktree pointers never followed.
+
+Initial59 PASS/.12s, strengthened63 PASS/.12s and288 related PASS/7.06s are subsets/checkpoints. Further stronger mount oracle first **287 PASS/1 FAIL/7.03s**: child harness missing os/errno/helper imports. Preserve failure metadata; fix only child imports, keep actual native EXDEV plus same-device check and runtime code. Final **288 related PASS/7.02s,0 SKIP, exit0**, including63 new cases, actual bind mount in private credential-free namespace and path-to-symlink swap exactly before syscall. Existing source policy/blob locks/verifier sandbox regression included. Controlled ENOSYS/platform/fstat injections are disclosed separately from real kernel cases. Four new Python files/44 descriptions, Ruff correctness/import/format pass.
+
+All accepted D32 application/test/config/model/dependency/applied migration bytes remain unchanged. Application collection1684 succeeds, **not a fresh1684 full test run**; historical D31 full1608 and D32 focused99 remain separate. Readonly audit0006/empty source-memory-quota/vector-worker-lock inventories, no app/pending work, original owners/ACL/narrow grants and fixed invoker triggers retained. New code operates only on disposable fixture roots; no host mount or repository contents changed.
+
+[Scope/limits](../docs/D33_WORKSPACE_SCOPE.md), [acceptance](../docs/evidence/d33-workspace-acceptance.json), [source freeze](../docs/evidence/d33-workspace-freeze.json), [post-audit](../docs/evidence/d33-final-post-audit.json). Full-version ZIP `/tmp/local-assistant-d33-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D33 PASS for the local capability/discovery foundation; D34 NEXT.** No authenticated repository read endpoint yet. Admission-time descriptor policy is not a sandbox against arbitrary same-UID host processes or a guarantee of membership after later path movement; bounded authenticated inventory/search and line provenance are D34, writes/execution/approval require their later gates.
