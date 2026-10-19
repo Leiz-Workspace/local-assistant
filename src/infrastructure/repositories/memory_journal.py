@@ -39,6 +39,31 @@ def record_values(record):
     return values
 
 
+def record_from_row(row):
+    """Decode only persisted provenance UUID strings while retaining strict SQL field and JSON shape validation."""
+    values = dict(row)
+    provenance = values.get("provenance")
+    if isinstance(provenance, dict):
+        provenance = dict(provenance)
+        kind = provenance.get("kind")
+        fields = (
+            {
+                "conversation_message": ("conversation_id", "message_id"),
+                "file_quote": ("file_id",),
+            }.get(kind, ())
+            if isinstance(kind, str)
+            else ()
+        )
+        for field in fields:
+            value = provenance.get(field)
+            if isinstance(value, str):
+                provenance[field] = UUID(value)
+        values["provenance"] = provenance
+    record = MemoryRecord.model_validate(values)
+    logger.info("memory_record_decoded")
+    return record
+
+
 class PostgresMemoryJournal:
     """Serialize owner controls and consented manual records without implicit extraction or model prompt use."""
 
@@ -365,7 +390,7 @@ class PostgresMemoryJournal:
         if row is None:
             raise MemoryPolicyError("memory_not_found")
         logger.info("memory_record_inspected")
-        return MemoryRecord.model_validate(dict(row))
+        return record_from_row(row)
 
     async def list(self, owner, *, limit=50, after=None):
         """List bounded owned record metadata without exposing full private text/provenance in a bulk response."""
@@ -412,7 +437,7 @@ class PostgresMemoryJournal:
             )
             if row is None:
                 raise MemoryPolicyError("memory_not_found")
-            previous = MemoryRecord.model_validate(dict(row))
+            previous = record_from_row(row)
             if previous.version != expected_version:
                 raise MemoryPolicyError("memory_conflict")
             now = await self._now(session)

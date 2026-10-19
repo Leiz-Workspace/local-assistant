@@ -1,0 +1,132 @@
+{
+  "description": "Actual unchanged CORE/fast source-literal message selection on same-agent synthetic English/Vietnamese facts and greeting absence; no human-independent/general quality or confidence claim.",
+  "cases": [
+    {
+      "kind": "project",
+      "source": "Project Cedar uses port 7443.",
+      "identity": {
+        "conversation_id": "de7b04e1-3a55-45fd-8b64-d2fc15c66dfc",
+        "message_id": "dba7f86b-7fc7-45a0-b00a-e0279ae6ffd2"
+      },
+      "result": {
+        "status": "captured",
+        "record": {
+          "id": "d4fba27c-9c04-4307-95e3-acacf9568226",
+          "owner_id": "21ef57f5-16e1-44dd-8da5-52a9372b85a9",
+          "kind": "project",
+          "scope_id": "4238493e-ddf9-4869-87a1-07972043cc70",
+          "consent_id": "4646eed5-40b3-44e1-b100-6f4c0f56c774",
+          "text": "Project Cedar uses port 7443.",
+          "method": "extracted",
+          "model_id": "qwen3.5-9b-core",
+          "provenance": {
+            "quote": "Project Cedar uses port 7443.",
+            "start": 0,
+            "end": 29,
+            "kind": "conversation_message",
+            "conversation_id": "de7b04e1-3a55-45fd-8b64-d2fc15c66dfc",
+            "message_id": "dba7f86b-7fc7-45a0-b00a-e0279ae6ffd2",
+            "role": "user",
+            "content_sha256": "e54b97cbb5e561cdf2ae8168070be3b78a05de5e03a1db127c814c3c5ab640e7"
+          },
+          "created_at": "2026-10-19T19:42:44.367873+07:00",
+          "updated_at": "2026-10-19T19:42:44.367873+07:00",
+          "expires_at": "2026-10-19T19:47:43.918257+07:00",
+          "version": 1,
+          "content_trust": "untrusted"
+        },
+        "content_trust": "untrusted"
+      }
+    },
+    {
+      "kind": "preference",
+      "source": "Tôi muốn câu trả lời bằng tiếng Việt.",
+      "identity": {
+        "conversation_id": "6e5774a9-293c-4967-995e-7fd75d6c0121",
+        "message_id": "acae7424-c724-49bf-8b93-01cd07a10871"
+      },
+      "result": {
+        "status": "captured",
+        "record": {
+          "id": "6d7c9bb4-9066-4be8-88ba-57d00992afed",
+          "owner_id": "21ef57f5-16e1-44dd-8da5-52a9372b85a9",
+          "kind": "preference",
+          "scope_id": "21ef57f5-16e1-44dd-8da5-52a9372b85a9",
+          "consent_id": "0e6265bd-dc4e-469e-ae73-005165bf2fb2",
+          "text": "Tôi muốn câu trả lời bằng tiếng Việt.",
+          "method": "extracted",
+          "model_id": "qwen3.5-9b-core",
+          "provenance": {
+            "quote": "Tôi muốn câu trả lời bằng tiếng Việt.",
+            "start": 0,
+            "end": 37,
+            "kind": "conversation_message",
+            "conversation_id": "6e5774a9-293c-4967-995e-7fd75d6c0121",
+            "message_id": "acae7424-c724-49bf-8b93-01cd07a10871",
+            "role": "user",
+            "content_sha256": "ebbfa9921a7361ab0ca327066064cd3b9c3e17c66f0ee8db8c89f00b3d50e6fc"
+          },
+          "created_at": "2026-10-19T19:42:44.704257+07:00",
+          "updated_at": "2026-10-19T19:42:44.704257+07:00",
+          "expires_at": "2026-10-19T19:47:44.380643+07:00",
+          "version": 1,
+          "content_trust": "untrusted"
+        },
+        "content_trust": "untrusted"
+      }
+    },
+    {
+      "kind": "preference",
+      "source": "Hello!",
+      "identity": {
+        "conversation_id": "bf9e0487-ed45-4920-bdb4-d6ac505f2609",
+        "message_id": "21c30506-58ab-48c5-ab01-9bdfa3ee1bd3"
+      },
+      "result": {
+        "status": "insufficient_evidence",
+        "record": null,
+        "content_trust": "untrusted"
+      }
+    }
+  ],
+  "actual_core_calls": [
+    {
+      "profile": "core",
+      "preset": "fast",
+      "temperature": 0,
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 200,
+      "output_tokens": 19,
+      "latency_ms": 428,
+      "synthetic_reply": "{\"status\":\"selected\",\"quote\":\"Project Cedar uses port 7443.\"}"
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "temperature": 0,
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 200,
+      "output_tokens": 18,
+      "latency_ms": 310,
+      "synthetic_reply": "{\"status\":\"selected\",\"quote\":\"Tôi muốn câu trả lời bằng tiếng Việt.\"}"
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "temperature": 0,
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 193,
+      "output_tokens": 13,
+      "latency_ms": 244,
+      "synthetic_reply": "{\"status\":\"insufficient_evidence\",\"quote\":null}"
+    }
+  ],
+  "foreign_source_refused_before_model": true,
+  "new_model_or_schema_change": false
+}

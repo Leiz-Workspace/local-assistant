@@ -15,6 +15,7 @@ from src.application.services.memory_contract import (
 )
 from src.infrastructure.repositories.memory_journal import (
     PostgresMemoryJournal,
+    record_from_row,
     record_values,
     typed_owner,
 )
@@ -44,6 +45,47 @@ def test_exact_manual_snapshot_serialization_and_hash():
     encoded = json.loads(record_values(extracted)["provenance"])
     assert encoded["conversation_id"] == str(extracted.provenance.conversation_id)
     assert encoded["message_id"] == str(extracted.provenance.message_id)
+
+
+@pytest.mark.parametrize("kind", ["conversation_message", "file_quote"])
+def test_persisted_provenance_uuid_decoder_preserves_strict_validation(kind):
+    """Round-trip real JSONB UUID string shapes without coercing arbitrary provenance fields or identifiers."""
+    record = MemoryRecord.model_validate(payload(extracted=True)["record"])
+    row = record.model_dump()
+    if kind == "file_quote":
+        from uuid import uuid4
+
+        file_id = uuid4()
+        row["provenance"] = dict(
+            kind="file_quote",
+            file_id=file_id,
+            source_sha256="b" * 64,
+            locator="file:" + str(file_id) + "#text",
+            field="text",
+            quote="quote",
+            start=0,
+            end=5,
+        )
+        record = MemoryRecord.model_validate(row)
+    encoded = record_values(record)
+    row = record.model_dump()
+    row["provenance"] = json.loads(encoded["provenance"])
+    restored = record_from_row(row)
+    assert restored == record
+    row["provenance"]["owner_override"] = "foreign"
+    with pytest.raises(ValueError):
+        record_from_row(row)
+
+
+@pytest.mark.parametrize("value", ["bad-uuid", 123, True])
+def test_persisted_source_uuid_decoder_rejects_invalid_identity(value):
+    """Never convert malformed or nonstring JSON source identifiers into authoritative storage UUIDs."""
+    record = MemoryRecord.model_validate(payload(extracted=True)["record"])
+    row = record.model_dump()
+    row["provenance"] = json.loads(record_values(record)["provenance"])
+    row["provenance"]["message_id"] = value
+    with pytest.raises(ValueError):
+        record_from_row(row)
 
 
 @pytest.mark.parametrize("owner", [None, "user", True, 123])

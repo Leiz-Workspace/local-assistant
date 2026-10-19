@@ -39,3 +39,13 @@ Twelve actual HTTP/SQL cases cover four classes, explicit consent/disabled inspe
 Final read-only audit: V005 unchanged; owned memory/settings/receipts, source/quota/probe DB/vector/worker/advisory-lock inventories0, old owners/ACLs unchanged. [Post-audit](evidence/d30-t02-final-post-audit.json). Original model/embedding/E5 rollback/dependencies unchanged. Disable/drain the operator feature to restore prior API behavior while retaining journal/data; never downgrade populated tables to roll back. Full-source archive `/tmp/local-assistant-d30-t02-complete-full-files.zip`.
 
 T03 must implement actual source verification, bounded model selection, owner control cancellation/fences, explicit insufficiency and retention/orphan cleanup before D30 closes. Source deletion/export/injection propagation remains D31. Do not infer those capabilities from successful manual CRUD.
+
+
+## D30-T03 implementation checkpoint
+
+Source-literal extraction, periodic expiry and explicit owner export are now implemented; focused147 PASS/0 SKIP, whole-system acceptance pending. See [T03 guide](D30_MESSAGE_MEMORY_SELECTION.md) for actual route bodies, budgets, source/control fences and limits. Earlier T02-only statements describe that historical checkpoint, not current T03 capabilities. Production flag stays off; D31 source deletion/injection/export propagation is not yet accepted.
+
+
+## D30 final acceptance
+
+[D30 acceptance](evidence/d30-memory-acceptance.json): **1570 full-suite PASS/1357.69s,0 SKIP**, after147 focused PASS and clean post-audit. Explicit message selection, bounded retention and owner export are locally accepted; previous checkpoint descriptions above remain historical. Production flag off; no model/schema change in T03. D31 source deletion/injection/export propagation NEXT.

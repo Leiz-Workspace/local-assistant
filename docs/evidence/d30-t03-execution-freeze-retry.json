@@ -1,0 +1,36 @@
+{
+  "description": "Healthy-CORE retry freeze after retained initial environment/standalone-fixture failure; model prompt and oracles unchanged.",
+  "base_commit": "701530c8cd1f9e6af5cafbb4ea8eec13b0376415",
+  "model": {
+    "profile": "core",
+    "preset": "fast",
+    "temperature": 0,
+    "max_tokens": 512,
+    "deadline_seconds": 60
+  },
+  "oracles": [
+    "Project Cedar uses port 7443. => selected quote containing 7443",
+    "Tôi muốn câu trả lời bằng tiếng Việt. => selected quote containing tiếng Việt",
+    "Hello! => insufficient evidence",
+    "I prefer concise replies. => TCP selected quote containing concise"
+  ],
+  "gates": [
+    "exact unique Unicode source quote/hash/native offsets",
+    "fresh owner/consent/source/version before delivery",
+    "foreign source refused before model",
+    "all final regression tests pass with zero skips"
+  ],
+  "sha256": {
+    "apps/api/services/memory_extraction.py": "bcd63f9fc858029977732c40245562b3927c435248122f360cb15168a5566fec",
+    "apps/api/services/memory_retention.py": "2737a347bee204da71420e9004f3312d840751b6f32bab12fa20444b46be84c5",
+    "apps/api/services/memory_work.py": "8300dcfae698f4ee3daef6067d851bf3821e13503684e033d3b58b0868a0c892",
+    "docs/ADR/047-explicit-message-memory-selection-and-retention.md": "c47e17e56f0e378480f1ef184250452fb52e7eeb1056e8b8427365522c85baf5",
+    "docs/MEMORY_BACKLOG.md": "a0a44a762ac318543407302d8c35fbfab4cd2a0965464b600d37dfb5f316a35e",
+    "src/application/services/memory_selection.py": "4664219a33835f5b714abbe6d4c7f623818df8b68cf292604855e6b2d75b219a",
+    "src/infrastructure/repositories/message_memory_journal.py": "fe2120832bcbf39e0754858038d84641da91de019666db1f136ad10a2a6959d0",
+    "tests/integration/test_memory_extraction_live.py": "85571412b317c0d1e25da8b2b11a9d49c4c9a85dffc0b90c51881199982546ca",
+    "tests/integration/test_message_memory_journal.py": "a5ad6d1fd981c39d4dd5feeea3734b757689048d9908a37741715874ffdea8b4",
+    "tests/test_memory_extraction.py": "55e0e63da973ade52bb8ff8893308699146d01226940e1ea2f4d73b346835726",
+    "tests/test_memory_selection.py": "f31103ea81d19648a5754e58b16422000bd429503f4214e97f151f29505f70c8"
+  }
+}
