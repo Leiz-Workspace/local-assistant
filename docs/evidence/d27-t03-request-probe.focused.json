@@ -1,0 +1,408 @@
+{
+  "description": "Actual isolated worker cost on an old diagnostic query plus meaningless stress tokens; no HTTP, embedding, source retrieval, concurrent-service measurement or human quality claim.",
+  "model_fingerprint": "c8cbd74cfcfa2e9ab2873466228defb519e3afb057623790c2e8f140652a40cb",
+  "profile_sha256": "63aabb1c2e1a9c7fd64d526047ac1e5444fdbf66c00e8c3aa79aa941d30f3bbc",
+  "query_id": "restore-q1",
+  "first_request": {
+    "seconds": 2.2249205709995294,
+    "pairs": [
+      {
+        "document_id": "restore-target",
+        "score": 0.9998601675033569,
+        "tokens": 116,
+        "logits": [
+          12.375,
+          21.25
+        ]
+      },
+      {
+        "document_id": "query-near",
+        "score": 0.5774953961372375,
+        "tokens": 105,
+        "logits": [
+          15.8125,
+          16.125
+        ]
+      },
+      {
+        "document_id": "restore-near",
+        "score": 0.9928786158561707,
+        "tokens": 112,
+        "logits": [
+          14.4375,
+          19.375
+        ]
+      },
+      {
+        "document_id": "ranking-near",
+        "score": 0.005554925184696913,
+        "tokens": 112,
+        "logits": [
+          12.125,
+          6.9375
+        ]
+      },
+      {
+        "document_id": "rollback-target",
+        "score": 0.012431650422513485,
+        "tokens": 115,
+        "logits": [
+          13.5625,
+          9.1875
+        ]
+      },
+      {
+        "document_id": "delete-target",
+        "score": 0.02595735900104046,
+        "tokens": 109,
+        "logits": [
+          14.4375,
+          10.8125
+        ]
+      },
+      {
+        "document_id": "query-target",
+        "score": 0.003824483836069703,
+        "tokens": 120,
+        "logits": [
+          11.9375,
+          6.375
+        ]
+      },
+      {
+        "document_id": "vision-target",
+        "score": 0.0002234163403045386,
+        "tokens": 111,
+        "logits": [
+          10.4375,
+          2.03125
+        ]
+      },
+      {
+        "document_id": "ocr-target",
+        "score": 0.0005614786641672254,
+        "tokens": 120,
+        "logits": [
+          10.9375,
+          3.453125
+        ]
+      },
+      {
+        "document_id": "shutdown-near",
+        "score": 4.702220394392498e-05,
+        "tokens": 114,
+        "logits": [
+          10.875,
+          0.91015625
+        ]
+      }
+    ]
+  },
+  "worker_start_to_first_request_seconds": 6.9879298390005715,
+  "model_initialization_seconds": 4.72138765499767,
+  "warm_requests": [
+    {
+      "seconds": 2.1499157840007683,
+      "pairs": [
+        {
+          "document_id": "restore-target",
+          "score": 0.9998601675033569,
+          "tokens": 116,
+          "logits": [
+            12.375,
+            21.25
+          ]
+        },
+        {
+          "document_id": "query-near",
+          "score": 0.5774953961372375,
+          "tokens": 105,
+          "logits": [
+            15.8125,
+            16.125
+          ]
+        },
+        {
+          "document_id": "restore-near",
+          "score": 0.9928786158561707,
+          "tokens": 112,
+          "logits": [
+            14.4375,
+            19.375
+          ]
+        },
+        {
+          "document_id": "ranking-near",
+          "score": 0.005554925184696913,
+          "tokens": 112,
+          "logits": [
+            12.125,
+            6.9375
+          ]
+        },
+        {
+          "document_id": "rollback-target",
+          "score": 0.012431650422513485,
+          "tokens": 115,
+          "logits": [
+            13.5625,
+            9.1875
+          ]
+        },
+        {
+          "document_id": "delete-target",
+          "score": 0.02595735900104046,
+          "tokens": 109,
+          "logits": [
+            14.4375,
+            10.8125
+          ]
+        },
+        {
+          "document_id": "query-target",
+          "score": 0.003824483836069703,
+          "tokens": 120,
+          "logits": [
+            11.9375,
+            6.375
+          ]
+        },
+        {
+          "document_id": "vision-target",
+          "score": 0.0002234163403045386,
+          "tokens": 111,
+          "logits": [
+            10.4375,
+            2.03125
+          ]
+        },
+        {
+          "document_id": "ocr-target",
+          "score": 0.0005614786641672254,
+          "tokens": 120,
+          "logits": [
+            10.9375,
+            3.453125
+          ]
+        },
+        {
+          "document_id": "shutdown-near",
+          "score": 4.702220394392498e-05,
+          "tokens": 114,
+          "logits": [
+            10.875,
+            0.91015625
+          ]
+        }
+      ]
+    },
+    {
+      "seconds": 2.1970083820015134,
+      "pairs": [
+        {
+          "document_id": "restore-target",
+          "score": 0.9998601675033569,
+          "tokens": 116,
+          "logits": [
+            12.375,
+            21.25
+          ]
+        },
+        {
+          "document_id": "query-near",
+          "score": 0.5774953961372375,
+          "tokens": 105,
+          "logits": [
+            15.8125,
+            16.125
+          ]
+        },
+        {
+          "document_id": "restore-near",
+          "score": 0.9928786158561707,
+          "tokens": 112,
+          "logits": [
+            14.4375,
+            19.375
+          ]
+        },
+        {
+          "document_id": "ranking-near",
+          "score": 0.005554925184696913,
+          "tokens": 112,
+          "logits": [
+            12.125,
+            6.9375
+          ]
+        },
+        {
+          "document_id": "rollback-target",
+          "score": 0.012431650422513485,
+          "tokens": 115,
+          "logits": [
+            13.5625,
+            9.1875
+          ]
+        },
+        {
+          "document_id": "delete-target",
+          "score": 0.02595735900104046,
+          "tokens": 109,
+          "logits": [
+            14.4375,
+            10.8125
+          ]
+        },
+        {
+          "document_id": "query-target",
+          "score": 0.003824483836069703,
+          "tokens": 120,
+          "logits": [
+            11.9375,
+            6.375
+          ]
+        },
+        {
+          "document_id": "vision-target",
+          "score": 0.0002234163403045386,
+          "tokens": 111,
+          "logits": [
+            10.4375,
+            2.03125
+          ]
+        },
+        {
+          "document_id": "ocr-target",
+          "score": 0.0005614786641672254,
+          "tokens": 120,
+          "logits": [
+            10.9375,
+            3.453125
+          ]
+        },
+        {
+          "document_id": "shutdown-near",
+          "score": 4.702220394392498e-05,
+          "tokens": 114,
+          "logits": [
+            10.875,
+            0.91015625
+          ]
+        }
+      ]
+    },
+    {
+      "seconds": 2.187671520998265,
+      "pairs": [
+        {
+          "document_id": "restore-target",
+          "score": 0.9998601675033569,
+          "tokens": 116,
+          "logits": [
+            12.375,
+            21.25
+          ]
+        },
+        {
+          "document_id": "query-near",
+          "score": 0.5774953961372375,
+          "tokens": 105,
+          "logits": [
+            15.8125,
+            16.125
+          ]
+        },
+        {
+          "document_id": "restore-near",
+          "score": 0.9928786158561707,
+          "tokens": 112,
+          "logits": [
+            14.4375,
+            19.375
+          ]
+        },
+        {
+          "document_id": "ranking-near",
+          "score": 0.005554925184696913,
+          "tokens": 112,
+          "logits": [
+            12.125,
+            6.9375
+          ]
+        },
+        {
+          "document_id": "rollback-target",
+          "score": 0.012431650422513485,
+          "tokens": 115,
+          "logits": [
+            13.5625,
+            9.1875
+          ]
+        },
+        {
+          "document_id": "delete-target",
+          "score": 0.02595735900104046,
+          "tokens": 109,
+          "logits": [
+            14.4375,
+            10.8125
+          ]
+        },
+        {
+          "document_id": "query-target",
+          "score": 0.003824483836069703,
+          "tokens": 120,
+          "logits": [
+            11.9375,
+            6.375
+          ]
+        },
+        {
+          "document_id": "vision-target",
+          "score": 0.0002234163403045386,
+          "tokens": 111,
+          "logits": [
+            10.4375,
+            2.03125
+          ]
+        },
+        {
+          "document_id": "ocr-target",
+          "score": 0.0005614786641672254,
+          "tokens": 120,
+          "logits": [
+            10.9375,
+            3.453125
+          ]
+        },
+        {
+          "document_id": "shutdown-near",
+          "score": 4.702220394392498e-05,
+          "tokens": 114,
+          "logits": [
+            10.875,
+            0.91015625
+          ]
+        }
+      ]
+    }
+  ],
+  "boundary_512": {
+    "seconds": 1.1178992879977159,
+    "score": 0.020332353189587593,
+    "tokens": 512,
+    "logits": [
+      16.875,
+      13.0
+    ]
+  },
+  "boundary_513_rejected": true,
+  "peak_worker_rss_mib": 1565.94140625,
+  "worker_cpu_seconds": 24.614314,
+  "gpu_allocation_bytes": 0,
+  "gpu_definition": "CPU-only Torch and all model parameter devices verified by unchanged runtime; not host GPU inventory.",
+  "http_e2e_measured": false,
+  "concurrent_core_measured": false,
+  "adoption_approved": false,
+  "parent_total_probe_seconds": 15.103750226997363
+}

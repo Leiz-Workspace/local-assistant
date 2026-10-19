@@ -1,0 +1,25 @@
+{
+  "description": "Freeze resource-only single-process first/warm request and actual full512/513 boundary probe before execution; no new challenge relevance inference.",
+  "scope": "RESOURCE_ONLY_NO_NEW_RELEVANCE_INFERENCE",
+  "inputs": "First query and its exact ten candidates from immutable original D27 diagnostic baseline, plus meaningless repeated-token stress input.",
+  "warm_requests": 3,
+  "cpu_budget_seconds": 120,
+  "worker_wall_seconds": 150,
+  "parent_wall_seconds": 180,
+  "rss_budget_mib": 4096,
+  "virtual_address_limit_gib": 8,
+  "pair_tokens": 512,
+  "candidate_gpu_allocation_bytes": 0,
+  "http_e2e_measured": false,
+  "concurrent_core_measured": false,
+  "adoption_approved": false,
+  "sha256": {
+    "scripts/reranker_request_probe.py": "f41ea472cfe1606a774097c46958ed0fdabe0d593a4be157de5e831eddcb677a",
+    "scripts/reranker_request_probe.py.lock": "7d70d277fad737fc0c251de290463e8aaedc46b33fff54c8392af293a8c96f88",
+    "tests/test_reranker_request_probe.py": "9eb82cbb99f76cdef205797d4228dab8b2c662790e7caa85fd9ee6df0885e2f6",
+    "docs/evidence/d27-t02-reranker-comparison.json": "1b2762e73ed704ce3930633b6007e38ad3a047ad94d4ae2185138040c175f127",
+    "docs/evidence/d27-t02-execution-manifest.json": "bcef9c5ef85655ba5b0daa4b256b433ce7b9e7e4cee34ae76e3440f8b2340d69"
+  },
+  "revision": 2,
+  "supersedes": "d27-t03-request-probe-freeze.v1.json; initial failure retained"
+}

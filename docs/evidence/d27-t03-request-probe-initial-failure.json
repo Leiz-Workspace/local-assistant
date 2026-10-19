@@ -1,0 +1,14 @@
+{
+  "description": "Retain actual first resource-probe failure before import-only correction; no accepted resource measurement from this attempt.",
+  "focused_passed": 60,
+  "focused_failed": 1,
+  "seconds": 0.91,
+  "failure_stage": "worker initialization",
+  "diagnosis": "Importing reranker_comparison also imports application retrieval dependencies absent from the separately frozen model-worker environment. Replace worker-side request loading with stdlib-only hash-bound access, preserving exact inputs and all budgets.",
+  "accepted_measurement": false,
+  "sha256": {
+    "data/backups/d27-t03-request-probe-v1-source.zip": "1a0ccc6192c2400b38eef4aa19d8a9e7e9c68e585016ba8b6a4c0bf9d1c599ce",
+    "data/backups/d27-t03-initial-failure.log": "6b1bd738d6866e794fb4a97ed5381c00a690ec09a4707dbb024a00ebcc192c4d",
+    "docs/evidence/d27-t03-request-probe-freeze.v1.json": "4e3b1ae04f1c76a43385eb96049cb3bb0f0061b17dbb48ae61470fc1772fed6f"
+  }
+}
