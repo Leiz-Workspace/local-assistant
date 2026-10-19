@@ -23,6 +23,7 @@ from apps.api.routes.files import router as file_router
 from apps.api.routes.grounded import router as grounded_router
 from apps.api.routes.health import router as health_router
 from apps.api.routes.ingestion import router as ingestion_router
+from apps.api.routes.memory import router as memory_router
 from apps.api.routes.ocr import router as ocr_router
 from apps.api.routes.retrieval import router as retrieval_router
 from apps.api.routes.xlsx import router as xlsx_router
@@ -57,4 +58,5 @@ app.include_router(chunk_router, prefix="/api/v1")
 app.include_router(ingestion_router, prefix="/api/v1")
 app.include_router(retrieval_router, prefix="/api/v1")
 app.include_router(grounded_router, prefix="/api/v1")
+app.include_router(memory_router, prefix="/api/v1")
 logging.getLogger(__name__).info("api_routers_registered")
