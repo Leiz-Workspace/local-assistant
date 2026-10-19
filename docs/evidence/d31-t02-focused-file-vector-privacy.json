@@ -1,0 +1,11 @@
+{
+  "description": "Actual approved Qwen/source/SQL/Qdrant/blob deletion on an owned removable probe; foreign source/vector preserved, no production collection or secure-erasure claim.",
+  "source_state": "deleted",
+  "generation_state": "tombstone",
+  "vector_count": 0,
+  "source_blob_present": false,
+  "foreign_blob_preserved": true,
+  "foreign_vector_count": 1,
+  "quota_released": true,
+  "journal_retained_as_text_free_tombstone": true
+}

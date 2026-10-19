@@ -2819,3 +2819,34 @@ Readonly post-audit:0006, no app transaction/pending inference; memory/source/qu
 [Source acceptance](../docs/evidence/d31-t01-source-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), rollout and post-audit retained. T01 adds29 unique cases:1599 across checkpoints, **not a new1599 full run**; D30 historical1570 full remains separate. Full-version source ZIP `/tmp/local-assistant-d31-t01-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D31-T01 PASS locally; D31 IN PROGRESS, T02 injection/export/DB-vector-blob deletion tests NEXT and final full regression pending.** No secure erasure of original soft-deleted history, protected backups, delivered exports or shared model cache is claimed. Continue T02 within current model choices.
+
+
+# 2026-10-19 — D31-T02 privacy composition testing
+
+**Purpose:** Continue after source repair commit `d1721cd` without changing production code or agreed models.
+
+Test plan freezes structural privacy gates before new actual CORE/source-vector checks. Actual HTTP controlled protocol/auth/export/log/physical-memory-deletion boundaries **7 PASS/1.01s,0 SKIP**. First actual CORE/vector run **1 PASS/1 FAIL/13.52s**: original CORE/fast malicious-source check returns explicit insufficient_evidence, no foreign canary/marker execution; file test incorrectly used the visible-only journal reader to inspect an intentionally hidden deleted tombstone. Keep failure/source checksum; inspect only the exact fixture owner/file through raw SQL instead. Strengthen the test to index/preserve the other principal's vector as well as its blob. Production file/journal/source code unchanged, privacy gates not weakened; D31 remains open for retry and full regression.
+
+
+## D31-T02 focused composition checkpoint — 2026-10-19
+
+**Purpose:** Continue actual privacy tests while keeping whole D31 open for final full regression.
+
+Final focused **9 PASS/20.90s,0 SKIP**: controlled adversarial protocol/error/log/privacy cases, actual foreign pre-model refusal, private owner export and physical per-record SQL deletion retain separate source/foreign data. Existing CORE/fast malicious-source case returns insufficient_evidence, no foreign canary or marker file; one synthetic case is not universal semantic injection resistance. Actual approved Qwen/Qdrant/file case proves exact source deletion gives inactive/tombstone DB generation/cleanup acknowledgement, zero scoped vectors, physically absent target blob, quota0 and preserved foreign blob/vector. Durable journal/vector payload contain no source marker.
+
+Initial1 PASS/1 FAIL/13.52s retained: visible-only file reader intentionally hides deleted tombstone; fixture now uses exact owner/file SQL, with stronger foreign-vector preservation. No production code, model prompt/runtime/profile, dependency or applied migration changed in T02. One unused test assignment removed with identical source-creation side effect before final freeze; original failure and retry manifests preserved. Broader transcript/bulk-memory purge assessed as unscheduled conditional backlog, not silently added to accepted semantics.
+
+Final V006 full regression and post-audit pending; no1608-case full result or D31 PASS claimed yet.
+
+
+# 2026-10-20 — D31 final privacy acceptance after preserved full result
+
+**Purpose:** Resume the completed full run after external environment restart, verify its source/current state and close D31 before D32.
+
+Preserved full log completed2026-10-19: **1608 PASS/1361.93s (22:41),0 SKIP**; no failure/exclusion. Process session/exit status was not retained across restart; the complete pytest summary/log SHA is retained. This entry does not claim a fresh full run after reboot. All252 frozen code/test/config files plus protected models/dependencies/applied V001–V006 match exactly. Existing Vault unsealed with protected existing material, no rotation/policy/config change; read-only current audit2026-10-20 verifies0006, no active app/pending inference, memory/source/quota/restore probes/vector collections/model workers/advisory locks0, original owners/ACLs/narrow grants and fixed invoker-only/no-direct-app-EXECUTE source functions.
+
+T02 focused9 PASS/20.90s and actual full-run artifacts confirm CORE malicious-source insufficiency/no foreign canary or marker file; actual approved Qwen/SQL/Qdrant/blob delete leaves inactive text-free tombstone/cleanup acknowledgement, zero scoped vectors/absent target blob/quota0, while foreign blob and one vector remain. Physical per-record memory deletion keeps its separate source. Earlier source3 FAIL and file-reader fixture failure remain recorded. T01 adds29 tests/T02 adds9:38 new D31 cases, all1608 tests now in one actual full invocation. No production source/prompt/model/migration change in T02.
+
+[Final acceptance](../docs/evidence/d31-privacy-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), [current audit](../docs/evidence/d31-final-post-audit.json) and actual evidence retained. Full-version combined D31 source archive `/tmp/local-assistant-d31-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D31 PASS for documented local privacy gates; D32 NEXT.** Conversation soft-delete, independent manual decisions and protected recovery/export/cache retention domains remain explicit limits, not secure-erasure certification. Continue actual integrated RAG/citation/limitations gate, preserving agreed models and existing PASS code.

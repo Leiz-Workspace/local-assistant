@@ -30,3 +30,8 @@ Rollback removes only these triggers/functions/indexes after disabling/draining 
 ## Measured source-task acceptance
 
 [Acceptance](../evidence/d31-t01-source-acceptance.json):271 final related PASS/11.00s and140 source-system PASS/216.58s,0 SKIP; actual CORE/HTTP/TCP existing behavior, PostgreSQL lock ordering/rollback and1000-row SQL fixture invalidation. Initial3 failures preserved. Clean V006 post-audit; old migrations/model/config/dependencies unchanged, no production flag enabled.29 new cases,1599 unique across checkpoints, not a new1599-case full invocation. D31-T02 injection/export/purge and final full regression remain mandatory.
+
+
+## D31 final acceptance — 2026-10-20
+
+[Privacy acceptance](../evidence/d31-privacy-acceptance.json): full1608 PASS/1361.93s,0 SKIP completed2026-10-19. All252 frozen bytes match; fresh current V006 inventory/security audit passes after external restart. D31 local gates accepted, with retained soft-delete/recovery/export/cache limitations. No model/config/prompt or T01 production source change in T02.

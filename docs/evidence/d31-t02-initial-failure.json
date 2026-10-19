@@ -1,0 +1,9 @@
+{
+  "description": "Retained D31-T02 initial file-test fixture failure; actual CORE privacy check passed. No production-code change.",
+  "passed": 1,
+  "failed": 1,
+  "seconds": 13.52,
+  "log_sha256": "fc4670b9084de81c851f0b6faf54ff319efa5ff5933badeffabd376d1cadca74",
+  "initial_file_test_sha256": "abf890b03463914d58b7e38b02521585a022fc9e172b1bd5e529393e497006c8",
+  "correction": "Use exact owner-scoped raw SQL for intentionally hidden tombstone; additionally require foreign vectors preserved."
+}

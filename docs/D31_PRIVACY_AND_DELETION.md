@@ -2,7 +2,7 @@
 
 **Purpose:** Track actual local privacy acceptance and distinguish source-derived data removal from independent records and retained recovery copies.
 
-**Status:** D31 IN PROGRESS; T01 source repair PASS locally. Final271 related PASS/11.00s and140 source-system PASS/216.58s,0 SKIP; [acceptance](evidence/d31-t01-source-acceptance.json), [clean audit](evidence/d31-t01-final-post-audit.json). Initial3 source failures retained. D31-T02 injection/export/purge and final full regression pending; no1599-case full run claimed.
+**Status:** PASS for documented local privacy scope. Full1608 PASS/1361.93s (22:41),0 SKIP completed2026-10-19; frozen252 files match and fresh2026-10-20 audit passes after external restart. [Final acceptance](evidence/d31-privacy-acceptance.json), [post-audit](evidence/d31-final-post-audit.json). Initial failures retained; no full rerun after reboot claimed.
 
 ## Source privacy repair
 
@@ -29,4 +29,8 @@ Memory export is a read-only repeatable-read owner snapshot. A snapshot ordered 
 
 Protected backups/WAL, already-delivered exports, shared model context/KV cache and forensic disk erasure are distinct retention domains. No SQL DELETE test certifies their erasure. Any permanent transcript purge/backup lifecycle expansion must be separately assessed and scheduled; it is not silently added to the accepted soft-delete endpoint.
 
-D31 remains open for negative injection/export/privacy composition, actual file DB/vector/blob removal and final full regression/post-audit. Preserve agreed models and historical failed evaluations; no user labeling or model replacement is required.
+D31 local negative injection/export/privacy composition, actual file DB/vector/blob removal and full regression/post-audit gates are accepted. Preserve agreed models and historical failed evaluations; no user labeling or model replacement is required.
+
+## Final measured privacy composition
+
+Focused9 PASS/20.90s and full1608 PASS/1361.93s,0 SKIP. Existing CORE/fast returned explicit insufficiency for the frozen malicious source, with no foreign canary/marker file; this is one structural/source isolation case, not general semantic safety. Actual Qwen/file/Qdrant flow leaves the deleted source inactive with text-free tombstone/cleanup acknowledgement, zero scoped vectors, absent blob and released quota, while another principal retains its blob and one vector. Per-record memory deletion physically removes its row and keeps its separate source. All252 code/test/config bytes match the execution freeze. New2026-10-20 audit: V006, memory/source/quota/restore probes/vector collections/workers/advisory locks0; original ACLs/narrow app grants and invoker-only source functions preserved. D32 knowledge gate NEXT.
