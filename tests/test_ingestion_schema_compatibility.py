@@ -34,7 +34,7 @@ def service_for(row):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("revision", ["0004", "0005"])
+@pytest.mark.parametrize("revision", ["0004", "0005", "0006"])
 async def test_reviewed_schema_reaches_guard_and_vector_boundary(revision):
     """Admit only reviewed additive revisions after preserving both immutable and mutable grant checks."""
     service = service_for((revision, False, True))
@@ -50,7 +50,7 @@ async def test_reviewed_schema_reaches_guard_and_vector_boundary(revision):
     [
         (None, False, True),
         ("0003", False, True),
-        ("0006", False, True),
+        ("0007", False, True),
         ("0005", True, True),
         ("0005", False, False),
     ],

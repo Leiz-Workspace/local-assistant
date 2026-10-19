@@ -31,3 +31,8 @@ Focused147 PASS/6.91s,0 SKIP includes exact Unicode/JSON/budget/strictness, cont
 Initial JSONB UUID strict-decoding failure was corrected only at the tagged database codec boundary, with five regression cases; applied V005 is unchanged. Initial live2 FAIL/10 setup errors were retained: restarted environment had sealed Vault/loading CORE and standalone fixture discovery was missing. Existing Vault keys/runtime recovered without rotation/new model/config changes; fixture import fixed. Export6 PASS/1 FAIL was an oracle comparing equivalent UTC spellings, corrected to compare aware instants. Original failure logs remain protected.
 
 Final full1570 PASS/0 SKIP and clean post-audit establish D30 local acceptance. Old owners/ACLs, applied V005 and protected models/config/dependencies remain unchanged; source/memory/quota/probe/vector/worker/lock inventories0. D31 independently verifies injection, source deletion and export/purge propagation; no memory-to-prompt or vector-memory feature exists. Disable/drain the operator feature for rollback while retaining journal/data; never downgrade populated memory tables. Preserve original model choices, approved embedding and exact E5 rollback.
+
+
+## D31 source privacy checkpoint
+
+[Transactional source repair](D31_PRIVACY_AND_DELETION.md) is now locally accepted under ADR-049/V006:271 final related plus140 source-system PASS/0 SKIP and clean audit. Enabled memory now requires0006; files/ingestion admit reviewed0006 while keeping existing grant checks. Applied V005 and prior acceptance entries remain historical/unchanged. Source deletion/edit removes dependent extracted records atomically; independent explicit manual preferences remain. D31-T02 and final full-day acceptance remain open.

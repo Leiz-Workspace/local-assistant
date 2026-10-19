@@ -60,3 +60,8 @@ Implement default-off authenticated owner APIs for settings/consent and inspect/
 ## D30 final acceptance
 
 [D30 acceptance](evidence/d30-memory-acceptance.json): **1570 full-suite PASS/1357.69s,0 SKIP**, after147 focused PASS and clean post-audit. Explicit message selection, bounded retention and owner export are locally accepted; previous checkpoint descriptions above remain historical. Production flag off; no model/schema change in T03. D31 source deletion/injection/export propagation NEXT.
+
+
+## D31 source privacy checkpoint
+
+[Transactional source repair](D31_PRIVACY_AND_DELETION.md) is now locally accepted under ADR-049/V006:271 final related plus140 source-system PASS/0 SKIP and clean audit. Enabled memory now requires0006; files/ingestion admit reviewed0006 while keeping existing grant checks. Applied V005 and prior acceptance entries remain historical/unchanged. Source deletion/edit removes dependent extracted records atomically; independent explicit manual preferences remain. D31-T02 and final full-day acceptance remain open.

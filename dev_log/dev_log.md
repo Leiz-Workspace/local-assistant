@@ -2790,3 +2790,32 @@ Post-audit:0005, memory settings/consents/records0; files/jobs/heads/quota/probe
 [Guide](../docs/D30_MESSAGE_MEMORY_SELECTION.md), [acceptance](../docs/evidence/d30-memory-acceptance.json), [post-audit](../docs/evidence/d30-final-post-audit.json), frozen source and actual CORE/HTTP/TCP evidence retained. Full-version source archive `/tmp/local-assistant-d30-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D30 PASS (local opt-in), D31 NEXT.** Continue privacy/injection/source deletion/export propagation from actual code; production flags off, no agreed-model replacement or manual relevance task.
+
+
+# 2026-10-19 — D31-T01 source privacy baseline
+
+**Purpose:** Continue after D30 commit `478bec0`, testing actual deletion/export propagation before changing accepted behavior.
+
+Three real SQL/HTTP tests with explicitly controlled inference **3 FAIL/.84s,0 SKIP**: conversation soft-delete, source message edit and source message delete all leave extracted text in owner export/inspection. These are honest D31 acceptance failures, not a D30 full-suite result change. Own manual independent records must survive. Failure evidence/log checksum retained. ADR-049 precedes proposed invoker-security V006 transactional source invalidation and related startup compatibility; rollout requires empty memory inventory, unchanged old data/security, fresh protected backup/restore and actual tests. V006 not applied yet; D31 IN PROGRESS, no day advancement.
+
+
+## D31-T01 reviewed source invalidation rollout — 2026-10-19
+
+Private PostgreSQL proposal14 PASS/.48s; pre-rollout contracts/compatibility **59 PASS/.86s,0 SKIP**. Reviewed offline SQL and ADR-049 precede fresh protected cluster/app backup and isolated12-table restore. V006 applied through existing migrator after quiet/empty-memory preconditions. All11 old data-table fingerprints and original schema/table/column ACLs unchanged; only Alembic version plus two functions/triggers and partial provenance indexes added. Post-V006 protected12-table restore verifies rows, normalized ACLs and exact function/trigger definitions; own restore DB removed. No shared restart, model/config/dependency/credential change; old migrations untouched.
+
+First post-rollout related **262 PASS/10.23s,0 SKIP**, including all memory/source contracts and actual CORE/HTTP/TCP. Source privacy extended beyond original3 failures: **25 PASS/1.83s,0 SKIP** across real SQL/HTTP owner-disabled, foreign/manual/session boundaries, transactional rollback, actual1000-row SQL-copy cleanup and capture→waiting-source ordering observed in pg_stat_activity `Lock`; two functions invoker-only/fixed search_path/no direct app EXECUTE.1000 copies are SQL fixture seeding, not1000 model/API calls. Original3 failing oracles retained, no weakened expectation.
+
+V006 source is now applied/immutable; checksum and restore evidence in `d31-t01-v006-rollout.json`. D31 remains IN PROGRESS; source task final related audit and injection/export/purge gates remain. Preserve D30 historical1570 full result; no new1598 full invocation claimed.
+
+
+## D31-T01 final source-task checkpoint — 2026-10-19
+
+**Purpose:** Accept the verified source repair task and continue open D31 privacy work.
+
+Final **271 related PASS/11.00s,0 SKIP** includes all memory contracts, new source/private proposal/concurrency/grant cases and actual existing CORE/HTTP/TCP. Existing conversation/file/ingestion/retrieval/grounded source-system **140 PASS/216.58s,0 SKIP** on0006. Added actual explicit PATCH-to-manual detachment test: independent preference survives source delete, unlike session scope. All11 changed Python files/83 descriptions and Ruff correctness/import/format pass; applied V006 checksum frozen. No changed model/runtime/dependency or old migration bytes.
+
+Readonly post-audit:0006, no app transaction/pending inference; memory/source/quota/probe DB/vector/model worker/advisory lock inventories0; original owners/ACLs and narrow runtime grants preserved. New source functions have fixed search_path/invoker security and app direct EXECUTE denied. Fresh pre/post12-table restore includes exact trigger/function definitions and column ACLs; original11 data tables unchanged across migration. No shared restart or production feature enabled. Initial3 source failures preserved unchanged;1000 deleted copies were SQL fixtures, not1000 model/API calls.
+
+[Source acceptance](../docs/evidence/d31-t01-source-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), rollout and post-audit retained. T01 adds29 unique cases:1599 across checkpoints, **not a new1599 full run**; D30 historical1570 full remains separate. Full-version source ZIP `/tmp/local-assistant-d31-t01-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D31-T01 PASS locally; D31 IN PROGRESS, T02 injection/export/DB-vector-blob deletion tests NEXT and final full regression pending.** No secure erasure of original soft-deleted history, protected backups, delivered exports or shared model cache is claimed. Continue T02 within current model choices.

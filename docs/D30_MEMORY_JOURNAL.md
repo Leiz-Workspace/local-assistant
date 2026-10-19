@@ -33,3 +33,8 @@ Read-only final audit: revision0005; memory settings/receipts/records0, files/jo
 ## Rollback and remaining work
 
 Leave additive schema in place when disabling future memory features. V005 downgrade refuses any settings/receipt/record row; do not discard user data or broaden grants to roll back. No memory API, source-derived extraction, prompt injection, retention worker, export or propagation is enabled by this checkpoint. Source-authenticity/final-delivery fences and source deletion remain T03/D31 obligations. Proceed T02 with default-off authenticated management APIs and independent owner opt-in; preserve agreed models.
+
+
+## D31 source privacy checkpoint
+
+[Transactional source repair](D31_PRIVACY_AND_DELETION.md) is now locally accepted under ADR-049/V006:271 final related plus140 source-system PASS/0 SKIP and clean audit. Enabled memory now requires0006; files/ingestion admit reviewed0006 while keeping existing grant checks. Applied V005 and prior acceptance entries remain historical/unchanged. Source deletion/edit removes dependent extracted records atomically; independent explicit manual preferences remain. D31-T02 and final full-day acceptance remain open.

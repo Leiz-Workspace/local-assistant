@@ -1,0 +1,33 @@
+{
+  "description": "Read-only D31-T01 post-related-regression owner/ACL/grant and source/memory/vector/probe inventory audit; no credentials or payload retained.",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "old_schema_owners_acls_unchanged": true,
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "app_temp": false,
+  "memory_identity_update": false,
+  "memory_text_update": true,
+  "receipt_expiry_update": false,
+  "ingestion_immutable_update": false,
+  "ingestion_state_update": true,
+  "ingestion_truncate": false,
+  "protected_source_and_applied_migrations_unchanged": true,
+  "source_task_python_source_unchanged": true,
+  "production_flags_enabled": false,
+  "environment_recovery": "Existing Vault unsealed and original CORE/vision resumed after external host restart; no credential rotation, new model/download or configuration change."
+}
