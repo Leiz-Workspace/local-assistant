@@ -58,3 +58,9 @@ Final replay p50≈110.446ms/p95≈116.020ms over72 observations; actual tokeniz
 **Purpose:** Supersede historical provisioning/evaluation status without changing frozen T01 data or gates.
 
 Original candidate was subsequently provisioned under the owner's continuation and evaluated in isolation. Batch1 v1/v2 failed to complete the three-round CPU budget; failures/source manifests retained. Separate CPU BF16 batch4 variant completed all three repetitions: diagnostic R@3/MRR@10/nDCG@10=1, same frozen candidates/labels; actual resource/quality gates pass, full1096 PASS/540.75s,0 SKIP. [Comparison and exact definitions](D27_RERANKER_COMPARISON.md). T01 plan's pre-execution NOT_PROVISIONED status is an immutable historical field, not current deployment evidence. No production/selection change; D27 remains IN PROGRESS, T03 independent/adoption review NEXT, D28 not started. [Review proposal](D27_RERANKER_ADOPTION_REVIEW.md).
+
+## D27 final local evaluation follow-up — 2026-10-19
+
+**Purpose:** Link final actual evaluation while preserving this document's original frozen measurements.
+
+[Final decision](D27_RERANKER_EVALUATION_DECISION.md) retains approved dense retrieval and the original reranker nomination without adoption/model/routing changes. Owner delegated relevance tasks to AI; no human review fabricated. Three new actual paired rounds show equal answerable quality on the separately frozen limited v2 diagnostic. ASGI/CORE and actual loopback TCP/source/lifecycle/rollback pass;1234 full+16 new AI-focused+1 TCP PASS/0 SKIP (1251 unique tests across checkpoints, not one full invocation). Original gains, failed runtimes, inputs/profiles/thresholds and exact E5 rollback unchanged. D27 local evaluation PASS; D28 NEXT.

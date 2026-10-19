@@ -1,0 +1,115 @@
+{
+  "description": "Final D27 local evaluation/retain-dense decision acceptance; explicitly owner-delegated AI diagnostics, not human-independent or production adoption.",
+  "observed_date": "2026-10-19",
+  "base_commit": "1078094",
+  "status": "PASS_LOCAL_EVALUATION_DECISION_RETAIN_DENSE",
+  "day27_status": "PASS_LOCAL_EVALUATION",
+  "day28_status": "NEXT",
+  "tests": {
+    "full_checkpoint": {
+      "passed": 1234,
+      "skipped": 0,
+      "seconds": 787.47,
+      "exit_code": 0
+    },
+    "new_agent_focused": {
+      "passed": 16,
+      "skipped": 0,
+      "seconds": 448.97,
+      "exit_code": 0
+    },
+    "new_tcp_focused": {
+      "passed": 1,
+      "skipped": 0,
+      "seconds": 40.93,
+      "exit_code": 0
+    },
+    "unique_tests_covered_across_checkpoints": 1251,
+    "single1251_full_invocation_performed": false,
+    "http_focused_subset": {
+      "passed": 46,
+      "seconds": 213.98
+    },
+    "scoring_gate_focused_subset": {
+      "passed": 31,
+      "seconds": 0.93
+    }
+  },
+  "quality": {
+    "original_diagnostic_retained": true,
+    "new_reviewer_type": "assistant",
+    "human_reviewed": false,
+    "same_agent_authorship_and_review": true,
+    "v1_absent_coverage": "FAIL_PRE_INFERENCE_RETAINED",
+    "v2_answerable": 7,
+    "v2_absent": 1,
+    "actual_paired_rounds": 3,
+    "rankings_stable": true,
+    "all_new_diagnostic_checks_met": true,
+    "dense_and_candidate_answerable_metrics": "all1.0",
+    "new_quality_gain": 0,
+    "absent_retrieval_metrics": null,
+    "calibrated_abstention_validated": false,
+    "production_quality_certified": false
+  },
+  "actual_asgi_and_core": "d27-t03-http-trial.json",
+  "actual_ai_paired": "d27-t03-agent-paired-trial.json",
+  "actual_tcp": "d27-t03-tcp-trial.json",
+  "post_audit": "d27-final-evaluation-post-audit.json",
+  "decision": "RETAIN_APPROVED_DENSE_DEFER_PRODUCTION_RERANKER",
+  "registry_nomination_preserved": true,
+  "models_or_default_routing_changed": false,
+  "production_adoption_approved": false,
+  "static_checks": {
+    "module_purposes": 13,
+    "function_class_descriptions": 105,
+    "ruff_correctness_imports": "PASS",
+    "ruff_format": "PASS"
+  },
+  "source_sha256": {
+    "scripts/agent_reviewed_retrieval_trial.py": "679ceceb081d6b6a74c86d7fb614c9a79e8204ddb1856ad6ada825a74aac7c4c",
+    "scripts/human_reviewed_retrieval_trial.py": "faa77491a5d0486cd3cdee393f406ec099d514370237a6d9e099e0652851191a",
+    "scripts/qwen_reranker_trial_worker.py": "cde58051e9de04807152d839e11ed624e1078e7e73237e655bbaeafb99a3e957",
+    "scripts/retrieval_reranker_trial.py": "18f52c83ab74a3ba7b7614fb476118590194e7022b04d1d76626bc5e33afc13c",
+    "scripts/retrieval_review_scoring.py": "a2680f28e86e2aab1d47f7d3b8b37b2bb71663243456ae92941871b446c64204",
+    "tests/integration/test_agent_reviewed_trial.py": "2052fd19ce33a7146cf8626d11ea6c362d1a2f7af811e64cbae2261123be0692",
+    "tests/integration/test_human_reviewed_trial_gate.py": "c30f4e3cb487bb13aac5ef9a0f9d7e13669c2999db7a38ba0a25d294dc7870fb",
+    "tests/integration/test_reranker_http_trial.py": "95fab1f8d102ba3896eb9a3079b600653d83cc6f25681da2658bfb8f0a6a441f",
+    "tests/integration/test_reranker_tcp_trial.py": "429be0e135384e697376a381cf3a822bb0767748a07432da79415796ba456722",
+    "tests/test_agent_reviewed_retrieval_trial.py": "45e4a20546363132d11cd1a8767b21d9b56629b477e1b04c2d30413e20d0546b",
+    "tests/test_human_reviewed_retrieval_trial.py": "6aa8183385553222eed51869a3dd62d2af927e4d0a1c342f1c31c89950b28691",
+    "tests/test_retrieval_reranker_trial.py": "39ae3f333f5626856c353d0dee33a9a95846e10b88700e091ec67e75742523cd",
+    "tests/test_retrieval_review_scoring.py": "83bc19721ee453887d22ee4e63484cac97fecabb7599bd1efc751bcde428a937",
+    "scripts/qwen_reranker_trial_worker.py.lock": "5ab8bd6e28e86923477629bcf56c5efdda384dc82483ed40fcfe69864d61b94c",
+    "tests/fixtures/retrieval/d27-review-challenge-v2.json": "3a033fbbdb8456592ca6c9f8ab42136aa73e4dce60e846f422c91c204064d9d8"
+  },
+  "protected_files_unchanged": [
+    "docs/MODEL_REGISTRY.md",
+    "configs/models.yaml",
+    "configs/embedding-selected.json",
+    "configs/embedding-e5-rollback.json",
+    "uv.lock",
+    "pyproject.toml",
+    "docs/evidence/d27-retrieval-baseline.json",
+    "docs/evidence/d27-t02-reranker-comparison.json",
+    "tests/fixtures/retrieval/d27-corpus.json",
+    "tests/fixtures/retrieval/d27-plan.json",
+    "tests/fixtures/retrieval/d27-review-challenge.json",
+    "docs/evidence/d27-t03-review-packet.json",
+    "docs/evidence/d27-t03-review-response.pending.json"
+  ],
+  "private_logs_sha256": {
+    "data/backups/d27-t03-http-paired-final-regression.log": "ec49af049b5b78224ea4b8ab580529f4e12f8e31bc0fbbd8fb8e98fdbc8aebb1",
+    "data/backups/d27-t03-agent-focused.log": "5cdda54cecf3609398930e0061c9ba842f5a255d8efa0f382ee322885757b808",
+    "data/backups/d27-t03-tcp-focused.log": "5defc029c1074822aad112a5e45d3ab1f3949f6f031974068f733d42a22d7dfe"
+  },
+  "adr": [
+    "041-isolated-http-reranker-trial.md",
+    "042-owner-delegated-relevance-evaluation.md"
+  ],
+  "remaining_unvalidated": [
+    "Independent-human/representative population quality.",
+    "Persistent-model co-residency and optimization.",
+    "Separate-process/multiworker deployment, production load/SLO and off-host DR."
+  ]
+}

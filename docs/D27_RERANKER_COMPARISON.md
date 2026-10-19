@@ -39,3 +39,9 @@ D27 remains IN PROGRESS, D28 not started. T03 must review actual results, indepe
 T02 batch4 measurement accepted after1096 PASS in540.75s,0 SKIP.37 unit+7 actual cases; full/focused quality identical, three ranks stable, all frozen diagnostic gates met. Final peak process RSS1596.055MiB RAM/GPU allocation0; fresh model-session load2.300225s, ten-pair warm p50≈2120.524ms/p95≈2238.943ms/max≈2292.312ms over108 samples. Real singleton full-head/final-head no/yes logits exactly[12.375,21.25]. Goldens plus actual512/513 tokens, cancellation/timeout/parent SIGKILL and real RSS/query watchdog kills passed. No application/default model routing change.
 
 [Complete comparison](evidence/d27-t02-reranker-comparison.json), [acceptance](evidence/d27-t02-acceptance.json), [post-audit](evidence/d27-t02-post-audit.json) and [T03 proposal](D27_RERANKER_ADOPTION_REVIEW.md). Post-audit schema0004 and original grants/owners/ACLs preserved; jobs/heads/files/quota/probe DBs/collections/model processes/advisory locks0. Batch1 remains FAILED/INCOMPLETE. D27 IN PROGRESS, T03 NEXT, D28 not started.
+
+## D27 final local evaluation follow-up — 2026-10-19
+
+**Purpose:** Link final actual evaluation while preserving this document's original frozen measurements.
+
+[Final decision](D27_RERANKER_EVALUATION_DECISION.md) retains approved dense retrieval and the original reranker nomination without adoption/model/routing changes. Owner delegated relevance tasks to AI; no human review fabricated. Three new actual paired rounds show equal answerable quality on the separately frozen limited v2 diagnostic. ASGI/CORE and actual loopback TCP/source/lifecycle/rollback pass;1234 full+16 new AI-focused+1 TCP PASS/0 SKIP (1251 unique tests across checkpoints, not one full invocation). Original gains, failed runtimes, inputs/profiles/thresholds and exact E5 rollback unchanged. D27 local evaluation PASS; D28 NEXT.

@@ -29,3 +29,9 @@ Shutdown disables/cancels/joins retrieval responses and encoding before ingestio
 D27 is IN PROGRESS: T01 baseline and T02 offline batch4 reranker diagnostic measurement accepted; T03 independent/adoption review NEXT. No reranker is integrated in this retrieval path. See [evaluation plan](D27_RETRIEVAL_EVALUATION.md). Production multiworker/load/DR, independent large-corpus quality and long-input validation remain outside this local scope. No production collection/configuration or new model was created.
 
 [Offline reranker comparison](D27_RERANKER_COMPARISON.md) retains batch1 CPU failures, batch4 resource/timing definitions and uncertainty. [Adoption proposal](D27_RERANKER_ADOPTION_REVIEW.md) requires independent quality/resource validation and owner decision before changing routing.
+
+## D27 evaluation-only trial
+
+**Purpose:** Distinguish measured test composition from deployed retrieval behavior.
+
+[ADR-041](ADR/041-isolated-http-reranker-trial.md) defines isolated source-held ASGI ranking and bounded existing CORE traffic. Only test instances are wrapped; this guide's actual app startup/flags/routes/dense behavior are unchanged. [ADR-042](ADR/042-owner-delegated-relevance-evaluation.md) records owner-delegated AI judgments; no current manual label action or human-independent claim. [T03 evidence and scope](D27_OWNER_DELEGATED_EVALUATION.md) retain original frozen inputs/failures and distinguish ASGI timing from network/persistent/load certification. No production reranker or model/routing change.

@@ -1,0 +1,61 @@
+{
+  "description": "Actual1234-test HTTP/paired-scoring preparation regression checkpoint; newly frozen AI-review/TCP actual executions are separate later checkpoints, not included in this test count.",
+  "status": "HTTP_TRIAL_AND_SCORING_PREPARATION_VERIFIED",
+  "tests": {
+    "full_passed": 1234,
+    "full_skipped": 0,
+    "full_seconds": 787.47,
+    "http_focused_passed": 46,
+    "http_focused_seconds": 213.98,
+    "scoring_preparation_focused_passed": 31,
+    "scoring_preparation_focused_seconds": 0.93
+  },
+  "transport": "in_process_ASGI_not_TCP",
+  "actual_http_summary": {
+    "dense_asgi": {
+      "samples": 3,
+      "mean_seconds": 5.657373756667464,
+      "p50_seconds": 5.661332228999527,
+      "p95_seconds": 5.670923043902439,
+      "max_seconds": 5.671988690002763
+    },
+    "trial_idle_asgi": {
+      "samples": 3,
+      "mean_seconds": 10.879764632000539,
+      "p50_seconds": 10.87293507800132,
+      "p95_seconds": 10.998357463402135,
+      "max_seconds": 11.012293284002226
+    },
+    "trial_with_core_asgi": {
+      "samples": 6,
+      "mean_seconds": 11.63675445400016,
+      "p50_seconds": 11.491642508499353,
+      "p95_seconds": 12.613291672750165,
+      "max_seconds": 12.854744868000125
+    },
+    "core_idle": {
+      "samples": 3,
+      "mean_seconds": 0.19182539866718193,
+      "p50_seconds": 0.15355631399870617,
+      "p95_seconds": 0.2597407755009044,
+      "max_seconds": 0.27153904900114867
+    },
+    "core_during_trial": {
+      "samples": 107,
+      "mean_seconds": 0.15579579377578323,
+      "p50_seconds": 0.1540609379990201,
+      "p95_seconds": 0.16392478089837823,
+      "max_seconds": 0.19455026400100905
+    }
+  },
+  "overlapped_core_requests": 107,
+  "every_concurrent_trial_overlapped_core": true,
+  "peak_ranking_worker_rss_mib": 1542.20703125,
+  "post_audit": "d27-t03-http-paired-post-audit.json",
+  "full_private_log_sha256": "ec49af049b5b78224ea4b8ab580529f4e12f8e31bc0fbbd8fb8e98fdbc8aebb1",
+  "human_reviewed": false,
+  "current_review_policy": "owner_delegated_AI_under_ADR_042",
+  "new_v2_agent_actual_execution": "PENDING_SEPARATE_RUN",
+  "production_routing_changed": false,
+  "adoption_approved": false
+}

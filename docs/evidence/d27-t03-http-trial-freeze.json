@@ -1,0 +1,38 @@
+{
+  "description": "Freeze isolated in-process ASGI HTTP ranking and bounded existing CORE contention trial before execution; no adoption/human relevance claims.",
+  "scope": "ISOLATED_ASGI_HTTP_TRIAL_NO_ADOPTION",
+  "source_inputs": "Exact first original frozen diagnostic query and its ten baseline candidates; one identical foreign-owner source. No new human-review challenge inference.",
+  "measurements": {
+    "dense_baseline_requests": 3,
+    "trial_idle_requests": 3,
+    "trial_concurrent_requests": 6,
+    "core_baseline_requests": 3,
+    "core_max_traffic_requests": 120,
+    "core_max_admission_seconds": 90,
+    "core_per_request_timeout_seconds": 10,
+    "core_completion_max_tokens": 16,
+    "core_min_spacing_seconds": 0.5,
+    "require_every_concurrent_trial_request_overlaps_core": true,
+    "latency_max_observed_request_seconds": 90,
+    "worker_rss_mib": 4096,
+    "worker_virtual_address_gib": 8,
+    "worker_cpu_seconds": 120,
+    "worker_hard_wall_seconds": 80,
+    "parent_worker_wall_seconds": 90,
+    "model_batch_size": 4,
+    "complete_pair_token_limit": 512
+  },
+  "transport": "IN_PROCESS_ASGI_NOT_TCP",
+  "quality_corpus_or_labels_changed": false,
+  "human_quality_claim": false,
+  "production_routing_changed": false,
+  "adoption_approved": false,
+  "sha256": {
+    "scripts/qwen_reranker_trial_worker.py": "cde58051e9de04807152d839e11ed624e1078e7e73237e655bbaeafb99a3e957",
+    "scripts/qwen_reranker_trial_worker.py.lock": "5ab8bd6e28e86923477629bcf56c5efdda384dc82483ed40fcfe69864d61b94c",
+    "scripts/retrieval_reranker_trial.py": "18f52c83ab74a3ba7b7614fb476118590194e7022b04d1d76626bc5e33afc13c",
+    "tests/test_retrieval_reranker_trial.py": "39ae3f333f5626856c353d0dee33a9a95846e10b88700e091ec67e75742523cd",
+    "tests/integration/test_reranker_http_trial.py": "95fab1f8d102ba3896eb9a3079b600653d83cc6f25681da2658bfb8f0a6a441f",
+    "docs/ADR/041-isolated-http-reranker-trial.md": "f55943a25ebeb410b7abb90997af3e257ef28c650f439fdd89a07e436105c96b"
+  }
+}
