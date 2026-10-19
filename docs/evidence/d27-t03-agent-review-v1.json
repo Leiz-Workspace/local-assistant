@@ -1,0 +1,378 @@
+{
+  "description": "Assistant-generated relevance judgments before model inference, explicitly delegated by owner; same-agent authorship/review, no human-independent evidence.",
+  "reviewer_type": "assistant",
+  "review_provenance": "same_agent_authored_and_reviewed",
+  "owner_delegation": "Owner explicitly instructed the assistant to perform this review and similar tasks autonomously because the owner is unavailable.",
+  "human_reviewed": false,
+  "version": "d27-agent-review-v1",
+  "corpus_sha256": "0c9294f48891cdf5ec48d61f1193cc4097e99cc183fb4ea8ae9cbe73b190390c",
+  "queries": [
+    {
+      "id": "review-q01",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": true,
+          "reason": "Explicit Atlas2.4 restore generation G-17 directly answers the requested version."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q02",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": true,
+          "reason": "Explicit Atlas2.5 restore generation G-18 answers the requested version."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q03",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": true,
+          "reason": "Explicit October packageB225000 before VAT directly answers the requested month/package."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q04",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": true,
+          "reason": "Explicit quarterly budget not approved supports a negative answer: no approved quarterly total can be supplied."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q05",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": true,
+          "reason": "Explicit original-image verification confirms the current lot code AB-107."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q06",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": true,
+          "reason": "Explicit OCR I/1 ambiguity and required original-image review support answering no."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q07",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": true,
+          "reason": "Disabled calculation and potentially stale dated cache support answering no."
+        },
+        {
+          "id": "doc-h",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        }
+      ]
+    },
+    {
+      "id": "review-q08",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-b",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-c",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-d",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-e",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-f",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-g",
+          "relevant": false,
+          "reason": "This source does not directly supply the requested fact or the explicit negative-answer evidence for this query."
+        },
+        {
+          "id": "doc-h",
+          "relevant": true,
+          "reason": "Explicit ranking rollback preserves embeddings/vector IDs and requires no reindex."
+        }
+      ]
+    }
+  ],
+  "pre_execution_coverage": {
+    "answerable_queries": 8,
+    "absent_queries": 0,
+    "minimum_absent_gate_met": false,
+    "finding": "Original query04 is answerable negatively from doc-d under frozen relevance instructions; retain coverage failure rather than forcing an absent label.",
+    "model_inference_executed": false
+  }
+}

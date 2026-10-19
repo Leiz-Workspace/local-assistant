@@ -135,3 +135,21 @@ T03 P1; dependencies T02 measurements, new independent judged corpus and owner d
 [Review protocol](D27_INDEPENDENT_RELEVANCE_REVIEW.md) provides a frozen new8-query/8-source challenge,64 pending pairs and a strict structural validator. Independent human review and a separately frozen paired plan with explicit absent-answer scoring remain required before inference. A resource-only probe uses the unchanged first old diagnostic query and original runtime; fresh-worker/warm/boundary timing is distinct from real HTTP and sustained co-resident CORE costs. P1/dependencies/effort/risks and original approval requirements remain unchanged. D27 IN PROGRESS; D28 NOT STARTED. No model or routing change.
 
 Preparation/resource verification:61 new cases, full1157 PASS/553.32s,0 SKIP; clean post-audit. [Evidence](evidence/d27-t03-preparation-acceptance.json). Owner volunteered for independent review; labels remain0/64. Actual complete512 forward/513 rejection and bounded first/warm worker cost verified; HTTP, concurrency and semantic long-input quality remain open. This does not complete MODEL-EVAL-002/D27 or approve adoption.
+
+
+## Owner-delegated D27-T03 evaluation policy — 2026-10-19
+
+**Purpose:** Reflect the owner's explicit delegation rather than continuing to demand manual labels.
+
+Owner is unavailable and delegated this review and similar tasks to the assistant. ADR-042 amends local D27 evaluation to explicitly same-agent-authored/AI-reviewed diagnostic data, with no human-independent claim. Prior manual templates/assignment remain historical. V1 minimum-absent coverage fails before inference because doc-d supports a negative quarterly-approval answer. Separate v2 changes only q04, retains all source bytes/seven queries/thresholds and freezes7 answerable/1 absent AI labels before any model scores. Actual three paired rounds pending. P1; depends exact source/HTTP trial and frozen runtime/judgments; effort one milestone; risks same-agent bias, ambiguous absence, small sample, latency and source races.
+
+Isolated authenticated ASGI source/ranking/response plus bounded actual CORE contention focused46 PASS/213.98s; paired scorer/gate focused31 PASS/.93s. Combined1234 regression running. New AI metric/provenance/source tests15 PASS; actual v2 pending until shared-service regression ends. Review measured evidence and retain dense/defer adoption if benefits do not justify fresh-worker cost; no agreed model change or original nomination removal. Independent/general human quality, TCP/load and persistent runtime optimization stay unvalidated future evidence. D27 open, D28 not started until amended local evaluation decision is complete.
+
+
+## MODEL-EVAL-002 / D27 local evaluation complete — 2026-10-19
+
+**Purpose:** Close measured local evaluation while preserving future adoption/quality boundaries.
+
+[Decision](D27_RERANKER_EVALUATION_DECISION.md): retain approved dense and defer production reranker; original nomination unchanged. Owner delegated review, no current manual task/human attestation. Original36-query positive diagnostic and batch1 failures retained; v1 absent coverage fails before inference, separately frozen AI v2 three actual rounds show equal baseline/candidate metrics1 on seven answerable cases plus one separately null absent case. No new benefit, same-agent/small-pool limitations explicit. Actual ASGI/CORE and real Uvicorn/TCP source/auth/lifecycle/rollback pass.1234 full+16 new AI-focused+1 TCP PASS/0 SKIP,1251 unique tests across checkpoints; no single1251 full invocation. Clean post-audit. D27 local evaluation PASS; D28 NEXT.
+
+Future reranker adoption/general quality remains P1 before production enablement, dependent on broader evidence and owner-specific model/routing approval;1–2 milestones, bias/latency/resources/source-lifecycle risks. Persistent-worker optimization P2, dependent on separately approved integration/ADR and measured co-residency;1–2 milestones, RAM/leak/cancel/resource-queue risks; unscheduled. Lexical/hybrid remains P2 without a demonstrated exact-term gap in this limited diagnostic. No silent model swap or deployment scheduled.

@@ -1,0 +1,14 @@
+{
+  "description": "Freeze additional diagnostic paired scoring and execution driver before any supplied human-review challenge inference; labels remain pending.",
+  "status": "FROZEN_HUMAN_REVIEW_EXECUTION_PENDING",
+  "sha256": {
+    "scripts/retrieval_review_scoring.py": "a2680f28e86e2aab1d47f7d3b8b37b2bb71663243456ae92941871b446c64204",
+    "tests/test_retrieval_review_scoring.py": "83bc19721ee453887d22ee4e63484cac97fecabb7599bd1efc751bcde428a937",
+    "docs/evidence/d27-t03-paired-review-plan.json": "0a26c0e06c3d289172b0465503173dc0be427927c9174db1df5e47ae39a35059",
+    "tests/fixtures/retrieval/d27-review-challenge.json": "1150b9606c8dcd6e6471471b08f7497ce9a3ccf047320ef8e98ccea475816483",
+    "docs/evidence/d27-t03-review-packet.json": "a2beb318d08812f4614cef5fb48f2a572f4ff70d4183d47990e7b58e1186352b",
+    "scripts/human_reviewed_retrieval_trial.py": "faa77491a5d0486cd3cdee393f406ec099d514370237a6d9e099e0652851191a",
+    "tests/test_human_reviewed_retrieval_trial.py": "6aa8183385553222eed51869a3dd62d2af927e4d0a1c342f1c31c89950b28691",
+    "tests/integration/test_human_reviewed_trial_gate.py": "c30f4e3cb487bb13aac5ef9a0f9d7e13669c2999db7a38ba0a25d294dc7870fb"
+  }
+}

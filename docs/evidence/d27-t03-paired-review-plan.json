@@ -1,0 +1,37 @@
+{
+  "description": "Pre-inference paired support-retrieval scoring plan for the small additional human-review challenge; no human labels supplied or model change approved.",
+  "status": "PLAN_FROZEN_HUMAN_REVIEW_AND_EXECUTION_PENDING",
+  "corpus_sha256": "0c9294f48891cdf5ec48d61f1193cc4097e99cc183fb4ea8ae9cbe73b190390c",
+  "packet_sha256": "b1877fd0458f6268d0a7fd36513e1722f7a76e90e17e41018d5bc243bae8b554",
+  "query_groups": {
+    "review-q01": "en",
+    "review-q02": "vi",
+    "review-q03": "vi",
+    "review-q04": "en",
+    "review-q05": "vi",
+    "review-q06": "en",
+    "review-q07": "en",
+    "review-q08": "vi"
+  },
+  "minimum_answerable_queries": 4,
+  "minimum_absent_queries": 1,
+  "max_group_recall_at_3_loss": 0.05,
+  "metrics": [
+    "recall_at_3",
+    "recall_at_5",
+    "recall_at_10",
+    "mrr_at_10",
+    "ndcg_at_10"
+  ],
+  "global_quality_gate": "Answerable macro metrics do not regress; group Recall@3 loss at most0.05. Coverage minima required; no significance/general quality/adoption inference.",
+  "absent_answer_policy": "All support-retrieval metrics null; exclude from answerable macro averages. Record separately; ranking-only comparison does not certify calibrated abstention.",
+  "candidate_policy": "Same baseline candidate set, maximum10 source-revalidated points per query, with deterministic existing trial point-ID tie break. New challenge8 sources means an at-most8-point diagnostic pool, not large-corpus retrieval.",
+  "execution_policy": "Three actual paired repetitions with approved embedding and exact original Qwen reranker batch4 contract, fixed owner-scoped sources and retained source/hash/provenance verification; no replay of model scores between repetitions. Require separate actual execution evidence.",
+  "bootstrap": {
+    "seed": 2703,
+    "resamples": 2000,
+    "meaning": "Descriptive query-bootstrap95 percentiles; eight authored cases cannot establish representative independent sampling."
+  },
+  "adoption_approved": false,
+  "require_stable_candidate_ranks": true
+}

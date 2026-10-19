@@ -91,3 +91,9 @@ Frozen24-document/36-query agent-authored corpus: R@3=.972222/MRR@10=.949074/nDC
 **Purpose:** Distinguish evaluation of the agreed ranking candidate from unchanged embedding selection.
 
 Original Qwen3-Reranker-0.6B provisioned/evaluated offline; batch1 CPU attempts incomplete, explicit batch4 variant completed three diagnostic rounds, full1096 PASS/0 SKIP. [Comparison/resource definitions/failed profiles](D27_RERANKER_COMPARISON.md) and [review proposal](D27_RERANKER_ADOPTION_REVIEW.md). No embedding/profile/precision/fingerprint/vector-space/collection/data change or ranking integration; approved embedding and byte-exact E5 rollback retained. Diagnostic scores do not authorize model/routing changes. D27 open, T03 independent/adoption review NEXT.
+
+## D27 final local evaluation follow-up — 2026-10-19
+
+**Purpose:** Link final actual evaluation while preserving this document's original frozen measurements.
+
+[Final decision](D27_RERANKER_EVALUATION_DECISION.md) retains approved dense retrieval and the original reranker nomination without adoption/model/routing changes. Owner delegated relevance tasks to AI; no human review fabricated. Three new actual paired rounds show equal answerable quality on the separately frozen limited v2 diagnostic. ASGI/CORE and actual loopback TCP/source/lifecycle/rollback pass;1234 full+16 new AI-focused+1 TCP PASS/0 SKIP (1251 unique tests across checkpoints, not one full invocation). Original gains, failed runtimes, inputs/profiles/thresholds and exact E5 rollback unchanged. D27 local evaluation PASS; D28 NEXT.

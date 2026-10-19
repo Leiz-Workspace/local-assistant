@@ -1,8 +1,11 @@
 # D27-T03 — Independent relevance review preparation
 
+**Current policy update:** The owner subsequently delegated this review and similar tasks to the assistant because they are unavailable. This manual-review material is historical/optional; no manual labeling is currently required. See [owner-delegated evaluation](D27_OWNER_DELEGATED_EVALUATION.md) and [ADR-042](ADR/042-owner-delegated-relevance-evaluation.md). No human review is claimed.
+
+
 **Purpose:** Provide a concrete score-blind review packet, preserve prior benchmarks and make missing human evidence explicit.
 
-**Status:** Prepared; the owner volunteered to perform the independent human review on2026-10-19. Completed judgments are still pending. No human labels supplied, no inference on this challenge, no adoption approval. D27 remains IN PROGRESS; D28 is NOT STARTED.
+**Status:** Historical uncompleted manual workflow, superseded by explicit owner delegation under ADR-042. D27 local AI evaluation is complete; no human labels/attestation supplied or required for that scope. See [final decision](D27_RERANKER_EVALUATION_DECISION.md).
 
 ## Frozen challenge
 

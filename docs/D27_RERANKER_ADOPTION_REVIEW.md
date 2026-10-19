@@ -2,7 +2,11 @@
 
 **Purpose:** Make the original candidate's measured benefit, cost, migration/rollback and missing evidence reviewable without changing routing.
 
-**Status:** Proposal only. D27-T02 local batch4 measurement accepted after1096 PASS/0 SKIP; T03 review/integration remains a proposal. No model selection, production integration or owner adoption approval.
+**Current review policy:** The owner delegated relevance review to the assistant; see [ADR-042](ADR/042-owner-delegated-relevance-evaluation.md) and [actual T03 trial / AI evaluation](D27_OWNER_DELEGATED_EVALUATION.md). Manual-label requests below are historical requirements superseded for the local diagnostic. Actual model replacement/adoption approval remains separate.
+
+**Current decision:** [D27 local evaluation complete: retain dense/defer adoption](D27_RERANKER_EVALUATION_DECISION.md);1251 tests across recorded checkpoints, no production model/routing change. The proposal below is historical and preserves earlier gates/evidence.
+
+**Historical proposal status:** D27-T02 local batch4 measurement accepted after1096 PASS/0 SKIP; T03 review/integration remains a proposal. No model selection, production integration or owner adoption approval.
 
 ## Concrete option under review
 

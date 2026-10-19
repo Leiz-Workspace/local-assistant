@@ -1,0 +1,73 @@
+{
+  "description": "Actual ephemeral localhost Uvicorn/TCP authenticated dense/reranked/dense rollback responses using the same lifespan-owned test resources; no production config or separate-process/load certification.",
+  "transport": "actual_loopback_Uvicorn_TCP_same_fixture_event_loop",
+  "observations": [
+    {
+      "mode": "dense",
+      "seconds": 5.606043475996557,
+      "response_bytes": 2855,
+      "response_sha256": "269d78a59c6a33016409a42d94aae6418465e72173e631b94c7b174fb0e8fbb0",
+      "points": [
+        {
+          "point_id": "416c0841-2b4f-5ed0-bfaf-3b07d3504432",
+          "file_id": "6426da8f-8520-4de0-84e3-dc2267044eec",
+          "source_sha256": "7e2755063e5102369947d5f815f0cd400498a814974dc0724fb86693732cfe14",
+          "generation": "d9e5e1fef993db934037b4a9d430fcdc9d4751edb8e8affd3943e1f9a3ac761f"
+        },
+        {
+          "point_id": "e4c6b37c-d0f8-5a8f-97c3-5f8485d7b02b",
+          "file_id": "3138fee0-a7ed-4a21-8c8a-bb2fa9374e05",
+          "source_sha256": "70e245dc3fa0895dc216a0c8913c564e0aee736468f8f868b6b24fc110e69795",
+          "generation": "33b3741158068618ae4fd0614a09e10839e4fe125a212b1ac63b66eae181e5bf"
+        }
+      ]
+    },
+    {
+      "mode": "evaluation_only_reranker",
+      "seconds": 8.896877920000406,
+      "response_bytes": 2967,
+      "response_sha256": "ca685a9f68b55e458b87de165e2fb1ec9d802173134074602beecf219abb7bac",
+      "points": [
+        {
+          "point_id": "416c0841-2b4f-5ed0-bfaf-3b07d3504432",
+          "file_id": "6426da8f-8520-4de0-84e3-dc2267044eec",
+          "source_sha256": "7e2755063e5102369947d5f815f0cd400498a814974dc0724fb86693732cfe14",
+          "generation": "d9e5e1fef993db934037b4a9d430fcdc9d4751edb8e8affd3943e1f9a3ac761f"
+        },
+        {
+          "point_id": "e4c6b37c-d0f8-5a8f-97c3-5f8485d7b02b",
+          "file_id": "3138fee0-a7ed-4a21-8c8a-bb2fa9374e05",
+          "source_sha256": "70e245dc3fa0895dc216a0c8913c564e0aee736468f8f868b6b24fc110e69795",
+          "generation": "33b3741158068618ae4fd0614a09e10839e4fe125a212b1ac63b66eae181e5bf"
+        }
+      ]
+    },
+    {
+      "mode": "dense_after_disable",
+      "seconds": 5.634907994000969,
+      "response_bytes": 2855,
+      "response_sha256": "269d78a59c6a33016409a42d94aae6418465e72173e631b94c7b174fb0e8fbb0",
+      "points": [
+        {
+          "point_id": "416c0841-2b4f-5ed0-bfaf-3b07d3504432",
+          "file_id": "6426da8f-8520-4de0-84e3-dc2267044eec",
+          "source_sha256": "7e2755063e5102369947d5f815f0cd400498a814974dc0724fb86693732cfe14",
+          "generation": "d9e5e1fef993db934037b4a9d430fcdc9d4751edb8e8affd3943e1f9a3ac761f"
+        },
+        {
+          "point_id": "e4c6b37c-d0f8-5a8f-97c3-5f8485d7b02b",
+          "file_id": "3138fee0-a7ed-4a21-8c8a-bb2fa9374e05",
+          "source_sha256": "70e245dc3fa0895dc216a0c8913c564e0aee736468f8f868b6b24fc110e69795",
+          "generation": "33b3741158068618ae4fd0614a09e10839e4fe125a212b1ac63b66eae181e5bf"
+        }
+      ]
+    }
+  ],
+  "unauthenticated_denied": true,
+  "origin_denied": true,
+  "foreign_owner_empty": true,
+  "source_point_identity_preserved": true,
+  "temporary_server_joined": true,
+  "persistent_routing_changed": false,
+  "adoption_approved": false
+}

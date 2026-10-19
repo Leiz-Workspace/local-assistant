@@ -1,8 +1,11 @@
 # D27-T03 — Human relevance review form
 
+**Current policy update:** The owner subsequently delegated this review and similar tasks to the assistant because they are unavailable. This manual-review material is historical/optional; no manual labeling is currently required. See [owner-delegated evaluation](D27_OWNER_DELEGATED_EVALUATION.md) and [ADR-042](ADR/042-owner-delegated-relevance-evaluation.md). No human review is claimed.
+
+
 **Purpose:** Present the frozen score-free challenge once for convenient independent review; no labels or results are prefilled.
 
-**Status:** PENDING. Copy this form for completed review; preserve the original. Review all64 pairs. The authoritative packet/template and validation rules are in [the review protocol](D27_INDEPENDENT_RELEVANCE_REVIEW.md).
+**Status:** Historical unfilled manual form. Current local D27 evaluation uses the separately versioned owner-delegated AI review; do not fill a false human review. The authoritative packet/template and validation rules are in [the review protocol](D27_INDEPENDENT_RELEVANCE_REVIEW.md).
 
 Reviewer: PENDING
 Reviewed at (ISO8601 with timezone): PENDING
