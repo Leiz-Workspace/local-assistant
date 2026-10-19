@@ -1,0 +1,35 @@
+{
+  "description": "D29 contract/proposed schema source snapshot and accepted system identity check; no memory runtime or applied migration.",
+  "base_commit": "a2cc9c0",
+  "sha256": {
+    "src/application/services/memory_contract.py": "8ce8101cc53215915c59467febe3a63b2207daaa5d40c9bdefab88c782dae86a",
+    "tests/test_memory_contract.py": "51d2fb65ae1402de006b72356c6eeab40d75977951d8cd27153b55104db90290",
+    "tests/integration/test_memory_schema_proposal.py": "c2ee7229df7feeaba316d87ca7ac1c6749f40da680836a750b362a9e4ac5203a",
+    "docs/ADR/044-consent-bound-memory-contract.md": "f5bb445463f4fc85c008993f11903a9b4709018a6fe44ae6a5469bec85895e4b",
+    "docs/proposals/d29-memory-schema.sql": "a0ff49daf82c77596f8dfe38b62f055d3540b2aa5cfc5f6be54cadafcf3b6379",
+    "docs/proposals/d29-memory-contract.schema.json": "826c9173ce057801b4a53b9c2364d05680f7e3053def5b9183d805377c654b53"
+  },
+  "preexisting_code_config_model_test_files_unchanged": 254,
+  "new_function_class_descriptions": 42,
+  "focused": {
+    "passed": 63,
+    "seconds": 0.53,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "scope": "47 new pure contract cases plus16 actual PostgreSQL temporary-table constraint cases; not a new full-suite invocation.",
+  "prior_full": "D28 full1334 PASS/1387.90s plus2 additional native-field tests PASS/1.21s,0 SKIP;1336 unique tests across checkpoints.",
+  "memory_runtime_enabled": false,
+  "application_revision_unchanged": "0004",
+  "app_grants_changed": false,
+  "initial_failures": [
+    "40 PASS/6 FAIL: synthetic quote offsets incorrectly counted five Unicode code points rather than four; fixture corrected.",
+    "46 PASS/15 setup errors: runtime app intentionally lacks TEMP; corrected only operator test identity, grants unchanged.",
+    "60 PASS/1 FAIL: synthetic JSONB fixture UUIDs required string encoding.",
+    "62 PASS/1 FAIL: test exception class is psycopg.errors.CheckViolation, not psycopg.CheckViolation."
+  ],
+  "status": "PASS_DESIGN_CONTRACT_ONLY",
+  "post_audit": "d29-final-post-audit.json",
+  "unique_tests_across_checkpoints": 1399,
+  "new_full_suite_invocation": false
+}

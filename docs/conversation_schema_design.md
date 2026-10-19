@@ -488,3 +488,10 @@ Không triển khai trong Ngày 15:
 **Supersedes:** Tài liệu Day 15 SQLite trước đó. Source SQLite đã cung cấp không còn là baseline triển khai được chốt.
 
 **Next Action:** Bắt đầu D15-T01 — PostgreSQL Infrastructure, sau đó Migration V001.
+
+
+## D29 memory contract checkpoint — 2026-10-19
+
+**Purpose:** Link the separately consented memory design without changing accepted conversation-history ownership or persistence.
+
+[MEMORY_DESIGN.md](MEMORY_DESIGN.md) and ADR-044 define four classes/consent/provenance/retention. D29 design/contract63 cases PASS; proposed JSON/SQL schemas are not an applied migration or runtime feature. Conversation history does not grant memory consent; existing JSONB owner locking and quarantine of unowned history remain unchanged. D30 needs actual source authorization, default-off APIs/extraction and reviewed backup/migration/grants; D31 privacy/export/deletion remains later.
