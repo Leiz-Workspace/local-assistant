@@ -85,3 +85,9 @@ D26 local opt-in dense retrieval now passes1030 PASS/0 SKIP. Query instruction a
 **Purpose:** Record new evaluation of the existing model without changing model selection or evidence scope.
 
 Frozen24-document/36-query agent-authored corpus: R@3=.972222/MRR@10=.949074/nDCG@10=.961613; actual existing CPU encoder plus evaluation-only vector replay through source/SQL/Qdrant/D26. Full1052 PASS/0 SKIP; candidate/label/source hashes and misses retained. Batch/cache scores/timing are not singleton API latency or independent production quality. No selected-config/profile/runtime/dependency/vector-space change, new RAM/VRAM measurement or model download/adoption. D27-T01 PASS local measurement; D27 open, T02 original reranker NOT EVALUATED. [Plan](D27_RETRIEVAL_EVALUATION.md), [evidence](evidence/d27-retrieval-baseline.json).
+
+## D27-T02 original reranker comparison — 2026-10-19
+
+**Purpose:** Distinguish evaluation of the agreed ranking candidate from unchanged embedding selection.
+
+Original Qwen3-Reranker-0.6B provisioned/evaluated offline; batch1 CPU attempts incomplete, explicit batch4 variant completed three diagnostic rounds, full1096 PASS/0 SKIP. [Comparison/resource definitions/failed profiles](D27_RERANKER_COMPARISON.md) and [review proposal](D27_RERANKER_ADOPTION_REVIEW.md). No embedding/profile/precision/fingerprint/vector-space/collection/data change or ranking integration; approved embedding and byte-exact E5 rollback retained. Diagnostic scores do not authorize model/routing changes. D27 open, T03 independent/adoption review NEXT.
