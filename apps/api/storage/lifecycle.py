@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from apps.api.services.conversations import ConversationService
+from apps.api.storage.approvals import initialize_approval_store
 from apps.api.storage.files import initialize_file_service
 from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
@@ -41,12 +42,16 @@ async def conversation_lifespan(app: FastAPI):
     app.state.workspace_service = None
     app.state.workspace_explanation_service = None
     app.state.workspace_diagnosis_service = None
+    app.state.approval_store = None
     try:
         app.state.workspace_service = await initialize_workspace_service()
         app.state.workspace_explanation_service = (
             await initialize_workspace_explanations(app.state.workspace_service)
         )
         app.state.workspace_diagnosis_service = await initialize_workspace_diagnoses(
+            app.state.workspace_service
+        )
+        app.state.approval_store = await initialize_approval_store(
             app.state.workspace_service
         )
         if os.environ.get("DATABASE_URL"):
@@ -83,6 +88,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.approval_store is not None:
+            app.state.approval_store.close()
+            app.state.approval_store = None
         if app.state.workspace_diagnosis_service is not None:
             await app.state.workspace_diagnosis_service.shutdown()
             app.state.workspace_diagnosis_service = None
