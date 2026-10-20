@@ -4,7 +4,7 @@
 
 **Date:** 2026-10-20 (Asia/Ho_Chi_Minh)
 
-**Status:** Accepted design; implementation acceptance requires actual source/provenance/security/transport/lifecycle tests.
+**Status:** Accepted and implemented within the defined local read-only scope:1785 full PASS/1509.95s,0 SKIP,exit0 on2026-10-20; exact301-file freeze and clean final readonly audit. [Acceptance](../evidence/d34-workspace-acceptance.json). Earlier malformed-JSON failures and interrupted attempts remain separate evidence.
 
 ## Priority, dependencies and effects
 

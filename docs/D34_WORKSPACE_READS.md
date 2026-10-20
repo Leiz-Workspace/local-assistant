@@ -48,7 +48,7 @@ Snapshots pin the admitted root through response delivery. Immediately before he
 
 ## Verification status
 
-Actual focused filesystem/auth/HTTP/TCP and lifecycle tests have passed intermediate checkpoints. Final evaluated source freeze, full application regression and post-audit are pending. D34 is IN PROGRESS; no D35 advancement or full-suite PASS is claimed yet.
+**D34 PASS (defined local read-only scope).** Actual full application regression:1785 PASS/1509.95s,0 SKIP,exit0, including101 new D34 cases;164 workspace-focused PASS/1.10s is a subset checkpoint. All301 evaluated files/protected hashes match. Final readonly V006/data/quota/vector/worker/ACL audit is clean. [Acceptance](evidence/d34-workspace-acceptance.json), [source freeze](evidence/d34-full-regression-freeze.json), [post-audit](evidence/d34-final-post-audit.json). D35 tool dispatch is next. The interruption/recovery notes below describe earlier attempts, not the completed accepted run.
 
 
 ## Pre-full strict JSON correction
@@ -59,3 +59,7 @@ An isolated actual HTTP probe found `NaN` produced ValueError and an overlong su
 ## Interrupted-process recovery
 
 A later corrected full attempt retains159 completed PASS but no final exit, and the host subsequently restarted. The exact loss cause/time is not established; this partial cannot be used as a completed full run. All301 evaluated source files match. Existing Vault/CORE were recovered without rotation/model/config changes; DB inventories are empty and exactly one acknowledged-owned empty vector probe was verified/removed. The next full1785 attempt runs on the same frozen code with durable PID/boot-aware progress and observed final exit metadata. See [partial evidence](evidence/d34-reboot-interrupted-full.json) and [scoped cleanup](evidence/d34-reboot-empty-probe-cleanup.json). D34 acceptance/audit are still pending.
+
+## Completed exact-source rerun
+
+The fresh boot-aware full run finished on2026-10-20 at01:37:42 UTC with observed exit0 and1785 PASS. Runner elapsed1510.60s; pytest1509.95s. Final audit then verified all301 frozen files, protected model/config/migration bytes, old owners/ACLs, no live model worker or advisory lock, V006 and empty source/memory/quota/vector/probe inventories. No host workspace or production feature enabled. Earlier interrupted attempts are retained unchanged and are not included in the PASS total.
