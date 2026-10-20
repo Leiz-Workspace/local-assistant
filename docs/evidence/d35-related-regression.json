@@ -1,0 +1,24 @@
+{
+  "description": "Actual D35 related regression, unchanged native/auth/API/startup cases plus64 new tool cases; not a fresh full application run.",
+  "targets": [
+    "tests/test_workspace_tools.py",
+    "tests/test_workspace_reader.py",
+    "tests/test_workspace_service.py",
+    "tests/test_workspace_startup.py",
+    "tests/integration/test_workspace_http.py",
+    "tests/test_workspace_policy.py",
+    "tests/test_readonly_workspace.py",
+    "tests/test_api_health.py",
+    "tests/test_conversation_auth.py",
+    "tests/test_conversation_api.py",
+    "tests/test_ingestion_startup.py",
+    "tests/test_retrieval_startup.py",
+    "tests/test_grounded_startup.py",
+    "tests/test_memory_api.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 1.94,
+  "log_sha256": "65947dab1914a01367a678537e3b3776ef8d7ffe9443e7a86f50f7e96e400d38",
+  "summary": "349 passed in 1.60s",
+  "source_freeze_sha256": "95f252b8380eb14e41187de7d1069094eb1d75ded6cedf90a3d9303f06021629"
+}

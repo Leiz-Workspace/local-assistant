@@ -2,7 +2,7 @@
 
 **Purpose:** Prepare bounded dispatch criteria during D34 full regression without advancing the current acceptance gate.
 
-**Status:** Draft; depends on actual D34 PASS and [ADR-053](ADR/053-scoped-readonly-tool-dispatch.md). No D35 implementation or model adoption yet.
+**Status:** Historical pre-implementation plan; D34 actual full/audit passed before D35 work. D35 now PASS within the internal scope:349 related PASS/0 SKIP and clean audit. See [implemented scope](D35_READ_TOOL_DISPATCH.md), [acceptance](evidence/d35-tool-acceptance.json) and [ADR-053](ADR/053-scoped-readonly-tool-dispatch.md). Proposed language below records the original plan; no model adoption.
 
 P1 after D34, one dispatch milestone. Source capabilities, authentication and file/line fences remain D33/D34. Registry names are fixed workspace discover/inventory/read/search/symbols, with immutable authenticated owner/workspace scope supplied by application context. Model envelope proposes only operation name and arguments. Server assigns run/call UUIDs; no model-selected identity, root, workspace, profile, budget or arbitrary tool command.
 

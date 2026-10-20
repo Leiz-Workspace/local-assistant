@@ -5,13 +5,17 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.routing import APIRoute
-from pydantic import BaseModel, ConfigDict, Field
 from starlette.responses import JSONResponse
 
 from apps.api.routes.conversations import require_local_client
 from apps.api.routes.files import Principal
 from src.application.services.workspace_policy import WorkspaceAccessError
 from src.application.services.workspace_requests import parse_workspace_json
+from src.application.services.workspace_tool_contracts import (
+    DirectoryInput,
+    ReadInput,
+    SearchInput,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -59,28 +63,6 @@ router = APIRouter(
     tags=["Workspace reads"],
     dependencies=[Depends(require_local_client)],
 )
-
-
-class DirectoryInput(BaseModel):
-    """Accept only an optional relative directory without caller roots or ownership overrides."""
-
-    model_config = ConfigDict(extra="forbid", strict=True)
-    directory: str | None = Field(default=None, max_length=4096)
-
-
-class SearchInput(DirectoryInput):
-    """Accept a bounded exact literal search without regex execution or caller budgets."""
-
-    query: str = Field(min_length=1, max_length=256)
-
-
-class ReadInput(BaseModel):
-    """Accept one relative path and a bounded one-indexed source-line range."""
-
-    model_config = ConfigDict(extra="forbid", strict=True)
-    path: str = Field(min_length=1, max_length=4096)
-    start_line: int = Field(default=1, ge=1, le=2147483647)
-    end_line: int = Field(default=200, ge=1, le=2147483647)
 
 
 async def get_workspace_service(request: Request):

@@ -1,0 +1,36 @@
+{
+  "description": "D35 accepted internal finite deterministic workspace tool dispatch and shared HTTP/tool argument contracts; no model execution or new public API.",
+  "status": "PASS (defined internal read-tool scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "78542b0",
+  "passed": 349,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1.6,
+  "new_unique_cases": 64,
+  "application_tests_collected": 1849,
+  "fresh_full_application_run": false,
+  "historical_d34_full_passed": 1785,
+  "limits": {
+    "attempts": 8,
+    "lifetime_seconds": 60,
+    "cumulative_tool_seconds": 20,
+    "call_seconds": 5,
+    "call_bytes": 65536,
+    "run_bytes": 262144
+  },
+  "actual_native_source_auth_output_cancel_tests": true,
+  "controlled_clock_and_cap_tests_disclosed": true,
+  "prior_runtime_changes": [
+    "apps/api/routes/workspaces.py shared schema compatibility imports only"
+  ],
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "next": "D36 existing CORE explanations with verified local source-line citations and final source fences",
+  "evidence_sha256": {
+    "docs/evidence/d35-tool-freeze.json": "95f252b8380eb14e41187de7d1069094eb1d75ded6cedf90a3d9303f06021629",
+    "docs/evidence/d35-related-regression.json": "6ebf669a1663fb4d8970c9e20368745f0ad2f7c73d868eddcc37ca7232e6ea14",
+    "docs/evidence/d35-final-post-audit.json": "95eb4960b2131470610a99ef7ac34f4baea73ba78e4fd50350633146b10f0e96"
+  }
+}
