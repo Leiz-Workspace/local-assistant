@@ -13,6 +13,7 @@ from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
 from apps.api.storage.memory import initialize_memory_service
 from apps.api.storage.retrieval import initialize_retrieval_service
+from apps.api.storage.workspaces import initialize_workspace_service
 from src.infrastructure.database.connection import (
     create_database_engine,
     create_session_factory,
@@ -35,7 +36,9 @@ async def conversation_lifespan(app: FastAPI):
     app.state.retrieval_service = None
     app.state.grounded_service = None
     app.state.memory_service = None
+    app.state.workspace_service = None
     try:
+        app.state.workspace_service = await initialize_workspace_service()
         if os.environ.get("DATABASE_URL"):
             try:
                 engine = create_database_engine()
@@ -70,6 +73,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.workspace_service is not None:
+            await app.state.workspace_service.shutdown()
+            app.state.workspace_service = None
         if app.state.memory_service is not None:
             await app.state.memory_service.shutdown()
             app.state.memory_service = None

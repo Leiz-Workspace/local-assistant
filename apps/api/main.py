@@ -26,6 +26,7 @@ from apps.api.routes.ingestion import router as ingestion_router
 from apps.api.routes.memory import router as memory_router
 from apps.api.routes.ocr import router as ocr_router
 from apps.api.routes.retrieval import router as retrieval_router
+from apps.api.routes.workspaces import router as workspace_router
 from apps.api.routes.xlsx import router as xlsx_router
 from apps.api.storage.lifecycle import conversation_lifespan
 
@@ -59,4 +60,5 @@ app.include_router(ingestion_router, prefix="/api/v1")
 app.include_router(retrieval_router, prefix="/api/v1")
 app.include_router(grounded_router, prefix="/api/v1")
 app.include_router(memory_router, prefix="/api/v1")
+app.include_router(workspace_router, prefix="/api/v1")
 logging.getLogger(__name__).info("api_routers_registered")

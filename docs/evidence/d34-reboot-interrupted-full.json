@@ -1,0 +1,14 @@
+{
+  "description": "Corrected D34 full process absent after observed host restart; preserved partial progress only, no completion/exit/PASS claim.",
+  "status": "interrupted_exit_unobserved",
+  "last_completed_passed": 159,
+  "failed_markers": 0,
+  "original_status": "running",
+  "original_pytest_pid": 93793,
+  "source_freeze_sha256": "7fb70eac167191eb14836cd0830b145a7eb58ad80e54096bd26b7ad019c399c1",
+  "log_sha256": "23509a743cd3b0b5b09a0cece86329bef0ffa72d1822dc94d3e877d4c0d549f8",
+  "log_last_modified_utc": "2026-10-19T18:51:38.417170+00:00",
+  "observed_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "cause": "Host restart observed; exact cause/time of original process loss not established. No process retained, volatile helpers gone."
+}
