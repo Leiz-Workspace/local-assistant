@@ -1,0 +1,25 @@
+{
+  "description": "Actual completed D42 full application regression on396 source/409 unique protected hashes;1104 related are a subset, not additive.",
+  "targets": [
+    "tests"
+  ],
+  "pytest_options": [
+    "-v",
+    "-rs",
+    "--tb=short"
+  ],
+  "status": "complete",
+  "started_at_utc": "2026-10-20T10:28:53.388923+00:00",
+  "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+  "wrapper_pid": 1162870,
+  "source_freeze_sha256": "b609b887617ca23cd852c5ad108cce7735bd6b936963e16076c7ddc46f12139b",
+  "pytest_pid": 1162873,
+  "exit_code": 0,
+  "elapsed_seconds": 1537.63,
+  "completed_at_utc": "2026-10-20T10:54:31.020237+00:00",
+  "log_sha256": "eecd2ca6e9478918073120c1ac1bbfe02de930dcc1bd179e5698dea43ddd6243",
+  "summary": "2461 passed in 1536.84s",
+  "passed": 2461,
+  "skipped": 0,
+  "pytest_seconds": 1536.84
+}
