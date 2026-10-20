@@ -1,0 +1,47 @@
+{
+  "description": "Actual initial D42 finite policy/thread-only native supervisor checkpoint, not complete D42 acceptance.",
+  "status": "IN_PROGRESS",
+  "base_commit": "bd8db41",
+  "passed": 65,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 4.74,
+  "targets": [
+    "tests/test_check_policy.py",
+    "tests/test_check_seccomp.py",
+    "tests/test_check_runner.py"
+  ],
+  "sha256": {
+    "src/application/services/check_policy.py": "ce570f43e8ca1c8acdcebc086a0375016460b10c909902a956847c0a5b3f3f24",
+    "src/infrastructure/check_seccomp.py": "eb2bebf47b207760e839ee14d5efb12712ac7de87bbb5ce16b309458e4cde280",
+    "src/infrastructure/check_runner.py": "ef97da60219541c0e3e07918b508e9ac75c733c8dc490c1e1db36cd7c951d942",
+    "tests/test_check_policy.py": "ed24c11ebac527a4b09996050a4c3c8563d7cb74ae5789612a6e78b417fc2152",
+    "tests/test_check_seccomp.py": "834a77749b5f4bfda7fde003f0be068e307230927c1903679dfc7a0b48861c7c",
+    "tests/test_check_runner.py": "f39b6bc4ca3eb3265b9ef2871e2281b0f20a0165043c8443c2a14ec4564420e5"
+  },
+  "evaluated_python_files": 6,
+  "described_functions_classes": 41,
+  "initial_failed_checkpoint": {
+    "passed": 57,
+    "failed": 1,
+    "seconds": 1.0,
+    "reason": "Runtime executable500 denied write with EACCES13 before readonly-mount EROFS30; assert both valid denial errors while separately requiring readonly flag; no native code weakened."
+  },
+  "verified": [
+    "actual sealed thread-only BPF and child setup FD consumption",
+    "actual readonly root/snapshot/runtime mount and source/canary preservation",
+    "actual fork/clone/x32 and nested-userns denial",
+    "actual memory/file/FD/tmpfs/CPU limits",
+    "actual timeout/cancel/owned-handle kill fallback plus no matching runtime descendants",
+    "Ruff compatibility and ignored source noqa suppression",
+    "exact bounded arbitrary-byte base64/hash/size/EOF observations; exit0 has no quality authority",
+    "one-shot native attempt and immutable copied response"
+  ],
+  "limitations": [
+    "Disposable executable fixtures currently use trusted system stdlib fallback; full private runtime capture not implemented or accepted.",
+    "No source snapshot/store/public API/fresh approval composition exists yet.",
+    "Controlled shorter parent timeout/cancel and injected group-signal fault disclosed.",
+    "CPU/address-space policy, not measured RSS/VRAM/general coding quality.",
+    "D41/model/config/data/infrastructure unchanged."
+  ]
+}

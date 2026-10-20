@@ -1,0 +1,45 @@
+{
+  "description": "Actual corrected D42 native runtime capsule/finite runner checkpoint, not complete day acceptance or production execution.",
+  "status": "IN_PROGRESS",
+  "base_commit": "bd8db41",
+  "passed": 97,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 6.94,
+  "targets": [
+    "tests/test_check_policy.py",
+    "tests/test_check_seccomp.py",
+    "tests/test_check_runner.py",
+    "tests/test_check_runtime_io.py",
+    "tests/test_check_runtime.py"
+  ],
+  "sha256": {
+    "src/application/services/check_policy.py": "597a1e133fc2cd021bfa650e2e2f0d98876d58882ea34209986b71ea625cbcdb",
+    "src/infrastructure/check_seccomp.py": "53b29f0f12037deb8f07ef67d857140965df7761bf98600052ececf37af7d553",
+    "src/infrastructure/check_runner.py": "fd53d9145ac4b8bf512668a5f0713110509a0eeb2e91631150628273552dc864",
+    "src/infrastructure/check_runtime_io.py": "622873b25572d4ed377d55efc683a39c533b4dbe718087b8120633d745f6ee28",
+    "src/infrastructure/check_runtime.py": "abaa3ec61365877796fe673cf9bd0e24ff231c06335bce6a0595c49d34929c39",
+    "tests/test_check_policy.py": "ed24c11ebac527a4b09996050a4c3c8563d7cb74ae5789612a6e78b417fc2152",
+    "tests/test_check_seccomp.py": "834a77749b5f4bfda7fde003f0be068e307230927c1903679dfc7a0b48861c7c",
+    "tests/test_check_runner.py": "bafc1796015d5d53f2b4c6241422a095952470ee3ad173fee3609d6c9de93c43",
+    "tests/test_check_runtime_io.py": "4cc29a88d67eb89f93881a0982cfc60bebdbf3ad4d2e7348a6eee7209387c77a",
+    "tests/test_check_runtime.py": "2c31bdeef4d8a3c2a4f176a38665f1281d9f475c88ed581ae40a049863fe5a4f"
+  },
+  "evaluated_python_files": 10,
+  "described_functions_classes": 95,
+  "pre_affinity_failure": {
+    "failed": 1,
+    "pytest_seconds": 0.13,
+    "log": "data/backups/d42-pre-affinity-fix.log",
+    "source_archive": "data/backups/d42-pre-affinity-fix-full-files.zip"
+  },
+  "fixed_affinity": "Owned dedicated launcher thread, inherited CPU mask, sealed20-instruction BPF denying sched_setaffinity; parent affinity and no launcher/namespace survivors verified.",
+  "runtime": "Existing copied Python/624 stdlib files/private Ruff; full private import paths, exact member/type/mode/hash/native version/reopen/final fences; no package/model installation.",
+  "pending": [
+    "immutable selected-source snapshot",
+    "bounded private job storage/intent/receipt history",
+    "fresh exact approval/service lifecycle",
+    "default-off authenticated API/local CLI workflow",
+    "expanded related/full regression and readonly audit"
+  ]
+}

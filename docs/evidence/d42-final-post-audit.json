@@ -1,0 +1,57 @@
+{
+  "description": "Readonly D42 audit after actual2461 full and1104 related PASS/exit0; finite snapshot unittest/Ruff jobs on disposable fixture roots only; original first D38 CORE4/6 preserved.",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "live_model_worker_processes": 0,
+  "coding_sandbox_processes": 0,
+  "checkpoint_git_namespace_processes": 0,
+  "snapshot_check_native_processes": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "app_temp": false,
+  "memory_identity_update": false,
+  "memory_text_update": true,
+  "receipt_expiry_update": false,
+  "ingestion_immutable_update": false,
+  "ingestion_state_update": true,
+  "ingestion_truncate": false,
+  "source_trigger_security_definer": false,
+  "source_trigger_direct_app_execute": false,
+  "source_trigger_fixed_search_path": true,
+  "all_396_source_files_and_13_additional_evidence_hashes_match": true,
+  "d42_twentyseven_evaluated_sources_match_freeze": true,
+  "necessary_prior_changes_main_and_lifecycle_wiring_only": true,
+  "first_core_coding_baseline4_of6_and_two_failures_preserved": true,
+  "completed_D41_evidence_and_private_trial_unchanged": true,
+  "additional_private_core_trial": {
+    "path": "data/backups/d38-live-coding-eaabc4e89a1049ad8efad3fadb242f31/summary.json",
+    "sha256": "74c366838b320f7d3f82b3cc7b9b16fc0349fbd0ef17170b8a91f06820ec4af5",
+    "attempted": 6,
+    "passed": 4,
+    "failed_task_ids": [
+      "unicode_palindrome",
+      "inclusive_clamp"
+    ],
+    "replaces_first_baseline": false
+  },
+  "production_action_approved": false,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true
+}
