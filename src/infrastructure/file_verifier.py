@@ -24,11 +24,22 @@ VERIFIER_CPU_SECONDS = 5
 MAX_XML_BYTES = 2 * 1024**2
 MAX_IMAGE_PIXELS = 20_000_000
 MAX_PDF_PAGES = 1000
+PAYLOAD_BOOTSTRAP = '''"""Replace consumed host stdin with the readonly namespace payload before trusted worker execution."""
+import os
+import sys
+descriptor = os.open("/payload", os.O_RDONLY | os.O_CLOEXEC)
+os.dup2(descriptor, 0)
+os.set_inheritable(0, True)
+if descriptor != 0:
+    os.close(descriptor)
+os.execv(sys.argv[1], sys.argv[1:])
+'''
 
 
 def sandbox_command(arguments: list[str]) -> list[str]:
-    """Expose only trusted runtime/code mounts in fresh network/PID/user/IPC namespaces."""
+    """Expose trusted runtime/code and consumed readonly payload mounts without a reopenable writable host stdin capability."""
     root = Path(__file__).resolve().parents[2]
+    logger.info("document_sandbox_readonly_payload_prepared")
     return [
         "/usr/bin/bwrap",
         "--unshare-all",
@@ -79,7 +90,18 @@ def sandbox_command(arguments: list[str]) -> list[str]:
         "--setenv",
         "PYTHONDONTWRITEBYTECODE",
         "1",
+        "--ro-bind-data",
+        "0",
+        "/payload",
+        "--remount-ro",
+        "/",
         "--",
+        "/venv/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        PAYLOAD_BOOTSTRAP,
         *arguments,
     ]
 
@@ -91,7 +113,7 @@ def verify_file(
     policy: StoragePolicy = DEFAULT_POLICY,
     declared_media: str | None = None,
 ) -> str:
-    """Verify format from the sealed FD without copying a payload or passing secrets/paths."""
+    """Verify a sealed FD through one bounded readonly namespace copy without passing secrets or host paths."""
     name = normalize_filename(filename)
     suffix = name.rsplit(".", 1)[1].lower()
     source.seek(0)

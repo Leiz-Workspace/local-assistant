@@ -240,7 +240,7 @@ with WorkspaceCatalog([spec]).open(spec.owner_id,spec.workspace_id) as handle:
 print("mount_boundary_verified")
 """
     command = sandbox_command(["/venv/bin/python", "-c", code])
-    boundary = command.index("--")
+    boundary = command.index("--ro-bind-data")
     command[boundary:boundary] = [
         "--ro-bind",
         str(root),

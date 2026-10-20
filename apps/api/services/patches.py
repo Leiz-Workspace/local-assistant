@@ -69,7 +69,34 @@ class PatchService:
             self.admission.release()
             logger.info("patch_operation_closed")
 
-    async def propose(self, owner, workspace, path, expected_sha256, replacement):
+    async def prepare_proposal(self, proposal, stop, restore_checkpoint):
+        """Preserve ephemeral D40 behavior through a trusted optional durable-checkpoint composition hook."""
+        if restore_checkpoint is not None:
+            raise WorkspaceAccessError("checkpoint_unavailable", 503)
+        logger.info("patch_ephemeral_proposal_prepared")
+
+    async def before_apply(self, proposal, stop):
+        """Preserve the accepted ephemeral D40 pre-commit behavior without creating a checkpoint journal."""
+        logger.info("patch_ephemeral_apply_prepared")
+
+    async def after_apply(self, proposal):
+        """Preserve the accepted ephemeral D40 result while allowing trusted durable receipt composition."""
+        logger.info("patch_ephemeral_apply_finalized")
+
+    def record_view(self, proposal):
+        """Preserve the accepted historical D40 response through an optional checkpoint identity presentation hook."""
+        return proposal.public()
+
+    async def propose(
+        self,
+        owner,
+        workspace,
+        path,
+        expected_sha256,
+        replacement,
+        *,
+        restore_checkpoint=None,
+    ):
         """Capture a complete native read-only proposal and register its pending exact review without applying it."""
         async with self.operation() as stop:
             if not any(
@@ -103,12 +130,13 @@ class PatchService:
                 close_result=True,
             )
             try:
+                await self.prepare_proposal(proposal, stop, restore_checkpoint)
                 proposal.register_approval(self.approvals)
                 self.records[proposal.identifier] = proposal
                 logger.info(
                     "patch_proposal_registered proposal_id=%s", proposal.identifier
                 )
-                return proposal.public()
+                return self.record_view(proposal)
             except BaseException:
                 await file_io(proposal.close)
                 raise
@@ -118,7 +146,7 @@ class PatchService:
         async with self.operation():
             proposal = self.find(owner, workspace, identifier)
             await self.expire(proposal)
-            return proposal.public()
+            return self.record_view(proposal)
 
     async def apply(self, owner, workspace, identifier, approval):
         """Join the native one-shot edit and retain its authoritative receipt even when the caller loses acknowledgement."""
@@ -129,28 +157,37 @@ class PatchService:
                 raise WorkspaceAccessError("patch_state_conflict", 409)
             proposal.require_approval(self.approvals, approval)
             try:
+                await self.before_apply(proposal, stop)
                 await joined_work(stop, proposal.apply, self.approvals, approval, stop)
+            except BaseException as error:
+                if proposal.state == "proposed":
+                    proposal.state = "failed"
+                    proposal.error_code = getattr(error, "code", "patch_interrupted")
+                raise
             finally:
                 try:
-                    await file_io(proposal.close)
-                except OSError:
-                    if proposal.receipt is not None:
-                        proposal.record_commit(
-                            "applied_cleanup_uncertain"
-                            if proposal.receipt["applied"] is True
-                            else "outcome_unknown",
-                            applied=proposal.receipt["applied"],
+                    try:
+                        await file_io(proposal.close)
+                    except OSError:
+                        if proposal.receipt is not None:
+                            proposal.record_commit(
+                                "applied_cleanup_uncertain"
+                                if proposal.receipt["applied"] is True
+                                else "outcome_unknown",
+                                applied=proposal.receipt["applied"],
+                            )
+                        else:
+                            proposal.state = "failed"
+                            proposal.error_code = "patch_pin_cleanup_uncertain"
+                        logger.warning(
+                            "patch_pin_cleanup_uncertain proposal_id=%s", identifier
                         )
-                    else:
+                    if proposal.state == "proposed" and proposal.closed:
                         proposal.state = "failed"
-                        proposal.error_code = "patch_pin_cleanup_uncertain"
-                    logger.warning(
-                        "patch_pin_cleanup_uncertain proposal_id=%s", identifier
-                    )
-                if proposal.state == "proposed" and proposal.closed:
-                    proposal.state = "failed"
-                    proposal.error_code = "patch_interrupted"
-            return proposal.public()
+                        proposal.error_code = "patch_interrupted"
+                finally:
+                    await self.after_apply(proposal)
+            return self.record_view(proposal)
 
     async def shutdown(self):
         """Reject new work, cancel/join active writers and close all pins before approval/workspace teardown."""
