@@ -1,0 +1,25 @@
+{
+  "description": "Actual completed D41 full application regression:2269 PASS/1554.97s,0SKIP/exit0 on371 source/377 unique protected hashes.912 related cases are a subset, not additive.",
+  "targets": [
+    "tests"
+  ],
+  "pytest_options": [
+    "-v",
+    "-rs",
+    "--tb=short"
+  ],
+  "status": "complete",
+  "started_at_utc": "2026-10-20T07:54:07.066520+00:00",
+  "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+  "wrapper_pid": 864957,
+  "source_freeze_sha256": "a757d81cfc5c3e2149adaa88b993e008fb26953531279f618f360d83d3ee4f33",
+  "pytest_pid": 864962,
+  "exit_code": 0,
+  "elapsed_seconds": 1555.78,
+  "completed_at_utc": "2026-10-20T08:20:02.848222+00:00",
+  "log_sha256": "9c9934e0f85dd326ab1d766296300d9ecd9780e9c2be1d003d9bac25f0e4430e",
+  "summary": "2269 passed in 1554.97s",
+  "passed": 2269,
+  "skipped": 0,
+  "pytest_seconds": 1554.97
+}

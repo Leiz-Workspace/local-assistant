@@ -1,0 +1,79 @@
+{
+  "description": "Actual native FD authority gaps and necessary ADR-061 repairs; first partial full retained, no completed D41 full acceptance yet.",
+  "status": "PASS_FIXED_SOURCE_FULL_AND_READONLY_AUDIT",
+  "architecture": "docs/ADR/061-consumed-directory-fds-and-readonly-worker-stdin.md",
+  "pre_fix_observations": {
+    "private_git_inherited_directory_fds": [
+      3,
+      4
+    ],
+    "controlled_host_parent_canary_access": true,
+    "document_stdin_reopen_write": true,
+    "uid_gid65534_only_still_reopened_write": true,
+    "actual_credentials_or_project_data_accessed": false
+  },
+  "interrupted_full": {
+    "confirmed_pass_markers": 419,
+    "exit_code": 2,
+    "wrapper_seconds": 1146.46,
+    "artifacts": "data/backups/d41-pre-fd-fix-manifest.json",
+    "cleanup": "data/backups/d41-pre-fd-fix-cleanup.json",
+    "completed_full": false
+  },
+  "fix": {
+    "private_git": "bwrap --bind-fd/--ro-bind-fd consume child setup capabilities, retained parent FDs still valid",
+    "document_workers": "bwrap --ro-bind-data 0 /payload; fixed isolated bootstrap opens readonly namespace payload as stdin then execs original worker argv",
+    "copy_cost": "one bounded input copy, existing admitted max25MiB; no zero-copy claim",
+    "unsandboxed_fallback": false,
+    "namespace_root": "Final readonly remount after all mounts; only explicitly granted child repository writable",
+    "metadata_order": "DOCX/XLSX request and D33 test fixture mounts precede payload/final readonly root"
+  },
+  "abandoned_compatibility_trial": {
+    "design": "direct --ro-bind-fd 0 payload failed anonymous/unlinked temporary files; replaced by readonly data bind",
+    "passed": 128,
+    "failed": 71,
+    "pytest_seconds": 6.72
+  },
+  "fixed_focus": {
+    "git_storage_checkpoint_action_process_targets": "60 passed in 5.16s",
+    "shared_document_workers_and_payload_authority": "199 passed in 22.55s",
+    "payload_write_denial_errno": 30,
+    "host_canary_bytes_modes_unchanged": true,
+    "root_and_document_git_cases": "213 passed in 22.96s"
+  },
+  "related_system_review": {
+    "directory_setup_pass_fds": "Only new private Git repository/template descriptors; now consumed",
+    "document_request_pass_fds": "Anonymous regular request data already uses consuming --ro-bind-data",
+    "shared_document_stdin": "Verifier/PDF/DOCX/XLSX/page-OCR share one repaired command; algorithms/adapters unchanged"
+  },
+  "protected": {
+    "models_configs_vault_docker_database_migrations_unchanged": true,
+    "d40_atomic_native_writer_unchanged": true,
+    "first_public_D38_and_D40_private_trial_unchanged": true
+  },
+  "second_interrupted_full": {
+    "confirmed_pass_markers": 0,
+    "exit_code": 2,
+    "wrapper_seconds": 214.42,
+    "artifacts": "data/backups/d41-pre-root-readonly-manifest.json",
+    "cleanup": "data/backups/d41-pre-root-readonly-cleanup.json",
+    "completed_full": false
+  },
+  "related_ordering_checkpoint": {
+    "passed": 911,
+    "failed": 1,
+    "pytest_seconds": 40.21,
+    "cause": "D33 test fixture mounted after readonly root; construction moved, NO_XDEV assertions unchanged",
+    "artifacts": "data/backups/d41-root-fixture-order-*"
+  },
+  "final_related": "912 passed in 40.32s",
+  "final_full": {
+    "passed": 2269,
+    "skipped": 0,
+    "exit_code": 0,
+    "pytest_seconds": 1554.97,
+    "evidence": "docs/evidence/d41-full-regression.json",
+    "log_sha256": "9c9934e0f85dd326ab1d766296300d9ecd9780e9c2be1d003d9bac25f0e4430e"
+  },
+  "final_audit": "docs/evidence/d41-final-post-audit.json"
+}

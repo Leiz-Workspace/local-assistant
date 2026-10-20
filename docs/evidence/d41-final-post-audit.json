@@ -1,0 +1,60 @@
+{
+  "description": "Read-only D41 audit after actual2269 full and912 related PASS/exit0; explicit private Git checkpoints/fixture approvals/atomic writes/byte restores only, no production action; immutable first D38 CORE4/6 outcome preserved.",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "live_model_worker_processes": 0,
+  "coding_sandbox_processes": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "app_temp": false,
+  "memory_identity_update": false,
+  "memory_text_update": true,
+  "receipt_expiry_update": false,
+  "ingestion_immutable_update": false,
+  "ingestion_state_update": true,
+  "ingestion_truncate": false,
+  "source_trigger_security_definer": false,
+  "source_trigger_direct_app_execute": false,
+  "source_trigger_fixed_search_path": true,
+  "all_371_source_files_and_six_additional_evidence_hashes_match": true,
+  "d41_twentyfour_evaluated_sources_match_freeze": true,
+  "necessary_prior_changes_router_hooks_initializer_private_emitter_readonly_payload_root_and_metadata_mount_ordering_only": true,
+  "first_core_coding_baseline4_of6_and_two_failures_preserved": true,
+  "completed_D40_evidence_and_private_trial_unchanged": true,
+  "intentional_pre_fix_partial419_exit2_not_counted_as_full": true,
+  "intentional_second_partial_zero_markers_exit2_not_counted_as_full": true,
+  "consumed_mount_directory_fds_and_readonly_document_payload_regression_pass": true,
+  "checkpoint_git_namespace_processes": 0,
+  "additional_private_core_trial": {
+    "path": "data/backups/d38-live-coding-8eea3090ef2a41dcb54f41dab1ae4bba/summary.json",
+    "sha256": "f2868181b10057acf7447753610df4bf99b4cb637a717ac841f35bbb72c7f191",
+    "attempted": 6,
+    "passed": 4,
+    "failed_task_ids": [
+      "unicode_palindrome",
+      "inclusive_clamp"
+    ],
+    "replaces_first_baseline": false
+  },
+  "production_action_approved": false,
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "obsolete_interrupted_and_reboot_partial_runs_retained_separately": true
+}

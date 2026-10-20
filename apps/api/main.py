@@ -18,6 +18,7 @@ from fastapi import FastAPI
 from apps.api.core.logging_config import configure_application_logging
 from apps.api.routes.approvals import router as approval_router
 from apps.api.routes.chat import router as chat_router
+from apps.api.routes.checkpoints import router as checkpoint_router
 from apps.api.routes.chunks import router as chunk_router
 from apps.api.routes.conversations import router as conversation_router
 from apps.api.routes.files import router as file_router
@@ -71,4 +72,5 @@ app.include_router(workspace_explanation_router, prefix="/api/v1")
 app.include_router(workspace_diagnosis_router, prefix="/api/v1")
 app.include_router(approval_router, prefix="/api/v1")
 app.include_router(patch_router, prefix="/api/v1")
+app.include_router(checkpoint_router, prefix="/api/v1")
 logging.getLogger(__name__).info("api_routers_registered")

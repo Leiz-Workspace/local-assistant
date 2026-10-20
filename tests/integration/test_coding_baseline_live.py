@@ -2,12 +2,58 @@
 
 import hashlib
 import json
+import logging
+import os
 from pathlib import Path
 from uuid import uuid4
 
 import pytest
 
 from scripts.coding_baseline_trial import run_trial
+
+logger = logging.getLogger(__name__)
+
+
+def save_trial_summary(directory, summary):
+    """Keep each observed live measurement immutable and publish only a separate private most-recent pointer."""
+    raw = (json.dumps(summary, indent=2) + "\n").encode()
+    target = directory / "summary.json"
+
+    def create(path, payload):
+        """Write/fsync one new private artifact without truncating existing observations or following a symbolic link."""
+        descriptor = os.open(
+            path,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+            0o600,
+        )
+        try:
+            offset = 0
+            while offset < len(payload):
+                count = os.write(descriptor, payload[offset:])
+                if count <= 0:
+                    raise OSError("trial_summary_write_failed")
+                offset += count
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+
+    create(target, raw)
+    pointer = dict(
+        description="Pointer to an immutable additional regression measurement; never replaces the original public D38 baseline.",
+        path=str(target.relative_to(Path.cwd())),
+        sha256=hashlib.sha256(raw).hexdigest(),
+    )
+    temporary = Path("data/backups") / (".d38-pointer-" + uuid4().hex + ".tmp")
+    create(temporary, (json.dumps(pointer, indent=2) + "\n").encode())
+    os.replace(temporary, Path("data/backups/d38-most-recent-trial.json"))
+    for parent in (directory, Path("data/backups")):
+        descriptor = os.open(parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+    logger.info("coding_trial_summary_saved bytes=%d", len(raw))
+    return target
 
 
 @pytest.mark.asyncio
@@ -53,6 +99,4 @@ async def test_actual_existing_core_coding_baseline():
         freeze_sha256=hashlib.sha256(freeze_path.read_bytes()).hexdigest(),
         report=result,
     )
-    latest = Path("data/backups/d38-latest-core-observations.json")
-    latest.write_text(json.dumps(summary, indent=2) + "\n")
-    latest.chmod(0o600)
+    save_trial_summary(directory, summary)

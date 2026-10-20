@@ -45,8 +45,8 @@ def process_xlsx(source, operation="read", plan=None):
             command = sandbox_command(
                 ["/venv/bin/python", "-m", "src.infrastructure.xlsx_worker", operation]
             )
-            separator = command.index("--")
-            command[separator:separator] = [
+            payload_index = command.index("--ro-bind-data")
+            command[payload_index:payload_index] = [
                 "--ro-bind-data",
                 str(request.fileno()),
                 "/request.json",
