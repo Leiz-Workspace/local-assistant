@@ -1,0 +1,40 @@
+{
+  "description": "Actual isolated Ruff correctness/import and format checks after all four reproduced D44 patch/check uncertainty cases.",
+  "evaluated_files": [
+    "apps/api/main.py",
+    "apps/api/routes/workflow_controls.py",
+    "apps/api/services/coding_workflows.py",
+    "apps/api/services/controlled_coding_workflows.py",
+    "apps/api/services/workflow_cancellation.py",
+    "apps/api/storage/coding_workflows.py",
+    "src/application/services/workflow_controls.py",
+    "tests/integration/test_workflow_controls_http.py",
+    "tests/test_controlled_coding_workflow_service.py",
+    "tests/test_workflow_cancellation.py",
+    "tests/test_workflow_controls.py",
+    "tests/test_workflow_controls_startup.py"
+  ],
+  "described_functions_classes": 128,
+  "checks": [
+    {
+      "options": [
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "options": [
+        "format",
+        "--isolated",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "12 files already formatted\n"
+    }
+  ],
+  "source_freeze_sha256": "db558fe1e9441626148fec923148eb147f32b77e5a28c56a060890c7159c2b3f"
+}
