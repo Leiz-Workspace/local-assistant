@@ -1,0 +1,679 @@
+{
+  "description": "Ten same-agent authored realistic bounded D46 utility repairs with distinct visible and held-out functional examples, complete source/test bytes and predeclared one-attempt evaluation contract.",
+  "version": "d46-v1",
+  "human_independent": false,
+  "cases": [
+    {
+      "id": "timeout-units",
+      "function": "parse_timeout",
+      "parameters": [
+        "text"
+      ],
+      "description": "Convert integer duration text with ms or s suffixes to milliseconds.",
+      "issue": "Sửa parse_timeout: hậu tố ms là milliseconds, s phải nhân1000, số không hậu tố là milliseconds. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 timeout-units utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef parse_timeout(text):\n    \"\"\"Convert integer duration text with ms or s suffixes to milliseconds.\"\"\"\n    logger.info(\"d46_fixture_call case=timeout-units\")\n    if text.endswith(\"ms\"):\n        return int(text[:-2]) * 1000\n    if text.endswith(\"s\"):\n        return int(text[:-1]) * 1000\n    return int(text)\n",
+      "reference_source": "\"\"\"Provide the disposable D46 timeout-units utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef parse_timeout(text):\n    \"\"\"Convert integer duration text with ms or s suffixes to milliseconds.\"\"\"\n    logger.info(\"d46_fixture_call case=timeout-units\")\n    if text.endswith(\"ms\"):\n        return int(text[:-2])\n    if text.endswith(\"s\"):\n        return int(text[:-1]) * 1000\n    return int(text)\n",
+      "visible_examples": [
+        {
+          "args": [
+            "250ms"
+          ],
+          "expected": 250
+        },
+        {
+          "args": [
+            "2s"
+          ],
+          "expected": 2000
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "15"
+          ],
+          "expected": 15
+        },
+        {
+          "args": [
+            "7ms"
+          ],
+          "expected": 7
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 timeout-units.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import parse_timeout\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=timeout-units suite=visible\")\n        examples = [{'args': ['250ms'], 'expected': 250}, {'args': ['2s'], 'expected': 2000}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        parse_timeout(*arguments)\n                else:\n                    self.assertEqual(parse_timeout(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 timeout-units.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import parse_timeout\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=timeout-units suite=heldout\")\n        examples = [{'args': ['15'], 'expected': 15}, {'args': ['7ms'], 'expected': 7}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        parse_timeout(*arguments)\n                else:\n                    self.assertEqual(parse_timeout(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "d8f9c39768f43899f9e8220c0fbd9f7389914df7ea6fdf2267ff676f3d445dea",
+        "reference_source": "f230b77d981ffb102bf5ad178cf696954df1db295ca61f8a8813055e85da31aa",
+        "visible_test_source": "282b1ca18e96d2d9f81bf6b41c0a9a1125a334c6203c2b287f96b9deb776def8",
+        "heldout_test_source": "896265e06e0b3dd55fd4740b178f4741f863265eac52fc942e04e7dc323bef94"
+      }
+    },
+    {
+      "id": "token-masking",
+      "function": "mask_token",
+      "parameters": [
+        "token",
+        "keep"
+      ],
+      "description": "Mask every character when visible suffix length is zero or covers the whole token.",
+      "issue": "Fix token masking: show only the last keep characters when0<keep<len(token); otherwise mask the entire token. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 token-masking utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef mask_token(token, keep):\n    \"\"\"Mask every character when visible suffix length is zero or covers the whole token.\"\"\"\n    logger.info(\"d46_fixture_call case=token-masking\")\n    return \"*\" * max(0, len(token) - keep) + token[-keep:]\n",
+      "reference_source": "\"\"\"Provide the disposable D46 token-masking utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef mask_token(token, keep):\n    \"\"\"Mask every character when visible suffix length is zero or covers the whole token.\"\"\"\n    logger.info(\"d46_fixture_call case=token-masking\")\n    if keep <= 0 or keep >= len(token):\n        return \"*\" * len(token)\n    return \"*\" * (len(token) - keep) + token[-keep:]\n",
+      "visible_examples": [
+        {
+          "args": [
+            "abcdef",
+            2
+          ],
+          "expected": "****ef"
+        },
+        {
+          "args": [
+            "abcdef",
+            0
+          ],
+          "expected": "******"
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "abc",
+            5
+          ],
+          "expected": "***"
+        },
+        {
+          "args": [
+            "",
+            2
+          ],
+          "expected": ""
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 token-masking.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import mask_token\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=token-masking suite=visible\")\n        examples = [{'args': ['abcdef', 2], 'expected': '****ef'}, {'args': ['abcdef', 0], 'expected': '******'}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        mask_token(*arguments)\n                else:\n                    self.assertEqual(mask_token(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 token-masking.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import mask_token\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=token-masking suite=heldout\")\n        examples = [{'args': ['abc', 5], 'expected': '***'}, {'args': ['', 2], 'expected': ''}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        mask_token(*arguments)\n                else:\n                    self.assertEqual(mask_token(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "71d92d07a2143623a8f489de6ffe01e510a3277a69e89f01b02afb77a1173fb5",
+        "reference_source": "7c2e8142627fafdf0afa06465b443e0ad5b4d213cc68e365d52b802b21bfac28",
+        "visible_test_source": "14e38b68ec69fcfa57a73cd7355d68a02fadab1e2a8cdb0d8317fc772485a552",
+        "heldout_test_source": "69e0a35c9da8389c57acecc54422c9648f0c913a1108ec1d4c3ead5dec2a1909"
+      }
+    },
+    {
+      "id": "api-path-join",
+      "function": "join_api_path",
+      "parameters": [
+        "base",
+        "path"
+      ],
+      "description": "Join one API path boundary while preserving the base prefix.",
+      "issue": "Sửa join_api_path để giữa base và path chỉ có một dấu slash; giữ nguyên prefix bên trong base. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 api-path-join utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef join_api_path(base, path):\n    \"\"\"Join one API path boundary while preserving the base prefix.\"\"\"\n    logger.info(\"d46_fixture_call case=api-path-join\")\n    return base.rstrip(\"/\") + \"/\" + path\n",
+      "reference_source": "\"\"\"Provide the disposable D46 api-path-join utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef join_api_path(base, path):\n    \"\"\"Join one API path boundary while preserving the base prefix.\"\"\"\n    logger.info(\"d46_fixture_call case=api-path-join\")\n    return base.rstrip(\"/\") + \"/\" + path.lstrip(\"/\")\n",
+      "visible_examples": [
+        {
+          "args": [
+            "https://local/api/",
+            "/files"
+          ],
+          "expected": "https://local/api/files"
+        },
+        {
+          "args": [
+            "api",
+            "files"
+          ],
+          "expected": "api/files"
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "api///",
+            "///files"
+          ],
+          "expected": "api/files"
+        },
+        {
+          "args": [
+            "",
+            "/files"
+          ],
+          "expected": "/files"
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 api-path-join.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import join_api_path\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=api-path-join suite=visible\")\n        examples = [{'args': ['https://local/api/', '/files'], 'expected': 'https://local/api/files'}, {'args': ['api', 'files'], 'expected': 'api/files'}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        join_api_path(*arguments)\n                else:\n                    self.assertEqual(join_api_path(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 api-path-join.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import join_api_path\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=api-path-join suite=heldout\")\n        examples = [{'args': ['api///', '///files'], 'expected': 'api/files'}, {'args': ['', '/files'], 'expected': '/files'}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        join_api_path(*arguments)\n                else:\n                    self.assertEqual(join_api_path(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "4f59425687c271af5ba176394dbf09765a84481103624f18ccf2f119580bb688",
+        "reference_source": "1a001351679319d351d700217ed9e8f9d4036f785a08b9b9c9850cfea9e92b92",
+        "visible_test_source": "043cdb29947a4ef966631fd97c791527fade35efcb8da55a69be36da1743a9d0",
+        "heldout_test_source": "6571b54efecc20a9f62b2df3c4992b791d695aa70a7e55a1ebc0bec58905c961"
+      }
+    },
+    {
+      "id": "stable-id-order",
+      "function": "deduplicate_ids",
+      "parameters": [
+        "values"
+      ],
+      "description": "Return unique identifiers in their first-occurrence order without mutating input.",
+      "issue": "Fix deduplicate_ids to preserve first occurrence order and case sensitivity, without mutating the input. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 stable-id-order utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef deduplicate_ids(values):\n    \"\"\"Return unique identifiers in their first-occurrence order without mutating input.\"\"\"\n    logger.info(\"d46_fixture_call case=stable-id-order\")\n    return sorted(set(values))\n",
+      "reference_source": "\"\"\"Provide the disposable D46 stable-id-order utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef deduplicate_ids(values):\n    \"\"\"Return unique identifiers in their first-occurrence order without mutating input.\"\"\"\n    logger.info(\"d46_fixture_call case=stable-id-order\")\n    seen = set()\n    result = []\n    for value in values:\n        if value not in seen:\n            seen.add(value)\n            result.append(value)\n    return result\n",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              "b",
+              "a",
+              "b"
+            ]
+          ],
+          "expected": [
+            "b",
+            "a"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              2,
+              1,
+              2,
+              3,
+              1
+            ]
+          ],
+          "expected": [
+            2,
+            1,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              "A",
+              "a",
+              "A"
+            ]
+          ],
+          "expected": [
+            "A",
+            "a"
+          ]
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 stable-id-order.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import deduplicate_ids\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=stable-id-order suite=visible\")\n        examples = [{'args': [['b', 'a', 'b']], 'expected': ['b', 'a']}, {'args': [[]], 'expected': []}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        deduplicate_ids(*arguments)\n                else:\n                    self.assertEqual(deduplicate_ids(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 stable-id-order.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import deduplicate_ids\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=stable-id-order suite=heldout\")\n        examples = [{'args': [[2, 1, 2, 3, 1]], 'expected': [2, 1, 3]}, {'args': [['A', 'a', 'A']], 'expected': ['A', 'a']}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        deduplicate_ids(*arguments)\n                else:\n                    self.assertEqual(deduplicate_ids(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "12eee5acef9212bd5eda2f658de22e0ffede98743f64e5d23efa3c44c365d787",
+        "reference_source": "6c7f4d433386812e68aba857669dda92e67c21ed8c3b9911b139547c1740f8b4",
+        "visible_test_source": "a574769f2647e71c574726a1eb3d08691485e29591ca4c405988aa4a4a634f89",
+        "heldout_test_source": "c5cf69222c2203d7bbad20d09f1acea8c34f5c93eb7d6abc45f6caa6c6fac09b"
+      }
+    },
+    {
+      "id": "partial-batch-tail",
+      "function": "split_batches",
+      "parameters": [
+        "values",
+        "size"
+      ],
+      "description": "Keep every item in bounded batches including the final partial batch.",
+      "issue": "Sửa split_batches: giữ batch cuối dù chưa đủ size, input rỗng trả[], size không dương báo ValueError. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 partial-batch-tail utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef split_batches(values, size):\n    \"\"\"Keep every item in bounded batches including the final partial batch.\"\"\"\n    logger.info(\"d46_fixture_call case=partial-batch-tail\")\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    return [values[index:index + size] for index in range(0, len(values) - size + 1, size)]\n",
+      "reference_source": "\"\"\"Provide the disposable D46 partial-batch-tail utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef split_batches(values, size):\n    \"\"\"Keep every item in bounded batches including the final partial batch.\"\"\"\n    logger.info(\"d46_fixture_call case=partial-batch-tail\")\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    return [values[index:index + size] for index in range(0, len(values), size)]\n",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5
+            ]
+          ]
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            0
+          ],
+          "raises": "ValueError"
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 partial-batch-tail.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import split_batches\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=partial-batch-tail suite=visible\")\n        examples = [{'args': [[1, 2, 3, 4, 5], 2], 'expected': [[1, 2], [3, 4], [5]]}, {'args': [[], 3], 'expected': []}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        split_batches(*arguments)\n                else:\n                    self.assertEqual(split_batches(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 partial-batch-tail.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import split_batches\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=partial-batch-tail suite=heldout\")\n        examples = [{'args': [[1, 2], 5], 'expected': [[1, 2]]}, {'args': [[1], 0], 'raises': 'ValueError'}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        split_batches(*arguments)\n                else:\n                    self.assertEqual(split_batches(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "3db649bb5d1474ced2565540c3f91d8bead40aa4f33c29ff2cc0fe1ac5cd2b9e",
+        "reference_source": "398b78dda8f2a3f32b5302fcb7699a254aa9e6e075f6b2ac8c8d8398d8107ebd",
+        "visible_test_source": "c3ce4c3fb1a077c833333b3a4daceddcee52a592c14e30e42894c716458d786d",
+        "heldout_test_source": "e277e2d24f48c8b91b9159d24a1e1d5113b183cefb473d3935f157cba2dfea25"
+      }
+    },
+    {
+      "id": "fractional-quota-percent",
+      "function": "percent_used",
+      "parameters": [
+        "used",
+        "total"
+      ],
+      "description": "Return usage percentage rounded to two decimals or zero for nonpositive totals.",
+      "issue": "Fix percent_used to retain fractional usage before rounding to two decimals; nonpositive totals return0. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 fractional-quota-percent utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef percent_used(used, total):\n    \"\"\"Return usage percentage rounded to two decimals or zero for nonpositive totals.\"\"\"\n    logger.info(\"d46_fixture_call case=fractional-quota-percent\")\n    if total <= 0:\n        return 0\n    return round((used // total) * 100, 2)\n",
+      "reference_source": "\"\"\"Provide the disposable D46 fractional-quota-percent utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef percent_used(used, total):\n    \"\"\"Return usage percentage rounded to two decimals or zero for nonpositive totals.\"\"\"\n    logger.info(\"d46_fixture_call case=fractional-quota-percent\")\n    if total <= 0:\n        return 0\n    return round(used * 100 / total, 2)\n",
+      "visible_examples": [
+        {
+          "args": [
+            1,
+            4
+          ],
+          "expected": 25.0
+        },
+        {
+          "args": [
+            0,
+            0
+          ],
+          "expected": 0
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            3,
+            8
+          ],
+          "expected": 37.5
+        },
+        {
+          "args": [
+            5,
+            2
+          ],
+          "expected": 250.0
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 fractional-quota-percent.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import percent_used\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=fractional-quota-percent suite=visible\")\n        examples = [{'args': [1, 4], 'expected': 25.0}, {'args': [0, 0], 'expected': 0}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        percent_used(*arguments)\n                else:\n                    self.assertEqual(percent_used(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 fractional-quota-percent.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import percent_used\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=fractional-quota-percent suite=heldout\")\n        examples = [{'args': [3, 8], 'expected': 37.5}, {'args': [5, 2], 'expected': 250.0}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        percent_used(*arguments)\n                else:\n                    self.assertEqual(percent_used(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "3db7ec4fc6c67d7342aab9d8e3a6ae269891f4a09bc4d689b55ba9ceec21239a",
+        "reference_source": "f26a681959d1af30855851169ac79cf3d4b4b82209a0ed860f403f5ce569765b",
+        "visible_test_source": "950ee4620b285a1cd833ffb8ddd357d773fc43235716cabff209be84cb98abea",
+        "heldout_test_source": "2c72fa24f3c408760e8c3003e67cd5c8b63e1ff35753be4d36fc47eb98ad2fba"
+      }
+    },
+    {
+      "id": "header-redaction-case",
+      "function": "redact_headers",
+      "parameters": [
+        "headers"
+      ],
+      "description": "Redact secret header values case-insensitively while preserving original keys.",
+      "issue": "Sửa redact_headers: Authorization, X-Api-Key và Cookie phải được che thành*** không phân biệt hoa thường, giữ keys và header khác. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 header-redaction-case utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef redact_headers(headers):\n    \"\"\"Redact secret header values case-insensitively while preserving original keys.\"\"\"\n    logger.info(\"d46_fixture_call case=header-redaction-case\")\n    return {name: \"***\" if name in {\"authorization\", \"x-api-key\", \"cookie\"} else value for name, value in headers.items()}\n",
+      "reference_source": "\"\"\"Provide the disposable D46 header-redaction-case utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef redact_headers(headers):\n    \"\"\"Redact secret header values case-insensitively while preserving original keys.\"\"\"\n    logger.info(\"d46_fixture_call case=header-redaction-case\")\n    return {name: \"***\" if name.lower() in {\"authorization\", \"x-api-key\", \"cookie\"} else value for name, value in headers.items()}\n",
+      "visible_examples": [
+        {
+          "args": [
+            {
+              "Authorization": "synthetic-token",
+              "Accept": "text/plain"
+            }
+          ],
+          "expected": {
+            "Authorization": "***",
+            "Accept": "text/plain"
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {}
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            {
+              "x-API-key": "synthetic-key",
+              "Cookie": "session-fixture"
+            }
+          ],
+          "expected": {
+            "x-API-key": "***",
+            "Cookie": "***"
+          }
+        },
+        {
+          "args": [
+            {
+              "cookie": "private-fixture",
+              "X-Trace": "42"
+            }
+          ],
+          "expected": {
+            "cookie": "***",
+            "X-Trace": "42"
+          }
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 header-redaction-case.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import redact_headers\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=header-redaction-case suite=visible\")\n        examples = [{'args': [{'Authorization': 'synthetic-token', 'Accept': 'text/plain'}], 'expected': {'Authorization': '***', 'Accept': 'text/plain'}}, {'args': [{}], 'expected': {}}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        redact_headers(*arguments)\n                else:\n                    self.assertEqual(redact_headers(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 header-redaction-case.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import redact_headers\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=header-redaction-case suite=heldout\")\n        examples = [{'args': [{'x-API-key': 'synthetic-key', 'Cookie': 'session-fixture'}], 'expected': {'x-API-key': '***', 'Cookie': '***'}}, {'args': [{'cookie': 'private-fixture', 'X-Trace': '42'}], 'expected': {'cookie': '***', 'X-Trace': '42'}}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        redact_headers(*arguments)\n                else:\n                    self.assertEqual(redact_headers(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "b656c7559453e7f8ed1a276a7a452619795860c1145638042132391deebb76d8",
+        "reference_source": "4e401f8327fb86df0f7a6b152046fa37ed9a462e5dacce53201ccc12bbaa0573",
+        "visible_test_source": "1b8a21301f247d4f823521012939891524ac5cc94900706c06f6a23890495040",
+        "heldout_test_source": "979d7c7a90600d5ec8d62f7e569f423895c0916ba42c7981fb52de49401ad6f8"
+      }
+    },
+    {
+      "id": "explicit-boolean-text",
+      "function": "parse_bool",
+      "parameters": [
+        "value"
+      ],
+      "description": "Parse explicit trimmed boolean text and reject unsupported values.",
+      "issue": "Fix parse_bool: trim whitespace and ignore case; true/yes/1/on map to True, false/no/0/off map to False; otherwise raise ValueError. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 explicit-boolean-text utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef parse_bool(value):\n    \"\"\"Parse explicit trimmed boolean text and reject unsupported values.\"\"\"\n    logger.info(\"d46_fixture_call case=explicit-boolean-text\")\n    return bool(value)\n",
+      "reference_source": "\"\"\"Provide the disposable D46 explicit-boolean-text utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef parse_bool(value):\n    \"\"\"Parse explicit trimmed boolean text and reject unsupported values.\"\"\"\n    logger.info(\"d46_fixture_call case=explicit-boolean-text\")\n    normalized = value.strip().casefold()\n    if normalized in {\"true\", \"yes\", \"1\", \"on\"}:\n        return True\n    if normalized in {\"false\", \"no\", \"0\", \"off\"}:\n        return False\n    raise ValueError(\"unsupported boolean text\")\n",
+      "visible_examples": [
+        {
+          "args": [
+            "TRUE"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            " false "
+          ],
+          "expected": false
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "0"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "maybe"
+          ],
+          "raises": "ValueError"
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 explicit-boolean-text.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import parse_bool\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=explicit-boolean-text suite=visible\")\n        examples = [{'args': ['TRUE'], 'expected': True}, {'args': [' false '], 'expected': False}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        parse_bool(*arguments)\n                else:\n                    self.assertEqual(parse_bool(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 explicit-boolean-text.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import parse_bool\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=explicit-boolean-text suite=heldout\")\n        examples = [{'args': ['0'], 'expected': False}, {'args': ['maybe'], 'raises': 'ValueError'}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        parse_bool(*arguments)\n                else:\n                    self.assertEqual(parse_bool(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "7e6e59c948586e8b62c58dbc9431e78eb2789a2ecf7a375ca46942a0cac23444",
+        "reference_source": "af626178a6856bcb6492a54c9bb495334ba729086265906265463315c45ff721",
+        "visible_test_source": "b29e760bfc452c205f6aac2a5b0ff00decbaa713e112fb61cfa91bdf6dada1d7",
+        "heldout_test_source": "b7183a6c2a42680aa4edb8e62c1d1b8a6fc0deefc2f0d7a525f14f172698c37a"
+      }
+    },
+    {
+      "id": "capped-retry-arithmetic",
+      "function": "retry_delay",
+      "parameters": [
+        "attempt",
+        "base",
+        "cap"
+      ],
+      "description": "Return capped exponential delay with attempt zero using the base delay.",
+      "issue": "Sửa retry_delay: attempt0 hoặc âm dùng base; attempt1 dùng2*base; các attempt sau tăng lũy thừa2 và không vượt cap. Đây chỉ là hàm tính toán. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 capped-retry-arithmetic utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef retry_delay(attempt, base, cap):\n    \"\"\"Return capped exponential delay with attempt zero using the base delay.\"\"\"\n    logger.info(\"d46_fixture_call case=capped-retry-arithmetic\")\n    return min(cap, base * 2 ** (attempt + 1))\n",
+      "reference_source": "\"\"\"Provide the disposable D46 capped-retry-arithmetic utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef retry_delay(attempt, base, cap):\n    \"\"\"Return capped exponential delay with attempt zero using the base delay.\"\"\"\n    logger.info(\"d46_fixture_call case=capped-retry-arithmetic\")\n    return min(cap, base * 2 ** max(0, attempt))\n",
+      "visible_examples": [
+        {
+          "args": [
+            0,
+            2,
+            30
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            1,
+            2,
+            30
+          ],
+          "expected": 4
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            8,
+            2,
+            30
+          ],
+          "expected": 30
+        },
+        {
+          "args": [
+            -1,
+            2,
+            30
+          ],
+          "expected": 2
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 capped-retry-arithmetic.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import retry_delay\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=capped-retry-arithmetic suite=visible\")\n        examples = [{'args': [0, 2, 30], 'expected': 2}, {'args': [1, 2, 30], 'expected': 4}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        retry_delay(*arguments)\n                else:\n                    self.assertEqual(retry_delay(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 capped-retry-arithmetic.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import retry_delay\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=capped-retry-arithmetic suite=heldout\")\n        examples = [{'args': [8, 2, 30], 'expected': 30}, {'args': [-1, 2, 30], 'expected': 2}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        retry_delay(*arguments)\n                else:\n                    self.assertEqual(retry_delay(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "428b06ed835e790f6872e0fa982c123d737af6c68ceb8900a5270486dc14e7c2",
+        "reference_source": "8ef247b0bd03157b94563df772c91716545cff19572a183de4a9a5c71c889126",
+        "visible_test_source": "bed3fd0862787ad50b7f89715120c77047f85f47ae65133cd46d0149120f129b",
+        "heldout_test_source": "4e59181885df8afb66f218a3dcfd93b92d1d84b709162076fc8344c98148c071"
+      }
+    },
+    {
+      "id": "owner-live-filter",
+      "function": "filter_visible",
+      "parameters": [
+        "items",
+        "owner"
+      ],
+      "description": "Return only undeleted identifiers owned by the requested owner.",
+      "issue": "Fix filter_visible to require both matching owner and not deleted; missing deleted means False; preserve input order and do not mutate input. Preserve the existing imports, logger binding, function name/signature and initial audit call. Keep a single described pure utility; no new imports/helpers/decorators/defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "buggy_source": "\"\"\"Provide the disposable D46 owner-live-filter utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef filter_visible(items, owner):\n    \"\"\"Return only undeleted identifiers owned by the requested owner.\"\"\"\n    logger.info(\"d46_fixture_call case=owner-live-filter\")\n    return [item[\"id\"] for item in items if item.get(\"owner\") == owner or not item.get(\"deleted\", False)]\n",
+      "reference_source": "\"\"\"Provide the disposable D46 owner-live-filter utility fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef filter_visible(items, owner):\n    \"\"\"Return only undeleted identifiers owned by the requested owner.\"\"\"\n    logger.info(\"d46_fixture_call case=owner-live-filter\")\n    return [item[\"id\"] for item in items if item.get(\"owner\") == owner and not item.get(\"deleted\", False)]\n",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "owner": "a"
+              },
+              {
+                "id": 2,
+                "owner": "b"
+              },
+              {
+                "id": 3,
+                "owner": "a",
+                "deleted": true
+              }
+            ],
+            "a"
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [],
+            "a"
+          ],
+          "expected": []
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              {
+                "id": 2,
+                "owner": "b"
+              },
+              {
+                "id": 4,
+                "owner": "b",
+                "deleted": true
+              }
+            ],
+            "b"
+          ],
+          "expected": [
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 7,
+                "owner": "a"
+              },
+              {
+                "id": 8,
+                "owner": "b",
+                "deleted": false
+              }
+            ],
+            "a"
+          ],
+          "expected": [
+            7
+          ]
+        }
+      ],
+      "visible_test_source": "\"\"\"Verify frozen visible examples for D46 owner-live-filter.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import filter_visible\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=owner-live-filter suite=visible\")\n        examples = [{'args': [[{'id': 1, 'owner': 'a'}, {'id': 2, 'owner': 'b'}, {'id': 3, 'owner': 'a', 'deleted': True}], 'a'], 'expected': [1]}, {'args': [[], 'a'], 'expected': []}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        filter_visible(*arguments)\n                else:\n                    self.assertEqual(filter_visible(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout examples for D46 owner-live-filter.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import filter_visible\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Check only predeclared functional examples and input immutability.\"\"\"\n\n    def test_frozen_examples(self):\n        \"\"\"Compare actual outputs/exceptions with fixed independent fixture expectations.\"\"\"\n        logger.info(\"d46_oracle_started case=owner-live-filter suite=heldout\")\n        examples = [{'args': [[{'id': 2, 'owner': 'b'}, {'id': 4, 'owner': 'b', 'deleted': True}], 'b'], 'expected': [2]}, {'args': [[{'id': 7, 'owner': 'a'}, {'id': 8, 'owner': 'b', 'deleted': False}], 'a'], 'expected': [7]}]\n        for index, example in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(example[\"args\"])\n                original = copy.deepcopy(arguments)\n                if example.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        filter_visible(*arguments)\n                else:\n                    self.assertEqual(filter_visible(*arguments), example[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "98a718e8a42cd2f55bafd09dc85eeab4dfcde3c015d631cce8ee060d386fc02b",
+        "reference_source": "ff2982b4029266d6883c60529c8a11a1489d6b67bd74ffc6e574fa5f8318283a",
+        "visible_test_source": "3fcb98d74151ad89a25e731cd396f2cb080f256bb6a3f3bd9e885f4d51aeec60",
+        "heldout_test_source": "abaffa40a104de1bb64f925323ecfadf6159ddea663673a10750c5529bc77570"
+      }
+    }
+  ],
+  "model_budget": {
+    "profile": "core",
+    "preset": "fast",
+    "temperature": 0,
+    "max_tokens": 2048,
+    "generation_seconds": 60,
+    "attempts_per_case": 1,
+    "total_attempts": 10,
+    "automatic_retries": 0
+  },
+  "review_contract": {
+    "description": "Trusted narrow fixture review only; not a new production policy or universal Python safety proof.",
+    "single_existing_target": true,
+    "single_function": true,
+    "signature_and_initial_audit_call_preserved": true,
+    "logging_header_preserved": true,
+    "new_imports_helpers_decorators_defaults_globals_or_external_actions": false
+  },
+  "gate": {
+    "description": "Ten complete authored measurements and actual authority/evidence/oracle integrity are required; report model functional repair score separately without inferring production quality.",
+    "minimum_measured_cases": 10,
+    "minimum_general_quality_score": null,
+    "reference_native_must_pass": true,
+    "buggy_native_must_fail": true,
+    "visible_and_heldout_both_required_for_functional_pass": true,
+    "source_and_canary_integrity_required": true
+  }
+}
