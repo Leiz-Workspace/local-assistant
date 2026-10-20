@@ -1,0 +1,26 @@
+{
+  "description": "Actual first D43 related regression failed because the previously running configured CORE process was absent; no listener on localhost8080, same boot, no evidence of the stopping cause. No source/model/config change or failed-trial score replacement.",
+  "status": "FAILED_ENVIRONMENT_CORE_UNAVAILABLE",
+  "failed": 2,
+  "passed": 1188,
+  "skipped": 0,
+  "exit_code": 1,
+  "pytest_seconds": 67.67,
+  "failed_cases": [
+    "test_actual_existing_core_frozen_source_explanations",
+    "test_actual_existing_core_frozen_diagnostic_plan"
+  ],
+  "log": "data/backups/d43-core-unavailable-related.log",
+  "log_sha256": "7acda1724fdd630163251bea773c37de260c12283911d9801456d6be09306922",
+  "original_result": "data/backups/d43-core-unavailable-related.result.json",
+  "original_result_sha256": "d1e7341d18d18b32b0935e6017d7cec82fba1a983b7c6b2a553ca7e83c723e2e",
+  "source_freeze_sha256": "4325f7b9279298c49782ada9bd6ce38e98eba076c7e783df2fbda6ab40465a86",
+  "collection_attempt": {
+    "exit_code": 2,
+    "collected": 2548,
+    "errors": 1,
+    "reason": "historical test_core_acceptance imports localhost8080 at collection time"
+  },
+  "first_actual_D43_CORE_sample_preserved": true,
+  "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49"
+}

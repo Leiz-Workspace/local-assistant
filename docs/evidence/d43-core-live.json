@@ -1,0 +1,37 @@
+{
+  "description": "First actual unchanged CORE visible D43 sample through TCP/two typed fixture approvals/checkpoint/native unittest. Narrow authored structural/four-assertion fixture proof, not general model quality or D38 replacement.",
+  "status": "PASS_VISIBLE_SAMPLE_WORKFLOW",
+  "actual_pytest_passed": 1,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 4.61,
+  "artifact": {
+    "description": "Pointer only; every D43 trial summary remains exclusive and immutable.",
+    "path": "data/backups/d43-live-workflow-8677ad6dcdc140c9a74cb7c88c1b0bfa/summary.json",
+    "sha256": "624a8801b0e57fecaf5a640d1149472196fd35f286611e8485c62c372689429b"
+  },
+  "case_sha256": "2153fba8d61b1d5cc2cda3f980a388a567cdddbd3634500e45e72ae216607075",
+  "model_port_attempts": 1,
+  "fixture_approvals": 2,
+  "structural_oracle_passed": true,
+  "candidate_bytes_match_reference": false,
+  "reference_byte_hash_is_not_structural_oracle": true,
+  "native_fixture_assertions": 4,
+  "fixed_test_source_unchanged": true,
+  "summary": {
+    "applied_sha256": "58d1de64925ec5cf8d29e30f596565fda12bcce142a57c6011e8660270d4eb0c",
+    "checkpoint_id": "5ea7de1a-ecce-4eb7-b97e-060bad108bb4",
+    "current_source_observed": false,
+    "edit_applied": true,
+    "native_exit_code": 0,
+    "native_outcome": "exited",
+    "native_started": true,
+    "output_is_untrusted": true,
+    "quality_evaluated": false,
+    "summary_source": "trusted_component_receipts",
+    "tested_source_version": "38581337c253b2bfe5812052ecf83dd5fda886e702bac6f1cd8b992169d9fb0d"
+  },
+  "model_replaced": false,
+  "production_action_approved": false,
+  "original_D38_replaced": false
+}
