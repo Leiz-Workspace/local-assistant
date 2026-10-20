@@ -1,0 +1,13 @@
+{
+  "description": "Post-reboot cleanup of exactly one observed owned empty la_d25 acceptance probe; no source rows, vectors or unrelated collection removed.",
+  "name": "la_d25_probe_422175d8e1a54420953e232cb1fdff6f",
+  "metadata": {
+    "application": "local-assistant-ingestion-v1",
+    "owner_id": "a011116b-cf16-49d0-b1a6-20706bbd3415",
+    "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b"
+  },
+  "points_before": 0,
+  "quiet_database_and_no_file_jobs_verified": true,
+  "collections_after": 0,
+  "source_code_models_configs_unchanged": true
+}

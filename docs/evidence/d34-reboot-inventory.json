@@ -1,0 +1,18 @@
+{
+  "description": "Read-only post-reboot persistent inventory, no source payload or credentials.",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "quota": [
+    0,
+    0,
+    0
+  ],
+  "pending_inference": 0,
+  "revision": "0006"
+}

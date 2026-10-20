@@ -2891,3 +2891,29 @@ All accepted D32 application/test/config/model/dependency/applied migration byte
 [Scope/limits](../docs/D33_WORKSPACE_SCOPE.md), [acceptance](../docs/evidence/d33-workspace-acceptance.json), [source freeze](../docs/evidence/d33-workspace-freeze.json), [post-audit](../docs/evidence/d33-final-post-audit.json). Full-version ZIP `/tmp/local-assistant-d33-complete-full-files.zip`; local commit includes dev log, no push.
 
 **Status: D33 PASS for the local capability/discovery foundation; D34 NEXT.** No authenticated repository read endpoint yet. Admission-time descriptor policy is not a sandbox against arbitrary same-UID host processes or a guarantee of membership after later path movement; bounded authenticated inventory/search and line provenance are D34, writes/execution/approval require their later gates.
+
+
+# 2026-10-20 — D34 authenticated workspace snapshots in progress
+
+**Purpose:** Continue after D33 `3a3489e` without stopping at an arbitrary milestone boundary; implement bounded source discovery/reads before coding tools.
+
+ADR-052 precedes default-off operator-private explicit workspace config and local bearer/Origin-protected discovery/inventory/read/literal search/lexical Python hint APIs. Reuse D33 actual openat2 scope; no model/git/shell/hooks execution, writes, database/schema/Vault/config/dependency changes. Only existing app router/lifecycle composition is extended; no host workspace is registered. New snapshots retain root through final inode/stat/hash/marker validation before headers; source lines preserve raw hash, LF line numbers and Unicode columns, with exact CRLF handling. Strict request/scan/file/line/response bounds,16KiB incoming stream guard,5-second cooperative deadline and joined worker/descriptor cancellation.
+
+Intermediate69 PASS/.89s,83 PASS/.95s and86 PASS/.97s cover real HTTP/TCP/source/auth/limits; later149/152 focused checkpoints include existing63 D33 cases and stronger native limits, completed-worker ownership race, repeated cancel/shutdown/send-error and later DB-startup rollback. These are subset checkpoints, not added full-suite totals. Final153 workspace-focused cases include a lone final CR oracle; actual full application regression/source freeze and final audit pending. No D34 PASS or D35 advancement yet.
+
+See [scope/limits](../docs/D34_WORKSPACE_READS.md), ADR-052 and new tests. Keep current models/E5 rollback, applied V001–V006 and all unrelated PASS code unchanged.
+
+
+D34 pre-full hardening checkpoint: **153 workspace-focused PASS/1.09s,0 SKIP** preceded full1774 invocation. While it ran, an independent isolated HTTP probe found actual malformed-body failures: NaN raises ValueError and overlong unpaired surrogate raises UnicodeEncodeError during framework error serialization. Intentionally SIGINT only the verified pytest PID; normal fixture teardown completed **exit2/no completed tests/414.48s**. This interrupted run is neither PASS nor a completed regression; v1 freeze/log/exit metadata retained. Add strict bounded JSON-object parsing on the new router only (duplicate/nonfinite/exponent-overflow/depth/Unicode rejection before framework parsing).11 new malformed-body cases require safe422 before any workspace root open. New evaluated source/full rerun and post-audit pending; D34 stays IN PROGRESS.
+
+
+Post-correction checkpoint: **164 workspace-focused PASS/1.10s,0 SKIP**, including101 new D34 cases and unchanged63 D33 cases.11 malformed-body cases now return sanitized422 before root access. Ruff correctness/import/format passes11 Python files/91 described function-class definitions. Interrupted-run read-only audit verifies0006, source/memory/quota/probe DB/vector/model-worker/advisory-lock inventories0, no app/pending work and original owners/ACL/narrow grants preserved. V2 freeze fixes301 evaluated files/protected hashes; full **1785** application rerun started with durable per-test progress/exit metadata, still pending. No D34 PASS or D35 implementation/adoption; ADR-053/tool plan are preparation drafts only.
+
+
+## D34 resumed after observed host restart — 2026-10-20
+
+Corrected full-run log retains159 completed PASS and no failure markers, but no wrapper/pytest process or observed exit remains. Host boot is now07:30:57 local; prior log last modified01:51:38 local, so exact cause/time of process loss is not established. `/tmp` helpers disappeared. This159-case partial is **not a completed full regression**. Earlier status message inferred liveness from a stale running sidecar; corrected by actual PID/boot inspection and new boot-aware monitoring. Full source301/protected hashes match exactly.
+
+Existing Vault unsealed using existing protected material, audit device preserved; original CORE/vision resumed and health200 confirmed. No rotation, model/config/dependency/infrastructure change. Readonly DB0006: files/jobs/heads/memory/quota/pending inference0. Qdrant has one empty `la_d25_probe_...` acceptance collection; verify exact metadata/schema/model, quiet DB and points0 through existing owned adapter, delete only that acknowledged empty probe and confirm collections0. No source rows/vectors/user collection removed. [Inventory](../docs/evidence/d34-reboot-inventory.json), [empty-probe cleanup](../docs/evidence/d34-reboot-empty-probe-cleanup.json), [partial-run evidence](../docs/evidence/d34-reboot-interrupted-full.json).
+
+Fresh full1785 rerun uses the same301-file freeze, durable ignored runner/logs and server-assigned pytest/wrapper PID plus boot ID. Detached test launcher survives chat process loss; a machine reboot still invalidates live progress. Status helper reports running only if boot and both recorded command identities match. Final exit/hash and actual full summary required before audit/acceptance. D34 remains IN PROGRESS; D35 drafts only, no source implementation/advancement.
