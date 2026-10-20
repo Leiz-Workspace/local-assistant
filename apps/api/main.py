@@ -26,6 +26,7 @@ from apps.api.routes.health import router as health_router
 from apps.api.routes.ingestion import router as ingestion_router
 from apps.api.routes.memory import router as memory_router
 from apps.api.routes.ocr import router as ocr_router
+from apps.api.routes.patches import router as patch_router
 from apps.api.routes.retrieval import router as retrieval_router
 from apps.api.routes.workspace_diagnoses import router as workspace_diagnosis_router
 from apps.api.routes.workspace_explanations import (
@@ -69,4 +70,5 @@ app.include_router(workspace_router, prefix="/api/v1")
 app.include_router(workspace_explanation_router, prefix="/api/v1")
 app.include_router(workspace_diagnosis_router, prefix="/api/v1")
 app.include_router(approval_router, prefix="/api/v1")
+app.include_router(patch_router, prefix="/api/v1")
 logging.getLogger(__name__).info("api_routers_registered")
