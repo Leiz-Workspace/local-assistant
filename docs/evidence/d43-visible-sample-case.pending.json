@@ -1,0 +1,50 @@
+{
+  "description": "DRAFT D43 visible sample workflow fixture frozen before inference; no inference/action, not an unseen benchmark or replacement for immutable D38 first4/6.",
+  "version": 1,
+  "status": "planned_not_executed",
+  "profile": "core",
+  "preset": "fast",
+  "issue": "Fix sample.add integer addition: replace the subtraction expression with addition. Keep every other statement, audit log and description unchanged. Only the supplied sample.py may change; tests remain fixed. Return a concise manual plan and the complete target file, without any command, approval, path or model change.",
+  "target": {
+    "path": "sample.py",
+    "source": "\"\"\"Compute a documented integer sum for the disposable coding workflow sample.\"\"\"\nimport logging\nlogger = logging.getLogger(__name__)\n\ndef add(left, right):\n    \"\"\"Return the integer sum and audit the operation without logging inputs.\"\"\"\n    logger.info(\"sample_add_called\")\n    return left - right\n",
+    "sha256": "35df43eaef274cad7ce5049e561770a1dc3c0dbd67e10bb7b4b8e5a52cba9561"
+  },
+  "tests": [
+    {
+      "path": "test_sample.py",
+      "source": "\"\"\"Verify the disposable sample addition using fixed host-authored assertions.\"\"\"\nimport logging\nimport unittest\nfrom sample import add\nlogger = logging.getLogger(__name__)\n\nclass AdditionTests(unittest.TestCase):\n    \"\"\"Check integer addition on explicit positive, negative and zero cases.\"\"\"\n    def test_integer_sums(self):\n        \"\"\"Observe all fixed sample sums without trusting generated success messages.\"\"\"\n        logger.info(\"sample_addition_oracles_started cases=4\")\n        self.assertEqual(add(2, 3), 5)\n        self.assertEqual(add(-4, 1), -3)\n        self.assertEqual(add(0, 0), 0)\n        self.assertEqual(add(-2, -3), -5)\n",
+      "sha256": "79d90ef4c6d7bdb6f4243356220d3b543b81061d65e0d7c80e8a27d9273bef50"
+    }
+  ],
+  "host_structural_oracle": "Normalize AST; expected module is exactly the original AST with the single function return BinOp Sub changed to Add, with every other node unchanged.",
+  "expected_fixed_source_sha256": "b794d3c69e92d55a9d6733e240e7e1f2cc296bd48da277663c8bb19b3c97fff7",
+  "native_oracles": {
+    "inputs": [
+      [
+        2,
+        3
+      ],
+      [
+        -4,
+        1
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        -2,
+        -3
+      ]
+    ],
+    "expected": [
+      5,
+      -3,
+      0,
+      -5
+    ]
+  },
+  "quality_scope": "Visible sample composition demonstration only; actual native exit is not general quality proof.",
+  "historical_D38_replaced": false
+}

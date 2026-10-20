@@ -1,4 +1,4 @@
-"""Own optional local backend resources and approved checks with dependency-ordered joined shutdown."""
+"""Own optional local resources and reviewed coding workflows with dependency-ordered joined shutdown."""
 
 import asyncio
 import logging
@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from apps.api.services.conversations import ConversationService
 from apps.api.storage.approvals import initialize_approval_store
 from apps.api.storage.checks import initialize_check_service
+from apps.api.storage.coding_workflows import initialize_coding_workflow_service
 from apps.api.storage.files import initialize_file_service
 from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
@@ -47,6 +48,7 @@ async def conversation_lifespan(app: FastAPI):
     app.state.approval_store = None
     app.state.patch_service = None
     app.state.check_service = None
+    app.state.coding_workflow_service = None
     try:
         app.state.workspace_service = await initialize_workspace_service()
         app.state.workspace_explanation_service = (
@@ -65,6 +67,12 @@ async def conversation_lifespan(app: FastAPI):
             app.state.workspace_service,
             app.state.approval_store,
             app.state.patch_service,
+        )
+        app.state.coding_workflow_service = await initialize_coding_workflow_service(
+            app.state.workspace_service,
+            app.state.approval_store,
+            app.state.patch_service,
+            app.state.check_service,
         )
         if os.environ.get("DATABASE_URL"):
             try:
@@ -100,6 +108,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.coding_workflow_service is not None:
+            await app.state.coding_workflow_service.shutdown()
+            app.state.coding_workflow_service = None
         if app.state.check_service is not None:
             await app.state.check_service.shutdown()
             app.state.check_service = None

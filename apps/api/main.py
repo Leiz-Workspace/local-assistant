@@ -21,6 +21,7 @@ from apps.api.routes.chat import router as chat_router
 from apps.api.routes.checkpoints import router as checkpoint_router
 from apps.api.routes.checks import router as check_router
 from apps.api.routes.chunks import router as chunk_router
+from apps.api.routes.coding_workflows import router as coding_workflow_router
 from apps.api.routes.conversations import router as conversation_router
 from apps.api.routes.files import router as file_router
 from apps.api.routes.grounded import router as grounded_router
@@ -61,6 +62,7 @@ app.include_router(
 
 app.include_router(conversation_router, prefix="/api/v1")
 app.include_router(check_router, prefix="/api/v1")
+app.include_router(coding_workflow_router, prefix="/api/v1")
 app.include_router(file_router, prefix="/api/v1")
 app.include_router(xlsx_router, prefix="/api/v1")
 app.include_router(ocr_router, prefix="/api/v1")
