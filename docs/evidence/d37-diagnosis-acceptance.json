@@ -1,0 +1,44 @@
+{
+  "description": "D37 accepted source-selected diagnosis and bounded manual plans without execution or source modifications.",
+  "status": "PASS (defined local manual-diagnosis scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "512c42b",
+  "passed": 477,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 7.22,
+  "new_unique_cases": 54,
+  "application_tests_collected": 1977,
+  "fresh_full_application_run": false,
+  "historical_d34_full_passed": 1785,
+  "actual_core": {
+    "model_id": "qwen3.5-9b-core",
+    "profile": "core",
+    "preset": "fast",
+    "supported_bug_cases": 1,
+    "correct_source_diagnoses": 1,
+    "concrete_manual_reproducer_cases": 1,
+    "absent_cases": 1,
+    "correct_refusals": 1,
+    "proposed_steps_executed": false,
+    "review": "same-agent authored synthetic source/case oracles; no human-independent or general quality claim"
+  },
+  "execution_status": "not_executed",
+  "old_runtime_changes": [
+    "apps/api/main.py router composition",
+    "apps/api/storage/lifecycle.py optional diagnosis startup/dependency-ordered drain",
+    "apps/api/services/workspace_explanations.py three default-preserving prompt/result/blank-source hooks"
+  ],
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "next": "D38 unchanged CORE plus deterministic coding-tool baseline evaluation; no unapproved specialist adoption",
+  "evidence_sha256": {
+    "docs/evidence/d37-diagnosis-freeze.json": "08076247072051b9239c9a41c91b81e33fca0cbc78104f5758886dd36f19b529",
+    "docs/evidence/d37-related-regression.json": "aebe6c620543ab163a5aa736f4484d1e24a4a03324d03729c5c70056038867cd",
+    "docs/evidence/d37-final-post-audit.json": "676e5bc06bc0e580b2bdb3d047846ec2467d1d43334a396f94285a81d48ddc62",
+    "docs/evidence/d37-core-case-freeze.json": "b65872032d5cddf7434716e84dfad603e72f23d70fa32127e58d67a35f649740",
+    "docs/evidence/d37-core-observations.json": "954e3a1a31112df3956efddef2cf03bbe11915bee5b6af5397458de66ef91313"
+  }
+}
