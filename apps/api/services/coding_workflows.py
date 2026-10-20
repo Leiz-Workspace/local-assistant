@@ -111,6 +111,13 @@ class CodingWorkflowService:
             record.value["state"],
         )
 
+    def register(self, record):
+        """Register one trusted bounded record before native awaits so optional controls can bind its exact owning task."""
+        self.records[record.identifier] = record
+        logger.info(
+            "coding_workflow_record_registered workflow_id=%s", record.identifier
+        )
+
     def view(self, record):
         """Build a truthful snapshot-bound summary from known component receipts without model-generated quality claims."""
         value = bounded_record(record.value)
@@ -254,7 +261,7 @@ class CodingWorkflowService:
                     )
                 ),
             )
-            self.records[identifier] = record
+            self.register(record)
             sources = None
             try:
                 sources = await joined_work(

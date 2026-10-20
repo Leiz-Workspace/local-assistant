@@ -31,6 +31,7 @@ from apps.api.routes.memory import router as memory_router
 from apps.api.routes.ocr import router as ocr_router
 from apps.api.routes.patches import router as patch_router
 from apps.api.routes.retrieval import router as retrieval_router
+from apps.api.routes.workflow_controls import router as workflow_control_router
 from apps.api.routes.workspace_diagnoses import router as workspace_diagnosis_router
 from apps.api.routes.workspace_explanations import (
     router as workspace_explanation_router,
@@ -63,6 +64,7 @@ app.include_router(
 app.include_router(conversation_router, prefix="/api/v1")
 app.include_router(check_router, prefix="/api/v1")
 app.include_router(coding_workflow_router, prefix="/api/v1")
+app.include_router(workflow_control_router, prefix="/api/v1")
 app.include_router(file_router, prefix="/api/v1")
 app.include_router(xlsx_router, prefix="/api/v1")
 app.include_router(ocr_router, prefix="/api/v1")

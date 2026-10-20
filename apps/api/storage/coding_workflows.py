@@ -6,6 +6,9 @@ import os
 from apps.api.services.checkpoint_patches import CheckpointPatchService
 from apps.api.services.checks import CheckService
 from apps.api.services.coding_workflows import CodingWorkflowService
+from apps.api.services.controlled_coding_workflows import (
+    ControlledCodingWorkflowService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +37,11 @@ async def initialize_coding_workflow_service(workspace, approvals, patches, chec
         or checks.store.closing
     ):
         raise RuntimeError("Coding workflows require matching live composition")
-    service = CodingWorkflowService(workspace, approvals, patches, checks)
+    service_type = (
+        ControlledCodingWorkflowService
+        if os.environ.get("ASSISTANT_CODING_WORKFLOW_CONTROLS_ENABLED", "0") == "1"
+        else CodingWorkflowService
+    )
+    service = service_type(workspace, approvals, patches, checks)
     logger.info("coding_workflow_initialized")
     return service
