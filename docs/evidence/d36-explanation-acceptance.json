@@ -1,0 +1,49 @@
+{
+  "description": "D36 accepted local source-selected existing CORE explanations with native line/quote/hash citations and post-model/pre-header source fencing.",
+  "status": "PASS (defined local source-selected explanation scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "8ce51d3",
+  "passed": 423,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 3.95,
+  "new_unique_cases": 74,
+  "application_tests_collected": 1923,
+  "fresh_full_application_run": false,
+  "historical_d34_full_passed": 1785,
+  "actual_core": {
+    "model_id": "qwen3.5-9b-core",
+    "profile": "core",
+    "preset": "fast",
+    "answerable": 2,
+    "correct_answers": 2,
+    "relevant_exact_citation_cases": 2,
+    "absent": 1,
+    "correct_refusals": 1,
+    "review": "same-agent synthetic authored source/case oracles; no independent human/general quality claim"
+  },
+  "controlled_model_clock_timeout_transport_cases_disclosed": true,
+  "old_runtime_changes": [
+    "apps/api/main.py router composition",
+    "apps/api/storage/lifecycle.py default-off startup and dependency-ordered shutdown"
+  ],
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "limitations": [
+    "Explicit1\u20133 selected files; no autonomous repository exploration",
+    "Exact quote checks do not prove every generated statement semantically supported",
+    "Sequential final fences are not an atomic filesystem transaction",
+    "Owned client/task joins do not promise instantaneous backend or kernel preemption",
+    "No shell/git/write/model-selection capability"
+  ],
+  "next": "D37 source-backed diagnosis with explicit planned steps and reproducible checks, without modifications",
+  "evidence_sha256": {
+    "docs/evidence/d36-explanation-freeze.json": "079ed2af4faac1e4ff9202ff18474e8481e1cba574e4d6386ce75d268272daa1",
+    "docs/evidence/d36-related-regression.json": "8be7e3e4c013fb31def25bc0f2530c0461e613555e5fe1376fcfe15b7475ab5d",
+    "docs/evidence/d36-final-post-audit.json": "5d94a015fddf35b0b57d15f26b39959c2c37d70f2576fa0cc13bca55d2a1fcf6",
+    "docs/evidence/d36-core-case-freeze.json": "c7d6d6a0f078e0127fe586b0a74f0f92f375719bce2e4fe0189a51faea8bc6a0",
+    "docs/evidence/d36-core-observations.json": "04d75f0dd20a41ba4d8eaee15b0f19a3c986543ff4b1aca30bf93939adc84f49"
+  }
+}
