@@ -13,6 +13,7 @@ from apps.api.storage.files import initialize_file_service
 from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
 from apps.api.storage.memory import initialize_memory_service
+from apps.api.storage.patches import initialize_patch_service
 from apps.api.storage.retrieval import initialize_retrieval_service
 from apps.api.storage.workspace_diagnoses import initialize_workspace_diagnoses
 from apps.api.storage.workspace_explanations import initialize_workspace_explanations
@@ -43,6 +44,7 @@ async def conversation_lifespan(app: FastAPI):
     app.state.workspace_explanation_service = None
     app.state.workspace_diagnosis_service = None
     app.state.approval_store = None
+    app.state.patch_service = None
     try:
         app.state.workspace_service = await initialize_workspace_service()
         app.state.workspace_explanation_service = (
@@ -53,6 +55,9 @@ async def conversation_lifespan(app: FastAPI):
         )
         app.state.approval_store = await initialize_approval_store(
             app.state.workspace_service
+        )
+        app.state.patch_service = await initialize_patch_service(
+            app.state.workspace_service, app.state.approval_store
         )
         if os.environ.get("DATABASE_URL"):
             try:
@@ -88,6 +93,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.patch_service is not None:
+            await app.state.patch_service.shutdown()
+            app.state.patch_service = None
         if app.state.approval_store is not None:
             app.state.approval_store.close()
             app.state.approval_store = None

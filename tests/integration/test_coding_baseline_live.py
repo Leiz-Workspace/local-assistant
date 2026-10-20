@@ -53,6 +53,6 @@ async def test_actual_existing_core_coding_baseline():
         freeze_sha256=hashlib.sha256(freeze_path.read_bytes()).hexdigest(),
         report=result,
     )
-    Path("docs/evidence/d38-core-observations.json").write_text(
-        json.dumps(summary, indent=2) + "\n"
-    )
+    latest = Path("data/backups/d38-latest-core-observations.json")
+    latest.write_text(json.dumps(summary, indent=2) + "\n")
+    latest.chmod(0o600)
