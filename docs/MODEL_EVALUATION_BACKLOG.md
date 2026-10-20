@@ -161,3 +161,14 @@ D27 decision remains retain approved dense/defer production reranker. D28 reuses
 
 
 **D28 final update — 2026-10-19:** Local opt-in grounded generation PASS: full1334/1387.90s plus2 additional native-field tests/1.21s,0 SKIP;1336 unique tests across checkpoints, not one1336 full invocation. [Acceptance](evidence/d28-grounded-acceptance.json), [guide](D28_GROUNDED_GENERATION.md), clean audit. Original models/source/schema/configuration preserved; production remains off. D29 memory contract NEXT. Earlier running-status paragraphs are historical checkpoints.
+
+
+## D38 existing-CORE baseline — 2026-10-20
+
+**Purpose:** Record measured coding evidence without selecting or replacing any agreed model.
+
+Existing `qwen3.5-9b-core`/fast on six frozen authored synthetic repair tasks:4/6 repairs PASS,2 FAIL. Palindrome generated malformed JSON and was rejected before execution; clamp retained the wrong arithmetic expression and failed3/5 oracles.20/23 executed proposed oracles PASS;5 palindrome oracles not executed. One actual trial per task, no retries or score selection. [Raw observations](evidence/d38-core-observations.json), [scope/limits](D38_CORE_CODING_BASELINE.md), ADR-056.
+
+D38 baseline measurement completed with valid Git/D35/native function isolation and retained case-wise failures; this is not application approval/general patch/sandbox command/MVP acceptance. MODEL-EVAL-007 remains P2/conditional with broader D39–D46 harness and explicit owner model-change approval still required. No specialist chosen/downloaded/evaluated/deployed; no benchmark supports replacing the agreed CORE. Native evaluator caps are policy, not measured RAM/VRAM or comparative throughput.
+
+Follow-up P2 format-contract robustness: D44 bounded handling/new held-out set, about half a milestone, risk retry-driven score selection/overfitting. Follow-up P2 reasoning quality: D46 realistic case expansion, about one milestone, risk tiny synthetic coverage. Preserve this first failure evidence; assess improvements separately before proposing any model evaluation/adoption.

@@ -1,0 +1,258 @@
+{
+  "description": "D38 case/oracle freeze before actual original CORE inference; six authored synthetic repairs, no specialist adoption or production edit/command authority.",
+  "cases_sha256": "cb756433b915a1b1dbd95ed8839c410bad9e15092a62c369a324a7f6e8bd2c86",
+  "cases": {
+    "description": "D38 six authored synthetic CORE repair tasks; expected outputs stay in the trusted host evaluator and are frozen before actual inference.",
+    "version": 1,
+    "profile": "core",
+    "preset": "fast",
+    "max_tokens": 1024,
+    "tasks": [
+      {
+        "id": "floor_division",
+        "requirements": "Repair solve(a, b) to perform exact Python integer floor division for nonzero integer b, including negative and large integers. Preserve its public signature.",
+        "source": "\"\"\"Compute integer division for the fixture.\"\"\"\ndef solve(a, b):\n    \"\"\"Return the intended integer floor quotient.\"\"\"\n    return int(a / b)\n",
+        "inputs": [
+          [
+            10,
+            3
+          ],
+          [
+            -10,
+            3
+          ],
+          [
+            -10,
+            -3
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            1180591620717411303427,
+            3
+          ]
+        ],
+        "expected": [
+          3,
+          -4,
+          3,
+          0,
+          393530540239137101142
+        ]
+      },
+      {
+        "id": "unique_order",
+        "requirements": "Repair solve(values) to remove duplicate integer values while preserving their first-occurrence order. Return a list and handle empty input.",
+        "source": "\"\"\"Deduplicate ordered integer values.\"\"\"\ndef solve(values):\n    \"\"\"Return values in their intended first-occurrence order.\"\"\"\n    return sorted(set(values))\n",
+        "inputs": [
+          [
+            [
+              3,
+              2,
+              3,
+              1,
+              2
+            ]
+          ],
+          [
+            []
+          ],
+          [
+            [
+              -1,
+              0,
+              -1,
+              -2
+            ]
+          ],
+          [
+            [
+              5,
+              5,
+              5
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            3,
+            2,
+            1
+          ],
+          [],
+          [
+            -1,
+            0,
+            -2
+          ],
+          [
+            5
+          ]
+        ]
+      },
+      {
+        "id": "unicode_palindrome",
+        "requirements": "Repair solve(text) to return a boolean palindrome check after Unicode casefold and removal of all whitespace. Empty normalized text is a palindrome.",
+        "source": "\"\"\"Check normalized text symmetry.\"\"\"\ndef solve(text):\n    \"\"\"Return whether normalized text reads equally in both directions.\"\"\"\n    return text == text[::-1]\n",
+        "inputs": [
+          [
+            "Race car"
+          ],
+          [
+            "hello"
+          ],
+          [
+            " \tA\n"
+          ],
+          [
+            "\u00dfss"
+          ],
+          [
+            "  \t"
+          ]
+        ],
+        "expected": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "id": "word_counts",
+        "requirements": "Repair solve(text) to count whitespace-separated words after Unicode casefold. Preserve punctuation as part of each word, omit empty tokens and return a dictionary of integer counts.",
+        "source": "\"\"\"Count normalized whitespace-delimited words.\"\"\"\ndef solve(text):\n    \"\"\"Return intended casefolded word frequencies.\"\"\"\n    counts = {}\n    for word in text.lower().split(' '):\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+        "inputs": [
+          [
+            "One  one\tTWO\nTwo"
+          ],
+          [
+            ""
+          ],
+          [
+            "Stra\u00dfe STRASSE"
+          ],
+          [
+            "hi, hi hi,"
+          ]
+        ],
+        "expected": [
+          {
+            "one": 2,
+            "two": 2
+          },
+          {},
+          {
+            "strasse": 2
+          },
+          {
+            "hi,": 2,
+            "hi": 1
+          }
+        ]
+      },
+      {
+        "id": "window_sums",
+        "requirements": "Repair solve(values, width) to return sums of every contiguous window. Return an empty list if width is nonpositive or exceeds the input length. Include the final valid window.",
+        "source": "\"\"\"Summarize adjacent integer windows.\"\"\"\ndef solve(values, width):\n    \"\"\"Return all intended contiguous window sums.\"\"\"\n    return [sum(values[index:index + width]) for index in range(len(values) - width)]\n",
+        "inputs": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            2
+          ],
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            1
+          ],
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            3
+          ],
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ],
+          [
+            [],
+            1
+          ]
+        ],
+        "expected": [
+          [
+            3,
+            5
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            6
+          ],
+          [],
+          []
+        ]
+      },
+      {
+        "id": "inclusive_clamp",
+        "requirements": "Repair solve(value, low, high) to clamp integer value to the inclusive interval low through high, where low is at most high. Preserve exact integers.",
+        "source": "\"\"\"Clamp integers into an inclusive interval.\"\"\"\ndef solve(value, low, high):\n    \"\"\"Return the intended bounded integer value.\"\"\"\n    return min(low, max(high, value))\n",
+        "inputs": [
+          [
+            3,
+            1,
+            5
+          ],
+          [
+            0,
+            1,
+            5
+          ],
+          [
+            9,
+            1,
+            5
+          ],
+          [
+            -4,
+            -5,
+            -1
+          ],
+          [
+            7,
+            7,
+            7
+          ]
+        ],
+        "expected": [
+          3,
+          1,
+          5,
+          -4,
+          7
+        ]
+      }
+    ]
+  },
+  "harness_gate": "All six frozen tasks actually attempted; all original oracle sets valid/failing, no unavailable sandbox, retained case-wise success/failure and joined cleanup. Model accuracy is measured, not assumed perfect."
+}
