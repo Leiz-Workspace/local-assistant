@@ -4,7 +4,7 @@
 
 **Date:** 2026-10-20 (Asia/Ho_Chi_Minh)
 
-**Status:** Proposed while D34 full regression runs. No D35 implementation/adoption or day advancement yet.
+**Status:** Accepted design after D34 actual1785 full PASS/0 SKIP/exit0 and clean audit (`78542b0`). D35 implemented/accepted:349 related PASS/1.60s,0 SKIP,exit0, including64 new cases, plus clean final audit. [Acceptance](../evidence/d35-tool-acceptance.json); no new full1849 claim.
 
 ## Priority and dependencies
 
@@ -25,3 +25,7 @@ D35 is a server-side dispatcher contract; D36 will separately compose the existi
 ## Rollback and acceptance conditions
 
 Remove/disable dispatcher composition without changing D34 source routes, source files, data or models. Before accepting D35, test actual authorized native reads and scope denial, malformed envelopes/schema drift, attempt/output/deadline boundaries, repeated cancellation and joined cleanup. Preserve every observed failure and distinguish controlled time/model inputs from actual filesystem behavior. D34 full regression/source/audit must finish first.
+
+## Implementation scope
+
+Internal request-owned `WorkspaceToolRun` only; no new public endpoint/session store or model call. Shared argument classes preserve D34 HTTP shapes through compatibility imports. Native fixed output limits and file-thread joins are exercised; synthetic clock/cap boundaries disclosed separately. [Guide](../D35_READ_TOOL_DISPATCH.md). Actual D34 full completed before implementation. D36 owns subsequent CORE/citation composition.
