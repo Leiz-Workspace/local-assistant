@@ -1,0 +1,72 @@
+{
+  "description": "Actual original CORE frozen workspace explanations; retain all observed responses including failures; synthetic small-case scope only.",
+  "freeze_sha256": "c7d6d6a0f078e0127fe586b0a74f0f92f375719bce2e4fe0189a51faea8bc6a0",
+  "observations": [
+    {
+      "case_id": "port",
+      "http_status": 200,
+      "result": {
+        "status": "answered",
+        "answer": "The numeric value assigned to LISTEN_PORT is 7443.",
+        "citations": [
+          {
+            "path": "transport.py",
+            "source_sha256": "6a94a47c8d6826879e650ae0d5e169eafff378940fbe89b8cfa6155cf9e301f8",
+            "line_number": 2,
+            "quote": "LISTEN_PORT = 7443",
+            "column_start": 0,
+            "column_end": 18,
+            "column_unit": "unicode_code_points"
+          }
+        ],
+        "content_trust": "untrusted",
+        "answer_trust": "generated_untrusted",
+        "model_id": "qwen3.5-9b-core"
+      }
+    },
+    {
+      "case_id": "delegation",
+      "http_status": 200,
+      "result": {
+        "status": "answered",
+        "answer": "The route_catalog method calls the active method of the Catalog class.",
+        "citations": [
+          {
+            "path": "transport.py",
+            "source_sha256": "6a94a47c8d6826879e650ae0d5e169eafff378940fbe89b8cfa6155cf9e301f8",
+            "line_number": 5,
+            "quote": "def route_catalog():",
+            "column_start": 0,
+            "column_end": 20,
+            "column_unit": "unicode_code_points"
+          },
+          {
+            "path": "transport.py",
+            "source_sha256": "6a94a47c8d6826879e650ae0d5e169eafff378940fbe89b8cfa6155cf9e301f8",
+            "line_number": 6,
+            "quote": "    return Catalog().active()",
+            "column_start": 0,
+            "column_end": 29,
+            "column_unit": "unicode_code_points"
+          }
+        ],
+        "content_trust": "untrusted",
+        "answer_trust": "generated_untrusted",
+        "model_id": "qwen3.5-9b-core"
+      }
+    },
+    {
+      "case_id": "absent",
+      "http_status": 200,
+      "result": {
+        "status": "insufficient_evidence",
+        "answer": null,
+        "citations": [],
+        "content_trust": "untrusted",
+        "answer_trust": "generated_untrusted",
+        "model_id": "qwen3.5-9b-core"
+      }
+    }
+  ],
+  "model_replacement": false
+}

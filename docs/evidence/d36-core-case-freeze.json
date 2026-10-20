@@ -1,0 +1,31 @@
+{
+  "description": "D36 actual CORE synthetic source/case freeze before inference; independent exact path/line/answer oracles, no model change.",
+  "sources": {
+    "catalog.py": "\"\"\"Public catalog fixture.\"\"\"\nclass Catalog:\n    def active(self):\n        return [\"cedar\"]\n",
+    "transport.py": "\"\"\"HTTP transport fixture.\"\"\"\nLISTEN_PORT = 7443\nfrom catalog import Catalog\n\ndef route_catalog():\n    return Catalog().active()\n"
+  },
+  "cases": [
+    {
+      "id": "port",
+      "question": "What numeric value is assigned to LISTEN_PORT?",
+      "expected": "7443",
+      "path": "transport.py",
+      "line_number": 2
+    },
+    {
+      "id": "delegation",
+      "question": "Which Catalog method does route_catalog call?",
+      "expected": "active",
+      "path": "transport.py",
+      "line_number": 6
+    },
+    {
+      "id": "absent",
+      "question": "What retry interval in seconds is configured?",
+      "expected": null
+    }
+  ],
+  "profile": "core",
+  "preset": "fast",
+  "max_tokens": 768
+}
