@@ -32,6 +32,25 @@ class WorkspaceExplanationService:
         self.operations = set()
         self.closing = False
 
+    def build_messages(self, question, lines):
+        """Build the unchanged source-selected explanation prompt through an overridable contract hook."""
+        return explanation_messages(question, lines)
+
+    def resolve(self, raw, units):
+        """Resolve the unchanged strict explanation citation contract without changing source ownership."""
+        return resolve_explanation(raw, units)
+
+    def empty_result(self):
+        """Preserve the existing no-sources explanation response without model generation."""
+        logger.info("workspace_explanation_no_sources")
+        return dict(
+            status="no_sources",
+            answer=None,
+            citations=[],
+            content_trust="untrusted",
+            answer_trust="not_generated",
+        )
+
     async def complete(self, messages):
         """Bound fixed CORE/fast generation and join cancellation before releasing source pins."""
         work = asyncio.create_task(
@@ -91,22 +110,16 @@ class WorkspaceExplanationService:
                     lines.extend(body["data"]["lines"])
             finally:
                 await run.close()
-            messages, units = explanation_messages(question, lines)
+            messages, units = self.build_messages(question, lines)
             if units:
                 completion = await self.complete(messages)
                 await self.validate(evidence)
                 evidence.payload = dict(
-                    resolve_explanation(completion.content, units),
+                    self.resolve(completion.content, units),
                     model_id=completion.model_id,
                 )
             else:
-                evidence.payload = dict(
-                    status="no_sources",
-                    answer=None,
-                    citations=[],
-                    content_trust="untrusted",
-                    answer_trust="not_generated",
-                )
+                evidence.payload = self.empty_result()
             logger.info(
                 "workspace_explanation_prepared citations=%d",
                 len(evidence.payload["citations"]),
