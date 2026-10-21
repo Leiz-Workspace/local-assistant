@@ -1,0 +1,43 @@
+# ADR-069: Source provenance and private bounded web evidence cache
+
+**Purpose:** Define D51 before implementation: source/title/date/fetch-time provenance, exact-content dedupe, bounded owner-scoped caching and verifiable text-span references.
+
+**Date:** 2026-10-21 (Asia/Ho_Chi_Minh).
+
+**Status:** Accepted and implemented within local D51 scope:128 new controls including2 native,2134 related PASS/0SKIP, first actual public provenance/cache/span and clean readonly audit. [Acceptance](../evidence/d51-provenance-acceptance.json). No production API/model/data change.
+
+## Priority, dependency, effort and risk
+
+Existing P1 D51 depends on accepted D49 static fetch and D50 isolated browser. Estimate one internal observation/cache/citation milestone plus controlled date/TTL/ownership/cancel/native/public/related/audit gates. No new model, dependency, database, Vault, infrastructure service or accepted API/startup change. Preserve all476 accepted D50 source/config bytes; add separate ports/services/observers. D52/D53/D56 retain attack, freshness/coverage and semantic claim validation responsibilities.
+
+Risks: inventing publication dates from HTTP Date or fetch time; trusting page canonical/title/date claims; leaking queries/content across owners or logs; stale cache appearing freshly fetched; ignoring no-store/private/no-cache/Age; collapsing identical text from different URLs into one provenance; normalization changing quote evidence; cancellation caching incomplete evidence or returning before fetch/browser cleanup; unbounded cache/metadata/claim spans. No general semantic truth, trusted publication date, freshness guarantee or long-run persistence claim.
+
+## Decision
+
+Add one explicit internal service selecting static or dynamic mode, never automatic fallback. Trusted owner UUID and validated public URL/mode are required before I/O. Default constructors remain inert; no production endpoint/model integration. New observation adapters delegate accepted D49/D50 primitives and inspect complete original main-document bytes without modifying them. Source dates come only from bounded explicit article:published_time/article:modified_time/date meta claims; missing/invalid/ambiguous dates stay unknown/unverified. HTTP Date, cache age, title, canonical links and fetch time never establish publication date. No JSON-LD/script execution or inferred date from prose.
+
+An immutable snapshot binds unique acquisition ID, owner, actual requested/final URL/title, extractor/mode, exact text/hash, complete source resource hashes, unverified date claims/canonical metadata and trusted aware UTC acquisition start/end. Host clock provenance is separate from page claims. Exact bytes only: dedupe identical text within an owner while retaining distinct URL/acquisition/resource/date provenance. No canonical alias, URL query removal, cross-owner content reuse or fuzzy similarity. SHA matches also require full string equality.
+
+Memory-only cache:16 entries per service instance/four per owner,4MiB accounted UTF-8 text plus serialized metadata, maximum300second monotonic TTL. This is bounded accounting, not a process RSS limit. Respect every observed response's no-store/private/no-cache/Set-Cookie, unsupported Vary, positive max-age, apparent Date age and Age; clamp to the shortest source lifetime and conservatively start its lifetime at acquisition start, never extend advertised lifetime or replace source fetch time on a hit. Missing cache policy allows at most300seconds of explicitly local reuse without asserting publisher freshness. Vary:Accept-Encoding is safe because host sends fixed identity; other Vary refuses reuse. Failed/noncacheable/cancelled acquisitions are never retained in the service cache. Exported immutable snapshots/references must accompany later artifacts, with no implicit refetch from an old ID.
+
+Every reference identifies a service-issued owner-bound snapshot and a validated nonempty exact Unicode code-point span, includes the copied quote/hash/source/fetch-time metadata and remains semantically unverified. Use an ephemeral process-local HMAC over all immutable snapshot fields, including owner/source/content/time and maximum300second citation deadline. This permits quote verification from returned noncacheable snapshots without retaining them or making them reusable read-cache entries. Changed/foreign/expired/cross-service snapshots or fabricated/overbudget spans fail; cache eviction does not revoke an already returned signed snapshot before its citation deadline. The proof is lineage integrity, not principal authentication or publication/semantic verification. The trusted caller supplies the already authenticated owner; no new endpoint or credential is exposed. D56 separately assesses whether a claim is supported. No arbitrary model-selected title/date/reference overwrite.
+
+One nonqueued operation per service through joined observer/resource/browser cleanup. Cache hits cause zero network/browser/model work and preserve original fetch time; served-at/cache-hit/monotonic age are separately visible. Shutdown rejects new work, cancels/joins only its operations and clears its own memory. Cancellation during uncertain native cleanup closes admission, no silent retry. No disk cache, automatic eviction of unknown job files, service restart or DB/Vault write.
+
+## Gates and rollback
+
+Freeze source, URL, date/cache/span oracles and resource budgets before public scoring; retain first failures without relabeling. Test actual static metadata and real native DOM rendering through authored resource seams, owner isolation, exact dedupe with separate provenance, TTL boundary/clock drift, upstream noncacheable/cache age/Vary policy, bounds, quote integrity, cancellation/task-creation/shutdown and absence of I/O on hits. One frozen real public static acquisition then memory hit must retain source/fetch time and closed sockets, with no publication-date invention or second GET. Run affected regression and readonly accepted-source/model/data/service audit. Fresh full required for shared composition/dependency changes; otherwise historical D48 full3010 stays separate.
+
+Rollback drops this unwired service and clears its memory only after joined cleanup. Existing sources/models/config/API/database/Qdrant/Vault/container data remain intact; no migration/reindex or model replacement.
+
+
+## Observed implementation refinements
+
+First97 controlled PASS/.24s; expanded107PASS/1FAIL/3.60s includes two actual native compositions. A faulty trusted source suppressed its owning CancelledError and returned late evidence that was incorrectly cached. Preserve exact first source/test/log ZIP6186b8c466ebbe830c5cb993d6685f21e943e2ba04e5e5ca545f7856015281d4; require no pending acquisition cancellation before signing/retaining. Same failure oracle passes after the new fence. No public request/model or accepted source change.
+
+Add conservative upstream policy checks before scoring: Pragma:no-cache refuses reuse; apparent HTTP Date age and Age both shorten source lifetime, rounded conservatively, with total acquisition duration subtracted by anchoring expiry before I/O. Malformed/duplicate Date and unsupported Expires disable reuse; no conditional revalidation is implemented. This bounded private evidence cache does not claim full wire-cache conformance or publisher freshness verification. [HTTP cache directives/age](https://www.rfc-editor.org/rfc/rfc9111.html). Explicit article publication/modification declarations follow [Open Graph](https://ogp.me/), remain page claims and never establish source truth.
+
+Final pre-public128 controlled PASS/3.59s includes actual isolated dynamic rendering/cache and no-store native cases. A script changing its DOM publication meta to2099 does not replace original-response2026 source metadata. Complete source resource/redirect chains and native-resource projection must match accepted static/browser evidence. HMAC proofs detect changed title/source/text/hash/date/trust/deadline, another owner/service and expiry; code-point quotes preserve exact Vietnamese text. Source/public/related/final audit gates remain pending.
+
+
+Final D51 gates:2134 related PASS/134.74s/0SKIP/exit0; one actual public GET/DNS/TLS then same-snapshot zero-I/O hit and exact signed span,1.131s. Original host UTC fetch time preserved, publication date unknown, all sockets closed/cache/proof key cleared.485 source/config/992 unique current hashes match; all476 accepted D50 bytes, models/data/ACLs/Vault/original15 containers/CORE preserved. First suppressed-cancellation failure retained. Historical D48 full3010 remains separate, no fresh full claim. D52 may begin.

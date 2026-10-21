@@ -1,0 +1,23 @@
+{
+  "description": "First D51 expanded gate107PASS/1FAIL3.60s: a faulty trusted source suppresses owning CancelledError, then service incorrectly caches its late result. No public request/model or prior source change. Original exact source/test/log retained before cancellation-state fence.",
+  "status": "FAILED_RETAINED",
+  "passed": 107,
+  "failed": 1,
+  "elapsed_seconds": 3.6,
+  "archive": {
+    "path": "data/backups/d51-before-cancel-publication-repair.zip",
+    "sha256": "6186b8c466ebbe830c5cb993d6685f21e943e2ba04e5e5ca545f7856015281d4"
+  },
+  "files": {
+    "src/application/ports/web_evidence.py": "528fbe5ff98a0cab5736a028b529d47439d41de4d8799c378ae92c73c9a83f96",
+    "src/application/services/web_evidence.py": "b9d7b18c54230c797ad6a10837a060fb1d0be4c302a15d1460881665073fd8b4",
+    "src/application/services/web_evidence_policy.py": "35387ad974f302a32ed2b983166362090407da5a8443551340d030bd86ac44d3",
+    "src/infrastructure/evidence_metadata.py": "28563116ae7ab340b178ff841ebd5cba6ec6e19ad2271d6183994ee72d57d0da",
+    "src/infrastructure/web_evidence_source.py": "8598281a242e660ccd6eff801d3ec21b254cdcccf90c4ec5a5a105ac81c4a2e6",
+    "tests/test_web_evidence.py": "f9b8f33d07a012baec178808ee0923c78ecd78b636d9286ca92e7a83eeab88e2",
+    "tests/test_web_evidence_policy.py": "1800e2d16a78044e9b026fb3a5ff977a9c4e12f5b7c56a68ead1fe6b41e21dde",
+    "tests/test_web_evidence_source.py": "8812a5ebde442a0f21197cc49a6994c32c6b0d731ed0db2412f41ab578ceb988",
+    "tests/integration/test_web_evidence_native.py": "d6e72bedd5529deba212c6f8321f092ef6d323079adf4b0d81e5690536454542",
+    "data/backups/d51-expanded-first.log": "d7a241678e2422763aed2012af0cc5b3cf2e1792cb842c80e373f072115d54ff"
+  }
+}
