@@ -6,7 +6,7 @@
 
 | Field | Assessment |
 |---|---|
-| Status | Required external prerequisite, not fulfilled: owner confirmed no existing provider account/key. D47 remains PARTIAL. |
+| Status | **COMPLETE within D47 local scope:** owner chose self-hosted SearXNG; actual provider/CORE/citation and1541 related gates pass. Historical no-account discovery remains true; commercial key is unnecessary for selected anonymous website engine. |
 | Priority | P1, required before D47 live acceptance and D48 API activation. |
 | Scope | Identify the operator-owned provider and actual plan; verify quota/payment/query retention/result-use rights, then supply its credential through an approved secret path and run bounded live acceptance. |
 | Existing independent work | Provider-neutral search/CORE contract, inactive Brave reference adapter and controlled HTTP/actual CORE fixture tests under [ADR-064](ADR/064-search-provider-boundary-and-existing-core.md). This is implementation readiness, not account adoption. |
@@ -17,4 +17,13 @@
 | Acceptance | Record actual plan/provider/terms/quota/privacy decision and credential provenance without values; make a bounded explicit public query, validate status/shape/citations/cleanup and retain real outcomes/usage without storing restricted raw results. Failures remain retained; no synthetic substitution. |
 | Rollback | Disable and drain the later search adapter; preserve original models/config/data. No migration/reindex needed for the current unwired implementation. |
 
-Brave remains an inactive reference implementation; Tavily and an owner's existing alternative remain candidates. No provider/model benchmark winner or migration is implied. D48–D60 stay sequenced by their roadmap acceptance criteria. [D47 plan and limitations](D47_SEARCH_PROVIDER_GATE.md).
+Brave REST API remains an inactive credential-requiring reference; Tavily remains a candidate. The selected provider is an owned SearXNG instance using its anonymous Brave website engine, with no new model. [Actual acceptance/failures/limits](D47_SEARXNG_LIVE_ACCEPTANCE.md) supersedes the historical pre-provider gate. D48–D60 remain sequenced by roadmap criteria.
+
+
+## WEB-EVAL-001 — Broader freshness, coverage and upstream resilience
+
+**Purpose:** Prevent a single visible provider smoke query from being promoted into broad research quality.
+
+P1 before phase D60 release; scheduled at existing D53 after D48 API/rate limits, D49 fetch, D51 provenance and D52 attack gates. Estimate one frozen bilingual/cross-language query-and-source evaluation milestone; re-estimate after corpus design. Risks: overfitting the D47 visible query, changing engine/query/thresholds after scores, variable HTML/rate limits/CAPTCHA, stale/irrelevant snippets, unsupported storage rights and mislabeling source binding as semantic entailment.
+
+Freeze complete queries/labels/settings/resource budgets and failure/refusal oracles before scoring; retain every first outcome and source/config lineage. D47's initial irrelevant-source CORE refusal and Google unavailable case remain mandatory regressions. The Mwmbl/Brave two-engine panel is only one-query connectivity/readiness evidence, not a general ranking winner. Do not clear/bypass upstream CAPTCHA/suspension, rotate public instances, download a model or infer permission to switch agreed models. Produce explicit freshness/coverage/partial-upstream/latency/resource evidence and rollback analysis before promotion.

@@ -1,0 +1,35 @@
+{
+  "description": "Separate repaired explicit-engine/provenance source freeze; original failed first provider/CORE trial preserved; same query/oracle and no automatic retries.",
+  "base_commit": "f51b628ba7e438690961686b15992558002150dd",
+  "owner_selected_provider": "self_hosted_searxng",
+  "query": "SearXNG Search API JSON format",
+  "oracle": {
+    "provider_calls": 1,
+    "model_port_attempts": 1,
+    "provider_result_minimum": 1,
+    "status": "answered",
+    "answer_contains_casefold": "json",
+    "primary_citation_hostname": "docs.searxng.org",
+    "semantic_validation": false,
+    "automatic_retries": 0
+  },
+  "new_source_sha256": {
+    "src/infrastructure/searxng_search.py": "edc4fec0e9b97bfbfc697cecc59b68fefade8a1caf303755e5107c4221a81966",
+    "tests/test_searxng_search.py": "656c76643d60acdf9729a3ee138d6c65437d4dcaf791ba2e484b947691512edd",
+    "tests/test_searxng_deployment.py": "7c5e16509efc87064fc0bff26212e65a4bc5fed799b2f5e84c5c12e43287bc96",
+    "../infras/searxng-server/log_policy.py": "bddac09a72fc0f58050783b6c0e3090cc41f5936cab70357a4e5eeb7bb5535f8",
+    "../infras/searxng-server/searxng-compose.yaml": "17ed081b9c6a93fb6d3be5e5afc96efb69963fea50bc83e99bf6895c6d6ec724",
+    "../infras/searxng-server/config/settings.yml": "4bd077dcf6d409f56afd6f1a5d0e5664b43a0a2a53c03634f10f8526c50318e9",
+    "../infras/searxng-server/config/logging.json": "ad764ce4ca0d72d796bee5edfd995150a9cfa331aeebbf7dd1a12c90c7bfc1ba",
+    "../infras/searxng-server/.gitignore": "d57497effce38c9d9fc712fef4b089b4d49913f147144e1c82e500887913a3fb",
+    "../infras/searxng-server/README.md": "6099294fc4704973fbf063c212ed22e0affb950e941fa73905dc0ff852165455"
+  },
+  "described_functions_classes": 29,
+  "raw_provider_content_persisted": false,
+  "actual_requests_before": 0,
+  "original_first_failure": {
+    "path": "data/backups/d47-searxng-first-live/summary.json",
+    "sha256": "2120d3015f5b31bb073834e9e5073d02ba4b8737b7a69f9f43291d6d01533ba7"
+  },
+  "repair": "No category expansion; verified singleton Google instance and returned engine provenance; original CORE unchanged."
+}
