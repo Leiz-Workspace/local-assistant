@@ -1,0 +1,21 @@
+{
+  "description": "D54 original256-token draft/current source/frozen2250 related PASS and first failed adapter preflight retained before supported512 cap correction; no prior accepted source/config changed.",
+  "archive": {
+    "path": "data/backups/d54-before-supported-token-cap-repair.zip",
+    "sha256": "f403ae5f6d7df1d124899318a09806904ad2082eed4f4cc5caf531e5a3430de0"
+  },
+  "files": {
+    "src/application/ports/research.py": "5d2f9c9a2453dabee55053ecba5df9d90d1146e0cf2ac675a6f094d5a51a1649",
+    "src/application/services/research_policy.py": "a4f693177f2bed698db89d1f8387ec3de1d41f03f7c78cd9960861b9c899cf61",
+    "src/application/services/research.py": "8de618bc2621193712f12c6e7fe4ec60318c8cb7b6376d95cf8feb117015d433",
+    "tests/test_research_policy.py": "4d4dfdbc6c418cdab9d7cc3cbb123950a7d7764f71d083f484e42c38f8cf5246",
+    "tests/test_research.py": "4d27aefe5656647599a1303f215f6559ef68fc2ed9edf04c64d14b959dc08914",
+    "docs/evidence/d54-research-freeze.json": "662df9aefe19bf45f0fca55199a8258dc5b1d51a66dc4260ef26a377e5e3042c",
+    "docs/evidence/d54-related-regression.json": "02e6cbc933d2be3f1ffea02301c480ea37952580bfb3f57eb699f70a3465d935",
+    "docs/evidence/d54-first-adapter-budget-failure.json": "df107b173a3aff6f84a22dea224e31e1288a554c09d1ff112e798db07ee89132",
+    "data/backups/d54-first-core-plan.py": "999d08bb04c92d6240e87a155828d8ae77fd28cadeeb0255a3c414fe966ad229",
+    "data/backups/d54-first-core-plan.log": "ce6e943d1418487e87429893c013fbc38f6266903e222e89b2cb66121de165b7",
+    "data/backups/d54-first-core-plan/summary.json": "98dc1cb70a8ef4fa3db14efcc978fee8d66138277ed8f2f683598a1fdcfebed5",
+    "data/backups/d54-related-regression.log": "25875764bf1beedaf273a7b3dbfaa706d27286606b09d0972bff33c51ee1ecd5"
+  }
+}

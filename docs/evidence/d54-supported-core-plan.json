@@ -1,0 +1,83 @@
+{
+  "description": "First actual unchanged CORE planning over an explicit public goal. Authored provider outcomes only, not actual search quality; fixed model/options/budgets and no source link fetch, browser, private context or automatic retry.",
+  "status": "PASS_FIRST_ACTUAL_CORE_BOUNDED_PLAN",
+  "source_freeze_sha256": "fd708d349e53c0fb03ccafd4a1f443cf1b38a5de222d02718ba5991cd044f281",
+  "external_provider_HTTP": 0,
+  "source_link_or_private_HTTP": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "result": {
+    "run_id": "3978183e-e2b1-4c66-ac07-23866ff1163f",
+    "owner_id": "cb46cd46-f621-4469-9664-367fb162b774",
+    "goal": "Research official SearXNG JSON API parameters and RFC 9111 HTTP cache directives using complementary search queries.",
+    "queries": [
+      {
+        "query_id": "Q1",
+        "query": "SearXNG JSON API parameters documentation",
+        "status": "sources",
+        "attempted": true,
+        "error_code": null,
+        "received_at": "2026-10-21 09:08:30.725517+00:00",
+        "sources": [
+          {
+            "source_id": "Q1:S1",
+            "title": "Authored primary fixture",
+            "url": "https://example.org/d54-source",
+            "snippet": "Authored source snippet; not live provider evidence.",
+            "snippet_sha256": "33b7c917432e167362e3481e62f4dfe63e689d2c582a966135974112067996f3"
+          }
+        ]
+      },
+      {
+        "query_id": "Q2",
+        "query": "RFC 9111 HTTP cache directives overview",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      },
+      {
+        "query_id": "Q3",
+        "query": "SearXNG API caching headers implementation",
+        "status": "empty",
+        "attempted": true,
+        "error_code": null,
+        "received_at": "2026-10-21 09:08:30.725695+00:00",
+        "sources": []
+      }
+    ],
+    "status": "partial",
+    "model_attempts": 1,
+    "provider_attempts": 3,
+    "completed_at": "2026-10-21 09:08:30.725742+00:00",
+    "content_trust": "untrusted",
+    "evidence_kind": "provider_snippet_not_fetched",
+    "semantic_validation": false,
+    "verified_freshness": null
+  },
+  "core_port_attempts": 1,
+  "authored_provider_attempts": 3,
+  "charged_attempts": 4,
+  "quota_owners": 1,
+  "model_completion": {
+    "content": "{\n  \"queries\": [\n    \"SearXNG JSON API parameters documentation\",\n    \"RFC 9111 HTTP cache directives overview\",\n    \"SearXNG API caching headers implementation\"\n  ]\n}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 165,
+    "output_tokens": 51,
+    "reasoning_tokens": null,
+    "latency_ms": 871
+  },
+  "service_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "elapsed_seconds": 0.874,
+  "artifact": {
+    "path": "data/backups/d54-supported-core-plan/summary.json",
+    "sha256": "732eee4a8d6286b817f48a49de8617f279d36cec4ad79b39824e06acd42ae4a3"
+  }
+}
