@@ -1,0 +1,66 @@
+{
+  "description": "Actual complete-file AST descriptions and isolated Ruff correctness/import/format checks before source freeze.",
+  "evaluated_files": [
+    "apps/api/main.py",
+    "apps/api/storage/lifecycle.py",
+    "src/application/services/web_search_policy.py",
+    "apps/api/services/web_search.py",
+    "apps/api/storage/web_search.py",
+    "apps/api/routes/web_search.py",
+    "tests/test_web_search_policy.py",
+    "tests/test_web_search_service.py",
+    "tests/test_web_search_startup.py",
+    "tests/integration/test_web_search_http.py"
+  ],
+  "described_functions_classes": 78,
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "apps/api/main.py",
+        "apps/api/storage/lifecycle.py",
+        "src/application/services/web_search_policy.py",
+        "apps/api/services/web_search.py",
+        "apps/api/storage/web_search.py",
+        "apps/api/routes/web_search.py",
+        "tests/test_web_search_policy.py",
+        "tests/test_web_search_service.py",
+        "tests/test_web_search_startup.py",
+        "tests/integration/test_web_search_http.py"
+      ],
+      "exit_code": 0,
+      "summary": "All checks passed!"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "apps/api/main.py",
+        "apps/api/storage/lifecycle.py",
+        "src/application/services/web_search_policy.py",
+        "apps/api/services/web_search.py",
+        "apps/api/storage/web_search.py",
+        "apps/api/routes/web_search.py",
+        "tests/test_web_search_policy.py",
+        "tests/test_web_search_service.py",
+        "tests/test_web_search_startup.py",
+        "tests/integration/test_web_search_http.py"
+      ],
+      "exit_code": 0,
+      "summary": "10 files already formatted"
+    }
+  ],
+  "source_freeze_sha256": "173d646590bdae0d8c91b9b3fc92441be0bf1be8e4f29f66b6aa591c2c16e6ca"
+}

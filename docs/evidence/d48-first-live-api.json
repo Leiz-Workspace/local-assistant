@@ -1,0 +1,24 @@
+{
+  "description": "First actual authenticated Uvicorn TCP/API\u2192owned SearXNG\u2192original CORE, not a pytest case or semantic/freshness benchmark.",
+  "status": "PASS_FIRST_ACTUAL_AUTHENTICATED_SEARCH_API",
+  "http_status": 200,
+  "elapsed_seconds": 2.934,
+  "actual_provider_attempts": 1,
+  "actual_model_attempts": 1,
+  "automatic_retries": 0,
+  "citations": 4,
+  "canonical_query_visible": true,
+  "private_headers": true,
+  "response_lifetime_admission_released": true,
+  "quota_charged": 1,
+  "shutdown_joined": true,
+  "raw_provider_content_persisted": false,
+  "query_token_signing_secret_absent_from_logs": true,
+  "semantic_validation": false,
+  "source_freeze_sha256": "173d646590bdae0d8c91b9b3fc92441be0bf1be8e4f29f66b6aa591c2c16e6ca",
+  "artifact": {
+    "path": "data/backups/d48-first-live-api/summary.json",
+    "sha256": "a916a4fe09a4a634879f6ffa679f01f1b7a0eb757c1dbf73aa21dd2df5d2f25a"
+  },
+  "earlier_D47_first_failures_unchanged": true
+}
