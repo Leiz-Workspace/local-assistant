@@ -1,0 +1,162 @@
+{
+  "description": "Distinct quiet-interval follow-up original CORE→selected owned SearXNG→actually returned fixed-family public sources→signed report→native DOCX/PDF→retained archives. Actual provider text stays ephemeral. Missing sources/refusals remain failed, no caller-designated fallback or retry.",
+  "status": "FAILED",
+  "source_freeze_sha256": "6dd18d12f2e47965694ea3aebec8daa5e2b4b9d532d95e55ea57dd2b7b31959c",
+  "prior_failed_live_phase_preserved": true,
+  "same_original_live_functional_oracles": true,
+  "our_evaluator_query_quiet_interval_at_least_seconds": 1800,
+  "provider_retry_after_independently_known": false,
+  "source_attempts": 0,
+  "actual_public_source_observations": [],
+  "automatic_retries": 0,
+  "browser_runs": 0,
+  "model_replacement": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "artifacts": {},
+  "raw_provider_titles_snippets_persisted": false,
+  "discovery_archive_raw_query_text_retained": false,
+  "original_host_generated_plan_completion_retained": true,
+  "discovery": {
+    "description": "Complete live discovery outcome metadata; original provider/query text was not retained.",
+    "schema_version": "live-discovery-metadata-v1",
+    "raw_provider_payload_retained": false,
+    "raw_query_text_retained": false,
+    "result_status": "no_sources",
+    "model_attempts": 1,
+    "provider_attempts": 3,
+    "completed_at": "2026-10-21 14:57:07.531782+00:00",
+    "queries": [
+      {
+        "query_id": "Q1",
+        "query_sha256": "90563272cef7d3a7ce5fee965d6c3726738f811d37c23f7e0f0c394c54fdca61",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      },
+      {
+        "query_id": "Q2",
+        "query_sha256": "93bac24ba0c5c38c204f6efe7b62818a6cee867ec01621c3306153238fb78960",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      },
+      {
+        "query_id": "Q3",
+        "query_sha256": "58007bc88ac26ef9b36a95dde6a7b4398d69fdf234f9f9208edf99adda118fdd",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      }
+    ],
+    "content_trust": "untrusted",
+    "semantic_validation": false,
+    "verified_freshness": null
+  },
+  "provider_attempts": 3,
+  "plan_queries": 3,
+  "error_type": "LivePhaseError",
+  "error_code": "live_missing_primary_sources",
+  "plan_CORE_attempts": 1,
+  "assessment_CORE_attempts": 0,
+  "native_batches": 0,
+  "plan_completion": {
+    "content": "{\n  \"queries\": [\n    \"SearXNG Search API GET POST methods documentation\",\n    \"RFC 9111 unqualified private cache rules\",\n    \"SearXNG API endpoint specifications\"\n  ]\n}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 171,
+    "output_tokens": 53,
+    "reasoning_tokens": null,
+    "latency_ms": 857
+  },
+  "assessment_completion": null,
+  "report_key_revoked": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admissions_released": true,
+  "actual_provider_port_attempts": 3,
+  "provider_wire_metadata": [
+    {
+      "ordinal": 1,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 205,
+          "consumed_sha256": "bf13c90e89e461588c37a067cee41f15bc5c39cea199f11e476ab3f5231f345b",
+          "body_complete": true,
+          "closed": true,
+          "reason": "empty_with_declared_upstream_failure",
+          "strict_code": "searxng_upstream_unavailable",
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "wire_results": 0,
+          "upstream_failures": 1
+        }
+      ]
+    },
+    {
+      "ordinal": 2,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 207,
+          "consumed_sha256": "02318b48c949b10c99fc987c86ce522cd905545f6aed98910bf14c029d1f28d5",
+          "body_complete": true,
+          "closed": true,
+          "reason": "empty_with_declared_upstream_failure",
+          "strict_code": "searxng_upstream_unavailable",
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "wire_results": 0,
+          "upstream_failures": 1
+        }
+      ]
+    },
+    {
+      "ordinal": 3,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 202,
+          "consumed_sha256": "c266a72397fb027c212b9b45f0f6fde8d156e5b85319a5aee4f486db1aeb2758",
+          "body_complete": true,
+          "closed": true,
+          "reason": "empty_with_declared_upstream_failure",
+          "strict_code": "searxng_upstream_unavailable",
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "wire_results": 0,
+          "upstream_failures": 1
+        }
+      ]
+    }
+  ],
+  "actual_DNS": [],
+  "actual_TLS": [],
+  "all_source_native_socket_FDs_closed": true,
+  "persisted_state": "paused",
+  "persisted_attempts": [
+    "discover"
+  ],
+  "acknowledged_blobs": {
+    "discover": {
+      "bytes": 1391,
+      "sha256": "fc951f08ae7e8d805a046692a75b142c6a92a93dff27fb156ef4f80a034ad923"
+    }
+  },
+  "archived_after_issuers_revoked": true,
+  "elapsed_seconds": 1.189,
+  "artifact": {
+    "path": "data/backups/d60-t04-quiet-followup-live-phase/summary.json",
+    "sha256": "46443b0fe11f203a660dd5b58a0adc0c417cb49c32e41e1d65c3be507f746a1e"
+  }
+}

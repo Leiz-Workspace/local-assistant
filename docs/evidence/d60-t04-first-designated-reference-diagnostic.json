@@ -1,0 +1,179 @@
+{
+  "description": "Separate evaluator-designated primary sources→signed report→native DOCX/PDF→retained archive diagnostic. Zero provider/planning calls; not search-derived, not a fallback within either failed live gate and never D60 phase acceptance.",
+  "status": "FAILED",
+  "source_freeze_sha256": "554b611762e5d96a428c009b9b252186edb21605c8d9d6cf40ab58797331be21",
+  "source_attempts": 2,
+  "actual_public_source_observations": [
+    {
+      "family": "searxng",
+      "requested_url": "https://docs.searxng.org/dev/search_api.html",
+      "final_url": "https://docs.searxng.org/dev/search_api.html",
+      "title": "Search API - SearXNG Documentation (2026.10.19+81371861f)",
+      "fetched_at": "2026-10-21 19:28:33.604428+00:00",
+      "source_text_sha256": "cc2cbad08739d87455518f5f3231de3e671d1ee708a988291a669f104bdaec4c",
+      "source_resources": [
+        {
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 46464,
+          "body_sha256": "cbcfae9b57f92250ec070f51f07b00786bcb64192a6fda9d0f58d0e4e9fcacc4"
+        }
+      ],
+      "selected_quote_sha256": "fceb2eca432e42b1e11d44f4fd77ceb2cb8ddb7ba3644c44cb77d8e8f4827c90",
+      "selected_quote_words": 14,
+      "selected_span": [
+        2563,
+        2638
+      ],
+      "date_claims": [],
+      "canonical_verified": false,
+      "verified_freshness": null
+    },
+    {
+      "family": "rfc",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "title": "RFC 9111: HTTP Caching",
+      "fetched_at": "2026-10-21 19:28:34.025469+00:00",
+      "source_text_sha256": "18e587371605ef2af0c7434539cc89cfd3c9ee260aa0e508bccdc464ff3baad5",
+      "source_resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 232630,
+          "body_sha256": "ce91ee9848d2b9ac46386b0f0cbd4bfd9c0cd1948ebc363834cadc7e0997f3d7"
+        }
+      ],
+      "selected_quote_sha256": "e09a64cca2742b9b70d8385cffea6d5bf0bdd37b66cb490e1c256155c7fc6831",
+      "selected_quote_words": 15,
+      "selected_span": [
+        53973,
+        54073
+      ],
+      "date_claims": [],
+      "canonical_verified": false,
+      "verified_freshness": null
+    }
+  ],
+  "automatic_retries": 0,
+  "browser_runs": 0,
+  "model_replacement": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "artifacts": {},
+  "raw_provider_titles_snippets_persisted": false,
+  "discovery_archive_raw_query_text_retained": false,
+  "original_host_generated_plan_completion_retained": true,
+  "discovery": {
+    "description": "Explicit evaluator-designated references; no search discovery occurred.",
+    "schema_version": "designated-reference-diagnostic-v1",
+    "search_discovered": false,
+    "sources": [
+      {
+        "family": "searxng",
+        "url": "https://docs.searxng.org/dev/search_api.html",
+        "provenance": "evaluator_designated_not_search_discovered"
+      },
+      {
+        "family": "rfc",
+        "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+        "provenance": "evaluator_designated_not_search_discovered"
+      }
+    ],
+    "provider_attempts": 0,
+    "model_plan_attempts": 0
+  },
+  "provider_attempts": 0,
+  "plan_queries": 0,
+  "D60_acceptance": false,
+  "selected_actual_results": [
+    {
+      "family": "searxng",
+      "url": "https://docs.searxng.org/dev/search_api.html",
+      "provenance": "evaluator_designated_not_search_discovered"
+    },
+    {
+      "family": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "provenance": "evaluator_designated_not_search_discovered"
+    }
+  ],
+  "error_type": "ResearchReportError",
+  "error_code": "report_assessment_failed",
+  "plan_CORE_attempts": 0,
+  "assessment_CORE_attempts": 1,
+  "native_batches": 0,
+  "plan_completion": null,
+  "assessment_completion": null,
+  "report_key_revoked": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admissions_released": true,
+  "actual_provider_port_attempts": 0,
+  "provider_wire_metadata": [],
+  "actual_DNS": [
+    {
+      "host": "docs.searxng.org",
+      "addresses": [
+        "185.199.108.153",
+        "185.199.110.153",
+        "185.199.109.153",
+        "185.199.111.153",
+        "2606:50c0:8002::153",
+        "2606:50c0:8000::153",
+        "2606:50c0:8001::153",
+        "2606:50c0:8003::153"
+      ]
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "addresses": [
+        "104.18.21.81",
+        "104.18.20.81",
+        "2606:4700::6812:1551",
+        "2606:4700::6812:1451"
+      ]
+    }
+  ],
+  "actual_TLS": [
+    {
+      "host": "docs.searxng.org",
+      "selected_pin": "185.199.108.153",
+      "actual_peer": "185.199.108.153",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.21.81",
+      "actual_peer": "104.18.21.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "all_source_native_socket_FDs_closed": true,
+  "persisted_state": "interrupted",
+  "persisted_attempts": [
+    "discover",
+    "publish"
+  ],
+  "acknowledged_blobs": {
+    "discover": {
+      "bytes": 823,
+      "sha256": "325c0d9636598d3c3d708f47a691d5348cde142b596179e45adf6cd8694ecdb0"
+    }
+  },
+  "archived_after_issuers_revoked": true,
+  "elapsed_seconds": 1.36,
+  "artifact": {
+    "path": "data/backups/d60-t04-designated-reference-diagnostic/summary.json",
+    "sha256": "0b43ff0160f73a18d1082785129548dc9cface8992a7a3117c9986fc0075b68d"
+  },
+  "diagnosis": "claim_model_failed; localhost CORE unavailable after host reboot"
+}

@@ -1,0 +1,41 @@
+{
+  "description": "All three final PDF pages viewed at144DPI; PDF is actual private-LibreOffice rendering of delivered DOCX. Complete claims/evidence/limitations present; no clipping, unreadable glyphs or heading/body overlap. Direct-reference diagnostic only; search completeness and human-independent semantic truth not established.",
+  "status": "PASS_ALL_THREE_PAGES_VISUALLY_REVIEWED",
+  "D60_acceptance": false,
+  "original_summary_sha256": "7c9445b582be450c2bd07271088c4366ff5224227ae810c30fd7fdd41a9325bb",
+  "pdf_pages": 3,
+  "reviewed_images": [
+    {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/page-1.png",
+      "sha256": "13299aac94c3f83af49088a66a61e12075d2cc9cd4e34b24b43e544e9352ae20"
+    },
+    {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/page-2.png",
+      "sha256": "17fe9dd6abaad36eb767c8a3c14bdd623b315035e3bd823a74c5ad3ba97e6961"
+    },
+    {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "artifacts": {
+    "docx": {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/report.docx",
+      "bytes": 38661,
+      "sha256": "b51e679b242ef02ba5713493a8f7615836e8159593cc90c74d558ea2943bdef7",
+      "published_path": "docs/evidence/d60-designated-reference-report.docx"
+    },
+    "pdf": {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/report.pdf",
+      "bytes": 46697,
+      "sha256": "18eea7f800e5913818d5b6b9cf4fa58d15242d7658bb3c78c5d6911174e76ad9",
+      "published_path": "docs/evidence/d60-designated-reference-report.pdf"
+    },
+    "markdown": {
+      "path": "data/backups/d60-t04-postboot-designated-reference-diagnostic/report.md",
+      "bytes": 3324,
+      "sha256": "aa26de6b028e8e16c152b16605e7d05bdc4ab8f478b9af9598a952ab86656097",
+      "published_path": "docs/evidence/d60-designated-reference-report.md"
+    }
+  }
+}
