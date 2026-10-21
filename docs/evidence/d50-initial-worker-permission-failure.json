@@ -1,0 +1,14 @@
+{
+  "description": "First D50 runtime gate68 PASS/12 FAIL/.23s: new apply-patch worker is0664 and correctly refused by owner/non-group-writable snapshot policy. No container created in this gate. Normalize only new worker metadata to0644; preserve security guard and test oracles.",
+  "passed": 68,
+  "failed": 12,
+  "seconds": 0.23,
+  "pytest_exit_code": 1,
+  "worker_original_mode": "0o664",
+  "archive": {
+    "path": "data/backups/d50-before-worker-permission-repair.zip",
+    "sha256": "ac1cc6a7fe931eb38e15db3c773836acd8d6d540328ef787fb7ee490d4784ca8"
+  },
+  "log_sha256": "66a49d8c5eb2135dadae8d9a9b2894ee98bd7a3d4a77427fcf6c37296aa5d91a",
+  "actual_browser_containers_created": 0
+}
