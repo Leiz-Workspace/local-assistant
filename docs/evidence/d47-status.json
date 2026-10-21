@@ -1,0 +1,62 @@
+{
+  "description": "D47 implemented inactive search boundary with actual controlled/CORE tests; no real provider exists, so live acceptance remains open.",
+  "status": "PARTIAL_EXTERNAL_PROVIDER_PREREQUISITE",
+  "task": "D47",
+  "blocking_task": "WEB-ONBOARD-001",
+  "owner_confirmed_no_provider": true,
+  "controlled_fixture_tests_passed": 115,
+  "related_tests_passed": 1459,
+  "related_seconds": 114.47,
+  "related_skipped": 0,
+  "related_exit_code": 0,
+  "separately_retained_actual_CORE_cases": 1,
+  "actual_CORE_seconds": 0.72,
+  "actual_CORE_port_attempts": 1,
+  "mock_provider_requests": 1,
+  "external_provider_requests": 0,
+  "automatic_retries": 0,
+  "new_unique_tests": 116,
+  "related_and_separate_case_distinct_total": 1460,
+  "full_suite_collected": 2829,
+  "new_full_suite_run": false,
+  "historical_full_D44_passed": 2622,
+  "source_files": 434,
+  "unique_source_protected_hashes": 859,
+  "new_Python_files": 6,
+  "described_functions_classes": 67,
+  "reference_adapter": "brave_inactive_unwired",
+  "actual_account_terms_quota_privacy_verified": false,
+  "provider_activated": false,
+  "architecture": "docs/ADR/064-search-provider-boundary-and-existing-core.md",
+  "backlog": "docs/WEB_RESEARCH_BACKLOG.md",
+  "prior_accepted_source_changes": [],
+  "model_config_dependency_migration_vault_docker_database_changes": false,
+  "first_D46_repair_score": "7/10 unchanged; three nonpassing outcomes retained",
+  "D48_started": false,
+  "evaluated_complete_files_zip": {
+    "path": "data/backups/d47-evaluated-full-files.zip",
+    "sha256": "95f55fbd074946f8f0223f8d7ed8e855f8f97d8887739a8e43b766016350f9b5"
+  },
+  "evidence": {
+    "d47-search-freeze": {
+      "path": "docs/evidence/d47-search-freeze.json",
+      "sha256": "686d1257c948881ff19807fcbda972852d6629e7d228f2a1a14d4ada98c6d544"
+    },
+    "d47-focused": {
+      "path": "docs/evidence/d47-focused.json",
+      "sha256": "419d859f8b317cb9fdf9a410921a0c1c23f7ae437e92509fa5c30bf5df7f9217"
+    },
+    "d47-first-core-observation": {
+      "path": "docs/evidence/d47-first-core-observation.json",
+      "sha256": "effe22c9f43e2cabcae1ad6ec1f9ef80f80c537c3855db2cf7048a2cbd7884cb"
+    },
+    "d47-related-regression": {
+      "path": "docs/evidence/d47-related-regression.json",
+      "sha256": "b9be1501fc6f82e2542190e8f791dad3de2de4b1403b1eb0282fbbaf3109c1e1"
+    },
+    "d47-final-post-audit": {
+      "path": "docs/evidence/d47-final-post-audit.json",
+      "sha256": "c08702e47de80872fc0de64c0a3dfd332e20b549942f194a285a1ff44b125038"
+    }
+  }
+}
