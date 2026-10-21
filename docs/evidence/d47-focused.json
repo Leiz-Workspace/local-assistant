@@ -1,0 +1,22 @@
+{
+  "description": "Actual D47 subprocess gate; no external search acceptance or fresh full-suite claim.",
+  "command": [
+    "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+    "-m",
+    "pytest",
+    "tests/test_search_pipeline.py",
+    "tests/test_brave_search.py",
+    "-q",
+    "-rs",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.34,
+  "summary": "115 passed in 0.17s",
+  "log": "data/backups/d47-focused.log",
+  "log_sha256": "8a61fed80749ae8a23b1d0b3b49684096061c37769c7926c630fdf4986486354",
+  "completed_at_utc": "2026-10-21T00:59:06.179869+00:00"
+}
