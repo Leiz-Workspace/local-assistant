@@ -1,0 +1,30 @@
+{
+  "description": "Actual fresh exact-source full application pytest gate, including existing enabled PostgreSQL/Qdrant/CORE/CPU embedding/reranker/native integration; related1640 and controlled99 are subsets, actual SearXNG API script separate.",
+  "status": "PASS_FRESH_FULL_SUITE",
+  "targets": [
+    "tests"
+  ],
+  "passed": 3010,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1637.76,
+  "wrapper_seconds": 1638.57,
+  "summary": "3010 passed in 1637.76s (0:27:17)",
+  "log_sha256": "eb7550fbe784598d640c8a425a79943b8d2e40253d0ab0380fe126f3a81fb982",
+  "source_freeze_sha256": "173d646590bdae0d8c91b9b3fc92441be0bf1be8e4f29f66b6aa591c2c16e6ca",
+  "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+  "wrapper_pid": 3028125,
+  "pytest_pid": 3028149,
+  "options": [
+    "-v",
+    "-rs",
+    "--tb=short",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "credentials_from_existing_Vault_in_memory_only": true,
+  "raw_credentials_in_logs": false,
+  "prior_first_evaluation_scores_unchanged": true
+}
