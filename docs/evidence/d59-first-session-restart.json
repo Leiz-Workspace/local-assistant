@@ -1,0 +1,100 @@
+{
+  "description": "First distinct-process original CORE discovery\u2192durable pause\u2192fresh-proof report/native export\u2192archive reopen. Authored provider/source fixtures, not live publisher research or independent semantic quality.",
+  "status": "PASS_FIRST_ACTUAL_SEPARATE_PROCESS_SESSION_RESUME",
+  "source_freeze_sha256": "f3b035e61eb8b29ce08dc2a2d0c73347dc7517b0586bd79e35e6f320f530bdff",
+  "actual_public_or_private_source_HTTP": 0,
+  "actual_provider_HTTP": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "recovery_tool_calls": 0,
+  "model_replacement": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "artifacts": {
+    "docx": {
+      "path": "data/backups/d59-first-session-restart/report.docx",
+      "sha256": "54fbcd0ecb6d44ed11356e0eee4b51719fc924afac486f56d77cb4f8745bb501",
+      "bytes": 38553
+    },
+    "pdf": {
+      "path": "data/backups/d59-first-session-restart/report.pdf",
+      "sha256": "855cfbab16624f054946ec9789a6bef285927af8dd053d1af6263f6c1d7c8cd2",
+      "bytes": 47015
+    },
+    "markdown": {
+      "path": "data/backups/d59-first-session-restart/report.md",
+      "sha256": "496131dc5ceecbdbfed118b951d5d2ab3bd992dc93e15de7af08b17f40ee95fe",
+      "bytes": 3143
+    }
+  },
+  "discover": {
+    "path": "data/backups/d59-first-session-restart/discover.json",
+    "sha256": "a27abdc5f330adb175d01a802a13d95a2d6c7fc3712d28cc004433d000156dba",
+    "exit_code": 0
+  },
+  "publish": {
+    "path": "data/backups/d59-first-session-restart/publish.json",
+    "sha256": "8db572c9171b7bc33fef110aff8615d68cf45f1746ed9eaa9821f68257763b47",
+    "exit_code": 0
+  },
+  "core_completions": 2,
+  "authored_provider_calls": 3,
+  "authored_source_reads": 2,
+  "native_batches": 1,
+  "functional_claims": "3/3",
+  "pdf_pages": 3,
+  "discovery_bytes_preserved": true,
+  "completed_archive_reopened_after_all_issuers_revoked": true,
+  "owner_bound_archived_data_not_live_proof": true,
+  "live_receipts_persisted": false,
+  "attempts": [
+    "discover",
+    "publish"
+  ],
+  "native_uid": 65534,
+  "native_gid": 65534,
+  "network_routes": 0,
+  "effective_capabilities": "0000000000000000",
+  "visual_status": "PENDING_ALL_PAGE_REVIEW",
+  "visual_images": [
+    {
+      "path": "data/backups/d59-first-session-restart/page-1.png",
+      "sha256": "8957a0dbeaa3c2524c1d6616203a6e107a197969c1833573a17f0c3533611ed4"
+    },
+    {
+      "path": "data/backups/d59-first-session-restart/page-2.png",
+      "sha256": "ee7994cf5a89c9f5cb058be424bcd6009921da764cd67b71c74436c95ad70599"
+    },
+    {
+      "path": "data/backups/d59-first-session-restart/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "elapsed_seconds": 4.808,
+  "artifact": {
+    "path": "data/backups/d59-first-session-restart/summary.json",
+    "sha256": "04023145470318f7a6a8fb6ea0ab6fbda3c648a683d1d64b8ff894a5d537aedc"
+  },
+  "subsequent_visual_review": {
+    "path": "docs/evidence/d59-first-session-visual-review.json",
+    "sha256": "14f74d6fdf3934a6a4d2b18091c101da7dcec59dc5142cdddfd4d44371f33deb"
+  },
+  "public_artifacts": {
+    "docx": {
+      "path": "docs/evidence/d59-first-authored-report.docx",
+      "sha256": "54fbcd0ecb6d44ed11356e0eee4b51719fc924afac486f56d77cb4f8745bb501",
+      "bytes": 38553
+    },
+    "pdf": {
+      "path": "docs/evidence/d59-first-authored-report.pdf",
+      "sha256": "855cfbab16624f054946ec9789a6bef285927af8dd053d1af6263f6c1d7c8cd2",
+      "bytes": 47015
+    },
+    "markdown": {
+      "path": "docs/evidence/d59-first-authored-report.md",
+      "sha256": "496131dc5ceecbdbfed118b951d5d2ab3bd992dc93e15de7af08b17f40ee95fe",
+      "bytes": 3143
+    }
+  }
+}

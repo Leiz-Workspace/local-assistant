@@ -1,0 +1,25 @@
+{
+  "description": "Two failed D59 readonly-audit invocation attempts retained. No source, audit oracle, freeze, test or actual cohort changed; same frozen script subsequently executed with runpy.run_path and project-root import context.",
+  "status": "FAILED_INVOCATIONS_RETAINED",
+  "failed_invocations": [
+    {
+      "path": "data/backups/d59-final-audit.log",
+      "sha256": "fe9ac8cc3ae669ead32617904040bae3fff7435935ab13e6ef6667212111854b",
+      "exit_code": 1,
+      "reason": "Script-path execution did not include project root in sys.path; src import failed before runtime/parent audit."
+    },
+    {
+      "path": "data/backups/d59-final-module-audit.log",
+      "sha256": "ef91a3480e5911294fe621e3ecf17e56cca11b171159607829fa09fd0b5422ee",
+      "exit_code": 1,
+      "reason": "runpy CLI expects a module name; supplying a script path failed before audit body."
+    }
+  ],
+  "successful_invocation": "uv run --no-sync python -c \"import runpy; runpy.run_path('data/backups/d59-final-audit.py', run_name='__main__')\"",
+  "successful_exit_code": 0,
+  "successful_log": {
+    "path": "data/backups/d59-final-path-audit.log",
+    "sha256": "7474b19f0c1bd4a42a944a215cb5914d5c2b4ed90e31ab7308192440eea2f256"
+  },
+  "source_and_audit_oracles_unchanged": true
+}

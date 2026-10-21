@@ -1,0 +1,32 @@
+{
+  "description": "Subsequent same-agent visual inspection of every actual D59 native exported page at144DPI after separate-process boundary resume; immutable summary keeps original visual-pending capture.",
+  "status": "PASS_ALL_ACTUAL_PAGES_VISUALLY_REVIEWED",
+  "reviewer_kind": "same-agent AI visual review, not independent human review",
+  "trial_sha256": "04023145470318f7a6a8fb6ea0ab6fbda3c648a683d1d64b8ff894a5d537aedc",
+  "source_freeze_sha256": "f3b035e61eb8b29ce08dc2a2d0c73347dc7517b0586bd79e35e6f320f530bdff",
+  "pages": 3,
+  "dpi": 144,
+  "images": [
+    {
+      "path": "data/backups/d59-first-session-restart/page-1.png",
+      "sha256": "8957a0dbeaa3c2524c1d6616203a6e107a197969c1833573a17f0c3533611ed4"
+    },
+    {
+      "path": "data/backups/d59-first-session-restart/page-2.png",
+      "sha256": "ee7994cf5a89c9f5cb058be424bcd6009921da764cd67b71c74436c95ad70599"
+    },
+    {
+      "path": "data/backups/d59-first-session-restart/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "findings": [
+    "Page1: black title/no inherited border, complete supported/contradicted claims and cohesive rationale groups, complete assessment identifiers.",
+    "Page2: full Vietnamese unresolved claim/reason and both complete original citations/quotes/hash/UTC/unknown freshness; readable glyphs and no clipping/overlap.",
+    "Page3: all six limitation paragraphs remain together and readable; no sparse two-paragraph orphan page, missing content or decorative artifacts."
+  ],
+  "no_clipping_overlap_or_missing_Vietnamese_glyphs_observed": true,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "general_unseen_layout_or_security_claim": false
+}
