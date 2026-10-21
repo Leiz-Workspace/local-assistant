@@ -1,0 +1,11 @@
+{
+  "description": "First D60 metadata-observer controls:14 FAIL/two PASS. Mock responses used content=bytes, which HTTPX eagerly marks read/closed before the observer wraps the stream. Real transport responses are unread streams. Retain complete source/tests/log before test-only stream=ByteStream fixture correction; no accepted source or diagnostic acceptance oracle change.",
+  "status": "FAILED_FIRST_FIXTURE_COHORT_RETAINED",
+  "passed": 2,
+  "failed": 14,
+  "archive": {
+    "path": "data/backups/d60-t01-before-streaming-fixture-repair.zip",
+    "sha256": "9d2fa7cfbc9cdbb7d75ca0e52c3925da2d2f92d5f0e6542110c083519a112784"
+  },
+  "repair_scope": "Test fixture response construction only; original observer/adapter/schema/oracles unchanged"
+}
