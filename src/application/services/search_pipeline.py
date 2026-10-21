@@ -104,22 +104,26 @@ def validate_batch(batch, provider_id):
 
 
 def search_messages(query, hits):
-    """Put bounded evidence in one untrusted data message after a fixed policy."""
-    content = json.dumps(
-        dict(
-            query=query,
-            sources=[
-                dict(
-                    source_id=f"S{index}",
-                    title=hit.title,
-                    url=hit.url,
-                    snippet=hit.snippet,
-                )
-                for index, hit in enumerate(hits, 1)
-            ],
-        ),
-        ensure_ascii=False,
-        allow_nan=False,
+    """Encode complete untrusted evidence without literal angle-bracket protocol tokens or changing decoded values."""
+    content = (
+        json.dumps(
+            dict(
+                query=query,
+                sources=[
+                    dict(
+                        source_id=f"S{index}",
+                        title=hit.title,
+                        url=hit.url,
+                        snippet=hit.snippet,
+                    )
+                    for index, hit in enumerate(hits, 1)
+                ],
+            ),
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
     )
     if len((SYSTEM + content).encode("utf-8")) > 24576:
         raise SearchPipelineError("search_prompt_limit")
