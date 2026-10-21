@@ -1,0 +1,20 @@
+{
+  "description": "First controlled two-page visual preview rejected despite63 functional controls PASS. The builtin Title style retained a blue bottom border, and the unresolved claim rationale split onto the next page. Preserve complete source/artifacts/PNG/provenance before new-style-only corrections; no frozen actual CORE trial yet.",
+  "status": "FAILED_CONTROLLED_VISUAL_REVIEW",
+  "functional_controls_passed": 63,
+  "actual_CORE_calls": 0,
+  "pages_inspected": [
+    1,
+    2
+  ],
+  "findings": [
+    "inherited_title_bottom_border",
+    "claim_rationale_split_across_pages"
+  ],
+  "archive": {
+    "path": "data/backups/d58-before-title-border-and-claim-pagination-repair.zip",
+    "sha256": "1d02f0e37e13a51b3e31f07912167503f4e196d2076164d9fb7f161f5ba98752"
+  },
+  "preview_manifest_sha256": "31331c63f1a155fd13f29da5e890bd0aac843f7ade2d4a86ff4fc5da608c7bab",
+  "accepted_D57_source_changes": []
+}

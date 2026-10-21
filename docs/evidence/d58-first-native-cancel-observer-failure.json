@@ -1,0 +1,11 @@
+{
+  "description": "D58 expanded controls62 PASS/one real Office cancellation-observer FAIL. First success/hostile Unicode/native wall-timeout gates pass; expected owned soffice.bin descendant was not observed by the initial children/cmdline reader. Do not claim cancellation acceptance yet; preserve source/test/log before diagnosis.",
+  "passed": 62,
+  "failed": 1,
+  "archive": {
+    "path": "data/backups/d58-before-native-office-observer-repair.zip",
+    "sha256": "16a25cff2f5e84f001fd0257033f54da97e9f56a95619156c1402db995875260"
+  },
+  "log_sha256": "e98ec34b6d318e9b94a9b3758fbca221f1daaab119dfd1b3e1e3d4c887629889",
+  "accepted_D57_source_changes": []
+}
