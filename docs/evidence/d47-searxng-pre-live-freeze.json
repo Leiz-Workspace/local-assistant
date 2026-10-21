@@ -1,0 +1,30 @@
+{
+  "description": "Exact selected SearXNG adapter/config/test source and one-attempt real provider/CORE oracle frozen before live search; earlier D47 first fixture retained unchanged.",
+  "base_commit": "f51b628ba7e438690961686b15992558002150dd",
+  "owner_selected_provider": "self_hosted_searxng",
+  "query": "SearXNG Search API JSON format",
+  "oracle": {
+    "provider_calls": 1,
+    "model_port_attempts": 1,
+    "provider_result_minimum": 1,
+    "status": "answered",
+    "answer_contains_casefold": "json",
+    "primary_citation_hostname": "docs.searxng.org",
+    "semantic_validation": false,
+    "automatic_retries": 0
+  },
+  "new_source_sha256": {
+    "src/infrastructure/searxng_search.py": "068875d2cd66e5c48ea82f757190c4cbb209e394c1bc357366ad859997f38c1a",
+    "tests/test_searxng_search.py": "27d72b47057434b35e6b3c1a27ed8319e973c60dc01bfd328365e138d88ccd20",
+    "tests/test_searxng_deployment.py": "7aced94537ae13dc39dbf076b0dc0b26aedc488ae854c62fe156026982dcbfd7",
+    "../infras/searxng-server/log_policy.py": "bddac09a72fc0f58050783b6c0e3090cc41f5936cab70357a4e5eeb7bb5535f8",
+    "../infras/searxng-server/searxng-compose.yaml": "17ed081b9c6a93fb6d3be5e5afc96efb69963fea50bc83e99bf6895c6d6ec724",
+    "../infras/searxng-server/config/settings.yml": "6ad9260e9506714cdac0aaf9f92cdf23ba981f8ee1fe538f66984f190ac81abf",
+    "../infras/searxng-server/config/logging.json": "ad764ce4ca0d72d796bee5edfd995150a9cfa331aeebbf7dd1a12c90c7bfc1ba",
+    "../infras/searxng-server/.gitignore": "d57497effce38c9d9fc712fef4b089b4d49913f147144e1c82e500887913a3fb",
+    "../infras/searxng-server/README.md": "60987ea87b84711b04731b7e5aec3459167a6f188ebbec47433d48560771fffa"
+  },
+  "described_functions_classes": 29,
+  "raw_provider_content_persisted": false,
+  "actual_requests_before": 0
+}

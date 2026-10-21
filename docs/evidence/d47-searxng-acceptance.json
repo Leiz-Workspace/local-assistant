@@ -1,0 +1,80 @@
+{
+  "description": "D47 owner-selected private SearXNG provider acceptance; original failing live cohorts and old mocked CORE fixture preserved. Local connectivity/reference binding only, not broad web relevance/freshness/semantic validation.",
+  "status": "PASS_LOCAL_SELECTED_PROVIDER_SCOPE",
+  "date": "2026-10-21",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "provider": "owned_searxng",
+  "upstream": "brave_website_engine",
+  "brave_commercial_API_key_used": false,
+  "owner_selected_self_hosting": true,
+  "provider_endpoint": "http://127.0.0.1:8889/search",
+  "provider_health": 200,
+  "existing14_containers_unchanged": true,
+  "original_core_healthy": true,
+  "selected_live_provider_attempts": 1,
+  "selected_live_model_attempts": 1,
+  "selected_live_citations": 4,
+  "selected_live_seconds": 2.663,
+  "automatic_retries": 0,
+  "semantic_validation": false,
+  "raw_provider_content_persisted": false,
+  "actual_live_trial": {
+    "path": "data/backups/d47-searxng-selected-live/summary.json",
+    "sha256": "55f03d7e5a7ff1cfd6431589f426239e3a2fe4d09e6dbfeba13c0de2dcd64ed8"
+  },
+  "failed_live_cohorts": [
+    {
+      "reason": "initial irrelevant retrieval; CORE correctly refused",
+      "path": "data/backups/d47-searxng-first-live/summary.json",
+      "sha256": "2120d3015f5b31bb073834e9e5073d02ba4b8737b7a69f9f43291d6d01533ba7",
+      "provider_attempts": 1,
+      "model_attempts": 1
+    },
+    {
+      "reason": "Google upstream unavailable; model not called",
+      "path": "data/backups/d47-searxng-repaired-live/summary.json",
+      "sha256": "205c98c8cb9a1af0a55c9f15a4ae02ee4a9c9427909b4f84288bc220f5c785f9",
+      "provider_attempts": 1,
+      "model_attempts": 0
+    }
+  ],
+  "compatibility_panel": "data/backups/d47-searxng-alternative-panel-result.json",
+  "panel_is_not_general_ranking_benchmark": true,
+  "new_pytest_cases": 82,
+  "related_passed": 1541,
+  "related_skipped": 0,
+  "related_exit_code": 0,
+  "related_seconds": 116.73,
+  "related_log_sha256": "2efd78973f85aa9ad90c1d8b17617ad5b616c85deb50284eb8e07a2d2a17897c",
+  "source_config_files": 443,
+  "unique_source_protected_hashes": 882,
+  "evaluated_python_files": 4,
+  "described_functions_classes": 30,
+  "source_quality": {
+    "correctness_import_format": "PASS",
+    "frozen_description_count_erratum": {
+      "frozen_declared": 29,
+      "actual": 30,
+      "reason": "Original pre-live metadata count was copied before adding provenance regression; source/oracle hashes unchanged and original freeze not edited."
+    }
+  },
+  "runtime_audit": "docs/evidence/d47-searxng-runtime-audit.json",
+  "parent_readonly_audit": {
+    "path": "data/backups/d47-searxng-parent-readonly-audit.json",
+    "sha256": "b083a1583d88dc290405338b8a983243a23e89b721c37521ccc19d9f867aeb1d"
+  },
+  "parent_readonly_log_sha256": "b160909c9901d9e6824d416fb4d89d29dcf53d1c81612ebe14ababcf25b845ea",
+  "existing_model_config_dependency_migration_vault_database_changes": false,
+  "prior_accepted_runtime_source_changes": [],
+  "new_docker_stack_only": "infras/searxng-server",
+  "application_search_API_activated": false,
+  "historical_full_D44_passed": 2622,
+  "new_full_suite_claim": false,
+  "previous_D47_mocked_CORE_fixture_unchanged": true,
+  "D46_first7_of10_and_failures_preserved": true,
+  "D48": "NEXT",
+  "evaluated_complete_archive": {
+    "path": "data/backups/d47-searxng-evaluated-full-files.zip",
+    "sha256": "275c195b5a0793c9ba50eeb4dd71e96dbf662c87fdea2bdb14ba41e7b689f0b6"
+  }
+}
