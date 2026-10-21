@@ -1,0 +1,60 @@
+{
+  "description": "First unchanged CORE\u2192signed claim assessment\u2192deterministic host Markdown experiment over authored sources. Citation integrity is not semantic truth; model statuses unverified. No actual publisher HTTP/search/browser or human-independent/general quality claim.",
+  "status": "PASS_FIRST_ACTUAL_CORE_CITED_MARKDOWN_REPORT",
+  "source_freeze_sha256": "a4d836f030eb1d1db302606f2a961019dfac69f371f2d2324177ab2b7c7908cf",
+  "actual_public_or_private_source_HTTP": 0,
+  "provider_calls": 0,
+  "browser_runs": 0,
+  "report_drafting_model_calls": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "observed_statuses": [
+    "supported",
+    "contradicted",
+    "insufficient"
+  ],
+  "functional_claims_correct": 3,
+  "markdown_sha256": "0c684c56b23500ac744f5e34e159b9f630ca7209283086a334b9fe3259557ee2",
+  "assessment_sha256": "37d0cc02ca09886dcad5b4f814eab238e6239af82d03db24de696116fbf875ed",
+  "markdown_utf8_bytes": 3001,
+  "citation_count": 2,
+  "claim_count": 3,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "receipt_valid_before_shutdown": true,
+  "foreign_owner_and_changed_markdown_rejected": true,
+  "byte_reproducible_from_same_assessment": true,
+  "authored_markdown_artifact": {
+    "path": "data/backups/d57-first-core-report/report.md",
+    "sha256": "0c684c56b23500ac744f5e34e159b9f630ca7209283086a334b9fe3259557ee2",
+    "public_path": "docs/evidence/d57-first-authored-report.md"
+  },
+  "shared_evidence_alive_after_report_shutdown": true,
+  "core_port_attempts": 1,
+  "model_completion": {
+    "content": "{\"claims\": [{\"claim_id\": \"C1\", \"status\": \"supported\", \"evidence_ids\": [\"E1\"], \"reason\": \"Quote in E1 directly states the requirement.\"}, {\"claim_id\": \"C2\", \"status\": \"contradicted\", \"evidence_ids\": [\"E2\"], \"reason\": \"Quote in E2 states 128 MiB, contradicting the 256 MiB claim.\"}, {\"claim_id\": \"C3\", \"status\": \"insufficient\", \"evidence_ids\": [], \"reason\": \"No evidence provided regarding the launch year.\"}]}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 681,
+    "output_tokens": 129,
+    "reasoning_tokens": null,
+    "latency_ms": 1966
+  },
+  "authored_source_reads": 2,
+  "charged_attempts": 1,
+  "reports_closed": true,
+  "validator_closed": true,
+  "report_receipts_revoked": true,
+  "evidence_closed": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "elapsed_seconds": 1.973,
+  "artifact": {
+    "path": "data/backups/d57-first-core-report/summary.json",
+    "sha256": "5e397a8e0b08088a1ae7bba8657800fa83472e2a342d61bca717d395a87e1711"
+  }
+}

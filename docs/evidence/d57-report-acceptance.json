@@ -1,0 +1,41 @@
+{
+  "description": "D57 local reproducible complete cited Markdown and expiring owner-bound receipt acceptance. One original CORE claim assessment over authored sources; no report-drafting model call or semantic truth promotion.",
+  "status": "PASS_LOCAL_REPRODUCIBLE_CITED_MARKDOWN",
+  "new_controls": 53,
+  "related_passed": 2441,
+  "related_skipped": 0,
+  "related_summary": "2441 passed in 141.71s (0:02:21)",
+  "related_log_sha256": "fa19fd463e6785410dd45b7a3122ff310d996e7ba0530515952e4f88f5328d6f",
+  "source_files": 513,
+  "source_protected_hashes": 1159,
+  "all508_D56_source_config_bytes_unchanged": true,
+  "source_freeze_sha256": "a4d836f030eb1d1db302606f2a961019dfac69f371f2d2324177ab2b7c7908cf",
+  "actual_CORE_completions": 1,
+  "additional_drafting_model_calls": 0,
+  "authored_functional_claims": "3/3",
+  "citations": 2,
+  "markdown_bytes": 3001,
+  "same_assessment_byte_reproducibility_verified": true,
+  "changed_foreign_owner_receipts_refused": true,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "production_API_wiring": false,
+  "historical_D52_full_passed": 3534,
+  "new_full_suite_claim": false,
+  "actual_CORE": {
+    "path": "docs/evidence/d57-first-core-report.json",
+    "sha256": "5ad3622bcca15965155740ab5408c0a59a352239641b0eb86a7c0eeb4dde6876"
+  },
+  "complete_authored_sample": {
+    "path": "docs/evidence/d57-first-authored-report.md",
+    "sha256": "0c684c56b23500ac744f5e34e159b9f630ca7209283086a334b9fe3259557ee2"
+  },
+  "readonly_audit": {
+    "path": "docs/evidence/d57-final-readonly-audit.json",
+    "sha256": "186745beb900e11d2c07da3f8224efc5fa9911e1bbced7b3733a4bea76a99f1a"
+  },
+  "next_task": "D58 PDF/DOCX export from authenticated generated report"
+}
