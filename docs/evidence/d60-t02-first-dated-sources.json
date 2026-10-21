@@ -1,0 +1,274 @@
+{
+  "description": "First frozen four-primary dated-source measurement with eight bilingual question views. Exact same-source date declarations are grounded when present, not independent verified publication/recency or generated bilingual answer quality. Every failure retained.",
+  "status": "DATE_EVALUATION_COMPLETE_WITH_RETAINED_OUTCOMES",
+  "source_freeze_sha256": "f560ddc02e1dc9b186bf559fdc06715d361387ac7a2feea13bfccecabaaf2fea",
+  "references": [
+    {
+      "reference_id": "rfc6901",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc6901.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": true,
+      "date_marker_grounded": true,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc6901.html",
+      "title": null,
+      "fetched_at": "2026-10-21T13:56:29.445892+00:00",
+      "text_sha256": "9ee8c801943d75c3d4762c2d1b40ee2e9fbd24033681876e84fb3107061d1c3d",
+      "text_bytes": 10893,
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc6901.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 17156,
+          "body_sha256": "38623faa2bf5c836d6e0f79c859273edbb9a82c40f872b86a85b120dcd59b462"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown",
+      "date_marker_quote_sha256": "e4f24ddcb2e78a239ee9b2dcb0991a0ca11e80025654c603e15dfd093752f338",
+      "date_marker_start": 184,
+      "date_marker_end": 194,
+      "date_marker_source_url": "https://www.rfc-editor.org/rfc/rfc6901.html",
+      "date_marker_fetched_at": "2026-10-21T13:56:29.445892+00:00",
+      "underlying_source_guard": {
+        "status": "observed",
+        "underlying_code": null,
+        "resources": 1
+      }
+    },
+    {
+      "reference_id": "rfc8259",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc8259.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": true,
+      "date_marker_grounded": true,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc8259.html",
+      "title": null,
+      "fetched_at": "2026-10-21T13:56:29.850697+00:00",
+      "text_sha256": "5c7fcb896adeab284d2a8534074c7322a59240c535a506b189399eb28b5f62e9",
+      "text_bytes": 23806,
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc8259.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 37946,
+          "body_sha256": "5302d6ccb6cf221817bdd1f8cd7221661d4519372e0ac0b4cf641e11e8037de7"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown",
+      "date_marker_quote_sha256": "d3735fc76b3ad7c556922b6958e00bd00f41fd942f9f872076fc0ac12cc05fdf",
+      "date_marker_start": 106,
+      "date_marker_end": 119,
+      "date_marker_source_url": "https://www.rfc-editor.org/rfc/rfc8259.html",
+      "date_marker_fetched_at": "2026-10-21T13:56:29.850697+00:00",
+      "underlying_source_guard": {
+        "status": "observed",
+        "underlying_code": null,
+        "resources": 1
+      }
+    },
+    {
+      "reference_id": "rfc8439",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc8439.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": true,
+      "date_marker_grounded": true,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc8439.html",
+      "title": null,
+      "fetched_at": "2026-10-21T13:56:30.350362+00:00",
+      "text_sha256": "dbd66093a6ab4a5ebc7a25a3bc27cb84bda3280808316904608ca9652bde99e1",
+      "text_bytes": 76753,
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc8439.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 106514,
+          "body_sha256": "74a1cee6e19a9c9be8e3f7b9850ac0287f22dbd6823864cc0ed6e6434b00019c"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown",
+      "date_marker_quote_sha256": "fa5d590b0f47d86fe83a3edfc185a02ba75cff0e2077c0debf6d0fdde67cf31b",
+      "date_marker_start": 159,
+      "date_marker_end": 168,
+      "date_marker_source_url": "https://www.rfc-editor.org/rfc/rfc8439.html",
+      "date_marker_fetched_at": "2026-10-21T13:56:30.350362+00:00",
+      "underlying_source_guard": {
+        "status": "observed",
+        "underlying_code": null,
+        "resources": 1
+      }
+    },
+    {
+      "reference_id": "rfc9111",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": true,
+      "date_marker_grounded": true,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "title": "RFC 9111: HTTP Caching",
+      "fetched_at": "2026-10-21T13:56:30.853567+00:00",
+      "text_sha256": "18e587371605ef2af0c7434539cc89cfd3c9ee260aa0e508bccdc464ff3baad5",
+      "text_bytes": 75660,
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 232630,
+          "body_sha256": "ce91ee9848d2b9ac46386b0f0cbd4bfd9c0cd1948ebc363834cadc7e0997f3d7"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown",
+      "date_marker_quote_sha256": "61dd8dd131141808b1af1524bbc81284d611e06766cb630588ce2d336bf0a76f",
+      "date_marker_start": 22,
+      "date_marker_end": 31,
+      "date_marker_source_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "date_marker_fetched_at": "2026-10-21T13:56:30.853567+00:00",
+      "underlying_source_guard": {
+        "status": "observed",
+        "underlying_code": null,
+        "resources": 1
+      }
+    }
+  ],
+  "question_views": [
+    {
+      "reference_id": "rfc6901",
+      "language": "en",
+      "question": "Which publication month and year does RFC6901 itself declare?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc6901",
+      "language": "vi",
+      "question": "Nguồn RFC6901 tự khai báo tháng và năm phát hành nào?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc8259",
+      "language": "en",
+      "question": "Which publication month and year does RFC8259 itself declare?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc8259",
+      "language": "vi",
+      "question": "Nguồn RFC8259 tự khai báo tháng và năm phát hành nào?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc8439",
+      "language": "en",
+      "question": "Which publication month and year does RFC8439 itself declare?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc8439",
+      "language": "vi",
+      "question": "Nguồn RFC8439 tự khai báo tháng và năm phát hành nào?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc9111",
+      "language": "en",
+      "question": "Which publication month and year does RFC9111 itself declare?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    },
+    {
+      "reference_id": "rfc9111",
+      "language": "vi",
+      "question": "Nguồn RFC9111 tự khai báo tháng và năm phát hành nào?",
+      "grounded_literal_source_declaration": true,
+      "generated_answer_evaluated": false,
+      "verified_freshness": null
+    }
+  ],
+  "score": {
+    "reference_attempts": 4,
+    "observed": 4,
+    "literal_date_declarations_grounded": 4,
+    "bilingual_views": 8,
+    "verified_freshness": null
+  },
+  "actual_TLS": [
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.20.81",
+      "actual_peer": "104.18.20.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.21.81",
+      "actual_peer": "104.18.21.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.21.81",
+      "actual_peer": "104.18.21.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.20.81",
+      "actual_peer": "104.18.20.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "source_attempts": 4,
+  "provider_attempts": 0,
+  "model_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "all_native_socket_FDs_closed": true,
+  "raw_provider_snippets_HTML_text_or_proof_key_persisted": false,
+  "elapsed_seconds": 1.859,
+  "artifact": {
+    "path": "data/backups/d60-t02-first-dated-sources.json",
+    "sha256": "692343531d15df207715e84ae47048545bf4af82b825e5d504538ef7deaf9fae"
+  }
+}
