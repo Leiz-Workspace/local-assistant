@@ -1,0 +1,16 @@
+{
+  "description": "Second controlled visual preview: inherited title rule removed and complete claim rationale groups retained, but third page contains only two short limitation paragraphs. Reject sparse pagination before actual model/source freeze; refine paragraph spacing only, preserve font size and exact input blocks.",
+  "status": "FAILED_CONTROLLED_PAGINATION_REVIEW",
+  "pages_inspected": [
+    1,
+    2,
+    3
+  ],
+  "actual_CORE_calls": 0,
+  "archive": {
+    "path": "data/backups/d58-before-compact-paragraph-spacing.zip",
+    "sha256": "cd3a21a59719f0496c4a9c162e520042ecbcca20ab1d1f7c74406e7d702c3e0d"
+  },
+  "same_original_input_sha256": "3b40562bf96e6c924406704a5c7ae9a7254385a44813a56af45794892984abf0",
+  "accepted_D57_source_changes": []
+}

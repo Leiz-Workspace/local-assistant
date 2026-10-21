@@ -1,0 +1,12 @@
+{
+  "description": "Actual D58 complete module/function/class descriptions, Ruff/format/control collection, final63 controls and all-page controlled visual review; old513-source baseline unchanged.",
+  "python_files": 9,
+  "described_functions_classes": 75,
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "pytest_collected": 63,
+  "native_controls": 4,
+  "controlled_summary": "63 passed in 2.29s",
+  "controlled_log_sha256": "deceaaacd364a197e10530f8649ae4b225ca97eab11b310c3336007e402ebc4d",
+  "all513_accepted_D57_bytes_unchanged": true
+}
