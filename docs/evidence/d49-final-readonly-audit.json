@@ -1,0 +1,59 @@
+{
+  "description": "D49 separate static-fetch source/related/actual-network/readonly audit. All451 accepted D48 source/config bytes unchanged; historical fresh3010 full remains separate, no new full claim.",
+  "status": "PASS_D49_FINAL_READONLY_AUDIT",
+  "source_files": 462,
+  "unique_current_source_protected_hashes": 932,
+  "related_passed": 1859,
+  "related_skipped": 0,
+  "related_exit_code": 0,
+  "source_freeze_sha256": "a14a5dedceae6a3217ff888c31adedbf46f54e2c2f4a76babaf164ced090f9fe",
+  "all451_D48_source_config_bytes_unchanged": true,
+  "prior_accepted_runtime_source_changes": [],
+  "one_D49_TLS_test_observer_assertion_change_Gitless_archive_verified": true,
+  "all_D49_production_sources_same_as_original_public_cohort": true,
+  "original_public_observer_failure_preserved": true,
+  "initial_two_IPv6_failures_preserved": true,
+  "historical_D48_full_passed": 3010,
+  "new_full_suite_claim": false,
+  "observed_live_artifact": {
+    "path": "data/backups/d49-observed-public-fetch/summary.json",
+    "sha256": "28cabec89f0a9de99584d8e564762e5b145f162e5f0c96e3801ccd1326c29459"
+  },
+  "first_failed_live_artifact": {
+    "path": "data/backups/d49-first-public-fetch/summary.json",
+    "sha256": "cc288f2f5f075d0d294a6db981a0bd40c230598d43417827f1a10cab3933c1ce"
+  },
+  "public_fetch_attempts_all_cohorts": 2,
+  "model_calls": 0,
+  "automatic_retries": 0,
+  "native_socket_FDs_closed": true,
+  "raw_real_HTML_or_extracted_text_persisted": false,
+  "parent_readonly_log_sha256": "30ad8b94eee5280f4cc635bd960f769480871a51f1a5744d36d5bd64478b9b6e",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "agreed_models_configs_dependencies_migrations_preserved": true,
+  "no_Vault_Docker_database_or_API_feature_changes": true,
+  "original14_identity_image_start_restart_ports_unchanged": true,
+  "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+  "selected_provider_healthy": true,
+  "selected_provider_runtime_limits_unchanged": true,
+  "original_CORE_healthy": true,
+  "signing_secret_mode": "0600",
+  "signing_secret_git_ignored": true
+}

@@ -1,0 +1,24 @@
+{
+  "description": "First actual D49 public fetch returns HTTP200 and static content assertions reach the cleanup observer, but the harness calls closed SSL writer.get_extra_info and raises AttributeError. Whole trial remains FAILED; no retroactive closure PASS or functional/quality score invented. Capture native socket before close in a separate observed cohort.",
+  "status": "FAILED_FIRST_ACTUAL_CLEANUP_OBSERVER",
+  "error_type": "AttributeError",
+  "actual_HTTP_attempts": 1,
+  "HTTP_statuses": [
+    200
+  ],
+  "actual_DNS_calls": 1,
+  "actual_TLS_calls": 1,
+  "elapsed_seconds": 1.135,
+  "model_calls": 0,
+  "automatic_retries": 0,
+  "artifact": {
+    "path": "data/backups/d49-first-public-fetch/summary.json",
+    "sha256": "cc288f2f5f075d0d294a6db981a0bd40c230598d43417827f1a10cab3933c1ce"
+  },
+  "source_freeze_sha256": "7a7deb712feaec5a1ed447a2a58dc9b62f3fefdd26bc35885c7090fd81baf327",
+  "archive": {
+    "path": "data/backups/d49-before-observer-repair.zip",
+    "sha256": "6888f4ea14bfb1a6375fe36ec350125c18cff8809e26bdbaee68620801afd7af"
+  },
+  "new_production_adapter_change_required": false
+}
