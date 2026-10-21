@@ -1,0 +1,13 @@
+{
+  "description": "First controlled native dynamic trial1 PASS/1 FAIL/1.63s. Blank worker gate passes; renderer gate denies an unowned attached target during setup before Fetch.enable/public content. Retain source/log before finite target-context diagnostic; no actual public browser or model query.",
+  "passed": 1,
+  "failed": 1,
+  "seconds": 1.63,
+  "exit_code": 1,
+  "public_navigations": 0,
+  "archive": {
+    "path": "data/backups/d50-before-bootstrap-target-repair.zip",
+    "sha256": "18c47a34bc94d2f2ce49a763f8f71113942f74f223c197f54b7de54a4676b4e7"
+  },
+  "log_sha256": "088a4be391f1a6103584838da38136d8ae6d12e1593c98e1c41815a2434ca019"
+}
