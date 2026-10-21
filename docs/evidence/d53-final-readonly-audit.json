@@ -1,0 +1,88 @@
+{
+  "description": "D53 completed measurement audit, not broad freshness/quality acceptance. All490 accepted source/config bytes unchanged and historical D52 full3534/first7of8/repaired8of8 preserved. Low3of8 primary coverage/two query errors/one reference failure remain retained.",
+  "status": "PASS_D53_MEASUREMENT_READONLY_AUDIT",
+  "source_files": 493,
+  "unique_current_source_protected_hashes": 1049,
+  "new_pytest_cases": 23,
+  "related_passed": 2187,
+  "related_skipped": 0,
+  "related_exit_code": 0,
+  "historical_D52_full_passed": 3534,
+  "new_full_suite_claim": false,
+  "source_freeze_sha256": "6f8c497926f5ac846cb3e61164dd1b2593e0db0447cca7ad2291668ebc2e26c5",
+  "all490_D52_source_config_bytes_unchanged": true,
+  "accepted_runtime_source_changes": [],
+  "first_measurement_artifact": {
+    "path": "data/backups/d53-first-coverage-evaluation/summary.json",
+    "sha256": "ee242045257384a9813d5e14be0b07b984d2901e47d4a9c9fba8e804106eb780"
+  },
+  "score": {
+    "queries": 8,
+    "reference_attempts": 4,
+    "provider_success": 6,
+    "provider_failed": 2,
+    "expected_primary_present": 3,
+    "expected_primary_presence_at5": 0.375,
+    "mean_reciprocal_primary_rank": 0.2916666666666667,
+    "by_language": {
+      "en": {
+        "queries": 4,
+        "primary_present": 1
+      },
+      "vi": {
+        "queries": 4,
+        "primary_present": 2
+      }
+    },
+    "references_observed": 3,
+    "date_markers_required": 1,
+    "date_markers_grounded": 1,
+    "verified_freshness": null,
+    "semantic_relevance_evaluated": false,
+    "human_independent": false,
+    "provider_or_model_comparison": false
+  },
+  "provider_attempts": 8,
+  "reference_attempts": 4,
+  "actual_reference_DNS_TLS": 4,
+  "native_socket_FDs_closed": true,
+  "source_date_declaration_quote_grounded": true,
+  "verified_freshness": null,
+  "broad_quality_gate_passed": false,
+  "followup_required_before_D60": "WEB-EVAL-002",
+  "model_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "raw_actual_snippets_HTML_text_or_proof_key_persisted": false,
+  "parent_readonly_log_sha256": "30ad8b94eee5280f4cc635bd960f769480871a51f1a5744d36d5bd64478b9b6e",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "agreed_models_configs_dependencies_migrations_preserved": true,
+  "no_Vault_database_or_API_feature_changes": true,
+  "no_existing_container_change": true,
+  "owned_browser_containers_remaining": 0,
+  "known_browser_jobs_remaining": 0,
+  "original14_identity_image_start_restart_ports_unchanged": true,
+  "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+  "selected_provider_healthy": true,
+  "selected_provider_runtime_limits_unchanged": true,
+  "original_CORE_healthy": true,
+  "signing_secret_mode": "0600",
+  "signing_secret_git_ignored": true
+}

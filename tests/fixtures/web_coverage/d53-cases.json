@@ -1,0 +1,83 @@
+{
+  "description": "Predeclared same-agent bilingual expected-primary URI labels and one RFC date-declaration marker; incomplete relevance judgments, not verified freshness or provider/model comparison.",
+  "references": [
+    {
+      "id": "searxng",
+      "url": "https://docs.searxng.org/dev/search_api.html",
+      "host": "docs.searxng.org",
+      "path_pattern": "/dev/search_api\\.html",
+      "date_marker": null
+    },
+    {
+      "id": "python",
+      "url": "https://docs.python.org/3/library/urllib.parse.html",
+      "host": "docs.python.org",
+      "path_pattern": "/3(?:\\.[0-9]+)?/library/urllib\\.parse\\.html",
+      "date_marker": null
+    },
+    {
+      "id": "rfc",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "host": "rfc-editor.org",
+      "path_pattern": "/rfc/rfc9111(?:\\.html|\\.txt)?",
+      "date_marker": "June 2022"
+    },
+    {
+      "id": "cdp",
+      "url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Browser.pdl",
+      "host": "chromedevtools.github.io",
+      "path_pattern": "/devtools-protocol/(?:tot|1-3)/Browser/?",
+      "date_marker": null
+    }
+  ],
+  "queries": [
+    {
+      "id": "searxng-en",
+      "topic": "searxng",
+      "language": "en",
+      "query": "SearXNG search API JSON format parameters"
+    },
+    {
+      "id": "searxng-vi",
+      "topic": "searxng",
+      "language": "vi",
+      "query": "SearXNG API tìm kiếm tham số format json"
+    },
+    {
+      "id": "python-en",
+      "topic": "python",
+      "language": "en",
+      "query": "Python urllib.parse urljoin absolute URL security warning"
+    },
+    {
+      "id": "python-vi",
+      "topic": "python",
+      "language": "vi",
+      "query": "tài liệu Python urllib.parse urljoin cảnh báo URL tuyệt đối"
+    },
+    {
+      "id": "rfc-en",
+      "topic": "rfc",
+      "language": "en",
+      "query": "RFC 9111 HTTP caching publication June 2022 no-store Age"
+    },
+    {
+      "id": "rfc-vi",
+      "topic": "rfc",
+      "language": "vi",
+      "query": "RFC 9111 phát hành tháng năm nào HTTP cache no-store Age"
+    },
+    {
+      "id": "cdp-en",
+      "topic": "cdp",
+      "language": "en",
+      "query": "Chrome DevTools Protocol Browser setDownloadBehavior deny"
+    },
+    {
+      "id": "cdp-vi",
+      "topic": "cdp",
+      "language": "vi",
+      "query": "Chrome DevTools Protocol setDownloadBehavior deny chặn tải xuống"
+    }
+  ]
+}
