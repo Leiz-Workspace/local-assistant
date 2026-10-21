@@ -1,0 +1,9 @@
+{
+  "description": "Actual D55 complete source descriptions, AST and lint/format checks; controlled result preserved separately.",
+  "python_files": 5,
+  "described_functions_classes": 63,
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "pytest_collected": 67,
+  "all498_accepted_D54_bytes_unchanged": true
+}
