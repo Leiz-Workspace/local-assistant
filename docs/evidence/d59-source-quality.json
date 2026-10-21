@@ -1,0 +1,12 @@
+{
+  "description": "D59 actual complete file/function/class descriptions, Ruff/format and82 controlled gates including6 actual SIGKILL publication windows; prior522 accepted files unchanged.",
+  "python_files": 7,
+  "described_functions_classes": 76,
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "pytest_collected": 82,
+  "actual_SIGKILL_controls": 6,
+  "controlled_summary": "82 passed in 0.95s",
+  "controlled_log_sha256": "66ebbb86f8b2a54a3e29020508f0539517152ef622524e9e7d16998828f6904b",
+  "all522_D58_source_config_bytes_unchanged": true
+}
