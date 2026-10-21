@@ -1,0 +1,56 @@
+{
+  "description": "D53 evaluation delivery complete, not broad quality/freshness PASS. First measured3/8 expected-primary presence,2 provider errors/one source failure and null verified freshness retained; all required source/date/network/cleanup/related/audit gates observed.",
+  "status": "EVALUATION_COMPLETE_LOCAL_COVERAGE_DATE_MEASUREMENT",
+  "validated_on": "2026-10-21",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "source_freeze_sha256": "6f8c497926f5ac846cb3e61164dd1b2593e0db0447cca7ad2291668ebc2e26c5",
+  "source_files": 493,
+  "unique_current_source_protected_hashes": 1049,
+  "new_pytest_cases": 23,
+  "related_passed": 2187,
+  "related_skipped": 0,
+  "related_exit_code": 0,
+  "all490_D52_source_config_bytes_unchanged": true,
+  "score": {
+    "queries": 8,
+    "reference_attempts": 4,
+    "provider_success": 6,
+    "provider_failed": 2,
+    "expected_primary_present": 3,
+    "expected_primary_presence_at5": 0.375,
+    "mean_reciprocal_primary_rank": 0.2916666666666667,
+    "by_language": {
+      "en": {
+        "queries": 4,
+        "primary_present": 1
+      },
+      "vi": {
+        "queries": 4,
+        "primary_present": 2
+      }
+    },
+    "references_observed": 3,
+    "date_markers_required": 1,
+    "date_markers_grounded": 1,
+    "verified_freshness": null,
+    "semantic_relevance_evaluated": false,
+    "human_independent": false,
+    "provider_or_model_comparison": false
+  },
+  "verified_freshness": null,
+  "broad_quality_gate_passed": false,
+  "followup_before_D60": "WEB-EVAL-002",
+  "historical_D52_full_passed": 3534,
+  "new_full_suite_claim": false,
+  "model_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "raw_actual_snippets_HTML_text_or_proof_key_persisted": false,
+  "next_milestone": "D54 bounded multi-query research planning",
+  "evidence": {
+    "docs/evidence/d53-first-coverage-observations.json": "ce877587af04e0aa14db6b30b303a6c1ef429e77ceeff63c899918af02be6c3f",
+    "docs/evidence/d53-related-regression.json": "8f0198d471eda67755dcbc13f06c5e88d82dc6022ee37a9fb87d444d622fa38f",
+    "docs/evidence/d53-final-readonly-audit.json": "c796005e0da23a5cefb5f328101901b1da23bd4685adb5aff65d6e5a57485a8a",
+    "docs/evidence/d53-source-quality.json": "2afffbfce06aa62f221b29ad56caa3b251a803beefed365aaa99921b5f51bfb5"
+  }
+}
