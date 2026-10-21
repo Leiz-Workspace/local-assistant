@@ -1,0 +1,111 @@
+{
+  "description": "First actual public static primary lookup. Caller-designated hosts remain unverified; no search quality, semantic truth or verified freshness claim. Raw public HTML/text/proof keys are not persisted.",
+  "status": "PASS_FIRST_ACTUAL_PRIMARY_LOOKUP",
+  "source_freeze_sha256": "f68da9302785f9740babc9dd7192e736aac3ab915aa04fef80531c037ea50ffe",
+  "model_calls": 0,
+  "browser_runs": 0,
+  "provider_calls": 0,
+  "automatic_retries": 0,
+  "verified_freshness": null,
+  "lookup_status": "complete",
+  "candidate_states": [
+    "observed",
+    "observed"
+  ],
+  "primary_designation": "caller_designated_unverified",
+  "snapshots": [
+    {
+      "requested_url": "https://docs.searxng.org/dev/search_api.html",
+      "final_url": "https://docs.searxng.org/dev/search_api.html",
+      "title": "Search API - SearXNG Documentation (2026.10.19+81371861f)",
+      "text_sha256": "cc2cbad08739d87455518f5f3231de3e671d1ee708a988291a669f104bdaec4c",
+      "text_utf8_bytes": 4825,
+      "fetched_at": "2026-10-21 09:47:23.652960+00:00",
+      "date_claims": [],
+      "resources": [
+        {
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 46464,
+          "body_sha256": "cbcfae9b57f92250ec070f51f07b00786bcb64192a6fda9d0f58d0e4e9fcacc4"
+        }
+      ]
+    },
+    {
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "title": "RFC 9111: HTTP Caching",
+      "text_sha256": "18e587371605ef2af0c7434539cc89cfd3c9ee260aa0e508bccdc464ff3baad5",
+      "text_utf8_bytes": 75660,
+      "fetched_at": "2026-10-21 09:47:24.078478+00:00",
+      "date_claims": [],
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 232630,
+          "body_sha256": "ce91ee9848d2b9ac46386b0f0cbd4bfd9c0cd1948ebc363834cadc7e0997f3d7"
+        }
+      ]
+    }
+  ],
+  "shared_evidence_alive_after_facade_shutdown": true,
+  "actual_DNS": [
+    {
+      "host": "docs.searxng.org",
+      "addresses": [
+        "185.199.111.153",
+        "185.199.110.153",
+        "185.199.108.153",
+        "185.199.109.153",
+        "2606:50c0:8000::153",
+        "2606:50c0:8002::153",
+        "2606:50c0:8003::153",
+        "2606:50c0:8001::153"
+      ]
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "addresses": [
+        "104.18.20.81",
+        "104.18.21.81",
+        "2606:4700::6812:1451",
+        "2606:4700::6812:1551"
+      ]
+    }
+  ],
+  "actual_TLS": [
+    {
+      "host": "docs.searxng.org",
+      "selected_pin": "185.199.111.153",
+      "actual_peer": "185.199.111.153",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.20.81",
+      "actual_peer": "104.18.20.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "native_socket_FDs_closed": true,
+  "source_attempts": 2,
+  "model_attempts": 0,
+  "facade_closed": true,
+  "evidence_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "cache_empty": true,
+  "signing_key_revoked": true,
+  "elapsed_seconds": 1.192,
+  "artifact": {
+    "path": "data/backups/d55-first-public-lookup/summary.json",
+    "sha256": "b7b4038ccc38bb1f46abd5c1f62f5b831d00947247310b0174eb5fe166fcfbfd"
+  }
+}

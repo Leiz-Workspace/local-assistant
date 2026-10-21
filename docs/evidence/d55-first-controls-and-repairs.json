@@ -1,0 +1,36 @@
+{
+  "description": "Preserve first D55 fixture and cancellation failures before prototype-only repairs. Initial lookalike fixture used a forbidden .test suffix; replacement .org tests public exclusion without weakening accepted D49 policy. Added cancellation uncertainty gates initially failed, then only new facade code poisons admission after joined cleanup.",
+  "initial_fixture_controls": {
+    "passed": 61,
+    "failed": 1,
+    "log": {
+      "path": "data/backups/d55-first-controls.log",
+      "sha256": "2b112b91a99b412cfa24f5e1c41a15e23a24965ae84ebd74cb2ac21743ef5a20"
+    },
+    "archive": {
+      "path": "data/backups/d55-before-public-host-fixture-correction.zip",
+      "sha256": "77d2149eb53a4e292539aa461c5c686f73663e124bd5037032c0f64829d89e04"
+    }
+  },
+  "initial_cancel_uncertainty_controls": {
+    "passed": 62,
+    "failed": 2,
+    "log": {
+      "path": "data/backups/d55-uncertain-cancellation-controls.log",
+      "sha256": "9150a47a384fd732b3dbc27d45408470e881ff8a055cf30c1e9be724d4a27f9a"
+    },
+    "archive": {
+      "path": "data/backups/d55-before-uncertain-cancellation-repair.zip",
+      "sha256": "8e385183a67ac667d1d749645453f9226f4d09ece10b567a2855a56fadfe4b8f"
+    }
+  },
+  "current_controlled": {
+    "passed": 67,
+    "failed": 0,
+    "log": {
+      "path": "data/backups/d55-controlled-tests.log",
+      "sha256": "38867934dbf105da25cd50d6c89fa09bce04928d04d5ec82b468e0ab24e9f39a"
+    }
+  },
+  "accepted_D54_source_changes": []
+}
