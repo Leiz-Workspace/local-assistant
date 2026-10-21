@@ -1,0 +1,33 @@
+{
+  "description": "First D54 real-adapter attempt failed before any model completion: requested256 conflicts with accepted fast minimum answer reserve512. One inference-port attempt/zero provider calls, cleanup confirmed. No backend outage, model replacement or generated-plan score is inferred.",
+  "status": "FAILED",
+  "source_freeze_sha256": "662df9aefe19bf45f0fca55199a8258dc5b1d51a66dc4260ef26a377e5e3042c",
+  "external_provider_HTTP": 0,
+  "source_link_or_private_HTTP": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "error_type": "ResearchError",
+  "error_code": "research_model_failed",
+  "core_port_attempts": 1,
+  "authored_provider_attempts": 0,
+  "charged_attempts": 1,
+  "quota_owners": 1,
+  "model_completion": null,
+  "service_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "elapsed_seconds": 0.028,
+  "artifact": {
+    "path": "data/backups/d54-first-core-plan/summary.json",
+    "sha256": "98dc1cb70a8ef4fa3db14efcc978fee8d66138277ed8f2f683598a1fdcfebed5"
+  },
+  "pure_existing_budget_preflight": {
+    "requested256_accepted": false,
+    "error_type": "PresetError",
+    "reason": "Requested output limit is smaller than the minimum answer reserve",
+    "requested512_accepted": true,
+    "existing_preset_source": "apps/api/runtime/presets.py"
+  }
+}
