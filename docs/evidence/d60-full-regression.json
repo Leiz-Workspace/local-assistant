@@ -1,0 +1,9 @@
+{
+  "description": "One fresh complete D60 pytest invocation, all tests/no exclusions. Historical D52 full3534 and all first evaluations remain separate.",
+  "exit_code": 1,
+  "summary": "12 failed, 3638 passed, 368 skipped in 176.66s (0:02:56)",
+  "elapsed_seconds": 177.55,
+  "log_sha256": "d17e47ee4e97bb6d41fabe43911a2dd373c25903db8062766144f9646acb6ee0",
+  "source_freeze_sha256": "f8fde861b30c621656d307d6f9eab99d4724c90f0e6d8be5fd14a7ca2267c735",
+  "source_files": 538
+}

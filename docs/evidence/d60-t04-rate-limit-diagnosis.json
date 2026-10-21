@@ -1,0 +1,19 @@
+{
+  "description": "Readonly diagnosis: current selected provider declares rate limiting. Exact upstream status/Retry-After and remaining duration are unknown. Pinned-source defaults differ from general docs; no suspension/logging/metrics/provider change or bypass.",
+  "status": "DECLARED_RATE_LIMIT_RETAINED_NO_BYPASS",
+  "observed_at": "2026-10-21T14:32:25.824267+00:00",
+  "declared_category": "rate_limit_declared",
+  "upstream_HTTP429_independently_observed": false,
+  "upstream_retry_after": null,
+  "provider_image_revision": "81371861f67226091d1c4df2e3908a11d3b54eb9",
+  "pinned_defaults_url": "https://raw.githubusercontent.com/searxng/searxng/81371861f67226091d1c4df2e3908a11d3b54eb9/searx/settings.yml",
+  "pinned_default_SearxEngineTooManyRequests_seconds": 180,
+  "tracked_operator_suspension_override": false,
+  "general_docs_url": "https://docs.searxng.org/admin/settings/settings_search.html",
+  "general_docs_example_seconds": 3600,
+  "defaults_are_not_remote_retry_after_or_remaining_duration": true,
+  "probe_file_observation_UTC": "2026-10-21T14:26:52.102447+00:00",
+  "provider_queries_in_this_readonly_diagnosis": 0,
+  "quiet_period_while_full_regression_runs": true,
+  "no_automatic_retry_or_source_fallback": true
+}

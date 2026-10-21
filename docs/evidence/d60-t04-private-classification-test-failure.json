@@ -1,0 +1,10 @@
+{
+  "description": "Private separate diagnostic controls first7 PASS/one FAIL: assertion incorrectly rejected timeout as substring of the allowed timeout_declared enum. Full sources/test/log preserved; test now checks exact permitted fields/no private canary while preserving enum and strict-response oracles. No repository source/test or full-suite input changed.",
+  "status": "FAILED_PRIVATE_TEST_ASSERTION_RETAINED",
+  "passed": 7,
+  "failed": 1,
+  "archive": {
+    "path": "data/backups/d60-t04-before-private-classification-assertion-repair.zip",
+    "sha256": "c8279dc2c9c856ca0e4801dfd4fa634a75f44965290bc5fef87398ff824adc35"
+  }
+}

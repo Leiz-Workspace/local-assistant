@@ -1,0 +1,13 @@
+{
+  "description": "First D60 complete test invocation omitted required integration credentials/live flags. Twelve explicit live-flag assertions failed and368 integration/model cases skipped; no source/test/oracle repair or pass claim. Preserve this invocation and use the accepted D52 Vault-backed environment in a separate run.",
+  "status": "FAILED_UNCONFIGURED_FULL_INVOCATION_RETAINED",
+  "passed": 3638,
+  "failed": 12,
+  "skipped": 368,
+  "elapsed_seconds": 176.66,
+  "log": {
+    "path": "data/backups/d60-full-regression.log",
+    "sha256": "d17e47ee4e97bb6d41fabe43911a2dd373c25903db8062766144f9646acb6ee0"
+  },
+  "corrective_scope": "Invocation only: original readonly Vault secret loader and live integration flags from accepted D52 runner; no source/model/service mutation"
+}

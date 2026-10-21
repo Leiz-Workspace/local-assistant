@@ -1,0 +1,35 @@
+{
+  "description": "Distinct D60 fresh complete Vault-backed application pytest run after retained unconfigured invocation; accepted D52 credential/live flags, redacted log and observed exit only.",
+  "targets": [
+    "tests"
+  ],
+  "pytest_options": [
+    "-v",
+    "-rs",
+    "--tb=short",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "status": "complete",
+  "started_at_utc": "2026-10-21T14:26:52.357925+00:00",
+  "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+  "wrapper_pid": 417638,
+  "source_freeze_sha256": "369fcbc9fd9ec623409872776c42a50b88da078c0521c6afa96dcaa7be3805e6",
+  "pytest_pid": 417639,
+  "exit_code": 0,
+  "elapsed_seconds": 1694.55,
+  "completed_at_utc": "2026-10-21T14:55:06.905648+00:00",
+  "log_sha256": "99cca007be4edf1385b5885f5a95cfacf1054a4818ee770302c667e30aeb479f",
+  "passed": 4018,
+  "skipped": 0,
+  "failed": 0,
+  "source_files": 538,
+  "source_oracles_unchanged": true,
+  "previous_unconfigured_invocation": "docs/evidence/d60-first-unconfigured-full-failure.json",
+  "result_artifact": {
+    "path": "data/backups/d60-vault-full-regression.result.json",
+    "sha256": "44a0a86df23c25bed6e7e1c742aab06a3b5e6502e54a7af31da6b37c8004ff86"
+  }
+}

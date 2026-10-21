@@ -1,0 +1,37 @@
+{
+  "description": "Readonly audit stopped at Vault credential lookup after observed reboot. No unseal or credential writes. Completed subset is separate from pending narrow app grants/triggers/Qdrant/worker checks; never full-audit PASS.",
+  "status": "PARTIAL_VAULT_SEALED",
+  "private_controls_passed": 4,
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "confirmed": {
+    "frozen_source_files": 538,
+    "original_container_ids_images_ports_preserved": true,
+    "start_times_changed_after_reboot": true,
+    "selected_provider_security_mounts_health_preserved": true,
+    "CORE_health_restored": true,
+    "revision": "0006",
+    "source_memory_rows_zero": true,
+    "quota_usage": [
+      0,
+      0,
+      0
+    ],
+    "old_security_fingerprint_preserved": true,
+    "restore_probe_databases": 0
+  },
+  "pending": [
+    "Vault app credential lookup",
+    "narrow application grants and trigger checks",
+    "authenticated Qdrant collections",
+    "final workers/advisory locks closure"
+  ],
+  "vault_health": "docs/evidence/d60-postboot-vault-health.json",
+  "log": {
+    "path": "data/backups/d60-postboot-readonly-audit.log",
+    "sha256": "bfc54f3f29b56d9242230c07da4ea143f348a0ffd29a370a1b3334dda29e9543"
+  },
+  "prior_complete_audit": "docs/evidence/d60-vault-full-readonly-audit.json",
+  "prior_full_regression": "docs/evidence/d60-vault-full-regression.json",
+  "prior_full_is_previous_boot": true,
+  "D60_acceptance": false
+}

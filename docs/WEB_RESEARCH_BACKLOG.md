@@ -72,3 +72,38 @@ Official release/security scope review complete, **no new runtime adopted/curren
 Original cached13 native controls PASS/12.42s and one blank network-none probe PASS/5.702s, three Docker point samples166–166.9MiB RAM container/97PIDs, fixed1GiB/1CPU/256PID/noGPU limits and exact cleanup. These are idle point samples, not workload peaks, model RAM/VRAM, SLO or candidate comparison. Keep local authored/blank compatibility scope/default-off production flags and native-sandbox limitation. D60 live source gate uses unchanged static public acquisition.
 
 P1 runtime qualification remains required before broad production dynamic browsing: select/verify an immutable candidate, official security/native-sandbox review, same frozen CDP/pipe/site/attack/cancel/cleanup corpus and measured latency/resources, then explicit migration/rollback to exact original digest/config/source. Estimate one qualification milestone after candidate/cache/disk/ownership prerequisites. Risks include stale candidate browser, CDP/layout drift, losing cleanup ownership and permission expansion; no automatic image/model/package/service adoption. [Review/evidence](evidence/d60-t03-browser-review.json).
+
+
+## WEB-SESSION-001 — Live provider session retention policy
+
+**Purpose:** Qualify actual provider result retention before production adoption of the D59 full-data session facade.
+
+P1 before live-provider session API adoption; depends on provider/result-use rights, operator storage/data classification and D59/D60 frozen ownership/recovery corpus. Estimate one minimization/retention adapter and qualification milestone after policy review. D59 acceptance used authored data and its facade archives complete D54 query/title/snippet results. D60 actual evaluation instead composes existing services/private store with explicitly labeled metadata-only discovery records under ADR-080; restricted raw provider titles/snippets stay ephemeral, exact allowed primary excerpts/reports/export bytes remain complete. Do not claim that hashes preserve retrievable excluded raw content.
+
+Evaluate explicit principal access/encryption/audit/deletion/retention, contract compatibility and bounded restart/error semantics before runtime reuse. Risks: unwanted restricted/private query/result retention, treating hashes as original data, data loss from silent redaction and confusing test-only composition with production lifecycle acceptance. No provider/model/service/Vault/database/dependency change or activation is authorized by this entry; rollback drains only a future adapter and retains existing data/receipts/services under the reviewed policy. [ADR-080](ADR/080-metadata-only-live-discovery-archive.md).
+
+
+## WEB-SEARCH-003 — Declared upstream rate limit and discovery reliability
+
+**Purpose:** Resolve the observed D60 live-discovery outage before claiming reliable phase promotion.
+
+P1; current D60 dependency. First actual live attempt fails before source/report/native work because all three selected-provider queries return empty results with a declared engine error. A separately frozen one-query diagnostic classifies the current declaration as rate_limit_declared; exact upstream HTTP status/Retry-After/remaining duration are not independently observed. Pinned SearXNG81371861... defaults differ from general documentation and are not a remote quota promise.
+
+Keep the existing owned SearXNG/Brave configuration, logging/privacy/metrics/cooldown, models and first failures. Permit one separately identified same-oracle follow-up only after full regression completes successfully and this evaluator has sent no search queries for at least1800s. This interval is an explicit conservative evaluation condition, not a verified remote Retry-After. No polling/retry loop, suspension reset, proxy/IP/public-instance rotation, CAPTCHA bypass, caller-designated source fallback or post-score label changes. If still unavailable, retain the failed gate and assess an alternative explicitly rather than claiming D60 PASS.
+
+Alternative engine evaluation depends on actual result-use/privacy rights and fixed source/response/budget/cleanup oracles. Estimate one zero-model frozen provider compatibility/coverage/latency/resource panel plus reviewed migration/rollback before adoption. Risks: silently bypassing a provider restriction, declaring anonymous website scraping equivalent to a licensed API, incomplete primary coverage, unsupported language/region/safe-search/time-range features, introducing a paid account or breaking strict whole-response validation. Official SearXNG [Mwmbl engine docs](https://docs.searxng.org/dev/engines/online/mwmbl.html) describe a small-index engine without those filtering features; it is an unqualified candidate, not an automatic equivalent replacement. Mwmbl's crawling-key rules do not themselves establish search API permission or quality.
+
+No alternative endpoint/engine/account/container/config/model adoption is performed by this item. Any later candidate must retain original selected-provider artifacts and explicit rollback, keep all model choices unchanged, and report every first score/refusal/error. Original D53 first3/8/T01 follow-up1/8 and D60 first live failure remain immutable.
+
+
+### WEB-SEARCH-003 — 2026-10-22 measured checkpoint
+
+The permitted one quiet-period same-oracle follow-up executed and failed before source acquisition. Both original-provider cohorts remain immutable. The one ADR-081 isolated independent Mwmbl candidate executes8/8 valid strict responses but0/8 expected-primary hits and lacks both required live source families; unqualified/no adoption,19 controls and exact owned resource/key retirement confirmed. Preserve original configuration; do not repeat provider/candidate loops or fabricate direct-reference search hits. Search-discovered source→report/native/archive remains the D60 blocker. PriorityP1, dependency compliant reliable selected-provider discovery or a separately reviewed/qualified provider proposal, effort one focused diagnosis/qualification milestone, risks availability/coverage/usage rights/feature gaps/data retention and false PASS. Existing model choices stay unchanged.
+
+## WEB-OPS-001 — Postboot credential availability and final audit
+
+**Purpose:** Restore operator-approved Vault availability after observed host reboot before completing the D60 readonly audit.
+
+P1/current D60 dependency; TLS-verified health503/initialized=true/sealed=true. Existing15 container identities/images/ports/security remain intact; original starts changed. Same cached CORE restored without a model/config/download/startup-service change. Partial readonly source/V006/count/quota/security checks pass; Vault-backed narrow application grants/triggers, authenticated Qdrant and final workers/locks remain pending. Previous-boot full4018/audit retained separately.
+
+Depends on operator Vault unseal/recovery through the established protected bootstrap procedure, then exact same readonly checks; estimate one operations recovery/audit step. Do not output bootstrap material, rotate credentials, write secrets, change seal/storage/startup architecture, bypass authentication or mark audit PASS from partial SQL checks. Risks bootstrap disclosure, unintended credential drift and confusing historical full evidence with current boot. Rollback preserves all config/secrets/data/accepted models and retained failures; no new auto-unseal service or architecture change is scheduled. [Partial audit](evidence/d60-postboot-readonly-audit.json), [health](evidence/d60-postboot-vault-health.json).
