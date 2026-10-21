@@ -1,0 +1,11 @@
+{
+  "description": "First D56 controls63 PASS/two test wiring FAIL. The accepted spawn helper binds create_task at module import, and calculate_budget uses RuntimePreset/requested_max_tokens. Correct new tests only; implementation and accepted APIs stay unchanged.",
+  "passed": 63,
+  "failed": 2,
+  "archive": {
+    "path": "data/backups/d56-before-test-wiring-correction.zip",
+    "sha256": "607b11d5fdfb436686b89243e203f8671856b4f79ecf807054cff7c5caf60348"
+  },
+  "log_sha256": "5da988b7b58be97ba61ac7f70cdfb55acf794dd904d1878195ec286a8613982c",
+  "accepted_source_changes": []
+}
