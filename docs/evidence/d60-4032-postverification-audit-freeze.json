@@ -1,0 +1,13 @@
+{
+  "description": "Freeze final current4032 post-Brave-verification readonly closure before service/data reads; same guarded full result/source bytes, no source/model/provider changes.",
+  "private_controls_passed": 10,
+  "full_freeze_sha256": "9ae8ca2263b7a493d419890d40ff7b1a2b99acb7d2ba6f62cadbe408f8ab7f4c",
+  "files_sha256": {
+    "data/backups/d60-4032-postverification-audit.py": "3006e255f6f6ee2b97bf6c11417db2fd320381fdf4a0c449df886179662222ef",
+    "data/backups/test_d60_4032_postverification_audit.py": "36bc9ecb880f8c69137db6595dd1b1c48777da604f34cad9c83768063c698847",
+    "data/backups/d60-4032-postverification-audit-controls.log": "43be76faac9efd4be375832f561a486305184383c6b630dc6c8c894fcba83aa1"
+  },
+  "expected_source_files": 540,
+  "provider_choice": "retain_brave_wait_upstream",
+  "D60_acceptance": false
+}
