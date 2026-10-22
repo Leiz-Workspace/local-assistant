@@ -1,0 +1,17 @@
+{
+  "description": "D69 exact auditor/control/actual first94observations sealed before original runtime/data/model readonly verification, no candidate selection.",
+  "created_at_utc": "2026-10-22T08:43:24.419706+00:00",
+  "sha256": {
+    "data/backups/d69-vad-readonly-audit.py": "6cfe61c8a601ad94843d65636f7ef2540f9aa5250710b31f1afdf8ee99d752a8",
+    "data/backups/test_d69_vad_audit.py": "18e9d1983701485ae9d8b1e0f512280e2d6b2ac4c74b977ca1496f5b816e9150",
+    "data/backups/d69-audit-controls-first.log": "c1dec8025fe3985249dbc92bc918250ebfaf065c98097b87f511407a985620c2",
+    "docs/evidence/d69-vad-first-freeze.json": "84033adb2f7c513063da9fb3ef032454a21bbd1d082ef655733e10565ec44a85",
+    "data/backups/d69-vad-scored-first/result.json": "d62162dfdae5d3a92542cd0e63016072caba002aed5a5f6c604678c2d7ea1e52",
+    "data/backups/d69-vad-scored-first/freeze.json": "e87260c6a08e1839bf397bca28cd791e57123412c621f79b099d9b9a9d0b9fb3",
+    "data/backups/d69-vad-scored-first/core-before.json": "a54966da6f36cc8cfb546c94390d5fc5b2e195601d2ac0ec45caec602d64fc68",
+    "data/backups/d69-vad-scored-first/worker.stdout.jsonl": "1127af27e47dd8bc601813dc380989936c0ba3a3e6492d4bdf13919a254d2089",
+    "data/backups/d69-vad-scored-first/worker.stderr.log": "c1dbb16b648e4d1c8f36215c97cf34f0160d4b7acc080b30bc1aa0c221d3f162"
+  },
+  "private_audit_controls": 19,
+  "selected_model": null
+}
