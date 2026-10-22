@@ -1,0 +1,25 @@
+{
+  "description": "Manual all-page review of the actual bounded native DOCX to LibreOffice PDF output at144dpi; same accepted styles and original content oracles, no new production renderer or formatting mutation.",
+  "status": "PASS_ALL_THREE_PAGES_VISUALLY_REVIEWED",
+  "pages": 3,
+  "images": [
+    {
+      "path": "data/backups/d60-archived-discovery-first/page-1.png",
+      "sha256": "c066533ed26033eb2009ff98213a53a38a97c394db1538f1c3cbe8d5ce4d7e77"
+    },
+    {
+      "path": "data/backups/d60-archived-discovery-first/page-2.png",
+      "sha256": "8b4e13de860be67ed9f37f811d97c8b2b10257101c4c14e0b7058c7980cc17b8"
+    },
+    {
+      "path": "data/backups/d60-archived-discovery-first/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "reviewed_every_page": true,
+  "readable_Vietnamese": true,
+  "no_clipping_overlap_missing_glyphs": true,
+  "complete_claims_quotes_urls_hashes_unknowns": true,
+  "first_page_discloses_historical_search_times_archive_hash_query_ids_zero_new_search": true,
+  "original_DOCX_PDF_markdown_bytes_unchanged": true
+}
