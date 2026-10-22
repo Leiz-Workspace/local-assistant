@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi lại bằng chứng thực tế của MODEL-EVAL-005, phân biệt khả năng chạy, tiếng Việt được hỗ trợ, chỉ số đo được và tiêu chí đánh giá còn mở. Tài liệu không phê duyệt chọn hoặc triển khai model.
 
-**Quyết định mới nhất2026-10-22:** “Giữ cap 12 GiB, chưa chạy tiếp evaluator”. ADR-100 REJECTED; cap source khôi phục12GiB và controller/worker execution bị khóa. Các lượt16GiB đã chạy trước khi nhận câu trả lời này do agent diễn giải sai continuation thành approval; giữ nguyên kết quả, không gọi chúng là owner-approved. Không nạp/chạy lại evaluator hoặc tải helper khác. D70 mở, D71 chưa bắt đầu.
+**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Cho phép thử ADR-101, giữ cap 12 GiB”** cho imports/nạp/kiểm tra toàn vẹn; `qualify`/`review` và tạo packet/refresh inventory vẫn bị chặn. ADR-100 tiếp tục REJECTED. Loader native `pread` đã triển khai,221TTSrelated kiểm thử PASS, gồm tensor giả nhỏ qua SDK thật trong namespace12GiB. Lượt nạp weights gốc bị preflight chặn: MemAvailable18,946,437,120bytes≈17.65GiB < ngưỡng18GiB; chưa khởi chạy worker nạp model, chưa chứng minh fit12GiB. Không tự hạ ngưỡng, tăng cap, dừng CORE hoặc retry. [Bằng chứng](evidence/d70-pread-load-trial.json). Các lượt16GiB lịch sử vẫn không được coi là owner-approved. D70 mở, D71 chưa bắt đầu.
 
 **Trạng thái:** IN PROGRESS — chờ khả năng nghe thực tế theo quyết định chủ dự án ngày2026-10-22. ADR-097 bị từ chối; giữ nguyên AC và thứ tự D70→D71. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
 
