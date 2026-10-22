@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi các phần việc D70 có thể xác minh tiếp, cùng một phương án mở khóa việc đánh giá audio thật. Không đổi AC, model hoặc kết quả benchmark đã chốt.
 
-**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Cho phép thử ADR-101, giữ cap 12 GiB”** cho imports/nạp/kiểm tra toàn vẹn; `qualify`/`review` và tạo packet/refresh inventory vẫn bị chặn. ADR-100 tiếp tục REJECTED. Loader native `pread` đã triển khai,221TTSrelated kiểm thử PASS, gồm tensor giả nhỏ qua SDK thật trong namespace12GiB. Lượt nạp weights gốc bị preflight chặn: MemAvailable18,946,437,120bytes≈17.65GiB < ngưỡng18GiB; chưa khởi chạy worker nạp model, chưa chứng minh fit12GiB. Không tự hạ ngưỡng, tăng cap, dừng CORE hoặc retry. [Bằng chứng](evidence/d70-pread-load-trial.json). Các lượt16GiB lịch sử vẫn không được coi là owner-approved. D70 mở, D71 chưa bắt đầu.
+**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** theo ADR-102. Native `pread` load/integrity weights gốc **PASS26.471s/exit0**,1,442tensors/9,406,928,896bytes khớp hash/storage/CPU-BF16; parent audit độc lập PASS. Peak RSS9.333GiB RAM và VmPeak10.393GiB virtual (không phải VRAM/minimum RAM). Đây là load-only: chưa đo inference fit12GiB, không chạy lại audio controls/review24outputs.222TTSrelated PASS6.00s/Ruff PASS. CORE cùng identity/recovery PASS. [Bằng chứng](evidence/d70-pread-14g-headroom-load.json). `qualify`/`review` vẫn bị chặn; ADR-100 và097 vẫn REJECTED. D70 mở, D71 chưa bắt đầu.
 
 ## Dịch vụ đã cấu hình
 
@@ -58,3 +58,9 @@ Lượt nạp weights gốc dừng tại preflight headroom17.65GiB <18GiB, exit
 ### Lỗi transport đầu được giữ nguyên
 
 Upload/prediction đã nhận receipt; event stream trả `404: Session not found.` nên chưa có judgement hoặc capability PASS. Source Gradio5.23.1 xác nhận custom session khác event_id gây đọc sai queue ở simple-call API. Giữ packet đầu1of5/0controlsPASS, toàn rawSSE/freeze/source snapshot trước khi sửa riêngtransport. Remote completion của lượt đầu chưa xác minh được. Việc sửa protocol không đổi prompt/control/AC hoặc rescore24native waveforms.
+
+## ADR-102: nạp weights gốc trong cap12GiB đã PASS
+
+Sau explicit approval headroom14GiB/cap12GiB, first original-weight pread load hoàn tất26.471s/exit0, không timeout, đủ1442tensors và9,406,928,896bytes. Child byte/storage/shape/device/dtype accounting và parent full-payload audit đều PASS; CORE cùngPID/start/command/text recovery trước-sau PASS. RSS peak9.333GiB RAM, VmPeak10.393GiB virtual; không inference/VRAM/minimumRAM claim.222TTSrelated PASS6.00s/Ruff PASS. [Evidence](evidence/d70-pread-14g-headroom-load.json), [ADR-102](ADR/102-proposed-headroom-for-retained-12gib-trial.md). P2 memory-loading milestone hoàn tất; không tự retry hoặc mở P1 audio gate.
+
+Readonly9source-control diagnosis xác nhận clip silence vẫn80000exactzeros, nguồn/hashes/masks giữ nguyên. SDK native chọn các frame hợp lệ bằng mask; feature_shape có padding không tự chứng minh lỗi conditioning. Chưa tìm thấy lỗi runner mới đủ căn cứ giải thích các semantic failures. [Diagnosis](evidence/d70-headroom-and-control-diagnosis.json) chỉ là stats/source inspection, không nghe hoặc naturalness.

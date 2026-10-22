@@ -1,0 +1,176 @@
+{
+  "description": "Readonly source/control/resource diagnosis after28cedf9. No neural import/load/inference, prompt/schema/label repair, model or package download, original audio mutation or new listening judgement. Statistics verify source properties only; they do not assess naturalness.",
+  "retained_controls": [
+    {
+      "id": "clip-01",
+      "source_sha256": "929ad397d23f619f98442f65ab254a7048774e5628658ed27edfbf27ec86965e",
+      "sample_count": 32000,
+      "duration_seconds": 2.0,
+      "exact_zero_samples": 767,
+      "unique_sample_values": 30081,
+      "peak_amplitude": 0.8018274307250977,
+      "RMS": 0.10776990443049039,
+      "actual_mask_frames": 200,
+      "actual_audio_tokens": 50,
+      "frozen_expectation": {
+        "presence": "speech",
+        "language": "english"
+      }
+    },
+    {
+      "id": "clip-02",
+      "source_sha256": "70347692a1c36071bf0b43083a27c47b291f45af6a02859d26ed803e4284ddfe",
+      "sample_count": 7245,
+      "duration_seconds": 0.4528125,
+      "exact_zero_samples": 0,
+      "unique_sample_values": 7245,
+      "peak_amplitude": 1.0,
+      "RMS": 0.2474543550442873,
+      "actual_mask_frames": 46,
+      "actual_audio_tokens": 11,
+      "frozen_expectation": {
+        "presence": "speech",
+        "language": "vietnamese"
+      }
+    },
+    {
+      "id": "clip-03",
+      "source_sha256": "ac2878215ad33205d1732578c89f25ededaad1b676911c540825bcf4baa42d9b",
+      "sample_count": 80000,
+      "duration_seconds": 5.0,
+      "exact_zero_samples": 80000,
+      "unique_sample_values": 1,
+      "peak_amplitude": 0.0,
+      "RMS": 0.0,
+      "actual_mask_frames": 500,
+      "actual_audio_tokens": 125,
+      "frozen_expectation": {
+        "presence": "silence",
+        "naturalness": "not_applicable"
+      }
+    },
+    {
+      "id": "clip-04",
+      "source_sha256": "302a8b086ca8f3eeb82e08438a9b857ce2afeab0aee56370811798631a43bf54",
+      "sample_count": 80000,
+      "duration_seconds": 5.0,
+      "exact_zero_samples": 19,
+      "unique_sample_values": 8591,
+      "peak_amplitude": 0.22510452568531036,
+      "RMS": 0.04996606065656437,
+      "actual_mask_frames": 500,
+      "actual_audio_tokens": 125,
+      "frozen_expectation": {
+        "presence": "non_speech",
+        "naturalness": "not_applicable"
+      }
+    },
+    {
+      "id": "clip-05",
+      "source_sha256": "1c6fc627e9db5fbf4ec8a435d8a20b7a63725543100015309e3a3000a148ef61",
+      "sample_count": 32000,
+      "duration_seconds": 2.0,
+      "exact_zero_samples": 0,
+      "unique_sample_values": 31843,
+      "peak_amplitude": 1.0,
+      "RMS": 0.45025217436617737,
+      "actual_mask_frames": 200,
+      "actual_audio_tokens": 50,
+      "frozen_expectation": {
+        "presence": "speech",
+        "naturalness": "unnatural",
+        "audible_defects": true
+      }
+    },
+    {
+      "id": "clip-06",
+      "source_sha256": "6fabcdd61b4ba425455095c468f543732a1d9cb764d20f8e35aeb69b84af9e05",
+      "sample_count": 202240,
+      "duration_seconds": 12.64,
+      "exact_zero_samples": 2152,
+      "unique_sample_values": 181212,
+      "peak_amplitude": 0.47346532344818115,
+      "RMS": 0.06787826893210958,
+      "actual_mask_frames": 1264,
+      "actual_audio_tokens": 316,
+      "frozen_expectation": {
+        "presence": "speech",
+        "language": "english"
+      }
+    },
+    {
+      "id": "clip-07",
+      "source_sha256": "b256973bad652bd8d2ed965a5e9ff1273d9e2e92b5451376587cd14df898a587",
+      "sample_count": 150720,
+      "duration_seconds": 9.42,
+      "exact_zero_samples": 4,
+      "unique_sample_values": 138833,
+      "peak_amplitude": 0.21393930912017822,
+      "RMS": 0.0290517707635852,
+      "actual_mask_frames": 942,
+      "actual_audio_tokens": 235,
+      "frozen_expectation": {
+        "presence": "speech",
+        "language": "vietnamese"
+      }
+    },
+    {
+      "id": "clip-08",
+      "source_sha256": "27c631e6a60ca5fa5ec6eeb77bd2bcdabbe083cf8fa3d06b123ca51c30bfad5b",
+      "sample_count": 202240,
+      "duration_seconds": 12.64,
+      "exact_zero_samples": 103272,
+      "unique_sample_values": 93214,
+      "peak_amplitude": 0.47346532344818115,
+      "RMS": 0.05024638177815386,
+      "actual_mask_frames": 1264,
+      "actual_audio_tokens": 316,
+      "frozen_expectation": {
+        "presence": "speech",
+        "naturalness": "unnatural",
+        "audible_defects": true
+      }
+    },
+    {
+      "id": "clip-09",
+      "source_sha256": "ee16cec68bcdf536014181373dc17999b3ae55d87f7ff75371aa3c392307e3a9",
+      "sample_count": 150720,
+      "duration_seconds": 9.42,
+      "exact_zero_samples": 75364,
+      "unique_sample_values": 71574,
+      "peak_amplitude": 0.21393930912017822,
+      "RMS": 0.018919207782863042,
+      "actual_mask_frames": 942,
+      "actual_audio_tokens": 235,
+      "frozen_expectation": {
+        "presence": "speech",
+        "naturalness": "unnatural",
+        "audible_defects": true
+      }
+    }
+  ],
+  "all9_source_hashes_unique_and_verified": true,
+  "exact_silence_is_still_exact_zeros": true,
+  "initial_diagnostic_assumption_failure": {
+    "assumption": "Noise would have more than10000distinct float32 sample values",
+    "observed_distinct_values": 8591,
+    "correction": "Remove unsupported arbitrary distinct-value threshold. Frozen PCM16-derived noise and all labels remain unchanged; this is a diagnostic assertion error, not a model/quality outcome.",
+    "before_publication": true
+  },
+  "SDK_source_observation": "Pinned native model selects valid input feature frames with feature_attention_mask before the audio tower; padded feature_shape alone does not demonstrate wrong conditioning.",
+  "host_memory_snapshot_bytes": {
+    "MemTotal": 32220790784,
+    "MemAvailable": 18879262720,
+    "SwapTotal": 8589930496,
+    "SwapFree": 9871360
+  },
+  "memory_pressure_snapshot": "some avg10=0.00 avg60=0.00 avg300=0.00 total=14931970\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=14527362\n",
+  "existing_headroom_guard_bytes": 19327352832,
+  "proposed_headroom_guard_bytes": 15032385536,
+  "unchanged_process_address_cap_bytes": 12884901888,
+  "proposed_guard_applied": false,
+  "original_weight_worker_started": false,
+  "original_reviews_changed": false,
+  "D70_complete": false,
+  "D71_started": false
+}

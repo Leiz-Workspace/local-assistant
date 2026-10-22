@@ -29,7 +29,7 @@ from scripts.tts_local_review_worker import (
 
 logger = logging.getLogger(__name__)
 ADDRESS_SPACE_BYTES = 12 * 1024**3
-MIN_AVAILABLE_BYTES = 18 * 1024**3
+MIN_AVAILABLE_BYTES = 14 * 1024**3
 
 
 def sha(raw):
@@ -195,7 +195,7 @@ def sandbox(mode, samples):
 
 
 def require_headroom(path=Path("/proc/meminfo")):
-    """Reject neural loading unless current host MemAvailable meets the18GiB preflight condition; this does not reserve memory or measure model RAM."""
+    """Reject neural loading unless current host MemAvailable meets the owner-approved14GiB preflight condition; this does not reserve memory or measure model RAM."""
     matches = [line.split() for line in path.read_text().splitlines() if line.startswith("MemAvailable:")]
     if len(matches) != 1 or len(matches[0]) != 3 or matches[0][2] != "kB":
         raise ValueError("local_review_host_memory_metadata")
@@ -289,8 +289,8 @@ def run(mode, output):
     if runtime_entries() != json.loads((ROOT / "runtime-integrity.json").read_text())["files"]:
         raise ValueError("local_review_runtime_integrity")
     artifacts = {row["filename"]: verify(ROOT / "model" / row["filename"], row) for row in specs()}
-    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md", PROJECT / "docs/ADR/101-proposed-pread-loading-within-12gib.md"]}
-    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES))
+    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md", PROJECT / "docs/ADR/101-proposed-pread-loading-within-12gib.md", PROJECT / "docs/ADR/102-proposed-headroom-for-retained-12gib-trial.md"]}
+    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES, host_preflight_required_bytes=MIN_AVAILABLE_BYTES))
     before = core_snapshot()
     publish_json(output / "core-before.json", before)
     if mode != "imports":
