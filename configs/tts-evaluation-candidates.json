@@ -1,0 +1,224 @@
+{
+  "description": "D70 original nominated TTS-family CPU comparison only; no model/default selected or deployed. Qwen bundled speech tokenizer is a mandatory checkpoint component; Piper VI/EN voice instances are frozen before any output.",
+  "status": "EVALUATION_ONLY_NOT_SELECTED",
+  "task": "MODEL-EVAL-005",
+  "candidates": [
+    {
+      "id": "qwen3-tts-0.6b",
+      "family": "Qwen3-TTS-0.6B",
+      "repository": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+      "revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+      "model_license": "Apache-2.0",
+      "speaker": "Ryan",
+      "documented_languages": [
+        "zh",
+        "en",
+        "ja",
+        "ko",
+        "de",
+        "fr",
+        "ru",
+        "pt",
+        "es",
+        "it"
+      ],
+      "Vietnamese_officially_documented": false,
+      "artifacts": [
+        {
+          "path": "README.md",
+          "bytes": 3263,
+          "git_blob_sha1": "ed613da23a5e133a506b13b79055854938b9e67c",
+          "lfs_sha256": null
+        },
+        {
+          "path": "config.json",
+          "bytes": 4908,
+          "git_blob_sha1": "5e8d5fc100536984e3a89bd87ef08e59e322b29b",
+          "lfs_sha256": null
+        },
+        {
+          "path": "generation_config.json",
+          "bytes": 245,
+          "git_blob_sha1": "1872b16d4535564abf2db5d6debe6cddd82b7f2e",
+          "lfs_sha256": null
+        },
+        {
+          "path": "merges.txt",
+          "bytes": 1671839,
+          "git_blob_sha1": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
+          "lfs_sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 1811626576,
+          "git_blob_sha1": "7fcbae5382ce4359e3b538bad87c7bad6b931050",
+          "lfs_sha256": "bc3c7e785eb961179c25450d1acff03f839e0002f2f3a5aeb67b5735c0fa2adb"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 127,
+          "git_blob_sha1": "0525dd953bb9241912f7147666f0d535165d5d4f",
+          "lfs_sha256": null
+        },
+        {
+          "path": "speech_tokenizer/config.json",
+          "bytes": 2336,
+          "git_blob_sha1": "06cc8dc4c5ec8a1929086b71b98c313020d9268b",
+          "lfs_sha256": null
+        },
+        {
+          "path": "speech_tokenizer/configuration.json",
+          "bytes": 76,
+          "git_blob_sha1": "ab58e2eaf53cd14a1a2a7527d9261ceea93a24cd",
+          "lfs_sha256": null
+        },
+        {
+          "path": "speech_tokenizer/model.safetensors",
+          "bytes": 682293092,
+          "git_blob_sha1": "026d66bfb5d730dcfd56450c5e9e51b3ef4e0712",
+          "lfs_sha256": "836b7b357f5ea43e889936a3709af68dfe3751881acefe4ecf0dbd30ba571258"
+        },
+        {
+          "path": "speech_tokenizer/preprocessor_config.json",
+          "bytes": 234,
+          "git_blob_sha1": "ba40914f4f49ab98a8ca545d4892ef7291a39592",
+          "lfs_sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 7344,
+          "git_blob_sha1": "6ff9fd60cc623bb54bbd603cbd418c97a11528d7",
+          "lfs_sha256": null
+        },
+        {
+          "path": "vocab.json",
+          "bytes": 2776833,
+          "git_blob_sha1": "4783fe10ac3adce15ac8f358ef5462739852c569",
+          "lfs_sha256": null
+        }
+      ]
+    },
+    {
+      "id": "piper-en",
+      "family": "Piper",
+      "repository": "rhasspy/piper-voices",
+      "revision": "5041a7a49ae5b3a0f30e6837769eb03fdbb231bd",
+      "speaker": 0,
+      "sample_rate": 22050,
+      "voice_dataset_license": "public-domain source dataset; repository declares MIT",
+      "engine_license": "GPL-3.0-or-later",
+      "artifacts": [
+        {
+          "path": "en/en_US/ljspeech/medium/MODEL_CARD",
+          "bytes": 517,
+          "git_blob_sha1": "324d7470296a501e3c6396310f9b218fdbd7ed1e",
+          "lfs_sha256": null
+        },
+        {
+          "path": "en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx",
+          "bytes": 63531379,
+          "git_blob_sha1": "cac20d8f96f39dcd35e695a1aa83311443c7218f",
+          "lfs_sha256": "6f52a751e2349abe7a76735eb09dc1875298c77ea2342ffd2fef79ff81b87f22"
+        },
+        {
+          "path": "en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx.json",
+          "bytes": 4972,
+          "git_blob_sha1": "73ecdec4f6ab17a437936652dfe3a925bb19e098",
+          "lfs_sha256": null
+        }
+      ]
+    },
+    {
+      "id": "piper-vi",
+      "family": "Piper",
+      "repository": "rhasspy/piper-voices",
+      "revision": "5041a7a49ae5b3a0f30e6837769eb03fdbb231bd",
+      "speaker": 0,
+      "sample_rate": 22050,
+      "voice_dataset_license": "CC-BY-4.0 source dataset per card; fine-tuned from Lessac, upstream chain not independently verified; repository declares MIT",
+      "engine_license": "GPL-3.0-or-later",
+      "artifacts": [
+        {
+          "path": "vi/vi_VN/vais1000/medium/MODEL_CARD",
+          "bytes": 361,
+          "git_blob_sha1": "d77035517b7e2e9446d43b2c83769890e14b000c",
+          "lfs_sha256": null
+        },
+        {
+          "path": "vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx",
+          "bytes": 63201294,
+          "git_blob_sha1": "c9b9df265b718e05ed60899d377f98725a8dbc95",
+          "lfs_sha256": "ec7c89e2c85f4d1edc24b6120c18aaf1bda614f06b511567eb9c7c0de15e2dab"
+        },
+        {
+          "path": "vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx.json",
+          "bytes": 4860,
+          "git_blob_sha1": "b11c938b28c4425d9be76beeb09d68f0d67157ba",
+          "lfs_sha256": null
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "torch": "2.10.0+cpu",
+    "torchaudio": "2.10.0+cpu",
+    "transformers": "4.57.3",
+    "qwen_tts": "0.1.1",
+    "piper_official_filtered_source": "1.8.0",
+    "onnxruntime": "1.31.0",
+    "numpy": "2.3.5",
+    "device": "cpu",
+    "dtype": "float32",
+    "logical_CPU_affinity": [
+      0,
+      1
+    ],
+    "threads": 2
+  },
+  "Qwen_generation": {
+    "speaker": "Ryan",
+    "seed_per_case": 7,
+    "do_sample": true,
+    "top_k": 50,
+    "top_p": 1.0,
+    "temperature": 0.9,
+    "repetition_penalty": 1.05,
+    "subtalker_dosample": true,
+    "subtalker_top_k": 50,
+    "subtalker_top_p": 1.0,
+    "subtalker_temperature": 0.9,
+    "max_new_tokens": 192,
+    "non_streaming_mode": true,
+    "instruct": null
+  },
+  "Piper_generation": {
+    "speaker_id": 0,
+    "length_scale": 1.0,
+    "noise_scales": "Pinned voice configuration defaults",
+    "normalize_audio": true,
+    "volume": 1.0,
+    "ONNX_intra_op_threads": 2,
+    "ONNX_inter_op_threads": 1,
+    "use_tashkeel": false
+  },
+  "corpus": {
+    "common_English_texts": 6,
+    "common_Vietnamese_texts": 6,
+    "Qwen_attempts": 18,
+    "Piper_attempts": 12,
+    "potential_waveforms": 24,
+    "VI_Auto": "Separate unsupported-language diagnostic, not a supported-language claim or retry"
+  },
+  "execution_caps": {
+    "address_space_GiB": 12,
+    "CPU_seconds": 3600,
+    "wall_seconds": 1800,
+    "private_tmpfs_MiB": 128,
+    "output_per_file_MiB": 16,
+    "output_total_MiB": 64,
+    "audio_duration_seconds": 20,
+    "new_storage_budget_GB": 7.5
+  },
+  "naturalness": "Actual audio inspection required; never substitute ASR/acoustic metrics for listening or independent human MOS",
+  "selected_model": null
+}
