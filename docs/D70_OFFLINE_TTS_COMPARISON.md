@@ -99,3 +99,10 @@ D70 giữ **IN PROGRESS / NATURALNESS OPEN / NOT_SELECTED / NOT_DEPLOYED**. Ph�
 Sau quyết định giữ nguyên AC tại `9d58085`, đã gửi lại đúng bản nghe smoke Ogg có hash được xác minh, không sinh audio mới. Công cụ vẫn trả `audio content omitted because you do not support audio input`. Tra cứu plugin bằng ba truy vấn tìm thấy Descript chưa cài, có mô tả transcription/cleanup/editing; chưa có bằng chứng khả năng đánh giá tự nhiên thực tế đáp ứng AC. Kết quả tra cứu không phải danh mục đầy đủ; có thể còn lựa chọn khác trong [danh mục plugin](https://chatgpt.com/plugins). Không cài plugin hoặc gửi audio ra dịch vụ ngoài. [Bằng chứng recheck](evidence/d70-audio-capability-recheck-001.json).
 
 624source và176file audit inputs khớp hash;24judgements vẫn pending/null. D70 tiếp tục chờ khả năng nghe, D71 chưa bắt đầu, ADR-097 vẫn REJECTED. Không thử lại benchmark hoặc thay đổi model/AC.
+
+
+### Tiếp tục kiểm tra dependency và thử qualification audio thật
+
+Đã kiểm tra readonly14Vault records; không có matching metadata xác định evaluator audio được cấu hình, không ghi secret values hoặc sửa Vault. Đã đọc được nguồn Lessac/CSTR trước đó bất khả dụng; quyền dùng dataset giới hạn nghiên cứu, full weight/output rights của PiperVI vẫn chưa được xác minh. [Dependency/license follow-up](D70_AUDIO_REVIEW_DEPENDENCIES.md) phân biệt nguồn dataset với license của weights/engine/output; không tự thay model.
+
+Tìm thấy API của demo Qwen chính thức đang chạy. [ADR-099](ADR/099-bounded-public-audio-review-qualification.md) chốt thử5synthetic/generated-smoke controls trên interface công khai, no credential/local neural download/model-default change. Serving code dùng alias `qwen-omni-turbo`, backend/decoder chưa pin được; không gọi là original7B local hoặc human MOS. Client40new/158TTSrelated controls PASS0.39s/0SKIP, một expected ZIP warning từ test cũ;626source/all624prior bytes freeze trước call. Chưa có qualification hoặc nhận xét nghe mới; chỉ xét review24audio khi controls đạt. ADR-098 local3B proposal chưa được phê duyệt/provision, ADR-097 vẫn REJECTED; D70 chưa đóng/D71 chưa bắt đầu.
