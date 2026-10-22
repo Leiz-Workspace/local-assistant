@@ -36,3 +36,10 @@ The proposed campaign has18neutral-smoke control comparisons, then only if all p
 Approval is needed for **sending neutral test audio and authored text to this new community recipient**. Prior local ADR-104 scope was consumed and previous public trials addressed different endpoints. No approval is requested for metadata investigation, reversible implementation or tests. One concrete ADR-105 approval would cover both conditional stages; it would not select/deploy a production model, waive AC or authorize further failed-campaign retries.
 
 All original models, datasets, first observations,24pending listening labels and CORE are retained. D70 remains IN PROGRESS/NATURALNESS OPEN; D71 remains NOT STARTED. If the candidate fails controls or cannot produce adequate VI/EN descriptions, those outcomes stay failures and D70 stays open.
+
+
+## 2026-10-23 first-evidence gate follow-up
+
+[Binding and correction evidence](evidence/d70-specialist-first-evidence-binding.json). While external consent remains pending, the standalone gate now verifies exactly56first-control artifacts, all hashes, fixed-origin unique event receipts and exact result/observation/SSE/parsed-judgement agreement. Two regressions reproduced against6e9f6ab; after repair41specialist/346TTSrelated PASS0.53s/18.40s,0FAIL/0SKIP/Ruff PASS. Authored full18control+24review flow and partial-stream failure tests require no real upload/model. Execution remains disabled and original ADR-1048of12 unchanged.
+
+Audit correction:6e9f6ab's917preserved claim used a pre-edit audit; a later redundant agent note changed protected AUDIO_BACKLOG.md, leaving916of917unchanged at that commit. Only that append is now removed and the exact protected baseline restored, while current progress stays in canonical roadmap/devlog/backlogs. First failed audit/removed-note version and prior evidence retained; fresh917protected/runtime/model/SDK/data/sameCORE audit passes. No historical result is relabelled. All642pre-specialist source bytes remain unchanged/current645; only specialist helper/test changed. No media, weights or predictions added. D70 OPEN/D71 NOT STARTED.
