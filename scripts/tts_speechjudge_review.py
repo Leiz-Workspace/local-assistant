@@ -37,7 +37,7 @@ EXECUTION_ALLOWED = False
 
 
 def require_scope():
-    """Reject preparation, retained clients and all media requests until this distinct external-evaluator campaign is approved."""
+    """Reject retained clients and all external media requests until this distinct evaluator recipient is approved."""
     if not EXECUTION_ALLOWED:
         logger.warning("speechjudge_execution_blocked reason=campaign_not_approved")
         raise ReviewError("specialist_campaign_not_approved")
@@ -118,7 +118,6 @@ def validate_packet(packet):
 
 def freeze_packet(directory, kind, items):
     """Publish one exclusive shuffled blind PCM16 packet and keep source identities and expected preferences parent-side."""
-    require_scope()
     directory.mkdir(mode=0o700, exist_ok=False)
     inputs = directory / "inputs"
     inputs.mkdir(mode=0o700)
@@ -142,7 +141,6 @@ def freeze_packet(directory, kind, items):
 
 def prepare_controls(root=ROOT, project=PROJECT):
     """Preregister eighteen source-bound distortion/gap/no-speech/reversed/tie comparisons from two separate existing neutral TTS smokes."""
-    require_scope()
     require_headroom()
     items = []
     for language, name in [("en", "d70-qwen-smoke-first"), ("vi", "d70-piper-vi-smoke-first")]:
@@ -169,7 +167,25 @@ def prepare_controls(root=ROOT, project=PROJECT):
                 signals = [(values, rate), (altered, rate)]
                 items.append(dict(text=text, signals=signals[::-1] if reverse else signals, expected="b" if reverse else "a", language=language, source_waveform_sha256=sha(raw), transform=transform, reversed=reverse))
         items.append(dict(text=text, signals=[(values, rate), (values, rate)], expected="tie", language=language, source_waveform_sha256=sha(raw), transform="identical_pair", reversed=False))
-    freeze_packet(Path(root) / "controls", "controls", items)
+    root = Path(root)
+    if root.is_symlink():
+        raise ReviewError("specialist_owned_root_symlink")
+    root.mkdir(mode=0o700, exist_ok=True)
+    freeze_packet(root / "controls", "controls", items)
+    directory = Path(root) / "controls"
+    publish_json(Path(root) / "controls-prepared.json", dict(description="First local-only control preparation; complete38filehashes before external-recipient consent, no upload or inference.", sha256={str(path.relative_to(root)): sha(path.read_bytes()) for path in sorted(directory.rglob("*")) if path.is_file()}, external_execution_allowed=EXECUTION_ALLOWED, media_uploaded=False))
+
+
+def verify_prepared_controls(root):
+    """Reject any change to the first locally prepared control packet before constructing a provider client or trusting its subsequent qualification."""
+    root = Path(root)
+    packet = json.loads((root / "controls/packet.json").read_text())
+    validate_packet(packet)
+    frozen = json.loads((root / "controls-prepared.json").read_text())["sha256"]
+    required = {"controls/packet.json", "controls/parent-only.json"} | {"controls/inputs/" + signal["filename"] for row in packet["cases"] for signal in row["signals"]}
+    if type(frozen) is not dict or set(frozen) != required or any(sha((root / name).read_bytes()) != value for name, value in frozen.items()):
+        raise ReviewError("specialist_prepared_control_changed")
+    logger.info("speechjudge_local_first_packet_verified files=%d", len(frozen))
 
 
 def parse_comparison(events):
@@ -266,6 +282,7 @@ class SpecialistDemo:
 def require_qualification(root=ROOT, project=PROJECT):
     """Recompute the exact first complete eighteen-control outcome and frozen protocol/packet bindings before common review."""
     root, project = Path(root), Path(project)
+    verify_prepared_controls(root)
     result = json.loads((root / "controls-first/result.json").read_text())
     frozen = json.loads((root / "controls-first/freeze.json").read_text())
     packet = json.loads((root / "controls/packet.json").read_text())
@@ -323,7 +340,6 @@ def order_consistency(observations, mapping):
 
 def prepare_review(root=ROOT, project=PROJECT):
     """Pair all24 retained outputs by identical authored text and freeze both orientations after the new specialist control gate."""
-    require_scope()
     require_qualification(root, project)
     require_headroom()
     project = Path(project)
@@ -361,6 +377,8 @@ def evaluate(kind, root=ROOT, project=PROJECT):
         raise ReviewError("specialist_stage")
     if kind == "review":
         require_qualification(root, project)
+    else:
+        verify_prepared_controls(root)
     require_headroom()
     directory, output = root / kind, root / (kind + "-first")
     packet = json.loads((directory / "packet.json").read_text())
@@ -418,14 +436,20 @@ def main():
     """Execute the separately approved eighteen-control and conditional24comparison campaign as one bounded sequence without further permission between stages."""
     global EXECUTION_ALLOWED
     logging.basicConfig(level=logging.INFO)
-    require_scope()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.parse_args()
+    parser.add_argument("--prepare-controls", action="store_true", help="Prepare local control copies only; never upload audio or invoke the provider.")
+    args = parser.parse_args()
+    if not args.prepare_controls:
+        require_scope()
     resource.setrlimit(resource.RLIMIT_AS, (12 * 1024**3, 12 * 1024**3))
     resource.setrlimit(resource.RLIMIT_CPU, (1200, 1201))
     os.sched_setaffinity(0, {0, 1})
-    try:
+    if args.prepare_controls:
         prepare_controls()
+        return
+    try:
+        if not (ROOT / "controls").exists():
+            prepare_controls()
         if evaluate("controls"):
             prepare_review()
             evaluate("review")

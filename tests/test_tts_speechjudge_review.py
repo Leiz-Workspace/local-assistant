@@ -3,6 +3,7 @@
 import copy
 import io
 import json
+import sys
 from collections import Counter
 from types import SimpleNamespace
 
@@ -129,12 +130,43 @@ def test_repaired_incomplete_or_contradictory_output_rejected(mutation):
 
 
 def test_unapproved_route_blocks_before_paths_or_network(tmp_path, monkeypatch):
-    """Keep this new external evaluator unavailable without explicit scope even when an object was retained earlier."""
+    """Block external evaluator execution without recipient consent even when a client object was retained earlier."""
     monkeypatch.setattr(specialist, "EXECUTION_ALLOWED", False)
-    for action in [lambda: specialist.prepare_controls(tmp_path, tmp_path), lambda: specialist.prepare_review(tmp_path, tmp_path), lambda: specialist.evaluate("controls", tmp_path, tmp_path), lambda: specialist.SpecialistDemo(tmp_path), lambda: specialist.main(), lambda: object.__new__(specialist.SpecialistDemo).open("POST", "/gradio_api/upload")]:
+    monkeypatch.setattr(sys, "argv", ["tts_speechjudge_review"])
+    for action in [lambda: specialist.evaluate("controls", tmp_path, tmp_path), lambda: specialist.SpecialistDemo(tmp_path), lambda: specialist.main(), lambda: object.__new__(specialist.SpecialistDemo).open("POST", "/gradio_api/upload")]:
         with pytest.raises(specialist.ReviewError, match="specialist_campaign_not_approved"):
             action()
     assert list(tmp_path.iterdir()) == []
+
+
+def test_local_controls_need_no_external_recipient_permission(prepared, monkeypatch):
+    """Allow reversible local control copies while proving no client is constructed and all outbound authority remains disabled."""
+    def forbidden(*args, **kwargs):
+        """Fail if local preparation creates a network client or requests an external interface."""
+        raise AssertionError("local_preparation_must_not_contact_provider")
+    monkeypatch.setattr(specialist, "EXECUTION_ALLOWED", False)
+    monkeypatch.setattr(specialist, "SpecialistDemo", forbidden)
+    monkeypatch.setattr(specialist, "inspect_interface", forbidden)
+    root = prepared.root / "local_only"
+    assert not root.exists()
+    specialist.prepare_controls(root, prepared.project)
+    packet = json.loads((root / "controls/packet.json").read_text())
+    assert len(packet["cases"]) == 18 and specialist.EXECUTION_ALLOWED is False
+    assert root.stat().st_mode & 0o777 == 0o700
+    specialist.verify_prepared_controls(root)
+    with pytest.raises(specialist.ReviewError, match="campaign_not_approved"):
+        specialist.evaluate("controls", root, prepared.project)
+
+
+def test_local_preparation_cannot_be_changed_before_first_request(prepared, monkeypatch):
+    """Bind the later approved stage to the first local-only preparation rather than silently adopting changed target text."""
+    path = prepared.root / "controls/packet.json"
+    packet = json.loads(path.read_text())
+    packet["cases"][0]["text"] = "A different authored fixture."
+    path.write_text(json.dumps(packet))
+    with pytest.raises(specialist.ReviewError, match="prepared_control_changed"):
+        specialist.evaluate("controls", prepared.root, prepared.project)
+    assert not (prepared.root / "controls-first").exists()
 
 
 def test_first_control_failure_stops_and_retains_raw(prepared, monkeypatch):
@@ -147,7 +179,7 @@ def test_first_control_failure_stops_and_retains_raw(prepared, monkeypatch):
     with pytest.raises(specialist.ReviewError, match="qualification_gate"):
         specialist.require_qualification(prepared.root, prepared.project)
     assert specialist.EXECUTION_ALLOWED is False
-    with pytest.raises(specialist.ReviewError, match="campaign_not_approved"):
+    with pytest.raises(specialist.ReviewError, match="qualification_gate"):
         specialist.prepare_review(prepared.root, prepared.project)
     assert not (prepared.root / "review").exists()
     with pytest.raises(specialist.ReviewError, match="campaign_not_approved"):
