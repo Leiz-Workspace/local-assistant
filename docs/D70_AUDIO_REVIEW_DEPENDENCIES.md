@@ -24,11 +24,13 @@ SDK diagnostic dùng uv environment riêng, Python3.12.3/gradio-client1.13.3, kh
 
 **42client tests mới/160TTS related PASS0.39s**, một expected ZIP duplicate warning từ test cũ; Ruff PASS. Đây là kiểm thử các TTS scripts liên quan, không phải full-suite626source. [Availability/integrity audit](evidence/d70-audio-evaluator-availability-audit.json) xác minh626source/toàn bộ624prior nguyên byte,176original audit inputs và23475original D70 SDK entries;24judgements gốc vẫn null/chưa nghe. Các owned SDK Python processes đã kết thúc. Không có local reviewer weights, TTS rerun hoặc model selection. Giữ AC tại D70 và ADR-097 REJECTED.
 
-## Phương án local bổ sung vẫn cần duyệt
+## Evaluator local đã được duyệt; load đầu chạm cap
 
-[ADR-098](ADR/098-proposed-isolated-audio-reviewer.md) đề xuất thử một **AI reviewer nhận audio thật**, chạy riêng với Qwen2.5-Omni-3B nguyên bản. Đã pin revision/shard sizes/hashes và đọc giấy phép; chưa tải weights hoặc cài runtime. Đây là công cụ đánh giá bổ sung, không thay CORE/ASR/TTS hoặc ứng viên registry. Khoảng11.97GB là disk weights; RAM/latency và năng lực đánh giá tiếng Việt còn chưa đo.
+Chủ dự án đã trả lời **“Cho phép thử evaluator local theo ADR-098”**. [ADR-098](ADR/098-proposed-isolated-audio-reviewer.md) được duyệt cho nghiên cứu riêng có giới hạn; đây là evaluator bổ sung, không thay CORE/ASR/TTS hoặc registry models. Đúng revision f75b40e.../16artifacts đã tải và xác minh, ba shard11,972,663,208bytes disk; SDK uv riêng23382entries đã freeze. Không dùng Research License thành quyền thương mại.
 
-Approval chỉ cho phép thử và đánh giá bằng AI có provenance rõ, không xác nhận sẵn năng lực reviewer hoặc human MOS. D70 vẫn phải đủ AC; nếu qualification/tiếng Việt/coverage không đạt thì vẫn mở. ADR-097 vẫn REJECTED, D71 chưa bắt đầu. [Metadata cụ thể](evidence/d70-audio-reviewer-proposal-metadata.json).
+**Import thật PASS6.065s/RSS415440KiB. First native load FAILED6.459s/exit1**, lỗi mmap shard thứ hai dưới cap12GiB virtual address space. Không có control/audio review, chưa đo RAM cần thiết hoặc virtual peak. CORE cùng identity/text recovery trước-sau PASS. Giữ first source/failure/freeze; không tăng cap hoặc retry vì ADR-098 yêu cầu dừng khi cap không khả thi.27new/187TTSrelated PASS0.43s, Ruff PASS; readonly632source/all626prior bytes/originalSDK/data/runtime PASS. [Báo cáo local](D70_LOCAL_AUDIO_REVIEW.md), [integrity audit](evidence/d70-local-reviewer-integrity-audit.json).
+
+[ADR-100](ADR/100-proposed-local-reviewer-address-space-trial.md) trình phương án16GiB virtual cap/18GiB host-headroom precondition, giữ nguyên model/CPU/AC/order và giới hạn còn lại; **PROPOSED, chưa duyệt hoặc thực thi**. Không xin lại quyền tải evaluator đã duyệt, không đề nghị waiver AC hoặc chuyển D71. Metadata proposal cũ và các ADR/public freezes ghi chưa duyệt là lịch sử tại thời điểm trước câu trả lời mới; giữ nguyên làm audit trail.
 
 ## Nguồn Lessac đã truy cập được
 
@@ -40,7 +42,7 @@ Lượt tra cứu mới đã đọc được [giấy phép dữ liệu CSTR/Voic
 
 ## Trạng thái
 
-D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Local fallback theo ADR-098 vẫn là đề xuất bổ sung model nghiên cứu ngoài tập đã thống nhất, cần phê duyệt riêng trước tải weights. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
+D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Evaluator local theo ADR-098 đã được duyệt/tải/import thành công nhưng load đầu thất bại tại cap12GiB address space; ADR-100 đề xuất cap16GiB riêng chưa được duyệt. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
 
 
 ### Lỗi transport đầu được giữ nguyên

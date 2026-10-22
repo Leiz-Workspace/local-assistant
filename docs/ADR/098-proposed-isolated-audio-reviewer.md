@@ -2,7 +2,7 @@
 
 **Purpose:** Make a concrete audio-conditioned AI review path available for owner approval while preserving D70's original acceptance order and all agreed production model roles.
 
-**Date:** 2026-10-22. **Status: PROPOSED — NOT APPROVED, NOT PROVISIONED.** ADR-097 remains REJECTED. D70 remains IN PROGRESS; D71 has not started.
+**Date:** 2026-10-22. **Status: APPROVED FOR BOUNDED LOCAL EVALUATION — NOT QUALIFIED OR SELECTED.** The owner explicitly answered “Cho phép thử evaluator local theo ADR-098”. This authorizes the proposed isolated research-only provisioning and qualification, retaining the stated resource limits and failure-stop conditions. ADR-097 remains REJECTED. D70 remains IN PROGRESS; D71 has not started.
 
 ## Problem and existing authority
 
@@ -31,7 +31,7 @@ No primary evidence currently qualifies this3B checkpoint as a Vietnamese natura
 
 ## Priority, dependencies, effort and risk
 
-**AUDIO-EVAL-CAPABILITY-001: P1, D70 blocker; proposed, not scheduled for provisioning.** Dependencies: explicit owner approval for the additional research-only evaluator, pinned complete weights/license, isolated SDK, adequate memory alongside existing CORE and qualified VI/EN/audio-control behaviour. Effort one qualification/review milestone; speed, RAM, reliability and fit have not been measured.
+**AUDIO-EVAL-CAPABILITY-001: P1, D70 blocker; owner approved the bounded trial.** Approval is recorded above; historical proposal metadata remains unchanged. Remaining dependencies: pinned complete weights/license, isolated SDK, adequate memory alongside existing CORE and qualified VI/EN/audio-control behaviour. Effort one qualification/review milestone; speed, RAM, reliability and fit have not been measured.
 
 Risks: CPU/memory infeasibility; related-Qwen-family preference; weak Vietnamese perception; text-driven hallucination presented as hearing; token truncation; a Research License mistaken for product rights; extra checkpoint components or qualification tuning hidden from audit. Blind inputs, controls, retained first results and explicit uncertainty reduce these risks; they do not eliminate them. A failed reviewer is an outcome to retain, not permission to remove the D70 criterion.
 
