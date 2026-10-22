@@ -273,8 +273,25 @@ def require_qualification(root=ROOT, project=PROJECT):
     validate_packet(packet)
     if result.get("controls_passed") is not True or result.get("error_code") is not None or result.get("freeze_sha256") != sha((root / "controls-first/freeze.json").read_bytes()) or frozen["packet"] != packet or len(result.get("observations", [])) != 18:
         raise ReviewError("specialist_qualification_gate")
+    required_artifacts = {"freeze.json", "interface.json"} | {row["id"] + suffix for row in packet["cases"] for suffix in [".receipt.json", ".json", ".sse"]}
+    artifact_hashes = result.get("first_artifact_sha256")
+    if type(artifact_hashes) is not dict or set(artifact_hashes) != required_artifacts:
+        raise ReviewError("specialist_first_artifact_coverage")
+    if any(sha((root / "controls-first" / name).read_bytes()) != value for name, value in artifact_hashes.items()):
+        raise ReviewError("specialist_first_artifact_changed")
+    seen_event_ids = set()
     for observation, expected, request in zip(result["observations"], mapping, packet["cases"], strict=True):
-        if observation["id"] != expected["id"] or observation["id"] != request["id"] or observation["signals"] != request["signals"] or parse_comparison(observation["events"])["winner"] != expected["expected"]:
+        identity = request["id"]
+        recorded = json.loads((root / "controls-first" / (identity + ".json")).read_text())
+        raw = (root / "controls-first" / (identity + ".sse")).read_bytes()
+        receipt = json.loads((root / "controls-first" / (identity + ".receipt.json")).read_text())
+        event_id = receipt.get("event_id")
+        if receipt.get("origin") != ORIGIN or type(event_id) is not str or re.fullmatch(r"[a-f0-9]{32}", event_id) is None or event_id in seen_event_ids:
+            raise ReviewError("specialist_first_receipt_identity")
+        seen_event_ids.add(event_id)
+        if observation != recorded or observation["events"] != parse_events(raw) or observation["judgement"] != parse_comparison(observation["events"]):
+            raise ReviewError("specialist_first_observation_contradiction")
+        if observation["id"] != expected["id"] or observation["id"] != identity or observation["signals"] != request["signals"] or observation["judgement"]["winner"] != expected["expected"]:
             raise ReviewError("specialist_qualification_recompute")
     for name, expected in frozen["source_sha256"].items():
         if sha((project / name).read_bytes()) != expected:
@@ -389,6 +406,7 @@ def evaluate(kind, root=ROOT, project=PROJECT):
     result = dict(description="First source-bound external AI comparisons, not human MOS, production model selection or automatic D70 acceptance.", stage=kind, observations=observations, error_code=error_code, controls_passed=complete if kind == "controls" else None, review_complete=complete if kind == "review" else None, core_before=before, core_after=after, freeze_sha256=sha((output / "freeze.json").read_bytes()), remote_cancellation_deletion_verified=False, D70_complete=False, D71_started=False)
     if kind == "review" and complete:
         result["order_consistency"] = order_consistency(observations, mapping)
+    result["first_artifact_sha256"] = {path.name: sha(path.read_bytes()) for path in sorted(output.iterdir()) if path.is_file()}
     publish_json(output / "result.json", result)
     if not complete or kind == "review":
         EXECUTION_ALLOWED = False

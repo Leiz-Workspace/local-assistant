@@ -59,6 +59,7 @@ def fake_client(prepared, monkeypatch, mismatch=False):
         def __init__(self, output):
             """Record the authored fixture client lifecycle with an empty initial stream."""
             self.raw_stream = b""
+            self.output = output
 
         def compare(self, row, inputs):
             """Return one declared authored observation, optionally failing the very first control."""
@@ -67,6 +68,7 @@ def fake_client(prepared, monkeypatch, mismatch=False):
                 winner = "b" if winner == "a" else "a"
             events = observation(winner)
             self.raw_stream = ("event: complete\ndata: " + json.dumps(events[0]["data"]) + "\n\n").encode()
+            specialist.publish_json(self.output / (row["id"] + ".receipt.json"), dict(description="Authored receipt fixture, no remote call.", event_id=specialist.sha(row["id"].encode())[:32], origin=specialist.ORIGIN))
             return specialist.parse_comparison(events)
 
     monkeypatch.setattr(specialist, "SpecialistDemo", Client)
@@ -170,6 +172,71 @@ def test_first_gate_recomputed_before_common_access(prepared, monkeypatch, mutat
         specialist.require_qualification(prepared.root, prepared.project)
 
 
+@pytest.mark.parametrize("mutation", ["summary_only", "judgement_only", "raw_stream", "receipt_origin", "duplicate_event", "observation_file", "artifact_coverage"])
+def test_first_raw_receipts_and_summary_are_cross_checked(prepared, monkeypatch, mutation):
+    """Reject stale or altered first evidence even when categorical winners and the stored positive control flag still agree."""
+    fake_client(prepared, monkeypatch)
+    assert specialist.evaluate("controls", prepared.root, prepared.project)
+    directory = prepared.root / "controls-first"
+    path = directory / "result.json"
+    result = json.loads(path.read_text())
+    first, second = prepared.packet["cases"][:2]
+    identity = first["id"]
+    if mutation == "summary_only":
+        result["observations"][0]["events"][0]["data"][1] = result["observations"][0]["events"][0]["data"][1].replace("Authored fixture", "Changed fixture")
+    elif mutation == "judgement_only":
+        result["observations"][0]["judgement"]["raw_log"] += "Changed retained judgement."
+    elif mutation == "raw_stream":
+        (directory / (identity + ".sse")).write_bytes(b"event: complete\ndata: null\n\n")
+    elif mutation in {"receipt_origin", "duplicate_event"}:
+        receipt_name = (identity if mutation == "receipt_origin" else second["id"]) + ".receipt.json"
+        receipt_path = directory / receipt_name
+        receipt = json.loads(receipt_path.read_text())
+        if mutation == "receipt_origin":
+            receipt["origin"] = "https://foreign.invalid"
+        else:
+            receipt["event_id"] = specialist.sha(identity.encode())[:32]
+        receipt_path.write_text(json.dumps(receipt))
+        result["first_artifact_sha256"][receipt_name] = specialist.sha(receipt_path.read_bytes())
+    elif mutation == "observation_file":
+        observation_path = directory / (identity + ".json")
+        retained = json.loads(observation_path.read_text())
+        retained["judgement"]["raw_log"] += "Changed separate observation."
+        observation_path.write_text(json.dumps(retained))
+        result["first_artifact_sha256"][observation_path.name] = specialist.sha(observation_path.read_bytes())
+    else:
+        result["first_artifact_sha256"].pop(identity + ".sse")
+    path.write_text(json.dumps(result))
+    with pytest.raises(specialist.ReviewError):
+        specialist.require_qualification(prepared.root, prepared.project)
+    assert not (prepared.root / "review").exists()
+
+
+def test_partial_first_stream_failure_retains_evidence_and_closes_scope(prepared, monkeypatch):
+    """Preserve an interrupted stream before any parsed observation and block subsequent stages instead of retrying."""
+    class Interrupted:
+        """Emulate a first stream timeout without creating a socket or contacting the provider."""
+
+        def __init__(self, output):
+            """Start with an empty authored event buffer."""
+            self.raw_stream = b""
+
+        def compare(self, row, inputs):
+            """Retain one incomplete generating event and simulate a transport timeout."""
+            self.raw_stream = b"event: generating\ndata: null\n\n"
+            raise TimeoutError("Authored timeout fixture, no network")
+
+    monkeypatch.setattr(specialist, "SpecialistDemo", Interrupted)
+    assert not specialist.evaluate("controls", prepared.root, prepared.project)
+    directory = prepared.root / "controls-first"
+    result = json.loads((directory / "result.json").read_text())
+    assert result["error_code"] == "TimeoutError" and result["observations"] == []
+    filename = prepared.packet["cases"][0]["id"] + ".sse"
+    assert (directory / filename).read_bytes() == b"event: generating\ndata: null\n\n"
+    assert result["first_artifact_sha256"][filename] == specialist.sha((directory / filename).read_bytes())
+    assert specialist.EXECUTION_ALLOWED is False
+
+
 def test_native_bf16_lower_bound_and_invalid_metadata():
     """Check analytic text-only storage accounting and prove the proposed7BnativeBF16text parameters alone exceed12GiB without weights."""
     config = dict(model_type="qwen2_5_omni_text", hidden_size=3584, intermediate_size=18944, vocab_size=152064, num_hidden_layers=28, num_attention_heads=28, num_key_value_heads=4, tie_word_embeddings=False)
@@ -262,6 +329,30 @@ def test_conditional_review_preserves_every_original_and_both_orders(prepared, m
         for signal, source in zip(row["signals"], parent["originals"], strict=True):
             assert signal["source_float32_sha256"] == expected[source["original_id"]]
     assert pending_path.read_bytes() == unchanged
+
+    class CommonClient:
+        """Exercise the complete conditional review with authored consistent preferences and no external model."""
+
+        def __init__(self, output):
+            """Store the owned output location and initialize an empty raw event buffer."""
+            self.output, self.raw_stream = output, b""
+
+        def compare(self, row, inputs):
+            """Prefer one fixed original identity in either orientation and retain a unique authored request receipt."""
+            source = next(item for item in mapping if item["id"] == row["id"])
+            winner = "a" if source["originals"][0]["original_id"].endswith("candidate_a") else "b"
+            events = observation(winner)
+            self.raw_stream = ("event: complete\ndata: " + json.dumps(events[0]["data"]) + "\n\n").encode()
+            specialist.publish_json(self.output / (row["id"] + ".receipt.json"), dict(description="Authored review receipt, no remote call.", event_id=specialist.sha(row["id"].encode())[:32], origin=specialist.ORIGIN))
+            return specialist.parse_comparison(events)
+
+    monkeypatch.setattr(specialist, "SpecialistDemo", CommonClient)
+    assert specialist.evaluate("review", prepared.root, prepared.project)
+    result = json.loads((prepared.root / "review-first/result.json").read_text())
+    assert result["review_complete"] and len(result["observations"]) == 24
+    assert result["order_consistency"]["consistent_original_pairs"] == 12
+    assert not result["D70_complete"] and not result["D71_started"]
+    assert specialist.EXECUTION_ALLOWED is False and pending_path.read_bytes() == unchanged
 
 
 def test_public_metadata_drift_fails_before_audio_network(monkeypatch):
