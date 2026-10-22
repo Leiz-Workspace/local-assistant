@@ -1,0 +1,10 @@
+{
+  "description": "Frozen tested D63 final read-only audit and original first4of4 actual summary; no rewritten first results.",
+  "sha256": {
+    "data/backups/d63-image-goldens-readonly-audit.py": "575ea2cd46e12ccd038a99c360752c58cbbd8ce0502bb770fd3be31953664b1c",
+    "data/backups/test_d63_image_readonly_audit.py": "fbdbb5ebb91129eff5a64d01451d477bc3aef20db6bd90d3433d06bb546e6436",
+    "data/backups/d63-readonly-audit-controls-first.log": "af8c295bac8e8c8aa1df19e0442ec04761cb550bae5ff92b7d91f2b049feb870",
+    "data/backups/d63-image-goldens-first/summary.json": "1e85336731fe26be6201f0072ef41adb355cad9adc84cb56168048becdbd6835",
+    "docs/evidence/d63-image-goldens-first-freeze.json": "8d42cc98c33f7876b2e42d6afbd1c6c88b8a3743d50f96cf94aa21bd789b5585"
+  }
+}

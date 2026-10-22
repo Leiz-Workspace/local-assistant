@@ -3770,3 +3770,12 @@ Lượt riêng sau sửa dùng nguyên corpus/model/options/oracle: **16/16 nhá
 **Full4265 hoàn tất:4265 PASS/1709.02s pytest,1710.11s wrapper/0FAIL/0SKIP/exit0**, cùng boot và freeze đã ghi trước chạy. Log SHA256 `c400531a8abc06849f00f5320797026d8729183df0d71b1e3b73a59f54bae3c4`.87 kiểm thử audit private PASS/.26s;2 kiểm thử prefix bổ sung PASS/.85s, được tính riêng với4265. Replay nguyên mã verifier trước sửa xác nhận buffered read-ahead có thể bỏ qua prefix HTML/shebang bị cấm; bản hiện tại kiểm tra và từ chối đủ toàn bộ byte, không sửa policy hoặc chạy nội dung fixture.
 
 Audit readonly cuối PASS:562 source/config khớp freeze, đúng sáu adapter cũ cần sửa và550 file còn lại nguyên byte; recompute nguyên output16/16 và hai abstention; V006/zero source-memory/quota/vector/probe/workers/locks, ACL/grants/triggers/model/data/15 dịch vụ/CORE giữ nguyên. First13/16, tám red test và mọi sai số OCR vẫn giữ nguyên. D62 PASS **đánh giá chất lượng và tradeoff đo được**, không khẳng định OCR hoàn hảo/semantic truth hay chọn model thay thế. Roadmapv4.04 và acceptance/report/backlog đồng bộ. **D63 NEXT:** golden table/figure/document screenshot với CORE đang có; không tải hoặc thay model.
+
+
+## 2026-10-22 — D63 golden bảng/biểu đồ/ảnh tài liệu PASS; tiếp tục D64
+
+Bắt đầu sau D62 commit `a72ed2c`; ZIP đầy đủ D62 gồm38 entry/0600/CRC/hash SHA256 `8e7358942ee652c4c71d2b050c1fb8e1963a670713fec09f347cbf4394559a9b`. ADR-089 ghi trước code/corpus: P1/dependency/effort/rủi ro/rollback, ba ảnh tự tạo bằng Pillow/font sẵn có; đã xem đủ ảnh trước inference. Chốt bốn câu hỏi/oracle và byte/hash trước đo; không lấy screenshot riêng tư hay tải ảnh/model mới.
+
+24 kiểm thử scorer/generator PASS/.13s;160 kiểm thử liên quan PASS/5.59s/0SKIP, gồm11 private evaluator controls. **Lượt thật đầu4/4 PASS/4.513s** với nguyên CORE/mmproj/options/native normalizer: February30, April không có dữ liệu trảNot available kèm uncertainty, Vở số lượng5/đơn giá18000 đúng cột, Release2.4/Files12. Text sau ảnh PASS; đủ4 normalization/4 model call, mọi HTTP/task/slot đã đóng, không retry hoặc sửa prompt/fixture/oracle.
+
+115 kiểm thử audit private PASS/.27s; final readonly audit PASS569 source/all562 cũ nguyên byte/V006/zero data-quota-vector-probe-workers-locks/ACL-grants-triggers/15 dịch vụ/CORE/models/config giữ nguyên. Full4265 là baseline562 source của D62; không bịa full4289. **D63 PASS local authored goldens**, nhãn cùng agent/không semantic certification/không nối API-UI. Roadmapv4.05; **D64 NEXT** FFmpeg metadata/frame timestamp tái lập, không chọn video model riêng.
