@@ -1,0 +1,38 @@
+{
+  "description": "User-triggered recheck of genuine existing smoke audio and read-only plugin capability discovery. No new synthesis, audio edit, upload, model/default/source change or auditory judgement.",
+  "client_date": "2026-10-22",
+  "trigger": "Owner requested continuation after explicitly retaining current D70 AC.",
+  "baseline_commit": "9d58085",
+  "method": "Forward the full existing qualified Ogg smoke copy through functions.exec audio(AudioContent).",
+  "preview_sha256": "28f908dfe1e00c8ccdd04c55db378092d50ae4e3cac9e839fb77b2ed33425e3c",
+  "tool_response": "audio content omitted because you do not support audio input",
+  "actual_audio_inspection_complete": false,
+  "dedicated_audio_tool_metadata_matches": 0,
+  "plugin_discovery": {
+    "queries": [
+      "audio analysis speech quality listening",
+      "audio perception",
+      "audio"
+    ],
+    "closest_audio_plugin": {
+      "name": "Descript",
+      "installed": false,
+      "documented_capabilities": [
+        "transcription",
+        "audio cleanup",
+        "video editing"
+      ],
+      "naturalness_assessment_capability_confirmed": false
+    },
+    "catalogue_search_exhaustive": false,
+    "plugins_installed": 0,
+    "audio_uploaded": false
+  },
+  "source_files_hash_verified": 624,
+  "frozen_audit_input_files_hash_verified": 176,
+  "pending_waveform_reviews": 24,
+  "model_executions": 0,
+  "D70_complete": false,
+  "D71_started": false,
+  "sequence_change_approved": false
+}
