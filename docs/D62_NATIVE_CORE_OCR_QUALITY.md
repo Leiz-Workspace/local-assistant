@@ -2,7 +2,7 @@
 
 **Purpose:** Report measured native/CORE text/grid/uncertainty/absence/latency/resource tradeoffs with unchanged model selection and every first failure retained.
 
-**Date:** 2026-10-22. **Status:** Actual paired quality observation complete; D62 IN PROGRESS pending full4265 and final readonly audit. [ADR-087](ADR/087-native-ocr-and-existing-core-quality-evaluation.md), [necessary FD repair ADR-088](ADR/088-synchronized-buffered-source-native-fd-handoff.md).
+**Date:** 2026-10-22. **Status:** PASS local native/CORE quality evaluation after full4265 and final readonly audit. [ADR-087](ADR/087-native-ocr-and-existing-core-quality-evaluation.md), [necessary FD repair ADR-088](ADR/088-synchronized-buffered-source-native-fd-handoff.md).
 
 ## Existing model and scope
 
@@ -41,6 +41,8 @@ The original CORE stays resident even during native OCR, so its existing GPU all
 
 ## Current closure and next dependency
 
-Original first13/16 and every error/quality discrepancy remain immutable. A fresh full4265 application invocation is now running with accepted in-memory readonly Vault paths/live flags and redacted durable logs; previous full4120 remains a separate545-source cohort. Do not mark D62 complete or start D63 from quality output alone. Final full/frozen source/model/data/runtime audit is required after the six necessary shared adapter changes. Optional dedicated OCR/Qwen3-VL remains MODEL-EVAL-006 candidate-only; this tiny corpus does not justify a replacement and none is selected.
+Original first13/16 and every error/quality discrepancy remain immutable. Fresh full4265 completed:4265 PASS/1709.02s pytest,1710.11s wrapper/0FAIL/0SKIP/exit0.87 private audit controls and2 separate whole-source prefix regressions PASS. The final readonly audit recomputes complete measured outputs and verifies current562 source bytes, exactly six necessary prior adapter changes, all other550 preserved, V006/zero source-memory/quota/vectors/probes/workers/locks, unchanged ACL/grants/triggers/models/data/15 service identities and healthy original CORE. The prefix replay also demonstrates that the old buffered handoff could omit a prohibited text prefix; current verification examines and rejects the complete original input. No prior outcome is overwritten. D62 acceptance records the measured tradeoffs; D63 may now begin. Previous full4120 remains a separate545-source cohort. Optional dedicated OCR/Qwen3-VL remains MODEL-EVAL-006 candidate-only; this tiny corpus does not justify a replacement and none is selected.
 
 [First result](evidence/d62-first-quality-incomplete-result.json), [FD diagnosis](evidence/d62-native-fd-diagnosis.json), [preservation](evidence/d62-native-fd-first-failure-preservation.json), [repaired freeze](evidence/d62-native-core-quality-repaired-freeze.json), [actual measured output](evidence/d62-repaired-native-core-quality-result.json), [full4265 freeze](evidence/d62-4265-full-freeze.json).
+
+[Completed full](evidence/d62-4265-full-regression.json), [final audit](evidence/d62-full4265-native-quality-readonly-audit.json), [acceptance](evidence/d62-native-core-quality-acceptance.json).

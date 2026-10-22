@@ -1,0 +1,49 @@
+{
+  "description": "D62 measured native-first OCR/current CORE quality acceptance after necessary reproduced native input synchronization, complete global regression and final read-only audit. Quality errors remain measured errors, not successful transcription.",
+  "status": "PASS_LOCAL_NATIVE_CORE_QUALITY_EVALUATION",
+  "source_files": 562,
+  "necessary_prior_source_files_modified": 6,
+  "all_other550_prior_source_bytes_unchanged": true,
+  "new_native_regressions_passed": 20,
+  "new_metric_controls_passed": 20,
+  "related_passed": 361,
+  "private_audit_controls_passed": 87,
+  "supplementary_prefix_controls_passed": 2,
+  "first_observation": {
+    "observed": 13,
+    "requested": 16,
+    "status": "INCOMPLETE_RETAINED",
+    "elapsed_seconds": 14.175
+  },
+  "distinct_repaired_observation": {
+    "observed": 16,
+    "requested": 16,
+    "elapsed_seconds": 18.772,
+    "unchanged_corpus_model_options_oracles": true,
+    "missing_field_abstentions_passed": 2,
+    "text_after_images_passed": true
+  },
+  "quality_discrepancies_retained": true,
+  "resources": "Process RSS RAM and GPU compute allocation VRAM before/after points, not peaks or unique/private RAM requirements. Native worker address-space cap is not measured RAM.",
+  "semantic_validation": false,
+  "independent_human_labels": false,
+  "model_replacements": 0,
+  "model_downloads": 0,
+  "default_ocr_routing_changed": false,
+  "production_api_ui_wiring": false,
+  "full_regression": {
+    "passed": 4265,
+    "failed": 0,
+    "skipped": 0,
+    "pytest_elapsed_seconds": 1709.02,
+    "wrapper_elapsed_seconds": 1710.11,
+    "log_sha256": "c400531a8abc06849f00f5320797026d8729183df0d71b1e3b73a59f54bae3c4",
+    "freeze_sha256": "7321cc82d35cea3713ad880114b0e418f94d2b6749ddcb4b7456055b2b2c6f16"
+  },
+  "readonly_audit": {
+    "path": "docs/evidence/d62-full4265-native-quality-readonly-audit.json",
+    "sha256": "0238cfe2b816f3bef56edf2eb7788648cb672edd73203e89dcee5845f1331cb1",
+    "status": "PASS_D62_FULL4265_NATIVE_QUALITY_READONLY_AUDIT"
+  },
+  "D63": "NEXT_IMAGE_TABLE_FIGURE_DOCUMENT_SCREENSHOT_GOLDENS"
+}
