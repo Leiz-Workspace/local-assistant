@@ -126,3 +126,13 @@ Operator-requested recovery run finds actual SearXNG sources but no required RFC
 ### WEB-SEARCH-003 — Operator selection: retain Brave and wait
 
 2026-10-22: operator explicitly chooses existing Brave while waiting for upstream recovery. Status WAITING FOR UPSTREAM; remains the required D60 dependency. ADR-083 Bing qualification is DEFERRED, not scheduled; do not start another engine candidate, change the selected provider/model/config, or create polling/retry/background-monitoring jobs. Keep every failed cohort and unknown recovery/Retry-After unchanged. A bounded new verification requires an operator recovery report or explicit new-verification request; no automatic repeat based on time. D60 remains IN PROGRESS, no D61 advance. WEB-OPS-001 stays complete.
+
+
+### WEB-SEARCH-003 — New explicit continuation, no provider change
+
+2026-10-22: latest user continuation permits one separately frozen bounded Brave verification after≥1800s quiet. It remains FAILED:one actual upstream error/two backend dispatches blocked/0source-report-native. No recurring requests or Bing evaluation; ADR-083 stays deferred. Complete the independent missing current-boot full4032 regression/final readonly closure while preserving exact540 source bytes. A running full or old direct-reference artifact cannot satisfy the actual searched-source gate.
+
+
+### WEB-SEARCH-003 — Current full regression prerequisite complete
+
+2026-10-22: independent fresh full4032 PASS/1685.93s/0FAIL/0SKIP/exit0 and final post-verification readonly audit PASS540 source/config/all agreed models/data/services/security preserved. Final foreground Brave verification after≥1800s evaluator silence still fails before sources/report/native:one actual backend/two blocked,1.237s. No actual multi-start interval or causal pacing benefit measured; no further probe in this continuation. Preserve every cohort and exact source/claim/model/family oracles. Retain Brave/wait as selected; ADR-083 deferred, no alternate engine or automatic polling/retry schedule/D61 advancement. Only the actual searched-source report/native/archive/visual gate remains required; successful tests or direct-reference reports do not replace it. [Current combined status](evidence/d60-current-regression-and-upstream-status.json).
