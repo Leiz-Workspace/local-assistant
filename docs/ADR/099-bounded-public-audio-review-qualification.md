@@ -30,6 +30,14 @@ Only one client request at a time. A timeout or protocol failure leaves an incom
 
 The first request uploaded successfully and obtained a prediction event, but SSE returned `404: Session not found.` before any usable judgement. Official Gradio5.23.1 `routes.py` streams simple calls by event_id while `queueing.py` assigns a separately supplied custom session to a different message queue. Omit custom session_hash so the server creates a fresh session equal to event_id, retaining an owned event receipt before GET. Keep all first failed evidence/source snapshots; no original624source, control, prompt or native output changes. This repair establishes transport correctness only, not qualified listening.
 
+### Current official text-only alternative after unavailable service
+
+The repaired2.5-demo call and a separate exact-default-settings availability probe both returned provider error events without a usable model judgement. Retain them; do not reinterpret them as heard audio or completed cancelled work.
+
+Qualify the same frozen five controls/prompt/expected conditions on the already running [official Qwen3.5 offline demo](https://huggingface.co/spaces/Qwen/Qwen3.5-Omni-Offline-Demo), fixed origin `https://qwen-qwen3-5-omni-offline-demo.hf.space`. Public source revision`2888772e0aa651efa67c2ece0a3c5a23bcf91a50`/SHA256`86f22ba1bc2d2bfb0a15c5cb3d85f4e7a74f0c7b98d0187f24c03e16dbe6b816` routes text-only audio observations to **`qwen3.5-omni-plus`**, not the project's existing CORE. Exact Gradio5.42 schema and source were inspected before use; no arbitrary endpoint selection is enabled. Empty native-default system prompt, temperature0/top_p1 are forwarded; top_k20 is a UI argument that public code does not forward. Seed and exact backend checkpoint remain uncontrolled/unverified. Never claim bitwise determinism or local/offline inference; “Offline” is the demo's batch-media interface name.
+
+This alternative provisions no model or SDK and replaces no project choice. It must qualify before any common24review. Old failures, source snapshots and freezes remain authoritative history. The original D70 AC, rejected ADR-097 and unapproved local ADR-098 remain unchanged.
+
 ## Priority, dependency, effort and risk
 
 P1/D70 blocker; qualification plus one24-case review milestone if viable. Depends on genuine anonymous availability and successful controls. Risks: alias drift, family bias, weak Vietnamese hearing, hallucinated descriptions, uncalibrated naturalness, public cache/retention, rate limits and incomplete remote cancellation. Input minimization, blind controls, strict bounds, first-result retention and uncertainty accounting constrain these risks; they do not certify the service.
