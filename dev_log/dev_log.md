@@ -3933,3 +3933,8 @@ New additive client+tests, **40new/158TTSrelated PASS0.39s/0FAIL/0SKIP**, một 
 
 
 Public audio first qualification giữ nguyên lỗi đầu: upload và prediction POST thành công, SSE trả `404: Session not found.`, observed1of5/0controlsPASS/2.867s, không có usable model judgement, chưa24case review. Dừngpacket, giữrawSSE/metadata/firstfreeze. Đối chiếu đúng officialGradio5.23.1 routes/queueing: GET `/call/.../{event_id}` đọc queue theoevent_id, nhưng customsession_hash làm event queue nằm ởsession khác. Đây là lỗi clienttransport cần sửa, không phải bằng chứng model có/không nghe được. First request remote completion không xác minh được; không tuyên bố provider đãdrain/xóa dữliệu. Lưu nguyên3source/ADR trướcfix, giữfirstfreeze626/sourcebytes làm lịch sử.
+
+
+Session fix đã thêm regression và durable owned event receipt trước GET; **41new/159TTSrelated PASS0.35s**, first failedcustomsession source/results vẫn nguyên. Qualified transport gửi đúngevent-linked session, nhưng upstream trả `event:error/data:null`, chưa usablejudgement. Probe riêng theo đúng systemprompt mặc định của publicdemo cũng error,2.799s; không dùng probe thành qualityscore. Không có control/model-judgement PASS, chưa review24cases. Đã dừngpacket, giữ first/qualified/default-diagnostic kết quả riêng; không khẳng định remote cleanup/retention.
+
+Readonly metadata discovery tiếp tìmQwen3.5-Omni-Offline-Demo đangRUNNING/public API nhận audio, sourcepin2888772e/sourcehash86f22b... dùngaliasqwen3.5-omni-plus với text-onlyoutput. Qwen3Omni demo cũngRUNNING; NVIDIAaudio-flamingo3 BUILD_ERROR. Chưa gọiinference trên các alternative. Đây là service-tool discovery, không tảiweights/đổi deployed model hoặc giọng.
