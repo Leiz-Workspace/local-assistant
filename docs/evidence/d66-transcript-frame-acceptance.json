@@ -1,0 +1,39 @@
+{
+  "description": "D66 local supplied-transcript/frame timeline acceptance with actual native speech/clock/pixel source binding. Explicit provided unverified reference, not automatic speech recognition, word alignment or original historic video.",
+  "status": "PASS_LOCAL_PROVIDED_TRANSCRIPT_FRAME_TIMELINE",
+  "new_controls": 73,
+  "related_passed": 368,
+  "related_elapsed_seconds": 22.9,
+  "private_evaluator_controls": 19,
+  "private_audit_controls": 185,
+  "actual_elapsed_seconds": 2.994,
+  "source_files": 596,
+  "all580_prior_source_bytes_unchanged": true,
+  "provided_transcript_window_seconds": [
+    0,
+    11
+  ],
+  "observed_frame_seconds": [
+    0,
+    4,
+    8
+  ],
+  "deterministic_summary": true,
+  "ordinary_text_recovery": true,
+  "ASR_attempts": 0,
+  "ASR_evaluated": false,
+  "word_alignment_verified": false,
+  "models_downloaded": 0,
+  "models_replaced": 0,
+  "human_independent": false,
+  "semantic_validation": false,
+  "confidence": null,
+  "production_API_UI_wiring": false,
+  "prior_full": {
+    "passed": 4265,
+    "source_files": 562,
+    "current_full_claim": false
+  },
+  "collection_only": 4461,
+  "D67": "NEXT_EXISTING_MULTIMODAL_RESOURCE_CONTEXT_PERFORMANCE"
+}

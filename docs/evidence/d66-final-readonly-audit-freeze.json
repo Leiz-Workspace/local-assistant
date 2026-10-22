@@ -1,0 +1,11 @@
+{
+  "description": "Tested final D66 read-only verifier and exact original first source-bound timeline/summary; every previous result retained unchanged.",
+  "sha256": {
+    "data/backups/d66-transcript-frame-readonly-audit.py": "ba4d0907bfb3fb0b0e0616eafc7f19335f572ff2a8e707d97618193efdb9750b",
+    "data/backups/test_d66_transcript_readonly_audit.py": "4fee1bf18d3ba12e864c0b7aab137642e6ffe2710d821857ebeed3ba31aafc2a",
+    "data/backups/d66-final-readonly-audit-controls.log": "7f6b870c05e013ebffde99372c8848e1eda207b353661478185363ec6cc14d1c",
+    "docs/evidence/d66-transcript-frame-first-freeze.json": "219e90079e5a3d0d5b67676fe6a8db68aa56e19e259983ca591239d63394f630",
+    "data/backups/d66-transcript-frame-first/summary.json": "01b58256ab07753247b59a5ed73c10c28400fe087a6139e4b87d8ef2754611bb",
+    "data/backups/d66-transcript-frame-first/timeline.txt": "6f98c69b31a2d949cb88516b8bd751d52366622e068eb46e1ff7d58cc7fae3d0"
+  }
+}
