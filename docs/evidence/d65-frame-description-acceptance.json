@@ -1,0 +1,28 @@
+{
+  "description": "D65 local sparse host-timestamped original CORE frame descriptions, unverified/ephemeral/no continuous-motion or audio transcript claim.",
+  "status": "PASS_LOCAL_HOST_TIMESTAMPED_FRAME_DESCRIPTIONS",
+  "new_controls": 40,
+  "related_passed": 289,
+  "related_elapsed_seconds": 17.53,
+  "private_evaluator_controls": 13,
+  "private_audit_controls": 161,
+  "actual_frames_passed": 3,
+  "actual_frames_total": 3,
+  "actual_elapsed_seconds": 2.7,
+  "ordinary_text_recovery": true,
+  "source_files": 580,
+  "all576_prior_source_bytes_unchanged": true,
+  "model_replacements": 0,
+  "model_downloads": 0,
+  "production_API_UI_wiring": false,
+  "audio_transcribed": false,
+  "continuous_motion_verified": false,
+  "semantic_validation": false,
+  "confidence": null,
+  "prior_full": {
+    "passed": 4265,
+    "source_files": 562,
+    "current_full_claim": false
+  },
+  "D66": "NEXT_TRANSCRIPT_FRAME_JOIN_REQUIRES_ACTUAL_ASR_DEPENDENCY"
+}

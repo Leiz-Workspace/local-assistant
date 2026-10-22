@@ -1,0 +1,6 @@
+{
+  "description": "A test-only callback docstring edit introduced an extra quote; related invocation failed during collection/exit2 and executed no tests. Original file/log retained; remove only the extra quote before freezing actual evaluation. Prior40 executed controls remain separate.",
+  "status": "COLLECTION_ERROR_RETAINED",
+  "source_sha256": "3f5758b43897b388ef08ec19511ad8302012645808b8ca4fbf46adc9e50359bf",
+  "log_sha256": "aaae8aa4a62d878e3cc7484bea526d4f0ad6c3d7c1315e5174930f209e027c25"
+}
