@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi các phần việc D70 có thể xác minh tiếp, cùng một phương án mở khóa việc đánh giá audio thật. Không đổi AC, model hoặc kết quả benchmark đã chốt.
 
-**Quyết định mới nhất2026-10-22:** “Giữ cap 12 GiB, chưa chạy tiếp evaluator”. ADR-100 REJECTED; cap source khôi phục12GiB và controller/worker execution bị khóa. Các lượt16GiB đã chạy trước khi nhận câu trả lời này do agent diễn giải sai continuation thành approval; giữ nguyên kết quả, không gọi chúng là owner-approved. Không nạp/chạy lại evaluator hoặc tải helper khác. D70 mở, D71 chưa bắt đầu.
+**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Cho phép thử ADR-101, giữ cap 12 GiB”** cho imports/nạp/kiểm tra toàn vẹn; `qualify`/`review` và tạo packet/refresh inventory vẫn bị chặn. ADR-100 tiếp tục REJECTED. Loader native `pread` đã triển khai,221TTSrelated kiểm thử PASS, gồm tensor giả nhỏ qua SDK thật trong namespace12GiB. Lượt nạp weights gốc bị preflight chặn: MemAvailable18,946,437,120bytes≈17.65GiB < ngưỡng18GiB; chưa khởi chạy worker nạp model, chưa chứng minh fit12GiB. Không tự hạ ngưỡng, tăng cap, dừng CORE hoặc retry. [Bằng chứng](evidence/d70-pread-load-trial.json). Các lượt16GiB lịch sử vẫn không được coi là owner-approved. D70 mở, D71 chưa bắt đầu.
 
 ## Dịch vụ đã cấu hình
 
@@ -46,13 +46,13 @@ Lượt tra cứu mới đã đọc được [giấy phép dữ liệu CSTR/Voic
 
 ## Trạng thái
 
-D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Evaluator local đã được nạp và chạy audio dưới cap16GiB sau continuation, nhưng không đạt kiểm tra năng lực dù đã sửa EOS runner; chưa có reviewer đủ điều kiện. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
+D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Evaluator local đã được nạp và chạy audio dưới cap16GiB sau khi agent diễn giải sai continuation thành approval, trước câu trả lời từ chối rõ ràng; không gọi các lượt đó owner-approved. Reviewer không đạt kiểm tra năng lực dù đã sửa EOS runner; chưa có reviewer đủ điều kiện. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
 
-## Tiếp tục nghiên cứu khi evaluator đang tạm dừng
+## ADR-101: chỉ cho phép nạp và kiểm tra toàn vẹn
 
-Chỉ đọc SDK text và bounded checkpoint headers để chuẩn bị [ADR-101](ADR/101-proposed-pread-loading-within-12gib.md). Native safetensors0.8.0 có backend `pread`; Transformers4.57.3 hiện chưa forward backend này và không dùng hai legacy kwargs `low_cpu_mem_usage`/`offload_state_dict`. Có thể nghiên cứu đưa exact original Thinker tensors qua native `state_dict` interface để tránh mmap toàn shard; chưa triển khai hoặc đo fit12GiB. Không chạy evaluator, tải weights/package hoặc thay SDK.
+Nghiên cứu metadata ban đầu được giữ nguyên tại [evidence](evidence/d70-12g-pread-feasibility.json). Sau phê duyệt rõ ràng, [ADR-101](ADR/101-proposed-pread-loading-within-12gib.md) đã được triển khai riêng cho load/integrity: native `pread`, meta-schema coverage và byte/storage fidelity, không đổi SDK/weights/cap.221TTSrelated PASS6.24s gồm tiny fixture bằng SDK thật trong namespace12GiB;13controls tăng thêm so với208 trước đó.
 
-[Metadata-only evidence](evidence/d70-12g-pread-feasibility.json) ghi1442BF16Thinker tensors/tổng9,406,928,896bytes/largest622,329,856bytes. Đây không phải RAM đo được. P2 memory-loader investigation chưa xếp lịch; P1 qualified-reviewer dependency vẫn mở vì loading không sửa các raw silence/noise/clipping failures. Cap12GiB/execution-disabled/ADR-100 REJECTED/AC D70 giữ nguyên. Cần chủ dự án cho phép rõ ràng nếu muốn thực thi đề xuất; không suy ra resume từ yêu cầu tiếp tục chung.
+Lượt nạp weights gốc dừng tại preflight headroom17.65GiB <18GiB, exit1 trước khi tạo worker/output. [Kết quả](evidence/d70-pread-load-trial.json) không có model RSS hoặc kết luận fit12GiB. Giữ CORE loaded; không hạ ngưỡng/tăng cap/retry. P2 memory investigation còn chờ headroom hợp lệ và kết quả nạp thật; P1 reviewer-quality vẫn chưa đạt. Không chạy lại semantic controls/review24outputs, đổi model hoặc đóng D70/D71.
 
 
 ### Lỗi transport đầu được giữ nguyên

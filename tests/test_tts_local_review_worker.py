@@ -132,15 +132,16 @@ def test_owner_pause_blocks_direct_worker_before_sdk_or_input(monkeypatch, capsy
         raise AssertionError("paused_worker_side_effect")
     monkeypatch.setattr(worker.os, "sched_setaffinity", forbidden)
     monkeypatch.setattr(worker, "Runtime", forbidden)
-    assert not worker.EXECUTION_ALLOWED
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", False)
     with pytest.raises(ValueError, match="owner_paused_execution"):
         worker.main()
     assert capsys.readouterr().out == ""
 
 
 @pytest.mark.parametrize("load", [False, True])
-def test_owner_pause_blocks_runtime_constructor_before_neural_imports(load):
+def test_owner_pause_blocks_runtime_constructor_before_neural_imports(load, monkeypatch):
     """Reject direct runtime construction as well as CLI entry points while the owner pause is active."""
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", False)
     with pytest.raises(ValueError, match="owner_paused_execution"):
         worker.Runtime(load)
 
@@ -152,5 +153,33 @@ def test_owner_pause_blocks_review_on_an_existing_runtime(monkeypatch):
         raise AssertionError("paused_runtime_input_access")
     monkeypatch.setattr(worker, "waveform", forbidden)
     runtime = object.__new__(worker.Runtime)
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", False)
     with pytest.raises(ValueError, match="owner_paused_execution"):
+        runtime.review({})
+
+
+@pytest.mark.parametrize("mode", ["imports", "load"])
+def test_adr101_allows_only_import_and_load_policy(mode):
+    """Reflect the explicit limited owner resume without importing SDKs or claiming model success."""
+    worker.require_execution_permission(mode)
+
+
+def test_adr101_rejects_direct_audio_worker_before_affinity(monkeypatch):
+    """Prevent direct worker invocation from bypassing the load-only controller scope."""
+    import io
+
+    def forbidden(*args, **kwargs):
+        """Fail if an unapproved audio mode reaches affinity changes or neural construction."""
+        raise AssertionError("unapproved_audio_side_effect")
+    monkeypatch.setattr(worker.os, "sched_setaffinity", forbidden)
+    monkeypatch.setattr(worker, "Runtime", forbidden)
+    monkeypatch.setattr(worker.sys, "stdin", SimpleNamespace(buffer=io.BytesIO(json.dumps(request()).encode())))
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
+        worker.main()
+
+
+def test_adr101_rejects_review_on_retained_runtime():
+    """Block inference on already allocated objects even while fresh loading is approved."""
+    runtime = object.__new__(worker.Runtime)
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
         runtime.review({})

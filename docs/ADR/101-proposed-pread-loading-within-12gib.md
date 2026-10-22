@@ -1,8 +1,8 @@
-# ADR 101 — Proposed original-tensor loading within the retained12GiB cap
+# ADR 101 — Original-tensor loading within the retained12GiB cap
 
-**Purpose:** Prepare a concrete memory-loading investigation without resuming the paused evaluator, changing agreed models or claiming that loading repairs its quality failures.
+**Purpose:** Authorize a bounded original-tensor loading/integrity investigation without resuming audio evaluation, changing agreed models or claiming that loading repairs its quality failures.
 
-**Date:** 2026-10-22. **Status: PROPOSED — NOT IMPLEMENTED, NOT EXECUTED.** ADR-100 remains REJECTED; cap12GiB and execution-disabled policy remain unchanged. The owner's generic request to continue does not resume the evaluator.
+**Date:** 2026-10-22. **Status: APPROVED FOR LOAD/INTEGRITY ONLY.** Explicit owner reply: **“Cho phép thử ADR-101, giữ cap 12 GiB”**. This resumes only imports/load for this experiment. Audio qualification/review and packet/inventory preparation remain blocked. ADR-100 remains REJECTED; no16GiB permission is inferred.
 
 ## Findings from source and headers only
 
@@ -10,7 +10,7 @@ The installed safetensors0.8.0 exposes `safe_open(..., backend="pread")`. Its [o
 
 Readonly original headers contain1442Thinker tensors, allBF16, totalling9,406,928,896bytes; largest tensor622,329,856bytes. These are serialized tensor bytes, not measured RSS or a proven address-space requirement. This inspection read bounded JSON headers and SDK text only: no tensor data, neural SDK import, allocation, model load or inference. [Feasibility evidence](../evidence/d70-12g-pread-feasibility.json).
 
-## Proposed experiment, only after explicit resume
+## Approved bounded experiment
 
 Use native safetensors `pread` to read only the exact original `thinker.*` tensors, retaining the original shards and their complete hash checks. Pass these unmodified tensors to the genuine Thinker `from_pretrained(None, config=original_thinker_config, state_dict=...)` interface. Preserve the original parameter names and original BF16 bytes; no tensor slicing/repacking/quantization, SDK monkeypatch or new model/download. The loader's coverage/missing/mismatch/storage/device/dtype accounting must reject partial or substituted state. Keep the tested original EOS/padding boundary handling.
 
@@ -24,8 +24,10 @@ The previous evaluator's first-turn outputs called silence/noise speech and seve
 
 ## Priority, dependencies, effort and risk
 
-**AUDIO-EVAL-LOAD-12G-001: P2, assessed but not scheduled for execution.** One loader investigation milestone; depends on explicit owner resume, unchanged artifacts/SDK, tiny-fixture tests and actual native-load evidence within12GiB. The **P1 D70 dependency remains a reviewer that passes factual/quality controls**. This P2 work cannot replace that dependency or justify advancing the roadmap.
+**AUDIO-EVAL-LOAD-12G-001: P2, approved for load/integrity only.** One loader investigation milestone; depends on the explicit limited owner resume above, unchanged artifacts/SDK, tiny-fixture tests and actual native-load evidence within12GiB. The **P1 D70 dependency remains a reviewer that passes factual/quality controls**. This P2 work cannot replace that dependency or justify advancing the roadmap.
 
 Risks: native CPU tensor copies exceed the virtual cap; hidden storage/dtype/key changes; unwanted model components loaded; memory progress mistaken for auditory reliability; repeating controls to pick favourable output. Keep full originals, independent complete-byte checks, first-result retention and strict separation of memory and quality conclusions.
 
-Rollback stops/joins only the owned trial if later authorized; retain its logs and original artifacts. Current state needs no migration or cleanup: evaluator execution stays disabled, cap12GiB, rejected16GiB decision and all historical results preserved. No application/service/database/Vault/Docker/registry change is authorized by this proposal.
+Rollback stops/joins only the owned approved trial; retain its logs and original artifacts. No data migration is needed: semantic evaluator execution stays disabled, load-only execution is allowed at cap12GiB, rejected16GiB decision and all historical results preserved. No application/service/database/Vault/Docker/registry change is authorized by this proposal.
+
+Outcome evidence is retained separately in [the bounded trial report](../evidence/d70-pread-load-trial.json), including preflight rejection if headroom is insufficient. Approval does not imply that an actual original-weight load has run or succeeded.

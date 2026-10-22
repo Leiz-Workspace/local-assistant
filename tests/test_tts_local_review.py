@@ -72,7 +72,7 @@ def test_sealed_cpu_limits_and_no_parent_labels(tmp_path):
 def test_common_review_blocked_without_passed_first_qualification(tmp_path, monkeypatch):
     """Never prepare or execute common24observations while genuine capability evidence is missing."""
     monkeypatch.setattr(review, "ROOT", tmp_path)
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
         review.prepare_review()
     assert not (tmp_path / "review").exists()
 
@@ -136,7 +136,7 @@ def test_owner_pause_blocks_every_execution_mode_before_side_effects(tmp_path, m
     monkeypatch.setattr(review, "run_worker", forbidden)
     monkeypatch.setattr(review, "core_snapshot", forbidden)
     monkeypatch.setattr(review, "runtime_entries", forbidden)
-    assert not worker.EXECUTION_ALLOWED
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", False)
     with pytest.raises(ValueError, match="owner_paused_execution"):
         review.run(mode, tmp_path / "run")
     assert not (tmp_path / "run").exists()
@@ -147,5 +147,43 @@ def test_owner_pause_blocks_cli_metadata_modes_too(tmp_path, monkeypatch):
     import sys
 
     monkeypatch.setattr(sys, "argv", ["tts_local_review", "--mode", "snapshot-runtime"])
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", False)
     with pytest.raises(ValueError, match="owner_paused_execution"):
         review.main()
+
+
+@pytest.mark.parametrize("mode", ["qualify", "review"])
+def test_adr101_load_permission_does_not_resume_audio(mode, tmp_path, monkeypatch):
+    """Reject semantic-control/common-review execution before any output or service access under partial owner approval."""
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", True)
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
+        review.run(mode, tmp_path / "run")
+    assert not (tmp_path / "run").exists()
+
+
+@pytest.mark.parametrize("action", [review.prepare, review.prepare_review, review.snapshot_runtime])
+def test_adr101_preserves_prior_packets_and_runtime_inventory(action, tmp_path, monkeypatch):
+    """Prevent the load-only approval from preparing new audio packets or refreshing the original SDK inventory."""
+    monkeypatch.setattr(review, "ROOT", tmp_path)
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
+        action()
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_parent_payload_audit_requires_exact_receipts(tmp_path):
+    """Refuse absent, partial, duplicate, changed or foreign tensor receipts even if a native worker reports ready."""
+    from scripts.tts_local_review_pread import file_tensor_hash, tensor_manifest
+    from tests.test_tts_local_review_pread import tiny_manifest
+
+    tiny_manifest(tmp_path)
+    manifest = tensor_manifest(tmp_path)
+    row = manifest["thinker.weight"]
+    receipt = dict(event="pread_fidelity", backend="pread", tensors=1, bytes=4, original_storage_shared=True, dtype="torch.bfloat16", device="cpu", complete_original_payload_sha256={"thinker.weight": dict(sha256=file_tensor_hash(tmp_path / row["shard"], row), shape=[2], bytes=4)})
+    assert review.audit_load_fidelity([receipt], tmp_path)
+    assert not review.audit_load_fidelity([], tmp_path)
+    assert not review.audit_load_fidelity([receipt, receipt], tmp_path)
+    for field, value in [("original_storage_shared", False), ("dtype", "torch.float32"), ("complete_original_payload_sha256", {}), ("tensors", True)]:
+        assert not review.audit_load_fidelity([dict(receipt, **{field: value})], tmp_path)
+    changed = copy.deepcopy(receipt)
+    changed["complete_original_payload_sha256"]["thinker.weight"]["sha256"] = "0" * 64
+    assert not review.audit_load_fidelity([changed], tmp_path)
