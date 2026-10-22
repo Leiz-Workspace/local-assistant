@@ -26,6 +26,8 @@ from scripts.tts_local_review_worker import (
 )
 
 logger = logging.getLogger(__name__)
+ADDRESS_SPACE_BYTES = 16 * 1024**3
+MIN_AVAILABLE_BYTES = 18 * 1024**3
 
 
 def sha(raw):
@@ -106,7 +108,7 @@ def prepare():
 
 def require_qualification():
     """Require genuine complete frozen first controls and unchanged protocol/runtime before any common-output review is prepared or executed."""
-    path = ROOT / "qualification-first"
+    path = ROOT / "qualification-eos-qualified"
     result = json.loads((path / "result.json").read_text())
     frozen = json.loads((path / "freeze.json").read_text())
     if not result["observation_complete"] or not result["qualification"]["passed"] or result["freeze_sha256"] != sha((path / "freeze.json").read_bytes()):
@@ -175,7 +177,7 @@ def record_signal(directory, rows, values):
 
 
 def sandbox(mode, samples):
-    """Expose only approved readonly model/SDK/worker/blind samples in a credential-free CPU namespace within the exact ADR-098 limits."""
+    """Expose only readonly model/SDK/worker/blind samples within ADR-100's16GiB virtual cap and the retained ADR-098 CPU/offline limits."""
     command = ["/usr/bin/bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL", "--clearenv", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--ro-bind", str(ROOT / "venv"), "/venv", "--ro-bind", str(ROOT / "model"), "/model", "--dir", "/app", "--ro-bind", str(PROJECT / "scripts/tts_local_review_worker.py"), "/app/worker.py", "--ro-bind", str(samples), "/samples", "--proc", "/proc", "--dev", "/dev", "--size", str(128 * 1024**2), "--tmpfs", "/tmp", "--dir", "/etc"]
     for name in ["passwd", "group"]:
         command.extend(["--ro-bind", str(ROOT / "runtime-source" / name), "/etc/" + name])
@@ -183,7 +185,20 @@ def sandbox(mode, samples):
     for key, value in environment.items():
         command.extend(["--setenv", key, value])
     cpu = 14400 if mode == "review" else 1200
-    return command + ["--chdir", "/app", "--remount-ro", "/", "--", "/usr/bin/prlimit", "--as=12884901888", f"--cpu={cpu}:{cpu+1}", "--nofile=128", "--fsize=16777216", "--core=0", "--", "/venv/bin/python", "/app/worker.py"]
+    return command + ["--chdir", "/app", "--remount-ro", "/", "--", "/usr/bin/prlimit", f"--as={ADDRESS_SPACE_BYTES}", f"--cpu={cpu}:{cpu+1}", "--nofile=128", "--fsize=16777216", "--core=0", "--", "/venv/bin/python", "/app/worker.py"]
+
+
+def require_headroom(path=Path("/proc/meminfo")):
+    """Reject neural loading unless current host MemAvailable meets the18GiB preflight condition; this does not reserve memory or measure model RAM."""
+    matches = [line.split() for line in path.read_text().splitlines() if line.startswith("MemAvailable:")]
+    if len(matches) != 1 or len(matches[0]) != 3 or matches[0][2] != "kB":
+        raise ValueError("local_review_host_memory_metadata")
+    available = int(matches[0][1]) * 1024
+    if available < MIN_AVAILABLE_BYTES:
+        logger.warning("local_audio_review_headroom_rejected available_bytes=%d required_bytes=%d", available, MIN_AVAILABLE_BYTES)
+        raise ValueError("local_review_host_memory_headroom")
+    logger.info("local_audio_review_headroom_pass available_bytes=%d required_bytes=%d", available, MIN_AVAILABLE_BYTES)
+    return dict(MemAvailable_bytes=available, required_bytes=MIN_AVAILABLE_BYTES, address_space_cap_bytes=ADDRESS_SPACE_BYTES, reserved_memory=False)
 
 
 def audit_events(request, events):
@@ -228,6 +243,8 @@ def run(mode, output):
     output = Path(output)
     if mode == "review":
         require_qualification()
+    if mode != "imports":
+        require_headroom()
     output.mkdir(mode=0o700, exist_ok=False)
     if mode in {"imports", "load"}:
         samples = ROOT / "empty-inputs"
@@ -245,10 +262,12 @@ def run(mode, output):
     if runtime_entries() != json.loads((ROOT / "runtime-integrity.json").read_text())["files"]:
         raise ValueError("local_review_runtime_integrity")
     artifacts = {row["filename"]: verify(ROOT / "model" / row["filename"], row) for row in specs()}
-    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md"]}
-    publish_json(output / "freeze.json", dict(description="Before first local audio-conditioned inference; blind request, exact original model/worker limits, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=12884901888))
+    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md"]}
+    publish_json(output / "freeze.json", dict(description="Before first local audio-conditioned inference; blind request, ADR-10016GiB virtual bound, no model replacement or AC waiver. Original12GiB failure retained separately.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES))
     before = core_snapshot()
     publish_json(output / "core-before.json", before)
+    if mode != "imports":
+        publish_json(output / "host-headroom-before-launch.json", require_headroom())
     metadata, stdout, stderr = run_worker(sandbox(mode, samples), request, timeout=7200 if mode == "review" else 600)
     save_bytes(output / "worker.stdout.jsonl", stdout)
     save_bytes(output / "worker.stderr.log", stderr)
