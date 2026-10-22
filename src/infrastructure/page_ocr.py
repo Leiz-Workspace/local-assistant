@@ -8,6 +8,7 @@ import tempfile
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ocr_contract import MAX_WORKER_BYTES, validate_page
 from src.infrastructure.file_verifier import sandbox_command
+from src.infrastructure.native_input import rewind_native_input
 
 logger = logging.getLogger(__name__)
 OCR_WALL_SECONDS = 25
@@ -30,7 +31,7 @@ def prepare_page(source, suffix, number=1, mode="auto"):
         or mode not in ("auto", "ocr", "vlm")
     ):
         raise StoragePolicyError("invalid_ocr_request", 422)
-    source.seek(0)
+    rewind_native_input(source)
     try:
         with tempfile.TemporaryFile() as output:
             result = subprocess.run(
@@ -60,7 +61,7 @@ def prepare_page(source, suffix, number=1, mode="auto"):
     except OSError:
         raise StoragePolicyError("ocr_processing_unavailable", 503) from None
     finally:
-        source.seek(0)
+        rewind_native_input(source)
     if result.returncode or len(data) > MAX_WORKER_BYTES:
         raise StoragePolicyError("ocr_processing_unavailable", 503)
     try:

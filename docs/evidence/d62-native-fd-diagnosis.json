@@ -1,0 +1,28 @@
+{
+  "description": "Finite readonly original fixture/kernel-offset/renderer diagnostics; no raw PDF/raster/stderr retained. Original native limits unchanged.",
+  "fixture_bytes": 1565,
+  "buffered_read": {
+    "logical": 1,
+    "kernel": 1565
+  },
+  "logical_seek_only": {
+    "logical": 0,
+    "kernel": 1565
+  },
+  "synchronized_seek": {
+    "logical": 0,
+    "kernel": 0
+  },
+  "direct_original_limits_renderer": {
+    "returncode": 0,
+    "PNG_bytes": 22316,
+    "stderr_bytes": 6512,
+    "stderr_sha256": "fc49cee87bfe0ddce94d1007894575e8ec60f46671f5ba2fe5c53e7c934923f5"
+  },
+  "original_worker_child": {
+    "returncode": 1,
+    "stderr_bytes": 39,
+    "stderr_sha256": "1316070ea1e7fea2b40e56e9345177b3190489508d52ed9d5c9ffd19f3f272a1"
+  },
+  "empty_stream_message_digest_matches": true
+}

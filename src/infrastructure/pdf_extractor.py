@@ -9,6 +9,7 @@ from typing import BinaryIO
 
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.infrastructure.file_verifier import sandbox_command
+from src.infrastructure.native_input import rewind_native_input
 
 logger = logging.getLogger(__name__)
 MAX_PAGE_TEXT_BYTES = 128 * 1024
@@ -55,7 +56,7 @@ def extract_pdf(source: BinaryIO) -> list[dict]:
     command = sandbox_command(
         ["/venv/bin/python", "-m", "src.infrastructure.pdf_extractor_worker"]
     )
-    source.seek(0)
+    rewind_native_input(source)
     try:
         with tempfile.TemporaryFile() as output:
             result = subprocess.run(
@@ -76,7 +77,7 @@ def extract_pdf(source: BinaryIO) -> list[dict]:
     except OSError:
         raise StoragePolicyError("extraction_unavailable", 503) from None
     finally:
-        source.seek(0)
+        rewind_native_input(source)
     if result.returncode or len(data) > MAX_EXTRACTION_OUTPUT_BYTES:
         raise StoragePolicyError("extraction_unavailable", 503)
     try:

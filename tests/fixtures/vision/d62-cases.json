@@ -1,0 +1,20 @@
+{
+  "description": "D62 paired native-first/CORE VLM visible authored source-page corpus, frozen before actual measurement; no model replacement or general quality claim.",
+  "cases": [
+    {"id":"native-pdf-ascii","fixture":"tests/fixtures/pdf/native-pages.pdf","page":1,"kind":"prose","criterion":"transcription","expected_text":"Page one: Alpha 123\nSecond line."},
+    {"id":"native-pdf-empty","fixture":"tests/fixtures/pdf/native-pages.pdf","page":3,"kind":"prose","criterion":"known_blank","expected_text":""},
+    {"id":"clean-english-image","fixture":"tests/fixtures/ocr/clean.png","page":1,"kind":"prose","criterion":"transcription","expected_text":"LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD"},
+    {"id":"scanned-english-page","fixture":"tests/fixtures/ocr/scanned.pdf","page":1,"kind":"prose","criterion":"transcription","expected_text":"LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD"},
+    {"id":"scanned-blank-page","fixture":"tests/fixtures/ocr/scanned.pdf","page":2,"kind":"prose","criterion":"known_blank","expected_text":""},
+    {"id":"blank-image","fixture":"tests/fixtures/ocr/blank.png","page":1,"kind":"prose","criterion":"known_blank","expected_text":""},
+    {"id":"blurred-latent-text","fixture":"tests/fixtures/ocr/unclear.png","page":1,"kind":"prose","criterion":"uncertainty_detection","expected_text":"uncertain 7381"},
+    {"id":"vietnamese-table","fixture":"tests/fixtures/ocr/table-vie.png","page":1,"kind":"table","criterion":"table_grid","expected_rows":[["Tên hàng","Số lượng"],["Bút","3"],["Vở","5"]]}
+  ],
+  "absent_fields": [
+    {"id":"missing-invoice-due-date","fixture":"tests/fixtures/ocr/clean.png","question":"What is the invoice due date?","absence_patterns":["not available","not visible","not provided","unknown","not explicitly"],"requires_uncertainty":true},
+    {"id":"missing-table-unit-price","fixture":"tests/fixtures/ocr/table-vie.png","question":"Trong ảnh, đơn giá của Bút là bao nhiêu?","absence_patterns":["not available","not visible","not provided","unknown","không có","không được","không thể","chưa có"],"requires_uncertainty":true}
+  ],
+  "text_recovery_expected":"D62_TEXT_OK",
+  "model":"qwen3.5-9b-core",
+  "automatic_retries":0
+}

@@ -1,0 +1,17 @@
+{
+  "description": "Original first incomplete13of16 paired observations and eight real red buffered-source/raster tests with all six pre-repair native adapter versions. No initial label/outcome/source overwrite.",
+  "zip_sha256": "b267f294f8b66e366fd302628ea9d2eb36b9fed9fe0854b08b9429ea451f84d4",
+  "files": 21,
+  "old_source_sha256": {
+    "src/infrastructure/file_verifier.py": "70c9a42cc1738289d8cf13b680c2fd49a822caf740345a7f361f5b3d50045cba",
+    "src/infrastructure/pdf_extractor.py": "56e8db025bb5fdb04ee2766563caeb520ff10b8e3967eb284c12bf9c7af16528",
+    "src/infrastructure/docx_processor.py": "a001ff8bae14b0a8722c22cd2501158dd9823630f67d9640b17d5e7c763e08dd",
+    "src/infrastructure/xlsx_processor.py": "78a8aa5da06242e00f2e1b036cd1dd39fda2725e3214872d1a1912b3ca459b94",
+    "src/infrastructure/page_ocr.py": "a8b61b3fcee84a1d2920e7af1404ce55dae29de520783c64db0b192e4e8132cf",
+    "src/infrastructure/ocr_worker.py": "6b3ef39a2027dbdbf03c9ad7cf9770c5222853b4dc4114e13863fb92784eddb1"
+  },
+  "first_summary_sha256": "6c10c772949b92c142c4883b4c5fbad6fa0bca3634689cf457a4593d82cfc6b8",
+  "reproduced_red_cases": 8,
+  "observed_modes": 13,
+  "requested_modes": 16
+}
