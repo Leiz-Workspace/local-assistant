@@ -1,0 +1,31 @@
+{
+  "description": "Actual current562-source global4265 application regression after ADR088; pytest duration differs from wrapper elapsed.",
+  "targets": [
+    "tests"
+  ],
+  "pytest_options": [
+    "-v",
+    "-rs",
+    "--tb=short",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "status": "complete",
+  "started_at_utc": "2026-10-22T04:01:04.143522+00:00",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "wrapper_pid": 1050167,
+  "source_freeze_sha256": "7321cc82d35cea3713ad880114b0e418f94d2b6749ddcb4b7456055b2b2c6f16",
+  "pytest_pid": 1050169,
+  "exit_code": 0,
+  "elapsed_seconds": 1710.11,
+  "completed_at_utc": "2026-10-22T04:29:34.252473+00:00",
+  "log_sha256": "c400531a8abc06849f00f5320797026d8729183df0d71b1e3b73a59f54bae3c4",
+  "passed": 4265,
+  "failed": 0,
+  "skipped": 0,
+  "pytest_elapsed_seconds": 1709.02,
+  "private_audit_controls": 87,
+  "supplementary_prefix_controls": 2
+}
