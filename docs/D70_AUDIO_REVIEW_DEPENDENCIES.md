@@ -6,11 +6,23 @@
 
 Đã kiểm tra readonly các path/field name của14secret hiện có trong một KV-v2 mount. Chưa tìm thấy metadata provider/audio cho một evaluator sẵn dùng. Không ghi giá trị secret, không sửa Vault và không gửi audio ra ngoài. Kết quả chỉ phản ánh các record đã kiểm tra; không suy luận chủ dự án không có tài khoản ở nơi khác.
 
-## Dịch vụ nhận audio công khai: đang qualification
+## Dịch vụ nhận audio công khai: chưa đạt qualification
 
 Đã xác minh API bình thường của [demo Qwen chính thức](https://huggingface.co/spaces/Qwen/Qwen2.5-Omni-7B-Demo). Serving code dùng alias `qwen-omni-turbo`; tên Space7B không chứng minh backend là checkpoint7B nguyên bản. Không cần model download hoặc credential của chủ dự án. [ADR-099](ADR/099-bounded-public-audio-review-qualification.md) chốt scope synthetic controls, blind inputs, bounds và first-result retention trước inference. Online reviewer không được gọi là khả năng nghe trực tiếp của assistant hoặc human MOS.
 
-40new client controls/158related PASS0.39s, protocol626source/all624prior nguyên byte và5controls đã freeze. Chưa có inference/qualification result tại checkpoint này; chỉ khi control checks đạt mới xem xét24audio benchmark. Giữ AC tại D70 và ADR-097 REJECTED.
+Đã thử cả demo trên và [Qwen3.5-Omni-Offline-Demo](https://huggingface.co/spaces/Qwen/Qwen3.5-Omni-Offline-Demo), dùng alias `qwen3.5-omni-plus`. “Offline” là tên interface batch-media; đây vẫn là dịch vụ cloud. Backend checkpoint/seed không được xác minh. Mọi packet dừng ở control đầu tiên, chưa gửi bốn control còn lại hoặc bất kỳ waveform nào trong24benchmark outputs.
+
+| Lượt được giữ riêng | Kết quả quan sát | Ý nghĩa |
+| --- | --- | --- |
+| Qwen2.5, transport đầu | SSE `404: Session not found.` | Lỗi custom session của client; đã xác minh bằng source Gradio5.23.1, giữ nguyên first failure/source/freeze |
+| Qwen2.5, transport sửa đúng event-linked session | SSE `event:error`, `data:null` | Không có usable judgement; không suy đoán nguyên nhân backend |
+| Qwen2.5, availability probe theo default system prompt | Cùng error event,2.799s | Probe riêng, không phải quality result |
+| Qwen3.5, schema/interface thực tế | SSE `event:error`, `data:null` | Chưa đủ qualification; không review24outputs |
+| Qwen3.5, SDK Gradio chính thức, hai workers | Upload/queue/SSE HTTP200; hết120s, exit124 | HTTP success không chứng minh có audio judgement; remote completion/cancellation chưa xác minh |
+
+SDK diagnostic dùng uv environment riêng, Python3.12.3/gradio-client1.13.3, không sửa app hoặc runtime đánh giá cũ. Giữ cả setup lỗi ở environment3.14 ban đầu, local empty-token protocol error và timeout của cấu hình một worker. Đối chiếu SDK cho thấy một worker làm request và SSE reader chờ chung executor; hai workers sửa riêng contention này, nhưng vẫn chưa nhận được kết quả trong giới hạn. Không gọi các lỗi client/setup là lỗi chất lượng model, không gọi timeout là model không hiểu audio. Chưa xác minh provider đã dừng hoặc xóa dữ liệu đã gửi.
+
+**42client tests mới/160TTS related PASS0.39s**, một expected ZIP duplicate warning từ test cũ; Ruff PASS. Đây là kiểm thử các TTS scripts liên quan, không phải full-suite626source. [Availability/integrity audit](evidence/d70-audio-evaluator-availability-audit.json) xác minh626source/toàn bộ624prior nguyên byte,176original audit inputs và23475original D70 SDK entries;24judgements gốc vẫn null/chưa nghe. Các owned SDK Python processes đã kết thúc. Không có local reviewer weights, TTS rerun hoặc model selection. Giữ AC tại D70 và ADR-097 REJECTED.
 
 ## Phương án local bổ sung vẫn cần duyệt
 
@@ -28,7 +40,7 @@ Lượt tra cứu mới đã đọc được [giấy phép dữ liệu CSTR/Voic
 
 ## Trạng thái
 
-D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc model/helper được phê duyệt. Đang thử qualify API audio công khai theo ADR-099; nếu không đạt thì chưa có evaluator được xác nhận. Local fallback theo ADR-098 vẫn cần phê duyệt riêng. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn.
+D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Local fallback theo ADR-098 vẫn là đề xuất bổ sung model nghiên cứu ngoài tập đã thống nhất, cần phê duyệt riêng trước tải weights. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
 
 
 ### Lỗi transport đầu được giữ nguyên

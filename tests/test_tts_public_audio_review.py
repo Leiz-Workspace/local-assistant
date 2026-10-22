@@ -380,3 +380,26 @@ def test_event_receipt_survives_interrupted_stream_and_uses_server_owned_session
         client.review(pcm_wave(np.zeros(16000, dtype=np.float32), 16000))
     value = json.loads((tmp_path / "receipt.json").read_text())
     assert value["event_id"] == value["session_hash"] == "b" * 32
+
+
+def test_current_official_endpoint_has_exact_fixed_origin_and_declared_text_only_schema():
+    """Use the separately inspected current public demo without allowing arbitrary hosts, credentials or hidden reference-text parameters."""
+    client = PublicDemo(service="qwen35")
+    data = client.prediction_data(dict(path="/tmp/gradio/fixture/clip.wav"))
+    assert len(data) == 9 and data[0] == PROMPT and data[4] == [] and data[5] == ""
+    assert data[6:] == [0.0, 1.0, 20]
+    captured = []
+
+    def opened(request, **kwargs):
+        """Capture only declared request authority without contacting the provider."""
+        captured.append(request)
+        return SimpleNamespace()
+
+    client.opener = SimpleNamespace(open=opened)
+    client.open("POST", "/gradio_api/upload", b"fixture", "application/octet-stream")
+    assert (
+        captured[0].full_url
+        == "https://qwen-qwen3-5-omni-offline-demo.hf.space/gradio_api/upload"
+    )
+    with pytest.raises(ReviewError):
+        PublicDemo(service="https://foreign.invalid")

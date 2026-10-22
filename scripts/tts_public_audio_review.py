@@ -23,6 +23,11 @@ from scripts.asr_evaluation_corpus import save_bytes
 logger = logging.getLogger(__name__)
 PROJECT = Path(__file__).resolve().parents[1]
 BASE = "https://qwen-qwen2-5-omni-7b-demo.hf.space"
+ORIGINS = {"qwen25": BASE, "qwen35": "https://qwen-qwen3-5-omni-offline-demo.hf.space"}
+REVIEWERS = {
+    "qwen25": "Official Qwen2.5 demo / qwen-omni-turbo alias; backend checkpoint/settings unverified",
+    "qwen35": "Official Qwen3.5 offline demo / qwen3.5-omni-plus alias; backend checkpoint unverified",
+}
 PROMPT = (
     "Evaluate the attached audio itself. Do not infer audio content from the request or filename. "
     "Return only one JSON object with these exact keys: presence, language, naturalness, confidence, artifacts, prosody, notes. "
@@ -342,11 +347,20 @@ def extract_review(events):
 class PublicDemo:
     """Use only the normal fixed-origin published anonymous upload/prediction/event interface without credentials, redirects or retries."""
 
-    def __init__(self, receipt_path=None):
+    def __init__(self, receipt_path=None, service="qwen25"):
         """Create a fresh credential-free HTTP client, keeping partial raw SSE evidence for an interrupted first request."""
+        if service not in ORIGINS:
+            raise ReviewError("public_service_scope")
+        self.service = service
         self.opener = urllib.request.build_opener(NoRedirect())
         self.raw_stream = bytearray()
         self.receipt_path = Path(receipt_path) if receipt_path is not None else None
+
+    def prediction_data(self, audio):
+        """Use only each retained official endpoint's exact positional schema while withholding labels, references, candidate names and scores."""
+        if self.service == "qwen25":
+            return [PROMPT, audio, None, None, [], SYSTEM, "Cherry"]
+        return [PROMPT, audio, None, None, [], "", 0.0, 1.0, 20]
 
     def open(self, method, path, data=None, content_type=None):
         """Refuse foreign paths or headers before creating a verified HTTPS request to the exact public demo origin."""
@@ -367,7 +381,7 @@ class PublicDemo:
         if content_type:
             headers["Content-Type"] = content_type
         request = urllib.request.Request(
-            BASE + path, data=data, headers=headers, method=method
+            ORIGINS[self.service] + path, data=data, headers=headers, method=method
         )
         logger.info(
             "tts_public_demo_request method=%s operation=%s",
@@ -416,7 +430,7 @@ class PublicDemo:
                 mime_type="audio/wav",
                 meta={"_type": "gradio.FileData"},
             )
-            payload = dict(data=[PROMPT, audio, None, None, [], SYSTEM, "Cherry"])
+            payload = dict(data=self.prediction_data(audio))
             prediction = self.json_request(
                 "/gradio_api/call/chat_predict",
                 json.dumps(payload).encode(),
@@ -437,7 +451,7 @@ class PublicDemo:
                                 description="Owned public simple-call event receipt before streaming; Gradio allocates a fresh session equal to event_id when no custom session is supplied.",
                                 event_id=prediction["event_id"],
                                 session_hash=prediction["event_id"],
-                                service_origin=BASE,
+                                service_origin=ORIGINS[self.service],
                             ),
                             indent=2,
                         )
@@ -462,9 +476,11 @@ class PublicDemo:
         return extract_review(parse_events(bytes(self.raw_stream)))
 
 
-def evaluate(packet_path, output):
+def evaluate(packet_path, output, service="qwen25"):
     """Retain source-bound first responses sequentially and stop on any incomplete remote operation without hiding failed controls or rerunning a judgement."""
     packet_path, output = Path(packet_path), Path(output)
+    if service not in ORIGINS:
+        raise ReviewError("public_service_scope")
     packet = json.loads(packet_path.read_text())
     validate_packet(packet)
     output.mkdir(mode=0o700, exist_ok=False)
@@ -472,16 +488,26 @@ def evaluate(packet_path, output):
         description="Fixed protocol and opaque synthetic packet before any public audio-conditioned observation; no model downloaded/default selected.",
         packet_sha256=sha(packet_path.read_bytes()),
         prompt=PROMPT,
-        system_prompt=SYSTEM,
-        service_origin=BASE,
+        system_prompt=SYSTEM if service == "qwen25" else "",
+        service_origin=ORIGINS[service],
+        service=service,
         script_sha256=sha(Path(__file__).read_bytes()),
-        reviewer_identity="Official Qwen demo / qwen-omni-turbo alias, backend checkpoint and generation settings unverified",
+        reviewer_identity=REVIEWERS[service],
+        public_request_decode_settings={
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "top_k_interface_argument": 20,
+            "top_k_forwarded_by_public_code": False,
+            "seed_control_available": False,
+        }
+        if service == "qwen35"
+        else {"backend_defaults_unverified": True},
         kind=packet["kind"],
     )
     save_bytes(output / "freeze.json", (json.dumps(frozen, indent=2) + "\n").encode())
     observations = []
     for row in packet["cases"]:
-        client = PublicDemo(output / (row["id"] + ".receipt.json"))
+        client = PublicDemo(output / (row["id"] + ".receipt.json"), service)
         started = time.perf_counter()
         try:
             raw = load_upload(row, packet_path.parent / "inputs")
@@ -577,6 +603,7 @@ def main():
         "--mode", choices=["prepare-qualification", "evaluate"], required=True
     )
     parser.add_argument("--packet", type=Path)
+    parser.add_argument("--service", choices=sorted(ORIGINS), default="qwen25")
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args()
     if arguments.mode == "prepare-qualification":
@@ -584,7 +611,7 @@ def main():
     elif arguments.packet is None:
         parser.error("--packet is required for evaluate")
     else:
-        evaluate(arguments.packet, arguments.output)
+        evaluate(arguments.packet, arguments.output, arguments.service)
 
 
 if __name__ == "__main__":
