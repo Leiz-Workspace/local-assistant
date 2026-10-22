@@ -48,6 +48,12 @@ Lượt tra cứu mới đã đọc được [giấy phép dữ liệu CSTR/Voic
 
 D70 giữ **IN PROGRESS**, chưa có nhận xét nghe mới hoặc evaluator đủ qualification. Đã dừng các lượt API công khai trong giới hạn; không có polling nền hoặc retry vô hạn. Evaluator local đã được nạp và chạy audio dưới cap16GiB sau continuation, nhưng không đạt kiểm tra năng lực dù đã sửa EOS runner; chưa có reviewer đủ điều kiện. Cũng có thể dùng một API audio sẵn có nếu chủ dự án cung cấp provider/Vault path. Cả hai giữ nguyên AC tại D70. Benchmark cũ,24native outputs và original model/data/runtime tiếp tục được bảo toàn; D71 chưa bắt đầu.
 
+## Tiếp tục nghiên cứu khi evaluator đang tạm dừng
+
+Chỉ đọc SDK text và bounded checkpoint headers để chuẩn bị [ADR-101](ADR/101-proposed-pread-loading-within-12gib.md). Native safetensors0.8.0 có backend `pread`; Transformers4.57.3 hiện chưa forward backend này và không dùng hai legacy kwargs `low_cpu_mem_usage`/`offload_state_dict`. Có thể nghiên cứu đưa exact original Thinker tensors qua native `state_dict` interface để tránh mmap toàn shard; chưa triển khai hoặc đo fit12GiB. Không chạy evaluator, tải weights/package hoặc thay SDK.
+
+[Metadata-only evidence](evidence/d70-12g-pread-feasibility.json) ghi1442BF16Thinker tensors/tổng9,406,928,896bytes/largest622,329,856bytes. Đây không phải RAM đo được. P2 memory-loader investigation chưa xếp lịch; P1 qualified-reviewer dependency vẫn mở vì loading không sửa các raw silence/noise/clipping failures. Cap12GiB/execution-disabled/ADR-100 REJECTED/AC D70 giữ nguyên. Cần chủ dự án cho phép rõ ràng nếu muốn thực thi đề xuất; không suy ra resume từ yêu cầu tiếp tục chung.
+
 
 ### Lỗi transport đầu được giữ nguyên
 

@@ -85,5 +85,12 @@
   "latest_owner_evaluator_decision": "docs/evidence/d70-owner-evaluator-pause.json",
   "new_evaluator_runs_after_explicit_pause": 0,
   "owner_pause_controls_passed": 9,
-  "latest_owner_evaluator_decision_sha256": "38ddcd4ebe0e4e88530e78cfd761ddb338b3bdeb2e710c7c20ce1c3b22c94450"
+  "latest_owner_evaluator_decision_sha256": "38ddcd4ebe0e4e88530e78cfd761ddb338b3bdeb2e710c7c20ce1c3b22c94450",
+  "metadata_only_loading_proposal": "docs/ADR/101-proposed-pread-loading-within-12gib.md",
+  "metadata_only_loading_feasibility": "docs/evidence/d70-12g-pread-feasibility.json",
+  "metadata_only_loading_feasibility_sha256": "b705bae07f7d68928553267b3f53d5a94420c9394bc27ff095a599b99079b0cc",
+  "metadata_only_loading_proposal_implemented": false,
+  "metadata_only_loading_proposal_executed": false,
+  "metadata_only_loading_proposal_approved": false,
+  "metadata_only_loading_proposal_priority": "P2_NOT_SCHEDULED_SEPARATE_FROM_P1_REVIEWER_QUALITY"
 }
