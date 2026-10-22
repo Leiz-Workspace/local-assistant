@@ -22,11 +22,12 @@ from scripts.tts_local_review_worker import (
     PROMPT,
     SYSTEM,
     parse_judgement,
+    require_execution_permission,
     validate_request,
 )
 
 logger = logging.getLogger(__name__)
-ADDRESS_SPACE_BYTES = 16 * 1024**3
+ADDRESS_SPACE_BYTES = 12 * 1024**3
 MIN_AVAILABLE_BYTES = 18 * 1024**3
 
 
@@ -177,7 +178,7 @@ def record_signal(directory, rows, values):
 
 
 def sandbox(mode, samples):
-    """Expose only readonly model/SDK/worker/blind samples within ADR-100's16GiB virtual cap and the retained ADR-098 CPU/offline limits."""
+    """Describe the owner's retained12GiB readonly CPU namespace without authorizing execution through the paused entry points."""
     command = ["/usr/bin/bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL", "--clearenv", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--ro-bind", str(ROOT / "venv"), "/venv", "--ro-bind", str(ROOT / "model"), "/model", "--dir", "/app", "--ro-bind", str(PROJECT / "scripts/tts_local_review_worker.py"), "/app/worker.py", "--ro-bind", str(samples), "/samples", "--proc", "/proc", "--dev", "/dev", "--size", str(128 * 1024**2), "--tmpfs", "/tmp", "--dir", "/etc"]
     for name in ["passwd", "group"]:
         command.extend(["--ro-bind", str(ROOT / "runtime-source" / name), "/etc/" + name])
@@ -240,6 +241,7 @@ def qualification_checks(request, events, expectations):
 
 def run(mode, output):
     """Freeze and execute one bounded owned first run, preserving partial failures and verifying unchanged CORE identity/recovery."""
+    require_execution_permission()
     output = Path(output)
     if mode == "review":
         require_qualification()
@@ -263,7 +265,7 @@ def run(mode, output):
         raise ValueError("local_review_runtime_integrity")
     artifacts = {row["filename"]: verify(ROOT / "model" / row["filename"], row) for row in specs()}
     sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md"]}
-    publish_json(output / "freeze.json", dict(description="Before first local audio-conditioned inference; blind request, ADR-10016GiB virtual bound, no model replacement or AC waiver. Original12GiB failure retained separately.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES))
+    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES))
     before = core_snapshot()
     publish_json(output / "core-before.json", before)
     if mode != "imports":
@@ -296,6 +298,7 @@ def main():
     parser.add_argument("--mode", required=True, choices=["prepare", "prepare-review", "snapshot-runtime", "imports", "load", "qualify", "review"])
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    require_execution_permission()
     if args.mode == "prepare":
         prepare()
     elif args.mode == "prepare-review":

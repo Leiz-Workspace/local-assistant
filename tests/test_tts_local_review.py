@@ -6,6 +6,7 @@ import json
 import pytest
 
 from scripts import tts_local_review as review
+from scripts import tts_local_review_worker as worker
 from tests.test_tts_local_review_worker import judgement, request
 
 
@@ -59,10 +60,10 @@ def test_invalid_observation_cannot_become_hearing_evidence(change):
 
 
 def test_sealed_cpu_limits_and_no_parent_labels(tmp_path):
-    """Keep no network/credentials/GPU and enforce ADR-10016GiB virtual/retained CPU policy with only blind samples exposed."""
+    """Keep no network/credentials/GPU and describe the retained12GiB virtual bound without running the paused evaluator."""
     command = review.sandbox("qualify", tmp_path)
     assert "--unshare-all" in command and "--clearenv" in command and "--remount-ro" in command
-    assert "--as=17179869184" in command and "--cpu=1200:1201" in command
+    assert "--as=12884901888" in command and "--cpu=1200:1201" in command
     assert "--cpu=14400:14401" in review.sandbox("review", tmp_path)
     assert not any("parent-only" in value or "/home/" == value for value in command)
     assert "CUDA_VISIBLE_DEVICES" in command and "HF_HUB_OFFLINE" in command
@@ -79,6 +80,7 @@ def test_common_review_blocked_without_passed_first_qualification(tmp_path, monk
 def test_first_run_creates_private_synthetic_identity_directory(tmp_path, monkeypatch):
     """Initialize the owned synthetic identity folder before the shared SDK identity helper, retaining evidence without a real subprocess."""
     monkeypatch.setattr(review, "ROOT", tmp_path)
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", True)
     review.publish_json(tmp_path / "runtime-integrity.json", dict(files={}))
     monkeypatch.setattr(review, "runtime_entries", lambda: {})
     monkeypatch.setattr(review, "specs", lambda: [])
@@ -95,6 +97,7 @@ def test_neural_run_rejects_low_host_headroom_before_creating_output(tmp_path, m
         """Emulate a measured host-headroom failure without allocating memory."""
         raise ValueError("local_review_host_memory_headroom")
     monkeypatch.setattr(review, "require_headroom", denied)
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", True)
     with pytest.raises(ValueError, match="host_memory_headroom"):
         review.run("load", tmp_path / "run")
     assert not (tmp_path / "run").exists()
@@ -107,7 +110,7 @@ def test_host_headroom_boundary_is_not_a_ram_measurement(tmp_path, kib, passed):
     path.write_text(f"MemAvailable: {kib} kB\n")
     if passed:
         value = review.require_headroom(path)
-        assert value["address_space_cap_bytes"] == 16*1024**3
+        assert value["address_space_cap_bytes"] == 12*1024**3
         assert not value["reserved_memory"]
     else:
         with pytest.raises(ValueError, match="host_memory_headroom"):
@@ -122,3 +125,27 @@ def test_pre_repair_qualification_cannot_promote_repaired_protocol(tmp_path, mon
     review.publish_json(old / "result.json", dict(observation_complete=True, qualification=dict(passed=True)))
     with pytest.raises(FileNotFoundError):
         review.require_qualification()
+
+
+@pytest.mark.parametrize("mode", ["imports", "load", "qualify", "review"])
+def test_owner_pause_blocks_every_execution_mode_before_side_effects(tmp_path, monkeypatch, mode):
+    """Reject all evaluator runs before model checks, CORE requests, subprocesses or output publication while the owner pause is active."""
+    def forbidden(*args, **kwargs):
+        """Fail if a paused run reaches a service, model or subprocess operation."""
+        raise AssertionError("paused_execution_side_effect")
+    monkeypatch.setattr(review, "run_worker", forbidden)
+    monkeypatch.setattr(review, "core_snapshot", forbidden)
+    monkeypatch.setattr(review, "runtime_entries", forbidden)
+    assert not worker.EXECUTION_ALLOWED
+    with pytest.raises(ValueError, match="owner_paused_execution"):
+        review.run(mode, tmp_path / "run")
+    assert not (tmp_path / "run").exists()
+
+
+def test_owner_pause_blocks_cli_metadata_modes_too(tmp_path, monkeypatch):
+    """Honor the current pause at the CLI before preparing a packet or replacing a runtime snapshot."""
+    import sys
+
+    monkeypatch.setattr(sys, "argv", ["tts_local_review", "--mode", "snapshot-runtime"])
+    with pytest.raises(ValueError, match="owner_paused_execution"):
+        review.main()

@@ -2,6 +2,8 @@
 
 **Purpose:** Assess additional evidence and lifecycle work required by observed offline voice results before model/default selection or product activation.
 
+**Quyết định mới nhất2026-10-22:** “Giữ cap 12 GiB, chưa chạy tiếp evaluator”. ADR-100 REJECTED; cap source khôi phục12GiB và controller/worker execution bị khóa. Các lượt16GiB đã chạy trước khi nhận câu trả lời này do agent diễn giải sai continuation thành approval; giữ nguyên kết quả, không gọi chúng là owner-approved. Không nạp/chạy lại evaluator hoặc tải helper khác. D70 mở, D71 chưa bắt đầu.
+
 ## AUDIO-VAD-ASR-001 Held-out gated versus ungated ASR
 
 **Priority P1; scheduled D72 prerequisite.** This follows D68's3/4and4/4known-no-speech ASR outputs and D69's limited clip-presence/negative evaluation. Dependencies: unchanged D68/D69 source/model artifacts, bounded private explicit waveform handling, fixed segmentation clocks/thresholds, a separately frozen independently labelled VI/EN holdout and original CORE/runtime audit. Effort one paired evaluation milestone, separate from model adoption.

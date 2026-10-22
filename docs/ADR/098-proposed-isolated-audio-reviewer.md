@@ -2,7 +2,7 @@
 
 **Purpose:** Make a concrete audio-conditioned AI review path available for owner approval while preserving D70's original acceptance order and all agreed production model roles.
 
-**Date:** 2026-10-22. **Status: APPROVED FOR BOUNDED LOCAL EVALUATION — NOT QUALIFIED OR SELECTED.** The owner explicitly answered “Cho phép thử evaluator local theo ADR-098”. This authorizes the proposed isolated research-only provisioning and qualification, retaining the stated resource limits and failure-stop conditions. ADR-097 remains REJECTED. D70 remains IN PROGRESS; D71 has not started.
+**Date:** 2026-10-22. **Status: EVALUATOR EXECUTION PAUSED BY OWNER — RETAIN12GiB AND EXISTING ARTIFACTS.** The original answer “Cho phép thử evaluator local theo ADR-098” authorized the historical bounded trial. The latest explicit answer is **“Giữ cap 12 GiB, chưa chạy tiếp evaluator”**; it stops further evaluator execution and rejects ADR-100's16GiB increase. Controller and worker are blocked, current cap restored to12GiB. Preserve all actual results, including16GiB runs already made before the answer after an incorrect continuation-as-approval interpretation; do not call those owner-approved. No new import/load/audio run occurs for this decision. ADR-097 remains REJECTED. D70 remains IN PROGRESS; D71 has not started.
 
 ## Problem and existing authority
 

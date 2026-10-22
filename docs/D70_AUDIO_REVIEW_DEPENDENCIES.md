@@ -2,6 +2,8 @@
 
 **Mục đích:** Ghi các phần việc D70 có thể xác minh tiếp, cùng một phương án mở khóa việc đánh giá audio thật. Không đổi AC, model hoặc kết quả benchmark đã chốt.
 
+**Quyết định mới nhất2026-10-22:** “Giữ cap 12 GiB, chưa chạy tiếp evaluator”. ADR-100 REJECTED; cap source khôi phục12GiB và controller/worker execution bị khóa. Các lượt16GiB đã chạy trước khi nhận câu trả lời này do agent diễn giải sai continuation thành approval; giữ nguyên kết quả, không gọi chúng là owner-approved. Không nạp/chạy lại evaluator hoặc tải helper khác. D70 mở, D71 chưa bắt đầu.
+
 ## Dịch vụ đã cấu hình
 
 Đã kiểm tra readonly các path/field name của14secret hiện có trong một KV-v2 mount. Chưa tìm thấy metadata provider/audio cho một evaluator sẵn dùng. Không ghi giá trị secret, không sửa Vault và không gửi audio ra ngoài. Kết quả chỉ phản ánh các record đã kiểm tra; không suy luận chủ dự án không có tài khoản ở nơi khác.
