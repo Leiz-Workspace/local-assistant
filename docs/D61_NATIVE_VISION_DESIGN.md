@@ -2,7 +2,7 @@
 
 **Purpose:** Record the inspected dependencies and proposed D61 acceptance before implementation, without advancing past unfinished D60 gates.
 
-**Date:** 2026-10-22. **Status:** Design preparation only; D60 full4120/final audit must complete before D61 implementation or acceptance. No image chat inference or source change is authorized by this document alone.
+**Date:** 2026-10-22. **Status:** Local unwired adapter PASS after D60 commit45ab011/full4120/final audit and D61 measured controls/native/actual/audit closure. The preparation below is retained as design history; current outcomes are at the end.
 
 ## Existing foundations
 
@@ -71,3 +71,16 @@ Existing native verification also refuses animated/multiframe images and bounds 
 Local `runtimes/llama.cpp/tools/server/README.md` documents schema-constrained chat, inline `image_url` data, `cache_prompt` and `/v1/models` architecture modalities. Two bounded readonly model-info requests confirmed the existing alias `qwen3.5-9b-core` advertises `architecture.input_modalities=[text,image,video]` and `output_modalities=[text]`; no image, question or completion was sent. This is capability advertisement, not a D61 image-chat result or video-quality acceptance. Future adapter admission should require exactly the configured alias and an advertised image input before any raster disclosure, rather than inferring image support from the model name.
 
 The native server accepts remote URLs/local file paths as image inputs, so the new host adapter must construct a validated inline PNG data URI itself and expose no caller-controlled `image_url`. Native `cache_prompt=false` means no reuse of a previous prompt's KV prefix; its documentation does not establish secure erasure or server-side computation abortion. Preserve that distinction in privacy/cancellation evidence.
+
+
+## Measured local adapter closure
+
+[ADR-085](ADR/085-native-core-image-chat-with-isolated-normalization.md) adds five unwired modules/five test files/one frozen fixture; all545 accepted source/config bytes remain unchanged/current556.105 new controls included158 related PASS/6.72s/0FAIL/0SKIP. Native tests exercise actual original namespace normalization,2000px sizing, stripped PNG/EXIF metadata/orientation and exact wrong-type/malformed/multiframe refusals. Thread/model repeated cancellation/deadline/ownership and pre-disclosure capability checks verified. The first related invocation referenced a nonexistent test filename and ran0 tests/exit4; retained separately and corrected without app/test behavior change.
+
+First actual original CORE sample **2/3 functional FAIL/3.163s**, despite correct positive invoice/table answers, valid source/schema/privacy cleanup and successful text recovery: model misattributes a title to an absent named field. Complete original files/freeze/answers/log retained. [First actual result](evidence/d61-first-native-image-chat-result.json), [preservation](evidence/d61-first-failure-preservation.json).
+
+[ADR-086](ADR/086-image-field-association-and-abstention-prompt.md) changes only the new generic system-frame instructions about explicit field/value association and abstention; no fixture/goal/pattern/model/options/oracle rewrite. Replay control preserves the first bad reply as unverified data rather than host-correcting it. Distinct frozen actual sample **3/3 PASS/3.879s** plus ordinary-text recovery after images; three real original native workers/three CORE image completions/one text completion, all actual model transports closed and owned operations/admission retired. [Repaired freeze](evidence/d61-native-image-chat-repaired-freeze.json), [actual result](evidence/d61-repaired-native-image-chat-result.json). This visible same-agent sample does not establish broad accuracy, independent human quality or semantic truth; D62/D63/D67 remain required.
+
+57 private final audit controls PASS/.26s. Final readonly audit PASS556/all545 prior bytes unchanged/V006/zero source-memory/quota/vectors/probes/workers/locks/original security/grants/triggers/15 container identities/security/health/models and CORE unchanged. Historical D60 full4120 belongs to545-source cohort; no current4225 full claim. The repaired freeze's descriptive definition count98 was copied from the original; final AST checks99 after one added replay test, with all frozen file hashes/actual outcomes unchanged. [Audit](evidence/d61-native-vision-readonly-audit.json), [acceptance](evidence/d61-native-vision-acceptance.json).
+
+The application does not persist images/questions/replies or provide history/tools/remote-media/stored-file lookup. Anonymous source descriptors exist only during native work; no secure disk/GPU erasure or server-side compute-abort guarantee. The separate evaluator explicitly retains its authored public fixture questions/answers for reproducibility; it does not retain raster bytes or complete model request bodies. Output hash/owner association remains unverified provenance and cannot replace file authentication, evidence receipts or approvals. No production HTTP/UI integration or model replacement was enabled. D62 NEXT.
