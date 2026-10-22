@@ -17,6 +17,11 @@ from scripts.asr_evaluation_runner import (
     run_worker,
 )
 from scripts.tts_local_review_assets import PROJECT, ROOT, digest, specs, verify
+from scripts.tts_local_review_diagnostic import QUESTION as DIAGNOSTIC_QUESTION
+from scripts.tts_local_review_diagnostic import audit_events as audit_diagnostic_events
+from scripts.tts_local_review_diagnostic import (
+    prepare_packet as prepare_diagnostic_packet,
+)
 from scripts.tts_local_review_pread import file_tensor_hash, tensor_manifest
 from scripts.tts_local_review_worker import (
     MAX_TOKENS,
@@ -185,6 +190,7 @@ def sandbox(mode, samples):
     """Describe the approved retained12GiB readonly CPU namespace; entry points separately enforce load-only permission."""
     command = ["/usr/bin/bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL", "--clearenv", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--ro-bind", str(ROOT / "venv"), "/venv", "--ro-bind", str(ROOT / "model"), "/model", "--dir", "/app", "--ro-bind", str(PROJECT / "scripts/tts_local_review_worker.py"), "/app/worker.py", "--ro-bind", str(samples), "/samples", "--proc", "/proc", "--dev", "/dev", "--size", str(128 * 1024**2), "--tmpfs", "/tmp", "--dir", "/etc"]
     command.extend(["--dir", "/app/scripts", "--ro-bind", str(PROJECT / "scripts/tts_local_review_pread.py"), "/app/scripts/tts_local_review_pread.py"])
+    command.extend(["--ro-bind", str(PROJECT / "scripts/tts_local_review_diagnostic.py"), "/app/scripts/tts_local_review_diagnostic.py"])
     for name in ["passwd", "group"]:
         command.extend(["--ro-bind", str(ROOT / "runtime-source" / name), "/etc/" + name])
     environment = dict(PATH="/venv/bin:/usr/bin", LANG="C.UTF-8", PYTHONDONTWRITEBYTECODE="1", CUDA_VISIBLE_DEVICES="", HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", HF_HOME="/tmp/hf", HOME="/tmp", USER="asr-evaluation", LOGNAME="asr-evaluation", OMP_NUM_THREADS="2", MKL_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2", NUMBA_NUM_THREADS="2", NUMBA_CACHE_DIR="/tmp/numba", TOKENIZERS_PARALLELISM="false", HF_HUB_DISABLE_TELEMETRY="1")
@@ -278,7 +284,7 @@ def run(mode, output):
         samples.mkdir(mode=0o700, exist_ok=True)
         request = dict(mode=mode, cases=[])
     else:
-        packet = ROOT / ("qualification" if mode == "qualify" else "review")
+        packet = ROOT / {"qualify": "qualification", "review": "review", "diagnose": "diagnostic-103"}[mode]
         samples = packet / "inputs"
         request = json.loads((packet / "request.json").read_text())
         if request["mode"] != mode:
@@ -289,8 +295,8 @@ def run(mode, output):
     if runtime_entries() != json.loads((ROOT / "runtime-integrity.json").read_text())["files"]:
         raise ValueError("local_review_runtime_integrity")
     artifacts = {row["filename"]: verify(ROOT / "model" / row["filename"], row) for row in specs()}
-    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md", PROJECT / "docs/ADR/101-proposed-pread-loading-within-12gib.md", PROJECT / "docs/ADR/102-proposed-headroom-for-retained-12gib-trial.md"]}
-    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES, host_preflight_required_bytes=MIN_AVAILABLE_BYTES))
+    sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md", PROJECT / "docs/ADR/101-proposed-pread-loading-within-12gib.md", PROJECT / "docs/ADR/102-proposed-headroom-for-retained-12gib-trial.md", PROJECT / "docs/ADR/103-proposed-heldout-audio-presence-diagnostic.md"]}
+    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES, host_preflight_required_bytes=MIN_AVAILABLE_BYTES, diagnostic_question=DIAGNOSTIC_QUESTION if mode == "diagnose" else None, diagnostic_maximum_new_tokens=16 if mode == "diagnose" else None))
     before = core_snapshot()
     publish_json(output / "core-before.json", before)
     if mode != "imports":
@@ -307,12 +313,19 @@ def run(mode, output):
     after = core_snapshot()
     assert all(before[key] == after[key] for key in ["pid", "start_ticks", "command_sha256"])
     assert all(sha((PROJECT / name).read_bytes()) == value for name, value in sources.items())
-    complete = metadata["exit_code"] == 0 and not metadata["timed_out"] and not event_parse_error and audit_events(request, events)
+    event_auditor = audit_diagnostic_events if mode == "diagnose" else audit_events
+    complete = metadata["exit_code"] == 0 and not metadata["timed_out"] and not event_parse_error and event_auditor(request, events)
     load_fidelity = audit_load_fidelity(events, ROOT / "model") if complete and mode == "load" else None
     if mode == "load":
         complete = complete and load_fidelity is True
     result = dict(description="Actual isolated original-model audio evaluation; not human MOS, TTS selection or automatic D70 acceptance.", mode=mode, process=metadata, events=events, observation_complete=complete, core_before=before, core_after=after, freeze_sha256=sha((output / "freeze.json").read_bytes()), D70_complete=False, D71_started=False)
     result["parent_original_tensor_fidelity_passed"] = load_fidelity
+    if mode == "diagnose":
+        mapping = json.loads((ROOT / "diagnostic-103/parent-only.json").read_text())["mapping"]
+        observations = [event for event in events if event.get("event") == "diagnostic"]
+        passed = complete and len(mapping) == len(observations) and all(event["id"] == expected["id"] and event["answer"] == expected["expected"] for event, expected in zip(observations, mapping, strict=True))
+        result["factual_diagnostic_passed"] = passed
+        result["reviewer_qualification_passed"] = False
     if mode == "qualify":
         expectations = json.loads((ROOT / "qualification/parent-only.json").read_text())["expectations"]
         result["qualification"] = qualification_checks(request, events, expectations) if complete else dict(passed=False, reason="worker_failed_or_incomplete")
@@ -324,11 +337,14 @@ def main():
     """Prepare fixed controls or execute one explicit owner-approved evaluation mode without alternate model or decoder options."""
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", required=True, choices=["prepare", "prepare-review", "snapshot-runtime", "imports", "load", "qualify", "review"])
+    parser.add_argument("--mode", required=True, choices=["prepare", "prepare-review", "snapshot-runtime", "imports", "load", "qualify", "review", "prepare-diagnose", "diagnose"])
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     require_execution_permission(args.mode)
-    if args.mode == "prepare":
+    if args.mode == "prepare-diagnose":
+        require_headroom()
+        prepare_diagnostic_packet(ROOT, PROJECT, publish_json)
+    elif args.mode == "prepare":
         prepare()
     elif args.mode == "prepare-review":
         prepare_review()

@@ -3,6 +3,8 @@
 **Mục đích:** Ghi lại bằng chứng thực tế của MODEL-EVAL-005, phân biệt khả năng chạy, tiếng Việt được hỗ trợ, chỉ số đo được và tiêu chí đánh giá còn mở. Tài liệu không phê duyệt chọn hoặc triển khai model.
 
 **Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** theo ADR-102. Native `pread` load/integrity weights gốc **PASS26.471s/exit0**,1,442tensors/9,406,928,896bytes khớp hash/storage/CPU-BF16; parent audit độc lập PASS. Peak RSS9.333GiB RAM và VmPeak10.393GiB virtual (không phải VRAM/minimum RAM). Đây là load-only: chưa đo inference fit12GiB, không chạy lại audio controls/review24outputs.222TTSrelated PASS6.00s/Ruff PASS. CORE cùng identity/recovery PASS. [Bằng chứng](evidence/d70-pread-14g-headroom-load.json). `qualify`/`review` vẫn bị chặn; ADR-100 và097 vẫn REJECTED. D70 mở, D71 chưa bắt đầu.
+**Bước tiếp theo đã chuẩn bị, chưa thực thi:** [ADR-103](ADR/103-proposed-heldout-audio-presence-diagnostic.md) chỉ chẩn đoán factual presence trên4control mới, không naturalness hoặc qualification. Mã và22controls mới/244TTSrelated PASS6.18s/Ruff PASS; modes `prepare-diagnose`/`diagnose` vẫn bị chặn theo quyền load-only hiện tại. Chưa tạo real packet hoặc chạy audio inference. [Protocol và nguồn dự kiến](evidence/d70-presence-diagnostic-proposal.json).
+
 
 **Trạng thái:** IN PROGRESS — chờ khả năng nghe thực tế theo quyết định chủ dự án ngày2026-10-22. ADR-097 bị từ chối; giữ nguyên AC và thứ tự D70→D71. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
 
