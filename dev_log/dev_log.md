@@ -3907,3 +3907,10 @@ Report `docs/D70_OFFLINE_TTS_COMPARISON.md`, evidence `d70-tts-measurement-statu
 
 
 Đã soạn **ADR-097 PROPOSED/NOT APPLIED** và đánh giá P1/dependency/effort/rủi ro/rollback của `AUDIO-TTS-NATURALNESS-001`: phương án chỉ chốt phạm vi benchmark D70, chuyển nghe thực tế thành gate bắt buộc trước D72/selection/deployment, để D71 recording-control độc lập có thể tiếp tục. Đây là đề xuất cần chủ dự án duyệt vì thay thứ tự AC đã thống nhất; **chưa áp dụng, D70 vẫn mở/D71 chưa bắt đầu**, không chọn hoặc triển khai model. Trước documentation commit kiểm tra lại toàn bộ624source/protected/prior-evaluation/currentSDK pins và176file audit inputs khớp nguyên hash.
+
+
+## 2026-10-22 — Chủ dự án giữ nguyên AC D70, chờ khả năng nghe
+
+Sau measurement commit `8f421de`, chủ dự án trả lời rõ **“Giữ nguyên AC, chờ khả năng nghe”**. Ghi ADR-097 **REJECTED/NOT APPLIED**, không còn yêu cầu phê duyệt đang chờ. Không tách scope để đóng D70, không chuyển tiêu chí nghe sang D72. `AUDIO-TTS-NATURALNESS-001` vẫn là AC tại D70; **D70 IN PROGRESS/chờ khả năng nghe thật, D71 NOT STARTED**. Roadmap/model backlog/voice backlog/report/status đồng bộ quyết định này.
+
+Chỉ sửa tài liệu/trạng thái quyết định. Giữ nguyên624source, model/default,24native waveforms/copies và toàn bộ judgement null; không sinh lại audio, không thử lại model, không thay nghe bằng ASR/acoustic metrics. Kết quả436related/34auditor controls trước đó được giữ đúng là lịch sử đã chạy; không chạy lại test/model cho thay đổi documentation-only. Kiểm tra JSON, quyết định/gates, liên kết và hash nguồn/evidence/audio để xác nhận bảo toàn; không tuyên bố theo dõi nền hoặc tự kiểm tra định kỳ khả năng nghe.
