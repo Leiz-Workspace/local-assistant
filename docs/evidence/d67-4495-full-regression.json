@@ -1,0 +1,30 @@
+{
+  "description": "Actual current599-source global4495 application regression after separately completed retired D67 matrix. Pytest duration differs from wrapper wall. All prior full/failed cohorts retained.",
+  "targets": [
+    "tests"
+  ],
+  "pytest_options": [
+    "-v",
+    "-rs",
+    "--tb=short",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "status": "complete",
+  "started_at_utc": "2026-10-22T06:24:32.147320+00:00",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "wrapper_pid": 1356972,
+  "source_freeze_sha256": "80a40f2977f940fe405cb99a0119526dd89d2fbd8fc79c504e1dc3715fc592c9",
+  "pytest_pid": 1356974,
+  "exit_code": 0,
+  "elapsed_seconds": 1738.87,
+  "completed_at_utc": "2026-10-22T06:53:31.013268+00:00",
+  "log_sha256": "84df5ec9ac0d4a85957492f066d10d251730fcaaf75fffe2a178af94e5652396",
+  "passed": 4495,
+  "failed": 0,
+  "skipped": 0,
+  "pytest_elapsed_seconds": 1737.73,
+  "private_audit_controls": 244
+}

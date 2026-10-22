@@ -1,0 +1,14 @@
+{
+  "description": "D67 final read-only verifier tested244 controls/.62s, frozen before current full4495 completes. Do not execute main until its real complete result/log is separately frozen. Matrix/first failures/prior scopes preserved.",
+  "private_audit_controls": 244,
+  "sha256": {
+    "data/backups/d67-full4495-readonly-audit.py": "6a0998ca67c6174d80af2224542550744a8e7654c4b0b12d770d1d886525afb7",
+    "data/backups/test_d67_full4495_readonly_audit.py": "1410b6050c43ee9e8222b8dbf031bb19ecc0f2cfa014f14a86ac0c12dccbe26d",
+    "data/backups/d67-final-readonly-audit-controls-first.log": "059df144c33dc6d749b627f0acad6e59ae1340095d3f81bcd72c79d5be199c77",
+    "docs/evidence/d67-4495-full-freeze.json": "80a40f2977f940fe405cb99a0119526dd89d2fbd8fc79c504e1dc3715fc592c9",
+    "docs/evidence/d67-existing-multimodal-first-freeze.json": "38bbfb6147a3a5c1958a0d8ce5aedf20d10aef87ff37660dfe7ff2c316a8f1cd",
+    "data/backups/d67-existing-multimodal-first/summary.json": "9016ad1164ba889f12e62a8f1fd4c65e048b4a811201cf1fffb7007498cfba4a",
+    "docs/evidence/d67-d66-progress-document-transition.json": "3fd6e55b15fdfda94ff673119a0f59594c42a1aaa8803b7aba9e71db5c87277d",
+    "data/backups/d66-audio-backlog-before-acceptance.md": "35a62872914b4f283c808329cafe2843eafc0f5b894560f1c2862985dfa28d5c"
+  }
+}
