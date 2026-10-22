@@ -1,0 +1,32 @@
+{
+  "description": "Evaluation-only spacing/stop helper closure after current-boot Vault recovery. Original538 source/config files unchanged;14 new cases included104 related passes. No current full4032 execution or D60 phase acceptance; exact first live failure retained.",
+  "status": "PASS_CONTROLLED_BOUNDARIES_LIVE_PHASE_FAILED",
+  "source_files": 540,
+  "previous538_source_bytes_unchanged": true,
+  "new_evaluation_only_python_files": 2,
+  "new_controlled_cases": 14,
+  "related_passed": 104,
+  "related_failed": 0,
+  "related_skipped": 0,
+  "related_elapsed_seconds": 0.3,
+  "log": {
+    "path": "data/backups/d60-spacing-final-related-controls.log",
+    "sha256": "f6e41b76d765c6957252e4ed597cef9a9c2cca7b3780892956be5197002c2cff"
+  },
+  "source_freeze_sha256": "3270ca225454fadb0c979c6da42317c7612ef5e9164438dffc998022994fcdd9",
+  "full_application_collection": 4032,
+  "full4032_executed": false,
+  "previous_full4018": "PASS_previous_boot_0skip_preserved",
+  "existing_Vault_unsealed": true,
+  "final_readonly_audit": "docs/evidence/d60-spaced-final-readonly-audit.json",
+  "production_wiring_changed": false,
+  "provider_or_model_replaced": false,
+  "live_functional_status": "FAILED_live_missing_primary_sources",
+  "actual_spaced_live_backend_attempts": 1,
+  "subsequent_backend_dispatches_blocked": 2,
+  "actual_live_spacing_exercised": false,
+  "causal_spacing_benefit_evaluated": false,
+  "D60_status": "IN_PROGRESS_SEARCHED_SOURCE_REPORT_REQUIRED",
+  "next_upstream_proposal": "docs/ADR/083-next-search-upstream-qualification-proposal.md",
+  "owned_trial_native_or_browser_resources_remaining": 0
+}

@@ -1,0 +1,12 @@
+{
+  "description": "Existing initialized Vault restored to unsealed via original helper/local protected bootstrap after reboot. No initialization/rekey/secret/policy/config/audit-device changes, no key material logged.",
+  "status": "PASS_EXISTING_VAULT_RUNTIME_UNSEALED",
+  "freeze_sha256": "903d6ee25b3450273606d57a9a2db40f79c8b1ed6929e161d2c17b8fa6c84f86",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "health_status": 200,
+  "initialized": true,
+  "sealed": false,
+  "protected_files_bytes_inode_modes_preserved": true,
+  "existing_helper_unchanged": true,
+  "D60_acceptance": false
+}
