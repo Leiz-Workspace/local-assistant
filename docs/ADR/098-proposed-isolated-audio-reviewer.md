@@ -1,0 +1,42 @@
+# ADR 098 — Proposed isolated audio-capable evaluator for D70
+
+**Purpose:** Make a concrete audio-conditioned AI review path available for owner approval while preserving D70's original acceptance order and all agreed production model roles.
+
+**Date:** 2026-10-22. **Status: PROPOSED — NOT APPROVED, NOT PROVISIONED.** ADR-097 remains REJECTED. D70 remains IN PROGRESS; D71 has not started.
+
+## Problem and existing authority
+
+The owner requires completing the project and explicitly retained actual auditory review at D70. The assistant's audio input is unavailable. Repeating that capability check does not close the criterion. A fresh readonly inspection of all14current static secrets in the single KV-v2 mount found no provider/audio metadata identifying an existing audio evaluator. No secret values were logged or saved, no Vault mutation occurred and no external audio request was sent. This finding covers those Vault records, not every possible external account.
+
+The proposed new dependency is a **private evaluation tool**, not a replacement for CORE, UNRESTRICTED, embedding, reranker, vision, ASR, VAD or TTS. It is outside the currently provisioned model set, so the existing project instruction to preserve agreed model choices and ADR-096's nominated-artifact boundary are not treated as permission to download it. Explicit owner approval is required before its neural weights or runtime are provisioned. This proposal does not ask to waive listening, move the criterion to D72 or approve a TTS selection.
+
+## Exact proposed evaluator and primary evidence
+
+Candidate: original `Qwen/Qwen2.5-Omni-3B`, revision `f75b40e3da2003cdd6e1829b1f420ca70797c34e`. The [original model card](https://huggingface.co/Qwen/Qwen2.5-Omni-3B) describes audio input. [Transformers documentation](https://huggingface.co/docs/transformers/model_doc/qwen2_5_omni#text-only-generation) provides the genuine Thinker-only text-output interface. Local inspection confirms that the corresponding class exists in the already retained4.57.3 SDK source; this is not an import/load or feasibility result.
+
+The checkpoint has three pinned safetensors shards totalling **11,972,663,208 bytes (~11.97GB decimal/11.15GiB disk)**. This is not RAM/VRAM. All three original shards would be retained with complete LFS SHA256 validation. The complete checkpoint includes non-review components; do not claim that no unused neural bytes are downloaded. Use the official Thinker-only loader to avoid executing Talker/token-to-wave/audio output, with no patched tensors or substitute audio model. Native checkpoint loading, missing/unexpected parameter accounting and actual device/dtype must be qualified before review.
+
+The pinned [Qwen Research License](https://huggingface.co/Qwen/Qwen2.5-Omni-3B/blob/f75b40e3da2003cdd6e1829b1f420ca70797c34e/LICENSE) limits use to noncommercial research/evaluation. It is not Apache-2.0. Approval here would cover only that private evaluation scope, not commercial use, redistribution or product adoption. Metadata and license text were inspected; **no neural weights downloaded and no new SDK installed**. [Pinned proposal metadata](../evidence/d70-audio-reviewer-proposal-metadata.json).
+
+No primary evidence currently qualifies this3B checkpoint as a Vietnamese naturalness judge. Actual audio understanding is a candidate capability, not proof of calibrated TTS quality judgement. Failure, uncertainty or inability to assess Vietnamese leaves the affected D70 criterion open.
+
+## Proposed execution, only after approval
+
+1. Use a new ignored0700 evaluation root and separate uv environment. Preserve all624accepted source files, existing app/D68/D69/D70 environments, locks, original audio/first results, all model configurations and original CORE process. Initially target genuine CPU Torch2.10+cpu/Transformers4.57.3 with BF16/eager and no remote-code execution; freeze exact dependencies and source hashes before loading. No vLLM, model server, API, Docker, database or Vault change.
+2. Keep one CPU reviewer process, affinity0,1, Torch2threads/inter-op1. Initial planned address-space cap12GiB, qualification wall600s, complete review wall7200s/CPU14400seconds, no network/GPU/credentials, bounded private tmpfs and output. New apparent disk budget20GiB includes original weights/SDK/artifacts. These are trial limits, not measured requirements. Keep CORE loaded; retain before/after identity/text recovery. If the cap is infeasible, retain the failure and stop; do not unload CORE, silently raise limits or substitute a model.
+3. Qualify genuine imports/loading and source-bound audio conditioning on a separately frozen small VI/EN/control packet from existing public evaluation material. Include actual speech, silence and explicitly altered copies with known severe gaps; keep originals untouched. Predeclare controls and expected factual distinctions before any reviewer output. Reject invented speech on silence, ignored audio, unsupported loading or inability to distinguish the declared severe corruption. This qualification does not establish human-level pronunciation/MOS accuracy.
+4. Before the24retained TTS outputs are reviewed, freeze order, prompts, format, seed7/greedy decoding and a finite output-token cap. Use opaque IDs and full source-bound16k inputs already derived from the unchanged native waveforms; preserve exact native/processor-input hashes and every declared rational resampling/level factor. No trimming, Opus-only judgement, speech regeneration or outcome-driven retry. Withhold candidate names, authored text, ASR transcripts, timings and proxy scores from the audio reviewer. Retain every raw response, cap/error and uncertainty.
+5. Request per-output speech presence, language confidence, audible continuity/artifacts, rhythm/prosody and qualitative naturalness with uncertainty. Require actual audio-conditioned inference; the orchestrating assistant must not claim that it personally heard the audio. Label the result **local AI audio review**, never independent human MOS, supported Vietnamese certification or a model-choice approval. Keep any uncertain/unassessed language criterion open. Reconcile descriptions with retained signals/qualification evidence without inventing favourable labels or repairing first outputs.
+6. Independently audit complete24-case provenance, review coverage, original624-source/model/data/runtime/CORE preservation, cleanup and limits. D70 may close only if its original criteria actually have sufficient evidence; provisioning or receiving24JSON responses alone is not completion. D71 remains gated until then. TTS adoption, Piper VI licence provenance and AUDIO-VAD-ASR-001 remain separate deployment/integration gates.
+
+## Priority, dependencies, effort and risk
+
+**AUDIO-EVAL-CAPABILITY-001: P1, D70 blocker; proposed, not scheduled for provisioning.** Dependencies: explicit owner approval for the additional research-only evaluator, pinned complete weights/license, isolated SDK, adequate memory alongside existing CORE and qualified VI/EN/audio-control behaviour. Effort one qualification/review milestone; speed, RAM, reliability and fit have not been measured.
+
+Risks: CPU/memory infeasibility; related-Qwen-family preference; weak Vietnamese perception; text-driven hallucination presented as hearing; token truncation; a Research License mistaken for product rights; extra checkpoint components or qualification tuning hidden from audit. Blind inputs, controls, retained first results and explicit uncertainty reduce these risks; they do not eliminate them. A failed reviewer is an outcome to retain, not permission to remove the D70 criterion.
+
+## Compatibility, migration and rollback
+
+This tool consumes copies of already bound waveform inputs and emits private review text. No application/model configuration, existing source, audio, database/index or model-role migration occurs. No cloud upload or new paid-service account is required by this local proposal. It cannot replace the established TTS/ASR choices by itself.
+
+Rollback terminates/joins only owned reviewer processes; the existing CORE and all prior models/data remain active and unchanged. Retain first failures and downloaded evaluation artifacts for audit; removal is a separately authorized cleanup. Rejection leaves D70 waiting under the current AC. A separately supplied audio-capable API or actual reviewer could provide another genuine-input path, but no provider/account/credential or model is assumed available or approved.
