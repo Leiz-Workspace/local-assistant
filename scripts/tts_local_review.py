@@ -10,6 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
+from scripts import tts_local_review_quality as quality
 from scripts.asr_evaluation_corpus import save_bytes
 from scripts.asr_evaluation_runner import (
     core_snapshot,
@@ -23,6 +24,10 @@ from scripts.tts_local_review_diagnostic import (
     prepare_packet as prepare_diagnostic_packet,
 )
 from scripts.tts_local_review_pread import file_tensor_hash, tensor_manifest
+from scripts.tts_local_review_quality_runtime import TASKS as QUALITY_TASKS
+from scripts.tts_local_review_quality_runtime import (
+    audit_events as audit_quality_events,
+)
 from scripts.tts_local_review_worker import (
     MAX_TOKENS,
     PROMPT,
@@ -191,12 +196,13 @@ def sandbox(mode, samples):
     command = ["/usr/bin/bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL", "--clearenv", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--ro-bind", str(ROOT / "venv"), "/venv", "--ro-bind", str(ROOT / "model"), "/model", "--dir", "/app", "--ro-bind", str(PROJECT / "scripts/tts_local_review_worker.py"), "/app/worker.py", "--ro-bind", str(samples), "/samples", "--proc", "/proc", "--dev", "/dev", "--size", str(128 * 1024**2), "--tmpfs", "/tmp", "--dir", "/etc"]
     command.extend(["--dir", "/app/scripts", "--ro-bind", str(PROJECT / "scripts/tts_local_review_pread.py"), "/app/scripts/tts_local_review_pread.py"])
     command.extend(["--ro-bind", str(PROJECT / "scripts/tts_local_review_diagnostic_runtime.py"), "/app/scripts/tts_local_review_diagnostic_runtime.py"])
+    command.extend(["--ro-bind", str(PROJECT / "scripts/tts_local_review_quality_runtime.py"), "/app/scripts/tts_local_review_quality_runtime.py"])
     for name in ["passwd", "group"]:
         command.extend(["--ro-bind", str(ROOT / "runtime-source" / name), "/etc/" + name])
     environment = dict(PATH="/venv/bin:/usr/bin", LANG="C.UTF-8", PYTHONDONTWRITEBYTECODE="1", CUDA_VISIBLE_DEVICES="", HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", HF_HOME="/tmp/hf", HOME="/tmp", USER="asr-evaluation", LOGNAME="asr-evaluation", OMP_NUM_THREADS="2", MKL_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2", NUMBA_NUM_THREADS="2", NUMBA_CACHE_DIR="/tmp/numba", TOKENIZERS_PARALLELISM="false", HF_HUB_DISABLE_TELEMETRY="1")
     for key, value in environment.items():
         command.extend(["--setenv", key, value])
-    cpu = 14400 if mode == "review" else 1200
+    cpu = 14400 if mode in {"review", "review-quality"} else 1200
     return command + ["--chdir", "/app", "--remount-ro", "/", "--", "/usr/bin/prlimit", f"--as={ADDRESS_SPACE_BYTES}", f"--cpu={cpu}:{cpu+1}", "--nofile=128", "--fsize=16777216", "--core=0", "--", "/venv/bin/python", "/app/worker.py"]
 
 
@@ -276,6 +282,11 @@ def run(mode, output):
     output = Path(output)
     if mode == "review":
         require_qualification()
+    if mode == "review-quality":
+        quality.require_qualification(ROOT, PROJECT)
+    quality_mode = mode in {"qualify-quality", "review-quality"}
+    if quality_mode and output != ROOT / ("quality-104-controls-first" if mode == "qualify-quality" else "quality-104-review-first"):
+        raise ValueError("quality_first_run_path")
     if mode != "imports":
         require_headroom()
     output.mkdir(mode=0o700, exist_ok=False)
@@ -284,7 +295,7 @@ def run(mode, output):
         samples.mkdir(mode=0o700, exist_ok=True)
         request = dict(mode=mode, cases=[])
     else:
-        packet = ROOT / {"qualify": "qualification", "review": "review", "diagnose": "diagnostic-103"}[mode]
+        packet = ROOT / {"qualify": "qualification", "review": "review", "diagnose": "diagnostic-103", "qualify-quality": "quality-104-controls", "review-quality": "quality-104-review"}[mode]
         samples = packet / "inputs"
         request = json.loads((packet / "request.json").read_text())
         if request["mode"] != mode:
@@ -296,12 +307,18 @@ def run(mode, output):
         raise ValueError("local_review_runtime_integrity")
     artifacts = {row["filename"]: verify(ROOT / "model" / row["filename"], row) for row in specs()}
     sources = {str(path.relative_to(PROJECT)): sha(path.read_bytes()) for path in [*sorted((PROJECT / "scripts").glob("tts_local_review*.py")), *sorted((PROJECT / "tests").glob("test_tts_local_review*.py")), PROJECT / "docs/ADR/098-proposed-isolated-audio-reviewer.md", PROJECT / "docs/ADR/100-proposed-local-reviewer-address-space-trial.md", PROJECT / "docs/ADR/101-proposed-pread-loading-within-12gib.md", PROJECT / "docs/ADR/102-proposed-headroom-for-retained-12gib-trial.md", PROJECT / "docs/ADR/103-proposed-heldout-audio-presence-diagnostic.md"]}
-    publish_json(output / "freeze.json", dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=7200 if mode == "review" else 600, address_space_bytes=ADDRESS_SPACE_BYTES, host_preflight_required_bytes=MIN_AVAILABLE_BYTES, diagnostic_question=DIAGNOSTIC_QUESTION if mode == "diagnose" else None, diagnostic_maximum_new_tokens=16 if mode == "diagnose" else None))
+    wall_limit = 7200 if mode in {"review", "review-quality"} else 600
+    frozen = dict(description="Local audio-control protocol with configured12GiB virtual bound and explicit owner execution gate; original12GiB/16GiB trial history retained separately, no model replacement or AC waiver.", request=request, source_sha256=sources, model_sha256=artifacts, prompt=PROMPT, system=SYSTEM, seed=7, maximum_new_tokens=MAX_TOKENS, runtime_inventory_sha256=sha((ROOT / "runtime-integrity.json").read_bytes()), wall_limit_seconds=wall_limit, address_space_bytes=ADDRESS_SPACE_BYTES, host_preflight_required_bytes=MIN_AVAILABLE_BYTES, diagnostic_question=DIAGNOSTIC_QUESTION if mode == "diagnose" else None, diagnostic_maximum_new_tokens=16 if mode == "diagnose" else None)
+    if quality_mode:
+        adr = "docs/ADR/104-proposed-heldout-quality-and-conditional-blind-review.md"
+        sources[adr] = sha((PROJECT / adr).read_bytes())
+        frozen.update(prompt=None, maximum_new_tokens=None, task_protocol={name: dict(question=value[0], maximum_new_tokens=value[1], choices=sorted(value[2]) if value[2] else None) for name, value in QUALITY_TASKS.items()}, parent_metadata_sha256=sha((packet / "parent-only.json").read_bytes()), packet_request_sha256=sha((packet / "request.json").read_bytes()))
+    publish_json(output / "freeze.json", frozen)
     before = core_snapshot()
     publish_json(output / "core-before.json", before)
     if mode != "imports":
         publish_json(output / "host-headroom-before-launch.json", require_headroom())
-    metadata, stdout, stderr = run_worker(sandbox(mode, samples), request, timeout=7200 if mode == "review" else 600)
+    metadata, stdout, stderr = run_worker(sandbox(mode, samples), request, timeout=wall_limit)
     save_bytes(output / "worker.stdout.jsonl", stdout)
     save_bytes(output / "worker.stderr.log", stderr)
     events, event_parse_error = [], False
@@ -313,13 +330,24 @@ def run(mode, output):
     after = core_snapshot()
     assert all(before[key] == after[key] for key in ["pid", "start_ticks", "command_sha256"])
     assert all(sha((PROJECT / name).read_bytes()) == value for name, value in sources.items())
-    event_auditor = audit_diagnostic_events if mode == "diagnose" else audit_events
+    event_auditor = audit_quality_events if quality_mode else audit_diagnostic_events if mode == "diagnose" else audit_events
     complete = metadata["exit_code"] == 0 and not metadata["timed_out"] and not event_parse_error and event_auditor(request, events)
     load_fidelity = audit_load_fidelity(events, ROOT / "model") if complete and mode == "load" else None
     if mode == "load":
         complete = complete and load_fidelity is True
     result = dict(description="Actual isolated original-model audio evaluation; not human MOS, TTS selection or automatic D70 acceptance.", mode=mode, process=metadata, events=events, observation_complete=complete, core_before=before, core_after=after, freeze_sha256=sha((output / "freeze.json").read_bytes()), D70_complete=False, D71_started=False)
     result["parent_original_tensor_fidelity_passed"] = load_fidelity
+    if quality_mode:
+        if sha((packet / "parent-only.json").read_bytes()) != frozen["parent_metadata_sha256"] or sha((packet / "request.json").read_bytes()) != frozen["packet_request_sha256"]:
+            raise ValueError("quality_packet_changed_during_run")
+        result["reviewer_qualification_passed"] = False
+        result["human_MOS"] = None
+        if mode == "qualify-quality":
+            mapping = json.loads((packet / "parent-only.json").read_text())["mapping"]
+            result["quality_controls_passed"] = complete and quality.qualification_checks(request, events, mapping)
+        else:
+            result["review_kind"] = "audio_conditioned_model_qualitative_review"
+            result["uncertain_observations"] = [event["id"] for event in events if event.get("event") == "quality" and event.get("task") == "naturalness" and event.get("answer") == "uncertain"]
     if mode == "diagnose":
         mapping = json.loads((ROOT / "diagnostic-103/parent-only.json").read_text())["mapping"]
         observations = [event for event in events if event.get("event") == "diagnostic"]
@@ -337,11 +365,17 @@ def main():
     """Prepare fixed controls or execute one explicit owner-approved evaluation mode without alternate model or decoder options."""
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", required=True, choices=["prepare", "prepare-review", "snapshot-runtime", "imports", "load", "qualify", "review", "prepare-diagnose", "diagnose"])
+    parser.add_argument("--mode", required=True, choices=["prepare", "prepare-review", "snapshot-runtime", "imports", "load", "qualify", "review", "prepare-diagnose", "diagnose", "prepare-quality", "qualify-quality", "prepare-quality-review", "review-quality"])
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     require_execution_permission(args.mode)
-    if args.mode == "prepare-diagnose":
+    if args.mode == "prepare-quality":
+        require_headroom()
+        quality.prepare_controls(ROOT, PROJECT, save_bytes, publish_json)
+    elif args.mode == "prepare-quality-review":
+        require_headroom()
+        quality.prepare_review(ROOT, PROJECT, save_bytes, publish_json)
+    elif args.mode == "prepare-diagnose":
         require_headroom()
         prepare_diagnostic_packet(ROOT, PROJECT, publish_json)
     elif args.mode == "prepare":

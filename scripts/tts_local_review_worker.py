@@ -41,6 +41,12 @@ def require_execution_permission(mode=None):
 
 def validate_request(request):
     """Accept only bounded blind float32 inputs and fixed modes, excluding references, arbitrary paths and generation overrides."""
+    if type(request) is dict and request.get("mode") in ("qualify-quality", "review-quality"):
+        from scripts.tts_local_review_quality_runtime import (
+            validate_request as validate_quality_request,
+        )
+
+        return validate_quality_request(request)
     if type(request) is not dict or set(request) != {"mode", "cases"} or request["mode"] not in {"imports", "load", "qualify", "review", "diagnose"}:
         raise ValueError("local_review_request")
     rows = request["cases"]
@@ -230,6 +236,15 @@ class Runtime:
             error = str(failure)
         emit("diagnostic", id=row["id"], source_sha256=row["sha256"], sample_count=len(values), sample_rate=16000, question=QUESTION, maximum_new_tokens=DIAGNOSTIC_MAX_TOKENS, feature_sha256=feature_hash, feature_shape=list(features.shape), feature_frames=frames, audio_tokens=audio_tokens, generated_token_ids=tokens, generation_complete=bool(tokens and tokens[-1] == self.boundaries["eos_token_id"]), raw_text=raw, answer=answer, parse_error=error, seconds=time.perf_counter() - started)
 
+    def assess_quality(self, row, mode):
+        """Enforce separately approved campaign scope before reading any signal or generating a fixed auditory response."""
+        require_execution_permission(mode)
+        if mode not in {"qualify-quality", "review-quality"}:
+            raise ValueError("quality_runtime_mode")
+        from scripts.tts_local_review_quality_runtime import observe
+
+        observe(self, row, waveform, emit, SYSTEM)
+
 
 def main():
     """Evaluate only a validated fixed request inside the parent-owned offline namespace and report actual process RAM/time separately from judgements."""
@@ -242,7 +257,9 @@ def main():
     try:
         runtime = Runtime(request["mode"] != "imports")
         for row in request["cases"]:
-            if request["mode"] == "diagnose":
+            if request["mode"] in {"qualify-quality", "review-quality"}:
+                runtime.assess_quality(row, request["mode"])
+            elif request["mode"] == "diagnose":
                 runtime.diagnose(row)
             else:
                 runtime.review(row)
