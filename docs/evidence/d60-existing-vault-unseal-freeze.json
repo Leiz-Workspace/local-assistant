@@ -1,0 +1,27 @@
+{
+  "description": "Pre-action gate for existing initialized Vault runtime unseal only after observed reboot; use existing protected bootstrap helper. No init/rekey/audit-policy/secret/config/service restart or architecture change. Existing failed audits retained.",
+  "status": "FROZEN_BEFORE_EXISTING_RUNTIME_UNSEAL",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "baseline_commit": "455dac68a2f3bb60260ebf414d4dbe35a2cc38f0",
+  "existing_Vault_initialized": true,
+  "existing_Vault_sealed": true,
+  "bootstrap_owner_mode_valid": true,
+  "bootstrap_git_ignored": true,
+  "existing_helper_sha256": "16c06dfee51b4d0581ec73772e055c3270532cb945166a8aa4604c09f3c9be6a",
+  "tests_passed": 8,
+  "controls": {
+    "path": "data/backups/d60-existing-vault-unseal-controls.log",
+    "sha256": "2258da9311f6395f328963456cede3d56523ef15c0585df78fd82e95fa259756"
+  },
+  "source_files_unchanged": 538,
+  "allowed_mutation": "existing_initializer.unseal_vault -> PUT /v1/sys/unseal only",
+  "not_allowed": [
+    "initialize",
+    "rekey",
+    "secret writes",
+    "policy writes",
+    "audit device reconciliation",
+    "seal/storage/startup config change"
+  ],
+  "D60_acceptance": false
+}

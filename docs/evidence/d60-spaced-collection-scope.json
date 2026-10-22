@@ -1,0 +1,23 @@
+{
+  "description": "Initial collect-only command omitted the tests target and entered vendored llama.cpp suites, causing missing appium/requests imports. No package installation or vendor-test/source repair. Correct application target collects4032; collection is not full execution/PASS.",
+  "status": "RETAINED_WRONG_COLLECTION_SCOPE_CORRECTED_TARGET",
+  "first_log": {
+    "path": "data/backups/d60-spaced-full-collection.log",
+    "sha256": "80ae21157ce07e1a7622730eae88711ef8cfd268ff70bf5b83967ccc06352f71"
+  },
+  "first_collected": 4100,
+  "first_collection_errors": 2,
+  "first_missing_optional_vendor_packages": [
+    "appium",
+    "requests"
+  ],
+  "correct_target": "tests",
+  "correct_collected": 4032,
+  "correct_collection_log": {
+    "path": "data/backups/d60-spaced-application-collection.log",
+    "sha256": "77ce6e260ac08111aac93241d949ecd31fff9c4bdc846d530a952de9c23c898c"
+  },
+  "new_application_cases": 14,
+  "previous_actual_full_passed": 4018,
+  "new_full4032_executed": false
+}

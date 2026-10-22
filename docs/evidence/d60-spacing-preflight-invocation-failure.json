@@ -1,0 +1,12 @@
+{
+  "description": "Premature local wrapper invocation after the five-minute quiet guard prevented freeze creation. Missing freeze then refused before any source/model/provider/native I/O. First log retained; no actual spaced cohort ran.",
+  "status": "FAILED_LOCAL_PREFLIGHT_NO_IO",
+  "actual_provider_attempts": 0,
+  "model_attempts": 0,
+  "source_attempts": 0,
+  "native_batches": 0,
+  "log": {
+    "path": "data/backups/d60-spacing-before-freeze-preflight.log",
+    "sha256": "54f90c1b597072d832195e507139bcbbd7d39a80a7256a45ec3c177127921938"
+  }
+}
