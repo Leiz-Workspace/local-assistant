@@ -1,0 +1,28 @@
+{
+  "description": "Post-first-trial correction of parent-code namespace exposure. Pure response validator bodies are unchanged; genuine namespace probe passes without importing neural SDKs or rerunning original model. Does not retroactively validate the original namespace.",
+  "parent_module_unmounted": true,
+  "parent_module_unimportable_in_native_probe": true,
+  "pure_runtime_has_no_SOURCES_or_prepare_packet": true,
+  "response_parser_AST_unchanged": true,
+  "response_auditor_AST_unchanged": true,
+  "native_probe_passed": true,
+  "native_probe_log_sha256": "e914d336a7773b5317d22b5d417df7ec4cd217a4bb4c8eeabe027644f97be06c",
+  "correction_source_sha256": {
+    "scripts/tts_local_review.py": "e6bd9023887059d4919634a7bbfffe6a7fc0a4082117aeb02fb31d621e58e117",
+    "scripts/tts_local_review_worker.py": "29961c82912fdfcced7a78e9238a691f0b29551e3ad4a068f2aad80a8cf08f8d",
+    "scripts/tts_local_review_diagnostic.py": "7ab995d9ba2a647ac6f5732bd930a7803486084beb10bb94462b230f3397097b",
+    "scripts/tts_local_review_diagnostic_runtime.py": "69a7c02f1a09ec0857520f4342606d95372b421b52400de8081c090ddbb9f98c",
+    "tests/test_tts_local_review_diagnostic_namespace.py": "77f3e36a840a2f1eb3dc867f757b771d0f61f43866982d23d1154e5c0df11523"
+  },
+  "original_model_inference_repeated": false,
+  "original_trial_strict_protocol_passed": false,
+  "approved_single_scope_consumed": true,
+  "current_allowed_modes": [
+    "imports",
+    "load"
+  ],
+  "final_TTS_tests_passed": 249,
+  "final_TTS_seconds": 7.63,
+  "D70_complete": false,
+  "D71_started": false
+}

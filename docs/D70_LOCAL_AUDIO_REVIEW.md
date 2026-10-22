@@ -2,8 +2,7 @@
 
 **Mục đích:** Ghi quyền thử, nguồn model/runtime, protocol và kết quả thực tế của công cụ đánh giá audio bổ sung. Tài liệu này không thay kết quả TTS gốc hoặc tự đóng Acceptance Criteria.
 
-**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** theo ADR-102. Native `pread` load/integrity weights gốc **PASS26.471s/exit0**,1,442tensors/9,406,928,896bytes khớp hash/storage/CPU-BF16; parent audit độc lập PASS. Peak RSS9.333GiB RAM và VmPeak10.393GiB virtual (không phải VRAM/minimum RAM). Đây là load-only: chưa đo inference fit12GiB, không chạy lại audio controls/review24outputs.222TTSrelated PASS6.00s/Ruff PASS. CORE cùng identity/recovery PASS. [Bằng chứng](evidence/d70-pread-14g-headroom-load.json). `qualify`/`review` vẫn bị chặn; ADR-100 và097 vẫn REJECTED. D70 mở, D71 chưa bắt đầu.
-**Bước tiếp theo đã chuẩn bị, chưa thực thi:** [ADR-103](ADR/103-proposed-heldout-audio-presence-diagnostic.md) chỉ chẩn đoán factual presence trên4control mới, không naturalness hoặc qualification. Mã và22controls mới/244TTSrelated PASS6.18s/Ruff PASS; modes `prepare-diagnose`/`diagnose` vẫn bị chặn theo quyền load-only hiện tại. Chưa tạo real packet hoặc chạy audio inference. [Protocol và nguồn dự kiến](evidence/d70-presence-diagnostic-proposal.json).
+**Quyết định mới nhất2026-10-23:** Chủ dự án duyệt **“Duyệt một lượt diagnostic ADR-103”**. Lượt đã chạy39.749s/exit0/no timeout, raw `yes/no/no/yes` khớp4control và4EOS. Audit phát hiện helper mount vào worker còn chứa metadata/prepare code phía cha: **không coi là strict protocol PASS**, dù worker không truyền các reference đó vào input model. Đã tách pure runtime, native namespace probe PASS; chưa chạy lại original model. Scope một lượt đã dùng, diagnostic modes đóng lại; chỉ imports/load còn mở.249TTSrelated PASS7.63s/Ruff PASS. [Bằng chứng](evidence/d70-presence-diagnostic-first.json). D70 mở, reviewer NOT QUALIFIED/D71 chưa bắt đầu.
 
 
 Chủ dự án đã trả lời **“Cho phép thử evaluator local theo ADR-098”**. [ADR-098](ADR/098-proposed-isolated-audio-reviewer.md) được duyệt cho thử nghiệm nghiên cứu riêng có giới hạn. Giữ nguyên AC D70, ADR-097 REJECTED, model registry/default/CORE và thứ tự D70→D71. Không có phê duyệt chọn/deploy TTS, chuyển tiêu chí nghe sang ngày khác hoặc thay model dự án.
@@ -103,3 +102,24 @@ Lifetime ru_maxrss9,786,388KiB≈9.333GiB RAM; kernel VmHWM9,786,536KiB là coun
 **222TTSrelated PASS6.00s/0FAIL/0SKIP/Ruff PASS**; test14GiB exact/below-bound và17GiB acceptance vẫn kiểm đúng12GiB sandbox. Final634source và mọi prior626/632other source bytes,917protected hashes,176original audit inputs,23475D70SDK/23382localSDK,16original reviewer artifacts và readonly model/data/security/service audit PASS. [Actual evidence](evidence/d70-pread-14g-headroom-load.json), [first freeze](evidence/d70-pread-14g-headroom-first-freeze.json).
 
 **AUDIO-EVAL-LOAD-12G-001 load/integrity COMPLETE.** Không có audio generation trong lượt này; local reviewer vẫn NOT QUALIFIED,24original judgements vẫn null, D70 mở/D71 unstarted. Không dùng memory fix để repair JSON/labels/prompt outcomes hoặc tự chạy lại semantic controls.
+
+## ADR-103 — First factual diagnostic và deviation của namespace
+
+Explicit approval ngày2026-10-23 cho một packet4control đã preregister. Source/protocol636file/917protected/26priorD70evidence được freeze sau248TTSrelated PASS6.11s, trước real preparation/inference. Dùng đúng pinned original model/SDK, question/system/seed/EOS đã chốt; max16tokens, cap12GiB/headroom14GiB/600wall/1200CPU, không download hoặc synthesis. Cả4control chỉ gửi đầy đủ opaque waveform và fixed question vào model; parent-only request/expectations hashes đóng băng trước gọi.
+
+| Control mờ | Parent-only nguồn | Raw answer | Expected | EOS |
+| --- | --- | --- | --- | --- |
+| clip-01 | Original complete FLEURS EN0001 | yes | yes |151645 |
+| clip-02 | Authored seed102noise3.75s | no | no |151645 |
+| clip-03 | Exactzero3.75s | no | no |151645 |
+| clip-04 | Original complete FLEURS VI0001 | yes | yes |151645 |
+
+Actual worker39.749s/exit0/no timeout, CPU50.860s, mỗi response2tokens, không parse repair/cap/uncertainty. Runtime factual flag4/4true được giữ nguyên. RSS peak10,006,588KiB≈9.543GiB RAM, VmPeak10,900,092KiB≈10.395GiB virtual; observed inference fit cho4case này, không minimumRAM/VRAM/generalSLO claim. CORE cùngPID/start/command và literal recovery PASS trước-sau, worker joined.
+
+**Namespace deviation:** helper mount ban đầu vẫn chứa `SOURCES` và parent packet preparation/expectation code. Frozen Runtime.diagnose không dùng các reference này trong model inputs, nhưng filesystem/module globals chưa đúng isolation đã đề ra. Audit đánh **strict protocol không PASS**, không giấu deviation hoặc biến raw4/4thành reviewer qualification. Giữ full actual source/result/stdout/stderr/packet và mọi hash; lỗi không được ghi ngược rằng namespace đầu đã sạch.
+
+Sửa riêng ranh giới source: parent preparation module không mount; pure response runtime module không có source IDs/hashes/prepare_packet. Probe thật trong bwrap xác nhận parent helper absent/unimportable, runtime không chứa SOURCES và parent-only labels/project root không nhìn thấy. Không chạy lại original model để tìm kết quả thuận lợi. Scope103 đã dùng và diagnostic modes khóa lại. **249TTSrelated PASS7.63s/Ruff PASS**, gồm5controls tăng thêm so với244(protected mode4/native namespace1); real fixture probes không phải inference/quality scores.
+
+Final638source,633file trong636approved freeze giữ nguyên; ba source controller/worker/helper thay đổi cần thiết và hai file runtime/probe-test mới.917protected/26priorD70evidence/176original inputs/23475D70SDK/23382localSDK/16reviewer artifacts và system/data/security audit PASS;24judgements null, owned evaluators0, no common24review. [Actual evidence](evidence/d70-presence-diagnostic-first.json), [approved freeze](evidence/d70-presence-diagnostic-approved-freeze.json). Presence observations không chứng minh prosody/pronunciation/artifact/naturalness; prompt và stimuli khác lượt cũ nên không suy causal prompt fix. **D70 IN PROGRESS, reviewer NOT QUALIFIED, D71 NOT STARTED.**
+
+[Correction proof](evidence/d70-diagnostic-namespace-correction.json) ghi native namespace probe và AST comparison: parse_answer/audit_events giữ nguyên function bodies sau khi tách module, không sửa acceptance/response logic để làm4answers thành PASS. Original namespace deviation không được retroactively xóa.

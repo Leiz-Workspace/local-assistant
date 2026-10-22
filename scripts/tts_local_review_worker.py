@@ -30,7 +30,7 @@ ALLOWED_EXECUTION_MODES = frozenset({"imports", "load"})
 
 
 def require_execution_permission(mode=None):
-    """Enforce the owner-approved ADR-101 load-only scope before input access, SDK imports or execution."""
+    """Enforce the explicit owner-approved mode scope before input access, SDK imports or execution."""
     if not EXECUTION_ALLOWED:
         logger.warning("local_audio_review_blocked code=owner_paused_execution")
         raise ValueError("local_review_owner_paused_execution")
@@ -202,10 +202,10 @@ class Runtime:
     def diagnose(self, row):
         """Record one first factual speech-presence response under a separately approved protocol without naturalness or qualification claims."""
         require_execution_permission("diagnose")
-        from scripts.tts_local_review_diagnostic import (
+        from scripts.tts_local_review_diagnostic_runtime import (
             MAX_TOKENS as DIAGNOSTIC_MAX_TOKENS,
         )
-        from scripts.tts_local_review_diagnostic import QUESTION, parse_answer
+        from scripts.tts_local_review_diagnostic_runtime import QUESTION, parse_answer
 
         started = time.perf_counter()
         values = waveform(row)
