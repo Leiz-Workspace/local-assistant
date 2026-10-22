@@ -125,7 +125,8 @@ def test_incomplete_or_incorrect_controls_never_open_review(packet, mutation):
 
 @pytest.mark.parametrize("mode", ["prepare-quality", "qualify-quality", "prepare-quality-review", "review-quality"])
 def test_default_quality_scope_closed_before_any_inputs(mode, monkeypatch, tmp_path):
-    """Preserve the consumed one-shot authorization and reject new packet or model execution before side effects."""
+    """Verify the retired imports/load-only policy blocks new packet or model execution before side effects."""
+    monkeypatch.setattr(worker, "ALLOWED_EXECUTION_MODES", frozenset({"imports", "load"}))
     with pytest.raises(ValueError, match="owner_load_only_scope"):
         worker.require_execution_permission(mode)
     if mode.startswith("prepare"):
@@ -138,6 +139,25 @@ def test_default_quality_scope_closed_before_any_inputs(mode, monkeypatch, tmp_p
         with pytest.raises(ValueError, match="owner_load_only_scope"):
             controller.run(mode, tmp_path / "uncreated")
         assert not (tmp_path / "uncreated").exists()
+
+
+@pytest.mark.parametrize("mode,allowed", [("prepare-quality", True), ("qualify-quality", True), ("prepare-quality-review", True), ("review-quality", True), ("prepare", False), ("qualify", False), ("review", False), ("prepare-diagnose", False), ("diagnose", False)])
+def test_adr104_approved_scope_keeps_original_trials_closed(mode, allowed, monkeypatch):
+    """Authorize only the complete new campaign while preserving consumed diagnostic and original qualification restrictions."""
+    monkeypatch.setattr(worker, "ALLOWED_EXECUTION_MODES", frozenset({"imports", "load", "prepare-quality", "qualify-quality", "prepare-quality-review", "review-quality"}))
+    if allowed:
+        worker.require_execution_permission(mode)
+    else:
+        with pytest.raises(ValueError, match="owner_load_only_scope"):
+            worker.require_execution_permission(mode)
+
+
+@pytest.mark.parametrize("mode", ["prepare-quality", "qualify-quality", "prepare-quality-review", "review-quality"])
+def test_consumed_adr104_campaign_is_closed_in_actual_policy(mode):
+    """Prevent accidental preparation or inference after the failed first controls consume the approved campaign."""
+    assert worker.ALLOWED_EXECUTION_MODES == frozenset({"imports", "load"})
+    with pytest.raises(ValueError, match="owner_load_only_scope"):
+        worker.require_execution_permission(mode)
 
 
 @pytest.mark.parametrize("task,raw", [("presence", "YES"), ("comparison", "first."), ("language", "English"), ("naturalness", "sounds natural"), ("notes", ""), ("notes", "word " * 41)])
