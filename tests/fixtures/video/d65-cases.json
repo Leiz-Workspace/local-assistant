@@ -1,0 +1,11 @@
+{
+  "description": "Predeclared D65 public authored sparse video descriptions. Original three-stage video and PCM synthetic tone; no speech or continuous-motion ground truth.",
+  "fixture": "tests/fixtures/video/stages.mkv",
+  "model": "qwen3.5-9b-core",
+  "targets_ms": [0, 1000, 2000],
+  "expected_pts": [0, 1000, 2000],
+  "expected_stages": ["READY", "MOVING", "DONE"],
+  "question": "What single stage word is visibly printed in this image? Return only that word; do not infer motion, sound or unseen events.",
+  "automatic_retries": 0,
+  "ordinary_text_recovery_expected": "VISION_TEXT_OK"
+}

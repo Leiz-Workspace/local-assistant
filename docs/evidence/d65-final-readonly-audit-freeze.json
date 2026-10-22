@@ -1,0 +1,10 @@
+{
+  "description": "Tested D65 final read-only audit and original first complete three-frame actual result; earlier gates/failures remain immutable.",
+  "sha256": {
+    "data/backups/d65-frame-description-readonly-audit.py": "23f5696748a79e11b11c8478cc55799c9bc8570a16a7f53174b7e6dcf6899013",
+    "data/backups/test_d65_frame_readonly_audit.py": "4c65fe983a247834def35ba4985feb6b45223b10f4ec4c294dcc9e9827c7f536",
+    "data/backups/d65-final-readonly-audit-controls.log": "376d3c8029c19be29c366234e49eb93812d21f8696373a0698b0191734c3e079",
+    "docs/evidence/d65-frame-description-first-freeze.json": "4a20f37dcb5ba0f7f2a789ad5e13a8ab4a2120c531782729c42e3d6161313362",
+    "data/backups/d65-frame-description-first/summary.json": "951def5ea31d69f241509e7da31ab260d619546ee960918607c7dfd3e5908716"
+  }
+}
