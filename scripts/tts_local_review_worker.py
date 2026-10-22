@@ -41,10 +41,10 @@ def require_execution_permission(mode=None):
 
 def validate_request(request):
     """Accept only bounded blind float32 inputs and fixed modes, excluding references, arbitrary paths and generation overrides."""
-    if type(request) is not dict or set(request) != {"mode", "cases"} or request["mode"] not in {"imports", "load", "qualify", "review"}:
+    if type(request) is not dict or set(request) != {"mode", "cases"} or request["mode"] not in {"imports", "load", "qualify", "review", "diagnose"}:
         raise ValueError("local_review_request")
     rows = request["cases"]
-    if type(rows) is not list or len(rows) != {"imports": 0, "load": 0, "qualify": 9, "review": 24}[request["mode"]]:
+    if type(rows) is not list or len(rows) != {"imports": 0, "load": 0, "qualify": 9, "review": 24, "diagnose": 4}[request["mode"]]:
         raise ValueError("local_review_coverage")
     seen = set()
     for row in rows:
@@ -199,6 +199,38 @@ class Runtime:
         emit("review", id=row["id"], source_sha256=row["sha256"], sample_count=len(values), sample_rate=16000, feature_sha256=feature_hash, feature_shape=list(features.shape), feature_frames=feature_frames, audio_tokens=audio_tokens, generated_token_ids=generated, generation_complete=complete, raw_text=raw, judgement=judgement, parse_error=parse_error, seconds=time.perf_counter() - started)
 
 
+    def diagnose(self, row):
+        """Record one first factual speech-presence response under a separately approved protocol without naturalness or qualification claims."""
+        require_execution_permission("diagnose")
+        from scripts.tts_local_review_diagnostic import (
+            MAX_TOKENS as DIAGNOSTIC_MAX_TOKENS,
+        )
+        from scripts.tts_local_review_diagnostic import QUESTION, parse_answer
+
+        started = time.perf_counter()
+        values = waveform(row)
+        conversation = [dict(role="system", content=[dict(type="text", text=SYSTEM)]), dict(role="user", content=[dict(type="audio", audio="/samples/" + row["id"] + ".f32"), dict(type="text", text=QUESTION)])]
+        text = self.processor.apply_chat_template(conversation, add_generation_prompt=True, tokenize=False)
+        inputs = self.processor(text=text, audio=[values], sampling_rate=16000, return_tensors="pt", padding=True)
+        features = inputs["input_features"]
+        feature_hash = hashlib.sha256(features.numpy().tobytes()).hexdigest()
+        audio_tokens = int((inputs["input_ids"] == self.model.config.audio_token_index).sum())
+        frames = int(inputs["feature_attention_mask"].sum())
+        if audio_tokens <= 0 or frames <= 0:
+            raise ValueError("local_diagnostic_audio_conditioning_missing")
+        inputs = inputs.to("cpu", dtype=self.torch.bfloat16)
+        with self.torch.inference_mode():
+            result = self.model.generate(**inputs, **self.boundaries, do_sample=False, num_beams=1, max_new_tokens=DIAGNOSTIC_MAX_TOKENS)
+        tokens = result[0, inputs["input_ids"].shape[1]:].tolist()
+        raw = self.processor.decode(tokens, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+        answer, error = None, None
+        try:
+            answer = parse_answer(raw)
+        except ValueError as failure:
+            error = str(failure)
+        emit("diagnostic", id=row["id"], source_sha256=row["sha256"], sample_count=len(values), sample_rate=16000, question=QUESTION, maximum_new_tokens=DIAGNOSTIC_MAX_TOKENS, feature_sha256=feature_hash, feature_shape=list(features.shape), feature_frames=frames, audio_tokens=audio_tokens, generated_token_ids=tokens, generation_complete=bool(tokens and tokens[-1] == self.boundaries["eos_token_id"]), raw_text=raw, answer=answer, parse_error=error, seconds=time.perf_counter() - started)
+
+
 def main():
     """Evaluate only a validated fixed request inside the parent-owned offline namespace and report actual process RAM/time separately from judgements."""
     logging.basicConfig(level=logging.INFO)
@@ -210,7 +242,10 @@ def main():
     try:
         runtime = Runtime(request["mode"] != "imports")
         for row in request["cases"]:
-            runtime.review(row)
+            if request["mode"] == "diagnose":
+                runtime.diagnose(row)
+            else:
+                runtime.review(row)
         usage = resource.getrusage(resource.RUSAGE_SELF)
         emit("complete", cases=len(request["cases"]), max_RSS_KiB=usage.ru_maxrss, CPU_seconds=usage.ru_utime + usage.ru_stime)
     finally:

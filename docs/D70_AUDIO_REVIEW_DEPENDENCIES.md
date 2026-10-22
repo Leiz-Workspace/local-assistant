@@ -3,6 +3,8 @@
 **Mục đích:** Ghi các phần việc D70 có thể xác minh tiếp, cùng một phương án mở khóa việc đánh giá audio thật. Không đổi AC, model hoặc kết quả benchmark đã chốt.
 
 **Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** theo ADR-102. Native `pread` load/integrity weights gốc **PASS26.471s/exit0**,1,442tensors/9,406,928,896bytes khớp hash/storage/CPU-BF16; parent audit độc lập PASS. Peak RSS9.333GiB RAM và VmPeak10.393GiB virtual (không phải VRAM/minimum RAM). Đây là load-only: chưa đo inference fit12GiB, không chạy lại audio controls/review24outputs.222TTSrelated PASS6.00s/Ruff PASS. CORE cùng identity/recovery PASS. [Bằng chứng](evidence/d70-pread-14g-headroom-load.json). `qualify`/`review` vẫn bị chặn; ADR-100 và097 vẫn REJECTED. D70 mở, D71 chưa bắt đầu.
+**Bước tiếp theo đã chuẩn bị, chưa thực thi:** [ADR-103](ADR/103-proposed-heldout-audio-presence-diagnostic.md) chỉ chẩn đoán factual presence trên4control mới, không naturalness hoặc qualification. Mã và22controls mới/244TTSrelated PASS6.18s/Ruff PASS; modes `prepare-diagnose`/`diagnose` vẫn bị chặn theo quyền load-only hiện tại. Chưa tạo real packet hoặc chạy audio inference. [Protocol và nguồn dự kiến](evidence/d70-presence-diagnostic-proposal.json).
+
 
 ## Dịch vụ đã cấu hình
 
