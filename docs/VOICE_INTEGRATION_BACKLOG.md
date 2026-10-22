@@ -13,3 +13,11 @@ Risks: VAD discards quiet/short words or reorders context, gap removal corrupts 
 ## AUDIO-PROD lifecycle
 
 D71–D74 retain explicit recording consent/stop, authenticated source/owner capabilities, nonqueued bounded admission, joined cancellation, model buffering/error handling and retention/delete/security gates. Existing D66 supplied-reference and D68/D69 offline results are foundations; none activates a microphone, background recorder, ASR/VAD/TTS default or server. TTS evidence/voice licensing remains D70; additional gaps must be assessed here before scheduling, not silently replacing registry models.
+
+## AUDIO-TTS-NATURALNESS-001 Actual first-output auditory review
+
+**Priority P1; currently an unmet D70 criterion. Proposed move to a mandatory D72/selection/deployment prerequisite is NOT APPROVED or applied.** [ADR-097](ADR/097-proposed-tts-auditory-review-sequencing.md) makes that exact alternative reviewable; D70 remains IN PROGRESS and D71 unstarted under the current order.
+
+The actual D70 tool cannot accept audio input, so no listening/naturalness/MOS judgement exists. Dependencies: an audio-capable tool or reviewer, all24retained first native waveforms/complete separate Opus listening copies and their hashes, fixed authored texts, accurate reviewer provenance and original model/data/runtime guards. Effort half to one review milestone; no synthesis rerun or model provisioning. Record per-output pronunciation/prosody/artifacts/naturalness with uncertainty after hearing the complete signal. Label same-agent review honestly and do not call it independent human MOS. [Measured report and review packet](D70_OFFLINE_TTS_COMPARISON.md).
+
+Risks include replacing hearing with ASR/acoustic proxies, selecting only good outputs, forgetting deferred quality work, silently using unsupported Qwen Vietnamese/Auto or conflating voice/engine/source-data licenses. Keep all first failures and no outcome-driven tuning. Model selection still needs benchmark/resources/compatibility/migration/rollback and explicit owner approval; Piper VI source-license verification and AUDIO-VAD-ASR-001 remain separate. No model/default/service/data change is authorized. Rollback of the unapproved proposal keeps D70 open/D71 unstarted, retaining every output and current system unchanged.
