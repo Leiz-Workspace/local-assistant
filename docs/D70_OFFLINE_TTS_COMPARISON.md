@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi lại bằng chứng thực tế của MODEL-EVAL-005, phân biệt khả năng chạy, tiếng Việt được hỗ trợ, chỉ số đo được và tiêu chí đánh giá còn mở. Tài liệu không phê duyệt chọn hoặc triển khai model.
 
-**Trạng thái:** IN PROGRESS. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
+**Trạng thái:** IN PROGRESS — chờ khả năng nghe thực tế theo quyết định chủ dự án ngày2026-10-22. ADR-097 bị từ chối; giữ nguyên AC và thứ tự D70→D71. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
 
 ## Model, giọng và giấy phép
 
@@ -91,4 +91,4 @@ Không migration dữ liệu/config/index/model default trong nhiệm vụ này.
 
 [Bản nghe24audio ngoại tuyến](../data/backups/d70-tts-listening-review/index.html) có đủ timeline, native/preview hashes và authored text; [JSON review pending](../data/backups/d70-tts-listening-review/review.pending.json) giữ mọi judgement null/has_actually_listenedFalse. Đây là artifact để công cụ hoặc reviewer có khả năng nghe đánh giá tiếp, không phải yêu cầu chủ dự án đã nghe hoặc nguồn human labels.
 
-D70 giữ **IN PROGRESS / NATURALNESS OPEN / NOT_SELECTED / NOT_DEPLOYED**. Phần benchmark máy, capability/license assessment và audit đã hoàn tất. Chưa thể đóng AC nghe thực tế bằng công cụ hiện tại; chưa tự chuyển D71. D71 tiếp theo là push-to-talk/recording consent và stop/cancel, độc lập với chọn giọng; chỉ được bắt đầu sau khi D70 được đóng theo AC hoặc chủ dự án duyệt thay đổi thứ tự/phạm vi. Model/voice selection, chuỗi giấy phép Piper VI và AUDIO-VAD-ASR-001 vẫn là các gate riêng trước D72/triển khai.
+D70 giữ **IN PROGRESS / NATURALNESS OPEN / NOT_SELECTED / NOT_DEPLOYED**. Phần benchmark máy, capability/license assessment và audit đã hoàn tất. Chưa thể đóng AC nghe thực tế bằng công cụ hiện tại; chưa tự chuyển D71. D71 tiếp theo là push-to-talk/recording consent và stop/cancel, độc lập với chọn giọng; chỉ được bắt đầu sau khi D70 được đóng theo AC. Chủ dự án đã chọn giữ nguyên AC, chờ khả năng nghe và từ chối thay đổi thứ tự/phạm vi tại ADR-097 ngày2026-10-22. Model/voice selection, chuỗi giấy phép Piper VI và AUDIO-VAD-ASR-001 vẫn là các gate riêng trước D72/triển khai.

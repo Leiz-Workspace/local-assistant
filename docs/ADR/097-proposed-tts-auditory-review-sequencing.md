@@ -2,7 +2,13 @@
 
 **Purpose:** Make the exact proposed scheduling change reviewable when D70's original auditory criterion cannot be executed by the available tool, without claiming naturalness, selecting a model or silently advancing the roadmap.
 
-**Date:** 2026-10-22. **Status: PROPOSED — NOT APPLIED; owner approval required to change the existing acceptance order.** D70 currently remains IN PROGRESS and D71 has not started.
+**Date:** 2026-10-22. **Status: REJECTED by owner on 2026-10-22 — NOT APPLIED.** D70 currently remains IN PROGRESS and D71 has not started.
+
+## Owner decision — 2026-10-22
+
+The owner chose: **“Giữ nguyên AC, chờ khả năng nghe”** (retain the existing Acceptance Criteria and wait for audio inspection capability). The proposed milestone split and permission to begin D71 are rejected. D70 remains IN PROGRESS with actual auditory review required at D70; D71 remains unstarted. Preserve all24first native waveforms, listening copies and null review labels. Do not replace hearing with ASR/acoustic metrics, rerun synthesis to select better outputs, alter any model or reopen the rejected proposal without new owner direction.
+
+The proposal below is retained as decision history, not an active approval request. Resume the unmet auditory criterion when genuine inspection capability becomes available; no continuous monitoring or background work is claimed.
 
 ## Observed constraint
 
@@ -19,7 +25,7 @@ The current [report](../D70_OFFLINE_TTS_COMPARISON.md), [measurement status](../
 3. Allow D71's independent explicit recording/stop/cancel foundation and tests to proceed without a TTS default, TTS deployment or background recording. Actual recording remains subject to the product's explicit user recording controls.
 4. Keep Piper VI upstream licensing verification, owner-approved model choice and `AUDIO-VAD-ASR-001` as separate prerequisites before D72/deployment. Do not replace any registry nomination, source, service, data or earlier acceptance.
 
-Until approval, none of these four scheduling/acceptance changes is effective. Existing D70/D71 statuses and AC remain in force. Keeping D70 open until audio inspection becomes possible is the other valid option.
+The owner rejected all four proposed scheduling/acceptance changes. Existing D70/D71 statuses and AC remain in force: keep D70 open until actual audio inspection becomes possible and do not begin D71.
 
 ## Priority, dependencies, effort and risk
 

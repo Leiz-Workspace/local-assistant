@@ -24,5 +24,11 @@
   "D71_status": "NOT_STARTED_GATED_BY_CURRENT_AC",
   "review_packet_html_sha256": "ff954899c755297a7eda55b533e4aa52e562ec985eac67f128064a6742bda863",
   "sequence_change_proposal": "docs/ADR/097-proposed-tts-auditory-review-sequencing.md",
-  "sequence_change_approved": false
+  "sequence_change_approved": false,
+  "sequence_change_decision": "REJECTED_BY_OWNER",
+  "owner_decision_date": "2026-10-22",
+  "owner_decision": "Giữ nguyên AC, chờ khả năng nghe",
+  "auditory_review_required_at": "D70",
+  "waiting_for": "GENUINE_AUDIO_INSPECTION_CAPABILITY",
+  "background_monitoring_active": false
 }
