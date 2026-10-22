@@ -1,0 +1,155 @@
+{
+  "description": "Distinct same-oracle sample after ADR086 generic field-association prompt repair, original first2of3 preserved. One frozen authored public-image local functionality sample through unchanged original CORE/mmproj and isolated normalization. Same-agent visible oracles, no independent-human/general vision quality, secure model-memory erasure or server-side abort claim.",
+  "status": "PASS_REPAIRED_ACTUAL_NATIVE_CORE_IMAGE_CHAT_AND_TEXT_RECOVERY",
+  "source_freeze_sha256": "ea710ede37f188bda9392afb4e3f05beb74a4031961d23632836d08a9333461d",
+  "cases": [
+    {
+      "id": "invoice-visible-facts",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "question": "What invoice number is visible, and what is the complete Total line? Copy the Total line literally.",
+      "status": "PASS",
+      "answer": "Invoice 2048\nTotal 42 USD",
+      "uncertainties": [],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "width": 1200,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:20:28.746933+00:00",
+      "elapsed_seconds": 1.048
+    },
+    {
+      "id": "vietnamese-item-quantities",
+      "fixture": "tests/fixtures/ocr/table-vie.png",
+      "source_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "question": "Trong ảnh, số lượng Bút và Vở lần lượt là bao nhiêu?",
+      "status": "PASS",
+      "answer": "Bút: 3, Vở: 5",
+      "uncertainties": [],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "width": 1000,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:20:29.672840+00:00",
+      "elapsed_seconds": 0.924
+    },
+    {
+      "id": "absent-customer-name",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "question": "What is the customer name on this invoice?",
+      "status": "PASS",
+      "answer": "not available",
+      "uncertainties": [
+        "The image does not contain an explicit field labeled 'Customer Name' or any unambiguous association of a name with the customer role. The text 'LOCAL OCR GOLDEN' may be a system identifier, company name, or placeholder, but its role as customer is not explicitly stated."
+      ],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "width": 1200,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:20:31.378484+00:00",
+      "elapsed_seconds": 1.702
+    }
+  ],
+  "text_CORE_attempts": 1,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "raw_images_or_model_prompts_persisted": false,
+  "human_independent": false,
+  "semantic_validation": false,
+  "ordinary_text_completion": {
+    "content": "VISION_TEXT_OK",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 24,
+    "output_tokens": 4,
+    "reasoning_tokens": null,
+    "latency_ms": 196
+  },
+  "ordinary_text_recovery_passed": true,
+  "native_attempts": 3,
+  "image_CORE_port_attempts": 3,
+  "model_transports": [
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    }
+  ],
+  "operations_remaining": 0,
+  "admission_released": true,
+  "service_closed": true,
+  "quota_charged": 3,
+  "elapsed_seconds": 3.879,
+  "first_measurement": false,
+  "functional_passed": 3,
+  "functional_total": 3,
+  "first_original_functional_passed": 2,
+  "first_original_functional_total": 3,
+  "first_original_status": "FAILED_UNCHANGED",
+  "private_summary_sha256": "5252fc541341f6eb0cc93975f914e2b17ef2ba22702eee56b400c7b6e5d2230a",
+  "same_original_images_questions_patterns_model_options": true,
+  "full_model_request_or_raster_bytes_persisted": false,
+  "explicit_public_fixture_questions_and_answers_retained": true,
+  "application_default_persistence": false,
+  "general_accuracy_or_verified_semantics": false
+}

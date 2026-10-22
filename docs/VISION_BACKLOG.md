@@ -1,0 +1,13 @@
+# Native vision dependencies and backlog
+
+**Purpose:** Assess integration and quality work before production use of the local image-chat foundation.
+
+## VISION-PROD-001 Authenticated stored-file and delivery integration
+
+P1 before public/runtime image-chat API/UI adoption; existing D61 local explicit-byte adapter is complete but unwired. Depends on D17–D21 owner/namespace/ready/hash/source-FD lifetime/auth response delivery and D61 normalization/CORE cancellation. Effort one routing/file-capability/response-lifetime integration milestone; schedule with product orchestration/API/UI work after relevant acceptance. Risks: accepting arbitrary paths/URLs/principal IDs, cross-owner blob disclosure, source changes between checks, releasing a source lock before client delivery/native cleanup, private image/prompt persistence and treating unverified image answers as cited facts or approvals.
+
+Only trusted authentication may supply the owner. Resolve an owned ready file through existing source capabilities, retain source/admission until delivery/cancel acknowledgment, recheck source/hash before model disclosure and result, preserve private no-store output. No arbitrary user backend/model/system prompt or automatic model download/replacement. Freeze owner/nonce/source/delete/cancel/TCP/ASGI-loss/privacy/native controls and actual existing-CORE sample before activation. Rollback drains only the new route, retaining old OCR/text APIs, source blobs/data/config/models/collections and artifacts. No production wiring has been performed by D61.
+
+## VISION-EVAL-001 Broader native OCR and CORE VLM evidence
+
+P1 existing D62/D63/D67 dependency after D61; original first2/3 missing-field misattribution stays a regression under ADR-086. Effort one frozen bilingual/ambiguous/quality corpus plus native-versus-CORE measurement and latency/resource/hallucination report. Compare existing native extraction/Tesseract and original CORE first; dedicated OCR or registry Qwen3-VL alternatives are candidates only if evidence warrants under MODEL-EVAL-006 and the user's benchmark/performance/resources/migration/rollback/approval rule. No alternate model selected/downloaded. Risks: using visible fixture success as broad accuracy, changing labels after scores, unflagged invention, treating OCR engine score as probability, English-only language limits and ignoring workload/memory costs. Preserve first measurements and independent-human versus same-agent labels.

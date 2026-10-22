@@ -1,0 +1,148 @@
+{
+  "description": "One frozen authored public-image local functionality sample through unchanged original CORE/mmproj and isolated normalization. Same-agent visible oracles, no independent-human/general vision quality, secure model-memory erasure or server-side abort claim.",
+  "status": "FAILED",
+  "source_freeze_sha256": "1ea01180b19ab2be72700c57679a00feb4392571d14847116e31efd1041d525f",
+  "cases": [
+    {
+      "id": "invoice-visible-facts",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "question": "What invoice number is visible, and what is the complete Total line? Copy the Total line literally.",
+      "status": "PASS",
+      "answer": "Invoice 2048\nTotal 42 USD",
+      "uncertainties": [],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "width": 1200,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:15:45.873944+00:00",
+      "elapsed_seconds": 1.036
+    },
+    {
+      "id": "vietnamese-item-quantities",
+      "fixture": "tests/fixtures/ocr/table-vie.png",
+      "source_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "question": "Trong ảnh, số lượng Bút và Vở lần lượt là bao nhiêu?",
+      "status": "PASS",
+      "answer": "Bút: 3, Vở: 5",
+      "uncertainties": [],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "width": 1000,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:15:46.744919+00:00",
+      "elapsed_seconds": 0.868
+    },
+    {
+      "id": "absent-customer-name",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "question": "What is the customer name on this invoice?",
+      "status": "FUNCTIONAL_FAIL",
+      "answer": "LOCAL OCR GOLDEN",
+      "uncertainties": [
+        "The text 'LOCAL OCR GOLDEN' may be a placeholder or label rather than an actual customer name"
+      ],
+      "owner_matches": true,
+      "source_matches": true,
+      "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "width": 1200,
+      "height": 500,
+      "model_id": "qwen3.5-9b-core",
+      "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+      "confidence": null,
+      "persisted": false,
+      "semantic_validation": false,
+      "received_at": "2026-10-22 03:15:47.808757+00:00",
+      "elapsed_seconds": 1.06
+    }
+  ],
+  "text_CORE_attempts": 1,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "raw_images_or_model_prompts_persisted": false,
+  "human_independent": false,
+  "semantic_validation": false,
+  "ordinary_text_completion": {
+    "content": "VISION_TEXT_OK",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 24,
+    "output_tokens": 4,
+    "reasoning_tokens": null,
+    "latency_ms": 186
+  },
+  "ordinary_text_recovery_passed": true,
+  "native_attempts": 3,
+  "image_CORE_port_attempts": 3,
+  "model_transports": [
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    }
+  ],
+  "operations_remaining": 0,
+  "admission_released": true,
+  "service_closed": true,
+  "quota_charged": 3,
+  "elapsed_seconds": 3.163,
+  "first_measurement": true,
+  "functional_passed": 2,
+  "functional_total": 3,
+  "private_summary_sha256": "519f35a85c64959edf4b29102abcff728a8cd5ff953a2291faa3c2c7604f5527",
+  "first_failure_retained": true
+}
