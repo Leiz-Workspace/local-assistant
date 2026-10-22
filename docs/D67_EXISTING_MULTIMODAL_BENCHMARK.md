@@ -2,7 +2,7 @@
 
 **Purpose:** Report actual unchanged CORE warm sequential context/media/RAM/VRAM observations with tested metrics and honest scope before resource/model decisions.
 
-**Date:** 2026-10-22. **Status:** First matrix PASS; D67 IN PROGRESS, full4495 running/final readonly audit pending. [ADR-093](ADR/093-existing-multimodal-resource-and-context-measurements.md).
+**Date:** 2026-10-22. **Status:** PASS local existing-model matrix after full4495 and final readonly audit. [ADR-093](ADR/093-existing-multimodal-resource-and-context-measurements.md).
 
 Original qwen3.5-9b-core/Q6_K/mmproj/PID37256 stays loaded, context32768/parallel1/GPUlayers99/loopback8080. No model/config/resource limit/cache/runtime/package/service change or download.34 new metric controls/6 private evaluator cases PASS/.41s;389 related PASS/22.95s/0FAIL/0SKIP. Three separate full-runner guard controls PASS/.28s. The only historical guarded-document difference is AUDIO_BACKLOG's legitimate post-audit D66 progress closure, exact prior bytes/hash archived and accepted Git2d93d98 bytes pinned separately; all596 prior source and every other protection unchanged/current599.
 
@@ -33,6 +33,8 @@ The target wait between samples is0.200s; actual completion-to-completion cadenc
 
 ## Current closure
 
-After the matrix/sampler/native/model work fully retired, a distinct full4495 application regression started with the accepted in-memory readonly Vault loader/live flags/redacted durable logs. It is RUNNING; do not mark D67 complete or start D68 from the matrix alone. The historical full4265/562-source D62 cohort remains unchanged. Final current full/frozen599-source/models/data/runtime/security audit is still required. D68 registry candidates remain NOT EVALUATED; no download, selection or deployment from this matrix.
+After the matrix/sampler/native/model work fully retired, a distinct full4495 application regression completed4495 PASS/1737.73s pytest,1738.87s wrapper/0FAIL/0SKIP/exit0 using accepted in-memory readonly Vault paths/live flags/redacted durable logs.244 private final-audit controls PASS/.62s. Final readonly audit PASS599 current source/all596 prior bytes unchanged, exact preserved MD progress-closure exception only, same original CORE PID/start/parameters, original model/config/data/V006/zero source-memory/quota/vectors/probes/workers/locks/ACL-grants-triggers/15 services preserved. D67 local scope is accepted; historical full4265/562-source D62 and original running-status matrix snapshot stay immutable. D68 may now begin after actual closure. D68 registry candidates remain NOT EVALUATED; no download, selection or deployment from this matrix.
 
 [Original result](evidence/d67-first-existing-multimodal-result.json), [measurement freeze](evidence/d67-existing-multimodal-first-freeze.json), [current full freeze](evidence/d67-4495-full-freeze.json), [single progress-document transition](evidence/d67-d66-progress-document-transition.json).
+
+[Completed full](evidence/d67-4495-full-regression.json), [final readonly audit](evidence/d67-full4495-multimodal-readonly-audit.json), [acceptance](evidence/d67-existing-multimodal-acceptance.json).
