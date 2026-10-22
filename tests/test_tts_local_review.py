@@ -103,7 +103,7 @@ def test_neural_run_rejects_low_host_headroom_before_creating_output(tmp_path, m
     assert not (tmp_path / "run").exists()
 
 
-@pytest.mark.parametrize("kib,passed", [(18*1024**2, True), (18*1024**2-1, False)])
+@pytest.mark.parametrize("kib,passed", [(14*1024**2, True), (14*1024**2-1, False), (17*1024**2, True)])
 def test_host_headroom_boundary_is_not_a_ram_measurement(tmp_path, kib, passed):
     """Require exact host MemAvailable units/bounds while explicitly distinguishing the virtual cap and unreserved preflight sample."""
     path = tmp_path / "meminfo"
@@ -111,6 +111,7 @@ def test_host_headroom_boundary_is_not_a_ram_measurement(tmp_path, kib, passed):
     if passed:
         value = review.require_headroom(path)
         assert value["address_space_cap_bytes"] == 12*1024**3
+        assert value["required_bytes"] == 14*1024**3
         assert not value["reserved_memory"]
     else:
         with pytest.raises(ValueError, match="host_memory_headroom"):

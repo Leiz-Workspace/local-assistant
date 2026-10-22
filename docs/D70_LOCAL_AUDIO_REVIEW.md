@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi quyền thử, nguồn model/runtime, protocol và kết quả thực tế của công cụ đánh giá audio bổ sung. Tài liệu này không thay kết quả TTS gốc hoặc tự đóng Acceptance Criteria.
 
-**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Cho phép thử ADR-101, giữ cap 12 GiB”** cho imports/nạp/kiểm tra toàn vẹn; `qualify`/`review` và tạo packet/refresh inventory vẫn bị chặn. ADR-100 tiếp tục REJECTED. Loader native `pread` đã triển khai,221TTSrelated kiểm thử PASS, gồm tensor giả nhỏ qua SDK thật trong namespace12GiB. Lượt nạp weights gốc bị preflight chặn: MemAvailable18,946,437,120bytes≈17.65GiB < ngưỡng18GiB; chưa khởi chạy worker nạp model, chưa chứng minh fit12GiB. Không tự hạ ngưỡng, tăng cap, dừng CORE hoặc retry. [Bằng chứng](evidence/d70-pread-load-trial.json). Các lượt16GiB lịch sử vẫn không được coi là owner-approved. D70 mở, D71 chưa bắt đầu.
+**Quyết định mới nhất2026-10-22:** Chủ dự án duyệt **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** theo ADR-102. Native `pread` load/integrity weights gốc **PASS26.471s/exit0**,1,442tensors/9,406,928,896bytes khớp hash/storage/CPU-BF16; parent audit độc lập PASS. Peak RSS9.333GiB RAM và VmPeak10.393GiB virtual (không phải VRAM/minimum RAM). Đây là load-only: chưa đo inference fit12GiB, không chạy lại audio controls/review24outputs.222TTSrelated PASS6.00s/Ruff PASS. CORE cùng identity/recovery PASS. [Bằng chứng](evidence/d70-pread-14g-headroom-load.json). `qualify`/`review` vẫn bị chặn; ADR-100 và097 vẫn REJECTED. D70 mở, D71 chưa bắt đầu.
 
 Chủ dự án đã trả lời **“Cho phép thử evaluator local theo ADR-098”**. [ADR-098](ADR/098-proposed-isolated-audio-reviewer.md) được duyệt cho thử nghiệm nghiên cứu riêng có giới hạn. Giữ nguyên AC D70, ADR-097 REJECTED, model registry/default/CORE và thứ tự D70→D71. Không có phê duyệt chọn/deploy TTS, chuyển tiêu chí nghe sang ngày khác hoặc thay model dự án.
 
@@ -89,3 +89,15 @@ Khôi phục `ADDRESS_SPACE_BYTES=12GiB`, thêm một execution policy dùng chu
 **208TTSrelated unit/controlled tests PASS0.44s**, gồm9case mới kiểm tra pause ở bốn mode, CLI, worker trực tiếp, runtime constructor và review trên instance có sẵn. Các test pipeline cũ chỉ mở policy trong fixture đã mock model/services/subprocess, không inference thật. Ruff PASS. Đây không phải full632-source suite hoặc một lượt model validation. Các kết quả199test/9control trước đó giữ nguyên là lịch sử. Quyết định pause áp dụng evaluator; không tự đánh dấu hoàn tất D70 hoặc bắt đầu D71.
 
 [Bằng chứng quyết định pause](evidence/d70-owner-evaluator-pause.json) xác minh static12GiB/disabled policy, không còn owned evaluator processes và18historical D70 evidence files nguyên byte. Đây là source/policy/unit-test verification, không phải một lượt model hoặc fresh service audit.
+
+## ADR-102 — Kết quả nạp pread với headroom14GiB/cap12GiB
+
+Explicit owner reply **“Duyệt headroom 14 GiB, giữ cap 12 GiB”** cho phép giảm riêng host preflight từ18xuống14GiB; process virtual cap12GiB không đổi. Ngưỡng18cũ xuất phát từ phương án16GiB, không phải model RAM đã đo; swap gần đầy là risk đã trình bày, không thay swap/dừng ứng dụng của chủ dự án. Source/tests/ADR đóng băng trước first new load, original preflight failure tại28cedf9 giữ nguyên.
+
+Native Thinker-only original-weight load/integrity **PASS26.471s/exit0/no timeout**; model/processor20.892s bao gồm audits trên artifacts đã được parent warm-read, không cold-load. Tất cả1442tensor BF16/9,406,928,896bytes khớp original shape/keys và hashes đọc độc lập từ shards; native storage vẫn chia sẻ đúng original tensor buffers. Missing/unexpected/mismatch/error0. Parent đọc lại đủ payload và đối chiếu mọi hash sau worker exit: PASS.4,703,464,448parameters/CPU/BF16/threads2/interop1/affinity0,1, original EOS151645/pad151643.
+
+Lifetime ru_maxrss9,786,388KiB≈9.333GiB RAM; kernel VmHWM9,786,536KiB là counter riêng, không ép bằng nhau. VmPeak10,897,948KiB≈10.393GiB virtual, dưới12GiB. Đây là toàn worker load-only, **chưa đo inference fit12GiB**, không VRAM/minimumRAM/generalSLO claim. Prelaunch MemAvailable19,063,668,736bytes, chỉ là sample không reservation. CORE cùngPID/start/command/text recovery PASS trước-sau; worker joined, không còn owned evaluator processes.
+
+**222TTSrelated PASS6.00s/0FAIL/0SKIP/Ruff PASS**; test14GiB exact/below-bound và17GiB acceptance vẫn kiểm đúng12GiB sandbox. Final634source và mọi prior626/632other source bytes,917protected hashes,176original audit inputs,23475D70SDK/23382localSDK,16original reviewer artifacts và readonly model/data/security/service audit PASS. [Actual evidence](evidence/d70-pread-14g-headroom-load.json), [first freeze](evidence/d70-pread-14g-headroom-first-freeze.json).
+
+**AUDIO-EVAL-LOAD-12G-001 load/integrity COMPLETE.** Không có audio generation trong lượt này; local reviewer vẫn NOT QUALIFIED,24original judgements vẫn null, D70 mở/D71 unstarted. Không dùng memory fix để repair JSON/labels/prompt outcomes hoặc tự chạy lại semantic controls.
