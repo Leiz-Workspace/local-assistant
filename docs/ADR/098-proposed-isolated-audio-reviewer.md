@@ -40,3 +40,8 @@ Risks: CPU/memory infeasibility; related-Qwen-family preference; weak Vietnamese
 This tool consumes copies of already bound waveform inputs and emits private review text. No application/model configuration, existing source, audio, database/index or model-role migration occurs. No cloud upload or new paid-service account is required by this local proposal. It cannot replace the established TTS/ASR choices by itself.
 
 Rollback terminates/joins only owned reviewer processes; the existing CORE and all prior models/data remain active and unchanged. Retain first failures and downloaded evaluation artifacts for audit; removal is a separately authorized cleanup. Rejection leaves D70 waiting under the current AC. A separately supplied audio-capable API or actual reviewer could provide another genuine-input path, but no provider/account/credential or model is assumed available or approved.
+
+
+## Current continuation note: 2026-10-23 after ADR-104
+
+Earlier load-only/fit-unmeasured statements above describe their historical phase. Latest actual [ADR-104 outcome](../evidence/d70-quality-campaign-first.json) observes twelve-case/paired-input fit under12GiB, but strict8of12control failure; approved scope consumed, local imports/load-only restored, no24output review or naturalness acceptance. [ADR-105](105-proposed-specialist-public-auditory-review.md) prepares a separate public specialist route with gate disabled and no media sent; its external-recipient permission has not been granted. Original3B/local runtime/models/data remain unchanged. The resource-only lower bound for local7B excludes that native route without downloading weights; no cap increase or evaluator replacement is approved.
