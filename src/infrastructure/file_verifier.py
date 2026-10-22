@@ -16,6 +16,7 @@ from src.application.services.file_storage_policy import (
     normalize_filename,
     validate_detected_media,
 )
+from src.infrastructure.native_input import rewind_native_input
 
 logger = logging.getLogger(__name__)
 VERIFIER_WALL_SECONDS = 10
@@ -116,7 +117,7 @@ def verify_file(
     """Verify a sealed FD through one bounded readonly namespace copy without passing secrets or host paths."""
     name = normalize_filename(filename)
     suffix = name.rsplit(".", 1)[1].lower()
-    source.seek(0)
+    rewind_native_input(source)
     command = sandbox_command(
         [
             "/venv/bin/python",
@@ -145,7 +146,7 @@ def verify_file(
     except OSError:
         raise StoragePolicyError("verification_unavailable", 503) from None
     finally:
-        source.seek(0)
+        rewind_native_input(source)
     if result.returncode or len(output) > 4096:
         raise StoragePolicyError("verification_unavailable", 503)
     try:
