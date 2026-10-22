@@ -2,7 +2,7 @@
 
 **Purpose:** Distinguish the failed multi-field reviewer task from a minimal factual audio task without repairing old results, claiming naturalness or replacing agreed models.
 
-**Date:** 2026-10-22. **Status: PROPOSED, EXECUTION NOT APPROVED.** ADR-102 permits load/integrity only. New `prepare-diagnose`/`diagnose` entry points remain blocked until an explicit decision; original `qualify`/`review` remain blocked regardless of this proposal. No new real diagnostic packet or inference is prepared before approval.
+**Date:** 2026-10-22. **Status: ONE APPROVED TRIAL COMPLETED WITH NAMESPACE DEVIATION; SCOPE CONSUMED.** On2026-10-23 the owner explicitly answered **“Duyệt một lượt diagnostic ADR-103”**. Temporarily allow only `prepare-diagnose`/`diagnose` in addition to imports/load, then close these two modes after the approved first trial. Original `qualify`/`review` remain blocked. No packet or diagnostic inference was executed before this explicit approval.
 
 ## Evidence and hypothesis
 
@@ -35,6 +35,19 @@ Only after an explicit approval may this add `prepare-diagnose` and `diagnose` t
 
 ## Priority, effort, risk and rollback
 
-**AUDIO-EVAL-PRESENCE-DIAG-001, P1 diagnostic dependency research, proposed only.** One preparation/test/first-response milestone; depends on owner approval, held-out provenance, tests, original artifacts/SDK and qualified12GiB inference execution. Risks: prompt sensitivity, hallucinated speech, allocation exceeding12GiB during features/generation, confusing factual competence with quality judgement and outcome-driven retries. Preserve raw first results and all old failures; fail closed rather than substitute a score.
+**AUDIO-EVAL-PRESENCE-DIAG-001, P1 diagnostic dependency research, approved for one fixed trial.** One preparation/test/first-response milestone; depends on owner approval, held-out provenance, tests, original artifacts/SDK and qualified12GiB inference execution. Risks: prompt sensitivity, hallucinated speech, allocation exceeding12GiB during features/generation, confusing factual competence with quality judgement and outcome-driven retries. Preserve raw first results and all old failures; fail closed rather than substitute a score.
 
 Rollback disables only the two diagnostic modes and joins the owned worker. No production source/model/default/data/database/service/Vault/Docker changes. Even4/4factual answers provide **no naturalness qualification, MOS, model-selection approval, D70 closure or D71 advance**. The next auditory-quality protocol still needs justified controls and retained first failures; this diagnostic is not a replacement AC.
+
+The immutable first outcome is recorded separately in [ADR-103 diagnostic evidence](../evidence/d70-presence-diagnostic-first.json); approval is not a claim that the diagnostic, reviewer qualification or D70 passed.
+
+
+## First outcome and implementation correction —2026-10-23
+
+The approved first process completed39.749s/exit0/no timeout with raw `yes/no/no/yes`, matching all four frozen expectations and genuine EOS. The original runtime scorer's factual pass flag is retained unchanged. Peak worker RSS9.543GiB RAM and virtual peak10.395GiB remain below the12GiB address-space cap for these four inputs; no general memory or quality certification.
+
+Post-run audit found that the mounted helper also included parent-side `SOURCES` and packet preparation/expected-label definitions. The frozen worker method did not read or pass those definitions into the model's processor/generation inputs, but their presence in the worker namespace violates the stated isolation contract. Therefore the independently audited strict protocol result is **NOT PASS**; do not silently promote the raw4/4flag. Preserve original raw outputs and source snapshots, with no automatic rerun or claim that the original namespace was compliant.
+
+Split the pure question/response validator into `tts_local_review_diagnostic_runtime.py`; keep corpus IDs, source hashes and packet preparation on the parent side. Bind only the pure runtime. A real bwrap standard-library probe confirms the parent helper is absent/unimportable, runtime has no SOURCES/prepare_packet and parent-only labels/project root are inaccessible. This corrects implementation isolation, not model predictions; no original-model inference ran with the corrected mount layout.
+
+The single diagnostic scope is consumed. Restore the policy to imports/load only; further preparation/diagnosis, original qualification and common24review remain blocked.249TTSrelated tests pass7.63s, including restored scope and native mount probe. The existing nine semantic/schema failures and all24pending judgements remain unchanged. D70 stays open/D71 unstarted; next work is a justified qualitative auditory protocol, not a factual-to-naturalness promotion.

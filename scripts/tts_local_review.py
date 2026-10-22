@@ -190,7 +190,7 @@ def sandbox(mode, samples):
     """Describe the approved retained12GiB readonly CPU namespace; entry points separately enforce load-only permission."""
     command = ["/usr/bin/bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL", "--clearenv", "--ro-bind", "/usr", "/usr", "--symlink", "usr/bin", "/bin", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--ro-bind", str(ROOT / "venv"), "/venv", "--ro-bind", str(ROOT / "model"), "/model", "--dir", "/app", "--ro-bind", str(PROJECT / "scripts/tts_local_review_worker.py"), "/app/worker.py", "--ro-bind", str(samples), "/samples", "--proc", "/proc", "--dev", "/dev", "--size", str(128 * 1024**2), "--tmpfs", "/tmp", "--dir", "/etc"]
     command.extend(["--dir", "/app/scripts", "--ro-bind", str(PROJECT / "scripts/tts_local_review_pread.py"), "/app/scripts/tts_local_review_pread.py"])
-    command.extend(["--ro-bind", str(PROJECT / "scripts/tts_local_review_diagnostic.py"), "/app/scripts/tts_local_review_diagnostic.py"])
+    command.extend(["--ro-bind", str(PROJECT / "scripts/tts_local_review_diagnostic_runtime.py"), "/app/scripts/tts_local_review_diagnostic_runtime.py"])
     for name in ["passwd", "group"]:
         command.extend(["--ro-bind", str(ROOT / "runtime-source" / name), "/etc/" + name])
     environment = dict(PATH="/venv/bin:/usr/bin", LANG="C.UTF-8", PYTHONDONTWRITEBYTECODE="1", CUDA_VISIBLE_DEVICES="", HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", HF_HOME="/tmp/hf", HOME="/tmp", USER="asr-evaluation", LOGNAME="asr-evaluation", OMP_NUM_THREADS="2", MKL_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2", NUMBA_NUM_THREADS="2", NUMBA_CACHE_DIR="/tmp/numba", TOKENIZERS_PARALLELISM="false", HF_HUB_DISABLE_TELEMETRY="1")

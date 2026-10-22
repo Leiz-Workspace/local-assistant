@@ -77,8 +77,9 @@ def test_bad_heldout_source_cannot_create_a_packet(tmp_path, monkeypatch):
     assert list(root.iterdir()) == []
 
 
-def test_unapproved_diagnostic_paths_remain_blocked(tmp_path):
+def test_unapproved_diagnostic_paths_remain_blocked(tmp_path, monkeypatch):
     """Keep preparation, controller execution and retained-runtime inference blocked under the current load-only owner permission."""
+    monkeypatch.setattr(worker, "ALLOWED_EXECUTION_MODES", frozenset({"imports", "load"}))
     with pytest.raises(ValueError, match="owner_load_only_scope"):
         diagnostic.prepare_packet(tmp_path, tmp_path, controller.publish_json)
     with pytest.raises(ValueError, match="owner_load_only_scope"):
@@ -169,3 +170,14 @@ def test_factual_generation_retains_raw_eos_and_audio_provenance(monkeypatch, ca
     assert event["event"] == "diagnostic" and event["answer"] == "yes" and event["generation_complete"]
     assert event["sample_count"] == 16000 and event["maximum_new_tokens"] == 16
     assert "naturalness" not in event and "qualification_passed" not in event
+
+
+@pytest.mark.parametrize("mode,allowed", [("prepare-diagnose", True), ("diagnose", True), ("qualify", False), ("review", False)])
+def test_explicit_diagnostic_scope_does_not_authorize_qualification(mode, allowed, monkeypatch):
+    """Exercise the precise temporary owner approval without granting the original qualification or common-output review modes."""
+    monkeypatch.setattr(worker, "ALLOWED_EXECUTION_MODES", frozenset({"imports", "load", "prepare-diagnose", "diagnose"}))
+    if allowed:
+        worker.require_execution_permission(mode)
+    else:
+        with pytest.raises(ValueError, match="owner_load_only_scope"):
+            worker.require_execution_permission(mode)
