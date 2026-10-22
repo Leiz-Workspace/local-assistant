@@ -4,6 +4,10 @@
 
 **Date:** 2026-10-22. [ADR-079](ADR/079-web-research-phase-evaluation-and-observation.md). **D60 IN PROGRESS.** D59 remains accepted at5676a3d; all529 accepted source/config bytes are unchanged. New diagnostics are test/evaluation helpers only.
 
+## Current operator decision — 2026-10-22
+
+**Retain Brave and wait for upstream recovery.** D60 remains IN PROGRESS / WAITING FOR UPSTREAM. ADR-083 is deferred; no Bing/alternate-engine evaluation or adoption, further provider probes, automatic polling/retry schedule or background monitoring. Existing selected provider, agreed models/config/data and all earlier outcomes stay unchanged. Successful Vault/final readonly audit does not satisfy the missing actual search-derived report/native/archive gate. No D61 advance. Resume a separately frozen bounded verification only after an operator recovery report or explicit request for new verification; elapsed time alone does not prove recovery or authorize recurring requests.
+
 ## T01 — Bounded observation and unchanged-corpus follow-up
 
 The original D53 first result stays3/8 expected-primary URI presence@5, six/eight valid responses, two provider errors and three/four reference sources observed. These incomplete URI labels do not measure semantic relevance, precision/recall or independently verified freshness.

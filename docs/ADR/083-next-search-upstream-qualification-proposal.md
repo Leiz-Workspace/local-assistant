@@ -2,7 +2,7 @@
 
 **Purpose:** Present a concrete next option after retained selected-provider and Mwmbl/spacing failures without silently switching a provider or changing any model.
 
-**Date:** 2026-10-22. **Status:** PROPOSED; no new engine trial, runtime wiring or adoption performed.
+**Date:** 2026-10-22. **Status:** DEFERRED by operator on2026-10-22: retain Brave and wait for upstream recovery; no Bing evaluation, runtime wiring or adoption.
 
 ## Current evidence
 
@@ -25,3 +25,9 @@ Require both actual D60 primary families before considering any separate same-go
 P1/current WEB-SEARCH-003 dependency; depends on compliant upstream access, cached immutable runtime and existing strict source/ownership/cleanup corpus. Estimated effort one isolated compatibility/coverage/resource panel, then a distinct end-to-end measurement only if prerequisites pass. Risks: upstream restrictions, insufficient primary coverage, filtering/paging/date differences, parser/URL incompatibility, data-use rights, transient outcomes and false equivalence with a licensed API. No measured performance or quality benefit is claimed now.
 
 Future adoption requires a separate concrete compatibility/performance/resources/privacy/retention/migration/rollback review. Reconfigure no production provider until that decision; preserve exact original Brave adapter/settings/container identity as rollback. Trial cleanup stops/removes only the verified owned candidate ID/empty project network and removes its fresh temporary secret. Existing models, collections, database, Vault secret values, accepted artifacts and original15 resources stay intact. No model replacement, migration or reindex.
+
+## Operator resolution — 2026-10-22
+
+The operator explicitly selected: retain Brave and wait for upstream recovery. The Bing-only qualification proposal is deferred and not scheduled or authorized for execution by this decision. Preserve the existing SearXNG/Brave instance, configuration and every agreed model. No further provider trials, automatic polling/retry schedule, engine rotation or background monitoring is started. No recovery time or upstream Retry-After is known.
+
+D60 remains IN PROGRESS / WAITING FOR UPSTREAM; the failed searched-source artifact gate and every original score/exception remain unchanged. Do not advance D61 or infer PASS from elapsed time, source-designated reports or the successful Vault/data audit. Resume a bounded verification only after the operator reports upstream recovery or explicitly requests a new verification; freeze that invocation and retain prior outcomes. Reconsidering another upstream requires a new operator selection.
