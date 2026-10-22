@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi quyền thử, nguồn model/runtime, protocol và kết quả thực tế của công cụ đánh giá audio bổ sung. Tài liệu này không thay kết quả TTS gốc hoặc tự đóng Acceptance Criteria.
 
-**Kết luận hiện tại:** Trial local đã hoàn tất; evaluator **NOT QUALIFIED** sau native-EOS repair và đủ9control observations. D70 vẫn IN PROGRESS; D71 chưa bắt đầu. Model nhận được audio thật nhưng phản hồi không đạt schema và mâu thuẫn các control quan trọng; chưa review24native benchmark outputs.
+**Quyết định hiện tại:** Chủ dự án chọn **“Giữ cap 12 GiB, chưa chạy tiếp evaluator”**. Cap hiện tại là12GiB và controller/worker đã khóa execution; không chạy lại model để kiểm chứng quyết định này. ADR-100 REJECTED. Các lượt16GiB bên dưới đã xảy ra trước khi nhận câu trả lời rõ ràng do agent diễn giải sai chỉ thị tiếp tục thành approval; không coi chúng là lượt được chủ dự án phê duyệt. Giữ nguyên kết quả thực tế và lịch sử để audit. Evaluator vẫn NOT QUALIFIED; D70 IN PROGRESS, D71 chưa bắt đầu,24native benchmark outputs chưa được review.
 
 Chủ dự án đã trả lời **“Cho phép thử evaluator local theo ADR-098”**. [ADR-098](ADR/098-proposed-isolated-audio-reviewer.md) được duyệt cho thử nghiệm nghiên cứu riêng có giới hạn. Giữ nguyên AC D70, ADR-097 REJECTED, model registry/default/CORE và thứ tự D70→D71. Không có phê duyệt chọn/deploy TTS, chuyển tiêu chí nghe sang ngày khác hoặc thay model dự án.
 
@@ -42,7 +42,7 @@ Chưa có qualification/naturalness hoặc D70 acceptance. Bản pending24review
 
 ## Tiếp tục với cap16GiB theo ADR-100
 
-Sau đề xuất cụ thể, chủ dự án chỉ thị “Continue from where you left off.” Lượt tiếp tục áp dụng đúng phạm vi16GiB virtual cap đã trình ở ADR-100, không ghi thành một multiple-choice answer không có thật. Bổ sung preflight MemAvailable≥18GiB trước chuẩn bị và ngay trước launch, cùng resource snapshots trước/sau native load và trongfinally cả khi lỗi. Các giới hạn/model/SDK/control/prompt/decoder/AC/order khác giữ nguyên.32test mới/192TTSrelated PASS0.50s, Ruff PASS. Đây không phải full632-source regression.
+Sau đề xuất cụ thể, agent đã diễn giải “Continue from where you left off” thành phê duyệt16GiB và thực hiện các lượt dưới đây trước khi nhận câu trả lời rõ ràng. Chủ dự án sau đó chọn giữ12GiB/chưa chạy tiếp; cách diễn giải approval đó đã được sửa tại ADR-100, không suy ra chủ dự án đã chọn16GiB. Lịch sử thực thi vẫn được giữ: preflight MemAvailable≥18GiB trước chuẩn bị và ngay trước launch, resource snapshots trước/sau load và trongfinally. Các model/SDK/control/prompt/decoder/AC/order giữ nguyên.32test mới/192TTSrelated PASS0.50s/Ruff PASS tại checkpoint đó, không full632-source regression.
 
 **16GiB load-only PASS**, worker6.427s/exit0, genuine model load+processor0.637s. Missing/mismatched/error counts đều0;1102unexpected keys đều thuộc output components Talker/token2wav không thực thi. Thinker có4,703,464,448parameters, CPU/bfloat16, hai threads/inter-op1/affinity0,1. Full-original checkpoint được mmap; load đã được parent hash-read nên không gọi thời gian này là cold-storage load.
 
@@ -81,3 +81,11 @@ Corrected lifetime peak RSS8,377,988KiB≈7.990GiB **RAM**; kernel VmPeak15,823,
 [Final readonly audit](evidence/d70-local-reviewer-final-integrity-audit.json) PASS632source/toàn626file trước evaluator và628file ngoài bốn local controller-worker/tests thay đổi; original176audit inputs/23475D70SDK/23382localSDK/model-config-data-security-runtime giữ nguyên. Kiểm tra gate thật từ chối evaluator chưa đạt; không có common24review packet hoặc waveform được reviewer này đánh giá,24pending judgements gốc vẫn null/chưa nghe.39new/199TTSrelated PASS0.44s/Ruff PASS, không full632-source suite; historical436related/full4495 giữ đúng scope.
 
 **Trial COMPLETED / reviewer NOT QUALIFIED / D70 IN PROGRESS / D71 NOT STARTED.** Việc tiếp theo là tìm reviewer vượt các control thực tế trước đánh giá24outputs, giữ nguyên AC. Chưa chọn/tải evaluator khác hoặc thay model/default/provider, không thay bằng ASR/acoustic proxy và không mở theo dõi nền. Giữ mọi artifacts/first failures phục vụ audit; Piper VI license và các integration gates trước D72 tiếp tục riêng biệt.
+
+## Thực thi quyết định giữ12GiB và chưa chạy tiếp
+
+Khôi phục `ADDRESS_SPACE_BYTES=12GiB`, thêm một execution policy dùng chung để chặn controller API/CLI và worker trực tiếp trước input/affinity/SDK/model/CORE/subprocess. Không có CLI bypass hoặc tự resume. Giữ bản sửa native EOS đã kiểm chứng, mọi artifact/audio/result/freezes và cap16GiB lịch sử; không nạp hay đánh giá model mới.
+
+**208TTSrelated unit/controlled tests PASS0.44s**, gồm9case mới kiểm tra pause ở bốn mode, CLI, worker trực tiếp, runtime constructor và review trên instance có sẵn. Các test pipeline cũ chỉ mở policy trong fixture đã mock model/services/subprocess, không inference thật. Ruff PASS. Đây không phải full632-source suite hoặc một lượt model validation. Các kết quả199test/9control trước đó giữ nguyên là lịch sử. Quyết định pause áp dụng evaluator; không tự đánh dấu hoàn tất D70 hoặc bắt đầu D71.
+
+[Bằng chứng quyết định pause](evidence/d70-owner-evaluator-pause.json) xác minh static12GiB/disabled policy, không còn owned evaluator processes và18historical D70 evidence files nguyên byte. Đây là source/policy/unit-test verification, không phải một lượt model hoặc fresh service audit.

@@ -98,6 +98,7 @@ def test_final_resource_evidence_survives_native_load_failure(monkeypatch, capsy
         """Emulate one native load error without importing or allocating neural parameters."""
         raise RuntimeError("fixture_native_load_failure")
     monkeypatch.setattr(worker.os, "sched_setaffinity", lambda *args: None)
+    monkeypatch.setattr(worker, "EXECUTION_ALLOWED", True)
     monkeypatch.setattr(worker.sys, "stdin", SimpleNamespace(buffer=io.BytesIO(b'{"mode":"load","cases":[]}')))
     monkeypatch.setattr(worker, "Runtime", fail)
     with pytest.raises(RuntimeError, match="fixture_native_load_failure"):
@@ -122,3 +123,34 @@ def test_foreign_or_missing_original_generation_boundaries_rejected(eos, pad):
     tokenizer = SimpleNamespace(eos_token_id=151645, pad_token_id=151643)
     with pytest.raises(ValueError, match="original_generation_boundaries"):
         generation_boundaries(SimpleNamespace(eos_token_id=eos,pad_token_id=pad),tokenizer)
+
+
+def test_owner_pause_blocks_direct_worker_before_sdk_or_input(monkeypatch, capsys):
+    """Prevent bypassing the paused controller by invoking the worker directly; do not touch input, affinity or model libraries."""
+    def forbidden(*args, **kwargs):
+        """Fail if a paused worker reaches affinity setup or native runtime construction."""
+        raise AssertionError("paused_worker_side_effect")
+    monkeypatch.setattr(worker.os, "sched_setaffinity", forbidden)
+    monkeypatch.setattr(worker, "Runtime", forbidden)
+    assert not worker.EXECUTION_ALLOWED
+    with pytest.raises(ValueError, match="owner_paused_execution"):
+        worker.main()
+    assert capsys.readouterr().out == ""
+
+
+@pytest.mark.parametrize("load", [False, True])
+def test_owner_pause_blocks_runtime_constructor_before_neural_imports(load):
+    """Reject direct runtime construction as well as CLI entry points while the owner pause is active."""
+    with pytest.raises(ValueError, match="owner_paused_execution"):
+        worker.Runtime(load)
+
+
+def test_owner_pause_blocks_review_on_an_existing_runtime(monkeypatch):
+    """Prevent a retained runtime object from evaluating another input after execution has been paused."""
+    def forbidden(*args, **kwargs):
+        """Fail if paused direct review reads a waveform or reaches native inference."""
+        raise AssertionError("paused_runtime_input_access")
+    monkeypatch.setattr(worker, "waveform", forbidden)
+    runtime = object.__new__(worker.Runtime)
+    with pytest.raises(ValueError, match="owner_paused_execution"):
+        runtime.review({})
