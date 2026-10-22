@@ -1,0 +1,8 @@
+{
+  "description": "First native controls36PASS/1FAIL: FFmpeg floating setpts2.4/TB truncates to23 ticks, actually2300 rather than intended2400. Worker reported real decoded PTS correctly. Retain initial test/log; fix generator to explicit20/24/36 integer ticks before actual golden freeze, without altering application decoder, target or expected oracle.",
+  "status": "TEST_FIXTURE_GENERATION_ERROR_RETAINED",
+  "first_test_sha256": "2301d425ffa0e62311798b09def9367a6ad5b4de49d02919b53e05fadc6d3e9a",
+  "first_log_sha256": "94f9a696acc762fb98dea899772365e24c4f7c1fdbf7d035360cb2ea60ed7429",
+  "actual_middle_pts": 2300,
+  "intended_middle_pts": 2400
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Frozen tested D64 final read-only verifier and original reproducibility observations, prior outputs never overwritten.",
+  "sha256": {
+    "data/backups/d64-video-sampling-readonly-audit.py": "3a408a13651da03e68d70d9519e8722173ac1ed44998ed4fb1b899912fd63114",
+    "data/backups/test_d64_video_readonly_audit.py": "5ac5d8abb42648f098af6ed85ef0d39933bd82af82bc5c3fc77815eb66b8f2d0",
+    "data/backups/d64-final-readonly-audit-controls.log": "17d14ef32578feb157380f0991ab042cebcf76a92bcd3cd5b13ab7262862a23f",
+    "docs/evidence/d64-video-sampling-first-freeze.json": "953e33b37eddebd3ddb724d0ee0557d7c00e2ab5c2213814b5a96881355b6fb0",
+    "data/backups/d64-video-sampling-first/summary.json": "8c15516a10315efe31bd5e14c863cbf64c562d018bfdc1d25ae2628fd52b853c"
+  }
+}
