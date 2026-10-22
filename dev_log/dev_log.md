@@ -3914,3 +3914,10 @@ Report `docs/D70_OFFLINE_TTS_COMPARISON.md`, evidence `d70-tts-measurement-statu
 Sau measurement commit `8f421de`, chủ dự án trả lời rõ **“Giữ nguyên AC, chờ khả năng nghe”**. Ghi ADR-097 **REJECTED/NOT APPLIED**, không còn yêu cầu phê duyệt đang chờ. Không tách scope để đóng D70, không chuyển tiêu chí nghe sang D72. `AUDIO-TTS-NATURALNESS-001` vẫn là AC tại D70; **D70 IN PROGRESS/chờ khả năng nghe thật, D71 NOT STARTED**. Roadmap/model backlog/voice backlog/report/status đồng bộ quyết định này.
 
 Chỉ sửa tài liệu/trạng thái quyết định. Giữ nguyên624source, model/default,24native waveforms/copies và toàn bộ judgement null; không sinh lại audio, không thử lại model, không thay nghe bằng ASR/acoustic metrics. Kết quả436related/34auditor controls trước đó được giữ đúng là lịch sử đã chạy; không chạy lại test/model cho thay đổi documentation-only. Kiểm tra JSON, quyết định/gates, liên kết và hash nguồn/evidence/audio để xác nhận bảo toàn; không tuyên bố theo dõi nền hoặc tự kiểm tra định kỳ khả năng nghe.
+
+
+## 2026-10-22 — Tiếp tục D70: kiểm tra lại khả năng nghe, vẫn chưa đáp ứng
+
+Theo yêu cầu tiếp tục, kiểm tra metadata công cụ và gửi lại bản Ogg smoke nguyên hash qua audio helper; kết quả vẫn **“audio content omitted because you do not support audio input”**, chưa có nghe/đánh giá tự nhiên. Áp dụng skill plugin-management để tra cứu capability thay thế với ba query; Descript là kết quả liên quan audio nhưng chưa cài, chỉ xác nhận mô tả transcription/cleanup/editing, chưa xác nhận đáp ứng auditory naturalness AC. Không coi tìm kiếm là đầy đủ, không cài/kết nối plugin và không upload audio. Evidence mới `docs/evidence/d70-audio-capability-recheck-001.json`; report/status đồng bộ.
+
+Xác minh624source và176file audit inputs nguyên hash,24review labels vẫn null/has_actually_listenedFalse. Chỉ cập nhật documentation/evidence, không chạy lại model/test suite, không đổi audio/model/data/AC hoặc đề nghị lại ADR-097. **D70 vẫn IN PROGRESS/chờ khả năng nghe thật, D71 NOT STARTED** theo quyết định chủ dự án. Không có theo dõi nền.

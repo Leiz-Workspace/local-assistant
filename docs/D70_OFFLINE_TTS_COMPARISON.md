@@ -92,3 +92,10 @@ Không migration dữ liệu/config/index/model default trong nhiệm vụ này.
 [Bản nghe24audio ngoại tuyến](../data/backups/d70-tts-listening-review/index.html) có đủ timeline, native/preview hashes và authored text; [JSON review pending](../data/backups/d70-tts-listening-review/review.pending.json) giữ mọi judgement null/has_actually_listenedFalse. Đây là artifact để công cụ hoặc reviewer có khả năng nghe đánh giá tiếp, không phải yêu cầu chủ dự án đã nghe hoặc nguồn human labels.
 
 D70 giữ **IN PROGRESS / NATURALNESS OPEN / NOT_SELECTED / NOT_DEPLOYED**. Phần benchmark máy, capability/license assessment và audit đã hoàn tất. Chưa thể đóng AC nghe thực tế bằng công cụ hiện tại; chưa tự chuyển D71. D71 tiếp theo là push-to-talk/recording consent và stop/cancel, độc lập với chọn giọng; chỉ được bắt đầu sau khi D70 được đóng theo AC. Chủ dự án đã chọn giữ nguyên AC, chờ khả năng nghe và từ chối thay đổi thứ tự/phạm vi tại ADR-097 ngày2026-10-22. Model/voice selection, chuỗi giấy phép Piper VI và AUDIO-VAD-ASR-001 vẫn là các gate riêng trước D72/triển khai.
+
+
+### Kiểm tra lại khả năng nghe theo yêu cầu tiếp tục
+
+Sau quyết định giữ nguyên AC tại `9d58085`, đã gửi lại đúng bản nghe smoke Ogg có hash được xác minh, không sinh audio mới. Công cụ vẫn trả `audio content omitted because you do not support audio input`. Tra cứu plugin bằng ba truy vấn tìm thấy Descript chưa cài, có mô tả transcription/cleanup/editing; chưa có bằng chứng khả năng đánh giá tự nhiên thực tế đáp ứng AC. Kết quả tra cứu không phải danh mục đầy đủ; có thể còn lựa chọn khác trong [danh mục plugin](https://chatgpt.com/plugins). Không cài plugin hoặc gửi audio ra dịch vụ ngoài. [Bằng chứng recheck](evidence/d70-audio-capability-recheck-001.json).
+
+624source và176file audit inputs khớp hash;24judgements vẫn pending/null. D70 tiếp tục chờ khả năng nghe, D71 chưa bắt đầu, ADR-097 vẫn REJECTED. Không thử lại benchmark hoặc thay đổi model/AC.

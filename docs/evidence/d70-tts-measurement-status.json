@@ -30,5 +30,7 @@
   "owner_decision": "Giữ nguyên AC, chờ khả năng nghe",
   "auditory_review_required_at": "D70",
   "waiting_for": "GENUINE_AUDIO_INSPECTION_CAPABILITY",
-  "background_monitoring_active": false
+  "background_monitoring_active": false,
+  "latest_audio_capability_recheck": "docs/evidence/d70-audio-capability-recheck-001.json",
+  "latest_audio_capability_recheck_result": "AUDIO_INPUT_STILL_UNSUPPORTED_NO_CONFIRMED_ALTERNATIVE"
 }
