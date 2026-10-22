@@ -352,4 +352,31 @@ def test_complete_public_flow_uses_fresh_blind_state_and_retains_first_SSE(monke
         and request["data"][5] == SYSTEM
     )
     assert request["data"][1]["orig_name"] == "clip.wav" and len(request["data"]) == 7
-    assert len(request["session_hash"]) == 32
+    assert "session_hash" not in request
+
+
+def test_event_receipt_survives_interrupted_stream_and_uses_server_owned_session(
+    tmp_path, monkeypatch
+):
+    """Retain the exact owned event before GET and avoid the first observed wrong-session queue lookup without changing audio or prompt."""
+
+    def receipt(self, path, raw, content_type):
+        """Return authored upload/event receipts and require automatic event-linked session allocation."""
+        if path.endswith("upload"):
+            return ["/tmp/gradio/fixture/clip.wav"]
+        assert set(json.loads(raw)) == {"data"}
+        return dict(event_id="b" * 32)
+
+    def interrupted(self, method, path, **kwargs):
+        """Fail the stream only after its recoverable owned receipt has been published."""
+        assert path.endswith("b" * 32)
+        assert (tmp_path / "receipt.json").is_file()
+        raise ReviewError("fixture_stream_interruption")
+
+    monkeypatch.setattr(PublicDemo, "json_request", receipt)
+    monkeypatch.setattr(PublicDemo, "open", interrupted)
+    client = PublicDemo(tmp_path / "receipt.json")
+    with pytest.raises(ReviewError):
+        client.review(pcm_wave(np.zeros(16000, dtype=np.float32), 16000))
+    value = json.loads((tmp_path / "receipt.json").read_text())
+    assert value["event_id"] == value["session_hash"] == "b" * 32

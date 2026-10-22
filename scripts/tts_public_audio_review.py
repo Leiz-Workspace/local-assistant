@@ -342,10 +342,11 @@ def extract_review(events):
 class PublicDemo:
     """Use only the normal fixed-origin published anonymous upload/prediction/event interface without credentials, redirects or retries."""
 
-    def __init__(self):
+    def __init__(self, receipt_path=None):
         """Create a fresh credential-free HTTP client, keeping partial raw SSE evidence for an interrupted first request."""
         self.opener = urllib.request.build_opener(NoRedirect())
         self.raw_stream = bytearray()
+        self.receipt_path = Path(receipt_path) if receipt_path is not None else None
 
     def open(self, method, path, data=None, content_type=None):
         """Refuse foreign paths or headers before creating a verified HTTPS request to the exact public demo origin."""
@@ -415,10 +416,7 @@ class PublicDemo:
                 mime_type="audio/wav",
                 meta={"_type": "gradio.FileData"},
             )
-            payload = dict(
-                data=[PROMPT, audio, None, None, [], SYSTEM, "Cherry"],
-                session_hash=secrets.token_hex(16),
-            )
+            payload = dict(data=[PROMPT, audio, None, None, [], SYSTEM, "Cherry"])
             prediction = self.json_request(
                 "/gradio_api/call/chat_predict",
                 json.dumps(payload).encode(),
@@ -430,6 +428,22 @@ class PublicDemo:
                 or re.fullmatch(r"[a-f0-9]{32}", prediction["event_id"]) is None
             ):
                 raise ReviewError("prediction_receipt")
+            if self.receipt_path is not None:
+                save_bytes(
+                    self.receipt_path,
+                    (
+                        json.dumps(
+                            dict(
+                                description="Owned public simple-call event receipt before streaming; Gradio allocates a fresh session equal to event_id when no custom session is supplied.",
+                                event_id=prediction["event_id"],
+                                session_hash=prediction["event_id"],
+                                service_origin=BASE,
+                            ),
+                            indent=2,
+                        )
+                        + "\n"
+                    ).encode(),
+                )
             with self.open(
                 "GET", "/gradio_api/call/chat_predict/" + prediction["event_id"]
             ) as response:
@@ -467,7 +481,7 @@ def evaluate(packet_path, output):
     save_bytes(output / "freeze.json", (json.dumps(frozen, indent=2) + "\n").encode())
     observations = []
     for row in packet["cases"]:
-        client = PublicDemo()
+        client = PublicDemo(output / (row["id"] + ".receipt.json"))
         started = time.perf_counter()
         try:
             raw = load_upload(row, packet_path.parent / "inputs")
