@@ -2,7 +2,7 @@
 
 **Purpose:** Record the controlled bilingual comparison of the two nominated ASR families, including exact scope, failures and resource evidence without selecting or deploying a default.
 
-**Status: IN PROGRESS.** ADR-094 governs this evaluation. D67's original 599 source files remain unchanged; its actual 4495-test run is historical coverage of that source snapshot, not a full-run claim for the new D68 scripts.
+**Status: PASS local offline comparison; no selected or deployed ASR.** Both first candidate runs completed44/44 requests without retries, timeout, cap errors or missing outputs. ADR-094 governs this evaluation. D67's original599 source files remain unchanged; its actual4495-test run is historical coverage of that source snapshot, not a full-run claim for the new D68 scripts. Current467 related tests, including87 new D68 controls, and32 private auditor controls pass. Readonly final audit verifies608 source files, original model/configuration/data/runtime and unchanged CORE identity/text recovery.
 
 ## Candidates and isolation
 
@@ -35,10 +35,40 @@ The first Qwen import failed on missing namespace UID mapping before loading any
 
 The separate existing public JFK fixture is used only for SDK input/output qualification, never as a scored FLEURS example or independent accuracy reference. Qwen smoke first failed because the evaluation wrapper duplicated `return_dict_in_generate`, which the official backend already sets internally. First and diagnostic results remain unchanged; a dedicated regression test now forbids that duplicate. Corrected smoke returned one complete27-token observation without hitting the cap. No common-corpus predictions were made during qualification. Ordinary CORE echo/process identity recovered before and after each qualification.
 
-**Actual paired scored observations and final audit are pending. No quality scores, selected model or D69 completion is claimed.**
+## First actual paired observations
+
+| Observation | Qwen3-ASR-0.6B CPU float32 | Whisper-small CT2 actual int8_float32 |
+| --- | ---: | ---: |
+| Completed requests |44/44 |44/44 |
+| Vietnamese WER |27/549 =4.918% |105/549 =19.126% |
+| Vietnamese CER |74/1916 =3.862% |211/1916 =11.013% |
+| English WER |21/428 =4.907% |28/428 =6.542% |
+| English CER |80/2254 =3.549% |91/2254 =4.037% |
+| No-speech nonempty outputs |3/4 requests |4/4 requests |
+| Import / load wall seconds |5.335 /1.163 |2.979 /0.542 |
+| Total inference-call seconds |195.148 |86.767 |
+| Whole worker wall seconds |202.365 |90.687 |
+| All44 call latency min / median / max seconds |0.791 /4.547 /8.195 |1.473 /1.920 /2.701 |
+| Duration-weighted RTF, all44 calls |0.44542 |0.19804 |
+| Median per-call RTF |0.47089 |0.20829 |
+| Lifetime process peak RSS KiB |5903892 |957248 |
+| Lifetime process peak RSS GiB |5.630 |0.913 |
+| Process CPU seconds |370.058 |164.077 |
+
+RSS is process RAM including imports/loading/mapped/shared pages; it is not unique memory, address-space size, all-process memory or a minimum hardware requirement. These candidates executed on CPU, with no visible GPU device; existing CORE NVIDIA allocation is recorded separately, not attributed to ASR. Two inference threads and two-logical-CPU affinity do not mean exactly two kernel threads. The owned evaluation root uses about4.5GiB apparent disk storage including runtime, corpus and candidates, below the declared6GB planning budget; this is neither RAM nor an isolated cache accounting.
+
+All438.12requested audio seconds and44call latencies are included. Each measured process is fresh and has no separate inference warmup: the first call includes lazy initialization (Qwen4.587s/Whisper2.168s), while files/kernel caches may be warm from provisioning/qualification. Therefore these are complete post-load call observations, **not uniformly warmed calls or cold-storage load measurements**. No slow-case trimming, p95 SLO, streaming first-token or decoding throughput claim. Keep the original ADR's planned warm-per-case wording as history; actual evidence/reporting uses this narrower measured scope.
+
+On this small repeated-sentence corpus, Qwen has lower observed WER/CER in both languages; Whisper's tested configuration uses less RAM and finishes faster. Architecture/precision/beam/suppression differ, so neither result isolates model architecture or predicts general production speed/accuracy. Both fail the known no-speech controls: Qwen emits text for both silence language hints and Vietnamese noise; Whisper emits text for all four requests. Do not enable automatic audio transcription merely because speech WER is low. No timestamps, extra forced aligner, streaming recognition or approved default were evaluated. D69 evaluates the originally nominated SileroVADv5 boundary separately; VAD effectiveness and combined ASR improvement are not inferred from D68.
+
+Raw predictions, both references, exact waveforms, source/SDK versions, first failures and complete stdout/stderr are retained under ignored `data/backups/d68-*` paths. The qualified paired freeze precedes both scored runs. The earlier prelint/import/metadata qualification snapshots remain unchanged and were never used for scored model selection. Public audit recomputes all edits/RTF/coverage from original observations and retains every control output, rather than adjusting thresholds after seeing results.
+
+Evidence: [qualified paired freeze](evidence/d68-offline-asr-qualified-freeze.json), [audit code/control/result freeze](evidence/d68-offline-asr-audit-freeze.json), [readonly final audit](evidence/d68-offline-asr-readonly-audit.json), [acceptance](evidence/d68-offline-asr-acceptance.json). Source implementation commit`d967148`; no application model routing or source changes. A later documentation-only audio-backlog closure transition preserves its exact audited preclosure bytes and binds the accepted Git revision without rewriting old freezes.
 
 ## Compatibility, approval and rollback
 
 Both candidates operate on private explicit float32 buffers and language hints; neither is wired to product upload/auth/session/cancellation APIs. Generation formats, timestamp behavior, precision and no-speech filtering differ. A future role choice needs actual quality/performance/resource evidence and owner approval before any registry/default/deployment edit. Keep existing CORE, embedding/reranker, all source data/collections and the D24 E5 rollback intact. A separate implementation ADR must cover API contract, warm-worker ownership/admission/cancellation and compatibility before production integration.
+
+Recommendation for review: retain original Qwen as the accuracy-oriented candidate and Whisper-small as the lower-resource reference; select neither now. D69/no-speech segmentation, user-representative independent audio and approved resource/admission/timestamp requirements remain dependencies before proposing a production choice. Any owner-approved future deployment must be additive/default-off first, preserve current audio/source ownership contracts and every existing model role, avoid data/index migrations, then provide a separately tested disable-and-drain rollback. There is no authorization to replace models through this report.
 
 Rollback for this evaluation retires only its owned namespace; retained source/models/corpus/results remain in ignored private directories until separately authorized cleanup. No production data/index/schema migration or existing model replacement has occurred.
