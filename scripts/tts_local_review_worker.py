@@ -94,6 +94,28 @@ def emit(event, **fields):
     print(json.dumps(dict(event=event, **fields), ensure_ascii=False), flush=True)
 
 
+def memory_snapshot(stage, status_path=Path("/proc/self/status")):
+    """Retain kernel memory point samples and lifetime RSS/CPU even on failure, separating virtual mappings from resident RAM."""
+    fields = {}
+    for line in status_path.read_text().splitlines():
+        parts = line.split()
+        if parts and parts[0] in {"VmRSS:", "VmSize:", "VmPeak:", "VmHWM:"}:
+            if len(parts) != 3 or parts[2] != "kB":
+                raise ValueError("local_review_worker_memory_metadata")
+            fields[parts[0][:-1] + "_KiB"] = int(parts[1])
+    usage = resource.getrusage(resource.RUSAGE_SELF)
+    emit("resources", stage=stage, memory=fields, lifetime_max_RSS_KiB=usage.ru_maxrss, CPU_seconds=usage.ru_utime + usage.ru_stime)
+
+
+def generation_boundaries(config, tokenizer):
+    """Require genuine original Thinker/tokenizer EOS and padding IDs instead of inheriting the empty outer generation config."""
+    eos, pad = config.eos_token_id, config.pad_token_id
+    if type(eos) is not int or type(pad) is not int or eos != tokenizer.eos_token_id or pad != tokenizer.pad_token_id or eos != 151645 or pad != 151643:
+        raise ValueError("local_review_original_generation_boundaries")
+    logger.info("local_audio_review_native_boundaries_verified eos_token_id=%d pad_token_id=%d", eos, pad)
+    return dict(eos_token_id=eos, pad_token_id=pad)
+
+
 class Runtime:
     """Use the genuine original Transformers Thinker and multimodal processor without Talker execution, remote code or parameter substitutions."""
 
@@ -115,22 +137,26 @@ class Runtime:
         if not load:
             return
         started = time.perf_counter()
+        memory_snapshot("before_native_load")
         self.model, loading = Qwen2_5OmniThinkerForConditionalGeneration.from_pretrained(
             "/model", dtype=torch.bfloat16, device_map="cpu", attn_implementation="eager",
             local_files_only=True, trust_remote_code=False, output_loading_info=True,
         )
         emit("loading_info", info=loading)
+        memory_snapshot("after_native_load")
         if loading["missing_keys"] or loading["mismatched_keys"] or loading["error_msgs"]:
             raise ValueError("local_review_incomplete_parameters")
         if any(not key.startswith(("talker.", "token2wav.")) for key in loading["unexpected_keys"]):
             raise ValueError("local_review_unexpected_thinker_parameters")
         self.model.eval()
         self.processor = Qwen2_5OmniProcessor.from_pretrained("/model", local_files_only=True, trust_remote_code=False)
+        self.boundaries = generation_boundaries(self.model.config, self.processor.tokenizer)
         devices = sorted({str(p.device) for p in self.model.parameters()})
         dtypes = sorted({str(p.dtype) for p in self.model.parameters() if p.is_floating_point()})
         if devices != ["cpu"] or dtypes != ["torch.bfloat16"]:
             raise ValueError("local_review_device_dtype")
-        emit("ready", load_seconds=time.perf_counter() - started, devices=devices, dtypes=dtypes, threads=torch.get_num_threads(), interop=torch.get_num_interop_threads(), affinity=sorted(os.sched_getaffinity(0)), parameter_count=sum(p.numel() for p in self.model.parameters()), thinker_only=True, maximum_new_tokens=MAX_TOKENS, seed=7, do_sample=False)
+        emit("ready", load_seconds=time.perf_counter() - started, devices=devices, dtypes=dtypes, threads=torch.get_num_threads(), interop=torch.get_num_interop_threads(), affinity=sorted(os.sched_getaffinity(0)), parameter_count=sum(p.numel() for p in self.model.parameters()), thinker_only=True, maximum_new_tokens=MAX_TOKENS, seed=7, do_sample=False, original_generation_boundaries=self.boundaries, outer_generation_EOS=self.model.generation_config.eos_token_id)
+        memory_snapshot("after_processor_ready")
 
     def review(self, row):
         """Condition one greedy first response on actual full-timeline audio features, keeping source/features/tokens/raw text and genuine EOS evidence."""
@@ -147,12 +173,10 @@ class Runtime:
             raise ValueError("local_review_audio_conditioning_missing")
         inputs = inputs.to("cpu", dtype=self.torch.bfloat16)
         with self.torch.inference_mode():
-            result = self.model.generate(**inputs, do_sample=False, num_beams=1, max_new_tokens=MAX_TOKENS)
+            result = self.model.generate(**inputs, **self.boundaries, do_sample=False, num_beams=1, max_new_tokens=MAX_TOKENS)
         generated = result[0, inputs["input_ids"].shape[1]:].tolist()
         raw = self.processor.decode(generated, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-        eos = self.model.generation_config.eos_token_id
-        eos = eos if isinstance(eos, list) else [eos]
-        complete = bool(generated and generated[-1] in eos)
+        complete = bool(generated and generated[-1] == self.boundaries["eos_token_id"])
         judgement, parse_error = None, None
         try:
             judgement = parse_judgement(raw)
@@ -167,11 +191,14 @@ def main():
     os.sched_setaffinity(0, {0, 1})
     request = json.loads(sys.stdin.buffer.read(65537))
     validate_request(request)
-    runtime = Runtime(request["mode"] != "imports")
-    for row in request["cases"]:
-        runtime.review(row)
-    usage = resource.getrusage(resource.RUSAGE_SELF)
-    emit("complete", cases=len(request["cases"]), max_RSS_KiB=usage.ru_maxrss, CPU_seconds=usage.ru_utime + usage.ru_stime)
+    try:
+        runtime = Runtime(request["mode"] != "imports")
+        for row in request["cases"]:
+            runtime.review(row)
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        emit("complete", cases=len(request["cases"]), max_RSS_KiB=usage.ru_maxrss, CPU_seconds=usage.ru_utime + usage.ru_stime)
+    finally:
+        memory_snapshot("worker_finally")
 
 
 if __name__ == "__main__":

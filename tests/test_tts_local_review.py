@@ -59,10 +59,10 @@ def test_invalid_observation_cannot_become_hearing_evidence(change):
 
 
 def test_sealed_cpu_limits_and_no_parent_labels(tmp_path):
-    """Keep no network/credentials/GPU and enforce exact12GiB/600-or7200s policy with only blind samples exposed."""
+    """Keep no network/credentials/GPU and enforce ADR-10016GiB virtual/retained CPU policy with only blind samples exposed."""
     command = review.sandbox("qualify", tmp_path)
     assert "--unshare-all" in command and "--clearenv" in command and "--remount-ro" in command
-    assert "--as=12884901888" in command and "--cpu=1200:1201" in command
+    assert "--as=17179869184" in command and "--cpu=1200:1201" in command
     assert "--cpu=14400:14401" in review.sandbox("review", tmp_path)
     assert not any("parent-only" in value or "/home/" == value for value in command)
     assert "CUDA_VISIBLE_DEVICES" in command and "HF_HUB_OFFLINE" in command
@@ -87,3 +87,38 @@ def test_first_run_creates_private_synthetic_identity_directory(tmp_path, monkey
     review.run("imports", tmp_path / "run")
     assert (tmp_path / "runtime-source/passwd").is_file()
     assert (tmp_path / "runtime-source").stat().st_mode & 0o777 == 0o700
+
+
+def test_neural_run_rejects_low_host_headroom_before_creating_output(tmp_path, monkeypatch):
+    """Refuse a load launch when preflight headroom is insufficient without starting a worker or leaving a fake completed result."""
+    def denied():
+        """Emulate a measured host-headroom failure without allocating memory."""
+        raise ValueError("local_review_host_memory_headroom")
+    monkeypatch.setattr(review, "require_headroom", denied)
+    with pytest.raises(ValueError, match="host_memory_headroom"):
+        review.run("load", tmp_path / "run")
+    assert not (tmp_path / "run").exists()
+
+
+@pytest.mark.parametrize("kib,passed", [(18*1024**2, True), (18*1024**2-1, False)])
+def test_host_headroom_boundary_is_not_a_ram_measurement(tmp_path, kib, passed):
+    """Require exact host MemAvailable units/bounds while explicitly distinguishing the virtual cap and unreserved preflight sample."""
+    path = tmp_path / "meminfo"
+    path.write_text(f"MemAvailable: {kib} kB\n")
+    if passed:
+        value = review.require_headroom(path)
+        assert value["address_space_cap_bytes"] == 16*1024**3
+        assert not value["reserved_memory"]
+    else:
+        with pytest.raises(ValueError, match="host_memory_headroom"):
+            review.require_headroom(path)
+
+
+def test_pre_repair_qualification_cannot_promote_repaired_protocol(tmp_path, monkeypatch):
+    """Require separate native-EOS qualification rather than relabelling a prior capped-response run as corrected listening evidence."""
+    monkeypatch.setattr(review, "ROOT", tmp_path)
+    old = tmp_path / "qualification-first"
+    old.mkdir()
+    review.publish_json(old / "result.json", dict(observation_complete=True, qualification=dict(passed=True)))
+    with pytest.raises(FileNotFoundError):
+        review.require_qualification()

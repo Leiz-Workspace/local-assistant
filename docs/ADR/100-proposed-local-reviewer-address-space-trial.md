@@ -2,7 +2,7 @@
 
 **Purpose:** Present a bounded, concrete response to the original loader's actual mmap failure without silently exceeding the owner's approved ADR-098 limits.
 
-**Date:** 2026-10-22. **Status: PROPOSED — NOT APPROVED OR EXECUTED.** ADR-098's original local evaluation is approved; its12GiB address-space trial failed. D70 remains open, D71 unstarted, ADR-097 rejected.
+**Date:** 2026-10-22. **Status: ACCEPTED FOR BOUNDED CONTINUATION — NOT YET QUALIFIED.** After the concrete16GiB proposal and question were presented, the owner instructed “Continue from where you left off.” This continuation is applied to the proposed16GiB trial, with the18GiB headroom condition and all other bounds retained. This records the actual continuation instruction, not a fabricated multiple-choice answer. ADR-098's original local evaluation is approved; its12GiB address-space failure remains unchanged. D70 remains open, D71 unstarted, ADR-097 rejected.
 
 ## Observed failure and distinction
 

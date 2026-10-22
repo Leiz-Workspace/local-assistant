@@ -2,11 +2,19 @@
 
 import hashlib
 import json
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
-from scripts.tts_local_review_worker import parse_judgement, validate_request, waveform
+from scripts import tts_local_review_worker as worker
+from scripts.tts_local_review_worker import (
+    generation_boundaries,
+    memory_snapshot,
+    parse_judgement,
+    validate_request,
+    waveform,
+)
 
 
 def judgement():
@@ -69,3 +77,48 @@ def test_original_full_timeline_waveform_and_corruption_guards(tmp_path):
     path.symlink_to(target)
     with pytest.raises(OSError):
         waveform(row, tmp_path)
+
+
+def test_memory_snapshots_distinguish_virtual_and_resident_bytes(tmp_path, capsys):
+    """Report authored kernel-shaped virtual/RSS samples separately from actual process lifetime peak counters."""
+    path = tmp_path / "status"
+    path.write_text("VmRSS: 100 kB\nVmSize: 500 kB\nVmPeak: 600 kB\nVmHWM: 120 kB\n")
+    memory_snapshot("fixture", path)
+    value = json.loads(capsys.readouterr().out)
+    assert value["memory"] == dict(VmRSS_KiB=100, VmSize_KiB=500, VmPeak_KiB=600, VmHWM_KiB=120)
+    assert value["stage"] == "fixture" and value["lifetime_max_RSS_KiB"] > 0
+
+
+def test_final_resource_evidence_survives_native_load_failure(monkeypatch, capsys):
+    """Retain final actual resource counters on failed loading without emitting a successful complete event or retrying."""
+    import io
+    from types import SimpleNamespace
+
+    def fail(load):
+        """Emulate one native load error without importing or allocating neural parameters."""
+        raise RuntimeError("fixture_native_load_failure")
+    monkeypatch.setattr(worker.os, "sched_setaffinity", lambda *args: None)
+    monkeypatch.setattr(worker.sys, "stdin", SimpleNamespace(buffer=io.BytesIO(b'{"mode":"load","cases":[]}')))
+    monkeypatch.setattr(worker, "Runtime", fail)
+    with pytest.raises(RuntimeError, match="fixture_native_load_failure"):
+        worker.main()
+    events = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    assert [event["event"] for event in events] == ["resources"]
+    assert events[0]["stage"] == "worker_finally"
+
+
+def test_native_thinker_eos_is_explicit_despite_empty_outer_generation_config():
+    """Bind generation to the original Thinker/tokenizer end marker so empty outer metadata cannot continue into fabricated chat turns."""
+    config = SimpleNamespace(eos_token_id=151645, pad_token_id=151643)
+    tokenizer = SimpleNamespace(eos_token_id=151645, pad_token_id=151643)
+    outer = SimpleNamespace(eos_token_id=None)
+    assert generation_boundaries(config, tokenizer) == dict(eos_token_id=151645, pad_token_id=151643)
+    assert outer.eos_token_id is None
+
+
+@pytest.mark.parametrize("eos,pad", [(None,151643),(151644,151643),(True,151643),(151645,None),(151645,151645)])
+def test_foreign_or_missing_original_generation_boundaries_rejected(eos, pad):
+    """Reject guessed, missing or substituted stop/padding IDs instead of hiding invalid completion evidence."""
+    tokenizer = SimpleNamespace(eos_token_id=151645, pad_token_id=151643)
+    with pytest.raises(ValueError, match="original_generation_boundaries"):
+        generation_boundaries(SimpleNamespace(eos_token_id=eos,pad_token_id=pad),tokenizer)
