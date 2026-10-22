@@ -1,0 +1,18 @@
+{
+  "description": "Exact final readonly audit source/control/current full freeze and actual recovery/provenance/artifact inputs before readonly execution. Full log/result are checked for complete success by the auditor after their producing process ends.",
+  "sha256": {
+    "data/backups/d60-4120-postverification-audit.py": "37aeb10f934928412c403a7959e1a98810ce478986f1bb65d52e58ecb1a565b4",
+    "data/backups/test_d60_4120_postverification_audit.py": "e9264fd1870f2a518ef284899d403eef988fb8b51b072f011f89bfaf7dbce525",
+    "data/backups/d60-4120-audit-controls-first.log": "394aa0f933a58443b82be3d098a52d59b1fdd6bc987e01480034e6b62c325e74",
+    "docs/evidence/d60-4120-full-freeze.json": "6595f53ef307c9f8c362559ac37658807f0314debeb93a792b00b0f2fcef534b",
+    "docs/evidence/d60-archived-discovery-freeze.json": "3a813321157baf7e19ec9855e1b86026b22d66b57d88a28ef261f99464e917a7",
+    "docs/evidence/d60-archived-discovery-result.json": "f182b2081de4341cc94d1cf501392d353640b614aeaed13f3888dd3df78ffc4c",
+    "docs/evidence/d60-archived-discovery-visual-review.json": "d1fe7ae6f853bf06181d33c2cedd1657c636b4aeacaaecd73be3356d70cedae3",
+    "docs/evidence/d60-archived-discovery-report.md": "93263768707660a1f328ea2e5548d3f3b4610de671d408c88292f7c3afb3f4c4",
+    "docs/evidence/d60-archived-discovery-report.docx": "d99178429ba215ffc96557e57ad0f922b374d8a4f9ab495fcc97173ea051c8a7",
+    "docs/evidence/d60-archived-discovery-report.pdf": "3a42b60e5a1b83053b7596e6dcb0c08df68a7123c0cad82abeda7e7ca3e28854"
+  },
+  "private_audit_controls_passed": 34,
+  "expected_full_collection": 4120,
+  "old540_source_bytes_unchanged": true
+}
