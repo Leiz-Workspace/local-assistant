@@ -1,0 +1,36 @@
+{
+  "description": "Metadata/source-only feasibility study under explicit evaluator pause. Headers and SDK text inspected, no neural SDK import, tensor read, allocation, model load, inference, package installation or new weights. Proposed pread/state_dict path is NOT IMPLEMENTED, NOT APPROVED, NOT QUALIFIED.",
+  "current_address_space_cap_bytes": 12884901888,
+  "evaluator_execution_allowed": false,
+  "thinker_tensor_count": 1442,
+  "thinker_raw_tensor_bytes": 9406928896,
+  "largest_thinker_tensor": {
+    "name": "thinker.model.embed_tokens.weight",
+    "bytes": 622329856,
+    "dtype": "BF16",
+    "shard": "model-00001-of-00003.safetensors"
+  },
+  "dtype_set": [
+    "BF16"
+  ],
+  "safetensors_installed_version": "0.8.0",
+  "safetensors_native_pread_supported_in_source": true,
+  "transformers_installed_version": "4.57.3",
+  "transformers_existing_safe_open_calls_do_not_forward_backend": true,
+  "transformers_low_cpu_mem_usage_and_offload_state_dict_are_popped_unused": true,
+  "proposed_strategy": "Read only exact original thinker.* tensors through native safe_open backend=pread, then use genuine Thinker.from_pretrained(None, config=originalThinkerConfig, state_dict=original_tensors) with explicit original EOS; no SDK monkeypatch, quantization, tensor rewriting or replacement model.",
+  "actual_peak_RAM_or_address_space_measured": false,
+  "actual_12GiB_fit_verified": false,
+  "reviewer_semantic_control_failures_resolved": false,
+  "source_sha256": {
+    "data/backups/d70-local-audio-reviewer/venv/lib/python3.12/site-packages/safetensors/__init__.pyi": "88467818dfbb7a6e4e2d1c085efb1d07cee365d87350ebe85d1d76f9ced6325d",
+    "data/backups/d70-local-audio-reviewer/venv/lib/python3.12/site-packages/safetensors/torch.py": "f3f476d1f8c04fe65fa3797426556a0b7afa43f8c4db9db6b799c7cf84748f3d",
+    "data/backups/d70-local-audio-reviewer/venv/lib/python3.12/site-packages/transformers/modeling_utils.py": "bf1c6b2a43cf7c36fb79f37c981424dd6ae78eb863fcaa5d2a37e76c9828611d"
+  },
+  "primary_sources": [
+    "https://github.com/safetensors/safetensors/blob/v0.8.0/bindings/python/py_src/safetensors/torch.py",
+    "https://github.com/huggingface/transformers/blob/v4.57.3/src/transformers/modeling_utils.py"
+  ],
+  "D70_complete": false,
+  "D71_started": false
+}
