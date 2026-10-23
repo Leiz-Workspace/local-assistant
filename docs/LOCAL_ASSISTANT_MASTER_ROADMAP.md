@@ -1,6 +1,6 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.43 (D71 recording and D72 offline composition verified; D70 listening deferred) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
+> **Version:** 4.44 (D73 ephemeral audio retention verified; D70 listening deferred) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
 > **CURRENT POSITION:** Owner explicitly deferred D70 actual listening to a later manual test and authorized D71 under [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md). D70 machine measurements complete; **0/24 listening reviews, DEFERRED, no naturalness PASS**. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). D71 explicit local recording PASS (271related tests and native fake-device browser); D72 NEXT; no model/default/deployment change. Earlier checkpoints remain in dev_log and ADR/evidence history.
@@ -415,7 +415,7 @@ T01 introduced no production runtime change. T02 applied reviewed V002 after ver
 | D70 | **MACHINE MEASUREMENTS COMPLETE / MANUAL LISTENING DEFERRED BY OWNER** |30first attempts/24waveforms/6explicit-VI refusals and machine measurements retained. Actual listening0/24, no naturalness PASS. Owner now permits D71; [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) supersedes the earlier scheduling prohibition. [Manual test guide](D70_MANUAL_LISTENING_TEST.md); gate remains before voice acceptance/model selection/release. |
 | D71 | **PASS local browser scope:** Push-to-talk / explicit recording control |271related PASS/15.46s/0SKIP;11Node controls included by one Python wrapper. Native Brave fake device:4streams ended, mono16k WAV, stop/Escape/hidden/late-permission cancellation, no upload. Original661source/917protected/176inputs/pending labels unchanged. [Scope and user-device check](D71_EXPLICIT_RECORDING.md), [acceptance](evidence/d71-explicit-recording-acceptance.json). D72 NEXT. |
 | D72 | **PASS local offline composition; product activation gated:** ASR → LLM → TTS buffering |6/6actual corrected original-candidate paths,267related PASS/7.52s/0SKIP, joined cancel/owner/source/clock guards. First caller128token failure preserved/corrected to existing Fast512minimum. Held-out VAD/ASR comparison complete; naive concatenation disabled. [Scope/limits](D72_BUFFERED_VOICE_COMPOSITION.md), [acceptance](evidence/d72-native-voice-composition-acceptance.json). D73 NEXT. |
-| D73 | Audio retention/delete/security tests | No unintended always-on recording |
+| D73 | **PASS local ephemeral scope:** Audio retention/delete/security |5minute ready-preview expiry, explicit/hidden/Escape delete, stale-timer generation guards, no upload/storage/auto-recording;271related PASS/7.08s/0SKIP,13Node controls, native fake-device browser/empty storage. [Scope/user check](D73_AUDIO_RETENTION_SECURITY.md), [acceptance](evidence/d73-audio-retention-acceptance.json). D74 NEXT. |
 | D74 | Multimodal/voice phase gate | End-to-end tested examples and resource matrix |
 
 ### Phase 6 — Harness, extensibility, security and UX (D75–D86)
