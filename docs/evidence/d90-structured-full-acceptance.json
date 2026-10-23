@@ -1,0 +1,70 @@
+{
+  "description": "Current719-file full software regression and joined qualified read-only audit completed; earlier failed runs remain preserved. No inferred manual/model/product/release acceptance.",
+  "status": "FULL_5596_PASS_PRODUCT_GATES_OPEN",
+  "full": {
+    "accepted_full_software_regression": true,
+    "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+    "completed_at_utc": "2026-10-23T21:11:47.249567+00:00",
+    "description": "Fresh full current-source regression with actual existing integration credentials; no new model/default/provider or benchmark-original rerun.",
+    "elapsed_seconds": 1762.1469386479876,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "log_sha256": "de93f25233bc368d525b9445e59daa2f797524f60e2115d44d4fed25389653d2",
+    "passed": 5596,
+    "pytest_pid": 1646617,
+    "pytest_seconds": 1760.86,
+    "skipped": 0,
+    "source_bytes_unchanged": true,
+    "source_files": 719,
+    "source_freeze_sha256": "ea719e2cd10bcfc6106d4bae0454dfc4f75cf25ed810970499496f6c49d067e0",
+    "started_at_utc": "2026-10-23T20:42:25.102686+00:00",
+    "status": "complete",
+    "summary": "================= 5596 passed, 1 warning in 1760.86s (0:29:20) =================",
+    "wrapper_pid": 1646600
+  },
+  "post_full_audit_status": "PASS_POST_FULL_AUDIT_WITH_EXPLICIT_OPERATIONAL_TIMESTAMP_DELTA",
+  "all_earlier_full_712_files_unchanged": true,
+  "original_other_source_files_unchanged": 660,
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "strict_all_row_fingerprints_equal": false,
+  "only_documented_database_delta": "assistant.file_global_usage.updated_at",
+  "normalized_business_data_and_security_match": true,
+  "original_core_retained": true,
+  "actual_listening_labels": 0,
+  "model_selection_changed": false,
+  "production_activation": false,
+  "release_approved": false,
+  "independent_private_controls": {
+    "auditor_policy": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 0.33
+    },
+    "delivery_policy": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 0.23
+    },
+    "included_in_full_5596": false
+  },
+  "artifact_sha256": {
+    "data/backups/d90-structured-final-full/result.json": "d03119b6e4c375a84544255bbc56aa90810fb09310f26522b3c71182ef830f72",
+    "data/backups/d90-structured-final-full/pytest.log": "de93f25233bc368d525b9445e59daa2f797524f60e2115d44d4fed25389653d2",
+    "data/backups/d90-structured-final-full/source-freeze.json": "ea719e2cd10bcfc6106d4bae0454dfc4f75cf25ed810970499496f6c49d067e0",
+    "docs/evidence/d90-structured-full-execution-environment.json": "dab324969f6a8ce60402dd924976dd93bda281b3d271594926981fee861340dc",
+    "docs/evidence/d90-structured-post-full-readonly-audit.json": "e184ece7845e4b6adc953e1194cf1a9c2cf034b05f0a0b38879cbc93e3ec0f6c",
+    "docs/evidence/d81-integer-quote-native-verification.json": "6708fba96968e377d728c04be87ac35848a9cb714c364906b3cb79c7fc81d832",
+    "docs/evidence/d90-reference-structured-smoke.json": "5649c18f94d706c7c2335e9403e33127fa7141f48ca97d6d660efeefd2abe7d9",
+    "data/backups/d90-structured-readonly-audit.py": "c68c8ff9c3a019c8d72cbd624190b913a55531b37453f623f5bc1c1145d73458",
+    "data/backups/test_d90_structured_readonly_audit.py": "2582b1ca8e0a753740ce02e1210e6c531be18ff5ad6e212e6a16839635af40bb",
+    "data/backups/d90-structured-final-readonly-audit.log": "e8ec6ce9502aec3eeae483dbe48071b8570c0eb6629d7880a3e95bdf09f5a1ac",
+    "data/backups/d90-structured-audit-policy-tests.log": "24def3de6cede6803b2c7f43a914014f591888145fbae9f3336e3d3d332d4830",
+    "data/backups/d90-build-final-delivery.py": "b7f75453271e4a41b35b5953d5e2ad3a304121c79aadc856568ac0bde285724a",
+    "data/backups/test_d90_build_final_delivery.py": "d6cea467001f1e5cb1d02246aade3d73916e5082150b722675fc0b011aa95763",
+    "data/backups/d90-delivery-policy-tests.log": "73568766c79d2428c7ba8911cc82a9588294497573ed2f582ac5bb56fe219d06"
+  }
+}
