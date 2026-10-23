@@ -52,7 +52,22 @@ def digest(path):
 
 def publish(path, value):
     """Durably create a private immutable artifact and refuse to overwrite an earlier observation."""
-    raw = value if type(value) is bytes else canonical(value) + b"\n"
+    raw = (
+        value
+        if type(value) is bytes
+        else (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                allow_nan=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+        ).encode("utf-8")
+    )
+    if len(raw) > 2 * 1024 * 1024:
+        raise ValueError("excerpt_artifact_limit")
     with Path(path).open("xb") as output:
         os.chmod(path, 0o600)
         output.write(raw)

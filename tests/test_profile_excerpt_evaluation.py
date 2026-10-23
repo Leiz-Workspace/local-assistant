@@ -21,6 +21,26 @@ def cases():
     return json.loads(evaluation.CORPUS.read_text())["cases"]
 
 
+def test_full_actual_source_manifest_is_not_limited_to_mcp_frame_size(tmp_path):
+    """Persist the actual whole-application freeze while preserving the unrelated existing16KiB MCP/request limits."""
+    manifest = evaluation.source_manifest()
+    assert len(manifest) >= 712
+    path = tmp_path / "protocol.json"
+    evaluation.publish(path, dict(source_sha256=manifest))
+    assert path.stat().st_size > 16384
+    assert json.loads(path.read_text())["source_sha256"] == manifest
+
+
+@pytest.mark.parametrize(
+    "value", [dict(value=float("nan")), dict(value="x" * (2 * 1024 * 1024))]
+)
+def test_artifact_writer_keeps_nonfinite_and_overall_byte_limits(tmp_path, value):
+    """Reject invalid or oversized metadata before creating an artifact rather than weakening bounded request parsing."""
+    with pytest.raises(ValueError):
+        evaluation.publish(tmp_path / "rejected.json", value)
+    assert not (tmp_path / "rejected.json").exists()
+
+
 class FixturePort:
     """Return controlled oracle-derived fixture replies solely for deterministic protocol tests."""
 
