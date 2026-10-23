@@ -1,0 +1,58 @@
+{
+  "description": "Actual D84 same-cluster PostgreSQL restore with row/ACL equality; original empty Qdrant baseline and nonempty owned vector/blob/config canary restores. No original writes or shared restart.",
+  "status": "LOCAL_ISOLATED_RESTORE_VERIFIED",
+  "new_tests": 11,
+  "related_tests": {
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.19
+  },
+  "source_sha256": {
+    "scripts/release_recovery_drill.py": "49fa07d5d7807aceaee37461adb3da780f5ffc332e3c4e707879d034d766b960",
+    "tests/test_release_recovery_drill.py": "9035814c3420f28751fb55d384f0076828b7e42c85452197d6722ecd87a380f7",
+    "scripts/postgres_recovery_acceptance.py": "a0caa88482b3d22dc3115defeab1f49b8fb3107905b815176a51cc70d94d3f89",
+    "docs/ADR/123-isolated-local-release-restore-drill.md": "64157fcf7e9a4116561645cebe0496730f059d52ceb87acaf1cab30cf7ab65ad"
+  },
+  "result": {
+    "config_object": {
+      "config_sha256": {
+        "configs/embedding-e5-rollback.json": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+        "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+        "configs/llama-cpp-commit.txt": "c44dffe2f5df93448c3bfe956285e9e21f7faa9f51f709ea9da1b2e5874901ab",
+        "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3"
+      },
+      "synthetic_object_bytes": 39,
+      "synthetic_object_sha256": "5cb6ae200a5a4eb588c536b471017a6c86676d44e54418a04a4dc899d3b6d4d3"
+    },
+    "database_archive_bytes": 60622,
+    "database_archive_sha256": "892ab16f8dfa2308ff6568ad3d971c01d15e57a7f81cbb9989b84e2c6f6db1d8",
+    "database_row_fingerprint_sha256": "3b0a6fd690137646b3a49816ffa881e70c63bdf9dce58c7cb502ba55c5db5610",
+    "database_security_sha256": "03577b8e67c4a8a2125c37fad27da5d96ba7ae58d4bc782aeca771d9df3a30b8",
+    "database_tables_verified": 12,
+    "description": "Actual same-cluster isolated restore; existing roles assumed. No original writes, restart, off-host/failover/RPO/RTO certification.",
+    "original_data_security_configs_unchanged": true,
+    "owned_database_and_vector_targets_retired": true,
+    "schema_revision": "0006",
+    "shared_services_restarted": false,
+    "status": "COMPLETE",
+    "vectors": {
+      "canary_points_restored": 3,
+      "keyword_indexes_verified": 2,
+      "logical_backup_sha256": "1cfe021e028e0f6e728eb7f484a0ef9d821c77d899d550f59f6e200b149a974e",
+      "original_collection_count": 0
+    }
+  },
+  "artifact_sha256": {
+    "data/backups/d84-recovery-first-tests.log": "ab277bdacf751086524d98f6278d368dc8c69e03e8c4f8de481e9c0e50740187",
+    "data/backups/d84-isolated-restore-first.log": "49083a0dc4be18495091d27aec1ccedee85e5eec651ae5f5f300b570c4a610fa",
+    "data/backups/d84-isolated-restore-first/result.json": "003e9c09e3a9df513250b5f9424696f02dc482bc0cea988fbc4e984dad19c286",
+    "data/backups/d84-isolated-restore-first/postgres/manifest.json": "4c5fbf733233949c68634a835a837636810260a67bf4a0212e5fa6642a5b1ab3",
+    "data/backups/d84-isolated-restore-first/vector-canary-backup.json": "1cfe021e028e0f6e728eb7f484a0ef9d821c77d899d550f59f6e200b149a974e",
+    "data/backups/d84-isolated-restore-first/vector-canary-restored.json": "e11440e11f0b5d1984a2aa7eb5806f35742799f08836fa5c165f587137593aa8",
+    "data/backups/d84-isolated-restore-first/object-metadata.json": "ea077b38ed76c67470896e6270c4339083f972061937180a31d544eddea29ba8"
+  },
+  "private_database_backup_retained": true,
+  "database_dump_committed": false,
+  "off_host_or_fresh_cluster_restore_certified": false
+}

@@ -1,0 +1,9 @@
+{
+  "description": "D84 reviewed local restore sources before one actual owned-namespace run; no original writes or service restart.",
+  "source_sha256": {
+    "scripts/release_recovery_drill.py": "49fa07d5d7807aceaee37461adb3da780f5ffc332e3c4e707879d034d766b960",
+    "tests/test_release_recovery_drill.py": "9035814c3420f28751fb55d384f0076828b7e42c85452197d6722ecd87a380f7",
+    "scripts/postgres_recovery_acceptance.py": "a0caa88482b3d22dc3115defeab1f49b8fb3107905b815176a51cc70d94d3f89",
+    "docs/ADR/123-isolated-local-release-restore-drill.md": "64157fcf7e9a4116561645cebe0496730f059d52ceb87acaf1cab30cf7ab65ad"
+  }
+}
