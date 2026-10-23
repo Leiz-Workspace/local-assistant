@@ -2,7 +2,7 @@
 
 **Purpose:** Define a concrete, resource-bounded preparation alternative after the owner confirmed no Hugging Face account/Space, without selecting a production model, loading weights, replacing D70 AC or reopening previous evaluator campaigns.
 
-**Date:** 2026-10-23. **Status: METADATA/NATIVE-META FEASIBILITY VERIFIED; MODEL DOWNLOAD AND SDK PREPARATION NOT APPROVED.** This proposal concerns only optional preparation of an additional research evaluator. No download, installation, load, auditory inference or deployment has occurred. [Metadata and native probe](../evidence/d70-voxtral-meta-feasibility.json), [exact preparation manifest](../evidence/d70-voxtral-preparation-manifest.json).
+**Date:** 2026-10-23. **Status: OWNER-APPROVED PREPARATION COMPLETED AND VERIFIED; LOAD/AUDIO NOT APPROVED.** On 2026-10-23 the owner replied “Duyệt chuẩn bị local theo ADR-107” to the exact nine-artifact/CPU-SDK/20GiB scope reviewed at commit `82bee58`. No neural model load, auditory inference, deployment or D70 closure is authorized. Historical manifest/feasibility evidence retains its original preapproval state. [Metadata and native probe](../evidence/d70-voxtral-meta-feasibility.json), [exact preparation manifest](../evidence/d70-voxtral-preparation-manifest.json).
 
 ## Reason and assessed scope
 
@@ -31,3 +31,17 @@ Risks: native memory/mmap overhead despite a lower tensor-byte count, processor/
 Migration affects only a new private research directory; there is no production model/config/index/database/service migration. Preserve registry choices, D24/`a88584b`/E5 rollback, all old model/audio/SDK bytes, previous first outcomes,24pending listening labels and original system/CORE. Rollback retires preparation scope, retains failed partial files and receipts, and leaves accepted components untouched. Do not overwrite partial downloads or repeat a failed original-weight campaign without a newly defined scope. This proposal selects no replacement or deployed model.
 
 **D70 IN PROGRESS/NATURALNESS OPEN; D71 NOT STARTED.** Preparation alone cannot satisfy either naturalness or model-selection approval.
+
+## Executed preparation, 2026-10-23
+
+Owner reply **“Duyệt chuẩn bị local theo ADR-107”** approved exactly this preparation scope. [Pre-execution approval/freeze](../evidence/d70-voxtral-approved-preparation.json), [actual completed preparation and independent audit](../evidence/d70-voxtral-preparation-completed.json). Earlier proposal/manifest/feasibility states above remain historical; the exact reviewed manifest bytes are unchanged.
+
+Downloaded all **9 artifacts / 9,371,455,742 bytes**, pinned revision and full Git-blob/LFS identities verified during transfer and again independently. Both bounded shard headers match the index: **762 tensors / 4,676,271,104 parameters / 9,356,382,208 payload bytes**, including 7,680,000 FP32 position bytes. Header reads allocate no model tensors. No duplicate consolidated checkpoint.
+
+uv resolved and installed the unchanged six SDK core pins, all transitive requirements hash-locked and CPU wheels only. The separate SDK has **19,561 inventoried entries**; an offline, readonly, no-GPU namespace imports the native Voxtral model/processor classes and audio SDK without constructing them, with no checkpoint mount or audio input. Python3.12.3/Torch2.10.0+cpu/Transformers4.57.3/NumPy2.3.5/safetensors0.8.0/mistral-common1.8.1 verified; SDK bytes unchanged after imports. Full evaluator root including SDK/cache/models/receipts: **11,374,012,139 bytes (10.5929 GiB)**, under20GiB. Enforcement uses exact artifact write bounds, reserve checks and a sampled SDK subprocess monitor; it is **not a kernel filesystem quota**. This disk use is not model RAM/VRAM.
+
+Initial new test caught omitted symlink-directory bytes; fixed before execution. First real resolution then stopped because the validator expected the extras suffix uv normally strips. Retained its output, corrected validation to require exact base pins plus hashed soundfile/soxr dependencies, and resumed only the frozen pre-install stage. No dependency pin, old environment, first log or artifact was overwritten. Both failures and the complete executed source are retained.
+
+Final **383 TTS-related tests PASS / 0 FAIL / 0 SKIP, 25.39s; Ruff PASS**. This includes16 new preparation tests; no full650-source or auditory-quality claim. All648 previous source bytes,38priorD70JSON,917protected files,176original inputs,23,475+23,382old SDK entries,16old reviewer artifacts,24pending labels and readonly services/database/model configuration preserved. Same CORE PID37256/start63900/command, context32K; no restart or context change.
+
+The preparation permission is now **consumed/retired**. No Voxtral checkpoint has been loaded, no neural/audio request has run, no VI/naturalness or memory-fit claim is established. Next dependency is a separately reviewed **load/integrity-only** protocol using these exact retained bytes with12GiB address-space cap/14GiB sampled host headroom/CORE loaded/offline CPU, followed only by separately authorized held-out auditory qualification. No additional download is needed for that proposal. It must not repeat earlier failed reviewer campaigns, lower AC, grant automatic model selection or advance D71. **D70 naturalness OPEN; D71 NOT STARTED.**
