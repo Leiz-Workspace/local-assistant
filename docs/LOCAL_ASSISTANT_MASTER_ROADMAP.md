@@ -216,12 +216,12 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 - [ ] Reconcile actual dates/tests D11–D14 against results and `dev_log`.
 - [ ] Decide formal weighted model scorecard and quality gap gate.
 - [ ] Confirm streaming/cancel/graceful shutdown and load/reload behavior where required.
-- [ ] Ensure UNRESTRICTED tool permissions stay disabled by policy, not only by convention.
-- [ ] Snapshot exact model hash, mmproj and runtime SHA in release manifest.
+- [x] Ensure UNRESTRICTED tool permissions stay disabled by backend policy: fixed CORE-only D77/D79 guards and explicit negative profile tests; no UNRESTRICTED runtime/quality claim. [Evidence/scope](D90_ARTIFACT_PROVENANCE_SNAPSHOT.md).
+- [x] Snapshot exact configured model hashes, both projectors and runtime Git/binary/library hashes in a current candidate companion manifest; original release manifest unchanged, no release approval. [Measured snapshot](evidence/d90-candidate-model-runtime-snapshot.json).
 
 ---
 
-## 5. Day 15 — detailed sprint (CURRENT)
+## 5. Day 15 — detailed accepted local sprint (historical)
 
 ### D15-T01 — PostgreSQL & Vault — **PASS**
 
