@@ -317,6 +317,18 @@ async def test_existing_profile_prompt_and_separate_schema_provenance_share_exac
         await run.close()
 
 
+@pytest.mark.asyncio
+async def test_native_schema_wire_order_matches_fact_first_request_and_source_first_citations():
+    """Preserve declared decoding order instead of accidentally canonicalizing JSON-schema properties into a different grammar sequence."""
+    port, messages, calls, _ = setup()
+    await port.complete(**arguments(messages))
+    schema = json.loads(calls[0])["response_format"]["schema"]["anyOf"][0]
+    assert list(schema["properties"]) == ["facts", "citations"]
+    assert list(schema["properties"]["facts"]["properties"]) == ["color", "count"]
+    citation = schema["properties"]["citations"]["items"]["anyOf"][0]
+    assert list(citation["properties"]) == ["source_id", "quote"]
+
+
 @pytest.mark.parametrize("facts_key", [None, "facts"])
 @pytest.mark.asyncio
 async def test_explicit_missing_evidence_refusal_is_possible_without_publishing_a_guess(

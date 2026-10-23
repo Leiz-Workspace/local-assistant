@@ -8,9 +8,11 @@ import pytest
 from scripts import structured_excerpt_evaluation as evaluation
 
 
-def corpus():
+def corpus(version="v1"):
     """Read immutable fresh paired cases and separate missing-evidence controls."""
-    return json.loads(evaluation.CORPUS.read_text())
+    return json.loads(
+        evaluation.CORPUS.with_name(f"d81-typed-paired-{version}.json").read_text()
+    )
 
 
 def install_transport(monkeypatch, case, fault=None):
@@ -63,7 +65,9 @@ def install_transport(monkeypatch, case, fault=None):
     return calls
 
 
-@pytest.mark.parametrize("case", corpus()["cases"], ids=lambda case: case["id"])
+@pytest.mark.parametrize(
+    "case", corpus()["cases"] + corpus("v2")["cases"], ids=lambda case: case["id"]
+)
 @pytest.mark.asyncio
 async def test_fixed_pairs_have_identical_messages_and_only_response_format_differs(
     tmp_path, monkeypatch, case
@@ -88,7 +92,9 @@ async def test_fixed_pairs_have_identical_messages_and_only_response_format_diff
 
 
 @pytest.mark.parametrize(
-    "case", corpus()["negative_cases"], ids=lambda case: case["id"]
+    "case",
+    corpus()["negative_cases"] + corpus("v2")["negative_cases"],
+    ids=lambda case: case["id"],
 )
 @pytest.mark.asyncio
 async def test_missing_or_instruction_only_source_requires_actual_refusal(

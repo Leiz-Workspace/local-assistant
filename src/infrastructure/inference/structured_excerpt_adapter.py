@@ -18,6 +18,7 @@ from apps.api.runtime.presets import (
 )
 from apps.api.services.llama_gateway import LlamaGateway
 from src.application.ports.inference import CompletionResult, InferenceFailure
+from src.application.services.mcp_adapter import canonical
 from src.application.services.profile_prompts import TEMPLATES, PromptInput
 from src.application.services.workspace_requests import parse_workspace_json
 
@@ -34,7 +35,6 @@ def encoded(value):
         value,
         ensure_ascii=False,
         allow_nan=False,
-        sort_keys=True,
         separators=(",", ":"),
     ).encode()
     if len(raw) > 32768:
@@ -365,7 +365,7 @@ class StructuredExcerptAdapter:
             if asyncio.current_task().cancelling():
                 raise asyncio.CancelledError()
             self.provenance = StructuredProvenance(
-                hashlib.sha256(encoded(dict(messages=messages))).hexdigest(),
+                hashlib.sha256(canonical(dict(messages=messages))).hexdigest(),
                 hashlib.sha256(encoded(schema)).hexdigest(),
                 hashlib.sha256(raw_request).hexdigest(),
                 hashlib.sha256(content.encode()).hexdigest(),
