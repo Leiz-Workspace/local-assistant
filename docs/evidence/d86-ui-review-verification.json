@@ -1,0 +1,113 @@
+{
+  "description": "D86 local recorder UI polish verified on actual fake-device browser keyboard/desktop/mobile-dark; release gate remains OPEN.",
+  "status": "LOCAL_UI_VERIFIED_RELEASE_GATE_OPEN",
+  "new_tests": 1,
+  "related_tests": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.42
+  },
+  "source_sha256": {
+    "apps/voice/static/index.html": "ee5ed21d4817c87289efe5d61b7276fcd45e4e15fa759001c3feac2b5011160d",
+    "tests/recording_accessibility_smoke.mjs": "0b86bbae4e857d95f8a19741994be39ab8d48f59dc3c7ca44ba6be59decd8dce",
+    "tests/test_recording_accessibility.py": "cafd98d0fd7d34a284bbd1a756296c714bc553f624c8e1b96ad6538d833250fc"
+  },
+  "prior_index_sha256": "2da2162dbadb399696ac824b36e17e830dfe5013843918c1e291c001e7c2f3d9",
+  "artifact_sha256": {
+    "data/backups/d86-native-accessibility-first.log": "ba12b88b5813255eb7a888731814080fe187eea1fe3f494fc039c07ddb54b6c5",
+    "data/backups/d86-native-recording-regression.log": "0b07e64950b323028f95bd7807664387109210a948757eb3a875916465934665",
+    "data/backups/d86-recording-ui-tests.log": "e7295eefdf7692e1719c685c5d8a3edd1f0dc7f77f25aab9bd8153dec6d4def1",
+    "data/backups/d86-temporary-ui-server.log": "0c63f92c8d2eec4c402f00ef4304828bc952faf65cf4c1bd0575eaad23ba14be",
+    "data/backups/d86-recorder-desktop.png": "37b4d812e9b20f081af960b4d6234699d6ea12ff8224a488ad6bfd2a0718824b",
+    "data/backups/d86-recorder-mobile-dark.png": "eecec161a59a57cd89a88e319187128077d4b2fcad190933e26050eb78059a77"
+  },
+  "native_accessibility": {
+    "description": "Actual fake-device browser keyboard/layout smoke; not physical mic, subjective listening or formal screen-reader/WCAG certification.",
+    "passed": true,
+    "browser": "154.0.8037.58",
+    "layout": {
+      "width": 320,
+      "scroll": 320,
+      "live": "polite",
+      "atomic": "true",
+      "previewLabel": "B\u1ea3n ghi \u00e2m v\u1eeba t\u1ea1o",
+      "background": "rgb(16, 21, 29)",
+      "buttons": [
+        55.171875,
+        55.171875,
+        55.171875
+      ]
+    },
+    "keyboard_start_stop_escape": true,
+    "external_requests_or_uploads": false,
+    "page_errors": []
+  },
+  "native_prior_lifecycle_regression": {
+    "description": "Actual native browser capture with fake device and injected preview-expiry trigger; not five minutes wall time, a physical-microphone or subjective audio-quality test.",
+    "browser": "154.0.8037.58",
+    "stopped": {
+      "rate": 16000,
+      "bytes": 23852,
+      "tracks": [
+        "ended"
+      ]
+    },
+    "captures": 4,
+    "late_permission_cancel_verified": true,
+    "preview_expiry_verified": true,
+    "storage": {
+      "localStorage": 0,
+      "sessionStorage": 0,
+      "IndexedDB": 0
+    },
+    "all_tracks_ended": true,
+    "page_errors": [],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:8091/",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/page.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/recorder.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "blob:http://127.0.0.1:8091/592a2951-fcbe-40cc-a457-eb2ce451696e",
+        "method": "GET"
+      }
+    ],
+    "finite_lifecycle_events": [
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event ready",
+      "explicit_recording_event retention_expired",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event page_hidden",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event capture_resources_released"
+    ],
+    "passed": true
+  },
+  "temporary_browser_and_server_retired": true,
+  "physical_microphone_or_actual_listening_certified": false,
+  "product_harness_api_or_voice_model_activated": false,
+  "release_gate_closed": false
+}
