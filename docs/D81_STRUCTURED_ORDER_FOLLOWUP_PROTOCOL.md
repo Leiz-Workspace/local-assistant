@@ -2,7 +2,7 @@
 
 **Purpose:** Verify the concrete schema wire-order bug fix on fresh frozen data without retrying or replacing failed v1 observations.
 
-**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** Prepared/tested; no v2native requests yet at preparation commit.
+**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** EXECUTED/CLOSED/NOT QUALIFIED. Both positive modes5/6; explicit refusals2/2. Historical workflow NOT_RUN; raw Unicode mismatch retained.
 
 P2 existing D81remediation; depends on the red wire-order reproducer, primary pinned runtime parser/grammar source and unchanged established CORE. Effort one bug-fix/measurement milestone. Risks: treating JSON canonicalization as grammar-neutral, overfitting old cases, changing scalar/quote/refusal criteria after observing errors, masking an unknown semantic failure and confusing a small protocol with general model quality.
 
@@ -17,3 +17,5 @@ Prepared67new controls within199related PASS/0FAIL/0SKIP/0.79s, RuffPASS. Existi
 ```sh
 uv run --no-sync python -m scripts.structured_excerpt_evaluation data/backups/d81-structured-order-first --corpus tests/fixtures/harness/d81-typed-paired-v2.json
 ```
+
+Actual snapshot7599624 kept718source bytes unchanged,14posts plus one recovery, same original CORE. Both modes dropped the combining accent from scalar `cafe\u0301-z`; schema quote preserved it while the scalar became `cafe-z`. Both unsupported scalars were withheld; neither raw output nor source was normalized to accept it. [First observations/executed source](evidence/d81-structured-order-first-verification.json). This finite scope is consumed. The [separate source-spelling follow-up](ADR/128-source-derived-string-vocabulary.md) addresses the identified scalar-domain gap on fresh data; it does not change this FAIL.

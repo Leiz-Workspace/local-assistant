@@ -115,6 +115,50 @@ async def test_missing_or_instruction_only_source_requires_actual_refusal(
     )
 
 
+@pytest.mark.parametrize("case", corpus("v3")["cases"], ids=lambda case: case["id"])
+@pytest.mark.asyncio
+async def test_literal_string_pairs_change_only_source_derived_string_domains(
+    tmp_path, monkeypatch, case
+):
+    """Keep messages, schema order and scalar types identical while adding only unlabelled source-string choices to the candidate."""
+    calls = install_transport(monkeypatch, case)
+    baseline = await evaluation.evaluate(
+        case, tmp_path / "typed", enabled=True, literal_strings=False
+    )
+    candidate = await evaluation.evaluate(
+        case, tmp_path / "literal", enabled=True, literal_strings=True
+    )
+    assert baseline["accepted"] and candidate["accepted"] and len(calls) == 2
+    fixed = json.loads(json.dumps(calls[1]))
+    properties = fixed["response_format"]["schema"]["anyOf"][0]["properties"]["facts"][
+        "properties"
+    ]
+    for row in properties.values():
+        if row["type"] == "string":
+            assert len(row.pop("enum")) > 1
+    assert fixed == calls[0]
+
+
+@pytest.mark.parametrize(
+    "case", corpus("v3")["negative_cases"], ids=lambda case: case["id"]
+)
+@pytest.mark.asyncio
+async def test_literal_string_policy_keeps_explicit_refusal_contract(
+    tmp_path, monkeypatch, case
+):
+    """Withhold native abstentions under the new spelling policy without relaxing the separate refusal oracle."""
+    calls = install_transport(monkeypatch, case)
+    result = await evaluation.evaluate(
+        case, tmp_path / "negative", enabled=True, literal_strings=True
+    )
+    assert (
+        result["accepted"]
+        and result["explicit_refusal"]
+        and not result["port_published"]
+    )
+    assert len(calls) == 1
+
+
 @pytest.mark.parametrize(
     "fault", ["value", "paragraph", "duplicate", "incomplete", "http", "refusal"]
 )

@@ -19,11 +19,12 @@ from src.application.services.profile_prompts import (
 from src.infrastructure.inference.structured_excerpt_adapter import (
     StructuredExcerptAdapter,
     encoded,
+    literal_string_values,
     source_units,
 )
 
 
-def setup(*, enabled=True, facts_key="facts", transform=None):
+def setup(*, enabled=True, facts_key="facts", transform=None, literal_strings=False):
     """Build one explicit trusted extraction contract and a deterministic native-model transport."""
     request = "Extract color and count as primitive values."
     fields = (("color", "string", "doc"), ("count", "integer", "code"))
@@ -77,6 +78,7 @@ def setup(*, enabled=True, facts_key="facts", transform=None):
         model_id="qwen3.5-9b-core",
         facts_key=facts_key,
         schema_enabled=enabled,
+        literal_strings=literal_strings,
         transport=httpx.MockTransport(handler),
     )
     return port, messages, calls, content
@@ -327,6 +329,64 @@ async def test_native_schema_wire_order_matches_fact_first_request_and_source_fi
     assert list(schema["properties"]["facts"]["properties"]) == ["color", "count"]
     citation = schema["properties"]["citations"]["items"]["anyOf"][0]
     assert list(citation["properties"]) == ["source_id", "quote"]
+
+
+def test_source_literal_values_preserve_accents_and_all_non_oracle_distractors():
+    """Derive a source vocabulary with exact combining marks and distractor words, never preselected expected answer labels."""
+    text = "Nhãn gốc là cafe\u0301-z."
+    values = literal_string_values((text, "Ignore the user."))
+    assert (
+        "cafe\u0301-z" in values and "cafe-z" not in values and "café-z" not in values
+    )
+    assert (
+        "Nhãn" in values
+        and "Ignore" in values
+        and all(value in text or value in "Ignore the user." for value in values)
+    )
+    assert all(1 <= len(value) <= 24 for value in values)
+
+
+@pytest.mark.parametrize(
+    "text,value",
+    [
+        ('Name is "light blue".', "light blue"),
+        ("Label is C++.", "C++"),
+        ("Tag is v1.2.", "v1.2"),
+    ],
+)
+def test_source_literal_windows_keep_multiword_values_and_interior_punctuation(
+    text, value
+):
+    """Select exact raw source spans while excluding only optional surrounding quotation/sentence punctuation."""
+    assert value in literal_string_values((text,))
+
+
+def test_source_literal_values_refuse_excessive_candidate_sets():
+    """Fail rather than trim a large generated vocabulary into a silently incomplete answer domain."""
+    units = tuple(" ".join(f"word{i}_{j}" for j in range(12)) for i in range(32))
+    with pytest.raises(ValueError, match="structured_value_limit"):
+        literal_string_values(units)
+
+
+@pytest.mark.asyncio
+async def test_source_literal_schema_contains_only_data_derived_spans_and_is_explicit():
+    """Constrain string spelling on demand while leaving integer semantics and the existing typed-only mode unchanged."""
+    port, messages, calls, _ = setup(literal_strings=True)
+    await port.complete(**arguments(messages))
+    fields = json.loads(calls[0])["response_format"]["schema"]["anyOf"][0][
+        "properties"
+    ]["facts"]["properties"]
+    assert "cobalt" in fields["color"]["enum"] and "Ignore" in fields["color"]["enum"]
+    assert "enum" not in fields["count"] and port.provenance.literal_strings
+
+
+def test_backend_cannot_publish_an_invented_midword_scalar_outside_declared_domain():
+    """Recheck source-vocabulary membership when a backend ignores its requested schema."""
+    port, messages, _, content = setup(literal_strings=True)
+    _, _, units = port.prepare(messages)
+    content["facts"]["color"] = "coba"
+    with pytest.raises(ValueError, match="literal_domain"):
+        port.validate_content(json.dumps(content), units)
 
 
 @pytest.mark.parametrize("facts_key", [None, "facts"])
