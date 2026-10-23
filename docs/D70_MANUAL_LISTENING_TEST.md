@@ -6,12 +6,14 @@
 
 ## Mở bộ audio
 
-1. Trên máy có trình duyệt và tai nghe/loa, mở file `ai/data/backups/d70-tts-listening-review/index.html`. Nếu đang làm qua SSH, chép riêng file HTML này về máy của bạn: audio đã nhúng trong trang, không cần server hay mạng.
+1. Trên máy có trình duyệt và tai nghe/loa, mở file `ai/data/backups/d89-native-tts-listening/index.html`. Nếu đang làm qua SSH, chép riêng file HTML này về máy của bạn: đủ24WAV gốc nguyên byte đã nhúng trong trang, không cần server hay mạng.
 2. Trang có24mục với mã output, câu cần đọc và nút Play. Mở âm lượng vừa phải. Bấm Play và nghe hết từng mục; có thể nghe lại để kiểm tra, ghi rõ khi còn phân vân.
 3. Có12mục tiếng Anh và12mục văn bản tiếng Việt. Qwen VI dùng **Auto ngoài danh sách hỗ trợ được công bố**; sáu lượt gọi explicit-Vietnamese đã bị từ chối và được giữ trong báo cáo, không nằm trong24waveform này.
-4. Các bản nghe Opus có gain riêng và đầy đủ timeline. File gốc là nguồn chuẩn; nếu nghi ngờ lỗi do nén/âm lượng, ghi “cần đối chiếu WAV gốc”, chưa kết luận chất lượng model.
+4. Trang mới dùng WAV gốc, không nén lại, đổi sample rate hoặc tăng gain. Trang Opus cũ vẫn được giữ nguyên để đối chiếu; không dùng khác biệt do bản nén/gain để suy chất lượng model.
 
-Trang nghe: [mở file offline](../data/backups/d70-tts-listening-review/index.html). [Báo cáo số đo](D70_OFFLINE_TTS_COMPARISON.md). [Nhãn gốc đang trống](../data/backups/d70-tts-listening-review/review.pending.json) phải được giữ nguyên; ghi kết quả vào bản mới hoặc gửi trong chat để nhập sau.
+Trang nghe WAV gốc: [mở file offline](../data/backups/d89-native-tts-listening/index.html). [Bản Opus lịch sử](../data/backups/d70-tts-listening-review/index.html) giữ nguyên.
+
+Đã kiểm tra độc lập24hashWAV/waveform và browser đọc được metadata/duration của đủ24file, không phát thử hoặc nghe. Việc browser decode được không phải đánh giá chất lượng;0/24nhận xét nghe vẫn chưa điền. [Báo cáo số đo](D70_OFFLINE_TTS_COMPARISON.md). [Nhãn gốc đang trống](../data/backups/d70-tts-listening-review/review.pending.json) phải được giữ nguyên; ghi kết quả vào bản mới hoặc gửi trong chat để nhập sau.
 
 ## Ghi nhận xét
 

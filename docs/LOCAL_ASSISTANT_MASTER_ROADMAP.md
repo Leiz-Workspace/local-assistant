@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.57 (D86 local UI verified; release gate open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
+> **Version:** 4.58 (D87 full5405 running; D88 reference install verified; manual release gates open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** D70 machine measurements complete; actual listening **0/24 DEFERRED_BY_OWNER**, no naturalness PASS. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Under [ADR111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), D71–D73 local scopes verified; D74 engineering review complete, product acceptance pending. Independent D75–D80 verified. D81 authored three-domain grounding verified; native strict quote format failed and remains tracked. D82 local security verified, with the necessary legacy chat guard fix; D83 local observability verified; D84 actual local isolated restore verified; D85 bounded native fault/load controls verified; D86 local UI verified, release gate OPEN; D87 full regression next. No model/default/deployment choice; manual/model/license/release gates remain open.
+> **CURRENT POSITION:** D70 machine measurements complete; actual listening **0/24 DEFERRED_BY_OWNER**, no naturalness PASS. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Under [ADR111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), D71–D73 local scopes verified; D74 engineering review complete, product acceptance pending. Independent D75–D80 verified. D81 authored three-domain grounding verified; native strict quote format failed and remains tracked. D82 local security verified, with the necessary legacy chat guard fix; D83 local observability verified; D84 actual local isolated restore verified; D85 bounded native fault/load controls verified; D86 local UI verified, release gate OPEN. D87full5405tests/707frozen files running; D88reference clean install verified; D89manual packet ready. No release/tag/model activation. No model/default/deployment choice; manual/model/license/release gates remain open.
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Model strategy source:** [MODEL_REGISTRY.md](MODEL_REGISTRY.md); [model evaluation backlog](MODEL_EVALUATION_BACKLOG.md). Registry nominations, measured choices and deployed capabilities are distinct. The owner approved Qwen after the offline comparison and transition review. [Selected configuration](../configs/embedding-selected.json) now pins Qwen CPU/1024, `selected_not_deployed`; exact E5 rollback is retained. D24 historical evidence remains unchanged.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
@@ -439,12 +439,26 @@ T01 introduced no production runtime change. T02 applied reviewed V002 after ver
 
 | Day | Concrete task | Acceptance gate |
 |---|---|---|
-| D87 | Feature freeze + full E2E benchmark suite | Reproducible result set with failures tracked |
-| D88 | Critical fixes, clean-install rehearsal, model provenance/scorecard | Onboarding documented, reproducible |
-| D89 | Backup restore drill, manual acceptance scenarios, security review | At least 10 representative workflows checked |
-| D90 | Release tag v1.0-local, architecture/runbook, known limitations and vNext backlog | Internal production-ready release decision grounded in evidence |
+| D87 | **IN PROGRESS:** Current-source freeze and full suite |5405collected tests/707frozen source files; Vault credentials in memory/redacted private logs; no terminal result yet. [Protocol](D87_FULL_REGRESSION_PROTOCOL.md). |
+| D88 | **REFERENCE INSTALL VERIFIED; PRODUCT SCORECARD GATES OPEN:** Clean install and provenance |Actual fresh locked CPython3.12startup/health55routes/missingauth denial;44production packages, second clean offline install succeeds. First3.11/cache failures retained. [Onboarding](D88_CLEAN_INSTALL_REHEARSAL.md), [scorecard](D88_MODEL_PROVENANCE_SCORECARD.md), [receipt](evidence/d88-clean-install-verification.json). |
+| D89 | **PACKET PREPARED; OWNER ACCEPTANCE PENDING:** Workflow/manual/recovery review |14workflow evidence mappings; D84actual current local restore retained.24native-WAV offline player/hash/browser metadata verified; actual listening0/24/physical mic pending. [Checklist](D89_MANUAL_ACCEPTANCE_CHECKLIST.md), [receipt](evidence/d89-manual-acceptance-packet.json). |
+| D90 | **NOT RELEASED / NO TAG:** Evidence-backed final decision and known limitations |[Engineering candidate review](RELEASE_CANDIDATE_STATUS.md); D87terminal/manual/product/model/license/quality acceptance still required. Do not turn a calendar target or software PASS into production readiness. |
 
 **If a phase fails its gate, advance the calendar only after recording deferment and impact. Never interpret Day 90 as guaranteed release.**
+
+### Post90closure — assessed, not automatically scheduled
+
+The owner deferred actual hearing and authorized independent engineering continuation. D74/D86/D89product/manual acceptance and D90release remain open; this table records impact instead of erasing those gates. Existing model/provider decisions remain binding.
+
+| Closure task | Priority | Dependency / effort | Risk and acceptance |
+|---|---|---|---|
+| D91candidate: AUDIO-TTS-NATURALNESS-001 actual owner review | P1before voice acceptance; unscheduled until reviewer available |24unchanged WAVs/blank worksheet ready; one actual listening/review session, may split | Unsupported language/encoding/subjective uncertainty; require actual complete listening/provenance, retain bad/uncertain judgments |
+| D92candidate: original D14scorecard reconciliation and voice/model/license decision | P1before relevant release/activation; not a new model proposal | Existing original benchmarks/configs, D70review and resource/license evidence; one evidence/decision milestone, additional measurements separately scoped if needed | False quality superiority/unsupportedVI/rights ambiguity; no replacement or selection without benchmark/performance/resources/migration/rollback and explicit owner approval |
+| D93candidate: product harness/voice integration and real-device acceptance | P1only after approved choices; not deployed/scheduled here | Prepared D71–D85components, approved defaults/rights, owner-bound API/UI design; design+integration+device milestones | New action/origin/audio retention surface; ADR for architecture, original approval gates, same source/stop/rollback and physical-device evidence |
+| D94candidate: final release acceptance/tag | P1after all agreed product gates; unscheduled | Current full suite, real manual acceptance, critical findings resolved; one release review/packaging milestone | Premature readiness/push/deploy; owner approves a concrete supported scope before any release action |
+
+P2D81-FMT-001 remains an assessed known limitation in D81report, not a silent model-change rationale. Off-host/OIDC/proxy/multiworker/SLOexpansion is future deployment work; schedule only when explicitly scoped, with dependency/effort/risk review.
+
 
 ---
 
