@@ -4,6 +4,8 @@
 
 **Status:** Actual complete software suite **5405PASS/0FAIL/0ERROR/0SKIP**, exit0,1821.99seconds. All707frozen source/config/test files unchanged. Product/manual/release gates remain open. [Exact terminal/source/log evidence](evidence/d87-current-full-acceptance.json).
 
+**Subsequent source addition:** The separate [D81excerpt guard](D81_STRICT_EXCERPT_GUARD.md) adds a component and66tests after this freeze. Its227related tests PASS/0SKIP; all707original snapshot files still match. The5405result remains evidence for its frozen snapshot and does not include the new files. A later release-wide run must freeze/include them; do not add related counts to5405 and call the sum a full-suite execution.
+
 Run `uv run --no-sync python -m scripts.full_regression data/backups/d87-full-first` only after all native benchmark/browser/restore/fault jobs have joined. The new runner records complete current tracked/additive source/config/test hashes, uses fresh private exclusive logs/status, reads the existing app/migrator/Qdrant Vault secrets only into memory, removes inherited Vault/operator feature overrides and enables existing live integration probes. It redacts credential strings/full DB URLs before writing diagnostics. No source changes during the frozen run; documentation outside source roots may be updated.
 
 The command executes all tests, retains first failures/skips and actual terminal counts/duration/exit status, then requires identical complete source inventory/bytes. A missing summary, nonzero exit, failure/error/skip or changed source prevents software acceptance. Previous D67full4495results and all failed D70reviewers stay historical/immutable; this is a new current-source run, not a replacement benchmark, model choice or reviewer retry.

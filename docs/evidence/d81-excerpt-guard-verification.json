@@ -1,0 +1,39 @@
+{
+  "description": "Additive D81 literal-excerpt guard verification; retained original format failure and pending hearing are unchanged.",
+  "status": "OPTIONAL_GUARD_VERIFIED_ORIGINAL_MODEL_FORMAT_GATE_OPEN",
+  "checked_at_utc": "2026-10-23T16:50:37.159093+00:00",
+  "new_tests": 66,
+  "related_tests": {
+    "passed": 227,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.56
+  },
+  "log_sha256": "87e90389d943e75cca12ce9aedff023a555a3c0fb1857e5362353ba6045e433f",
+  "source_sha256": {
+    "src/application/services/profile_excerpt_guard.py": "1666340951729e1514171eb575604ee1adbe02e433468bee9b2e3c77ae80641f",
+    "tests/test_profile_excerpt_guard.py": "973ffad9c6eb42d43d94f25606dc6c690bcc8886e65e83b6d97c1bdd9b3364b1"
+  },
+  "retained_d81_fixture_sha256": "d55baf86c10b30c6a400651678a747a42333afe5caacf9751684e315b51a2a27",
+  "original_d81_strict_matches": 1,
+  "original_d81_literal_unique_matches": 3,
+  "original_d81_guard_outcome": "REJECTED_excerpt_mismatch",
+  "new_model_inference_calls": 0,
+  "model_or_template_changes": 0,
+  "original_reply_rewrites": 0,
+  "all707_d87_snapshot_files_unchanged": true,
+  "d87_5405_result_is_prior_snapshot_not_full_run_of_new_additions": true,
+  "original_source_unchanged": 660,
+  "original_source_existing_exception": [
+    "apps/api/routes/chat.py"
+  ],
+  "protected_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "original_pending_sha256": "14c9374dbb852e4f463121ecaa97a355421ef4879c9e99bf8dd35b09743276d6",
+  "actual_listening_completed": 0,
+  "production_route_activation": false,
+  "semantic_answer_correctness_certified": false,
+  "original_D81_format_gate_closed": false,
+  "release_approved": false,
+  "initial_226_log_sha256": "839d1f7b87f490a0d81de1d1925ef1e090fe23bc5626286c05f868ddbafd52ff"
+}
