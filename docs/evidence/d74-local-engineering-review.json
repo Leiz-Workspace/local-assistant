@@ -1,0 +1,197 @@
+{
+  "description": "D74 local engineering regression/resource review completed; final voice/product acceptance remains pending owner listening, model/voice selection and activation/license/no-speech gates. Independent later code preparation does not close those gates.",
+  "status": "ENGINEERING_REVIEW_COMPLETE_PRODUCT_PHASE_ACCEPTANCE_PENDING",
+  "media_related_tests": {
+    "passed": 1043,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 74.39,
+    "warnings": 1,
+    "warning_scope": "Existing deliberate duplicate Piper archive fixture."
+  },
+  "native_voice_paths": [
+    {
+      "index": 0,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 45.93673075400875,
+      "stages": [
+        [
+          "asr",
+          9.654043890972389
+        ],
+        [
+          "llm",
+          0.49322336600744165
+        ],
+        [
+          "tts",
+          35.789321753021795
+        ]
+      ],
+      "output_samples": 75520,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909644,
+      "tts_lifetime_worker_RSS_KiB": 5795388
+    },
+    {
+      "index": 1,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 11.358684989012545,
+      "stages": [
+        [
+          "asr",
+          9.662266986997565
+        ],
+        [
+          "llm",
+          0.22806184101500548
+        ],
+        [
+          "tts",
+          1.4681991679826751
+        ]
+      ],
+      "output_samples": 54428,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909624,
+      "tts_lifetime_worker_RSS_KiB": 229276
+    },
+    {
+      "index": 2,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 13.980016462010099,
+      "stages": [
+        [
+          "asr",
+          12.052031069993973
+        ],
+        [
+          "llm",
+          0.4746522160130553
+        ],
+        [
+          "tts",
+          1.453191592998337
+        ]
+      ],
+      "output_samples": 67245,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909872,
+      "tts_lifetime_worker_RSS_KiB": 233196
+    },
+    {
+      "index": 3,
+      "asr": "whisper-small-ct2",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 49.31466564600123,
+      "stages": [
+        [
+          "asr",
+          5.593595551996259
+        ],
+        [
+          "llm",
+          0.39197923499159515
+        ],
+        [
+          "tts",
+          43.328972158022225
+        ]
+      ],
+      "output_samples": 110080,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 897892,
+      "tts_lifetime_worker_RSS_KiB": 5796324
+    },
+    {
+      "index": 4,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 7.775020888017025,
+      "stages": [
+        [
+          "asr",
+          5.973300400975859
+        ],
+        [
+          "llm",
+          0.31135384799563326
+        ],
+        [
+          "tts",
+          1.4902199950010981
+        ]
+      ],
+      "output_samples": 90837,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 897876,
+      "tts_lifetime_worker_RSS_KiB": 266800
+    },
+    {
+      "index": 5,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 7.849131955008488,
+      "stages": [
+        [
+          "asr",
+          6.095408494002186
+        ],
+        [
+          "llm",
+          0.4216874720004853
+        ],
+        [
+          "tts",
+          1.3319106939889025
+        ]
+      ],
+      "output_samples": 57772,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 898008,
+      "tts_lifetime_worker_RSS_KiB": 228432
+    }
+  ],
+  "CORE_after_voice_matrix": {
+    "pid": 37256,
+    "start_ticks": 63900,
+    "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+    "RSS_RAM_KiB": 3649548,
+    "NVIDIA_process_allocation_VRAM_MiB": [
+      9386
+    ],
+    "ordinary_text_recovery": true
+  },
+  "system_readonly_audit_receipt_sha256": "49dd428f7d5ae4da076d2ed0af5060acdbef0039d1d099dfdb01a4d61de8fac0",
+  "system_readonly_audit_passed": true,
+  "prior_source_bytes_preserved": 661,
+  "D70_listening_labels": 0,
+  "D70_listening_required": 24,
+  "D70_owner_deferment_ADR": "docs/ADR/111-owner-deferred-tts-listening-and-explicit-recording.md",
+  "product_models_selected": false,
+  "voice_licenses_approved_for_activation": false,
+  "VAD_concatenation_enabled": false,
+  "full_project_regression_claimed": false,
+  "D74_product_phase_complete": false,
+  "research_workers_active": false,
+  "log_sha256": {
+    "data/backups/d74-media-regression.log": "3f9efb19d4eea086a7f643221589c65682ff04b6dc0e794eb058e65cefd21be8",
+    "data/backups/d74-readonly-system-audit.log": "378835601893658717fdaa70176ddc23eeae60ff242ee63ba4f29a04d4a2232a",
+    "data/backups/d74-readonly-system-audit.json": "49dd428f7d5ae4da076d2ed0af5060acdbef0039d1d099dfdb01a4d61de8fac0"
+  }
+}
