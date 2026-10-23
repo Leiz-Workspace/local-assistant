@@ -1,0 +1,46 @@
+# ADR 110 Proposed Voxtral paired attention diagnostic
+
+**Purpose:** Define a bounded numerical/backend investigation after the retained ADR-109 failure without replacing models, relaxing D70 acceptance or repeating qualification for a favorable result.
+
+**Date:** 2026-10-23. **Status: CODE/TESTS/PACKET PREPARED; ORIGINAL-WEIGHT EXECUTION NOT APPROVED OR RUN.** The owner approved one ADR-109 campaign, completed with strict4/12FAIL and no conditional24audio review. That scope is consumed. The present continuation covers investigation, reversible code, synthetic tests and local packet preparation. This proposal requires a separate explicit decision before a new original-weight worker; all original execution guards remain False.
+
+## Findings and reason
+
+[Original campaign](../D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable first result](../evidence/d70-voxtral-auditory-first.json). All twelve original responses had native EOS/schema and independently replayed features, yet presence1/4, language1/2 and comparison2/6 failed the unchanged gate12/12. No old result or label is edited. Source-only inspection did not establish a causal defect.
+
+New synthetic probes directly check several previously untested paths in the pinned CPU SDK, with no original weight or recorded-audio mounts:
+
+- Standard loader and retained `pread` loader: identical nonpersistent FP32 RoPE buffers and exactly equal logits on an authored7,116parameter/60tensor checkpoint, including GQA, unequal attention-projection width, four-frame audio grouping and RoPE base100000000.
+- Eager and SDPA KV cache: audio encoder invoked once for four cached output tokens, four times for full recomputation; tokens equal within each backend.
+- One random audio-attention block at the actual1280width/20heads/head64/1500positions: finite eager/SDPA results within predeclared tolerance; maximum absolute difference0.000244140625, with bidirectional future influence preserved. This6,557,440parameter block is not the original32layer encoder.
+- Four authored signals: native Whisper mel features match an independently assembled Mistral filter-bank/STFT/global-normalization path exactly on silence, tones, seeded noise and a step; no recorded waveform or model involved.
+
+These finite synthetic checks find no demonstrated fix. They cannot establish cumulative numerical equivalence on original pretrained weights. The remaining testable hypothesis is whether native eager versus SDPA changes original first-token logits or fixed prompt answers when all other inputs are identical. A difference would establish backend sensitivity on these cases, not universal causality, production suitability or naturalness competence.
+
+Pinned primary implementation references: [Voxtral4.57.3](https://github.com/huggingface/transformers/blob/v4.57.3/src/transformers/models/voxtral/modeling_voxtral.py), [native processor4.57.3](https://github.com/huggingface/transformers/blob/v4.57.3/src/transformers/models/voxtral/processing_voxtral.py). Research also found [llama.cpp issue25496](https://github.com/ggml-org/llama.cpp/issues/25496), an unconfirmed report concerning a different backend's pooling/frontend. The retained Transformers path groups audio features by reshape, with synthetic mel checks above; that issue is **not** treated as a confirmed defect or justification to patch this SDK. No latest/main upgrade or external code execution.
+
+## Exact proposed experiment
+
+[Controller](../../scripts/tts_voxtral_attention_diagnostic.py), [pure worker](../../scripts/tts_voxtral_attention_runtime.py), [tests](../../tests/test_tts_voxtral_attention_diagnostic.py), [synthetic probes](../../scripts/tts_voxtral_synthetic_diagnostics.py). Accepted loaders, auditory controller/runtime and all previous source remain unchanged. The new guard rejects execution before request/SDK/model/audio access; local `prepare` is separate from `run`.
+
+One new original-weight worker, using exactly the retained9artifacts/revision3060fe34b35ba5d44202ce9ff3c097642914f8f3/CPU SDK. **Four historical presence cases**, copied losslessly from ADR109 in their original relative order: EN speech, authored silence, authored noise and VI speech. Exactly4signals/6packet files at `data/backups/d70-voxtral-local-reviewer/attention-110-packet`; parent expectations and old answers stay outside workers. Source identities, expectations and all original conditioning receipts are bound to the immutable first evidence SHA256, not mutable metadata. These are deliberately reused diagnostic inputs, **not fresh held-out qualification**.
+
+For each case, fixed order **eager then SDPA**, with no adaptation after an answer. Same full float32 signal, native lossless FLOAT WAV/template/375audio placeholders/401input tokens, same presence prompt and BF16 conditioning. Each backend performs one explicit uncached native forward retaining the full131072-element first-logit vector, then one deterministic native generation of at most16newtokens with the original BOS1/EOS2/PAD11/KV cache/logits_to_keep1. Total **8first responses and8explicit diagnostic forwards**, plus cached decode work; no repeats, alternate prompts, revised labels, beam search, sampling or repair. Preserve every raw response, token, parse/EOS outcome, uncached argmax and whether it matches the greedy first generated token.
+
+Both full FP32 little-endian first-logit vectors per case are serialized to bounded structured stderr records, retained verbatim with hashes. Eight vectors are4,194,304rawbytes/about5.6MBbase64 before small metadata, within the existing8MiBstderr ceiling; original receipt/prediction stdout remains within2MiB. Parent independently decodes every vector and recomputes SHA256, finite values, argmax, maximum absolute difference, RMS and exact-byte equality. Float32 RMS reduction is compared with preregistered rel_tol1e-5/abs_tol1e-7; maximum difference rel_tol1e-6/abs_tol1e-7. These are audit tolerances, **not reviewer-quality thresholds**.
+
+One separate offline **no-weights** replay recomputes all four conditioning receipts. Both new backend receipts and replay must exactly match the historical source/padded waveform/input-ID/FP32/BF16 receipts. Native tensor receipts match ADR108, and payload hashes/storage pointers are rechecked after both backends. Parent revalidates source/SDK/artifacts/packet/raw files and same CORE before calling the diagnostic observations complete. Any incomplete process, mismatch, invalid JSON/EOS or output bound remains a retained failed observation; no retry or conversion to PASS. No automatic backend or model choice even if one answer happens to be correct.
+
+## Unchanged resource bounds and explicit stop conditions
+
+**12GiB process address space; sampled host MemAvailable≥14GiB immediately before launch; original CORE loaded with same PID/start/command/context32768.** CPU2/inter-op1/affinity0,1/offline/no GPU. No new weights/packages, quantization, offload, cap/headroom change, context reduction or production configuration change. Original worker wall **900seconds**, retained CPU1200/1201seconds; replay wall **120seconds**, retaining the same kernel CPU/address limits. Private128MiBtmpfs/nofile128/fsize16MiB/core0 and original namespace isolation. Original preparation root retains20GiB budget; no kernel directory quota or memory reservation is claimed.
+
+Original SDPA auditory peak virtual10.2388GiB is measured history, **not proof that eager fits**. One1500x1500x20 BF16 score tensor alone is90,000,000bytes, with extra FP32 softmax/output and other live tensors. This is partial tensor arithmetic, not measured peak RAM. Fail within12GiB if eager exceeds the cap; do not raise it, unload CORE or retry. Retain partial first vectors/responses/process evidence and close the new guard after the owned worker/replay finish.
+
+## Interpretation, priority and rollback
+
+P1 child of `AUDIO-EVAL-VOXTRAL-DIAG-005` and the open reviewer-reliability parent. Preparation effort completed; proposed execution is one paired diagnostic plus independent audit. Dependencies: explicit new diagnostic approval, frozen exact sources/packet/artifacts/SDK, live14GiBhost guard and unchanged CORE. Risks: original-scale numerical differences, eager memory/time failure, prompt limitations and selection bias from already observed controls. Fixed eager-first order may retain allocator/cache order effects; it is not randomized performance comparison, cold-load benchmark or latency improvement evidence.
+
+If outputs agree, retain that result; do not conclude all numerical effects are excluded. If outputs differ, report exact vectors/answers and whether the selected historical cases show changes; do not generalize or select a backend automatically. If one backend produces the expected historical labels, **fresh independent qualification remains required** before any common24audio review. This proposal authorizes no qualification rerun, naturalness review, MOS, D70 closure, model migration or D71 start.
+
+Rollback closes only `EXECUTION_ALLOWED`, reaps owned processes and retains first data/source/raw/vector evidence. Production migration is none: models, registry/defaults, D24/a88584b/E5 rollback, services, Docker/Vault/database/configs/collections and all original recordings stay unchanged. **D70 NATURALNESS OPEN; D71 NOT STARTED.**

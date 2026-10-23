@@ -59,3 +59,7 @@ Worker wall238.164530s; replay5.379030s, both exit0/no timeout/reaped. Whole-wor
 Final **432TTSrelated PASS40.13s/0FAIL/0SKIP/Ruff PASS** (one existing deliberate duplicate-archive warning), not full656-source regression or qualification PASS. Fresh readonly audit verifies656source/all655other final bytes,917protected/176inputs/38oldD70JSON/23,475+23,382oldSDK entries/16oldartifacts/19,561VoxtralSDK entries/all9artifacts/originalservices/data/security/sameCORE preserved. Only one positive permission-switch unit test remains as a source change.24pending human naturalness fields remain null/unlistened. No Docker/Vault/database/config/production-model/default change, deployment or push.
 
 **AUDIO-EVAL-VOXTRAL-QUAL-004 EXECUTED/CLOSED FAIL; reviewer NOT QUALIFIED. D70 NATURALNESS OPEN; D71 NOT STARTED.** Reviewer-reliability parent remains open. No replacement model or new neural experiment is selected/scheduled. Existing AC, prior failures and D24/a88584b/E5 rollback stay unchanged.
+
+## Subsequent investigation2026-10-23
+
+Synthetic loader-buffer/cache/mel/attention tests found no demonstrated causal fix. [ADR-110](110-proposed-voxtral-paired-attention-diagnostic.md) now has tested paired-backend diagnostic code and a historical four-signal packet; original execution remains separately unapproved/guardFalse. It does not reopen this consumed campaign, modify4/12FAIL, run24audio or grant qualification/model selection. [Completed investigation](../D70_VOXTRAL_SYNTHETIC_DIAGNOSTICS.md).
