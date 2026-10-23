@@ -2,7 +2,7 @@
 
 **Purpose:** Define a reviewable, resource-bounded auditory campaign after the successful original load, without selecting a production model or lowering D70 acceptance.
 
-**Date:** 2026-10-23. **Status: IMPLEMENTED/TESTED AND LOCAL CONTROLS PREPARED; ORIGINAL AUDITORY EXECUTION NOT APPROVED OR RUN.** ADR-108 authorized exactly one load/integrity attempt, now PASS/consumed. It excluded audio inference. The latest continuation authorizes reversible protocol, local packet and synthetic SDK tests; it is not relabelled as original neural auditory permission.
+**Date:** 2026-10-23. **Status: OWNER-APPROVED CAMPAIGN EXECUTED; STRICT QUALIFICATION FAIL4/12; SCOPE CONSUMED/GUARD CLOSED.** Explicit reply “Duyệt campaign ADR-109” authorized one12control worker and a conditional24audio worker only after every gate passed. The condition failed, so the latter was not prepared or run. Prior proposal paragraphs below describe the reviewed protocol; the actual closure below supersedes historical approval-pending statements.
 
 ## Reason and scope
 
@@ -47,3 +47,15 @@ P1 child of `AUDIO-EVAL-REVIEWER-RELIABILITY-001`, following completed local PRE
 **26new controls; final431TTSrelated PASS40.29s/0FAIL/0SKIP; Ruff PASS.** Initial25targeted controls passed10.10s before the final duplicate-original-identity hardening. The final review packet also requires exactly24distinct original signal identities before publication; a new regression rejects duplicate coverage. Initial430test/audit/source snapshots remain retained, with fresh final source/protected/prepared-runtime/packet/system closure checks. One existing deliberate duplicate-Piper-fixture warning. Readonly audit verifies656source files/all653prior bytes unchanged, all original protected/data/SDK/model/system/CORE state and24pending labels. No full656-source regression or original auditory benchmark is claimed. Native synthetic forward/generation tests are explicitly distinguished from original-checkpoint execution, which remains zero.
 
 Rollback closes only the new campaign guard, retains packets/partial observations/first raw output/replays and keeps the previous failed reviewer observations intact. No production migration, D70 AC waiver, automatic model replacement or next-day advance. Even a completed conditional review must be assessed for evidence/uncertainty and the owner's model-choice gate. **D70 NATURALNESS OPEN; D71 NOT STARTED.**
+
+## 2026-10-23 approved ADR-109 campaign completed: strict 4/12 FAIL
+
+[First campaign report](../D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](../evidence/d70-voxtral-auditory-first.json), [source-only triage](../evidence/d70-voxtral-auditory-source-triage.json).
+
+The owner explicitly approved “Duyệt campaign ADR-109” for commit2348566. One original-weight worker completed all12 first responses/EOS/schema; one no-weights conditioning replay matched every input/feature receipt and all762original tensor receipts matched ADR108. Strict scores: presence1/4, language1/2, comparisons2/6, total4/12 against unchanged12/12. Both identical pairs returned SECOND, silence YES, EN/VI speech NO and VI language ENGLISH. No answer repair, retry, threshold change or causal model-quality claim. The conditional24audio packet/worker were not created because the gate failed.
+
+Worker wall238.164530s; replay5.379030s, both exit0/no timeout/reaped. Whole-worker peak RSS **RAM9.428303GiB** and **virtual VmPeak10.238766GiB** under12GiBAS; sampled host headroom14GiB retained. CPU2/inter-op1/affinity0,1/offline/nativeSDPA; no evaluator GPU/VRAM measurement, new download/package or CORE context change. Executed source bindings were independently checked before restoring the auditory guard to exact reviewed False bytes; the one-campaign scope is consumed. Source-only pinned processor/forward/cache/decoder/model-card triage is complete, without another inference; root cause remains unconfirmed.
+
+Final **432TTSrelated PASS40.13s/0FAIL/0SKIP/Ruff PASS** (one existing deliberate duplicate-archive warning), not full656-source regression or qualification PASS. Fresh readonly audit verifies656source/all655other final bytes,917protected/176inputs/38oldD70JSON/23,475+23,382oldSDK entries/16oldartifacts/19,561VoxtralSDK entries/all9artifacts/originalservices/data/security/sameCORE preserved. Only one positive permission-switch unit test remains as a source change.24pending human naturalness fields remain null/unlistened. No Docker/Vault/database/config/production-model/default change, deployment or push.
+
+**AUDIO-EVAL-VOXTRAL-QUAL-004 EXECUTED/CLOSED FAIL; reviewer NOT QUALIFIED. D70 NATURALNESS OPEN; D71 NOT STARTED.** Reviewer-reliability parent remains open. No replacement model or new neural experiment is selected/scheduled. Existing AC, prior failures and D24/a88584b/E5 rollback stay unchanged.
