@@ -45,3 +45,7 @@ Initial new test caught omitted symlink-directory bytes; fixed before execution.
 Final **383 TTS-related tests PASS / 0 FAIL / 0 SKIP, 25.39s; Ruff PASS**. This includes16 new preparation tests; no full650-source or auditory-quality claim. All648 previous source bytes,38priorD70JSON,917protected files,176original inputs,23,475+23,382old SDK entries,16old reviewer artifacts,24pending labels and readonly services/database/model configuration preserved. Same CORE PID37256/start63900/command, context32K; no restart or context change.
 
 The preparation permission is now **consumed/retired**. No Voxtral checkpoint has been loaded, no neural/audio request has run, no VI/naturalness or memory-fit claim is established. Next dependency is a separately reviewed **load/integrity-only** protocol using these exact retained bytes with12GiB address-space cap/14GiB sampled host headroom/CORE loaded/offline CPU, followed only by separately authorized held-out auditory qualification. No additional download is needed for that proposal. It must not repeat earlier failed reviewer campaigns, lower AC, grant automatic model selection or advance D71. **D70 naturalness OPEN; D71 NOT STARTED.**
+
+## Follow-up protocol
+
+[ADR-108](108-proposed-voxtral-load-integrity-only.md) now specifies and tests the separate load/integrity-only milestone. Preparation remains complete/retired; the original checkpoint load gate remainsFalse pending its own explicit approval. No original loading or auditory execution has occurred.
