@@ -29,3 +29,7 @@ Run both original ASR workers sequentially, one first prediction per admitted va
 ## Compatibility and rollback
 
 New source/tests only; existing production/API/D71 behavior and all models/configurations/databases unchanged. No fallback, model factory, new weight download, resource increase or persistent audio store. Retire the new service and join its active operation on rollback; retain first tests/benchmark failures. Deployment stays off.
+
+## Local composition closure
+
+The [D72 report](../D72_BUFFERED_VOICE_COMPOSITION.md) records6complete actual corrected native paths and267related tests. The initial caller-budget failure is preserved; only the new caller changed to the existing Fast512minimum. The [held-out comparison](../D72_VAD_ASR_COMPARISON.md) completed; naive VAD concatenation stays disabled. Accept the local offline composition scope and enforced nonactivation boundary; production model/voice/license/quality gates remain unresolved before activation/release. This is not deployment or naturalness acceptance. D73 independent retention/delete controls can proceed without activating models. The source-frozen version of this document used during the comparison is retained in its executed-source archive and Git fc2cd33.

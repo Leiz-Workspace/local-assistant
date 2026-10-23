@@ -7,7 +7,8 @@ import wave
 import numpy as np
 import pytest
 
-from scripts.voice_native_smoke import MATRIX, joined_io, pcm_wave
+from scripts.voice_native_smoke import MATRIX, EvaluationLLM, joined_io, pcm_wave
+from src.application.ports.inference import CompletionResult
 
 
 def test_pcm_conversion_retains_duration_and_declares_exact_native_samples():
@@ -72,3 +73,25 @@ async def test_thread_cancellation_waits_for_real_native_exit():
     with pytest.raises(asyncio.CancelledError):
         await task
     assert finished.is_set()
+
+
+@pytest.mark.asyncio
+async def test_first_llm_result_is_retained_before_downstream_failure(tmp_path):
+    """Preserve a complete first CORE result even if later voice synthesis rejects its text length."""
+    import json
+
+    adapter = EvaluationLLM(tmp_path)
+
+    async def reply(**kwargs):
+        """Return one complete oversized public fixture reply without making a model request."""
+        assert kwargs["preset"] == "fast"
+        return CompletionResult("x" * 180, "core-fixture", "fast", "stop")
+
+    adapter.adapter.complete = reply
+    result = await adapter.complete(preset="fast", messages=[])
+    assert result.content == "x" * 180
+    assert (
+        json.loads((tmp_path / "llm-response.json").read_text())["content"]
+        == result.content
+    )
+    assert json.loads((tmp_path / "llm-request.json").read_text())["preset"] == "fast"
