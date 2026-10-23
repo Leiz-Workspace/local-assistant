@@ -1,0 +1,54 @@
+{
+  "description": "Verify immutable host profile/template binding and stateless text inference with no tool authority; actual CORE only, UNRESTRICTED tested with deterministic ports only.",
+  "status": "LOCAL_PROFILE_COMPOSITION_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 20,
+  "related_tests": {
+    "passed": 53,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.05
+  },
+  "source_sha256": {
+    "src/application/services/profile_prompts.py": "83c79068bbfb673ceb4512783bcc5668e15feba4421b127c9586c7a1ff718e8c",
+    "tests/test_profile_prompts.py": "2e3513bb642fbb3d1d75562cd96a5beccdd158803e5f0a95a83439a83840d02a"
+  },
+  "log_sha256": {
+    "data/backups/d80-profile-first-tests.log": "d87fe44490176ae91b31767244bca97953a97bd71f000c9af9d3adfc0f7f92d4",
+    "data/backups/d80-profile-first-failure.log": "f1c1ef52d8decd9bfeac64a7eb24a58d19024a7edbd85d9acd3a6fc1a7b94d22",
+    "data/backups/d80-profile-related-tests.log": "ef369e3537c09a66134ff59307e10a36368ae4c9f1484e85992e972d94e7b815",
+    "data/backups/d80-native-core-text.log": "eacbc3a999190aed1844cf436fe656dddcc2eecbeb69483740c8cce895f5458c",
+    "data/backups/d80-native-core-text.json": "54c22eebbfd561fbc03197e3e1a7d521db0691b505a37ec6af796f852c9f370b"
+  },
+  "native_core": {
+    "description": "One actual retained CORE text inference through D80; no UNRESTRICTED model loaded or tested.",
+    "status": "COMPLETE",
+    "profile": "core",
+    "model_id": "qwen3.5-9b-core",
+    "template_sha256": "e8e08159b94a46c272bd9f2dd9318f65b659a4bc9abeb36e5653e057734fb465",
+    "prompt_sha256": "b804678d23ed477734d87bb134b248a0de6497ebcfc2ab04772f4e99bfbb2703",
+    "source_sha256": [
+      [
+        "doc-cedar",
+        "51620fc0c36c418e8a8ddf4e5ddb1d7c4b5a144a19753c52562397423170f970"
+      ]
+    ],
+    "content": "The Cedar fixture color is blue (source: doc-cedar).",
+    "finish_reason": "stop",
+    "preset": "fast",
+    "input_tokens": 113,
+    "output_tokens": 14,
+    "elapsed_seconds": 0.5380287510051858,
+    "core_before": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    },
+    "core_after": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    }
+  },
+  "unrestricted_runtime_loaded_or_tested": false,
+  "all661_prior_source_bytes_unchanged": true,
+  "production_route_registered": false,
+  "D74_product_gate_closed": false
+}
