@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. No v1.0tag, production-ready declaration, push, model/default selection or deployment. D87current full suite is running; terminal result must be recorded before any software-pass claim.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. No v1.0tag, production-ready declaration, push, model/default selection or deployment. D87current full suite completed5405PASS/0FAIL/0SKIP/exit0;707source files unchanged. This software result does not approve manual/model/product/release gates.
 
 ## Completed local engineering evidence
 
@@ -20,7 +20,7 @@
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
-| D87current full software suite | Running5405tests over707frozen source/config/test files | Actual terminal counts/exit/source equality and tracked failures/skips; no inferred pass |
+| D87current full software suite | **COMPLETE5405PASS/0FAIL/0SKIP/exit0**,1821.99s/707files unchanged | [Terminal/qualified audit](evidence/d87-current-full-acceptance.json); explicit quota timestamp-only delta retained, no fabricated strict row equality |
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14quality scorecard | Established inference/models; weighted complete comparison/signoff still partial | Reconcile original evidence and actual missing quality judgments; software/function smoke does not substitute |
