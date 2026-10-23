@@ -1,5 +1,7 @@
 # D70 — So sánh TTS ngoại tuyến
 
+**D70 acceptance clarification2026-10-23:** Machine measurements are recorded; **actual listening0/24 remains the unmet original AC**. Fresh native audio input is still omitted. Extra evaluator research is a route, not a replacement deliverable; no new trial scheduled. [Exact checklist and blocker](D70_ACCEPTANCE_STATUS.md).
+
 **Latest actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
 
 **Latest checkpoint2026-10-23:** Approved ADR-109 completed; strict **4/12 FAIL**, no conditional24audio review. Guard closed/scope consumed; D70 naturalness OPEN/D71 NOT STARTED. [First campaign report](D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](evidence/d70-voxtral-auditory-first.json), [source-only triage](evidence/d70-voxtral-auditory-source-triage.json).
