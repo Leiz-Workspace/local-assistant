@@ -74,6 +74,14 @@ def source_units(text, mode):
     return tuple(units)
 
 
+def whole_integers(text):
+    """Read only signed 32-bit whole integer tokens using the same literal policy for grammar and publication."""
+    tokens = re.findall(r"(?<![\w.+-])[+-]?[0-9]+(?![\w.])", text)
+    return frozenset(
+        value for token in tokens if -(2**31) <= (value := int(token)) < 2**31
+    )
+
+
 def literal_string_values(units):
     """Enumerate bounded whitespace-aligned source spans without Unicode normalization, expected answers or output repair."""
     values = {}
@@ -206,6 +214,22 @@ class StructuredExcerptAdapter:
             row.source_id: source_units(row.text, self.source_modes[row.source_id])
             for row in data.sources
         }
+        integer_sources = {
+            source for _, kind, source in self.fields if kind == "integer"
+        }
+        eligible = {
+            source: tuple(
+                unit
+                for unit in choices
+                if source not in integer_sources or whole_integers(unit)
+            )
+            for source, choices in units.items()
+        }
+        logger.info(
+            "structured_quote_eligibility sources=%d removed=%d",
+            len(units),
+            sum(len(units[key]) - len(eligible[key]) for key in units),
+        )
         properties = {
             name: dict(type=kind, minimum=-(2**31), maximum=2**31 - 1)
             if kind == "integer"
@@ -235,7 +259,8 @@ class StructuredExcerptAdapter:
                     required=["source_id", "quote"],
                     additionalProperties=False,
                 )
-                for source, choices in units.items()
+                for source, choices in eligible.items()
+                if choices
             ]
         )
         citations = dict(
@@ -264,7 +289,7 @@ class StructuredExcerptAdapter:
             required=list(refusal_properties),
             additionalProperties=False,
         )
-        schema = dict(anyOf=[schema, refusal])
+        schema = dict(anyOf=[schema, refusal]) if all(eligible.values()) else refusal
         encoded(schema)
         return copied, schema, units
 
@@ -313,8 +338,7 @@ class StructuredExcerptAdapter:
             if kind == "integer":
                 if type(value) is not int or not -(2**31) <= value < 2**31:
                     raise ValueError("structured_reply_type")
-                tokens = re.findall(r"(?<![\w.+-])[+-]?[0-9]+(?![\w.])", quotes[source])
-                if value not in {int(token) for token in tokens}:
+                if value not in whole_integers(quotes[source]):
                     raise ValueError("structured_reply_literal")
             elif (
                 type(value) is not str

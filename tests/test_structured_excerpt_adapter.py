@@ -21,6 +21,7 @@ from src.infrastructure.inference.structured_excerpt_adapter import (
     encoded,
     literal_string_values,
     source_units,
+    whole_integers,
 )
 
 
@@ -417,3 +418,48 @@ async def test_explicit_missing_evidence_refusal_is_possible_without_publishing_
         and port.provenance is None
         and len(calls) == 1
     )
+
+
+def test_integer_quote_grammar_prunes_only_locally_impossible_source_units():
+    """Exclude a nonnumeric header while retaining every numeric distractor and the full original source payload."""
+    port, messages, _, _ = setup()
+    payload = json.loads(messages[1]["content"])
+    payload["sources"][1]["text"] += "\nOLD_COUNT = 12"
+    messages[1]["content"] = encoded(payload).decode()
+    copied, schema, units = port.prepare(messages)
+    choices = schema["anyOf"][0]["properties"]["citations"]["items"]["anyOf"]
+    assert choices[1]["properties"]["quote"]["enum"] == ["COUNT = 7", "OLD_COUNT = 12"]
+    assert units["code"] == ("# Authored fixture", "COUNT = 7", "OLD_COUNT = 12")
+    assert copied == messages
+
+
+def test_missing_integer_source_can_generate_only_explicit_refusal():
+    """Avoid an impossible empty quote enum and never force an unsupported answer when a required integer is absent."""
+    port, messages, _, _ = setup()
+    payload = json.loads(messages[1]["content"])
+    payload["sources"][1]["text"] = "No numeric count is available."
+    messages[1]["content"] = encoded(payload).decode()
+    _, schema, units = port.prepare(messages)
+    assert schema["properties"] == dict(
+        facts=dict(type="null"), citations=dict(type="array", maxItems=0)
+    )
+    assert "anyOf" not in schema and units["code"] == (
+        "No numeric count is available.",
+    )
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("COUNT = -7; OLD = +12", {-7, 12}),
+        ("ID AB-7; VERSION 7.5; HEX 0x20", set()),
+        ("MIN = -2147483648; MAX = 2147483647", {-2147483648, 2147483647}),
+        ("LOW = -2147483649; HIGH = 2147483648", set()),
+        ("Nothing numeric here", set()),
+    ],
+)
+def test_grammar_integer_eligibility_matches_existing_literal_publication_policy(
+    text, expected
+):
+    """Preserve signed token, identifier, decimal and range boundaries without selecting a gold answer."""
+    assert whole_integers(text) == expected
