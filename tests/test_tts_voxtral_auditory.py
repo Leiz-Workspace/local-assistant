@@ -33,6 +33,13 @@ def test_original_auditory_guard_closed():
         runtime.main()
 
 
+def test_explicit_campaign_permission_switch(monkeypatch):
+    """Allow only the explicit campaign switch without reading requests, loading weights or running audio."""
+    monkeypatch.setattr(runtime, "AUDITORY_EXECUTION_ALLOWED", True)
+    runtime.require_permission()
+    logger.info("voxtral_auditory_explicit_permission_switch_verified model_loaded=False")
+
+
 def test_blind_request_coverage():
     """Accept complete declared controls and reject reference leakage, overrides and out-of-bound signals."""
     request = request_fixture()
