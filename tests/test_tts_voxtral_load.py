@@ -42,6 +42,13 @@ def test_original_permission_closed_before_access(tmp_path, monkeypatch):
     assert not (tmp_path / "absent").exists()
 
 
+def test_explicit_load_permission_can_open_only_load_guard(monkeypatch):
+    """Verify the explicit approval switch without importing a model SDK or starting any original-weight process."""
+    monkeypatch.setattr(runtime, "LOAD_EXECUTION_ALLOWED", True)
+    assert runtime.require_permission() is None
+    logger.info("voxtral_approved_load_guard_fixture_passed model_started=False")
+
+
 def test_worker_denied_inside_actual_namespace():
     """Prove the actual no-model offline namespace rejects the worker before importing Torch or loading weights."""
     result = subprocess.run(controller.command(), capture_output=True, timeout=15)

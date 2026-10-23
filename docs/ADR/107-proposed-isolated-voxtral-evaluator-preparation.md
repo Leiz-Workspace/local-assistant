@@ -49,3 +49,7 @@ The preparation permission is now **consumed/retired**. No Voxtral checkpoint ha
 ## Follow-up protocol
 
 [ADR-108](108-proposed-voxtral-load-integrity-only.md) now specifies and tests the separate load/integrity-only milestone. Preparation remains complete/retired; the original checkpoint load gate remainsFalse pending its own explicit approval. No original loading or auditory execution has occurred.
+
+## Subsequent separately approved load
+
+Owner-approved ADR-108 first load/integrity now PASS; [actual evidence](../evidence/d70-voxtral-load-first.json). This occurred under its own explicit approval, not the earlier preparation scope. Preparation and load gates are retired/closed; no audio inference or naturalness qualification has occurred.
