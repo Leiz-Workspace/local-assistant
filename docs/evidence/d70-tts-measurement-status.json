@@ -29,7 +29,7 @@
   "owner_decision_date": "2026-10-22",
   "owner_decision": "Gi\u1eef nguy\u00ean AC, ch\u1edd kh\u1ea3 n\u0103ng nghe",
   "auditory_review_required_at": "D70",
-  "waiting_for": "QUALIFIED_AUDITORY_REVIEWER_AND_ACTUAL_NATURALNESS_REVIEW",
+  "waiting_for": "ACTUAL_AUDITORY_INSPECTION_OF_ALL24_RETAINED_OUTPUTS",
   "background_monitoring_active": false,
   "latest_audio_capability_recheck": "docs/evidence/d70-voxtral-attention-first.json",
   "latest_audio_capability_recheck_result": "APPROVED_ADR110_NUMERICAL_DIAGNOSTIC_COMPLETE_ANSWERS_UNCHANGED_NOT_QUALIFIED",
@@ -326,5 +326,14 @@
   "new_local_evaluator_attention_diagnostic_original_workers_remaining": 0,
   "new_local_evaluator_audio_inference_requests_counting_basis": "Completed original model.generate calls: ADR109 twelve plus ADR110 eight. Separately eight explicit uncached diagnostic forwards; excludes internal cached decode steps.",
   "new_local_evaluator_original_audio_prefills_total": 28,
-  "new_local_evaluator_backend_selected": false
+  "new_local_evaluator_backend_selected": false,
+  "D70_acceptance_checklist": "docs/D70_ACCEPTANCE_STATUS.md",
+  "D70_machine_measurements_recorded": true,
+  "D70_actual_listening_labels_completed": 0,
+  "D70_actual_listening_labels_required": 24,
+  "D70_extra_evaluator_research_is_not_an_original_acceptance_requirement": true,
+  "latest_native_audio_input_recheck": "docs/evidence/d70-native-audio-acceptance-recheck.json",
+  "latest_native_audio_input_recheck_sha256": "35185a53e296d6ff217bb6afbf99836ecef3d834c146453bb36d2fd1d1c3a870",
+  "native_chat_audio_input_available": false,
+  "additional_evaluator_trials_scheduled": false
 }
