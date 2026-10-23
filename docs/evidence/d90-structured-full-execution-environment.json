@@ -1,0 +1,14 @@
+{
+  "description": "Observed live pytest child umask and explicit private artifacts; checked before terminal result.",
+  "pytest_child_umask": "0022",
+  "pytest_pid": 1646617,
+  "artifact_modes": {
+    "data/backups/d90-structured-final-full/pytest.log": "0o600",
+    "data/backups/d90-structured-final-full/result.json": "0o600",
+    "data/backups/d90-structured-final-full/source-freeze.json": "0o600",
+    "data/backups/d90-structured-final-full-supervisor.log": "0o600"
+  },
+  "output_directory_mode": "0o700",
+  "source_files": 719,
+  "source_freeze_sha256": "ea719e2cd10bcfc6106d4bae0454dfc4f75cf25ed810970499496f6c49d067e0"
+}
