@@ -74,6 +74,33 @@ def source_units(text, mode):
     return tuple(units)
 
 
+def literal_string_values(units):
+    """Enumerate bounded whitespace-aligned source spans without Unicode normalization, expected answers or output repair."""
+    values = {}
+    for unit in units:
+        words = list(re.finditer(r"\S+", unit))
+        for first in range(len(words)):
+            for last in range(first, len(words)):
+                left, right = words[first].start(), words[last].end()
+                if right - left > 32:
+                    break
+                spans = [(left, right)]
+                while left < right and unit[left] in "\"'([{":
+                    left += 1
+                while right > left and unit[right - 1] in "\"')]}.,;:!?":
+                    right -= 1
+                spans.append((left, right))
+                for start, end in spans:
+                    if 1 <= end - start <= 24:
+                        values[unit[start:end]] = None
+                        if len(values) > 512:
+                            raise ValueError("structured_value_limit")
+    if not values:
+        raise ValueError("structured_value_limit")
+    logger.info("structured_literal_values_bound choices=%d", len(values))
+    return tuple(values)
+
+
 @dataclass(frozen=True, slots=True)
 class StructuredProvenance:
     """Record prompt/schema/native-request/output digests as provenance, never as authorization or semantic certification."""
@@ -83,6 +110,7 @@ class StructuredProvenance:
     native_request_sha256: str
     content_sha256: str
     schema_enabled: bool
+    literal_strings: bool
 
 
 class StructuredExcerptAdapter:
@@ -97,6 +125,7 @@ class StructuredExcerptAdapter:
         model_id,
         facts_key,
         schema_enabled,
+        literal_strings=False,
         transport=None,
     ):
         """Require immutable bounded host contracts and an explicit grammar choice without loading or selecting another model."""
@@ -110,6 +139,8 @@ class StructuredExcerptAdapter:
             or model_id != "qwen3.5-9b-core"
             or facts_key not in {None, "facts"}
             or type(schema_enabled) is not bool
+            or type(literal_strings) is not bool
+            or (literal_strings and not schema_enabled)
         ):
             raise ValueError("structured_host_contract")
         names, sources = set(), set()
@@ -143,6 +174,7 @@ class StructuredExcerptAdapter:
         )
         self.source_modes = MappingProxyType(dict(source_modes))
         self.schema_enabled, self.transport = schema_enabled, transport
+        self.literal_strings = literal_strings
         self.calls, self.last_error, self.provenance = 0, None, None
         logger.info(
             "structured_excerpt_bound fields=%d grammar=%s", len(fields), schema_enabled
@@ -180,6 +212,12 @@ class StructuredExcerptAdapter:
             else dict(type="string", minLength=1, maxLength=24)
             for name, kind, _ in self.fields
         }
+        if self.literal_strings:
+            for name, kind, source in self.fields:
+                if kind == "string":
+                    properties[name]["enum"] = list(
+                        literal_string_values(units[source])
+                    )
         facts = dict(
             type="object",
             properties=properties,
@@ -284,6 +322,10 @@ class StructuredExcerptAdapter:
                 or value not in quotes[source]
             ):
                 raise ValueError("structured_reply_literal")
+            elif self.literal_strings and value not in literal_string_values(
+                units[source]
+            ):
+                raise ValueError("structured_reply_literal_domain")
         logger.info("structured_excerpt_content_verified fields=%d", len(facts))
 
     async def complete(self, **request):
@@ -370,6 +412,7 @@ class StructuredExcerptAdapter:
                 hashlib.sha256(raw_request).hexdigest(),
                 hashlib.sha256(content.encode()).hexdigest(),
                 self.schema_enabled,
+                self.literal_strings,
             )
             logger.info("structured_excerpt_completed grammar=%s", self.schema_enabled)
             return CompletionResult(

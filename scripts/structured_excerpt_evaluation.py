@@ -55,7 +55,7 @@ def payload(case):
     )
 
 
-def adapter(case, *, enabled, transport=None):
+def adapter(case, *, enabled, transport=None, literal_strings=False):
     """Bind one explicit source-derived grammar to the same request and existing model for either fixed comparison mode."""
     return StructuredExcerptAdapter(
         request=payload(case)["request"],
@@ -66,6 +66,7 @@ def adapter(case, *, enabled, transport=None):
         model_id="qwen3.5-9b-core",
         facts_key="facts",
         schema_enabled=enabled,
+        literal_strings=literal_strings,
         transport=transport,
     )
 
@@ -134,17 +135,26 @@ def score(case, content, published):
     )
 
 
-async def evaluate(case, root, *, enabled):
+async def evaluate(case, root, *, enabled, literal_strings=False):
     """Retain one first paired-mode request, native response and independent score even when publication is withheld."""
     root.mkdir(mode=0o700)
     data = payload(case)
     publish(
         root / "attempt.json",
         dict(
-            case_id=case["id"], schema_enabled=enabled, request=data, maximum_attempts=1
+            case_id=case["id"],
+            schema_enabled=enabled,
+            literal_strings=literal_strings,
+            request=data,
+            maximum_attempts=1,
         ),
     )
-    port = adapter(case, enabled=enabled, transport=RawCaptureTransport(root))
+    port = adapter(
+        case,
+        enabled=enabled,
+        transport=RawCaptureTransport(root),
+        literal_strings=literal_strings,
+    )
     run = ProfilePromptRun(
         uuid4(),
         uuid4(),
@@ -178,6 +188,7 @@ async def evaluate(case, root, *, enabled):
     result.update(
         case_id=case["id"],
         schema_enabled=enabled,
+        literal_strings=literal_strings,
         port_error=port.last_error,
         fatal_backend_failure=port.last_error
         in {"backend_failed", "invalid_request", "model_mismatch"},
@@ -196,8 +207,13 @@ async def campaign(output, *, corpus_path=None):
     if output.parent != (ROOT / "data/backups").resolve():
         raise ValueError("structured_output_scope")
     selected = CORPUS if corpus_path is None else Path(corpus_path).resolve()
-    if selected not in {CORPUS, CORPUS.with_name("d81-typed-paired-v2.json")}:
+    if selected not in {
+        CORPUS,
+        CORPUS.with_name("d81-typed-paired-v2.json"),
+        CORPUS.with_name("d81-typed-paired-v3.json"),
+    }:
         raise ValueError("structured_corpus_scope")
+    literal_comparison = selected.name == "d81-typed-paired-v3.json"
     output.mkdir(mode=0o700)
     frozen = source_manifest()
     corpus = json.loads(selected.read_text())
@@ -214,7 +230,12 @@ async def campaign(output, *, corpus_path=None):
             instruction=INSTRUCTION,
             paired_cases=6,
             per_mode_attempts=1,
-            paired_order=["baseline", "schema"],
+            paired_order=["typed-schema", "source-literal"]
+            if literal_comparison
+            else ["baseline", "schema"],
+            comparison_factor="source-derived string value vocabulary"
+            if literal_comparison
+            else "response_format",
             schema_only_negative_controls=2,
             conditional_historical_regressions=1,
             maximum_generation_requests_including_recovery=16,
@@ -238,20 +259,41 @@ async def campaign(output, *, corpus_path=None):
         for index, case in enumerate(cases):
             root = output / f"case-{index + 1:02d}"
             root.mkdir(mode=0o700)
-            for name, enabled in (("baseline", False), ("schema", True)):
-                result = await evaluate(case, root / name, enabled=enabled)
+            modes = (
+                (("typed-schema", True, False), ("source-literal", True, True))
+                if literal_comparison
+                else (("baseline", False, False), ("schema", True, False))
+            )
+            for index_mode, (name, enabled, literals) in enumerate(modes):
+                if literal_comparison:
+                    result = await evaluate(
+                        case, root / name, enabled=enabled, literal_strings=literals
+                    )
+                else:
+                    result = await evaluate(case, root / name, enabled=enabled)
+                result["comparison_role"] = (
+                    "candidate" if index_mode == 1 else "baseline"
+                )
                 rows.append(result)
                 if result["fatal_backend_failure"]:
                     stop = True
                     break
             if stop:
                 break
-        candidate = [row for row in rows if row["schema_enabled"]]
+        candidate = [row for row in rows if row["comparison_role"] == "candidate"]
         if not stop:
             for index, case in enumerate(negatives):
-                negative = await evaluate(
-                    case, output / f"negative-{index + 1:02d}", enabled=True
-                )
+                if literal_comparison:
+                    negative = await evaluate(
+                        case,
+                        output / f"negative-{index + 1:02d}",
+                        enabled=True,
+                        literal_strings=True,
+                    )
+                else:
+                    negative = await evaluate(
+                        case, output / f"negative-{index + 1:02d}", enabled=True
+                    )
                 negative_rows.append(negative)
                 if negative["fatal_backend_failure"]:
                     break
@@ -275,6 +317,7 @@ async def campaign(output, *, corpus_path=None):
                 model_id="qwen3.5-9b-core",
                 facts_key=None,
                 schema_enabled=True,
+                literal_strings=literal_comparison,
                 transport=RawCaptureTransport(root),
             )
             try:
@@ -303,9 +346,11 @@ async def campaign(output, *, corpus_path=None):
         negative_controls=negative_rows,
         complete=len(rows) == 12 and len(negative_rows) == 2,
         baseline_accepted=sum(
-            row["accepted"] for row in rows if not row["schema_enabled"]
+            row["accepted"] for row in rows if row["comparison_role"] == "baseline"
         ),
-        schema_accepted=sum(row["accepted"] for row in rows if row["schema_enabled"]),
+        schema_accepted=sum(
+            row["accepted"] for row in rows if row["comparison_role"] == "candidate"
+        ),
         historical_regression=regression,
         source_bytes_unchanged=unchanged,
         original_core_identity_retained=all(
