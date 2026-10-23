@@ -4426,3 +4426,7 @@ Current707-sourcefreeze remains unchanged while D87runs. This is manual packet/p
 ## 2026-10-23 — D90 engineering candidate review PREPARED, no premature release
 
 [Concrete review](../docs/RELEASE_CANDIDATE_STATUS.md) consolidates completed localengineering/evidence and exact open D87terminal/D70actualhearing/D74voice-model-license-no-speech/D14quality/D86/D89owner/release gates. No tag/push/deploy or model/default selection. Masterroadmapv4.58reflects actual running5405/707frozenfiles, D88verifiedinstall, D89packetprepared and D90NOTRELEASED. Assessed post90closure candidates include priority/dependency/effort/risk; not automatically scheduled or substituted for unmet AC. Currentlocalone-worker evidence remains distinct from unrequested futureOIDC/TLS/multiworker/offhost/SLO expansion. Continue awaiting/monitoring actual fullresult and completing only independent review work; do not invent owner/manual/model approvals.
+
+## 2026-10-23 — D88 follow-up: historical D14runtime evidence reconciled, quality remains OPEN
+
+Actualold day14CORE/UNRESTRICTEDreports each9/9runtime/YAML/artifact/Docker/APIchecks; day13scorecard explicitlyprovisional/smallsmoke, not weightedcompletequality/perf/multimodal/VRAM/context. [Readonlymetadata/hashes](../docs/evidence/d88-historical-scorecard-reconciliation.json) preserveoriginalfiles; no modelrerun or inventedqualitysignoff. Onboardingclarifies oldunversionedunauthauto-routerutility is not supportedauthclient afternecessaryADR121guard; do not disableauth to replaylegacytool. Sourcefrozenunchanged, D87stillrunning.
