@@ -2,7 +2,7 @@
 
 **Purpose:** Address D81's measured field/quote-format failures with bounded native JSON grammar, without replacing an agreed model or rewriting prior scores.
 
-**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** Accepted for optional component implementation and one declared local paired evaluation under the owner's continuous-work instruction. No default/API activation or model-selection approval.
+**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** First campaign EXECUTED/CLOSED/NOT QUALIFIED. No default/API activation or model-selection approval. The diagnosed wire-order fix has a separately frozen follow-up protocol.
 
 ## Decision, dependency and risks
 
@@ -27,3 +27,9 @@ Maximum16generation requests including one ordinary CORE recovery:12paired+2nega
 Prepared **58new controls within190related PASS/0FAIL/0SKIP/0.70s**, Ruff PASS. Includes actual unchanged ProfilePromptRun/provenance composition, baseline/schema body equality exceptformat, type/source/template/usage/stop/cancel/budget guards, refusal support, signed-integer versus identifier/decimal distinctions and conditional campaign accounting with fixture transports. The completed full5507/712snapshot and qualified readonly audit precede these additive files; do not claim that full run included this new component.
 
 Rollback closes/removes the optional adapter and keeps all first artifacts. Old API routes and default inference keep their existing adapter. Actual D70hearing0/24, physical-device review, D14weighted quality, voice/model/license choices and final release approval remain separate. No replacement model or unapproved deployment follows from this ADR.
+
+## First execution and implementation diagnosis
+
+Snapshotbfee540: baseline6/6, schema5/6, strict negative refusals1/2; both negative answers withheld. All14paired/control posts plus one recovery retained,717source files unchanged during execution. Historical native regression correctly NOT_RUN. [Exact first result/source archive](../evidence/d81-structured-first-verification.json). This scope is consumed, old criteria/scores remain unchanged and the first candidate is not adopted.
+
+New unit reproduces a wire-order bug: shared sorted JSON serialization sends schema properties as citations-before-facts/quote-before-source_id. The pinned runtime's `common/json.h` preserves added key order and `common/json-schema-to-grammar.cpp` emits required properties in that order; observed native bodies match it. Fix only the new serializer to preserve declared schema order, using existing canonical ordering separately for the v1prompt digest. No runtime/model/template change. Unit red log retained; corrected67new/199related PASS0.79s/RuffPASS. The impact on model quality remains a hypothesis until the [fresh follow-up](../D81_STRUCTURED_ORDER_FOLLOWUP_PROTOCOL.md) is measured.

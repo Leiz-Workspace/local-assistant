@@ -2,6 +2,7 @@
 
 import argparse
 import asyncio
+import hashlib
 import json
 import logging
 import runpy
@@ -189,14 +190,17 @@ async def evaluate(case, root, *, enabled):
     return result
 
 
-async def campaign(output):
+async def campaign(output, *, corpus_path=None):
     """Run fixed paired/negative cases and the conditional historical native regression, preserving all first failures."""
     output = Path(output).resolve()
     if output.parent != (ROOT / "data/backups").resolve():
         raise ValueError("structured_output_scope")
+    selected = CORPUS if corpus_path is None else Path(corpus_path).resolve()
+    if selected not in {CORPUS, CORPUS.with_name("d81-typed-paired-v2.json")}:
+        raise ValueError("structured_corpus_scope")
     output.mkdir(mode=0o700)
     frozen = source_manifest()
-    corpus = json.loads(CORPUS.read_text())
+    corpus = json.loads(selected.read_text())
     cases, negatives = corpus["cases"], corpus["negative_cases"]
     if len(cases) != 6 or len(negatives) != 2:
         raise ValueError("structured_corpus_size")
@@ -205,6 +209,8 @@ async def campaign(output):
         dict(
             description="Fresh fixed paired modes, identical per-case messages, no feedback/retry. Conditional old-fixture regression excluded from fresh six-case score.",
             source_sha256=frozen,
+            corpus_file=selected.name,
+            corpus_sha256=hashlib.sha256(selected.read_bytes()).hexdigest(),
             instruction=INSTRUCTION,
             paired_cases=6,
             per_mode_attempts=1,
@@ -325,7 +331,9 @@ def main():
     """Execute only the explicitly requested fresh paired evaluation and distinguish completed failures from qualification."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    result = asyncio.run(campaign(parser.parse_args().output))
+    parser.add_argument("--corpus", type=Path, required=True)
+    args = parser.parse_args()
+    result = asyncio.run(campaign(args.output, corpus_path=args.corpus))
     print(json.dumps(result, sort_keys=True))
     raise SystemExit(
         0 if result["candidate_qualified"] else 2 if result["complete"] else 1
