@@ -1,0 +1,24 @@
+{
+  "description": "Explicit owner authorization frozen before the first ADR-107 SDK installation or artifact transfer. No load/audio/production authorization.",
+  "owner_reply": "Duyệt chuẩn bị local theo ADR-107",
+  "reviewed_commit": "82bee5807e3b9c53c684d19291fcd280590f8678",
+  "preparation_approved": true,
+  "model_load_approved": false,
+  "audio_inference_approved": false,
+  "model_selection_approved": false,
+  "artifacts": 9,
+  "bytes": 9371455742,
+  "disk_budget_bytes": 21474836480,
+  "address_space_cap_bytes": 12884901888,
+  "future_host_MemAvailable_bytes": 15032385536,
+  "preflight_tests_passed": 13,
+  "preflight_test_seconds": 0.47,
+  "ruff_passed": true,
+  "sha256": {
+    "scripts/tts_voxtral_preparation.py": "703b91fac1ae8a0042b736630a362f6d9254cd2715bc5061cd5fe10572c4c524",
+    "tests/test_tts_voxtral_preparation.py": "3e5c0de530425a4554a9fb8b3e7e6d91393f15564477119d47cd5a4569fb9a69",
+    "docs/ADR/107-proposed-isolated-voxtral-evaluator-preparation.md": "4e485c3e27c488d922e78e6ffa0819c97a1256d1243c5a0aabe6283ad2c001a6",
+    "docs/evidence/d70-voxtral-preparation-manifest.json": "4be2871c3e88da5cb76b521f3fae6874708a9ee4765fe2856c596f56b377a801",
+    "docs/evidence/d70-remediation-final-readonly-audit.json": "e16e7333ca76dcdadfc447a49ac66347b76784fee9a18504167e8b15cef285bc"
+  }
+}
