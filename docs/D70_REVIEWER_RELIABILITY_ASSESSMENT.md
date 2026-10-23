@@ -2,7 +2,7 @@
 
 **Purpose:** Record the completed investigation after ADR-104, separate measured local failures from external research and interface availability, and identify a concrete next evaluation route without changing project models or D70 acceptance.
 
-**Date:** 2026-10-23. **Status:** Investigation and gated implementation complete; new external audio evaluation is not approved or executed. [Proposed ADR-105](ADR/105-proposed-specialist-public-auditory-review.md). [Evidence](evidence/d70-specialist-review-proposal.json).
+**Date:** 2026-10-23. **Status:** Owner-approved ADR-105 campaign completed with first-request upstream GPU failure; no usable auditory score, scope consumed and execution closed. [Actual evidence](evidence/d70-specialist-campaign-first.json). [ADR-105 protocol and outcome](ADR/105-proposed-specialist-public-auditory-review.md). [Evidence](evidence/d70-specialist-review-proposal.json).
 
 ## What the retained failure establishes
 
@@ -19,7 +19,7 @@ The [SpeechJudge study](https://arxiv.org/abs/2511.07931) distinguishes naturaln
 | Existing local3B, unchanged protocol | Failed original controls and ADR-104; all first failures retained | No rerun or promotion |
 | Native BF16 specialist locally | Analytic and native meta-only count agree:7,615,616,512text parameters,15,231,233,024BF16bytes≈14.185GiB before modalities/runtime | Excluded under12GiB cap; no weights downloaded, no cap/precision change |
 | Author-linked SpeechJudge demo | Metadata reports RUNTIME_ERROR | Unavailable at this observation; no prediction attempted |
-| Community SpeechJudge demo | RUNNING metadata; live exact public API/schema/source check passes | Candidate for one separately approved finite campaign, not qualified |
+| Community SpeechJudge demo | RUNNING metadata; live exact public API/schema/source check passes | Approved first request failed with GPU task aborted; no quality result or qualification |
 | Earlier official Qwen demos | Frontend metadata still RUNNING; prior real model calls failed/timed out | Frontend state does not reverse retained failures; no retry made |
 | ASR/acoustic/MOS proxies | Existing intelligibility/acoustic diagnostics retained | Cannot replace actual per-output naturalness evidence |
 
@@ -27,13 +27,13 @@ The native lower bound is an architecture calculation, independently checked usi
 
 The inspected community copy is [Den4ikAI/SpeechJudge-GRM](https://huggingface.co/spaces/Den4ikAI/SpeechJudge-GRM), Space revision`e16fd85d230ac043091476eb78faa6c2e24c5c66`, Gradio6.26.0. It is not author-owned or controlled by this project. Its utility downloads the model repository without a pinned revision. Code identity and a public model-card revision do not attest remotely loaded weights, settings or resource consumption. No account, key, billing or local installation was used for metadata reads.
 
-## Concrete implementation and remaining boundary
+## Implementation and proposal-stage boundary (historical)
 
 New standalone script/test files leave all642prior source bytes unchanged. External execution defaults disabled for provider constructors and retained-object media calls; reversible local control preparation is allowed and benchmark copies still require successful qualification. Tests cover full PCM16 provenance, mirrored/tie controls, schema/path/endpoint bounds, exact one-generation requests, raw/frontend score agreement, first-failure retention, gate recomputation, conditional24output pairing, order disagreements, metadata drift and policy refusal. Native meta-only counting separately checks the resource exclusion. Live metadata checking transmits no audio.
 
 The proposed campaign has18neutral-smoke control comparisons, then only if all pass24mirrored comparisons covering all24existing benchmark outputs. It uses the specialist's source-defined1to10rubric and required neutral reference text; those model scores are not human MOS. Maximum42comparisons/84audio uploads, one generation each, no retries or averaging away disagreements. Independent readonly checks confirm that all24retained signals form12same-text EN/VI pairs and still match native/diagnostic hashes; the real local control packet is prepared and frozen; the common review packet remains uncreated.
 
-Approval is needed for **sending neutral test audio and authored text to this new community recipient**. Prior local ADR-104 scope was consumed and previous public trials addressed different endpoints. No approval is requested for metadata investigation, reversible implementation or tests. One concrete ADR-105 approval would cover both conditional stages; it would not select/deploy a production model, waive AC or authorize further failed-campaign retries.
+At the proposal checkpoint, approval was needed for **sending neutral test audio and authored text to this new community recipient**; that permission has now been granted and the one campaign consumed. Prior local ADR-104 scope was consumed and previous public trials addressed different endpoints. No approval is requested for metadata investigation, reversible implementation or tests. One concrete ADR-105 approval would cover both conditional stages; it would not select/deploy a production model, waive AC or authorize further failed-campaign retries.
 
 All original models, datasets, first observations,24pending listening labels and CORE are retained. D70 remains IN PROGRESS/NATURALNESS OPEN; D71 remains NOT STARTED. If the candidate fails controls or cannot produce adequate VI/EN descriptions, those outcomes stay failures and D70 stays open.
 
@@ -50,3 +50,9 @@ Audit correction:6e9f6ab's917preserved claim used a pre-edit audit; a later redu
 [Local preparation evidence](evidence/d70-specialist-local-control-preparation.json). Removed the unnecessary consent barrier around reversible local copies while retaining EXECUTION_ALLOWEDFalse for every provider client/upload/inference. Actual18control/36WAV/38file packet is now prepared privately and its first manifest verified; later execution must reuse/check those exact bytes. Common benchmark inputs still require complete18control qualification and are not prepared. No media sent, no prediction or new weights.
 
 A first local CLI attempt exposed missing owned-root initialization before any file publication; fixed0700creation/symlink rejection and tested a previously nonexistent root, preserving the failed log.348TTSrelated PASS18.38s/0FAIL/0SKIP/Ruff PASS, including2new preparation/changed-packet cases after the binding follow-up. All642pre-specialist source bytes and34priorD70JSON preserved/current645,917protected/176inputs/23475+23382SDK/16artifacts/original system/sameCORE audit passes;24pending judgements unchanged. Local preparation was authorized continuation work; only transmission to the new community recipient awaits explicit permission. D70 OPEN/D71 NOT STARTED.
+
+## 2026-10-23 ADR-105 approved campaign: upstream GPU failure, no auditory scores
+
+Owner explicitly approved **“Cho phép gửi audio theo ADR-105”**. [Approved freeze](evidence/d70-specialist-approved-freeze.json), [actual first evidence](evidence/d70-specialist-campaign-first.json), [protocol and outcome](ADR/105-proposed-specialist-public-auditory-review.md). Reused the hash-bound first local packet; exact source/runtime/schema preflight passed. Two neutral WAV uploads and one accepted prediction request reached the community endpoint. At the first identical EN control, four heartbeats ended in `System Error: 'GPU task aborted'` / `ZeroGPU worker error`, without a score or rationale. The unchanged parser rejected it as `specialist_first_generation`; this is **service failure, not measured wrong audio judgement**. One control attempted/17unattempted/0usable comparisons, no retry or conditional24benchmark packet/upload. Remote completion/resources/root cause/deletion remain unverified.
+
+Command elapsed78.37s; local-client maximumRSS43276KiB, not provider RAM/VRAM. Exit0 means handled failure recorded, not PASS. Gate restoredFalse/scope consumed; original local policy remains imports/load-only. **350preflight/355finalTTSrelated PASS19.04s/19.30s,0FAIL/0SKIP/Ruff PASS**,7new regression cases since348; no full645-source or auditory benchmark claim. All642pre-specialist source bytes preserved/current645,917protected/35priorD70JSON/176inputs/23475+23382SDK/16artifacts/original system/security/model/data/sameCORE audit PASS. First audit-launch import-root error retained and corrected without an inference retry.24original pending naturalness labels remain null/unlistened. **D70 naturalness OPEN; D71 NOT STARTED.** No model/default/provider deployment, weights/package download, AC waiver or new campaign scheduled.

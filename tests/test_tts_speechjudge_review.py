@@ -1,4 +1,4 @@
-"""Test the unapproved specialist route with authored media and HTTP doubles, never real uploads, model weights or claimed listening results."""
+"""Test the bounded specialist route with authored media and HTTP doubles, never real uploads, model weights or claimed listening results."""
 
 import copy
 import io
@@ -137,6 +137,78 @@ def test_unapproved_route_blocks_before_paths_or_network(tmp_path, monkeypatch):
         with pytest.raises(specialist.ReviewError, match="specialist_campaign_not_approved"):
             action()
     assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize("controls_passed", [False, True])
+def test_approved_main_reuses_first_packet_and_retires_scope(prepared, monkeypatch, controls_passed):
+    """Reuse the already frozen local packet and run conditional review once without regeneration or further permission."""
+    calls = []
+
+    def forbidden_preparation():
+        """Reject any attempt to regenerate the existing first control packet."""
+        raise AssertionError("first_packet_must_be_reused")
+
+    def evaluate_stage(kind):
+        """Record the campaign sequence without transmitting audio or making provider requests."""
+        calls.append(kind)
+        return controls_passed
+
+    def prepare_conditional():
+        """Record conditional packet preparation without accessing original benchmark audio."""
+        calls.append("prepare_review")
+
+    monkeypatch.setattr(sys, "argv", ["tts_speechjudge_review"])
+    monkeypatch.setattr(specialist, "ROOT", prepared.root)
+    monkeypatch.setattr(specialist, "prepare_controls", forbidden_preparation)
+    monkeypatch.setattr(specialist, "prepare_review", prepare_conditional)
+    monkeypatch.setattr(specialist, "evaluate", evaluate_stage)
+    monkeypatch.setattr(specialist.resource, "setrlimit", lambda *args: None)
+    monkeypatch.setattr(specialist.os, "sched_setaffinity", lambda *args: None)
+    specialist.main()
+    assert calls == (["controls", "prepare_review", "review"] if controls_passed else ["controls"])
+    assert specialist.EXECUTION_ALLOWED is False
+
+
+@pytest.mark.parametrize("operation", ["main", "stage", "client", "retained_client"])
+def test_consumed_actual_campaign_is_closed_by_current_policy(tmp_path, monkeypatch, operation):
+    """Reject additional real campaign entry points under the retired default policy without monkeypatching its permission flag."""
+    monkeypatch.setattr(sys, "argv", ["tts_speechjudge_review"])
+    assert specialist.EXECUTION_ALLOWED is False
+    actions = {
+        "main": specialist.main,
+        "stage": lambda: specialist.evaluate("controls", tmp_path, tmp_path),
+        "client": lambda: specialist.SpecialistDemo(tmp_path),
+        "retained_client": lambda: object.__new__(specialist.SpecialistDemo).open("POST", "/gradio_api/upload"),
+    }
+    with pytest.raises(specialist.ReviewError, match="campaign_not_approved"):
+        actions[operation]()
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_provider_error_inside_complete_event_is_not_a_quality_result(prepared, monkeypatch):
+    """Retain a provider-shaped GPU failure wrapped in a complete SSE event without accepting it as a rating or invoking conditional review."""
+    class Unavailable:
+        """Emulate the public frontend's service-error envelope using authored local data only."""
+
+        def __init__(self, output):
+            """Store the owned evidence path and initialize the first raw buffer."""
+            self.output, self.raw_stream = output, b""
+
+        def compare(self, row, inputs):
+            """Produce one source-shaped upstream error, not a listening judgement or network response."""
+            events = [dict(event="complete", data=["System Error: 'GPU task aborted'", "Authored fixture: ZeroGPU worker error; no model score."])]
+            self.raw_stream = ("event: complete\ndata: " + json.dumps(events[0]["data"]) + "\n\n").encode()
+            specialist.publish_json(self.output / (row["id"] + ".receipt.json"), dict(description="Authored service-error fixture receipt, no network.", event_id="a" * 32, origin=specialist.ORIGIN))
+            return specialist.parse_comparison(events)
+
+    monkeypatch.setattr(specialist, "SpecialistDemo", Unavailable)
+    assert not specialist.evaluate("controls", prepared.root, prepared.project)
+    directory = prepared.root / "controls-first"
+    result = json.loads((directory / "result.json").read_text())
+    assert result["error_code"] == "specialist_first_generation" and result["observations"] == []
+    assert result["controls_passed"] is False and specialist.EXECUTION_ALLOWED is False
+    assert b"GPU task aborted" in (directory / "pair-01.sse").read_bytes()
+    assert not (prepared.root / "review").exists()
 
 
 def test_local_controls_need_no_external_recipient_permission(prepared, monkeypatch):
