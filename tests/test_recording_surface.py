@@ -65,6 +65,19 @@ def test_remote_peer_and_media_upload_are_denied():
         assert client.get("/openapi.json").status_code == 404
 
 
+@pytest.mark.parametrize("method", ["POST", "PUT", "PATCH", "DELETE"])
+def test_no_user_audio_write_or_persistent_storage_endpoint_exists(method, caplog):
+    """Reject every write method and keep media bytes outside server logs or files."""
+    caplog.set_level("INFO")
+    marker = "private-captured-speech-marker"
+    with TestClient(
+        app, base_url="http://localhost:8091", client=("127.0.0.1", 1234)
+    ) as client:
+        response = client.request(method, "/", content=marker)
+    assert response.status_code == 405
+    assert marker not in caplog.text
+
+
 def test_explicit_recorder_node_lifecycle_and_pcm_controls():
     """Run native JavaScript lifecycle and waveform tests with injected device capabilities and no real recording."""
     node = shutil.which("node")

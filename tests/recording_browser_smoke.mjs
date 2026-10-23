@@ -23,6 +23,11 @@ try {
   await page.addInitScript(() => {
     const original = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
     const originalURL = URL.createObjectURL.bind(URL);
+    const originalTimer = window.setTimeout.bind(window);
+    window.setTimeout = (callback, delay, ...args) => {
+      if (delay === 300000) window.testExpirePreview = callback;
+      return originalTimer(callback, delay, ...args);
+    };
     window.testStreams = [];
     window.testBlobs = [];
     URL.createObjectURL = blob => { window.testBlobs.push(blob); return originalURL(blob); };
@@ -48,7 +53,8 @@ try {
   assert.equal(stopped.rate, 16000);
   assert.ok(stopped.bytes > 44 && stopped.bytes <= 960044);
   assert.deepEqual(stopped.tracks, ["ended"]);
-  await page.getByRole("button", {name: "Hủy / xóa audio"}).click();
+  await page.evaluate(() => window.testExpirePreview());
+  assert.equal(await page.locator("#status").textContent(), "Đã hủy và xóa audio");
   assert.equal(await page.locator("#preview").getAttribute("src"), null);
   await page.getByRole("button", {name: "Bắt đầu ghi"}).click();
   await page.waitForFunction(() => document.getElementById("status").textContent.startsWith("Đang ghi âm"));
@@ -70,7 +76,9 @@ try {
   assert.equal(await page.evaluate(() => window.testStreams.length), 4);
   assert.equal(requests.some(request => request.method !== "GET" || (!request.url.startsWith(origin + "/") && !request.url.startsWith("blob:"))), false);
   assert.deepEqual(errors, []);
-  console.info(JSON.stringify({description: "Actual native browser capture with fake device only; not a physical-microphone or subjective audio-quality test.", browser: browser.version(), stopped, captures: 4, late_permission_cancel_verified: true, all_tracks_ended: true, page_errors: errors, requests, finite_lifecycle_events: logs.filter(line => line.startsWith("explicit_recording_event")), passed: true}));
+  const storage = await page.evaluate(async () => ({localStorage: localStorage.length, sessionStorage: sessionStorage.length, IndexedDB: (await indexedDB.databases()).length}));
+  assert.deepEqual(storage, {localStorage:0, sessionStorage:0, IndexedDB:0});
+  console.info(JSON.stringify({description: "Actual native browser capture with fake device and injected preview-expiry trigger; not five minutes wall time, a physical-microphone or subjective audio-quality test.", browser: browser.version(), stopped, captures: 4, late_permission_cancel_verified: true, preview_expiry_verified: true, storage, all_tracks_ended: true, page_errors: errors, requests, finite_lifecycle_events: logs.filter(line => line.startsWith("explicit_recording_event")), passed: true}));
 } finally {
   await browser.close();
 }

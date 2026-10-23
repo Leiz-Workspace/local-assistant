@@ -1,6 +1,7 @@
 /** Own explicit consent, bounded PCM capture and immediate microphone release without uploading audio. */
 export const RATE = 16000;
 export const MAX_SAMPLES = 30 * RATE;
+export const PREVIEW_MILLISECONDS = 5 * 60 * 1000;
 
 /** Encode admitted mono samples as a standard PCM16 WAV without mutating source buffers. */
 export function waveBlob(chunks, count) {
@@ -44,6 +45,7 @@ export class ExplicitRecorder {
     this.session = null;
     this.url = null;
     this.blob = null;
+    this.previewTimer = null;
   }
 
   /** Publish finite lifecycle audit events without audio, device identifiers or exception content. */
@@ -55,6 +57,8 @@ export class ExplicitRecorder {
 
   /** Revoke the previous preview and release all application references to captured audio. */
   discard() {
+    this.env.clearTimer(this.previewTimer);
+    this.previewTimer = null;
     if (this.url) this.env.revokeURL(this.url);
     this.url = null;
     this.blob = null;
@@ -146,6 +150,12 @@ export class ExplicitRecorder {
       return;
     } finally {
       chunks.length = 0;
+    }
+    if (this.blob) {
+      const generation = this.generation;
+      this.previewTimer = this.env.setTimer(() => {
+        if (this.generation === generation && this.state === "ready") this.cancel("retention_expired");
+      }, PREVIEW_MILLISECONDS);
     }
     this.publish(this.blob ? "ready" : "idle");
   }

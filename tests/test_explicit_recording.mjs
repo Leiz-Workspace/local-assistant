@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import vm from "node:vm";
 import {readFileSync} from "node:fs";
-import {ExplicitRecorder, MAX_SAMPLES, waveBlob} from "../apps/voice/static/recorder.mjs";
+import {ExplicitRecorder, MAX_SAMPLES, PREVIEW_MILLISECONDS, waveBlob} from "../apps/voice/static/recorder.mjs";
 
 /** Construct finite observable browser doubles with no network, real audio or filesystem writes. */
 function fixture() {
@@ -37,13 +37,46 @@ test("construction does not acquire a microphone; explicit stop releases capture
   f.recorder.stop();
   assert.equal(f.track.stopped, 1);
   assert.equal(f.recorder.state, "ready");
-  assert.equal(f.timers.size, 0);
+  assert.deepEqual([...f.timers.keys()], [PREVIEW_MILLISECONDS]);
   const raw = new DataView(await f.recorder.blob.arrayBuffer());
   assert.equal(raw.byteLength, 52);
   assert.equal(raw.getUint32(24, true), 16000);
   assert.equal(raw.getInt16(46, true), -32768);
   assert.equal(raw.getInt16(48, true), 32767);
   assert.equal(f.node.port.onmessage, null);
+});
+
+test("completed preview expires without recording or retaining a Blob, URL or active timer", async () => {
+  const f = fixture();
+  await f.recorder.start();
+  f.recorder.accept(f.recorder.generation, new Float32Array([0.5]));
+  f.recorder.stop();
+  assert.equal(PREVIEW_MILLISECONDS, 300000);
+  f.timers.get(PREVIEW_MILLISECONDS)();
+  assert.equal(f.recorder.state, "cancelled");
+  assert.equal(f.recorder.blob, null);
+  assert.equal(f.recorder.url, null);
+  assert.equal(f.timers.size, 0);
+  assert.equal(f.track.stopped, 1);
+  assert.equal(f.events.filter(item => item === "permission_requested").length, 1);
+  assert.ok(f.events.includes("retention_expired"));
+  assert.ok(f.events.includes("preview_revoked"));
+});
+
+test("replacing or explicitly deleting a preview cancels its expiry before a new device is requested", async () => {
+  const f = fixture();
+  await f.recorder.start();
+  f.recorder.accept(f.recorder.generation, new Float32Array([0.5]));
+  f.recorder.stop();
+  assert.equal(f.timers.has(PREVIEW_MILLISECONDS), true);
+  const staleExpiry = f.timers.get(PREVIEW_MILLISECONDS);
+  await f.recorder.start();
+  staleExpiry();
+  assert.equal(f.recorder.state, "recording");
+  assert.equal(f.timers.has(PREVIEW_MILLISECONDS), false);
+  assert.equal(f.recorder.blob, null);
+  f.recorder.cancel();
+  assert.equal(f.timers.size, 0);
 });
 
 test("cancel and duplicate start never keep PCM or acquire a second active device", async () => {

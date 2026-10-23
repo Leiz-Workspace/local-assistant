@@ -1,0 +1,105 @@
+{
+  "description": "Accept local D73 ephemeral recording retention/delete/security with source-bound automated and real fake-device browser observations; no production model activation or TTS listening.",
+  "milestone": "D73",
+  "status": "PASS_LOCAL_EPHEMERAL_CAPTURE_SCOPE",
+  "preview_expiry_milliseconds": 300000,
+  "stale_preview_timer_generation_bound": true,
+  "related_tests": {
+    "passed": 271,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 7.08
+  },
+  "node_controls": {
+    "passed": 13,
+    "included_by_one_python_wrapper": true
+  },
+  "native_browser": {
+    "description": "Actual native browser capture with fake device and injected preview-expiry trigger; not five minutes wall time, a physical-microphone or subjective audio-quality test.",
+    "browser": "154.0.8037.58",
+    "stopped": {
+      "rate": 16000,
+      "bytes": 23340,
+      "tracks": [
+        "ended"
+      ]
+    },
+    "captures": 4,
+    "late_permission_cancel_verified": true,
+    "preview_expiry_verified": true,
+    "storage": {
+      "localStorage": 0,
+      "sessionStorage": 0,
+      "IndexedDB": 0
+    },
+    "all_tracks_ended": true,
+    "page_errors": [],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:8091/",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/page.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/recorder.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "blob:http://127.0.0.1:8091/d95a0e98-f3c1-4d69-9f59-4c268dddf191",
+        "method": "GET"
+      }
+    ],
+    "finite_lifecycle_events": [
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event ready",
+      "explicit_recording_event retention_expired",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event page_hidden",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event capture_resources_released"
+    ],
+    "passed": true
+  },
+  "source_sha256": {
+    "apps/voice/static/recorder.mjs": "aa562f4470e7b9b1b6e287512484ffed351a7951982626357841adff995ab44a",
+    "apps/voice/static/index.html": "2da2162dbadb399696ac824b36e17e830dfe5013843918c1e291c001e7c2f3d9",
+    "tests/test_explicit_recording.mjs": "300bcf262c98839da338f5147d8d7e26b886640415e4855cc17c3c1c61fbd597",
+    "tests/test_recording_surface.py": "09a657ab67a4377d5f491d1d56ad4735680c5ca2a845cb42f2f6720f4d983715",
+    "tests/recording_browser_smoke.mjs": "11b88690c6abc79d84f36833c5b6358eac31dc6a70def8d74de3881742422854"
+  },
+  "log_sha256": {
+    "data/backups/d73-related-final-tests.log": "6d9016c6aadc7e9345919a590741b8c28cd316e9a93e6c94cc83dacbf8bb9ce1",
+    "data/backups/d73-node-controls-final.log": "ea8df8b4b511088786f3bb365a38a7b7bf94452ebfd57349d1086690f6dc00f5",
+    "data/backups/d73-native-browser-first.log": "47eed6118dca314272fd82a4a0faa314e8b7209e5d9fc90ea6cdecc082a2b84c",
+    "data/backups/d73-ui-server.log": "3f706d31171eca74233c5abf02a7f5dff869ba971f75decb252715f9f5ace74a",
+    "data/backups/d73-controls-first.log": "3ed2c314466f0a5adadddf4259203d33bb58cb839f5122d329b05a7d0fc4ffc3",
+    "data/backups/d73-controls-qualified.log": "14fd4214297881289354542cde0bf67ad2eefdccbdd8d1c07ce60dbdcf8666de"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "original24_D70_pending_labels_unchanged": true,
+  "user_recording_transmitted": false,
+  "physical_microphone_tested": false,
+  "real_five_minute_wait_tested": false,
+  "temporary_browser_and_UI_server_stopped": true,
+  "models_selected_or_deployed": false,
+  "D74": "NEXT_PHASE_REVIEW_WITH_OPEN_MANUAL_ACTIVATION_GATES"
+}
