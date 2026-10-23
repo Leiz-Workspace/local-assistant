@@ -1,0 +1,33 @@
+# ADR 107 Proposed isolated Voxtral evaluator preparation
+
+**Purpose:** Define a concrete, resource-bounded preparation alternative after the owner confirmed no Hugging Face account/Space, without selecting a production model, loading weights, replacing D70 AC or reopening previous evaluator campaigns.
+
+**Date:** 2026-10-23. **Status: METADATA/NATIVE-META FEASIBILITY VERIFIED; MODEL DOWNLOAD AND SDK PREPARATION NOT APPROVED.** This proposal concerns only optional preparation of an additional research evaluator. No download, installation, load, auditory inference or deployment has occurred. [Metadata and native probe](../evidence/d70-voxtral-meta-feasibility.json), [exact preparation manifest](../evidence/d70-voxtral-preparation-manifest.json).
+
+## Reason and assessed scope
+
+The owner confirmed **“Chưa có Space riêng”** and **“Chưa có tài khoản Hugging Face”**. The ADR-106 provider patch is locally complete but cannot be applied to the unowned community endpoint. The original local Qwen reviewer failed its strict controls; reducing local CORE context does not fix those answers or the remote GPU error. Original failures and both undeployed/preparation boundaries remain explicit.
+
+Inspect `mistralai/Voxtral-Mini-3B-2507` solely as a different-family **research candidate**, revision `3060fe34b35ba5d44202ce9ff3c097642914f8f3`. [Model card](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/blob/3060fe34b35ba5d44202ce9ff3c097642914f8f3/README.md), [original announcement](https://mistral.ai/news/voxtral/). Current public metadata reports ungated/Apache-2.0, supports audio understanding and multiple audio inputs, and lists EN/FR/DE/ES/IT/PT/NL/HI. **Vietnamese is not listed; naturalness qualification is unproven.** Do not confuse this release with newer Voxtral ASR/TTS/realtime products or infer Vietnamese support from them. Ungated metadata is not an actual successful weight transfer.
+
+The first proposed action is preparation only: fetch the exact nine artifacts below into a new private evaluation root and resolve/install one separately pinned CPU SDK, preserving all old environments. No neural model load or control/common-audio inference is included in this preparation approval. A tested source/processor/first-control protocol would still have to be concrete and separately reviewed before original-weight inference; no repeated approval is needed for reversible code/tests/metadata work.
+
+## Exact resources and verification
+
+Two original HF safetensor shards total **9,356,474,312bytes** on disk; all nine model artifacts total **9,371,455,742bytes**. Include config, generation config, shard index, preprocessor, tekken tokenizer, params and README. Exclude `consolidated.safetensors`, which duplicates the weights. The manifest binds each filename/size/ordinary-Git or LFS hash and pinned URL; no arbitrary repository or model selection. No private recordings, corpus or credential is sent to obtain public artifacts.
+
+Independent native shape-only construction using the existing sealed Transformers4.57.3 CPU SDK matches **4,676,271,104parameters/762persistent tensors** and **9,356,382,208native tensor bytes**. This release's “3B” name is not the full parameter count. Voxtral keeps its1,920,000audio-position elements in FP32; a naive all-BF16 estimate is3,840,000bytes too small. First meta test assumed all-BF16 and failed that exact comparison; retain that log. Correct the probe to preserve the native `_keep_in_fp32_modules_strict=["embed_positions"]` rule. No original weights or SDK bytes were modified, and no judgement was generated. Qualified native meta test PASS5.96s; full current367TTSrelated PASS25.04s/0FAIL/0SKIP/Ruff PASS, including11provider-remediation tests and this one new feasibility test. These are software/shape checks, not model fit or quality evidence.
+
+Tensor bytes are **not measured RAM, VRAM, peak address space or a guarantee of a successful load**. A native12GiB address-space cap must also cover Python/Torch, mappings, buffers, activations and output/cache. The earlier pread approach demonstrates a technique on a different model, not Voxtral success. Keep12GiB per future process and14GiB sampled host MemAvailable guard; do not raise either scope or use the GPU. CORE remains loaded with32K context and its original PID/model. Proposed evaluation-root disk cap is20GiB, including the separate SDK/cache/model artifacts, not an unlimited global cache.
+
+Proposed SDK core: Python3.12.3, Torch2.10.0+cpu, Transformers4.57.3, NumPy2.3.5, safetensors0.8.0 and `mistral-common[audio]==1.8.1` (the original model card requires at least1.8.1). Native meta construction needs no tokenizer, so it does not establish processor/dependency compatibility. Transitive resolution, exact CPU wheels/build inventory and isolated installation remain preparation work; do not silently change pins, execute remote model code or alter existing SDKs if resolution fails. Use uv and freeze the resolved environment before any future model load.
+
+## Priority, dependencies, risk and rollback
+
+P1 child of `AUDIO-EVAL-REVIEWER-RELIABILITY-001`. Effort: one optional provisioning/SDK audit milestone; later load/integrity and genuinely held-out auditory competence would be separate unmet gates, with no automatic next-day advance. Dependencies: explicit owner authorization of this additional evaluator preparation, unchanged originals, enough local disk and the original resource guards. No hosting account or subscription is required by the observed public metadata, but transfer availability is untested.
+
+Risks: native memory/mmap overhead despite a lower tensor-byte count, processor/SDK incompatibility, unsupported VI pronunciation/prosody, generic audio QA mistaken for naturalness competence, decoder/schema errors, dataset familiarity and another failed gate. No quality/throughput/RAM/VRAM advantage or benchmark is claimed. No ASR/acoustic/MOS proxy can replace actual D70 review, and no model score is human MOS.
+
+Migration affects only a new private research directory; there is no production model/config/index/database/service migration. Preserve registry choices, D24/`a88584b`/E5 rollback, all old model/audio/SDK bytes, previous first outcomes,24pending listening labels and original system/CORE. Rollback retires preparation scope, retains failed partial files and receipts, and leaves accepted components untouched. Do not overwrite partial downloads or repeat a failed original-weight campaign without a newly defined scope. This proposal selects no replacement or deployed model.
+
+**D70 IN PROGRESS/NATURALNESS OPEN; D71 NOT STARTED.** Preparation alone cannot satisfy either naturalness or model-selection approval.
