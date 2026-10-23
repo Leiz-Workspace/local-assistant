@@ -2,7 +2,7 @@
 
 **Mục đích:** Gom bằng chứng kỹ thuật và các kiểm tra người dùng cần làm sau, không bắt chủ dự án chỉnh JSON hoặc chấm lại benchmark.
 
-**Trạng thái:** PACKET PREPARED; D87full regression đang chạy. Các bằng chứng cục bộ dưới đây đã có, nhưng không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Chưa có xác nhận nghe/thiết bị của chủ dự án.
+**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. D87đã hoàn tất5405PASS/0FAIL/0SKIP. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Chưa có xác nhận nghe/thiết bị của chủ dự án.
 
 ## Mở phần nghe khi bạn rảnh
 
@@ -31,7 +31,7 @@ Trang mới giữ nguyên byte WAV. Kiểm tra hash và browser metadata24/24đ�
 |13| Backup/restore và failure cleanup | D84actual12table/ACLrestore plus owned vector/blob/config canaries; D85actual private resource faults/read overload. Không off-host/hostOOM/SLOclaim |
 |14| Memory consent/revoke/owner/retention | Existing actual DB/HTTPmemory controls trong D87; không tự học từ conversation hoặc phục hồi consent cũ |
 
-Khi D87kết thúc, ghi kết quả terminal thực tế và lỗi/skip vào evidence; không điền PASS cho mọi workflow chỉ từ bảng này. Các test do máy chạy trên fixture là kiểm thử kỹ thuật, không giả chữ ký/nghe/nghiệm thu người dùng.
+Kết quả D87thực tế đã được lưu tại [full evidence](evidence/d87-current-full-acceptance.json); không điền nghiệm thu người dùng chỉ từ bảng này. Các test do máy chạy trên fixture là kiểm thử kỹ thuật, không giả chữ ký/nghe/nghiệm thu người dùng.
 
 ## Kiểm tra thiết bị thực tế còn chờ
 
