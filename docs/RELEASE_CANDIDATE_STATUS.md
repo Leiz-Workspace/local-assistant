@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. No v1.0tag, production-ready declaration, push, model/default selection or deployment. D87current full suite completed5405PASS/0FAIL/0SKIP/exit0;707source files unchanged. This software result does not approve manual/model/product/release gates.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. No v1.0tag, production-ready declaration, push, model/default selection or deployment. D87frozen full snapshot completed5405PASS/0FAIL/0SKIP/exit0;707existing source files unchanged. Subsequent optional D81excerpt guard has66new/227related PASS/0SKIP; it is not included in that prior full-run claim. Software results do not approve manual/model/product/release gates.
 
 ## Completed local engineering evidence
 
@@ -10,6 +10,7 @@
 - D71–D73explicit local recording/bounded native voice composition/ephemeral retention verified; D74engineering review completed, product acceptance open.
 - D75–D80owner-reviewed skill contracts, pinned MCP, trusted hooks, durable bounded plans, deterministic action-approved routing and immutable profile prompts verified as optional independent components. No production harness API/skill/server/model activation.
 - D81three-domain fixture has3correct facts/3literal unique supporting quotes; original strict minimal-quote format failure preserved, not rerun into a better score.
+- D81follow-up [optional excerpt guard](D81_STRICT_EXCERPT_GUARD.md) verifies host-pinned literal boundaries and rejects the unchanged first reply;227related PASS. No template/model change or production integration; original model-format gate remains open.
 - D82necessary legacy stateless localhost/bearer/body/error fix and actual TCP revocation verified. D83measured client TTFT versus separately labeled native decode rate; no fake nonstreaming timings.
 - D84actual same-cluster PostgreSQL12table/ACLrestore and owned vector/blob/config canary roundtrips complete/retired. D85bounded native resource/admission recovery complete; no hostOOM/global capacity claim.
 - D86recorder UI keyboard/responsive/dark-mode/native lifecycle review verified; release gate remains open.
@@ -20,7 +21,7 @@
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
-| D87current full software suite | **COMPLETE5405PASS/0FAIL/0SKIP/exit0**,1821.99s/707files unchanged | [Terminal/qualified audit](evidence/d87-current-full-acceptance.json); explicit quota timestamp-only delta retained, no fabricated strict row equality |
+| D87full software snapshot | **COMPLETE5405PASS/0FAIL/0SKIP/exit0**,1821.99s/707existing files unchanged; later guard covered by227related tests | [Terminal/qualified audit](evidence/d87-current-full-acceptance.json); explicit quota timestamp-only delta retained; new additions need inclusion in any later release-wide freeze/run |
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14quality scorecard | Established inference/models; weighted complete comparison/signoff still partial | Reconcile original evidence and actual missing quality judgments; software/function smoke does not substitute |
