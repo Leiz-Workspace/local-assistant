@@ -1,6 +1,6 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.46 (D75 independent skill contract verified; manual/product gates open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
+> **Version:** 4.47 (D76 independent MCP adapter verified; manual/product gates open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
 > **CURRENT POSITION:** Owner explicitly deferred D70 actual listening to a later manual test and authorized D71 under [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md). D70 machine measurements complete; **0/24 listening reviews, DEFERRED, no naturalness PASS**. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). D71 explicit local recording PASS (271related tests and native fake-device browser); D72 NEXT; no model/default/deployment change. Earlier checkpoints remain in dev_log and ADR/evidence history.
@@ -423,7 +423,7 @@ T01 introduced no production runtime change. T02 applied reviewed V002 after ver
 | Day | Concrete task | Acceptance gate |
 |---|---|---|
 | D75 | **LOCAL CONTRACT VERIFIED / independent preparation:** Skill contract and versioned permissions |39new/234related PASS/0.87s/0SKIP, exact owner/digest/expiry/one-shot trust, version permissions, revoked/copy rejection and native read-only dispatcher narrowing. No production install/new permissions. [Contract/limits](D75_VERSIONED_SKILL_CONTRACT.md), [verification](evidence/d75-skill-contract-verification.json). D74 product gate remains open. |
-| D76 | MCP adapter, allowlisted servers/operations | Tool discovery cannot silently widen permissions |
+| D76 | **LOCAL ADAPTER VERIFIED / independent preparation:** MCP allowlisted servers/operations |27new/214related PASS/1.50s/0SKIP; pinned modern metadata, exact owner/CORE/schema/read-only allowlists, discovery cannot grant permissions, bounded frames/cancel/reap. Actual inert offline namespace demo3RPCs/exit0/reaped; no production server installed. [Scope/limits](D76_MCP_ALLOWLIST_ADAPTER.md), [verification](evidence/d76-mcp-adapter-verification.json). |
 | D77 | Pre-/post-tool hooks and error/stop handlers | Hooks cannot bypass approval layer |
 | D78 | Run planner, budgets, retries, checkpoint/resume | Bounded orchestration and recovery |
 | D79 | Deterministic tool routing + approval workflows | Audit for decisions and side effects |
