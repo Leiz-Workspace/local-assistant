@@ -199,5 +199,22 @@
   "specialist_review_approved_freeze": "docs/evidence/d70-specialist-approved-freeze.json",
   "specialist_review_client_elapsed_seconds": 78.37,
   "specialist_review_client_maximum_RSS_RAM_KiB": 43276,
-  "specialist_review_remote_RAM_VRAM_measured": false
+  "specialist_review_remote_RAM_VRAM_measured": false,
+  "context_resource_diagnostic": "docs/evidence/d70-context-resource-diagnostic.json",
+  "context_resource_diagnostic_sha256": "0686ca9a7b15f4211a34f8fb3be7df72ff094cd2975897fc2742fab2b0351aae",
+  "context_resource_report": "docs/D70_CONTEXT_RESOURCE_DIAGNOSTIC.md",
+  "context_reduction_owner_permitted_if_useful": true,
+  "local_CORE_context_tokens_verified": 32768,
+  "local_CORE_GPU_point_allocation_MiB": 9386,
+  "local_GPU_free_point_MiB": 5675,
+  "local_context_reduction_applied": false,
+  "remote_context_override_exposed": false,
+  "remote_GPU_OOM_confirmed": false,
+  "remote_GPU_duration_exhaustion_confirmed": false,
+  "remote_retained_GPU_duration_seconds": 30,
+  "remote_retained_output_token_cap": 1024,
+  "new_specialist_requests_during_context_diagnostic": 0,
+  "context_diagnostic_existing_tests_passed": 6,
+  "context_diagnostic_existing_tests_seconds": 0.18,
+  "context_diagnostic_existing_tests_skipped": 0
 }
