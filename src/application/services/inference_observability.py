@@ -42,13 +42,13 @@ class InferenceObservability:
         """Read only a finite nonnegative host timing point without treating an invalid clock as zero latency."""
         try:
             value = self.clock()
+            return (
+                value
+                if type(value) in (int, float) and math.isfinite(value) and value >= 0
+                else None
+            )
         except Exception:
             return None
-        return (
-            value
-            if type(value) in (int, float) and math.isfinite(value) and value >= 0
-            else None
-        )
 
     def snapshot(self):
         """Return fresh operator-only aggregate counters with explicit unavailable nonstreaming TTFT/decode measurements."""
@@ -111,6 +111,11 @@ class InferenceObservability:
                 else None
             )
             with self.lock:
+                if elapsed is not None and (
+                    not math.isfinite(elapsed)
+                    or not math.isfinite(counters["latency_ms_total"] + elapsed)
+                ):
+                    elapsed = None
                 counters["active"] -= 1
                 counters[outcome] += 1
                 if elapsed is None:

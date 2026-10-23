@@ -129,3 +129,19 @@ async def test_unknown_profile_never_delegates_or_adds_high_cardinality_labels()
         "core",
         "unrestricted",
     }
+
+
+@pytest.mark.parametrize("points", [[0.0, 1e308], [10**1000, 1.0]])
+@pytest.mark.asyncio
+async def test_extreme_clock_values_cannot_overflow_or_mask_valid_completion(points):
+    """Treat numeric clock overflow as unavailable telemetry while preserving the original successful inference result."""
+    clock = iter(points)
+    observed = InferenceObservability(Port(), clock=lambda: next(clock))
+    result = await observed.complete(profile="core")
+    assert result.content == "private reply"
+    core = observed.snapshot()["profiles"]["core"]
+    assert (
+        core["completed"] == 1
+        and core["latency_samples"] == 0
+        and core["timing_unavailable"] == 1
+    )
