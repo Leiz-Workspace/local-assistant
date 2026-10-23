@@ -11,6 +11,7 @@
 - D75–D80owner-reviewed skill contracts, pinned MCP, trusted hooks, durable bounded plans, deterministic action-approved routing and immutable profile prompts verified as optional independent components. No production harness API/skill/server/model activation.
 - D81three-domain fixture has3correct facts/3literal unique supporting quotes; original strict minimal-quote format failure preserved, not rerun into a better score.
 - D81follow-up [optional excerpt guard](D81_STRICT_EXCERPT_GUARD.md) verifies host-pinned literal boundaries and rejects the unchanged first reply;227related PASS. No template/model change or production integration; original model-format gate remains open.
+- D81-FMT-002 [fresh six-case protocol evaluation](D81_FROZEN_EXCERPT_PROTOCOL_EVALUATION.md) completed with1/6full contracts,18/18literal/16/18minimal quotes; quality FAIL retained, protocol not adopted. Source712unchanged, original CORE retained, zero retries. New36controls within132related PASS; separate full5507currently RUNNING, not a completed result.
 - D82necessary legacy stateless localhost/bearer/body/error fix and actual TCP revocation verified. D83measured client TTFT versus separately labeled native decode rate; no fake nonstreaming timings.
 - D84actual same-cluster PostgreSQL12table/ACLrestore and owned vector/blob/config canary roundtrips complete/retired. D85bounded native resource/admission recovery complete; no hostOOM/global capacity claim.
 - D86recorder UI keyboard/responsive/dark-mode/native lifecycle review verified; release gate remains open.
