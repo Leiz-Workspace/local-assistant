@@ -1,0 +1,30 @@
+{
+  "description": "Verify independent D75 strict skill contract/explicit trust/runtime narrowing using disposable owner scopes and actual accepted native workspace reads, without installing a production skill or closing D74 product acceptance.",
+  "status": "LOCAL_CONTRACT_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 39,
+  "related_tests": {
+    "passed": 234,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.87
+  },
+  "source_sha256": {
+    "src/application/services/skill_contract.py": "19f1e87330de9fe1c959aeafefc1c0ff3df27b9ec0380b0bf3a54b4882e5fa44",
+    "apps/api/services/skill_tools.py": "3f0a30b341df314ec5da84c453e00e09de4edce6d8d5b0cadb6f77d34109e0f9",
+    "configs/skills/source-reader.v1.json": "48820ef8b361b33381c2c58d496f520aef9c5db7a2763b3afea1b0b9895b6a15",
+    "tests/test_skill_contract.py": "4a42bcd9bb9e79280f735b577c6b2a606f704d133539319bb9cb24af2a8c4684",
+    "tests/test_skill_tools.py": "ff407b433f7e79be95a773478fc7de05419bdbdad1fd20ed0f0428fd4254dd81"
+  },
+  "log_sha256": {
+    "data/backups/d75-skill-first-tests.log": "9f035ff6096b1b08599cdcc514703054d83a886840320fe186943d7817475f3f",
+    "data/backups/d75-related-final-tests.log": "23b89702f34f0c48e3a32487ce5f42d730feb2bd7d4762910a61bc94a3f5b99b",
+    "data/backups/d75-related-completed-tests.log": "7c81aa5a25a7d4295a20f5575e39b5c03ffc58fe293064f9170666c8ffaa98a3"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "D73_recorder_source_bytes_unchanged": true,
+  "production_skill_installed": false,
+  "new_tool_capabilities_registered": false,
+  "models_or_data_changed": false,
+  "D74_product_gate_closed": false,
+  "next_independent_component": "D76 MCP allowlist/adapter"
+}
