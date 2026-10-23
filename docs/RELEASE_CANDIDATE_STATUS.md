@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Completed corrected full: **5507 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1762.43s/exit0,712unchanged files. Later structured extraction has89new public tests and a passing original native workflow; current719-file **5596-test full RUNNING** includes those additions. This is no manual/model/product/release approval, tag, push, model/default selection or deployment.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current full: **5596 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1760.86s/exit0,719unchanged files, including89new structured adapter/evaluator controls. Joined read-only audit confirms original data/security/runtime apart from the explicitly diagnosed quota timestamp. Earlier5507PASS and first umask failure remain historical. This is no manual/model/product/release approval, tag, push, model/default selection or deployment. [Terminal and audit](evidence/d90-structured-full-acceptance.json).
 
 ## Completed local engineering evidence
 
@@ -25,10 +25,11 @@
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
-| D87full software snapshot | **COMPLETE5507PASS/0FAIL/0SKIP/exit0**,1762.43s/712files unchanged; latest719-file full5596RUNNING includes89structured tests | [Completed5507terminal/qualified audit](evidence/d90-corrected-full-acceptance.json); preserve initial umask failure and timestamp-only delta; latest full still needs terminal/audit |
+| D87full software snapshot | **COMPLETE5596PASS/0FAIL/0ERROR/0SKIP/exit0**,1760.86s/719files unchanged, includes89structured controls | [Current terminal/qualified audit](evidence/d90-structured-full-acceptance.json); initial umask failure and explicit timestamp-only delta retained; all earlier712files still match |
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14quality scorecard | Established inference/models; weighted complete comparison/signoff still partial | Reconcile original evidence and actual missing quality judgments; software/function smoke does not substitute |
+| Broader coding/web promotion | D46first7/10repair result with3failures retained; Brave freshness remains qualified/degraded | Existing CODE-EVAL-002/WEB-SEARCH-003 remain P1before broader promotion; full-suite/harness execution PASS is not a new coding-quality or upstream recovery score |
 | D86release gate | UI controls verified; pending product/manual gates remain | Confirm the planned scope actually satisfies acceptance and no critical unresolved blocker is being waived silently |
 | D89owner/device acceptance | Prepared, not completed | Real microphone/browser/listening checks and owner review of scope/known limits |
 | D90release decision | NOT APPROVED/NOT TAGGED | Evidence-backed owner acceptance; only then tag/deploy an agreed scope |
