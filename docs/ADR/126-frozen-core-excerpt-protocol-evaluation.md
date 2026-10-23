@@ -2,7 +2,7 @@
 
 **Purpose:** Measure D81 format adherence on fresh authored cases before proposing any production prompt integration or model change.
 
-**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** Protocol prepared/tested under the owner's explicit instruction to continue independent work. Actual observations are recorded separately after execution.
+**Date:** 2026-10-24 (Asia/Ho_Chi_Minh). **Status:** EXECUTED / CLOSED; six-case quality FAIL1/6. The owner's continuation instruction authorized this bounded evaluation; its first observations are retained and the protocol is not adopted.
 
 ## Decision and assessed scope
 
@@ -25,3 +25,7 @@ Prepared33new controls within129related PASS/0FAIL/0SKIP/0.55s; Ruff PASS. Tests
 First startup failed before any native request because the new artifact writer incorrectly reused the16KiB MCP canonicalizer for the full712-file manifest. Keep that log/directory unchanged. Correct only the new artifact serializer: strict finite JSON with2MiB artifact cap; request/MCP limits unchanged. Add actual full-manifest and invalid/oversized-artifact regressions. Corrected preflight36new/132related PASS/0FAIL/0SKIP/0.66s/Ruff PASS. The next fresh directory contains the first actual model attempts; this is not a retry of a model response.
 
 No source changes to existing API/gateway/templates, no new dependency/model/provider, no Docker/Vault/database/collection change, no route activation. Rollback stops using the new offline evaluation runner and retains all first artifacts. Actual D70listening0/24 and model/license/device/product/release gates remain open. Any later product prompt integration needs its own scoped evidence review; this ADR cannot approve a model replacement or rewrite original acceptance.
+
+## Actual execution and scope closure
+
+Corrected snapshot440ae44 executed exactly one first attempt for each of the six cases plus one ordinary CORE recovery request. Quality1/6full contracts,18/18literal quotes/16/18minimal excerpts; source712unchanged, same original CORE, all responses retained, zero neural retries. [First report](../D81_FROZEN_EXCERPT_PROTOCOL_EVALUATION.md), [digests](../evidence/d81-fmt002-first-verification.json). The earlier manifest startup failure made zero model requests. This campaign is consumed/closed; no rerun of its failed cases or model replacement is scheduled by this ADR. Further remediation needs its own declared protocol/fresh cases; old failures remain immutable.
