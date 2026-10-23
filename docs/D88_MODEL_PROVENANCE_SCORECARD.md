@@ -22,3 +22,7 @@
 Licenses listed in candidate manifests are upstream declarations, not legal clearance of every engine/weight/voice/dataset/output use. Frozen artifacts/revisions/hashes remain in existing manifests and reports. Dataset repetition/training-overlap, warm-versus-cold/runtime/dtype differences, sampled-versus-peak RAM/VRAM and source-quality limits remain part of the evidence; do not generalize small tests into universal superiority.
 
 Any future replacement still requires measured benchmark, performance/resources, compatibility, migration, rollback and explicit owner approval under ADR031and the registry policy. This scorecard does not authorize a model/default/config/service/data change. Final acceptance still needs actual owner listening/manual checks and explicit model/voice/license/release decisions; software PASS is not model-quality PASS.
+
+## Historical D14files independently reconciled
+
+Read-only inspection of the actual day14-core-gate/day14-unrestricted-gate reports finds9/9checks per profile, covering YAML/profile/runtime/artifact/Docker/API identity gates. The day13scorecard explicitly declares day13_provisional, small smoke datasets, basic math reasoning and unscored performance/multimodal/VRAM/context/provenance dimensions; it explicitly disclaims an overall model-capability percentage. These real files therefore support historical runtime readiness, not closure of the complete weighted30–50case quality acceptance. No original result was edited or model rerun. [Exact metadata/hashes](evidence/d88-historical-scorecard-reconciliation.json).
