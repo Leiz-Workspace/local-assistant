@@ -1,0 +1,98 @@
+{
+  "description": "First native original file/code/authored-web regression after real integer quote compiler fix. Earlier v3 campaign remains failed. No default activation.",
+  "executed_commit": "d040108",
+  "preflight_public_tests": 89,
+  "private_replay_controls": 3,
+  "preflight_seconds": 0.67,
+  "observation": {
+    "description": "First post-fix original workflow observation; scoped integration evidence, not a fresh quality benchmark or release decision.",
+    "native_workflow_attempts": 1,
+    "old_results_rewritten": false,
+    "original_core_identity_retained": true,
+    "production_activation": false,
+    "recovery_requests": 1,
+    "replayed_original_outputs": 8,
+    "retries": 0,
+    "source_bytes_unchanged": true,
+    "workflow_passed": true
+  },
+  "native_result": {
+    "action_approvals_created": false,
+    "answer": {
+      "citations": [
+        {
+          "quote": "Atlas restore generation is G-17.",
+          "source_id": "file"
+        },
+        {
+          "quote": "UPLOAD_LIMIT_MIB = 128",
+          "source_id": "code"
+        },
+        {
+          "quote": "Indexing lease duration is 45 seconds.",
+          "source_id": "web"
+        }
+      ],
+      "generation": "G-17",
+      "lease_seconds": 45,
+      "quota_mib": 128
+    },
+    "attempts": 3,
+    "checkpoint_sha256": "c429141dd22aebb83b568210ccd05b66169183bc88e8cfe3605a5c6614e324b8",
+    "description": "Actual disposable native file/code reads and authored web-adapter fixture, not live search or currentness certification.",
+    "finish_reason": "stop",
+    "input_tokens": 239,
+    "model_id": "qwen3.5-9b-core",
+    "native_source_receipts": {
+      "code": [
+        {
+          "line": 1,
+          "source_sha256": "60ea7303a7e4de7a37351fdf4c81c9912fcd2fa1025af6ec9b85fcf33169d057"
+        },
+        {
+          "line": 2,
+          "source_sha256": "60ea7303a7e4de7a37351fdf4c81c9912fcd2fa1025af6ec9b85fcf33169d057"
+        }
+      ],
+      "file": [
+        {
+          "line": 1,
+          "source_sha256": "7380addd5056cd11934ffdf8495ecaed67b5de761c78d0821ff68ecbe761fdbc"
+        }
+      ]
+    },
+    "original_fixture_files_unchanged": true,
+    "output_tokens": 139,
+    "prompt_sha256": "563451fc9a3cb6801a62820e782c35f14f9832a8dddeb4eb99277489d178024c",
+    "real_web_network_called": false,
+    "source_sha256": [
+      [
+        "file",
+        "e50d6c008f9960e5354a054006bbfb81e5f78c6e10921501154b9edf3a66a120"
+      ],
+      [
+        "code",
+        "015bbd0f17e7c13cc424b8d6619849956c807dd9f636f4216fc654c19339093f"
+      ],
+      [
+        "web",
+        "3bf655a8408fa97ff7732d7f5074c0f3eac874e6f3739b19956a02feddc1f951"
+      ]
+    ],
+    "status": "COMPLETE",
+    "template_sha256": "e8e08159b94a46c272bd9f2dd9318f65b659a4bc9abeb36e5653e057734fb465",
+    "web_body_sha256": "cd57e9297694d42d3c8698e949deaf3d9251bc35458eb7010853cd9c257cc03e",
+    "web_text_sha256": "3bf655a8408fa97ff7732d7f5074c0f3eac874e6f3739b19956a02feddc1f951"
+  },
+  "artifact_sha256": {
+    "data/backups/d81-integer-quote-native-first/protocol.json": "c33c679050b628f882fedd6c14dd7fe5e1d42337db6cb9ba636c76cd7062d5bf",
+    "data/backups/d81-integer-quote-native-first/replay.json": "d63eb6324993c2d2505d018d18deb11aaa477dfcfa62d3e87e369d6b390a1632",
+    "data/backups/d81-integer-quote-native-first/workflow/native-request.json": "b4869ef7b5f47d6cce5f655bb1ef452f59a6b14947d4b0a921e263109cc02353",
+    "data/backups/d81-integer-quote-native-first/workflow/native-response.bin": "9f4bd713d701950b8308618ce2599795b97b85667273e57e849e9eb98a53ba6d",
+    "data/backups/d81-integer-quote-native-first/workflow/result.json": "5d2bc73513f96e7e43dbda6b2305cc479b4b56c140745052957959c706e59706",
+    "data/backups/d81-integer-quote-native-first/result.json": "0e40f249920af040cfd2c15405849ad42e7d37c144471bb78fbdee91604e385c",
+    "data/backups/d81-integer-quote-native-first.log": "02d2ded5eb553bd52ef9f0e62f1e71c314895729a8d076f04ce5b4f4b63c511c"
+  },
+  "scope": "original_fixture_integration_regression_only",
+  "fresh_v3_campaign_requalified": false
+}

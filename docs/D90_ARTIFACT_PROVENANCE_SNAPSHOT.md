@@ -25,10 +25,13 @@ The fixed CORE-only D77/D79 backend guards reject `profile="unrestricted"` befor
 
 First current712-file full run: **5505PASS/2FAIL/0ERROR/0SKIP/1756.41s**, source bytes unchanged. The caller incorrectly launched pytest with umask0077. A directory requested as0755 and a file requested as0644 therefore became0700/0600, so the negative tests did not receive their intended public-permission fixtures. Original production security checks correctly accept private files; changing those checks or tests would hide the invocation mistake.
 
-Controlled isolated subprocess reproduction: the same two original tests fail under0077 and both pass under0022. [Exact diagnosis](evidence/d90-permission-fixture-umask-reproduction.json). No source/security-policy change. A fresh complete rerun uses the original0022 fixture environment; supervisor/log/metadata remain explicitly0600 and roots0700. Keep both full results and wait for the corrected terminal receipt before declaring PASS.
+Controlled isolated subprocess reproduction: the same two original tests fail under0077 and both pass under0022. [Exact diagnosis](evidence/d90-permission-fixture-umask-reproduction.json). No source/security-policy change. A fresh complete rerun uses the original0022 fixture environment; supervisor/log/metadata remain explicitly0600 and roots0700. Both results are retained. Corrected full completed5507PASS/0FAIL/0ERROR/0SKIP/1762.43s; [terminal/qualified audit](evidence/d90-corrected-full-acceptance.json).
 
 ## Production-only reference follow-up
 
 The retained D88fresh offline CPython3.12.3environment imports the new components and validates three fixture excerpts. Actual ASGI health200 and missing-auth503 at `/api/v1/chat/completions`; pytest remains absent, isolated mode enabled, native socket connections blocked, model calls/database connections0. [Actual receipt](evidence/d90-reference-followup-smoke.json). This adds no dependency/install or physical-device/owner acceptance.
 
 First smoke caller incorrectly used `/api/v1/chat` and received404. Keep its log/executed test; correct only the private smoke route to the existing endpoint and retain the subsequent PASS. Existing application routes/source stay unchanged. The25private operator policy controls and this reference smoke are separate evidence, not additions to the5507full-suite count.
+
+
+After the structured compiler fix, the retained production-only environment also verifies all6positive/2refusal fixture contracts, exact source Unicode, ASGIhealth/auth and imports with no native sockets/model/database calls. [Separate actual smoke](evidence/d90-reference-structured-smoke.json). This does not reinstall dependencies, rerun model evaluation, or create listening/product approval.

@@ -15,3 +15,12 @@ Kết quả phần mềm:5405PASS/0FAIL/0SKIP,707source files giữ nguyên;9aud
 Gói `ai/data/backups/local-assistant-d81-excerpt-20261023-full-files.zip` chứa **bản đầy đủ của từng file thay đổi** kể từ `bce04bd`, cùng hai log kiểm thử và manifest commit/hash. Receipt `.receipt.json` bên cạnh ghi kết quả kiểm tra Git-byte/CRC/SHA thực tế. Gói D70–D90 trước giữ nguyên; gói bổ sung không thay thế lịch sử hay chứa secret/model/database dump.
 
 [Guard mới](D81_STRICT_EXCERPT_GUARD.md):66tests mới trong227related PASS/0FAIL/0SKIP/1.56s, Ruff PASS. 5405full là kết quả snapshot D87 trước phần bổ sung, không được cộng các lượt chạy thành một full-suite mới. Guard chặn phản hồi sai định dạng và giữ nguyên điểm D81 cũ; chưa bật route, đổi template/model hoặc đóng nghiệm thu sản phẩm.
+
+
+## Bản tích lũy 2026-10-24
+
+Gói mới `ai/data/backups/local-assistant-d70-d90-20261024-full-files.zip` là bản đầy đủ các file Git thay đổi từ commit7fa4756 đến commit được ghi trong manifest, kèm bằng chứng được chọn rõ ràng. Dùng bản này để review trạng thái mới nhất; hai ZIP20261023 vẫn giữ nguyên lịch sử. Receipt `.receipt.json` được tạo sau ZIP, ghi commit, SHA256, CRC, số file và đối chiếu từng byte với Git/artifact. Không cộng kết quả các lượt test thành một full suite.
+
+Bao gồm source/test đầy đủ của adapter/evaluator, từng phiên bản nguồn đã chạy, raw request/response trung tính và log FAIL/PASS, kiểm thử/auditor/snapshot/reference-smoke, log/metadata/source-freeze của các full suite và trang nghe24WAV gốc. Không lấy cả thư mục scenario: checkpoint chứa signing key được loại trừ hoàn toàn, cùng mọi secret, database dump, weights, SDK/cache/venv.11kiểm thử riêng xác nhận allowlist, chống traversal/symlink/file quá lớn, từ chối bundle cũ bị sửa và loại trừ checkpoint; không thuộc5596tests ứng dụng.
+
+D81workflow gốc đã PASS sau sửa compiler, mọi FAIL trước giữ nguyên. Full5507PASS thuộc snapshot712files; full5596bao gồm structured additions chỉ được báo PASS khi có terminal receipt và audit tương ứng. Phần nghe vẫn0/24; hướng dẫn/phiếu thiết bị và model/voice/license/product/quality/release vẫn chờ nghiệm thu thực tế. Gói source/evidence không tự triển khai hoặc phê duyệt model.

@@ -2,7 +2,7 @@
 
 **Mục đích:** Gom bằng chứng kỹ thuật và các kiểm tra người dùng cần làm sau, không bắt chủ dự án chỉnh JSON hoặc chấm lại benchmark.
 
-**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. D87đã hoàn tất5405PASS/0FAIL/0SKIP. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Chưa có xác nhận nghe/thiết bị của chủ dự án.
+**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. Full snapshot712files đã hoàn tất5507PASS/0FAIL/0SKIP; snapshot719files/5596tests có phần structured mới đang chạy. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Chưa có xác nhận nghe/thiết bị của chủ dự án.
 
 ## Mở phần nghe khi bạn rảnh
 
@@ -22,7 +22,7 @@ Trang mới giữ nguyên byte WAV. Kiểm tra hash và browser metadata24/24đ�
 | 4 | PDF/DOCX/XLSXtext/table/cell/source quotes | Existing native parsing/field provenance suites; scope OCR/imperfect quality giữ nguyên |
 | 5 | Ingestion/retrieval/chunk/source deletion | Existing actual Qwen/Qdrant integration controls; D24E5rollback giữ nguyên, không production cutover |
 | 6 | Read code → exact proposal → explicit approval → atomic patch → separate approved check | D79actual disposable patch/read/pinned Ruff and existing workflow HTTP/TCPtests; không cấp approval thật cho code do model tự nói |
-| 7 | Web source/canonical/injection boundaries | D81authored fixture3facts/3literal unique quotes; strict minimal-quote1/3FAIL retained. Fresh Brave discovery remains qualified/degraded, not rebranded PASS |
+| 7 | Web source/canonical/injection boundaries | D81workflow gốc hiện PASS3giá trị/3trích dẫn chính xác qua adapter tùy chọn; các FAIL lịch sử vẫn giữ. Không phải chứng nhận live-search; Brave vẫn qualified/degraded |
 | 8 | Image/chart/document screenshot | D61–D63native existing-model evidence/source association/abstention; no universal OCRaccuracy claim |
 | 9 | Video frames/timestamps/transcript composition | D64–D66native FFmpeg/source clocks; supplied-reference and sparse-frame limits remain |
 |10| Explicit recording/stop/Escape/hidden/TTL/local storage | D71/D73/D86actual fake-device browser controls; **mic vật lý/thiết bị người dùng chưa test** |
