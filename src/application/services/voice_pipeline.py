@@ -220,7 +220,7 @@ class VoicePipeline:
                     ],
                     preset="fast",
                     temperature=0.0,
-                    max_tokens=128,
+                    max_tokens=512,
                 )
                 timings.append(("llm", time.monotonic() - before))
                 self.live(deadline)

@@ -33,7 +33,7 @@ from src.infrastructure.audio_normalizer import NativeAudioNormalizer
 from src.infrastructure.inference.llama_adapter import LlamaInferenceAdapter
 
 logger = logging.getLogger(__name__)
-ROOT = Path(__file__).resolve().parents[1] / "data/backups/d72-native-voice-smoke-first"
+ROOT = Path(__file__).resolve().parents[1] / "data/backups/d72-native-voice-smoke-compatible"
 MATRIX = tuple(
     (asr, tts, language)
     for asr in ("qwen3-asr-0.6b", "whisper-small-ct2")

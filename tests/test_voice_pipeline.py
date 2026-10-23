@@ -8,6 +8,7 @@ from uuid import uuid4
 
 import pytest
 
+from apps.api.runtime.presets import calculate_budget
 from src.application.ports.audio import NormalizedAudio
 from src.application.ports.inference import CompletionResult
 from src.application.ports.voice import VoiceSpeech, VoiceTranscript
@@ -47,6 +48,11 @@ def fixture(timeout=2):
         """Observe text-only CORE authority and return one complete fixture response."""
         calls.append("llm")
         assert kwargs["profile"] == "core" and "tools" not in kwargs
+        calculate_budget(
+            preset=kwargs["preset"],
+            input_tokens=100,
+            requested_max_tokens=kwargs["max_tokens"],
+        )
         return CompletionResult("private-answer", "llm-fixture", "fast", "stop")
 
     async def synthesize(owner, answer, language):
