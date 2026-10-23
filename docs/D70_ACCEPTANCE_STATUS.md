@@ -2,7 +2,7 @@
 
 **Mục đích:** Đối chiếu trực tiếp AC gốc của D70 với bằng chứng hiện có, tránh nhầm tiến độ nghiên cứu evaluator hoặc số lượng test với hoàn thành so sánh TTS.
 
-**Cập nhật:** 2026-10-23, Asia/Saigon. **D70 IN PROGRESS; D71 NOT STARTED.** Nguồn AC: [ADR-096](ADR/096-offline-registry-tts-comparison.md). Quyết định giữ nguyên AC/thứ tự: [ADR-097](ADR/097-proposed-tts-auditory-review-sequencing.md).
+**Cập nhật:** 2026-10-23, Asia/Saigon. **D70: benchmark máy hoàn tất, kiểm thử nghe HOÃN THEO YÊU CẦU CHỦ DỰ ÁN; D71 được phép tiếp tục.** [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) ghi quyết định mới, thay thế ràng buộc thứ tự cũ của ADR-097. [Hướng dẫn nghe sau](D70_MANUAL_LISTENING_TEST.md) và [phiếu24mục chưa điền](D70_MANUAL_LISTENING_RESULTS.pending.md). Nguồn AC vẫn là [ADR-096](ADR/096-offline-registry-tts-comparison.md); không có naturalness PASS.
 
 ## Đối chiếu Acceptance Criteria
 
@@ -27,7 +27,7 @@ Các lượt sau benchmark đã chuyển trọng tâm sang tìm và chẩn đoá
 
 AC gốc yêu cầu **thực sự nghe/kiểm tra audio và lưu nhận xét theo từng output**. AC không bắt buộc xây evaluator local, dùng Voxtral, đạt12/12trong mọi phương án, thêm ADR nghiên cứu hoặc có independent human MOS. Các gate12/12đã duyệt áp dụng cho những campaign AI cụ thể và được giữ nguyên; chúng không được biến thành mục tiêu thay thế cho D70. Same-agent listening được phép nếu công cụ thực sự nhận audio và provenance được ghi trung thực.
 
-Task cần giải quyết là **AUDIO-TTS-NATURALNESS-001: đánh giá đủ24audio đã giữ**, bằng một đường nghe khả dụng và đáng tin cậy. Hiện phiên chat không nhận được audio, các AI đã thử chưa đủ điều kiện. Chưa có đường khả dụng thì giữ tiêu chí này chưa đạt; không tự hạ AC, dùng proxy, đánh PASS hoặc chuyển D71. Không tự thêm lượt nghiên cứu model/backend để thay cho kết quả nghe. Các kết quả nghiên cứu cũ và mọi quyền chạy đã dùng hết vẫn được giữ nguyên.
+Task còn lại là **AUDIO-TTS-NATURALNESS-001: chủ dự án nghe và đánh giá đủ24audio đã giữ khi có thời gian**. Tiêu chí vẫn chưa đạt; theo quyết định mới ADR-111, việc này được hoãn và D71 có thể bắt đầu. Giữ gate trước chấp nhận voice/chọn model/release. Không tự thêm lượt nghiên cứu model/backend để thay cho kết quả nghe. Các kết quả nghiên cứu cũ và mọi quyền chạy đã dùng hết vẫn được giữ nguyên.
 
 Việc chọn/deploy model và chấp thuận đầy đủ quyền sử dụng voice vẫn là các quyết định riêng, không tự phát sinh từ hoàn thành benchmark offline. Không thay model, code, Docker, Vault, database hoặc dữ liệu trong lần đối chiếu AC này.
 

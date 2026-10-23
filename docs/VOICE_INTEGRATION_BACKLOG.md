@@ -1,5 +1,7 @@
 # Voice integration dependencies
 
+**Current owner decision2026-10-23:** D70 listening explicitly DEFERRED to the owner’s later manual test; machine measurements complete, naturalness0/24 remains unaccepted. D71 is now authorized/in progress under [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), superseding the earlier scheduling prohibition. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Earlier checkpoints below are historical, not current D71 blockers. No evaluator retry/model change is scheduled.
+
 **D70 acceptance clarification2026-10-23:** Machine measurements are recorded; **actual listening0/24 remains the unmet original AC**. Fresh native audio input is still omitted. Extra evaluator research is a route, not a replacement deliverable; no new trial scheduled. [Exact checklist and blocker](D70_ACCEPTANCE_STATUS.md).
 
 **Latest actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
