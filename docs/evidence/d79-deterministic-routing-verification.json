@@ -1,0 +1,23 @@
+{
+  "description": "Verify deterministic CORE routing through existing action approval services with real disposable patch/read and pinned offline Ruff checks.",
+  "status": "LOCAL_ROUTING_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 18,
+  "related_tests": {
+    "passed": 221,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 6.58
+  },
+  "source_sha256": {
+    "apps/api/services/harness_tools.py": "f6140b7caa0416e6bd516eca2a48f85307e757f39687d3fd9b0dd3e44581a33e",
+    "tests/test_harness_tools.py": "d3c61ec98b6d03e39c43c913cc9618c056eceaec054a8969245d8fc06dc04f95"
+  },
+  "log_sha256": {
+    "data/backups/d79-router-first-tests.log": "03b544e131f66c05fb01c18d7cf16cb99bbf2d2385b079b4b96ea8340aa37e6d",
+    "data/backups/d79-router-related-tests.log": "2e9a08ed2fe4e08b94e2c9056cb5f47a6c82b6614d0b4b71399e42a9f590791b"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "production_route_registered": false,
+  "new_approval_authority": false,
+  "D74_product_gate_closed": false
+}
