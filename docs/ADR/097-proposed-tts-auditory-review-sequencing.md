@@ -4,6 +4,8 @@
 
 **Date:** 2026-10-22. **Status: REJECTED by owner on 2026-10-22 — NOT APPLIED.** D70 currently remains IN PROGRESS and D71 has not started.
 
+**Later owner decision2026-10-23:** [ADR-111](111-owner-deferred-tts-listening-and-explicit-recording.md) records explicit permission to defer listening to a later owner test and begin D71. It supersedes this ADR's scheduling prohibition. The rejection and observations below remain historical; this proposal is not retroactively relabelled accepted. D70 naturalness is still unaccepted.
+
 ## Owner decision — 2026-10-22
 
 The owner chose: **“Giữ nguyên AC, chờ khả năng nghe”** (retain the existing Acceptance Criteria and wait for audio inspection capability). The proposed milestone split and permission to begin D71 are rejected. D70 remains IN PROGRESS with actual auditory review required at D70; D71 remains unstarted. Preserve all24first native waveforms, listening copies and null review labels. Do not replace hearing with ASR/acoustic metrics, rerun synthesis to select better outputs, alter any model or reopen the rejected proposal without new owner direction.
