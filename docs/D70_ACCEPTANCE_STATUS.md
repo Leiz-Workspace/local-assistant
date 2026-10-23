@@ -30,3 +30,9 @@ AC gốc yêu cầu **thực sự nghe/kiểm tra audio và lưu nhận xét the
 Task cần giải quyết là **AUDIO-TTS-NATURALNESS-001: đánh giá đủ24audio đã giữ**, bằng một đường nghe khả dụng và đáng tin cậy. Hiện phiên chat không nhận được audio, các AI đã thử chưa đủ điều kiện. Chưa có đường khả dụng thì giữ tiêu chí này chưa đạt; không tự hạ AC, dùng proxy, đánh PASS hoặc chuyển D71. Không tự thêm lượt nghiên cứu model/backend để thay cho kết quả nghe. Các kết quả nghiên cứu cũ và mọi quyền chạy đã dùng hết vẫn được giữ nguyên.
 
 Việc chọn/deploy model và chấp thuận đầy đủ quyền sử dụng voice vẫn là các quyết định riêng, không tự phát sinh từ hoàn thành benchmark offline. Không thay model, code, Docker, Vault, database hoặc dữ liệu trong lần đối chiếu AC này.
+
+## Kiểm tra lại đường nghe công khai — 2026-10-23
+
+[Kiểm tra metadata mới](evidence/d70-auditory-route-availability-recheck.json) ghi nhận demo tác giả SpeechJudge vẫn `RUNTIME_ERROR`; demo cộng đồng vẫn `RUNNING`, đúng revision/giao diện đã gặp lỗi `GPU task aborted`. Đây chỉ là kiểm tra bốn metadata GET, **không chứng minh inference đã phục hồi**. Không gửi audio, gọi inference hoặc mở lại campaign đã dùng hết. Inventory công cụ hiện tại không có connector nhận audio; kết quả từ chối native audio gần nhất vẫn được giữ riêng, không gọi lại.
+
+Xác minh lại661source,917file được bảo vệ,176input gốc và hash packet nhãn: không đổi, vẫn0/24nhận xét nghe. Không chạy lại software tests vì không sửa source;470PASS là kết quả lịch sử. D70 đang bị chặn bởi khả năng nghe thực tế, không còn phần code có thể viết để thay thế bằng chứng này. Không thêm thử nghiệm evaluator, thay model/giới hạn hoặc chuyển D71 theo một kết quả metadata.
