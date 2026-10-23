@@ -1,9 +1,9 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.52 (D81 grounding verified; strict quote formatting open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
+> **Version:** 4.53 (D82 local security verified; deferred gates open) · **Updated:** 2026-10-23 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** D70 machine measurements complete; actual listening **0/24 DEFERRED_BY_OWNER**, no naturalness PASS. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Under [ADR111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), D71–D73 local scopes verified; D74 engineering review complete, product acceptance pending. Independent D75–D80 verified. D81 authored three-domain grounding verified; native strict quote format failed and remains tracked. D82 security proceeds independently. No model/default/deployment choice; manual/model/license/release gates remain open.
+> **CURRENT POSITION:** D70 machine measurements complete; actual listening **0/24 DEFERRED_BY_OWNER**, no naturalness PASS. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Under [ADR111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), D71–D73 local scopes verified; D74 engineering review complete, product acceptance pending. Independent D75–D80 verified. D81 authored three-domain grounding verified; native strict quote format failed and remains tracked. D82 local security verified, with the necessary legacy chat guard fix; D83 observability next. No model/default/deployment choice; manual/model/license/release gates remain open.
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Model strategy source:** [MODEL_REGISTRY.md](MODEL_REGISTRY.md); [model evaluation backlog](MODEL_EVALUATION_BACKLOG.md). Registry nominations, measured choices and deployed capabilities are distinct. The owner approved Qwen after the offline comparison and transition review. [Selected configuration](../configs/embedding-selected.json) now pins Qwen CPU/1024, `selected_not_deployed`; exact E5 rollback is retained. D24 historical evidence remains unchanged.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
@@ -272,7 +272,7 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 - [x] `POST /api/v1/conversations/{id}/messages` — persistent chat; optional idempotency key.
 - [x] `POST /api/v1/conversations/{id}/archive` — archive.
 - [x] `DELETE /api/v1/conversations/{id}` — soft-delete.
-- [x] Preserve `POST /api/v1/chat/completions` exactly; do not replace its stateless behavior.
+- [x] Preserve `POST /api/v1/chat/completions` stateless inference behavior. Later D82/ADR121 necessarily adds the existing localhost/bearer guard, bounded JSON and safe errors; authenticated request/result compatibility remains verified.
 - [x] Consistent error mapping (404, 409, 422, 502/503/504), validation and response schemas.
 - [x] Localhost-only development boundary: direct peer guard, Origin/proxy rejection and error redaction tested. External exposure remains prohibited until authN/authZ with owner boundary exists; this local PASS does not certify authentication.
 
@@ -429,7 +429,7 @@ T01 introduced no production runtime change. T02 applied reviewed V002 after ver
 | D79 | **LOCAL ROUTING VERIFIED / independent preparation:** Deterministic tools and existing approvals |18new/221related PASS6.58s/0SKIP; actual disposable approved patch/read and pinned check; pending/foreign/rejected/replayed action denied. No new approval authority. [Scope](D79_DETERMINISTIC_TOOL_ROUTING.md), [verification](evidence/d79-deterministic-routing-verification.json). |
 | D80 | **LOCAL PROFILE COMPOSITION VERIFIED / independent preparation:** Explicit profile and immutable template pins |20new/53related PASS1.05s/0SKIP; stateless source separation/model/completeness/cancel guards; actual retained CORE text0.538s, UNRESTRICTED fixture-only/no activation. [Scope](D80_PROFILE_PROMPT_ISOLATION.md), [verification](evidence/d80-profile-prompts-verification.json). |
 | D81 | **GROUNDING VERIFIED; STRICT FORMAT OPEN:** Cross-domain authored files/code/web fixture |Actual native plan+CORE facts3/3 and literal unique quotes3/3; requested minimal-fact quote format1/3 FAIL retained, no neural retry.7new controls; [scope/failure](D81_CROSS_DOMAIN_ORCHESTRATION.md), [verification](evidence/d81-cross-domain-verification.json). D82 independent review does not erase D81-FMT-001. |
-| D82 | Threat model, RBAC/user ownership, CSRF/CORS and token handling | Negative tests for unauthorized access |
+| D82 | **LOCAL SECURITY CONTROLS VERIFIED:** Threat model, owner/origin/bearer boundaries |19new/174related PASS13.07s/0SKIP; actual TCP revocation/auth/origin denial. Necessary legacy stateless guard/redaction fix under ADR121;660other original sources unchanged. [Threat model](D82_THREAT_MODEL_SECURITY_REVIEW.md), [verification](evidence/d82-security-verification.json). |
 | D83 | Observability: TTFT/TPS, token usage, error traces, redaction | Metrics and logs do not expose secrets |
 | D84 | Backup/restore of PostgreSQL, vector/object metadata and config | Actual restore drill |
 | D85 | Load/concurrency/OOM/disk-full failure tests | Published bottleneck and recovery policy |

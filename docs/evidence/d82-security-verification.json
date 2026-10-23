@@ -1,0 +1,32 @@
+{
+  "description": "D82 authenticated local stateless security fix with actual Uvicorn/TCP credential revocation; one justified old-source exception, all other original code/config/data unchanged.",
+  "status": "LOCAL_SECURITY_CONTROLS_VERIFIED",
+  "new_tests": 19,
+  "related_tests": {
+    "passed": 174,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 13.07
+  },
+  "necessary_changed_prior_source": {
+    "apps/api/routes/chat.py": {
+      "before": "34f599a1317eb0c7bc08b72e517729c7d0ddcd961e457a14d1ebd1d2e666e681",
+      "after": "84d6bde66f9a08cb4d28c74c265a9cdba01fe65b26e2e763481394fde376cf3e"
+    }
+  },
+  "other_prior_source_files_unchanged": 660,
+  "source_sha256": {
+    "apps/api/routes/chat.py": "84d6bde66f9a08cb4d28c74c265a9cdba01fe65b26e2e763481394fde376cf3e",
+    "tests/test_stateless_security.py": "c14302a414e5c352c34f996469c4cd7d41b014606b4bb8cc962385203a168c86",
+    "tests/integration/test_stateless_security_http.py": "7b171a6950beea7f1359f868ae73b984fac174ce0be10cd204449cd0f394e805"
+  },
+  "log_sha256": {
+    "data/backups/d82-security-first-related.log": "f0079156e1c27ddf2c17a53d0b65070606f2246ba1a5ea40a0d2ad5c9a3ff350",
+    "data/backups/d82-security-completed-tests.log": "352099f4c477c180cd2220b654120a4ab7d80e105c6ae1ae9ff4d2d5edd45205",
+    "data/backups/d82-stateless-security-red.log": "9483cd83a1ba277b9467f2a85f04d2c9bc5649f839bf4a292d6965381598ae85"
+  },
+  "protected_original_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "production_restarted": false,
+  "new_model_or_role": false
+}
