@@ -1,0 +1,21 @@
+{
+  "description": "Prepared first fresh coding comparison; no results inferred from preparation tests.",
+  "status": "PREPARED_BEFORE_INFERENCE",
+  "source_files": 723,
+  "original_719_source_files_unchanged": true,
+  "corpus_sha256": "e13c1baa6ff021ce696bb2a481e2f401797cb57f4541dca38c284fa80f0435b7",
+  "corpus_cases": 12,
+  "visible_examples": 24,
+  "heldout_examples": 60,
+  "corpus_controls_passed": 29,
+  "native_oracle_cases_passed": 12,
+  "oracle_seconds": 9.13,
+  "native_oracle_capsules": 24,
+  "model_calls_before_campaign": 0,
+  "capture_controls_passed": 2,
+  "capture_seconds": 0.8,
+  "protocol_sha256": "8f9d5756785dcb792188dc29548aab689a4d710c2970cbb6440951914a549e67",
+  "original_D46_score": "7/10",
+  "models_changed": 0,
+  "release_approved": false
+}
