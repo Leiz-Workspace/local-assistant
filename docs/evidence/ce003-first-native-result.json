@@ -1,0 +1,165 @@
+{
+  "description": "First six-case actual CORE visible-feedback experiment; immutable first and conditional second scores, no quality promotion or old-score rewriting.",
+  "status": "MEASUREMENT_COMPLETE_FULL_SOFTWARE_VERIFICATION_RUNNING",
+  "executed_commit": "fe73da6",
+  "protocol_cases": 6,
+  "protocol_tests_passed": 6,
+  "protocol_seconds": 33.86,
+  "first_pass": 4,
+  "after_at_most_two_pass": 4,
+  "actual_model_requests": 7,
+  "eligible_second_cases": 1,
+  "second_repairs": 0,
+  "observed_quality_improvement": false,
+  "fixture_approvals": 18,
+  "native_capsules": 12,
+  "automatic_retries": 0,
+  "hidden_outcomes_used_for_feedback": false,
+  "first_scores_rewritten": false,
+  "source_files_frozen": 728,
+  "source_bytes_unchanged": true,
+  "original_core_identity_retained": true,
+  "fixture_builder_header_prefix": "CODE-EVAL-002/ce002_fixture_called reused unchanged; ce003 IDs, source hashes and protocol identify the new cases.",
+  "models_changed": 0,
+  "production_activation": false,
+  "release_approved": false,
+  "actual_listening_labels": 0,
+  "measurements": [
+    {
+      "case_id": "ce003-mask-suffix",
+      "first_outcome": "FUNCTIONAL_PASS",
+      "first_visible_exit": 0,
+      "first_hidden_exit": 0,
+      "second_outcome": null,
+      "second_visible_exit": null,
+      "second_hidden_exit": null,
+      "model_attempts": 1,
+      "first_pass": true,
+      "after_at_most_two_pass": true,
+      "fixture_approvals": 3,
+      "native_capsules": 2,
+      "measurement_path": "data/backups/ce003-first-native/ce003-mask-suffix/measurement.json",
+      "measurement_sha256": "bf32cd6222ba0282306da265fe588c37e876d54456d82962807f905da821ce8f",
+      "captures": {
+        "first": {
+          "request_sha256": "d10926180daf821d323fb60cfdcadd62d115ff0d91e008cc0fd9865de4a265a2",
+          "first_reply_sha256": "ecb65041c72f63fe055613f7c5cec088d5232cc09cf6a6e219692469a96156e6"
+        }
+      }
+    },
+    {
+      "case_id": "ce003-overlay-values",
+      "first_outcome": "FUNCTIONAL_PASS",
+      "first_visible_exit": 0,
+      "first_hidden_exit": 0,
+      "second_outcome": null,
+      "second_visible_exit": null,
+      "second_hidden_exit": null,
+      "model_attempts": 1,
+      "first_pass": true,
+      "after_at_most_two_pass": true,
+      "fixture_approvals": 3,
+      "native_capsules": 2,
+      "measurement_path": "data/backups/ce003-first-native/ce003-overlay-values/measurement.json",
+      "measurement_sha256": "27b5bb0beb0a483928d6cd798a51eb9e28c7543431784ac4a7859ddb9988320a",
+      "captures": {
+        "first": {
+          "request_sha256": "27aeadff21ebce36bc15c8e1df647683effeace1d7fbca14454731d6d1a3e773",
+          "first_reply_sha256": "9c1d90b9154b64caa3b2e870d9c792064e6a512dd470edf6713650d03e171b1e"
+        }
+      }
+    },
+    {
+      "case_id": "ce003-page-count",
+      "first_outcome": "REVIEW_REJECTED",
+      "first_visible_exit": null,
+      "first_hidden_exit": null,
+      "second_outcome": null,
+      "second_visible_exit": null,
+      "second_hidden_exit": null,
+      "model_attempts": 1,
+      "first_pass": false,
+      "after_at_most_two_pass": false,
+      "fixture_approvals": 0,
+      "native_capsules": 0,
+      "measurement_path": "data/backups/ce003-first-native/ce003-page-count/measurement.json",
+      "measurement_sha256": "66c8f52ea26dbccebe8eeae55ac53135ea6d6d6e8b7d3b25842fbd59da4c6be0",
+      "captures": {
+        "first": {
+          "request_sha256": "2cc6056a225daa1e848afb8f7e343a5b7c783f4729710f3268e2e7679fefadc2",
+          "first_reply_sha256": "caa8bde7c4c5c117e16c4dc7ca76999b9f944c9a548371c51644466be72889ed"
+        }
+      }
+    },
+    {
+      "case_id": "ce003-retry-wait",
+      "first_outcome": "FUNCTIONAL_PASS",
+      "first_visible_exit": 0,
+      "first_hidden_exit": 0,
+      "second_outcome": null,
+      "second_visible_exit": null,
+      "second_hidden_exit": null,
+      "model_attempts": 1,
+      "first_pass": true,
+      "after_at_most_two_pass": true,
+      "fixture_approvals": 3,
+      "native_capsules": 2,
+      "measurement_path": "data/backups/ce003-first-native/ce003-retry-wait/measurement.json",
+      "measurement_sha256": "fa4cb72c92ee486c8456f5b619030dcad3f755532e3ab06d967ffbb12c132b83",
+      "captures": {
+        "first": {
+          "request_sha256": "7d5693fa8abc4d10a86f7fcba254d3cee95ec8b07f4050b7904ba1025b37c9f0",
+          "first_reply_sha256": "cbeda61b9da89c332a70ffddfac6523f887d4b0748a55714da9765361e74e512"
+        }
+      }
+    },
+    {
+      "case_id": "ce003-right-pair",
+      "first_outcome": "FUNCTIONAL_FAIL",
+      "first_visible_exit": 1,
+      "first_hidden_exit": 1,
+      "second_outcome": "FUNCTIONAL_FAIL",
+      "second_visible_exit": 1,
+      "second_hidden_exit": 1,
+      "model_attempts": 2,
+      "first_pass": false,
+      "after_at_most_two_pass": false,
+      "fixture_approvals": 6,
+      "native_capsules": 4,
+      "measurement_path": "data/backups/ce003-first-native/ce003-right-pair/measurement.json",
+      "measurement_sha256": "769762f0d8b85fa560426871566bfca7ff7802d2a021898e6492f24153ea143a",
+      "captures": {
+        "first": {
+          "request_sha256": "2e58d2d45ced136cb27f4262ffd23ce0feab2d5c53a97c19da86c122a92e531f",
+          "first_reply_sha256": "6b79ca218164c3e18861f814d6d29de8cdf49b9a2d6fd8a53eaf606eec534c16"
+        },
+        "second": {
+          "request_sha256": "d5ddfef071d68ed8cc2720887b685b18b217925ef0cb974a77ef04ca27f79910",
+          "first_reply_sha256": "de78d0b1db058607898f6dc6207ebb2722b4f4bd4fb73256242d6f4c7431d76c"
+        }
+      }
+    },
+    {
+      "case_id": "ce003-tail-items",
+      "first_outcome": "FUNCTIONAL_PASS",
+      "first_visible_exit": 0,
+      "first_hidden_exit": 0,
+      "second_outcome": null,
+      "second_visible_exit": null,
+      "second_hidden_exit": null,
+      "model_attempts": 1,
+      "first_pass": true,
+      "after_at_most_two_pass": true,
+      "fixture_approvals": 3,
+      "native_capsules": 2,
+      "measurement_path": "data/backups/ce003-first-native/ce003-tail-items/measurement.json",
+      "measurement_sha256": "a383f39076a3096b0b443cfb5bdc587277b1ee105b90d9db2c205975b32200d9",
+      "captures": {
+        "first": {
+          "request_sha256": "73806a4af0617e40d2ea73bc80dd06a5a733740550296427cb9cf19e7e51b27e",
+          "first_reply_sha256": "e3d1f199c2eb7c53f8cbbe0514dfeabdf8bdcb9aeb8d0e0018babcacccd32f98"
+        }
+      }
+    }
+  ]
+}

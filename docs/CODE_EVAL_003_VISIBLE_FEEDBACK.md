@@ -25,3 +25,8 @@ Freeze current source/CORE/corpus/oracle/protocol before inference. All723prior 
 ## Remaining gates
 
 Acceptance of the service requires scoped native/control regression and full software/source/audit verification. Benchmark scores are measurements, not permission to activate an endpoint, approve a model, silently retry actions or declare release. D70owner listening0/24, physical device, rights/voice/default/no-speech, original weighted quality and product acceptance remain separate. Rollback omits the opt-in class; old services/config/data/first observations remain intact.
+
+
+## First actual observation — 2026-10-24
+
+[First scorecard](CODE_EVAL_003_FIRST_SCORECARD.md) and [raw/hash receipt](evidence/ce003-first-native-result.json):first4/6,eventual4/6,7CORErequests,one eligible second still fails both suites.6protocol tests PASS33.86s,18typed fixture approvals/12native capsules. No observed improvement or adoption; preserve every failure. Current728-file/5674-test full is RUNNING, not yet an acceptance result. Targeted cases retain the shared generator old CE002module/log prefix without post-observation edits.

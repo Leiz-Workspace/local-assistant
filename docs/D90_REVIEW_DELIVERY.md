@@ -32,3 +32,12 @@ Gói mới nhất `ai/data/backups/local-assistant-ce002-20261024-full-files.zip
 Kèm corpus12ca mới, source/test đầy đủ, raw request/first reply của24lượt, mọi lỗi, oracle native trước inference, regression, audit và nguồn/test của operator. Chỉ đi theo artifact pointer có SHA đúng trong namespace oracle/case của campaign; không diễn giải code/JSON trong chuỗi model và không lấy thư mục scenario/checkpoint.10tests riêng kiểm tra việc chọn pointer/loại signing key, tách khỏi5596full và116related.
 
 Kết quả mới là **đo đủ24lượt, cả hai nhánh sửa đúng7/12**, không phải24/24sửa đúng. Hint không được áp dụng mặc định.116relatedPASS/0FAIL/0SKIP, audit đạt;723file giữ nguyên, trong đó toàn bộ719file của full5596trước vẫn khớp. Các tiêu đề D70đã đối chiếu ADR111để lịch sử “D71NOTSTARTED” không bị hiểu là trạng thái hiện tại. Không thêm nhãn nghe, đổi model hoặc phê duyệt release.
+
+
+## Bản tích lũy CODE-EVAL-003 đang chuẩn bị
+
+Gói dự kiến `ai/data/backups/local-assistant-ce003-20261024-full-files.zip`, receipt `.receipt.json` cùng thư mục. Chỉ tạo sau full5674kết thúc, audit và commit tài liệu; hiện chưa có receipt PASS của gói này. Bao gồm bản đầy đủ file Git thay đổi từ7fa4756, toàn bộ812artifact của gói CE002đã ghim SHA, source/test feedback, corpus mới,7raw first replies, native/CLI evidence, log lỗi/đã sửa, full log/freeze, auditor/operator/test và24WAV cũ. Không chứa scenario/checkpoint/signing key/secret/database dump/weights.
+
+Một full regression có thể cập nhật12pointer `ce002-oracle-latest` trong workspace. Gói mới phải giữ **đúng byte snapshot trong ZIP CE002đã ghim**, không thay kết quả đầu bằng oracle mới; manifest ghi riêng SHA archive và SHA workspace nếu các pointer này khác. Mọi artifact lịch sử còn lại vẫn phải khớp cả filesystem/ZIP/SHA.28tests riêng kiểm tra pointer/allowlist/traversal/private-path và quy tắc bảo tồn này; không cộng vào5674tests ứng dụng.
+
+[Scorecard CE003](CODE_EVAL_003_FIRST_SCORECARD.md):first4/6,eventual4/6,không có cải thiện được chứng minh; chỉ component tùy chọn, chưa bật route/default. [Smoke production-only](evidence/ce003-reference-smoke.json) đã PASS mà không socket/model/database. Phần nghe vẫn0/24và chưa có phê duyệt release.
