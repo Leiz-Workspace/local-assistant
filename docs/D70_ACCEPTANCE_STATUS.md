@@ -1,5 +1,7 @@
 # D70 — Phần đã hoàn tất và tiêu chí còn thiếu
 
+> **Trạng thái hiện tại — 2026-10-24:** D70 đã hoàn tất đo máy; nghe thực tế **0/24, chủ dự án để test sau**. [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) đã cho phép tiếp tục; D71–D73 đã kiểm chứng phạm vi local, D74 còn nghiệm thu sản phẩm. Các dòng “D71 NOT STARTED” ở lịch sử bên dưới mô tả thời điểm trước quyết định này. Các guard research vẫn đóng; xem phê duyệt và lượt chạy theo đúng ngày của từng thí nghiệm. Không mở lại evaluator campaign hoặc sửa điểm/nhãn cũ. Xem [trạng thái dự án hiện tại](RELEASE_CANDIDATE_STATUS.md), [hướng dẫn nghe](D70_MANUAL_LISTENING_TEST.md).
+
 **Mục đích:** Đối chiếu trực tiếp AC gốc của D70 với bằng chứng hiện có, tránh nhầm tiến độ nghiên cứu evaluator hoặc số lượng test với hoàn thành so sánh TTS.
 
 **Cập nhật:** 2026-10-23, Asia/Saigon. **D70: benchmark máy hoàn tất, kiểm thử nghe HOÃN THEO YÊU CẦU CHỦ DỰ ÁN; D71 được phép tiếp tục.** [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) ghi quyết định mới, thay thế ràng buộc thứ tự cũ của ADR-097. [Hướng dẫn nghe sau](D70_MANUAL_LISTENING_TEST.md) và [phiếu24mục chưa điền](D70_MANUAL_LISTENING_RESULTS.pending.md). Nguồn AC vẫn là [ADR-096](ADR/096-offline-registry-tts-comparison.md); không có naturalness PASS.

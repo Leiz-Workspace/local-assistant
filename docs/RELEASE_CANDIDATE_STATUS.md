@@ -29,7 +29,7 @@
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14quality scorecard | Established inference/models; weighted complete comparison/signoff still partial | Reconcile original evidence and actual missing quality judgments; software/function smoke does not substitute |
-| Broader coding/web promotion | D46first7/10repair result with3failures retained; Brave freshness remains qualified/degraded | Existing CODE-EVAL-002/WEB-SEARCH-003 remain P1before broader promotion; full-suite/harness execution PASS is not a new coding-quality or upstream recovery score |
+| Broader coding/web promotion | D46first7/10repair result with3failures retained; Brave freshness remains qualified/degraded | CODE-EVAL-002 fresh measurement complete:baseline7/12/concise7/12,no hint adoption; broader coding/WEB-SEARCH-003promotion remains P1. Protocol/full-suite PASS is not a successful-repair or upstream recovery score |
 | D86release gate | UI controls verified; pending product/manual gates remain | Confirm the planned scope actually satisfies acceptance and no critical unresolved blocker is being waived silently |
 | D89owner/device acceptance | Prepared, not completed | Real microphone/browser/listening checks and owner review of scope/known limits |
 | D90release decision | NOT APPROVED/NOT TAGGED | Evidence-backed owner acceptance; only then tag/deploy an agreed scope |
@@ -41,3 +41,11 @@ D81 original minimal-quote workflow is locally verified through a corrected opti
 Current evidence is local/one-worker/operator-configured. OIDC/TLS/reverse-proxy exposure, multiworker load/SLO, full-host/model-OOM behavior, off-host/new-cluster/Vault-from-scratch recovery and production metrics exposure are not certified. Do not invent these as completed features or silently widen the current local boundary. Future expansion needs its own priority/dependency/effort/risk assessment and ADR where architecture changes.
 
 The owner's instruction permits independent work while manual listening is done later. It does not authorize fake listening labels, changing model choices, removing original AC, disregarding failed results or tagging an unfinished project asv1.0. Day90is a planning target, not a forced end; the master roadmap tracks the remaining closure work beyond it.
+
+
+## Independent follow-up after the completed full snapshot
+
+[CODE-EVAL-002 fresh paired campaign](CODE_EVAL_002_FIRST_SCORECARD.md) completed24first CORE attempts across12new paired cases,24visible/60heldout examples. Both arms7/12; no observed improvement, experimental hint not adopted.116related regression testsPASS/0FAIL/0SKIP and qualified post-campaign audit complete.29corpus controls and12actual native oracle tests PASS before inference,2private raw-capture controls PASS. Four additive test/fixture files bring source inventory to723; all719previous files remain unchanged. The5596full result stays its own719-file snapshot, not a full run of the additions. Shared application code/prompts/security, model/default/config/data and owner-deferred acceptance remain unchanged. Paired issue wording is experimental; failures and originalD46scores stay visible.
+
+
+Seven legacy D70research/acceptance report headers now explicitly point to ADR111/current status: hearing0/24owner-deferred, D71–D73local scopes verified, D74product pending. Their earlier “D71 NOT STARTED” classifications and all failed evaluator results remain dated history; no research guard reopens or labels change. Existing voice/license engineering inventory was already complete in D74 and recorded Piper provenance; actual listening/device/rights/model decisions remain unresolved, not a new license clearance.

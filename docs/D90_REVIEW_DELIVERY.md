@@ -24,3 +24,11 @@ Gói mới `ai/data/backups/local-assistant-d70-d90-20261024-full-files.zip` là
 Bao gồm source/test đầy đủ của adapter/evaluator, từng phiên bản nguồn đã chạy, raw request/response trung tính và log FAIL/PASS, kiểm thử/auditor/snapshot/reference-smoke, log/metadata/source-freeze của các full suite và trang nghe24WAV gốc. Không lấy cả thư mục scenario: checkpoint chứa signing key được loại trừ hoàn toàn, cùng mọi secret, database dump, weights, SDK/cache/venv.11kiểm thử riêng xác nhận allowlist, chống traversal/symlink/file quá lớn, từ chối bundle cũ bị sửa và loại trừ checkpoint; không thuộc5596tests ứng dụng.
 
 D81workflow gốc đã PASS sau sửa compiler, mọi FAIL trước giữ nguyên. Full mới nhất5596PASS/0FAIL/0ERROR/0SKIP/1760.86s bao gồm phần structured,719files giữ nguyên; [terminal receipt và audit đã hoàn tất](evidence/d90-structured-full-acceptance.json). Snapshot5507PASS trước đó vẫn giữ riêng. Phần nghe vẫn0/24; hướng dẫn/phiếu thiết bị và model/voice/license/product/quality/release vẫn chờ nghiệm thu thực tế. Gói source/evidence không tự triển khai hoặc phê duyệt model.
+
+## Bản tích lũy sau CODE-EVAL-002
+
+Gói mới nhất `ai/data/backups/local-assistant-ce002-20261024-full-files.zip` chứa bản đầy đủ mọi file Git thay đổi từ7fa4756đến commit ghi trong manifest, toàn bộ437artifact đã kiểm tra của gói trước và bằng chứng CODE-EVAL-002 được chọn theo path/hash. Receipt `.receipt.json` bên cạnh ghi SHA256/CRC, số file và đối chiếu byte thực tế; các gói cũ giữ nguyên.
+
+Kèm corpus12ca mới, source/test đầy đủ, raw request/first reply của24lượt, mọi lỗi, oracle native trước inference, regression, audit và nguồn/test của operator. Chỉ đi theo artifact pointer có SHA đúng trong namespace oracle/case của campaign; không diễn giải code/JSON trong chuỗi model và không lấy thư mục scenario/checkpoint.10tests riêng kiểm tra việc chọn pointer/loại signing key, tách khỏi5596full và116related.
+
+Kết quả mới là **đo đủ24lượt, cả hai nhánh sửa đúng7/12**, không phải24/24sửa đúng. Hint không được áp dụng mặc định.116relatedPASS/0FAIL/0SKIP, audit đạt;723file giữ nguyên, trong đó toàn bộ719file của full5596trước vẫn khớp. Các tiêu đề D70đã đối chiếu ADR111để lịch sử “D71NOTSTARTED” không bị hiểu là trạng thái hiện tại. Không thêm nhãn nghe, đổi model hoặc phê duyệt release.
