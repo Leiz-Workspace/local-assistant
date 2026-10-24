@@ -26,3 +26,8 @@ Any future replacement still requires measured benchmark, performance/resources,
 ## Historical D14files independently reconciled
 
 Read-only inspection of the actual day14-core-gate/day14-unrestricted-gate reports finds9/9checks per profile, covering YAML/profile/runtime/artifact/Docker/API identity gates. The day13scorecard explicitly declares day13_provisional, small smoke datasets, basic math reasoning and unscored performance/multimodal/VRAM/context/provenance dimensions; it explicitly disclaims an overall model-capability percentage. These real files therefore support historical runtime readiness, not closure of the complete weighted30–50case quality acceptance. No original result was edited or model rerun. [Exact metadata/hashes](evidence/d88-historical-scorecard-reconciliation.json).
+
+
+## Later original-quality follow-up — 2026-10-24
+
+[MODEL-QUALITY-001first COREtext baseline](MODEL_QUALITY_001_CORE_TEXT_SCORECARD.md) now supplies30fresh authored first attempts under the same historical weights:23/30exact,52.5of70text points,overall100point scorenull. Other30points/UNRESTRICTEDprofile comparison/actual broadquality and owner/model/product signoff remainunmeasured/open. Same retained CORE/D80template/fast512; no model/default/context/resource change. Original day13/day14reports and their provisional/runtime-only classifications remain unchanged. This later result adds bounded evidence without converting it into completeD14acceptance.

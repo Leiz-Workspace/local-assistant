@@ -41,3 +41,10 @@ Gói mới `ai/data/backups/local-assistant-ce003-20261024-full-files.zip`, rece
 Một full regression có thể cập nhật12pointer `ce002-oracle-latest` trong workspace. Gói mới phải giữ **đúng byte snapshot trong ZIP CE002đã ghim**, không thay kết quả đầu bằng oracle mới; manifest ghi riêng SHA archive và SHA workspace nếu các pointer này khác. Mọi artifact lịch sử còn lại vẫn phải khớp cả filesystem/ZIP/SHA.28tests riêng kiểm tra pointer/allowlist/traversal/private-path và quy tắc bảo tồn này; không cộng vào5674tests ứng dụng.
 
 [Scorecard CE003](CODE_EVAL_003_FIRST_SCORECARD.md):first4/6,eventual4/6,không có cải thiện được chứng minh; chỉ component tùy chọn, chưa bật route/default. [Smoke production-only](evidence/ce003-reference-smoke.json) đã PASS mà không socket/model/database. Phần nghe vẫn0/24và chưa có phê duyệt release.
+
+
+## Bản tích lũy MODEL-QUALITY-001
+
+Gói mới `ai/data/backups/local-assistant-mq001-20261024-full-files.zip` và receipt `.receipt.json` được tạo sau commit tài liệu. Manifest giữ bản đầy đủ file Git từ7fa4756đến đúngHEAD, toàn bộ959artifact của gói CE003đã ghimSHA và source/test/operator/log lỗi/lượt đo30request-reply/bằng chứng audit mới.12CE002latest-index vẫn lấy đúng byte lịch sử từ archive, ghi riêngSHAworkspace nếu khác.28kiểm thử policy PASS; build kiểm tra từngGit/extra byte/CRC/finalSHA. Không chứa secret/signingkey/checkpoint/scenario/database dump/weights hoặc triển khai tự động.
+
+[Điểm baseline mới](MODEL_QUALITY_001_CORE_TEXT_SCORECARD.md)23/30,52.5of70text points; không biến thành điểm100hay đóngD14. Full5674vẫn đúng snapshot728applicationfiles giữ nguyên;59privateoperator controls/19audit-policy/28delivery-policy là các scope riêng. Các gói cũ và24WAV nghe sau giữ nguyên; nghe thực tế0/24/model/voice/license/device/product/release vẫn mở.
