@@ -2,7 +2,7 @@
 
 **Purpose:** Implement and measure one explicit second proposal from exact known-applied source and its originally selected visible test failure while preserving all first scores.
 
-Date: 2026-10-24. Status: Service implementation/control validation complete; fresh native quality campaign prepared before inference. [ADR129](ADR/129-explicit-visible-failure-feedback.md) records architecture, dependency/priority/effort/risk and rollback. No route/default/production activation or model choice change.
+Date: 2026-10-24. Status: Optional service and first native measurement COMPLETE; current728-file full5674PASS/0FAIL/0ERROR/0SKIP1798.59s and qualified audit complete. First4/6/eventual4/6,no observed improvement or promotion. [Final evidence](evidence/ce003-full-acceptance.json). [ADR129](ADR/129-explicit-visible-failure-feedback.md) records architecture, dependency/priority/effort/risk and rollback. No route/default/production activation or model choice change.
 
 ## Implemented optional service
 
@@ -29,4 +29,9 @@ Acceptance of the service requires scoped native/control regression and full sof
 
 ## First actual observation — 2026-10-24
 
-[First scorecard](CODE_EVAL_003_FIRST_SCORECARD.md) and [raw/hash receipt](evidence/ce003-first-native-result.json):first4/6,eventual4/6,7CORErequests,one eligible second still fails both suites.6protocol tests PASS33.86s,18typed fixture approvals/12native capsules. No observed improvement or adoption; preserve every failure. Current728-file/5674-test full is RUNNING, not yet an acceptance result. Targeted cases retain the shared generator old CE002module/log prefix without post-observation edits.
+[First scorecard](CODE_EVAL_003_FIRST_SCORECARD.md) and [raw/hash receipt](evidence/ce003-first-native-result.json):first4/6,eventual4/6,7CORErequests,one eligible second still fails both suites.6protocol tests PASS33.86s,18typed fixture approvals/12native capsules. No observed improvement or adoption; preserve every failure. At this first-measurement checkpoint, the728-file/5674-test full was RUNNING; the completed result is recorded below. Targeted cases retain the shared generator old CE002module/log prefix without post-observation edits.
+
+
+## Completed software verification — 2026-10-24
+
+The complete frozen728-file suite finished5674PASS/0FAIL/0ERROR/0SKIP1798.59s,exit0. All723previous source files match. After joining it, one stronger private exact-approved-grant readiness denial test PASS1.16s; no public source/test changes were needed. Production-only CPython3.12.3import/ASGI smokePASS with sockets forbidden/no new dependency. Private audit-policy19PASS/delivery-policy28PASS/RuffPASS; none are added to the full count. Joined read-only audit retains originalservices/data/security/schema/collections/sameCORE32K/917protected/176inputs/0of24listened labels and explicitly discloses quota updated_at-only delta. [Terminal/source/audit](evidence/ce003-full-acceptance.json). Service and bounded measurement are complete; quality promotion, route/product activation and owner/manual/release gates remain open.

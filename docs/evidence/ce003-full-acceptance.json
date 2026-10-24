@@ -1,0 +1,111 @@
+{
+  "description": "Completed actual current full regression, unchanged source and joined qualified audit for the optional visible-feedback component; repair score is not software pass count.",
+  "status": "PASS_CURRENT_FULL_SOFTWARE_AND_QUALIFIED_AUDIT",
+  "recorded_at_utc": "2026-10-24T06:20:27.383484+00:00",
+  "full": {
+    "accepted_full_software_regression": true,
+    "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+    "completed_at_utc": "2026-10-24T06:17:43.425044+00:00",
+    "description": "Fresh full current-source regression with actual existing integration credentials; no new model/default/provider or benchmark-original rerun.",
+    "elapsed_seconds": 1799.945420300006,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "log_sha256": "3d5cf5bfe384171a12d3b4f4c815b354c3e0fe8b2a8def6e8d52d31565f69722",
+    "passed": 5674,
+    "pytest_pid": 2698055,
+    "pytest_seconds": 1798.59,
+    "skipped": 0,
+    "source_bytes_unchanged": true,
+    "source_files": 728,
+    "source_freeze_sha256": "cceb5043870727ccfbf796bb49dd869265b39db0256e525eac56aed5890dddaf",
+    "started_at_utc": "2026-10-24T05:47:43.479695+00:00",
+    "status": "complete",
+    "summary": "================= 5674 passed, 1 warning in 1798.59s (0:29:58) =================",
+    "wrapper_pid": 2698051
+  },
+  "current_source_files": 728,
+  "all723_prior_source_files_unchanged": true,
+  "service_control_tests": 31,
+  "native_quality": {
+    "first_pass": 4,
+    "cases": 6,
+    "after_at_most_two_pass": 4,
+    "actual_model_requests": 7,
+    "eligible_second_cases": 1,
+    "second_repairs": 0,
+    "quality_improved": false,
+    "production_promotion_qualified": false
+  },
+  "supplementary_valid_exact_grant_denial": {
+    "passed": 1,
+    "seconds": 1.16,
+    "included_in_full": false,
+    "source_or_first_evidence_changed": false
+  },
+  "private_audit_policy_tests": {
+    "passed": 19,
+    "seconds": 0.36,
+    "included_in_full": false
+  },
+  "private_delivery_policy_tests": {
+    "passed": 28,
+    "seconds": 0.26,
+    "included_in_full": false
+  },
+  "production_only_smoke_passed": true,
+  "ordinary_text_recovery": true,
+  "first_model_outcomes_unchanged": true,
+  "first_measurement_receipt_is_dated_pre_full_status": true,
+  "known_warning": "Existing intentional duplicate Piper archive member negative fixture; no new warning.",
+  "strict_all_row_fingerprints_equal": false,
+  "explicit_operational_delta": "Only assistant.file_global_usage.updated_at; exact singleton/zero counters and all11other tables/security match baseline. No timestamp restoration or new restore probe.",
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "models_changed": 0,
+  "production_route_or_default_activated": false,
+  "actual_listening_labels": 0,
+  "project_or_release_approved": false,
+  "artifacts": [
+    {
+      "path": "data/backups/ce003-current-full/pytest.log",
+      "sha256": "3d5cf5bfe384171a12d3b4f4c815b354c3e0fe8b2a8def6e8d52d31565f69722"
+    },
+    {
+      "path": "data/backups/ce003-current-full/result.json",
+      "sha256": "da5acab9b15e4e2f866cf0482acffc86465cd52f6c2adf6804e509540d9da026"
+    },
+    {
+      "path": "data/backups/ce003-current-full/source-freeze.json",
+      "sha256": "cceb5043870727ccfbf796bb49dd869265b39db0256e525eac56aed5890dddaf"
+    },
+    {
+      "path": "data/backups/ce003-valid-grant-retirement-tests.log",
+      "sha256": "c420fbcd629a020d82db5355a0430090ad57720c65b08d7983461589c3bab90d"
+    },
+    {
+      "path": "data/backups/ce003-post-full-readonly-audit.log",
+      "sha256": "1f3a4465f3b447c4ba7b70163148fd7f9ad96bf29b2e031d551348f9732bbf9f"
+    },
+    {
+      "path": "data/backups/ce003-delivery-tests.log",
+      "sha256": "0d392bb1ad47f612fc41dc6ea1ca05ccb8e934a409307ada32bce346182ed904"
+    },
+    {
+      "path": "data/backups/ce003-final-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "docs/evidence/ce003-post-full-readonly-audit.json",
+      "sha256": "8b474fd33449cdb10b4e3dc1946f5c5be1253ce4e6ec0d397333258dc7a37cbf"
+    },
+    {
+      "path": "docs/evidence/ce003-full-execution-environment.json",
+      "sha256": "7576fdfd6b6e29113f2fe24b611f5123f75e95b5f049ccfa602b67c344463a36"
+    },
+    {
+      "path": "docs/evidence/ce003-reference-smoke.json",
+      "sha256": "832d8659da89424fd842475b3ccb5107c44f9b97c7f9fca2d9da6a7a715cef83"
+    }
+  ]
+}

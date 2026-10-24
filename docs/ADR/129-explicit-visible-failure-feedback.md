@@ -23,3 +23,10 @@ No HTTP route, API flag, model/default/provider/config/Vault/schema/database/col
 ## Verification and acceptance
 
 Test real disposable native first failure, second pending proposal, fresh distinct reviews, known current source and unchanged tests/history; reject third attempts, aliases, foreign scopes, stale captures, malformed/uncertain receipts, passed tests, non-test profiles and chained retries. Verify slot consumption, joined cancellation, parent drift and legacy behavior. Do not mark quality improvement, production adoption or project completion from these service tests.
+
+
+## Actual implementation and verification — 2026-10-24
+
+Optional subclass implemented in commitfe73da6, existing723source files unchanged.31service controls pass within the new complete728-file/5674-test full suite,1798.59s/0FAIL/0ERROR/0SKIP/exit0. Separate post-join test with a genuinely approved exact child patch grant verifies uncertain retirement denies workflow application before the known first edit can change:1PASS1.16s. Offline production-only import/ASGI smoke and private audit/delivery guards pass. [Final source/runtime/data audit](../evidence/ce003-full-acceptance.json) preserves sameCORE/models/config/data and original review labels, explicitly retaining the established operational quota timestamp delta.
+
+[Separately predeclared fresh campaign](../CODE_EVAL_003_FIRST_SCORECARD.md) completed6cases/7actualCORErequests: first4/6,eventual4/6,one eligible second still fails. No quality improvement or model/default/route/product adoption. Every first reply/native failure/review rejection is retained. This record accepts only the optional local implementation and measured evidence, not general coding quality or release.
