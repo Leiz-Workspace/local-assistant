@@ -1,0 +1,105 @@
+{
+  "description": "PostMQ001withunchanged5674fullsnapshot readonly audit:11tables and exact singleton non-time fields match the independently verified original baseline; report current timestamp-only delta explicitly. No restore probe, timestamp restoration or original writes.",
+  "status": "PASS_POST_FULL_AUDIT_WITH_EXPLICIT_OPERATIONAL_TIMESTAMP_DELTA",
+  "full_passed": 5674,
+  "full_failed": 0,
+  "full_skipped": 0,
+  "current_frozen_files_unchanged": 728,
+  "all723_prior_source_files_unchanged": true,
+  "earlier_full_712_files_unchanged": true,
+  "other_prior_source_files_unchanged": 660,
+  "necessary_prior_source_exception": {
+    "apps/api/routes/chat.py": {
+      "before": "34f599a1317eb0c7bc08b72e517729c7d0ddcd961e457a14d1ebd1d2e666e681",
+      "after": "84d6bde66f9a08cb4d28c74c265a9cdba01fe65b26e2e763481394fde376cf3e"
+    }
+  },
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "original_pending_sha256": "14c9374dbb852e4f463121ecaa97a355421ef4879c9e99bf8dd35b09743276d6",
+  "actual_listening_labels": 0,
+  "runtime": {
+    "original14_identity_image_ports_preserved": true,
+    "original_start_times_changed_after_observed_host_reboot": true,
+    "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+    "selected_provider_healthy": true,
+    "selected_provider_runtime_limits_unchanged": true,
+    "original_CORE_healthy": true,
+    "signing_secret_mode": "0600",
+    "signing_secret_git_ignored": true
+  },
+  "strict_all_row_fingerprints_equal": false,
+  "documented_operational_delta": {
+    "description": "Readonly comparison to the original independently verified baseline; complete singleton metadata excludes only updated_at.",
+    "changed_tables": {
+      "assistant.file_global_usage": {
+        "before": "1:77e3f448385286fcf686b4f483f76119",
+        "after": "1:6eaa975768052f751117d00514f4acff"
+      }
+    },
+    "details": {
+      "assistant.file_global_usage": {
+        "changed_columns": [
+          "updated_at"
+        ],
+        "before_usage": [
+          0,
+          0,
+          0
+        ],
+        "after_usage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "all_other_tables_exactly_equal": true,
+    "source_security_matches": true
+  },
+  "normalized_business_data_fingerprint_matches": true,
+  "complete_quota_metadata_verified": true,
+  "restore_probe_created_for_this_audit": false,
+  "database_tables": 12,
+  "database_security_sha256": "03577b8e67c4a8a2125c37fad27da5d96ba7ae58d4bc782aeca771d9df3a30b8",
+  "original_legacy_security_fingerprint_unchanged": true,
+  "schema_revision": "0006",
+  "original_row_counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "quota": [
+    0,
+    0,
+    0
+  ],
+  "application_role_grants_unchanged": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false
+  ],
+  "original_qdrant_collection_count": 0,
+  "restore_probe_databases_remaining": 0,
+  "core": {
+    "pid": 37256,
+    "start_ticks": 63900,
+    "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+    "RSS_RAM_KiB": 8838888,
+    "NVIDIA_process_allocation_VRAM_MiB": [
+      9386
+    ],
+    "ordinary_text_recovery": true
+  },
+  "isolated_workers_remaining": [],
+  "product_or_release_gate_closed": false,
+  "diagnostic_sha256": "8b77b4a060182adebe61b91ca9b85310ee7df3483a2b4ef8b60f4c087bf96269",
+  "first_strict_failure_log_sha256": "d91b6250556b57e0a20cfbb4ee597507ccac8a27f1044d1e90c60c81f753f455"
+}
