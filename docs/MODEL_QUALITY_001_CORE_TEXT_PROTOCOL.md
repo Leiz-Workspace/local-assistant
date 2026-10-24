@@ -13,3 +13,8 @@ Capture exact request and full first CompletionResult **before** original result
 57model-free controls PASS before inference;16trusted math/Python expressions independently check those fixed references without evaluating model-generated code. Initial private caller passedstrto existing bytes-only parser:34FAIL/22PASS,zero actual requests; first source/log retained. Fix caller only:56PASS,then57PASSwith full reference control. Original application/parser/source728files remain unchanged.
 
 Freeze/commit before actual run. Preserve all30first outcomes, no repair/selection, compare no new profile and infer no UNRESTRICTED result. Keep D14PARTIAL after this limited baseline; actual broad/multimodal/context/performance/provenance/profile-pair and owner/model/product/manual/release gates remain separate. No threshold or score is invented to close them.
+
+
+## Pre-inference launcher correction
+
+First launch at commitcec7962failed while merging the protocol description, before protocol publication or any model request; empty first output directory/source/log retained. Correct only private metadata merge, add two actual-entry controls, including all30fake-port cases;59controlsPASS. [Revised pre-inference freeze](evidence/mq001-core-pre-inference-freeze-v2.json) binds corrected operator/tests and the exact same cases/references/weights/source728. Fresh actual output rootmq001-core-first-v2; no model request or first answer existed to retry or discard. Original firstfreeze/sourcehash remains retained at its named historical operator copy.
