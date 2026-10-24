@@ -1,0 +1,25 @@
+# Current outstanding-work closure ledger
+
+**Purpose:** State exactly what the owner's UNRESTRICTED/outstanding-work request completed, what still lacks acceptance evidence, and the dependencies of any next work.
+
+Date:2026-10-24. Engineering milestones have reached D90 review; the project is **NOT RELEASED**. Development-day numbers are acceptance milestones, not a percentage or permission to erase earlier gaps. D70listening was explicitly deferred by the owner, allowing independent work under ADR111.
+
+| Item | Current observed state | Next dependency, effort and risk |
+|---|---|---|
+| Requested UNRESTRICTED text comparison | COMPLETE:30first native generations/20correct/45of70text points; CORE23/30/52.5of70retained | No model adoption. Original30unscored points and broader quality need a separately frozen measurement. Small authored corpus/templates/backend confounders prohibit universal conclusions |
+| UNRESTRICTED authority/resource cleanup | COMPLETE:44preflight/104relatedauthoritycontrols; peakwholechildRSS RAM7.68GiB/noGPUoffload; exited0/reaped/COREunchanged | Existing backend tools stay CORE-only. No service/default switch or new permission |
+| Current Brave observation | COMPLETE:four actual accepted searches over one probe and one three-query phase | A snapshot does not establish reliability/coverage/rights; no polling/retry or alternate provider |
+| Original direct-result live web qualification | FAILED retained:actualRFCpublisherlanding excluded by original full-text-family oracle | P1before broad promotion: product handling must explicitly preserve search→landing→observedlink lineage and get scoped integration/test/ADR review; effort one design/integration milestone, risk SSRF/redirect/archive-as-proof/extra latency |
+| Isolated publisher-link report/export | COMPLETE:corrected compatibility variant derives actualhref, rereads sources, exact3claimoracles, oneCOREreport/nativebatch, reopenedarchive, all3PDFpagesvisually reviewed | First parser-size failure retained. Optional private operator only; no production integration or broad qualification implied |
+| Current software regression | COMPLETE5674PASS/0FAIL/0ERROR/0SKIP/1798.59s; exact728files unchanged | Private evaluator/docs-only follow-up does not require another unchanged30-minute full. New application changes require appropriate tests/current evidence |
+| Final runtime/data/security audit | PASSwith explicit original quota updated_at-only delta;917protected/176inputs/sameCORE/zeroisolatedworkers | No restoreprobe/timestamp rewrite. Strict all-row fingerprint equality remainsfalse rather than hidden by normalization |
+| Coding quality debt | First D46 7/10; CE0027/12perarm; CE003first/eventual4/6; optional service verified but improvement NOTQUALIFIED | P1before broad unattended coding: new assessed/frozen cases and acceptable quality; do not regenerate failures, alter oracles or change agreed model silently |
+| Original D14complete weighted quality | PARTIAL:both profiles now measured on30same short text cases; original30otherpoints unscored | P1before relevant model acceptance: multimodal/performance/memory-context/provenance protocols/evidence; historical smoke is not automatically a new weighted result. Effort several bounded measurements, risk incomparable datasets/resource confounding/overclaiming |
+| D70actual naturalness listening | OWNER-DEFERRED0/24; unchanged24WAVofflineplayer/blankworksheet ready | Actual reviewer listening when available; machine metadata/text reasoning cannot replace it. No research evaluator rerun or forged labels |
+| D74voice/model/license/no-speech decision | OPEN; existing candidates/matrix/rejections preserved | P1before activation: complete rights chain, real listening/device behavior, explicit choices and migration/rollback; unresolved rights stayunknown, no default selection |
+| D86/D89real-device/product acceptance | OPEN; prepared browser/fake-device/engineering evidence | Actual microphone/browser/owner workflow acceptance and approved product scope; simulation does not prove physical behavior. ADR before architecture changes |
+| D90release/signoff | NOT APPROVED/NOT TAGGED/NOT DEPLOYED | P1after agreed critical gates: owner acceptance of concrete supported scope. No release action inferred from softwarePASS |
+
+The independent bounded work performed in this continuation is complete and auditable. This ledger deliberately retains unsatisfied original gates; it does not claim the whole project is done. Model/provider/default/service/Vault/database/collection/config choices and all historical scores stay unchanged. No new download, periodic job, campaign, production activation or deployment is scheduled by this document.
+
+Evidence: [paired model scorecard](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md), [current web observations](WEB_SEARCH_003_CURRENT_CHECK.md), [current full acceptance](evidence/ce003-full-acceptance.json), [final audit](evidence/mq002-web-final-readonly-audit.json), [release status](RELEASE_CANDIDATE_STATUS.md), [owner listening guide](D70_MANUAL_LISTENING_TEST.md).

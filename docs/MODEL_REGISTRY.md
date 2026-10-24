@@ -95,3 +95,7 @@ flowchart TD
 ## 6. Provenance
 
 Historical plan sources: `PERSONAL-AI-LOCAL-ROADMAP.md`, `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, and the incomplete model coverage in `LOCAL_ASSISTANT_MASTER_ROADMAP.md` v3.0. Current D24 facts are operator-reported; current repository contents and ADR-031 have **not** been inspected here.
+
+## 2026-10-24 — Existing-profile measured status, no selection change
+
+Owner explicitly requested UNRESTRICTED testing. [Paired text measurement](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md) uses exact same30authored cases/references/historicalweights: CORE23/30/52.5of70textpoints; UNRESTRICTED20/30/45of70. Remaining30points unscored/overall100point scorenull. Original profile templates/CPU-versus-GPU/cold-warm conditions differ, so this is descriptive evidence, not causal superiority or a replacement decision. UNRESTRICTEDtemporary CPUsidecar/context32K/wholeprocesspeakRSS RAM7.68GiB/zeroGPUoffload retired; original CORE/models/configs/tool-denial policies unchanged. No candidates/nominations/defaults/deployment/rights approval changes.
