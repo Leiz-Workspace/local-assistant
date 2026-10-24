@@ -49,3 +49,8 @@ The owner's instruction permits independent work while manual listening is done 
 
 
 Seven legacy D70research/acceptance report headers now explicitly point to ADR111/current status: hearing0/24owner-deferred, D71–D73local scopes verified, D74product pending. Their earlier “D71 NOT STARTED” classifications and all failed evaluator results remain dated history; no research guard reopens or labels change. Existing voice/license engineering inventory was already complete in D74 and recorded Piper provenance; actual listening/device/rights/model decisions remain unresolved, not a new license clearance.
+
+
+## CODE-EVAL-003 explicit feedback, current verification
+
+[Optional guarded service](CODE_EVAL_003_VISIBLE_FEEDBACK.md) is implemented without changing existing D44 behavior or activating a route/default.31service controls/6native oracle tests PASS. First fresh actual measurement:4/6first-pass and4/6after-at-most-two,7CORErequests/18fixtureapprovals/12nativecapsules, no observed quality improvement or promotion. [Every first/second outcome](CODE_EVAL_003_FIRST_SCORECARD.md). Current728-file full5674is RUNNING after joined native work; previous723files unchanged. Do not present the old5596full as a full run of this added application component. Owner/manual/model/rights/product/release gates remain unchanged.
