@@ -31,3 +31,7 @@ Read-only inspection of the actual day14-core-gate/day14-unrestricted-gate repor
 ## Later original-quality follow-up — 2026-10-24
 
 [MODEL-QUALITY-001first COREtext baseline](MODEL_QUALITY_001_CORE_TEXT_SCORECARD.md) now supplies30fresh authored first attempts under the same historical weights:23/30exact,52.5of70text points,overall100point scorenull. Other30points/UNRESTRICTEDprofile comparison/actual broadquality and owner/model/product signoff remainunmeasured/open. Same retained CORE/D80template/fast512; no model/default/context/resource change. Original day13/day14reports and their provisional/runtime-only classifications remain unchanged. This later result adds bounded evidence without converting it into completeD14acceptance.
+
+## Authorized existing UNRESTRICTED follow-up
+
+The historical D88phase above did not load UNRESTRICTED. Later owner-requested [MQ002paired trial](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md) completed30actual first native generations:20/30/45of70textpoints, versus retainedCORE23/30/52.5of70. Original30otherpoints/overall100pointnull/signoff stayopen. CPUwholeprocesspeakRSS RAM7.68GiB/noGPUoffload/32K, temporarychildretired/originalCOREunchanged, no new tools/model/default/license/provenance approval. This closes the narrow previously missing same-question profile comparison, not broad quality or product acceptance.

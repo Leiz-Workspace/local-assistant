@@ -35,3 +35,7 @@ First smoke caller incorrectly used `/api/v1/chat` and received404. Keep its log
 
 
 After the structured compiler fix, the retained production-only environment also verifies all6positive/2refusal fixture contracts, exact source Unicode, ASGIhealth/auth and imports with no native sockets/model/database calls. [Separate actual smoke](evidence/d90-reference-structured-smoke.json). This does not reinstall dependencies, rerun model evaluation, or create listening/product approval.
+
+## Current paired-profile follow-up, preserving historical inventory claims
+
+The snapshot above did not load UNRESTRICTED. A later explicitly authorized [MQ002trial](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md) did: existing exactGGUF/temporaryCPUonly/32K,30first replies/20correct/45of70textpoints; whole-childpeakRSS RAM7.68GiB,zeroGPUoffload,12GiBAS, exited0/reaped. COREretained23/30/52.5of70. No original artifact/config/default/privilege/model selection changes; no provenance/license/overallquality certification from this limited trial. Current728sourcefiles/full5674and backend authority denial remain verified.
