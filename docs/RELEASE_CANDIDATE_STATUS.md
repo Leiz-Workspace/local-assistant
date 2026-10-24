@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current full: **5596 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1760.86s/exit0,719unchanged files, including89new structured adapter/evaluator controls. Joined read-only audit confirms original data/security/runtime apart from the explicitly diagnosed quota timestamp. Earlier5507PASS and first umask failure remain historical. This is no manual/model/product/release approval, tag, push, model/default selection or deployment. [Terminal and audit](evidence/d90-structured-full-acceptance.json).
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current full: **5674 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1798.59s/exit0,728unchanged files; all723prior source hashes match. Includes31new feedback service controls and fresh corpus/oracle tests. Joined qualified read-only audit confirms original runtime/business data/security with the explicitly diagnosed quota timestamp-only delta. Separate valid-exact-grant denial1PASS1.16s. Earlier5596/5507PASS and original umask failure remain dated history. No model/manual/product/release approval, tag, push or deployment. [Current terminal/source/audit](evidence/ce003-full-acceptance.json).
 
 ## Completed local engineering evidence
 
@@ -25,7 +25,7 @@
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
-| D87full software snapshot | **COMPLETE5596PASS/0FAIL/0ERROR/0SKIP/exit0**,1760.86s/719files unchanged, includes89structured controls | [Current terminal/qualified audit](evidence/d90-structured-full-acceptance.json); initial umask failure and explicit timestamp-only delta retained; all earlier712files still match |
+| D87full software snapshot | **COMPLETE5674PASS/0FAIL/0ERROR/0SKIP/exit0**,1798.59s/728files unchanged; all723previous files match | [Current terminal/qualified audit](evidence/ce003-full-acceptance.json); earlier5596/5507/initial umask failure remain separate snapshots, explicit timestamp-only delta retained |
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14quality scorecard | Established inference/models; weighted complete comparison/signoff still partial | Reconcile original evidence and actual missing quality judgments; software/function smoke does not substitute |
@@ -53,4 +53,4 @@ Seven legacy D70research/acceptance report headers now explicitly point to ADR11
 
 ## CODE-EVAL-003 explicit feedback, current verification
 
-[Optional guarded service](CODE_EVAL_003_VISIBLE_FEEDBACK.md) is implemented without changing existing D44 behavior or activating a route/default.31service controls/6native oracle tests PASS. First fresh actual measurement:4/6first-pass and4/6after-at-most-two,7CORErequests/18fixtureapprovals/12nativecapsules, no observed quality improvement or promotion. [Every first/second outcome](CODE_EVAL_003_FIRST_SCORECARD.md). Current728-file full5674is RUNNING after joined native work; previous723files unchanged. Do not present the old5596full as a full run of this added application component. Owner/manual/model/rights/product/release gates remain unchanged.
+[Optional guarded service](CODE_EVAL_003_VISIBLE_FEEDBACK.md) is implemented without changing existing D44 behavior or activating a route/default.31service controls/6native oracle tests PASS. First fresh actual measurement:4/6first-pass and4/6after-at-most-two,7CORErequests/18fixtureapprovals/12nativecapsules, no observed quality improvement or promotion. [Every first/second outcome](CODE_EVAL_003_FIRST_SCORECARD.md). Current728-file full5674PASS1798.59s/0FAIL/0ERROR/0SKIP after joined native work; previous723files unchanged. One separate exact-valid-grant retirement testPASS1.16s and joined qualified audit complete. [Terminal/source/audit](evidence/ce003-full-acceptance.json). Old5596full stays its own719-file snapshot. Owner/manual/model/rights/product/release gates remain unchanged.

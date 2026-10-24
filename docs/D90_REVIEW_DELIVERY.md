@@ -34,9 +34,9 @@ Kèm corpus12ca mới, source/test đầy đủ, raw request/first reply của24
 Kết quả mới là **đo đủ24lượt, cả hai nhánh sửa đúng7/12**, không phải24/24sửa đúng. Hint không được áp dụng mặc định.116relatedPASS/0FAIL/0SKIP, audit đạt;723file giữ nguyên, trong đó toàn bộ719file của full5596trước vẫn khớp. Các tiêu đề D70đã đối chiếu ADR111để lịch sử “D71NOTSTARTED” không bị hiểu là trạng thái hiện tại. Không thêm nhãn nghe, đổi model hoặc phê duyệt release.
 
 
-## Bản tích lũy CODE-EVAL-003 đang chuẩn bị
+## Bản tích lũy CODE-EVAL-003 sau kiểm chứng phần mềm
 
-Gói dự kiến `ai/data/backups/local-assistant-ce003-20261024-full-files.zip`, receipt `.receipt.json` cùng thư mục. Chỉ tạo sau full5674kết thúc, audit và commit tài liệu; hiện chưa có receipt PASS của gói này. Bao gồm bản đầy đủ file Git thay đổi từ7fa4756, toàn bộ812artifact của gói CE002đã ghim SHA, source/test feedback, corpus mới,7raw first replies, native/CLI evidence, log lỗi/đã sửa, full log/freeze, auditor/operator/test và24WAV cũ. Không chứa scenario/checkpoint/signing key/secret/database dump/weights.
+Gói mới `ai/data/backups/local-assistant-ce003-20261024-full-files.zip`, receipt `.receipt.json` cùng thư mục. ZIP/receipt được tạo sau commit tài liệu từ đúng Git HEAD; chỉ dùng khi receipt xác nhận Git-byte/extra-byte/CRC/SHA đã hoàn tất. Full mới5674PASS/0FAIL/0ERROR/0SKIP1798.59s/728files giữ nguyên, audit hoàn tất: [bằng chứng](evidence/ce003-full-acceptance.json). Bao gồm bản đầy đủ file Git thay đổi từ7fa4756, toàn bộ812artifact của gói CE002đã ghim SHA, source/test feedback, corpus mới,7raw first replies, native/CLI evidence, log lỗi/đã sửa, full log/freeze, auditor/operator/test và24WAV cũ. Không chứa scenario/checkpoint/signing key/secret/database dump/weights.
 
 Một full regression có thể cập nhật12pointer `ce002-oracle-latest` trong workspace. Gói mới phải giữ **đúng byte snapshot trong ZIP CE002đã ghim**, không thay kết quả đầu bằng oracle mới; manifest ghi riêng SHA archive và SHA workspace nếu các pointer này khác. Mọi artifact lịch sử còn lại vẫn phải khớp cả filesystem/ZIP/SHA.28tests riêng kiểm tra pointer/allowlist/traversal/private-path và quy tắc bảo tồn này; không cộng vào5674tests ứng dụng.
 
