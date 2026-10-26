@@ -56,3 +56,8 @@ First frozenf33289ecompleted allCOREfirst outcomes/cancel/retirement, then stopp
 Keep the established COREbaseline and isolated optional UNRESTRICTEDprofile, existing32Kconfiguration and server-sideCORE-only tool permissions. This is continuity of the owner's agreed lineup, not adoption/replacement based on these scores. The missing D14weighted measurements, historical reconciliation and bounded lifecycle verification are now complete.
 
 **D14cannot be labeled all-qualityPASS:** the retained text errors and newly observed format failures remain real. No original numeric minimum was located that would authorize a new posthoc acceptance threshold. Broader quality/format integration must be addressed with a separately assessed implementation and fresh frozen evaluation before relevant promotion; oldcases/firstscores cannot be regenerated into success. No new model, campaign or production integration is scheduled here. D70actualhearing/device/voice/model-license/product/release gates remain distinct and unchanged.
+
+
+## Later authorized quality integration fix — 2026-10-26
+
+[Structural decoding and the explicit functional gate](D14_STRUCTURED_QUALITY_GATE_RESULT.md) are now implemented under ADR133without changing these original scores. New correctedwireformat42/42perprofile and freshCOREstream3/3verifytheformatfix; exactfactualscore31/42CORE/30/42UNRESTRICTEDstillfails thenew42/42qualitycriterion. Do not relabel this earlier66.5/52comparison or its raw firstfailures as passing.
