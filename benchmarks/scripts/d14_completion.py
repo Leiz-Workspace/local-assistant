@@ -463,6 +463,7 @@ class OwnedServer:
         if self.before["native_pids"]:
             raise ValueError("d14_native_runtime_busy")
         sample = resources()
+        publish(self.root / "preflight.json", sample)
         if (
             sample["available_RAM_KiB"] < 14 * 1024**2
             or sample["GPU_free_MiB"] < 14 * 1024
@@ -894,6 +895,30 @@ def weighted(text_points, rows, checks):
     )
 
 
+def validate_continuation(prior):
+    """Allow only the never-loaded UNRESTRICTED suffix while retaining the complete first CORE cohort and rejecting any replayed request."""
+    core = prior.get("profiles", {}).get("core", {})
+    other = prior.get("profiles", {}).get("unrestricted", {})
+    if (
+        prior.get("status") != "INCOMPLETE"
+        or prior.get("runtime_baseline_restored") is not True
+        or len(core.get("rows", [])) != 12
+        or len({row.get("id") for row in core["rows"]}) != 12
+        or any(row.get("model_requests") != 1 for row in core["rows"])
+        or core.get("runtime", {}).get("reaped") is not True
+        or core["runtime"].get("exit_code") != 0
+        or core["runtime"].get("guard_failure") is not None
+        or core.get("cancellation", {}).get("model_requests") != 1
+        or core["cancellation"].get("native_slot_retired") is not True
+        or other.get("rows") != []
+        or other.get("runtime", {}).get("pid") is not None
+        or other["runtime"].get("reaped") is not False
+    ):
+        raise ValueError("d14_continuation_not_unmeasured_suffix")
+    LOGGER.info("d14_never_loaded_unrestricted_suffix_eligibility_verified")
+    return core
+
+
 async def run():
     """Execute one frozen sequential two-profile campaign, retaining first observations and always retiring only owned test processes."""
     frozen = json.loads(FREEZE.read_text())
@@ -916,9 +941,22 @@ async def run():
         model_or_default_changes=0,
         downloads=0,
     )
+    if "retained_prior_result" in frozen:
+        prior_path = ROOT / frozen["retained_prior_result"]["path"]
+        prior = json.loads(prior_path.read_text())
+        if digest(prior_path) != frozen["retained_prior_result"]["sha256"] or list(
+            (prior_path.parent / "unrestricted").iterdir()
+        ):
+            raise ValueError("d14_prior_suffix_changed")
+        summary["profiles"]["core"] = validate_continuation(prior)
+        summary["retained_prior_result"] = frozen["retained_prior_result"]
+        summary["profile_artifact_roots"] = dict(
+            core=str(prior_path.parent / "core"),
+            unrestricted=str(OUTPUT / "unrestricted"),
+        )
     try:
         async with asyncio.timeout(2400):
-            for profile in ["core", "unrestricted"]:
+            for profile in frozen.get("profiles_to_execute", ["core", "unrestricted"]):
                 root = OUTPUT / profile
                 root.mkdir(mode=0o700)
                 server = OwnedServer(profile, root)
@@ -977,7 +1015,10 @@ async def run():
                     summary["profiles"].setdefault(profile, {})["runtime"] = (
                         server.receipt()
                     )
-                    if server.failure or server.exit_code not in (0, -15):
+                    if server.failure or (
+                        server.exit_code is not None
+                        and server.exit_code not in (0, -15)
+                    ):
                         raise ValueError("d14_native_guard_or_exit_failure")
             summary["status"] = "MEASUREMENT_COMPLETE_QUALITY_FINDINGS_RETAINED"
     except BaseException as exc:
@@ -1007,7 +1048,11 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--continue-unmeasured", action="store_true")
     options = parser.parse_args()
+    if options.continue_unmeasured:
+        OUTPUT = ROOT / "data/backups/d14-completion-20261026-unrestricted-first"
+        FREEZE = ROOT / "docs/evidence/d14-completion-unmeasured-suffix-freeze.json"
     if not options.execute:
         print(
             "Dry run: freeze protocol, test controls and use --execute for one owned sequential campaign."
