@@ -1,0 +1,11 @@
+# ADR-132 — Complete missing D14 domains using owned sequential existing profiles
+
+**Purpose:** Record the evaluation topology, resource boundaries and evidence implications of finishing original D14 debt on the current host boot.
+
+Date:2026-10-26. Status: Accepted for the owner-requested D14evaluation; no production architecture/default/model change.
+
+The remaining original weighted domains are multimodal/performance/memory-context/provenance. Earlier text first results and originalday13/day14reports are immutable. This boot has no live native CORE, so preserving historicalPID37256cannot mean pretending it survived the restart. Use exact existing configuredGGUFs/projectors/runtime sequentially on the freeGPU in owned loopback18080processes, then restore the initial no-native baseline. No Docker/service/config/data/model changes or downloads.
+
+[Protocol](../D14_COMPLETION_PROTOCOL.md) declares new-domain criteria, inherited text confounders, strict first-result retention, one planned cancel/profile and exact local provenance path reconciliation. Batch512/ubatch128/thread2/GPU99/32K/reasoningoff are the same for both new-domain runs. CPU/audio evaluator12GiBRLIMIT_AS remains unchanged and out of scope; this CUDA process has explicitly sampled12GiBRSS/14GiBVRAMguards rather than a false virtual-memory cap. Nativewait4RSS and sampledVRAM remain separate. Guard uncertainty/overlap/startup/retirement failures end the campaign; no automatic load/generation retry or unrelated-process termination.
+
+Alternative historical-result substitution would leave the original missing numerical criteria unmeasured. Simultaneous profiles would compete forVRAM. Replacing a model would violate the owner's selection policy. This topology permits bounded actual measurements with the least runtime disruption on this boot. Risks are sampled resource protection, sequential/cold-warm order, small authored corpus, mixed-date text evidence, oldmanifest path drift and overclaiming semantic/legal/release acceptance. Countermeasures and rollback are exactowned-process cleanup, no shared modifications, pinned first artifacts, original-denominator scoring and explicit limited disposition. No acceptance criterion is waived; a completed evaluation with failures must be reported as such.
