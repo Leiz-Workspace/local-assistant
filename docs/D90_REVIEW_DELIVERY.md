@@ -58,3 +58,11 @@ Allowlist mới chỉ lấy request/reply/native bytes/measurement đã định 
 Bộ kiểm thử riêng cuối192PASS/0FAIL/0SKIP/2.33s;104authorityrelatedPASS/1.27s là scope khác. Không cộng chúng vào5.674tests của snapshot728files không đổi. Ruff E9/F/I đạt với đúng hai I001import-order ngoại lệ cho hai operator đã freeze/chạy; log lint ban đầu được giữ, không sửa byte nguồn đã dùng chỉ để làm đẹp lint. Không có bỏ qua lỗi thực thi E9/F.
 
 [UNRESTRICTED20/30so với CORE23/30](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md), [web variant và lỗi gốc](WEB_SEARCH_003_CURRENT_CHECK.md), [những gate còn lại](OUTSTANDING_WORK_STATUS.md). Gói review không phải bản release, thay model hoặc quyền deploy; D70nghe thực tế vẫn0/24.
+
+## Bản tích lũy hoàn tất đo D14 — 2026-10-26
+
+Gói mới `ai/data/backups/local-assistant-d14-20261026-full-files.zip` và receipt `.receipt.json` được tạo sau commit kết quả. Giữ toàn bộ1.327artifact của gói UNRESTRICTED/web đã ghimSHA, mọi fileGit thay đổi đầy đủ từ7fa4756đếnHEAD và bằng chứng D14được chọn theo allowlist:5PNGtrung tính, request/nativebytes/measurement, cancel/ready/launch/resource log, frozenprotocol, kết quả đầu/controllerINCOMPLETEvà suffixUNRESTRICTEDchưa từng chạy, source/testoperatorđã thực thi và báo cáo kiểm chứng. Không chứa model weights/projector/cache/SDK/database dump/secret/checkpoint hoặc dữ liệu hội thoại.
+
+17deliverycontrolsPASS; build kiểm chứng từngGit/extra byte/CRC/SHA, giữ12pointerCE002bằng byte archivecũ và SHAworkspace riêng. Dòng IDEdo người dùng thêm ở đầu devlog được giữ nguyên trong worktree, không commit/đưa vào ZIP: allowlist chỉ chấp nhận đúng prefixSHAđã quan sát và phần còn lại phải khớp GitHEAD, mọi delta khác bị chặn. Không tự xóa/chỉnh dòng người dùng để làm Gitclean. Receipt ghi rõ ngoại lệ worktree này mà không ghi nội dung dòng đó.
+
+[D14scorecard](D14_COMPLETION_SCORECARD.md):42modelquestions+5provenancechecks/profile, originalweights đủ100, compositecục bộCORE66.5/UNRESTRICTED52; strictformatqualityvẫnNOTQUALIFIED. 26generationmới gồm2cancel, không chạy lạiCORE/câu đã chấm. 271scopedtestsPASS/0FAIL/0SKIP/1.23s, RuffPASS/76function-classdescriptions; snapshotứng dụng728files/full5674lịch sử không đổi, không cộng scopedcount vào full. Không triển khai, thay model hoặc phê duyệt release.
