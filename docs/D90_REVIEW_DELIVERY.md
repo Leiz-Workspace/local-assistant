@@ -83,3 +83,10 @@ Gói mới `ai/data/backups/local-assistant-d14-quality-gate-20261026-full-files
 Gói mới `ai/data/backups/local-assistant-d14-review-fixes-20261026-full-files.zip` và receipt `.receipt.json` cùng thư mục chứa full file Git từ7fa4756đến commit ghi trong manifest, giữ1.769artifact của gói quality trước và evidence/operator/test mới được chọn rõ. Builder output nằm ngoài allowlist để tránh tự lấy log đang ghi. Đối chiếu lại Git/extra byte/CRC/SHA sau khi builder kết thúc; dòng IDE riêng của người dùng vẫn ngoài Git/ZIP.
 
 [Ba lỗi review đã sửa](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP, trong đó14deliverycontrols. Không có model call mới; original first report/freeze/scores giữ nguyên, quality vẫn FAIL. Verifier lịch sử cần giữ ZIP quality cũ có SHA1f2b7d9197a56488b7e7ae9ce1543a43b6817f54a57b4a0aafcd4471046ce463bên cạnh tại path gốc; ZIP mới không nhúng đệ quy ZIP cũ. Gói không chứa weights/secret/dump/SDK/cache, không chứng nhận full730 mới hoặc release.
+
+
+## Bản đầy đủ sau khắc phục semantic D14 — 2026-10-26
+
+Gói `ai/data/backups/local-assistant-d14-semantic-20261026-full-files.zip`, receipt `.receipt.json` cùng thư mục, được tạo từ GitHEAD sau commit kết quả. Giữ1.789extras trước đã pinSHAf48babaf43af5507ed717c8bc00ae46b2dc312590fe34c3e03d1f34e1ffda1ef, completeGitfileversions từ7fa4756 và toàn bộ firststudy artifacts/source snapshots/PNG/vocabulary recounts đã chọn rõ. Manifest tính246modelgenerations trên4study, kể cả invalidfirstcaller; không ẩn lỗi đầu. Builderoutput ngoàiallowlist, đối chiếu lại từngGit/extra byte/CRC/SHA sau khi process kết thúc. DòngIDEriêng đầu devlog vẫn ngoàiGit/ZIP.
+
+[Selected local path42/42/profile đã kiểm chứng](D14_SEMANTIC_REMEDIATION_RESULT.md).568scopedPASS/0SKIP gồm28newdeliverycontrols;732appfiles/all730oldexact, no newfull732claim. Không weights/SDK/cache/DBdump/secrets/checkpoints/defaultactivation/modelchange/release. CácZIPtrước giữ nguyên; chỉ dùng receipt/manifest để xác định chính xác commit/count/hash của gói mới.

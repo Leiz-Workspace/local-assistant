@@ -61,3 +61,8 @@ Keep the established COREbaseline and isolated optional UNRESTRICTEDprofile, exi
 ## Later authorized quality integration fix — 2026-10-26
 
 [Structural decoding and the explicit functional gate](D14_STRUCTURED_QUALITY_GATE_RESULT.md) are now implemented under ADR133without changing these original scores. New correctedwireformat42/42perprofile and freshCOREstream3/3verifytheformatfix; exactfactualscore31/42CORE/30/42UNRESTRICTEDstillfails thenew42/42qualitycriterion. Do not relabel this earlier66.5/52comparison or its raw firstfailures as passing.
+
+
+## Later semantic remediation — 2026-10-26
+
+This document's original cohort/first scores remain unchanged. A separately preregistered selected bounded-reasoning/boolean-contract path now verifies freshCORE42/42andUNRESTRICTED42/42 with full lifecycle/provenance/context checks: [actual remediation, retained failures and cost](D14_SEMANTIC_REMEDIATION_RESULT.md).568scopedPASS/0SKIP, all730priorappfiles exact/current732; no newfull732/model/default/release claim.

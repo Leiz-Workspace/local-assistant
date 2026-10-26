@@ -2,6 +2,8 @@
 
 **Mục đích:** Ghi lại ba lỗi đã sửa, bằng chứng kiểm thử và giới hạn của lần kiểm chứng ngày 2026-10-26.
 
+Historical cohort below remains unchanged. The later [selected semantic path is independently verified42/42perprofile](D14_SEMANTIC_REMEDIATION_RESULT.md); its result does not rewrite these first scores.
+
 Cả ba phát hiện review đã được sửa. [ADR-134](ADR/134-shared-d14-acceptance-and-retained-request-binding.md) ghi quyết định và ảnh hưởng; [receipt cuối](evidence/d14-structured-review-fixes-verification-final.json) giữ kết quả offline riêng. D14 vẫn **FORMAT FIX VERIFIED / FUNCTIONAL QUALITY GATE FAIL**.
 
 | Phát hiện | Thay đổi | Kiểm chứng |
@@ -27,3 +29,8 @@ Operator offline: `uv run --no-sync python -m benchmarks.scripts.d14_structured_
 Các lần collection đầu gặp trùng tên module public/private; thử importlib bộc lộ import theo tên của test cũ. Đã đổi tên và giữ test phụ thuộc artifact ở vùng operator riêng, chạy lại normal collection đạt đầy đủ, không sửa test ứng dụng đã PASS. Lượt lint theo cấu hình bên ngoài báo style C408/RUF059; dùng bộ E4/E7/E9/F tường minh, sửa biến không dùng và kiểm tra format, không thay hàng loạt code cũ để đổi style. Log ban đầu được giữ. Lần audit đầu dừng ở boot ID khác; sau khi tách rõ lịch sử/hiện tại, receipt mới ghi đúng khác biệt đó. Hai receipt review trung gian giữ riêng; receipt có hậu tố `final` là kết quả dùng cho bản sửa cuối.
 
 Gói code đầy đủ: `data/backups/local-assistant-d14-review-fixes-20261026-full-files.zip`, receipt `.receipt.json` cùng thư mục. Gói được tạo sau commit, giữ artifact trước và chỉ thêm evidence đã chọn; không chứa secret/weights/dump/cache. Receipt xác nhận Git-byte, artifact-byte, CRC và SHA sau khi build hoàn tất. Đây là bản review, không phải release.
+
+
+## Later semantic remediation — 2026-10-26
+
+This document's original cohort/first scores remain unchanged. A separately preregistered selected bounded-reasoning/boolean-contract path now verifies freshCORE42/42andUNRESTRICTED42/42 with full lifecycle/provenance/context checks: [actual remediation, retained failures and cost](D14_SEMANTIC_REMEDIATION_RESULT.md).568scopedPASS/0SKIP, all730priorappfiles exact/current732; no newfull732/model/default/release claim.

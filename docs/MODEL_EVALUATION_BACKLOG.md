@@ -322,3 +322,10 @@ D14-SEMANTIC-001:P1beforequalitypromotion; dependencies typedwirefix/current87ra
 ## 2026-10-26 — D14-SEMANTIC-001 root-cause investigation
 
 P1 remainsbeforequalitypromotion. [ADR135](ADR/135-bounded-request-local-reasoning-comparison.md)/[ADR136](ADR/136-opt-in-bounded-reasoning-profile-decoding.md): same-model paired fresh text native thinking12/12versus direct7/12perprofile after separate declared-budget wire replay. First caller512/1024budgetbug leaves first diagnostic INVALID/0acceptedthinking and every raw first row unchanged; fixed with boundary tests. Scope/dependencies/effort/risks/resources/rollback assessed before separately frozen full42freshcases/profile; no model/default/download/production adoption. Full preparation206controlsPASS, actual full result pending at this commit. Token/latency increase must remain explicit. Original42/42criteria and historicalscores unchanged; D70/manual/rights/release independent.
+
+
+## 2026-10-26 — D14-SEMANTIC-001 VERIFIED_LOCAL_OPT_IN
+
+[Actual remediation and all first studies](D14_SEMANTIC_REMEDIATION_RESULT.md): new explicit bounded-native-reasoning/boolean-contract path42/42format+facts/profile under unchangedcriteria, allnativecancel/5provenance/exit0/reaped/resource/baseline gates and40independentvocabulary-onlycontextrecountsPASS. Balancedfresh12/12perprofile6True/6False qualifies the generic contract before fullvalidation. No goldenums, oraclefeedback, oldquestionreruns, droppedfailures or agreedmodelreplacement. Initialinvalid512/1024researchcaller, originalCORE41/42full, old31/42and30/42wirefacts/composites allretained.
+
+Localcomponent/remediationtask COMPLETEforselectedpath; defaultAPIintegration/generalquality/rights/release is not adopted. Latency/tokens increase explicitly measured.568scopedPASS/0SKIP/6.17s; current732/all730oldexact/full5674historical. Fourstudies246firstgenerations; no further campaign/download/switch scheduled. Broader coding-quality debt and owner/manual gates retain their own acceptance.
