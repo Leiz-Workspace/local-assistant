@@ -596,3 +596,36 @@ def test_continuation_cannot_repeat_core_or_an_already_loaded_unrestricted(fault
     else:
         with pytest.raises(ValueError):
             MODULE["validate_continuation"](prior)
+
+
+def test_live_listener_is_never_mistaken_for_retired_owned_port():
+    """Refuse an occupied real loopback listener even when both probe and listener use SO_REUSEADDR."""
+    import socket
+
+    with socket.socket() as listener:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        with pytest.raises(OSError):
+            MODULE["require_free_port"](listener.getsockname()[1])
+
+
+def test_time_wait_is_not_an_active_native_listener():
+    """Allow the same bounded native rebind semantics after a real accepted connection retires without touching another process."""
+    import socket
+
+    listener = socket.socket()
+    listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listener.bind(("127.0.0.1", 0))
+    port = listener.getsockname()[1]
+    listener.listen()
+    client = socket.create_connection(("127.0.0.1", port))
+    accepted, _ = listener.accept()
+    try:
+        accepted.shutdown(socket.SHUT_WR)
+        assert client.recv(1) == b""
+    finally:
+        accepted.close()
+        client.close()
+        listener.close()
+    MODULE["require_free_port"](port)

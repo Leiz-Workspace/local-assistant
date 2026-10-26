@@ -260,3 +260,41 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
         p["functional_passed"] == (41 if wrong_fact else 42)
         for p in result["profiles"].values()
     )
+
+
+@pytest.mark.parametrize(
+    "fault", [None, "old_case", "already_loaded", "incomplete_core", "unsettled"]
+)
+def test_suffix_cannot_retry_or_replace_first_profile_quality_failures(fault):
+    """Admit only an unattempted suffix, retaining every failed first CORE row rather than using outcome-based resampling."""
+    prior = dict(
+        status="INCOMPLETE",
+        runtime_baseline_restored=True,
+        profiles=dict(
+            core=dict(
+                rows=[
+                    dict(id=str(n), model_requests=1, functional_passed=False)
+                    for n in range(42)
+                ],
+                runtime=dict(exit_code=0, reaped=True),
+                cancellation=dict(native_slot_retired=True),
+            ),
+            unrestricted=dict(rows=[], runtime=dict(pid=None)),
+        ),
+    )
+    if fault == "old_case":
+        prior["profiles"]["unrestricted"]["rows"] = [dict(model_requests=1)]
+    if fault == "already_loaded":
+        prior["profiles"]["unrestricted"]["runtime"]["pid"] = 1
+    if fault == "incomplete_core":
+        prior["profiles"]["core"]["rows"].pop()
+    if fault == "unsettled":
+        prior["profiles"]["core"]["runtime"]["reaped"] = False
+    if fault is None:
+        assert (
+            MODULE["validate_unmeasured_suffix"](prior)["rows"][0]["functional_passed"]
+            is False
+        )
+    else:
+        with pytest.raises(ValueError):
+            MODULE["validate_unmeasured_suffix"](prior)

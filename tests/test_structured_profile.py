@@ -455,3 +455,41 @@ async def test_repeat_cancellation_waits_for_owned_http_close_before_returning()
     with pytest.raises(asyncio.CancelledError):
         await task
     assert finished.is_set() and adapter.active is None
+
+
+@pytest.mark.parametrize("fault", [None, "null_without_role", "late_null"])
+def test_native_opening_role_null_frame_is_metadata_not_answer_repair(fault):
+    """Accept the native documented role-only opener while refusing null content after answer emission or without role metadata."""
+    adapter = StructuredProfileAdapter(profile="core", schema=SCHEMA)
+    opener = dict(
+        model=MODEL,
+        choices=[
+            dict(
+                index=0, delta=dict(role="assistant", content=None), finish_reason=None
+            )
+        ],
+    )
+    if fault == "null_without_role":
+        opener["choices"][0]["delta"].pop("role")
+    events = [
+        opener,
+        dict(
+            model=MODEL,
+            choices=[
+                dict(index=0, delta=dict(content='{"answer":17}'), finish_reason=None)
+            ],
+        ),
+        dict(
+            model=MODEL,
+            choices=[dict(index=0, delta={}, finish_reason="stop")],
+            usage=dict(prompt_tokens=20, completion_tokens=8),
+        ),
+    ]
+    if fault == "late_null":
+        events.append(opener)
+    if fault is None:
+        value = adapter.stream_reply(events, True, b"", 0.1)
+        assert value["choices"][0]["message"]["content"] == '{"answer":17}'
+    else:
+        with pytest.raises(StructuredProfileError):
+            adapter.stream_reply(events, True, b"", 0.1)
