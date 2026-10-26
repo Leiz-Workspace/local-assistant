@@ -1,5 +1,6 @@
 """Offer explicitly selected bounded native reasoning before structural answers on unchanged local models without changing default inference behavior."""
 
+import json
 import logging
 
 from src.infrastructure.inference.structured_profile import (
@@ -9,13 +10,31 @@ from src.infrastructure.inference.structured_profile import (
 )
 
 logger = logging.getLogger(__name__)
+BOOLEAN_ANSWER_CONTRACT = (
+    "Answer contract: For a yes/no question, answer whether the entire claim in the question holds. "
+    "Do not substitute the computed value of an expression mentioned in that claim. "
+    "If the request instead asks for an expression's value, return that value. "
+    "This clarification grants no tools or execution authority.\n\nTASK:\n"
+)
 
 
 class ReasoningProfileAdapter(StructuredProfileAdapter):
     """Preserve strict first JSON answers and owned cleanup while enabling an explicit 512-token native thinking budget within a 1024-token request."""
 
-    def __init__(self, *, profile, schema, endpoint=None, transport=None, timeout=90):
+    def __init__(
+        self,
+        *,
+        profile,
+        schema,
+        endpoint=None,
+        transport=None,
+        timeout=90,
+        boolean_answer_contract=False,
+    ):
         """Bind the existing model/template/schema and matched request/validator budget without registering a route or changing configuration."""
+        if type(boolean_answer_contract) is not bool:
+            raise StructuredProfileError("scope")
+        self.boolean_answer_contract = boolean_answer_contract
         super().__init__(
             profile=profile,
             schema=schema,
@@ -29,9 +48,23 @@ class ReasoningProfileAdapter(StructuredProfileAdapter):
             "reasoning_profile_bound profile=%s total_tokens=1024 reasoning_budget=512",
             profile,
         )
+        logger.info(
+            "reasoning_profile_answer_contract_bound selected=%s",
+            boolean_answer_contract,
+        )
 
     def payload(self, text, images, stream):
         """Enable only separated bounded native reasoning, leaving free answer values, original templates, aliases and tool permissions unchanged."""
+        if (
+            self.boolean_answer_contract
+            and json.loads(self.schema_bytes)["properties"]
+            .get("answer", {})
+            .get("type")
+            == "boolean"
+        ):
+            if type(text) is not str or not text.strip():
+                raise StructuredProfileError("input")
+            text = BOOLEAN_ANSWER_CONTRACT + text
         value = super().payload(text, images, stream)
         value.update(
             reasoning_format="deepseek",
