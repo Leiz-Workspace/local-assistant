@@ -39,3 +39,8 @@ Read-only posttrial verification checks all frozenartifact hashes, current730sou
 ## Remaining disposition
 
 The requested formatting/stream integration fix and executable quality gate are implemented and tested. The gate correctly blocks the remaining factual errors. Do not mark general D14qualityPASS or select/replace a model based on format results. Next P1semantic remediation needs an assessed mechanism, independent references and fresh preregistered evaluation; expected values must not enter grammar or hidden feedback. Existing model choices, first scores and owner/manual/voice/license/product/release gates remain binding.
+
+
+## Code review correction — 2026-10-26
+
+[All three reviewed implementation gaps are fixed](D14_REVIEW_FIXES.md): the runner includes the declared compatibility cohort, both callers use the same five-provenance/lifecycle acceptance, and the verifier reconstructs complete payloads and authenticates requests against the pinned prior delivery. [Separate final offline receipt](evidence/d14-structured-review-fixes-verification-final.json), 418scoped PASS/0FAIL/0SKIP/5.15s. No new generation, score rewrite or new full-suite claim. Functional quality remains FAIL with unchanged 31/42CORE and30/42UNRESTRICTED corrected-wire facts. Earlier first results above are historical and unchanged.
