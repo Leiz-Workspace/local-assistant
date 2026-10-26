@@ -315,8 +315,9 @@ async def test_frozen_input_drift_rejected_before_model_or_runtime_inventory(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("failed_first", [False, True])
+@pytest.mark.parametrize("suffix", [False, True])
 async def test_complete_campaign_spends_exact_declared_requests_and_retires_both_profiles(
-    tmp_path, monkeypatch, failed_first
+    tmp_path, monkeypatch, failed_first, suffix
 ):
     """Exercise the complete real controller with native-shaped HTTP fixtures, exact request accounting, retained errors and no weights/GPU/network."""
     globals_ = MODULE["run"].__globals__
@@ -365,6 +366,44 @@ async def test_complete_campaign_spends_exact_declared_requests_and_retires_both
             )
         )
     )
+    if suffix:
+        prior_root = tmp_path / "previous"
+        (prior_root / "unrestricted").mkdir(parents=True)
+        prior_path = prior_root / "result.json"
+        core_rows = [
+            dict(
+                id=case["id"], category=case["category"], passed=True, model_requests=1
+            )
+            for case in media + context + performance
+        ]
+        prior_path.write_text(
+            json.dumps(
+                dict(
+                    status="INCOMPLETE",
+                    runtime_baseline_restored=True,
+                    profiles=dict(
+                        core=dict(
+                            rows=core_rows,
+                            runtime=dict(reaped=True, exit_code=0, guard_failure=None),
+                            cancellation=dict(
+                                model_requests=1, native_slot_retired=True
+                            ),
+                        ),
+                        unrestricted=dict(
+                            rows=[], runtime=dict(pid=None, reaped=False)
+                        ),
+                    ),
+                )
+            )
+        )
+        data = json.loads(freeze.read_text())
+        data.update(
+            retained_prior_result=dict(
+                path=str(prior_path), sha256=MODULE["digest"](prior_path)
+            ),
+            profiles_to_execute=["unrestricted"],
+        )
+        freeze.write_text(json.dumps(data))
     model_dispatches = dict(core=0, unrestricted=0)
     retired = []
 
@@ -453,12 +492,15 @@ async def test_complete_campaign_spends_exact_declared_requests_and_retires_both
     monkeypatch.setitem(globals_, "provenance", lambda profile: checks())
     monkeypatch.setattr(httpx, "AsyncClient", client_factory)
     result = await MODULE["run"]()
-    assert model_dispatches == dict(core=13, unrestricted=13)
-    assert retired == ["core", "unrestricted"] and result["runtime_baseline_restored"]
+    assert model_dispatches == dict(core=0 if suffix else 13, unrestricted=13)
+    assert (
+        retired == (["unrestricted"] if suffix else ["core", "unrestricted"])
+        and result["runtime_baseline_restored"]
+    )
     assert result["status"] == "MEASUREMENT_COMPLETE_QUALITY_FINDINGS_RETAINED"
     for profile in ["core", "unrestricted"]:
         assert len(result["profiles"][profile]["rows"]) == 12
-        if failed_first:
+        if failed_first and not (suffix and profile == "core"):
             assert result["profiles"][profile]["rows"][0]["passed"] is False
             assert (
                 output / profile / "media-0/native-response.bin"
@@ -509,3 +551,48 @@ def test_provenance_flattened_copy_requires_original_complete_hash(
     result = MODULE["source_binding"](item, directory)
     assert result["complete_sha256_matches"] is (fault is None)
     assert result["original_path_exists"] is False
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        None,
+        "attempted",
+        "loaded",
+        "partial_core",
+        "core_live",
+        "cancel_uncertain",
+        "not_restored",
+    ],
+)
+def test_continuation_cannot_repeat_core_or_an_already_loaded_unrestricted(fault):
+    """Admit only the genuinely unmeasured suffix with complete immutable first CORE accounting and settled lifecycle."""
+    prior = dict(
+        status="INCOMPLETE",
+        runtime_baseline_restored=True,
+        profiles=dict(
+            core=dict(
+                rows=[dict(id=str(n), model_requests=1) for n in range(12)],
+                runtime=dict(reaped=True, exit_code=0, guard_failure=None),
+                cancellation=dict(model_requests=1, native_slot_retired=True),
+            ),
+            unrestricted=dict(rows=[], runtime=dict(pid=None, reaped=False)),
+        ),
+    )
+    if fault == "attempted":
+        prior["profiles"]["unrestricted"]["rows"] = [dict(model_requests=1)]
+    if fault == "loaded":
+        prior["profiles"]["unrestricted"]["runtime"]["pid"] = 123
+    if fault == "partial_core":
+        prior["profiles"]["core"]["rows"].pop()
+    if fault == "core_live":
+        prior["profiles"]["core"]["runtime"]["reaped"] = False
+    if fault == "cancel_uncertain":
+        prior["profiles"]["core"]["cancellation"]["native_slot_retired"] = False
+    if fault == "not_restored":
+        prior["runtime_baseline_restored"] = False
+    if fault is None:
+        assert MODULE["validate_continuation"](prior) == prior["profiles"]["core"]
+    else:
+        with pytest.raises(ValueError):
+            MODULE["validate_continuation"](prior)
