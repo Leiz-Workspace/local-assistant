@@ -41,6 +41,7 @@ class TrialAdapter(StructuredProfileAdapter):
             raise StructuredProfileError("scope")
         self.thinking = thinking
         super().__init__(max_tokens=512, timeout=90, **options)
+        self.max_tokens = 1024
         logger.info("d14_reasoning_trial_bound thinking=%s", thinking)
 
     def payload(self, text, images, stream):

@@ -69,6 +69,41 @@ def test_matched_payload_changes_only_declared_request_local_reasoning_fields(pr
     assert direct == reasoned
 
 
+@pytest.mark.parametrize("thinking", [False, True])
+@pytest.mark.parametrize("tokens", [540, 1024, 1025])
+def test_request_and_validation_share_the_complete_declared_token_budget(
+    thinking, tokens
+):
+    """Cover native usage above512 and reject only values beyond the declared1024 total budget."""
+    case = trial.make_cases()[0]
+    adapter = trial.TrialAdapter(
+        profile="core",
+        schema=case["schema"],
+        thinking=thinking,
+        endpoint="http://127.0.0.1:18080",
+    )
+    assert (
+        adapter.max_tokens
+        == adapter.payload(case["prompt"], (), False)["max_tokens"]
+        == 1024
+    )
+    value = dict(
+        model=adapter.model,
+        choices=[
+            dict(
+                message=dict(role="assistant", content=json.dumps(case["expected"])),
+                finish_reason="stop",
+            )
+        ],
+        usage=dict(prompt_tokens=100, completion_tokens=tokens),
+    )
+    if tokens <= 1024:
+        assert adapter.validate_reply(value)[1]["completion_tokens"] == tokens
+    else:
+        with pytest.raises(StructuredProfileError):
+            adapter.validate_reply(value)
+
+
 @pytest.mark.parametrize("fault", ["endpoint", "truthy", "image", "stream"])
 def test_research_adapter_does_not_expand_scope(fault):
     """Confine this experiment to literal host conditions and one owned text endpoint without changing production adapter permissions."""
