@@ -7,6 +7,7 @@ import runpy
 import httpx
 import pytest
 
+from benchmarks.scripts.d14_structured_acceptance import PROVENANCE_IDS
 from src.infrastructure.inference.structured_profile import (
     compile_schema,
     matches_schema,
@@ -97,16 +98,47 @@ def test_fresh_arithmetic_and_python_references_are_independently_computed(corpu
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("wrong_fact", [False, True])
+@pytest.mark.parametrize(
+    "wrong_fact",
+    [
+        False,
+        True,
+        "compatibility_good",
+        "compatibility_fact",
+        "compatibility_format",
+        "compatibility_lifecycle",
+        "provenance",
+    ],
+)
 async def test_actual_controller_retains_first_values_and_never_promotes_shape_only_success(
     corpus, tmp_path, monkeypatch, wrong_fact
 ):
     """Run all84 native-shaped model dispatches through the real adapter while an incorrect typed answer still fails functional quality."""
     globals_ = MODULE["run"].__globals__
     freeze = tmp_path / "freeze.json"
+    compatibility = (
+        [
+            dict(
+                id=f"compatibility-{n}",
+                category="performance",
+                prompt=f"Return object with answer {n} and source_ids [].",
+                schema=corpus[0]["schema"],
+                expected=dict(answer=n, source_ids=[]),
+                stream=True,
+            )
+            for n in range(3)
+        ]
+        if isinstance(wrong_fact, str) and wrong_fact.startswith("compatibility")
+        else []
+    )
     freeze.write_text(
         json.dumps(
-            dict(sha256={}, application_sha256={"fixture": "source"}, cases=corpus)
+            dict(
+                sha256={},
+                application_sha256={"fixture": "source"},
+                cases=corpus,
+                fresh_stream_compatibility_cases=compatibility,
+            )
         )
     )
     active = {"profile": None}
@@ -119,6 +151,7 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
         def __init__(self, profile, root):
             """Bind only the next declared profile and deterministic test lifecycle state."""
             self.profile, self.failure, self.exit_code = profile, None, None
+            self.compatibility = root.name == "core-stream-compatibility"
 
         async def start(self):
             """Make only this fixture's alias available to native-shaped discovery."""
@@ -131,7 +164,14 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
 
         def receipt(self):
             """Return only authored fixture retirement facts without a fabricated memory benchmark."""
-            return dict(reaped=True, exit_code=0, guard_failure=None, fixture_only=True)
+            return dict(
+                reaped=not (
+                    self.compatibility and wrong_fact == "compatibility_lifecycle"
+                ),
+                exit_code=0,
+                guard_failure=None,
+                fixture_only=True,
+            )
 
     async def calibrate(client, case):
         """Provide declared long-context fixture metadata without tokenizer or model traffic."""
@@ -161,7 +201,10 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
 
     def provenance(profile):
         """Return five distinct non-model fixture observations for quality-gate control flow."""
-        return [dict(id=str(n), passed=True) for n in range(5)]
+        return [
+            dict(id=key, passed=wrong_fact != "provenance")
+            for key in sorted(PROVENANCE_IDS)
+        ]
 
     def handler(request):
         """Serve actual adapter discovery and bounded native wire results while counting each first model generation."""
@@ -179,12 +222,22 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
                 ),
             )
         profile = active["profile"]
-        case = corpus[counters[profile]]
+        case = (corpus + compatibility if profile == "core" else corpus)[
+            counters[profile]
+        ]
         counters[profile] += 1
         value = copy.deepcopy(case["expected"])
-        if wrong_fact and case["id"] == "fresh-reasoning-1":
+        if (wrong_fact is True and case["id"] == "fresh-reasoning-1") or (
+            wrong_fact == "compatibility_fact"
+            and case["id"].startswith("compatibility-")
+        ):
             value["answer"] = -999
-        content = json.dumps(value, ensure_ascii=False)
+        content = (
+            "[]"
+            if wrong_fact == "compatibility_format"
+            and case["id"].startswith("compatibility-")
+            else json.dumps(value, ensure_ascii=False)
+        )
         usage = dict(
             prompt_tokens=30550 if case["category"] == "memory_context" else 100,
             completion_tokens=32,
@@ -248,16 +301,18 @@ async def test_actual_controller_retains_first_values_and_never_promotes_shape_o
         monkeypatch.setitem(MODULE["BASE"], key, value)
     monkeypatch.setattr(httpx, "AsyncClient", client_factory)
     result = await MODULE["run"]()
-    assert counters == dict(core=42, unrestricted=42) and retired == [
-        "core",
-        "unrestricted",
-    ]
-    assert result["format_gate_passed"] and result["quality_gate_passed"] is (
-        not wrong_fact
+    assert counters == dict(core=42 + len(compatibility), unrestricted=42)
+    assert retired == ["core", "unrestricted"] + (["core"] if compatibility else [])
+    assert result["format_gate_passed"] is (wrong_fact != "compatibility_format")
+    assert result["quality_gate_passed"] is (
+        wrong_fact is False or wrong_fact == "compatibility_good"
     )
-    assert result["functional_gate_passed"] is (not wrong_fact)
+    assert result["functional_gate_passed"] is (
+        wrong_fact is not True
+        and wrong_fact not in {"compatibility_fact", "compatibility_format"}
+    )
     assert all(
-        p["functional_passed"] == (41 if wrong_fact else 42)
+        p["functional_passed"] == (41 if wrong_fact is True else 42)
         for p in result["profiles"].values()
     )
 

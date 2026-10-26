@@ -13,6 +13,7 @@ from pathlib import Path
 import httpx
 from PIL import Image, ImageDraw, ImageFont
 
+from benchmarks.scripts.d14_structured_acceptance import assess_gate
 from scripts.full_regression import source_manifest, verify_manifest
 from scripts.profile_excerpt_evaluation import publish
 from src.infrastructure.inference.structured_profile import (
@@ -551,28 +552,11 @@ async def run():
                 declared_cases=42,
                 completed_cases=len(rows),
             )
-        summary["format_gate_passed"] = (
-            summary["status"] == "MEASUREMENT_COMPLETE"
-            and set(summary["profiles"]) == {"core", "unrestricted"}
-            and all(
-                v["format_passed"] == v["completed_cases"] == 42
-                for v in summary["profiles"].values()
-            )
-        )
-        summary["functional_gate_passed"] = summary["format_gate_passed"] and all(
-            v["functional_passed"] == 42 for v in summary["profiles"].values()
-        )
-        summary["quality_gate_passed"] = (
-            summary["functional_gate_passed"]
-            and summary["runtime_baseline_restored"]
-            and all(
-                value.get("cancellation", {}).get("native_slot_retired") is True
-                and len(value.get("provenance", [])) == 5
-                and all(row["passed"] for row in value["provenance"])
-                and value.get("runtime", {}).get("reaped") is True
-                and value["runtime"].get("exit_code") == 0
-                and value["runtime"].get("guard_failure") is None
-                for value in summary["profiles"].values()
+        summary.update(
+            assess_gate(
+                summary,
+                frozen["cases"],
+                frozen.get("fresh_stream_compatibility_cases", []),
             )
         )
         publish(OUTPUT / "result.json", summary)

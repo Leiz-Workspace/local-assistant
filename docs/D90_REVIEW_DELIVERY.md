@@ -76,3 +76,10 @@ Gói mới `ai/data/backups/local-assistant-d14-quality-gate-20261026-full-files
 11deliverycontrolsPASS: chặn traversal/unknownmetadata/secret/modeldump/activebuilderlog, kiểm tra đúng priorZIP/receipt. Build phải đối chiếu từngGit/extra byte/CRC/SHA;12CE002latestpointer giữ byte archivecũ. Không chứa weights/projector/cache/SDK/database dump/.env/checkpoint/signingkey. DòngIDEcủangườidùngởđầudevlog vẫn ngoàiGit/ZIP; kiểm tra exactprefixSHA vàcommittedbody, không tự xóa hoặc commit thay người dùng. Builderoutput đặt ngoài namespaceinput để không tự cuốn logđangghi; xác minh lại byte sau khi processkết thúc.
 
 [Actual gate](D14_STRUCTURED_QUALITY_GATE_RESULT.md): **formatfixVERIFIED, functionalqualityFAIL**. Giữ firstCORE39format/28functional; correctedwire42/31; UNRESTRICTEDfirst42/30;3freshCOREstream3/3. Không nâng điểm cũ hoặc đổi đápán/schemađể làmPASS.394scopedPASS/RuffPASS, không cộng vào5674full lịch sử. Current730files=728unchanged+2additive; không new730full/release/model/default/productionactivationclaim.
+
+
+## Bản sửa ba lỗi review D14 — 2026-10-26
+
+Gói mới `ai/data/backups/local-assistant-d14-review-fixes-20261026-full-files.zip` và receipt `.receipt.json` cùng thư mục chứa full file Git từ7fa4756đến commit ghi trong manifest, giữ1.769artifact của gói quality trước và evidence/operator/test mới được chọn rõ. Builder output nằm ngoài allowlist để tránh tự lấy log đang ghi. Đối chiếu lại Git/extra byte/CRC/SHA sau khi builder kết thúc; dòng IDE riêng của người dùng vẫn ngoài Git/ZIP.
+
+[Ba lỗi review đã sửa](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP, trong đó14deliverycontrols. Không có model call mới; original first report/freeze/scores giữ nguyên, quality vẫn FAIL. Verifier lịch sử cần giữ ZIP quality cũ có SHA1f2b7d9197a56488b7e7ae9ce1543a43b6817f54a57b4a0aafcd4471046ce463bên cạnh tại path gốc; ZIP mới không nhúng đệ quy ZIP cũ. Gói không chứa weights/secret/dump/SDK/cache, không chứng nhận full730 mới hoặc release.

@@ -67,3 +67,6 @@ D14follow-up2026-10-26completes missing domains, historical reconciliation and b
 
 
 D14structuredfix2026-10-26: [formatintegrationverified,functionalqualitygateFAIL](D14_STRUCTURED_QUALITY_GATE_RESULT.md). Newcurrent730files=728oldunchanged+opt-inadapter/test;394scopedPASS/0SKIP/RuffPASSand89actualnativeattempts, no new730-file full claim. Correctedwireformat42/42each, exactfacts31/42CORE/30/42UNRESTRICTEDbelow thepreregistered42/42. Firstscores/compositesimmutable, no expectedvaluesingrammar/model/default/actionauthority/releasechange. This gate actively blocks promotion despite validJSON.
+
+
+2026-10-26 D14review follow-up: [three code-review defects fixed](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP. Shared fail-closed acceptance includes compatibility/provenance/runtime; full request reconstruction and prior-archive binding reject altered prompts despite updated self-hashes. Offline verification only, zero new model requests, unchanged730application files and historical scores. Functional quality remains FAIL; no model/default/service/data/release approval or manual-gate closure.
