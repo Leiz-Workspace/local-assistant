@@ -6,7 +6,10 @@ import json
 import httpx
 import pytest
 
-from src.infrastructure.inference.reasoning_profile import ReasoningProfileAdapter
+from src.infrastructure.inference.reasoning_profile import (
+    BOOLEAN_ANSWER_CONTRACT,
+    ReasoningProfileAdapter,
+)
 from src.infrastructure.inference.structured_profile import (
     StructuredProfileAdapter,
     StructuredProfileError,
@@ -61,6 +64,61 @@ def test_default_adapter_and_templates_are_unchanged():
     assert b["reasoning_budget_tokens"] == 512 and b["reasoning_format"] == "deepseek"
     for key in ["messages", "response_format", "model", "cache_prompt", "temperature"]:
         assert a[key] == b[key]
+
+
+@pytest.mark.parametrize("kind", ["integer", "boolean"])
+def test_optional_contract_is_host_selected_shape_based_and_never_embeds_answer_values(
+    kind,
+):
+    """Clarify only boolean tasks under an explicit host option while retaining exact templates/schema and the unchanged default path."""
+    schema = dict(
+        type="object",
+        properties=dict(answer=dict(type=kind)),
+        required=["answer"],
+        additionalProperties=False,
+    )
+    default = ReasoningProfileAdapter(profile="core", schema=schema)
+    selected = ReasoningProfileAdapter(
+        profile="core", schema=schema, boolean_answer_contract=True
+    )
+    plain = default.payload("User question", (), False)
+    payload = selected.payload("User question", (), False)
+    assert plain["messages"][1]["content"] == "User question"
+    assert (
+        payload["messages"][1]["content"]
+        == (BOOLEAN_ANSWER_CONTRACT if kind == "boolean" else "") + "User question"
+    )
+    assert payload["messages"][0] == plain["messages"][0]
+    assert payload["response_format"] == plain["response_format"]
+    assert not any(
+        key in json.dumps(payload["response_format"])
+        for key in ['"enum"', '"const"', '"default"', '"description"']
+    )
+
+
+@pytest.mark.parametrize("value", [1, "true", None])
+def test_answer_contract_cannot_be_selected_by_truthy_untyped_values(value):
+    """Require an explicit literal host boolean rather than coercing caller input into the experimental contract mode."""
+    with pytest.raises(StructuredProfileError, match="scope"):
+        ReasoningProfileAdapter(
+            profile="core", schema=SCHEMA, boolean_answer_contract=value
+        )
+
+
+@pytest.mark.parametrize("text", ["", "   ", None])
+def test_contract_prefix_does_not_admit_an_empty_original_request(text):
+    """Keep the original nonempty user-input requirement even when a host clarification would add its own text."""
+    schema = dict(
+        type="object",
+        properties=dict(answer=dict(type="boolean")),
+        required=["answer"],
+        additionalProperties=False,
+    )
+    adapter = ReasoningProfileAdapter(
+        profile="core", schema=schema, boolean_answer_contract=True
+    )
+    with pytest.raises(StructuredProfileError, match="input"):
+        adapter.payload(text, (), False)
 
 
 @pytest.mark.parametrize(
