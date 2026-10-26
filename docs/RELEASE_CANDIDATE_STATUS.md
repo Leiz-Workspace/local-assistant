@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current full: **5674 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1798.59s/exit0,728unchanged files; all723prior source hashes match. Includes31new feedback service controls and fresh corpus/oracle tests. Joined qualified read-only audit confirms original runtime/business data/security with the explicitly diagnosed quota timestamp-only delta. Separate valid-exact-grant denial1PASS1.16s. Earlier5596/5507PASS and original umask failure remain dated history. No model/manual/product/release approval, tag, push or deployment. [Current terminal/source/audit](evidence/ce003-full-acceptance.json).
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. [D14selected local semantic path now verified42/42/profile](D14_SEMANTIC_REMEDIATION_RESULT.md); current732application files/all730priorbytes unchanged,568scopedPASS. Historicalfull and release gates below remain separate. Current full: **5674 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1798.59s/exit0,728unchanged files; all723prior source hashes match. Includes31new feedback service controls and fresh corpus/oracle tests. Joined qualified read-only audit confirms original runtime/business data/security with the explicitly diagnosed quota timestamp-only delta. Separate valid-exact-grant denial1PASS1.16s. Earlier5596/5507PASS and original umask failure remain dated history. No model/manual/product/release approval, tag, push or deployment. [Current terminal/source/audit](evidence/ce003-full-acceptance.json).
 
 ## Completed local engineering evidence
 
@@ -70,3 +70,6 @@ D14structuredfix2026-10-26: [formatintegrationverified,functionalqualitygateFAIL
 
 
 2026-10-26 D14review follow-up: [three code-review defects fixed](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP. Shared fail-closed acceptance includes compatibility/provenance/runtime; full request reconstruction and prior-archive binding reject altered prompts despite updated self-hashes. Offline verification only, zero new model requests, unchanged730application files and historical scores. Functional quality remains FAIL; no model/default/service/data/release approval or manual-gate closure.
+
+
+D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is locally qualified on fresh42/42facts+format/profile, with independently reconstructedwire/context, nativecancel,5provenance/retirement/baselinePASS. [Full evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md). Earlier invalid researchcaller/fullCORE41/42andalloriginalscores preserved, four studies246firstgenerations/0automaticretry, no model/default/production activation.568scopedPASS/current732/all730oldexact is not a new732-file full run or release/manual/rights approval.

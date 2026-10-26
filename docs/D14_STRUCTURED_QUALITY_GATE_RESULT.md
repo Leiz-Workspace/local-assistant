@@ -2,6 +2,8 @@
 
 **Purpose:** Report the implemented format fix, actual fresh model outcomes and the quality gate's explicit refusal to promote incorrect answers.
 
+Historical cohort below remains unchanged. The later [selected semantic path is independently verified42/42perprofile](D14_SEMANTIC_REMEDIATION_RESULT.md); its result does not rewrite these first scores.
+
 Date:2026-10-26. **Format integration VERIFIED; functional quality gate FAIL.** [Preregistered criteria](D14_STRUCTURED_QUALITY_GATE_PROTOCOL.md), [ADR133](ADR/133-opt-in-host-schema-profile-decoding.md), [exact independent first/wire verification](evidence/d14-structured-quality-gate-first-result.json).
 
 ## Changes and first actual results
@@ -44,3 +46,8 @@ The requested formatting/stream integration fix and executable quality gate are 
 ## Code review correction — 2026-10-26
 
 [All three reviewed implementation gaps are fixed](D14_REVIEW_FIXES.md): the runner includes the declared compatibility cohort, both callers use the same five-provenance/lifecycle acceptance, and the verifier reconstructs complete payloads and authenticates requests against the pinned prior delivery. [Separate final offline receipt](evidence/d14-structured-review-fixes-verification-final.json), 418scoped PASS/0FAIL/0SKIP/5.15s. No new generation, score rewrite or new full-suite claim. Functional quality remains FAIL with unchanged 31/42CORE and30/42UNRESTRICTED corrected-wire facts. Earlier first results above are historical and unchanged.
+
+
+## Later semantic remediation — 2026-10-26
+
+This document's original cohort/first scores remain unchanged. A separately preregistered selected bounded-reasoning/boolean-contract path now verifies freshCORE42/42andUNRESTRICTED42/42 with full lifecycle/provenance/context checks: [actual remediation, retained failures and cost](D14_SEMANTIC_REMEDIATION_RESULT.md).568scopedPASS/0SKIP, all730priorappfiles exact/current732; no newfull732/model/default/release claim.
