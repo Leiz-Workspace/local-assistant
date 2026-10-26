@@ -35,3 +35,8 @@ Read-only inspection of the actual day14-core-gate/day14-unrestricted-gate repor
 ## Authorized existing UNRESTRICTED follow-up
 
 The historical D88phase above did not load UNRESTRICTED. Later owner-requested [MQ002paired trial](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md) completed30actual first native generations:20/30/45of70textpoints, versus retainedCORE23/30/52.5of70. Original30otherpoints/overall100pointnull/signoff stayopen. CPUwholeprocesspeakRSS RAM7.68GiB/noGPUoffload/32K, temporarychildretired/originalCOREunchanged, no new tools/model/default/license/provenance approval. This closes the narrow previously missing same-question profile comparison, not broad quality or product acceptance.
+
+
+## D14measurement closure — 2026-10-26
+
+[Completed missing-domain measurements](D14_COMPLETION_SCORECARD.md) now cover original100weight across42modelquestions+5localprovenancechecks/profile. Localmixed-datecompositeCORE66.5/UNRESTRICTED52retains strictformat and oldtext errors; no general capabilitypercentage/qualityPASS. Local5/5provenance checks verify exact existingbytes/cachedeclarations/runtime and knownflattenedcopypaths; originalmetadata untouched, no newremoteattestation/legalclearance. Both owned32KGPUprofilesloaded/cancelled/retired on currentboot; historicalCOREPIDabsentafterrestart. No chosenmodel/default/production/license decision change.
