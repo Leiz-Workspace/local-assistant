@@ -459,6 +459,13 @@ class StructuredProfileAdapter:
                 ):
                     raise StructuredProfileError("wire")
                 text = delta.get("content", "")
+                if (
+                    text is None
+                    and delta.get("role") == "assistant"
+                    and not texts
+                    and finish is None
+                ):
+                    text = ""
                 if type(text) is not str or text and finish is not None:
                     raise StructuredProfileError("wire")
                 texts.append(text)

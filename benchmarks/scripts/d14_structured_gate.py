@@ -1,5 +1,6 @@
 """Evaluate an explicitly preregistered structured-output quality gate on fresh same-case sequential existing profiles without rewriting prior D14 results."""
 
+import argparse
 import asyncio
 import json
 import logging
@@ -412,6 +413,27 @@ async def measure(client, profile, case, root):
     return row
 
 
+def validate_unmeasured_suffix(prior):
+    """Require complete first CORE accounting and a never-loaded UNRESTRICTED suffix; preserve all quality failures without repeating a case."""
+    core = prior.get("profiles", {}).get("core", {})
+    other = prior.get("profiles", {}).get("unrestricted", {})
+    if (
+        prior.get("status") != "INCOMPLETE"
+        or prior.get("runtime_baseline_restored") is not True
+        or len(core.get("rows", [])) != 42
+        or len({r["id"] for r in core["rows"]}) != 42
+        or any(r.get("model_requests") != 1 for r in core["rows"])
+        or core.get("runtime", {}).get("exit_code") != 0
+        or core["runtime"].get("reaped") is not True
+        or core.get("cancellation", {}).get("native_slot_retired") is not True
+        or other.get("rows") != []
+        or other.get("runtime", {}).get("pid") is not None
+    ):
+        raise ValueError("structured_suffix_already_attempted_or_incomplete")
+    logger.info("structured_unmeasured_suffix_verified")
+    return core
+
+
 async def run():
     """Run one frozen fresh42-case/profile gate with all first failures retained and owned native processes retired before final assessment."""
     frozen = json.loads(FREEZE.read_text())
@@ -434,9 +456,25 @@ async def run():
         answers_in_schema=False,
     )
     publish(OUTPUT / "execution-freeze.json", frozen)
+    if "retained_prior_result" in frozen:
+        prior_path = ROOT / frozen["retained_prior_result"]["path"]
+        if BASE["digest"](prior_path) != frozen["retained_prior_result"]["sha256"]:
+            raise ValueError("structured_prior_result_changed")
+        if {p.name for p in (prior_path.parent / "unrestricted").iterdir()} - {
+            "preflight.json"
+        }:
+            raise ValueError("structured_prior_suffix_has_native_artifacts")
+        summary["profiles"]["core"] = validate_unmeasured_suffix(
+            json.loads(prior_path.read_text())
+        )
+        summary["retained_prior_result"] = frozen["retained_prior_result"]
+        summary["profile_artifact_roots"] = dict(
+            core=str(prior_path.parent / "core"),
+            unrestricted=str(OUTPUT / "unrestricted"),
+        )
     try:
         async with asyncio.timeout(2400):
-            for profile in ["core", "unrestricted"]:
+            for profile in frozen.get("profiles_to_execute", ["core", "unrestricted"]):
                 root = OUTPUT / profile
                 root.mkdir(mode=0o700)
                 server = BASE["OwnedServer"](profile, root)
@@ -475,6 +513,24 @@ async def run():
                     raise ValueError(
                         "structured_between_profile_headroom_not_recovered"
                     )
+            if frozen.get("fresh_stream_compatibility_cases"):
+                root = OUTPUT / "core-stream-compatibility"
+                root.mkdir(mode=0o700)
+                server = BASE["OwnedServer"]("core", root)
+                rows = []
+                summary["fresh_stream_compatibility_rows"] = rows
+                try:
+                    await server.start()
+                    async with httpx.AsyncClient(
+                        base_url="http://127.0.0.1:18080", trust_env=False, timeout=100
+                    ) as client:
+                        for case in frozen["fresh_stream_compatibility_cases"]:
+                            rows.append(await measure(client, "core", case, root))
+                finally:
+                    await server.stop()
+                    summary["fresh_stream_compatibility_runtime"] = server.receipt()
+                    if server.failure or server.exit_code != 0:
+                        raise ValueError("structured_compatibility_native_retirement")
             summary["status"] = "MEASUREMENT_COMPLETE"
     except BaseException as exc:
         summary.update(
@@ -525,6 +581,12 @@ async def run():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--unmeasured-suffix", action="store_true")
+    options = parser.parse_args()
+    if options.unmeasured_suffix:
+        OUTPUT = ROOT / "data/backups/d14-structured-suffix-20261026"
+        FREEZE = ROOT / "docs/evidence/d14-structured-unmeasured-suffix-freeze.json"
     result = asyncio.run(run())
     print(
         json.dumps(

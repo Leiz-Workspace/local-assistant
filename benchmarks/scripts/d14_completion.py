@@ -111,6 +111,14 @@ def resources(pid=None):
     )
 
 
+def require_free_port(port=18080):
+    """Reject a live listener while allowing native SO_REUSEADDR rebinding after owned connections enter TIME_WAIT."""
+    with socket.socket() as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        probe.bind(("127.0.0.1", port))
+    LOGGER.info("d14_owned_loopback_port_available")
+
+
 def command(profile):
     """Select only the exact configured existing profile, projector and runtime with identical sequential GPU settings."""
     if profile not in {"core", "unrestricted"}:
@@ -469,8 +477,7 @@ class OwnedServer:
             or sample["GPU_free_MiB"] < 14 * 1024
         ):
             raise ValueError("d14_preflight_headroom")
-        with socket.socket() as probe:
-            probe.bind(("127.0.0.1", 18080))
+        require_free_port()
         environment = {
             key: os.environ[key]
             for key in ["PATH", "LANG", "LC_ALL", "LD_LIBRARY_PATH"]
