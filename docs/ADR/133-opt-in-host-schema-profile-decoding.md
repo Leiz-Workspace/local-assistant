@@ -1,0 +1,13 @@
+# ADR-133 — Opt-in host-schema decoding for the D14 quality integration gap
+
+**Purpose:** Record why structural generation constraints and independent validation address the observed formatting failures while preserving model choices and historical evidence.
+
+Date:2026-10-26. Status:Accepted for the owner's explicit format/quality-fix request; no default/API/production activation.
+
+D14actual output often contains correct visible values in Markdown or a barearray instead of the requested object. Prompt-only requests cannot guarantee the required machine contract. Add a separate reusable `StructuredProfileAdapter` with a narrow host-owned schema, fixed existing local profile aliases and unchanged profile templates. No shared passed gateway/vision/excerpt behavior needs modification. The native mechanism is documented in the pinned runtime's `tools/server/README.md`; no upstream SDK/dependency/download is required.
+
+Permit only structural types/field names and finite size limits. Forbid gold-bearing enum/const/default/description and unsupported dynamic schema features. Preserve nativecontent verbatim and validate independently after exact wireidentity/usage/stop/SSE checks. Do not strip Markdown, invent fields, replace values, repair answers, fallback or retry. A structural grammar cannot certify factual truth; the fresh evaluator keeps expected answers separate and requires full exact functional references before qualityPASS.
+
+Model permissions stay unchanged: no tools/network-image/approval/action execution. Endpoint/schema choices are host-only, not userpayload overrides. Single-use request admission plus owned child/shield/join keeps cleanup reliable under repeated cancellation. Snapshot request/schema/content hashes without logging raw source or answers. Reject unavailable/unsupportednative schema as a retained failure rather than silently switching to plain text.
+
+[Preregistered protocol](../D14_STRUCTURED_QUALITY_GATE_PROTOCOL.md) assesses P1priority/dependencies/effort/risks and declares the fresh42questions/profile, all42/42format+functional criteria, sameGPUresources/lifecycle and unchanged originalscores. Alternatives rejected: postprocessing hides originalformat failures; schemas containing expected answers invalidate benchmark; model replacement violates the agreed lineup; changing passed shared defaults widens risk. Rollback is not selecting the opt-in adapter and retiring only owned test processes, retaining all first observations. A passing bounded gate does not authorize product release, voice/model-license decisions or general unattendedcoding promotion.
