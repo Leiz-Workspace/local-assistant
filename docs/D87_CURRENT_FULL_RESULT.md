@@ -12,7 +12,7 @@
 | So với full cũ | Toàn bộ 728 file của full 5.674 vẫn khớp byte; bốn file adapter/test D14 bổ sung đã nằm trong full mới |
 | Cảnh báo | Một warning cố ý từ fixture ZIP có entry trùng `piper/voice.py`; test từ chối archive này PASS |
 | Benchmark controls riêng | 183 PASS / 2,26 giây; không cộng vào 5.759 |
-| Operator controls riêng | Supervisor/runner/lifecycle 71 PASS; audit policy 46 PASS; delivery policy 32 PASS; các scope có overlap, không cộng thành một full suite |
+| Operator controls riêng | Supervisor/runner/lifecycle 71 PASS; audit policy 46 PASS; delivery policy ban đầu32 PASS, cuối43 PASS; các scope có overlap, không cộng thành một full suite |
 
 Lượt chạy bắt đầu 11:29:08 và kết thúc 12:00:21 theo Asia/Ho_Chi_Minh. Source ứng dụng không cần sửa. Không tải hoặc thay model, thay default/API/config, đổi provider, schema, ACL hay collection. Các live integration test dùng runtime và credential hiện có; kết quả software regression không ghi đè điểm benchmark đầu tiên.
 
@@ -39,3 +39,5 @@ D87 current-source software refresh hoàn tất. D14 selected semantic path vẫ
 D70 nghe thực tế vẫn **0/24 owner-deferred**; [hướng dẫn nghe](D70_MANUAL_LISTENING_TEST.md) đã sẵn sàng. D74 voice/model/license/no-speech, D81 product integration, D86/D89 product/device acceptance, các gate D88 liên quan model/license và D90 release vẫn mở theo [ledger](OUTSTANDING_WORK_STATUS.md). Không push, tag, deploy hoặc tuyên bố toàn dự án hoàn thành.
 
 Root `AGENTS.md` untracked và dòng IDE riêng đầu devlog được giữ nguyên, ngoài commit và ZIP D87. Gói đầy đủ sau commit: `data/backups/local-assistant-d87-20261027-full-files.zip`, kèm receipt và manifest. Gói giữ các artifact lịch sử theo SHA, full phiên bản file Git và operator/test/log được chọn rõ; không chứa weights, SDK, secret, dump hay checkpoint.
+
+Đóng gói phát hiện thêm sáu CE003 latest pointers do `tests/test_coding_feedback_oracles.py` cập nhật trong full suite. Đã đối chiếu từng target summary/SHA: frozen oracle PASS, hai native check, 0 model attempt; đây không phải thay đổi first model score. Builder đầu từ chối trước khi tạo ZIP và log được giữ. Policy cuối chỉ chấp nhận đúng12CE002+6CE003pointer, giữ byte archive cũ và ghi riêng SHA workspace; mọi immutable extra khác phải khớp.43delivery controls PASS/0SKIP/0,58 giây, gồm chặn pointer giả/unknown/archive hỏng/target có model call và active builder stdout.
