@@ -69,6 +69,7 @@ PURE_METHODS = frozenset(
         "removesuffix",
         "replace",
         "reverse",
+        "rfind",
         "rsplit",
         "rstrip",
         "sort",
