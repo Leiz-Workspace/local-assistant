@@ -44,6 +44,8 @@ class WorkflowRecord:
 class CodingWorkflowService:
     """Own a finite nonretrying proposal/apply/check composition without bypassing native component approval or lifecycle rules."""
 
+    _proposal_preset = "fast"
+
     def __init__(self, workspace, approvals, patches, checks, *, inference=None):
         """Bind existing live services and the established CORE adapter without opening storage or changing model configuration."""
         self.workspace, self.approvals, self.patches, self.checks = (
@@ -164,7 +166,7 @@ class CodingWorkflowService:
             self.inference.complete(
                 profile="core",
                 messages=messages,
-                preset="fast",
+                preset=self._proposal_preset,
                 temperature=0,
                 max_tokens=MODEL_TOKENS,
             )
@@ -204,7 +206,10 @@ class CodingWorkflowService:
                     prefix_truncated=len(raw) > 16384,
                 ),
             )
-            if result.finish_reason != "stop" or result.preset_selected != "fast":
+            if (
+                result.finish_reason != "stop"
+                or result.preset_selected != self._proposal_preset
+            ):
                 raise WorkspaceAccessError("workflow_model_incomplete", 503)
             return resolve_candidate(result.content)
         except TimeoutError:
