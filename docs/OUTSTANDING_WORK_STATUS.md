@@ -49,3 +49,6 @@ Historical structural-only qualityfix evidence: [D14structuredgate](D14_STRUCTUR
 
 
 2026-11-02 D46/D60 selected local remediation CLOSED within its recorded scope: [5837PASS/current745source and actual preservation](D46_D60_REMEDIATION_RESULT.md). Original first quality failures and all unsuccessful full/resource trials remain immutable. ADR151only partitions owned operator/children, with the exact original worker/profile/uncached algorithm/caps; no failed optimization or model/default/provider/production adoption. Original1080scores/ranks exact. Full includes existing actual CORE tests; zero requests refers only to exact CE005revalidation. D70hearing0/24andD74/D81/D86/D88/D89/D90manual/product/rights/release gates remain OPEN; the whole project is not complete or released.
+
+
+2026-11-03 D60fresh follow-up: [new-discovery/native/archive/all3-page workflow VERIFIED3/3](D60_FRESH_DISCOVERY_RESULT.md); both source routes truthful, no archive input or URL override. Bilingual panel FAILED/INCOMPLETE4valid/1upstream-error/3not-run, original frozen thresholds unchanged; retain Brave and first failed coverage. New750-source full5889collected/RUNNING; no fresh full/preservation acceptance yet. Historical745-source5837PASS remains valid only for that scope. D70manual and production/product/rights gates unchanged.

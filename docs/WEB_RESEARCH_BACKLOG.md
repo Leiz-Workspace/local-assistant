@@ -175,3 +175,10 @@ P1 correction depends on retained first records and [parent diagnostic](evidence
 
 
 2026-11-02 terminal closure for the selected local remediation: D60selected optional publisher resolver/native/all-page integration VERIFIED3/3/oneCORE/oneexport/3pages. CurrentBraveone-queryobservationaccepted; originaldirect-hitfailure and broader coverage/freshness/reliability/browser/rights/production gates remain open. The dated earlier pending/full-failure checkpoints remain history. Actual final full5837PASS and preservation receipt supersede their pending software status; no failed first score is replaced, no candidate450CPU/parity rejection is reversed and no release is approved.
+
+
+## D60-FRESH-001 — New discovery and bounded coverage (2026-11-03)
+
+P1; dependency: original ResearchService, publisher/source/report/native/archive services and selected SearXNG-Brave. One optional composition/evaluation milestone, with risks of source substitution, archived authority, raw-provider retention, upstream refusal and score inflation; rollback omits the unregistered service. [ADR152](ADR/152-fresh-search-publisher-evidence-composition.md), [frozen protocol](D60_FRESH_DISCOVERY_PROTOCOL.md), [first results](D60_FRESH_DISCOVERY_RESULT.md).
+
+Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archive-after-revocation/all3pages. Coverage FAILED/INCOMPLETE:4valid official-locator responses, one declared upstream failure,3not dispatched; original8-question denominator/6minimum/every-topic requirements unchanged. Keep Brave; no polling/retry/provider replacement or automatic new panel. Current750-source full5889collected/RUNNING, historical745-source5837PASS remains historical. No production activation or model/default change.

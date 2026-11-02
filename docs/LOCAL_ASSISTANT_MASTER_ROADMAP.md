@@ -1,9 +1,11 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.79 (D46/D60 selected local remediation verified; current full and preservation accepted) · **Updated:** 2026-11-02 (Asia/Ho_Chi_Minh)
+> **Version:** 4.80 (D60 fresh workflow verified; broader coverage incomplete; current full running) · **Updated:** 2026-11-03 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
 > **VERIFIED 2026-11-02:** Owner-prioritized D46/D60 local coding/publisher integration gates are verified. Current745-source full **5837 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2039.08s/exit0, plus independent read-only preservation. [Result and scope](D46_D60_REMEDIATION_RESULT.md), [actual terminal evidence](evidence/d46-d60-20261102-final-acceptance.json). Original first scores and every unsuccessful full remain history; broader coding/web qualification is not inferred.
+>
+> **D60 follow-up 2026-11-03:** Fresh CORE/Brave discovery→actual publisher link→3/3claims→native DOCX/PDF→revoked-proof archive/all3-page visual QA VERIFIED. Conditional8-question panel stopped after its first upstream error:4valid/1error/3not-run; broad coverage NOT accepted. Same745prior bytes/five additions/750current files; new full5889collected, RUNNING. [First result and limits](D60_FRESH_DISCOVERY_RESULT.md).
 >
 > **CURRENT POSITION:** D70actual listening **0/24 DEFERRED_BY_OWNER**; [manual guide](D70_MANUAL_LISTENING_TEST.md)/blank worksheet ready. ADR111permits independent engineering. D71–D73local scopes are verified; D74voice/model/license/no-speech, D81product integration, D86/D88/D89device/rights/product acceptance and D90release approval remain open. D90is **NOT RELEASED**. The [selected D14semantic path](D14_SEMANTIC_REMEDIATION_RESULT.md) remains42/42perprofile/local opt-in, with all earlier failures retained. Latest full5837/745sources supersedes historical5759/732and5674/728for current software coverage only. Original model/provider/default choices stay intact. [Outstanding ledger](OUTSTANDING_WORK_STATUS.md), [release status](RELEASE_CANDIDATE_STATUS.md).
 > **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
