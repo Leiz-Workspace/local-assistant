@@ -4755,3 +4755,18 @@ ADR139/follow-up protocol: codingv2riêng1536reasoning/2048total và CE00512API/
 
 
 Follow-up freeze745source/36execution inputs/12immutable oracle summaries trước generation.30final private controls PASS/1.10s; single-core reranker diagnostic1PASS/471.83s, giữ originaltwo threads/480CPU/600wall và mọi source/model/profile. ADR140chỉ ghim exact ownedreranker descendants trong một full mới, rejectunowned/PIDreuse/cycle/wrongcommand/unavailableCPU; không đổi governor/sharedprocess/cap, CPUheadroom còn hẹp. NativeCE005/correctedWEB004/full vẫn chưa được gọi là PASS.
+
+
+## 2026-11-02 — D46/D60 native verified; interrupted fixture recovered; clean full running
+
+D46: CE004 giữ nguyên 9/12 FAIL. CE005 giữ nguyên first 11/12 FAIL: một candidate dùng rfind bị reviewer chặn trước native checks. Đã thêm đúng pure method rfind, giữ API/import/audit/dynamic-call guards; ADR141 và72 first wire/request/reply/measurement hashes pin trước thay đổi. Revalidation dùng đúng12 request/reply ban đầu đạt12/12,24 native visible/held-out runs,0 inference mới và không sửa candidate. Legacy harness model_attempts trong replay chỉ đếm giao lại response cũ.108 related controls/1.47s và46 gated private controls/1.35s; không cộng overlap vào full.
+
+D60: current Brave đúng1request accepted. First WEB004 lỗi HTML parser và shadow manifest được giữ lại, chưa có report/model/export ở lượt lỗi. Resolver sửa dùng anchor-only parent issuer minh bạch, child full-text/security guard không nới. Corrected archived-locator→fresh parent/observed child→3/3 claim/evidence→1 CORE→1 native DOCX/PDF→archive reopen PASS; đã xem thật đủ3trang PDF, không lỗi cắt/chồng chữ. Không đổi nhãn child thành direct hit, không gọi provider lại hoặc tuyên bố broad reliability.
+
+Full742 đầu:5810PASS/1FAIL/0ERROR/0SKIP,1890.35s, reranker CPU guard. Single-core scheduling diagnostic1PASS/471.83s giữ2threads và480/481CPU/8GiBAS/4096MiBRSS/600wall. ADR140 chỉ áp dụng exact owned descendants. First final745 full:5836PASS/1FAIL/0ERROR/0SKIP,2122.54s; reranker đã PASS trong full, lỗi còn lại global quota.
+
+Đã xác định lỗi vận hành do tôi hủy intermediate full bằng group SIGTERM: first fixture đã tạo142-byte file/index job dù log chưa có completed test line. Câu “chưa test nào chạy” trong tài liệu trước sai và đã sửa, giữ nguyên lịch sử Git/receipt. Đối chiếu đủ private principal/root, owner/file UUID, namespace, frozen doc-a hash và creation/stop interval trước cleanup. Chỉ purge đúng inode/blob, exact metadata-owned Qdrant probe và row/charge của fixture đó; giữ nguyên foreign owner0 từ18/10. Audit thực tế sau recovery khớp original business/security/schema/runtime, chỉ zero-usage quota updated_at lệch; không reset timestamp hoặc dữ liệu người dùng.
+
+Giữ log preflight recovery đầu bị AttributeError do tên API reader sai, chưa có mutation; đã sửa open_reader và bổ sung test blob thật,12recovery controls PASS. ADR142 thêm child-only SIGINT→fixture teardown→wrapper join, finite fallback đánh dấu cleanup_uncertain. Có test pytest thật xác nhận finally chạy, PID-reuse/foreign guard và timeout escalation.48 final recovery/retirement/audit controls PASS/1.45s. Native global40-byte quota test trên baseline sạch1PASS/0.33s; không sửa production quota policy.
+
+Commit a5f68f5 pin same745application files và166execution/evidence inputs. Clean full đang chạy sau fresh readonly preflight original tables/security/schema0006/native0/same15containers và authenticated Qdrant0. Các full lỗi/interruption vẫn FAIL; chỉ đóng software gate sau full0fail/0skip và post-audit thật. Model/Brave/default/schema/ACL/Vault policy không đổi; D70hearing vẫn0/24, không có campaign chất lượng mới hoặc provider retry.
