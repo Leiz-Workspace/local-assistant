@@ -2,6 +2,8 @@
 
 **Purpose:** Assess web research prerequisites before scheduling or activating new capabilities.
 
+**Current disposition — 2026-11-02:** D60selected optional publisher resolver/native/all-page integration VERIFIED3/3/oneCORE/oneexport/3pages. CurrentBraveone-queryobservationaccepted; originaldirect-hitfailure and broader coverage/freshness/reliability/browser/rights/production gates remain open. Complete current-source full5837PASS/0FAIL/ERROR/SKIP/2039.08s on745files plus independent preservation VERIFIED; [actual result](D46_D60_REMEDIATION_RESULT.md). Full native tests make real CORE requests; zero-new-inference is scoped to CE005revalidation. No model/provider/default/production change.
+
 ## WEB-ONBOARD-001 — Actual search provider/account
 
 | Field | Assessment |
@@ -170,3 +172,6 @@ P1 correction depends on retained first records and [parent diagnostic](evidence
 
 
 2026-11-02 current software status: both later complete745-source fulls retain5836PASS/1FAIL/0ERROR/0SKIP; the remaining fault is original reranker CPU enforcement, including an inherited-original run2147.54s/exit152after2rounds. Owned runtime and original data/security/vector state independently preserved; no source/counter reset or timestamp restoration. [Resource diagnostics](D46_D60_RESOURCE_VERIFICATION.md) retain every rejected optimization; no450CPU/parity criterion relaxed or failed variant promoted. ADR150original-profile passive/inherited probe is running; only its actual PASS authorizes a same-environment current full. D46corrected-review12/12andD60native/all-page gates remain verified, original first failures retained, final software/audit acceptance pending.
+
+
+2026-11-02 terminal closure for the selected local remediation: D60selected optional publisher resolver/native/all-page integration VERIFIED3/3/oneCORE/oneexport/3pages. CurrentBraveone-queryobservationaccepted; originaldirect-hitfailure and broader coverage/freshness/reliability/browser/rights/production gates remain open. The dated earlier pending/full-failure checkpoints remain history. Actual final full5837PASS and preservation receipt supersede their pending software status; no failed first score is replaced, no candidate450CPU/parity rejection is reversed and no release is approved.
