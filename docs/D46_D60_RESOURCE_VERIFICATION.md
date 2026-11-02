@@ -1,0 +1,36 @@
+# D46/D60 resource verification record
+
+Purpose: preserve unsuccessful full-regression and optimization observations separately from the verified coding/web functional evidence.
+
+Date: 2026-11-02. The unchanged reranker is an integration-test dependency. These experiments never authorize a model, SDK, provider, production or default replacement.
+
+## Preserved software failures
+
+| Execution | Actual outcome | Disposition |
+|---|---|---|
+| First742-source full | 5810PASS/1FAIL/0ERROR/0SKIP | Original reranker CPU guard terminated the worker |
+| Intermediate745-source full | Interrupted after collection; first fixture had started | No software acceptance; exact142-byte owned residue recovered under ADR142 |
+| First final745-source full | 5836PASS/1FAIL/0ERROR/0SKIP | Reranker passed; quota rejected the interruption residue |
+| Clean745-source full | 5836PASS/1FAIL/0ERROR/0SKIP,2124.37seconds | Quota passed; late-pinned reranker exhausted original CPU guard. Read-only original-state preservation independently verified |
+
+A collection line is not proof that fixture execution has not started. The correction, exact owner/namespace/content/time recovery and graceful descendant-pytest retirement are retained in [ADR142](ADR/142-owned-interrupted-fixture-recovery-and-graceful-retirement.md). Original business/security/runtime match with only quota updated_at drift; no original counter/timestamp is restored to manufacture equality.
+
+## Distinct bounded diagnostics
+
+All use the existing pinned model/weights and offline SDK. Original CPU480/481seconds, AS8GiB, RSS4096MiB, query60seconds and worker wall600seconds stay fixed. Candidate promotion additionally requires total child CPU at most450seconds, all1080score differences at most1e-6 and identical rankings. No criterion was relaxed after observation.
+
+| Diagnostic | Actual outcome | Promotion |
+|---|---|---|
+| ADR143 passive waiting, original2threads/batch4 | 473.229182child CPU seconds; original resource gates passed | Rejected:450CPU criterion |
+| ADR144 passive waiting, physical cores1and3 | 482.272573child CPU seconds; original resource gates passed | Rejected:450CPU criterion |
+| ADR145 one thread/batch4 | 465.299037child CPU seconds; all1080scores/ranks exact | Rejected:450CPU criterion |
+| ADR146 batch10/original positions | Three-query micro max delta0.00016407319344580173 and changed rankings | Rejected;0full dispatches |
+| ADR147 original2threads/batch4, selected-class projection | Micro and full1080scores/ranks exact;473.443637child CPU seconds | Rejected:450CPU criterion |
+
+ADR147 also retains two zero-worker prelaunch invocation/binding errors and a corrected independently frozen binding. Its full ran exactly once after the micro gate; no failed score was regenerated. The original full vocabulary weights stayed resident for actual reference controls. No selected-head variant was promoted despite exact scores.
+
+## Original-runtime verification policy
+
+[ADR148](ADR/148-inherited-original-reranker-scheduling-for-final-full.md) uses only the original reranker graph. A private argument-exact uv delegate selects CPU3 before the original worker exec/thread creation and forwards every other command unchanged. It replaces late scheduling within the owned full invocation, with original limits and assertions. The earlier inherited single-CPU diagnostic passed in471.83seconds; this remains narrow headroom, not general stability evidence.
+
+The new full and post-run read-only audit must finish before current-source software acceptance. The D46exact-first-output12/12 and D60observed-source/native/all-page QA are separate functional gates. D70listening0/24, product/device/rights and release approval remain independent.
