@@ -37,6 +37,8 @@ SHA256 = re.compile(r"[0-9a-f]{64}")
 class WebEvidenceService:
     """Retain only bounded owner-scoped cache entries and join explicit source acquisitions before admitting another caller."""
 
+    _static_extractors = frozenset({"static-html-utf8-v1"})
+
     def __init__(self, source, *, monotonic=None, utcnow=None):
         """Bind an inert trusted source/clock seam and ephemeral proof key without network, filesystem or model activity."""
         self.source = source
@@ -182,7 +184,8 @@ class WebEvidenceService:
             if (
                 page.canonical_verified is not False
                 or page.body_sha256 != documents[0].body_sha256
-                or page.extractor_version != "static-html-utf8-v1"
+                or type(page.extractor_version) is not str
+                or page.extractor_version not in self._static_extractors
             ):
                 raise WebEvidenceError("evidence_integrity")
             if (

@@ -1,0 +1,1044 @@
+{
+  "description": "Twelve new instances of known utility failure families; new APIs/specifications/examples, same-agent authored and not an independent broad benchmark. No old scored instance is regenerated.",
+  "cases": [
+    {
+      "id": "ce005-mask-reference",
+      "function": "mask_reference",
+      "parameters": [
+        "token",
+        "keep"
+      ],
+      "description": "Retain a suffix only when its length is positive and smaller than the reference; replace every preceding character with period. Otherwise replace the entire reference with periods.",
+      "issue": "Retain a suffix only when its length is positive and smaller than the reference; replace every preceding character with period. Otherwise replace the entire reference with periods. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            "acacia",
+            2
+          ],
+          "expected": "....ia"
+        },
+        {
+          "args": [
+            "ivy",
+            0
+          ],
+          "expected": "..."
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "cedars",
+            -4
+          ],
+          "expected": "......"
+        },
+        {
+          "args": [
+            "elm",
+            3
+          ],
+          "expected": "..."
+        },
+        {
+          "args": [
+            "ash",
+            20
+          ],
+          "expected": "..."
+        },
+        {
+          "args": [
+            "",
+            4
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "đậuX",
+            1
+          ],
+          "expected": "...X"
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 mask_reference fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef mask_reference(token, keep):\n    \"\"\"Retain a suffix only when its length is positive and smaller than the reference; replace every preceding character with period. Otherwise replace the entire reference with periods.\"\"\"\n    logger.info(\"ce005_fixture_called function=mask_reference\")\n    return token[-keep:]\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 mask_reference fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef mask_reference(token, keep):\n    \"\"\"Retain a suffix only when its length is positive and smaller than the reference; replace every preceding character with period. Otherwise replace the entire reference with periods.\"\"\"\n    logger.info(\"ce005_fixture_called function=mask_reference\")\n    if keep <= 0 or keep >= len(token):\n        return \".\" * len(token)\n    return \".\" * (len(token)-keep) + token[-keep:]\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for mask_reference.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import mask_reference\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=mask_reference\")\n        examples = [{'args': ['acacia', 2], 'expected': '....ia'}, {'args': ['ivy', 0], 'expected': '...'}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        mask_reference(*arguments)\n                else:\n                    self.assertEqual(mask_reference(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for mask_reference.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import mask_reference\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=mask_reference\")\n        examples = [{'args': ['cedars', -4], 'expected': '......'}, {'args': ['elm', 3], 'expected': '...'}, {'args': ['ash', 20], 'expected': '...'}, {'args': ['', 4], 'expected': ''}, {'args': ['đậuX', 1], 'expected': '...X'}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        mask_reference(*arguments)\n                else:\n                    self.assertEqual(mask_reference(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "e5b0a820fed42793de5e5ddb430065c5afe38f5bd66fd98431dd0f123d4951b8",
+        "reference_source": "46d5b022883efd367c4836b2a9418a8a9c30dc224881964230f2a11d7b8c5434",
+        "visible_test_source": "b9e0a4aed41d86c1753517f68e2acfa6454b40bf54709d07928b4afaa34512e7",
+        "heldout_test_source": "9186799a1f7123fdec30f97a12a94fc323c44a6686837e6975b486837701dc50"
+      }
+    },
+    {
+      "id": "ce005-split-final-component",
+      "function": "split_final_component",
+      "parameters": [
+        "text",
+        "sep"
+      ],
+      "description": "Return two strings using only the last separator occurrence. If no separator occurs return the whole input and empty suffix. Empty separator raises ValueError.",
+      "issue": "Return two strings using only the last separator occurrence. If no separator occurs return the whole input and empty suffix. Empty separator raises ValueError. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            "north/east/south",
+            "/"
+          ],
+          "expected": [
+            "north/east",
+            "south"
+          ]
+        },
+        {
+          "args": [
+            "solo",
+            "/"
+          ],
+          "expected": [
+            "solo",
+            ""
+          ]
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "r--s--t",
+            "--"
+          ],
+          "expected": [
+            "r--s",
+            "t"
+          ]
+        },
+        {
+          "args": [
+            "/",
+            "/"
+          ],
+          "expected": [
+            "",
+            ""
+          ]
+        },
+        {
+          "args": [
+            "",
+            "/"
+          ],
+          "expected": [
+            "",
+            ""
+          ]
+        },
+        {
+          "args": [
+            "x",
+            ""
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            "lá|đỏ",
+            "|"
+          ],
+          "expected": [
+            "lá",
+            "đỏ"
+          ]
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 split_final_component fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef split_final_component(text, sep):\n    \"\"\"Return two strings using only the last separator occurrence. If no separator occurs return the whole input and empty suffix. Empty separator raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=split_final_component\")\n    parts = text.split(sep,1)\n    return parts if len(parts)==2 else [text, \"\"]\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 split_final_component fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef split_final_component(text, sep):\n    \"\"\"Return two strings using only the last separator occurrence. If no separator occurs return the whole input and empty suffix. Empty separator raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=split_final_component\")\n    parts = text.rsplit(sep,1)\n    return parts if len(parts)==2 else [text, \"\"]\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for split_final_component.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import split_final_component\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=split_final_component\")\n        examples = [{'args': ['north/east/south', '/'], 'expected': ['north/east', 'south']}, {'args': ['solo', '/'], 'expected': ['solo', '']}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        split_final_component(*arguments)\n                else:\n                    self.assertEqual(split_final_component(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for split_final_component.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import split_final_component\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=split_final_component\")\n        examples = [{'args': ['r--s--t', '--'], 'expected': ['r--s', 't']}, {'args': ['/', '/'], 'expected': ['', '']}, {'args': ['', '/'], 'expected': ['', '']}, {'args': ['x', ''], 'raises': 'ValueError'}, {'args': ['lá|đỏ', '|'], 'expected': ['lá', 'đỏ']}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        split_final_component(*arguments)\n                else:\n                    self.assertEqual(split_final_component(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "fed089572caf280bba04181ff783ce8da03a8e4afb0b46fda9b7c32281ddf31a",
+        "reference_source": "121bc007378f80c0eb050cb843f71eedfb7a49ef8c7d01ce015a0a4974a7a4c5",
+        "visible_test_source": "d6058928db7b2c280645b4486ca73afe64823a19c3c4a3dbce9ce7c923050cfd",
+        "heldout_test_source": "0e4a79c5907edda955fb855aa0ad21125640c0cd271ed519a266b66f93f7493f"
+      }
+    },
+    {
+      "id": "ce005-ceiling-batches",
+      "function": "ceiling_batches",
+      "parameters": [
+        "total",
+        "width"
+      ],
+      "description": "Compute the integer number of capacity-sized batches required for total records. Reject negative totals and zero or negative capacity with ValueError; no imports.",
+      "issue": "Compute the integer number of capacity-sized batches required for total records. Reject negative totals and zero or negative capacity with ValueError; no imports. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            23,
+            7
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            28,
+            7
+          ],
+          "expected": 4
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            0,
+            9
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            1,
+            8
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            -6,
+            2
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            8,
+            0
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            8,
+            -1
+          ],
+          "raises": "ValueError"
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 ceiling_batches fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef ceiling_batches(total, width):\n    \"\"\"Compute the integer number of capacity-sized batches required for total records. Reject negative totals and zero or negative capacity with ValueError; no imports.\"\"\"\n    logger.info(\"ce005_fixture_called function=ceiling_batches\")\n    return total // width\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 ceiling_batches fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef ceiling_batches(total, width):\n    \"\"\"Compute the integer number of capacity-sized batches required for total records. Reject negative totals and zero or negative capacity with ValueError; no imports.\"\"\"\n    logger.info(\"ce005_fixture_called function=ceiling_batches\")\n    if total < 0 or width <= 0:\n        raise ValueError(\"invalid bounds\")\n    return (total + width - 1) // width\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for ceiling_batches.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import ceiling_batches\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=ceiling_batches\")\n        examples = [{'args': [23, 7], 'expected': 4}, {'args': [28, 7], 'expected': 4}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        ceiling_batches(*arguments)\n                else:\n                    self.assertEqual(ceiling_batches(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for ceiling_batches.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import ceiling_batches\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=ceiling_batches\")\n        examples = [{'args': [0, 9], 'expected': 0}, {'args': [1, 8], 'expected': 1}, {'args': [-6, 2], 'raises': 'ValueError'}, {'args': [8, 0], 'raises': 'ValueError'}, {'args': [8, -1], 'raises': 'ValueError'}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        ceiling_batches(*arguments)\n                else:\n                    self.assertEqual(ceiling_batches(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "4a2703137ab76c1b0d46054803042f506dde621e8598a46f1ea00613886a758f",
+        "reference_source": "94ca21c21c38121994db3dd4b35f3583466c87d7e0d00fecd48436bb2dadfc43",
+        "visible_test_source": "12e40afab2a8cd937915ffb567e9fb5d9881ef4aa4f19b6cb7c5022a03c1e867",
+        "heldout_test_source": "5cba77c3fb220c6c639c48308481426244018189305e9487651fa8bfccd7f974"
+      }
+    },
+    {
+      "id": "ce005-bounded-backoff",
+      "function": "bounded_backoff",
+      "parameters": [
+        "base",
+        "retry",
+        "limit"
+      ],
+      "description": "Double the starting wait by a retry exponent clamped to at least zero, then cap the result at the upper limit.",
+      "issue": "Double the starting wait by a retry exponent clamped to at least zero, then cap the result at the upper limit. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            7,
+            -4,
+            80
+          ],
+          "expected": 7
+        },
+        {
+          "args": [
+            7,
+            3,
+            80
+          ],
+          "expected": 56
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            5,
+            -2,
+            3
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            0,
+            7,
+            20
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            9,
+            0,
+            50
+          ],
+          "expected": 9
+        },
+        {
+          "args": [
+            3,
+            5,
+            47
+          ],
+          "expected": 47
+        },
+        {
+          "args": [
+            4,
+            2,
+            21
+          ],
+          "expected": 16
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 bounded_backoff fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef bounded_backoff(base, retry, limit):\n    \"\"\"Double the starting wait by a retry exponent clamped to at least zero, then cap the result at the upper limit.\"\"\"\n    logger.info(\"ce005_fixture_called function=bounded_backoff\")\n    return min(limit,base * 2 ** retry)\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 bounded_backoff fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef bounded_backoff(base, retry, limit):\n    \"\"\"Double the starting wait by a retry exponent clamped to at least zero, then cap the result at the upper limit.\"\"\"\n    logger.info(\"ce005_fixture_called function=bounded_backoff\")\n    return min(limit,base * 2 ** max(0,retry))\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for bounded_backoff.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import bounded_backoff\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=bounded_backoff\")\n        examples = [{'args': [7, -4, 80], 'expected': 7}, {'args': [7, 3, 80], 'expected': 56}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        bounded_backoff(*arguments)\n                else:\n                    self.assertEqual(bounded_backoff(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for bounded_backoff.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import bounded_backoff\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=bounded_backoff\")\n        examples = [{'args': [5, -2, 3], 'expected': 3}, {'args': [0, 7, 20], 'expected': 0}, {'args': [9, 0, 50], 'expected': 9}, {'args': [3, 5, 47], 'expected': 47}, {'args': [4, 2, 21], 'expected': 16}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        bounded_backoff(*arguments)\n                else:\n                    self.assertEqual(bounded_backoff(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "d42136af705a4d11a52ecd7d1d090ae90e463fd0b133b7a4d9b16ffb0d5761f0",
+        "reference_source": "a62dbbe8b369f2b79ce68bec949350f94a9db67f1b7088e07d580b4bb34deebc",
+        "visible_test_source": "5ded89cef22fad7a49311a913cd32e0944fc144055f67069c247df9ee5b95b64",
+        "heldout_test_source": "5722e922fbf90a7b1fd2def4dfa155db8aa963df39d3700ba76b41e2a582388b"
+      }
+    },
+    {
+      "id": "ce005-merge-options",
+      "function": "merge_options",
+      "parameters": [
+        "current",
+        "incoming"
+      ],
+      "description": "Produce a fresh shallow mapping in which incoming overrides win conflicts, without changing either mapping.",
+      "issue": "Produce a fresh shallow mapping in which incoming overrides win conflicts, without changing either mapping. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            {
+              "theme": "light"
+            },
+            {
+              "theme": "dark"
+            }
+          ],
+          "expected": {
+            "theme": "dark"
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 6
+            },
+            {
+              "b": 8
+            }
+          ],
+          "expected": {
+            "a": 6,
+            "b": 8
+          }
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "k": 1
+            },
+            {
+              "k": null
+            }
+          ],
+          "expected": {
+            "k": null
+          }
+        },
+        {
+          "args": [
+            {
+              "k": false
+            },
+            {
+              "k": true
+            }
+          ],
+          "expected": {
+            "k": true
+          }
+        },
+        {
+          "args": [
+            {
+              "k": [
+                3
+              ]
+            },
+            {
+              "k": [
+                9
+              ]
+            }
+          ],
+          "expected": {
+            "k": [
+              9
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "k": 3
+            },
+            {}
+          ],
+          "expected": {
+            "k": 3
+          }
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 merge_options fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef merge_options(current, incoming):\n    \"\"\"Produce a fresh shallow mapping in which incoming overrides win conflicts, without changing either mapping.\"\"\"\n    logger.info(\"ce005_fixture_called function=merge_options\")\n    return {**incoming, **current}\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 merge_options fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef merge_options(current, incoming):\n    \"\"\"Produce a fresh shallow mapping in which incoming overrides win conflicts, without changing either mapping.\"\"\"\n    logger.info(\"ce005_fixture_called function=merge_options\")\n    return {**current, **incoming}\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for merge_options.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import merge_options\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=merge_options\")\n        examples = [{'args': [{'theme': 'light'}, {'theme': 'dark'}], 'expected': {'theme': 'dark'}}, {'args': [{'a': 6}, {'b': 8}], 'expected': {'a': 6, 'b': 8}}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        merge_options(*arguments)\n                else:\n                    self.assertEqual(merge_options(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for merge_options.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import merge_options\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=merge_options\")\n        examples = [{'args': [{}, {}], 'expected': {}}, {'args': [{'k': 1}, {'k': None}], 'expected': {'k': None}}, {'args': [{'k': False}, {'k': True}], 'expected': {'k': True}}, {'args': [{'k': [3]}, {'k': [9]}], 'expected': {'k': [9]}}, {'args': [{'k': 3}, {}], 'expected': {'k': 3}}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        merge_options(*arguments)\n                else:\n                    self.assertEqual(merge_options(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "7b0d59bbb5560095c4368c71477ba8e537c1050791ae9e9ee8a69335c1ee86d9",
+        "reference_source": "2730963ccaca58f5a536e12f92452cf368ff067ee9640428be3d7d68d09ce07e",
+        "visible_test_source": "126e2addcf1142b1932d469342ae9060478cf42acadbfd5f4950cdb7db7eef71",
+        "heldout_test_source": "b1dbeb47b4a128199ec568487b33bf381d08aa8a921ec35fd987a37c5c906a02"
+      }
+    },
+    {
+      "id": "ce005-tail-window",
+      "function": "tail_window",
+      "parameters": [
+        "values",
+        "count"
+      ],
+      "description": "Copy the last requested number of rows into a new list; zero yields an empty list and negative requested length raises ValueError.",
+      "issue": "Copy the last requested number of rows into a new list; zero yields an empty list and negative requested length raises ValueError. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              11,
+              13,
+              17
+            ],
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              11,
+              13,
+              17
+            ],
+            1
+          ],
+          "expected": [
+            17
+          ]
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              6,
+              8
+            ],
+            -2
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            [],
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              3,
+              7
+            ],
+            99
+          ],
+          "expected": [
+            3,
+            7
+          ]
+        },
+        {
+          "args": [
+            [
+              9
+            ],
+            1
+          ],
+          "expected": [
+            9
+          ]
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 tail_window fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef tail_window(values, count):\n    \"\"\"Copy the last requested number of rows into a new list; zero yields an empty list and negative requested length raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=tail_window\")\n    return values[-count:]\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 tail_window fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef tail_window(values, count):\n    \"\"\"Copy the last requested number of rows into a new list; zero yields an empty list and negative requested length raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=tail_window\")\n    if count < 0:\n        raise ValueError(\"negative count\")\n    return values[-count:] if count else []\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for tail_window.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import tail_window\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=tail_window\")\n        examples = [{'args': [[11, 13, 17], 0], 'expected': []}, {'args': [[11, 13, 17], 1], 'expected': [17]}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        tail_window(*arguments)\n                else:\n                    self.assertEqual(tail_window(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for tail_window.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import tail_window\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=tail_window\")\n        examples = [{'args': [[6, 8], -2], 'raises': 'ValueError'}, {'args': [[], 0], 'expected': []}, {'args': [[3, 7], 99], 'expected': [3, 7]}, {'args': [[9], 1], 'expected': [9]}, {'args': [[], 3], 'expected': []}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        tail_window(*arguments)\n                else:\n                    self.assertEqual(tail_window(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "6641647fe38381952cfe5943bec327f69ecac24d3d7400356a0c6fde95c9ec17",
+        "reference_source": "4fc9e020ab94b3432620d125dc1c78ce630bdf30fc0d1c25d03955c040f4e7de",
+        "visible_test_source": "30ab6ad32c880b1245091a3876bfcfa2e00dba1a57079fd6b30b8e8ef65f7b20",
+        "heldout_test_source": "350fe0b9855a614c7511cf58cff92b75e2ad5395af9cbd02b6edf3827b8dfe41"
+      }
+    },
+    {
+      "id": "ce005-first-seen",
+      "function": "first_seen",
+      "parameters": [
+        "values"
+      ],
+      "description": "Remove duplicate hashable values while keeping their first-seen order and leaving the input untouched.",
+      "issue": "Remove duplicate hashable values while keeping their first-seen order and leaving the input untouched. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              4,
+              9,
+              4,
+              2
+            ]
+          ],
+          "expected": [
+            4,
+            9,
+            2
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              "m",
+              "a",
+              "m"
+            ]
+          ],
+          "expected": [
+            "m",
+            "a"
+          ]
+        },
+        {
+          "args": [
+            [
+              5,
+              5
+            ]
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              9,
+              0,
+              9,
+              3
+            ]
+          ],
+          "expected": [
+            9,
+            0,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              "ộ",
+              "o",
+              "ộ"
+            ]
+          ],
+          "expected": [
+            "ộ",
+            "o"
+          ]
+        },
+        {
+          "args": [
+            [
+              -2,
+              0,
+              -2
+            ]
+          ],
+          "expected": [
+            -2,
+            0
+          ]
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 first_seen fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef first_seen(values):\n    \"\"\"Remove duplicate hashable values while keeping their first-seen order and leaving the input untouched.\"\"\"\n    logger.info(\"ce005_fixture_called function=first_seen\")\n    return sorted(set(values))\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 first_seen fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef first_seen(values):\n    \"\"\"Remove duplicate hashable values while keeping their first-seen order and leaving the input untouched.\"\"\"\n    logger.info(\"ce005_fixture_called function=first_seen\")\n    return list(dict.fromkeys(values))\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for first_seen.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import first_seen\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=first_seen\")\n        examples = [{'args': [[4, 9, 4, 2]], 'expected': [4, 9, 2]}, {'args': [[]], 'expected': []}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        first_seen(*arguments)\n                else:\n                    self.assertEqual(first_seen(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for first_seen.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import first_seen\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=first_seen\")\n        examples = [{'args': [['m', 'a', 'm']], 'expected': ['m', 'a']}, {'args': [[5, 5]], 'expected': [5]}, {'args': [[9, 0, 9, 3]], 'expected': [9, 0, 3]}, {'args': [['ộ', 'o', 'ộ']], 'expected': ['ộ', 'o']}, {'args': [[-2, 0, -2]], 'expected': [-2, 0]}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        first_seen(*arguments)\n                else:\n                    self.assertEqual(first_seen(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "48e136e4f967280094dd324e9c5b0fcd64c5d690aa26144d093bd2d58c253766",
+        "reference_source": "c77aefdabefd841b5d6b326d10c57ee94a964cb350e84293d94afde365a90171",
+        "visible_test_source": "47b7def484d2db035b567bbf9756ca4a64c67a9e5d8b70a80139a03a6b2d5699",
+        "heldout_test_source": "2392c09a5df0ccee126a0b593b75af4733cce4aaebda6585f2ffaf01a55f7d5a"
+      }
+    },
+    {
+      "id": "ce005-clamped-slot",
+      "function": "clamped_slot",
+      "parameters": [
+        "position",
+        "length"
+      ],
+      "description": "Return a valid zero-based slot by clamping the proposed position; a nonpositive slot count is invalid and raises ValueError.",
+      "issue": "Return a valid zero-based slot by clamping the proposed position; a nonpositive slot count is invalid and raises ValueError. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            50,
+            8
+          ],
+          "expected": 7
+        },
+        {
+          "args": [
+            -8,
+            8
+          ],
+          "expected": 0
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            0,
+            1
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            100,
+            1
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            1,
+            -4
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            6,
+            10
+          ],
+          "expected": 6
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 clamped_slot fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef clamped_slot(position, length):\n    \"\"\"Return a valid zero-based slot by clamping the proposed position; a nonpositive slot count is invalid and raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=clamped_slot\")\n    return min(position,length)\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 clamped_slot fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef clamped_slot(position, length):\n    \"\"\"Return a valid zero-based slot by clamping the proposed position; a nonpositive slot count is invalid and raises ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=clamped_slot\")\n    if length <= 0:\n        raise ValueError(\"empty length\")\n    return max(0,min(position,length-1))\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for clamped_slot.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import clamped_slot\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=clamped_slot\")\n        examples = [{'args': [50, 8], 'expected': 7}, {'args': [-8, 8], 'expected': 0}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        clamped_slot(*arguments)\n                else:\n                    self.assertEqual(clamped_slot(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for clamped_slot.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import clamped_slot\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=clamped_slot\")\n        examples = [{'args': [0, 1], 'expected': 0}, {'args': [100, 1], 'expected': 0}, {'args': [1, 0], 'raises': 'ValueError'}, {'args': [1, -4], 'raises': 'ValueError'}, {'args': [6, 10], 'expected': 6}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        clamped_slot(*arguments)\n                else:\n                    self.assertEqual(clamped_slot(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "438f5afd7601fccf49df91a04dda562b030412894170fc8b5454807dadb7b05c",
+        "reference_source": "5c3a1a812a5c910aec985634d92a45734c02dac8016ec4ad08eb89551791d1e2",
+        "visible_test_source": "f891e037777d99c36b1c2d2b4629923de9dc4b0deb303c6f2e2c2f8bc6b5a8bd",
+        "heldout_test_source": "9b62b536a53c1dc32925dee06f8040f971a64e4d9a87893698ff84f9a8b33aba"
+      }
+    },
+    {
+      "id": "ce005-vi-permission",
+      "function": "vi_permission",
+      "parameters": [
+        "label"
+      ],
+      "description": "After stripping surrounding whitespace and Unicode casefold, only đồng ý is True and từ chối is False; reject every other label with ValueError.",
+      "issue": "After stripping surrounding whitespace and Unicode casefold, only đồng ý is True and từ chối is False; reject every other label with ValueError. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            " ĐỒNG Ý "
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "từ chối"
+          ],
+          "expected": false
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "TỪ CHỐI\n"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "đồng ý"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            ""
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            "đồng  ý"
+          ],
+          "raises": "ValueError"
+        },
+        {
+          "args": [
+            " đồng ý\t"
+          ],
+          "expected": true
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 vi_permission fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef vi_permission(label):\n    \"\"\"After stripping surrounding whitespace and Unicode casefold, only đồng ý is True and từ chối is False; reject every other label with ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=vi_permission\")\n    return label == \"đồng ý\"\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 vi_permission fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef vi_permission(label):\n    \"\"\"After stripping surrounding whitespace and Unicode casefold, only đồng ý is True and từ chối is False; reject every other label with ValueError.\"\"\"\n    logger.info(\"ce005_fixture_called function=vi_permission\")\n    value = label.strip().casefold()\n    if value == \"đồng ý\":\n        return True\n    if value == \"từ chối\":\n        return False\n    raise ValueError(\"unsupported label\")\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for vi_permission.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import vi_permission\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=vi_permission\")\n        examples = [{'args': [' ĐỒNG Ý '], 'expected': True}, {'args': ['từ chối'], 'expected': False}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        vi_permission(*arguments)\n                else:\n                    self.assertEqual(vi_permission(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for vi_permission.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import vi_permission\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=vi_permission\")\n        examples = [{'args': ['TỪ CHỐI\\n'], 'expected': False}, {'args': ['đồng ý'], 'expected': True}, {'args': [''], 'raises': 'ValueError'}, {'args': ['đồng  ý'], 'raises': 'ValueError'}, {'args': [' đồng ý\\t'], 'expected': True}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        vi_permission(*arguments)\n                else:\n                    self.assertEqual(vi_permission(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "6cefe93bb0bf88bbfabc32bc8dcd30f441edb5248415d3e74fd0d6b37e98f36a",
+        "reference_source": "4d9b63a577037eaea86a2c9730072eac3449fcc40c42592cf868447a5820e5eb",
+        "visible_test_source": "9150dfa6b8f2358137072191dc01647314a40e50c6e86563d536af4e120d0c27",
+        "heldout_test_source": "513b79624a395f3ce6455e272fc9d4cf68350edbfcd2cf0fbfd320c78d97865b"
+      }
+    },
+    {
+      "id": "ce005-first-clean-value",
+      "function": "first_clean_value",
+      "parameters": [
+        "values"
+      ],
+      "description": "Return the first stripped nonblank string, preserving internal whitespace; return empty string when there is none and never mutate the sequence.",
+      "issue": "Return the first stripped nonblank string, preserving internal whitespace; return empty string when there is none and never mutate the sequence. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            [
+              "",
+              "  fern  ",
+              "ash"
+            ]
+          ],
+          "expected": "fern"
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": ""
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            [
+              " \t",
+              " "
+            ]
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            [
+              "x",
+              "y"
+            ]
+          ],
+          "expected": "x"
+        },
+        {
+          "args": [
+            [
+              "",
+              " hoa "
+            ]
+          ],
+          "expected": "hoa"
+        },
+        {
+          "args": [
+            [
+              "c"
+            ]
+          ],
+          "expected": "c"
+        },
+        {
+          "args": [
+            [
+              "  a  b  "
+            ]
+          ],
+          "expected": "a  b"
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 first_clean_value fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef first_clean_value(values):\n    \"\"\"Return the first stripped nonblank string, preserving internal whitespace; return empty string when there is none and never mutate the sequence.\"\"\"\n    logger.info(\"ce005_fixture_called function=first_clean_value\")\n    return values[0] if values else \"\"\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 first_clean_value fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef first_clean_value(values):\n    \"\"\"Return the first stripped nonblank string, preserving internal whitespace; return empty string when there is none and never mutate the sequence.\"\"\"\n    logger.info(\"ce005_fixture_called function=first_clean_value\")\n    for value in values:\n        cleaned = value.strip()\n        if cleaned:\n            return cleaned\n    return \"\"\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for first_clean_value.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import first_clean_value\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=first_clean_value\")\n        examples = [{'args': [['', '  fern  ', 'ash']], 'expected': 'fern'}, {'args': [[]], 'expected': ''}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        first_clean_value(*arguments)\n                else:\n                    self.assertEqual(first_clean_value(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for first_clean_value.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import first_clean_value\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=first_clean_value\")\n        examples = [{'args': [[' \\t', ' ']], 'expected': ''}, {'args': [['x', 'y']], 'expected': 'x'}, {'args': [['', ' hoa ']], 'expected': 'hoa'}, {'args': [['c']], 'expected': 'c'}, {'args': [['  a  b  ']], 'expected': 'a  b'}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        first_clean_value(*arguments)\n                else:\n                    self.assertEqual(first_clean_value(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "37a85e68e0af750a09ac88ac9d2075dc2ae9dbae6847d25a7d562ea85e9cef1d",
+        "reference_source": "726d984ad20e60c04e52fcceaade0b3c29f1c74cefcded40b1a5d6f3fe7116c4",
+        "visible_test_source": "aae187c803cf9b90c1553bfe10b62615cd7a002d51b7bf69f460d97d76523905",
+        "heldout_test_source": "91e6016f22bc83adb7bcb61ce6ccebb6e606f1d15cf27eb0224a54cc44266768"
+      }
+    },
+    {
+      "id": "ce005-unicode-equivalent",
+      "function": "unicode_equivalent",
+      "parameters": [
+        "left",
+        "right"
+      ],
+      "description": "Compare both strings after surrounding-whitespace removal and Unicode casefold; do not substitute lowercasing or collapse interior spaces.",
+      "issue": "Compare both strings after surrounding-whitespace removal and Unicode casefold; do not substitute lowercasing or collapse interior spaces. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            "  HEAT",
+            "heat  "
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "north",
+            "south"
+          ],
+          "expected": false
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            "FUSS",
+            "fuß"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "",
+            "\t"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "Σ",
+            "ς"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "a b",
+            "ab"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            " ĐẬU ",
+            "đậu"
+          ],
+          "expected": true
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 unicode_equivalent fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef unicode_equivalent(left, right):\n    \"\"\"Compare both strings after surrounding-whitespace removal and Unicode casefold; do not substitute lowercasing or collapse interior spaces.\"\"\"\n    logger.info(\"ce005_fixture_called function=unicode_equivalent\")\n    return left == right\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 unicode_equivalent fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef unicode_equivalent(left, right):\n    \"\"\"Compare both strings after surrounding-whitespace removal and Unicode casefold; do not substitute lowercasing or collapse interior spaces.\"\"\"\n    logger.info(\"ce005_fixture_called function=unicode_equivalent\")\n    return left.strip().casefold() == right.strip().casefold()\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for unicode_equivalent.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import unicode_equivalent\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=unicode_equivalent\")\n        examples = [{'args': ['  HEAT', 'heat  '], 'expected': True}, {'args': ['north', 'south'], 'expected': False}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        unicode_equivalent(*arguments)\n                else:\n                    self.assertEqual(unicode_equivalent(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for unicode_equivalent.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import unicode_equivalent\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=unicode_equivalent\")\n        examples = [{'args': ['FUSS', 'fuß'], 'expected': True}, {'args': ['', '\\t'], 'expected': True}, {'args': ['Σ', 'ς'], 'expected': True}, {'args': ['a b', 'ab'], 'expected': False}, {'args': [' ĐẬU ', 'đậu'], 'expected': True}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        unicode_equivalent(*arguments)\n                else:\n                    self.assertEqual(unicode_equivalent(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "9012c134f1e3d8fe84ece0a4122b4656877b76429ad3a02a1f3bffbb8bdb99f9",
+        "reference_source": "6a11e6d346ddf57be73a0fd3d2de4ccb7f0e5326ce4f4067a12b40bd80c9102c",
+        "visible_test_source": "6b73b0a21b8f626562f8bb8b81d6b03326ef5402de0ee71885250e5d4f983c05",
+        "heldout_test_source": "84b90202c19279a64f31840df5c1f5bfa6969e7e2e538d65f25011aa6dc54380"
+      }
+    },
+    {
+      "id": "ce005-closed-interval-sum",
+      "function": "closed_interval_sum",
+      "parameters": [
+        "start",
+        "stop"
+      ],
+      "description": "Add every integer in the closed interval from start to stop, returning zero for a reversed interval.",
+      "issue": "Add every integer in the closed interval from start to stop, returning zero for a reversed interval. Preserve original imports, logger binding, exact public signature and initial audit call. No new imports, helper functions, decorators, defaults or external actions.",
+      "target_path": "sample.py",
+      "visible_test_path": "test_visible.py",
+      "heldout_test_path": "test_holdout.py",
+      "visible_examples": [
+        {
+          "args": [
+            5,
+            9
+          ],
+          "expected": 35
+        },
+        {
+          "args": [
+            7,
+            7
+          ],
+          "expected": 7
+        }
+      ],
+      "heldout_examples": [
+        {
+          "args": [
+            4,
+            2
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            -4,
+            1
+          ],
+          "expected": -9
+        },
+        {
+          "args": [
+            0,
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            -6,
+            -4
+          ],
+          "expected": -15
+        },
+        {
+          "args": [
+            1,
+            5
+          ],
+          "expected": 15
+        }
+      ],
+      "buggy_source": "\"\"\"Provide the owned CODE-EVAL-005 closed_interval_sum fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef closed_interval_sum(start, stop):\n    \"\"\"Add every integer in the closed interval from start to stop, returning zero for a reversed interval.\"\"\"\n    logger.info(\"ce005_fixture_called function=closed_interval_sum\")\n    return sum(range(start,stop))\n",
+      "reference_source": "\"\"\"Provide the owned CODE-EVAL-005 closed_interval_sum fixture.\"\"\"\n\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\ndef closed_interval_sum(start, stop):\n    \"\"\"Add every integer in the closed interval from start to stop, returning zero for a reversed interval.\"\"\"\n    logger.info(\"ce005_fixture_called function=closed_interval_sum\")\n    return sum(range(start,stop+1))\n",
+      "visible_test_source": "\"\"\"Verify frozen visible CODE-EVAL-005 examples for closed_interval_sum.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import closed_interval_sum\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=visible function=closed_interval_sum\")\n        examples = [{'args': [5, 9], 'expected': 35}, {'args': [7, 7], 'expected': 7}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        closed_interval_sum(*arguments)\n                else:\n                    self.assertEqual(closed_interval_sum(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "heldout_test_source": "\"\"\"Verify frozen heldout CODE-EVAL-005 examples for closed_interval_sum.\"\"\"\n\nimport copy\nimport logging\nimport unittest\n\nfrom sample import closed_interval_sum\n\nlogger = logging.getLogger(__name__)\nlogging.basicConfig(level=logging.INFO)\n\n\nclass FrozenExamples(unittest.TestCase):\n    \"\"\"Compare source behavior with predeclared independent examples.\"\"\"\n\n    def test_examples(self):\n        \"\"\"Check outputs, exceptions and complete input preservation inside the native capsule.\"\"\"\n        logger.info(\"ce005_oracle_started suite=heldout function=closed_interval_sum\")\n        examples = [{'args': [4, 2], 'expected': 0}, {'args': [-4, 1], 'expected': -9}, {'args': [0, 0], 'expected': 0}, {'args': [-6, -4], 'expected': -15}, {'args': [1, 5], 'expected': 15}]\n        for index, item in enumerate(examples):\n            with self.subTest(index=index):\n                arguments = copy.deepcopy(item[\"args\"])\n                original = copy.deepcopy(arguments)\n                if item.get(\"raises\") == \"ValueError\":\n                    with self.assertRaises(ValueError):\n                        closed_interval_sum(*arguments)\n                else:\n                    self.assertEqual(closed_interval_sum(*arguments), item[\"expected\"])\n                self.assertEqual(arguments, original)\n",
+      "sha256": {
+        "buggy_source": "363af24110174f73ab12ec48536778bed1904e2e81c9c0140d136e41c884fc5f",
+        "reference_source": "82b5fac31cbfe033a7953e0a45d146aa17f0e4578bbc94d7d91d6b0cbd302f77",
+        "visible_test_source": "833b6135698ec01c46479d4b396703704d96faa58fe799c64f10bc9b2ce4559f",
+        "heldout_test_source": "dec7a032d0bc837977591f75c502ffdb31f0ef6f6af4d5d52fdd31526f13e2bb"
+      }
+    }
+  ]
+}

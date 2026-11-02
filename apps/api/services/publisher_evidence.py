@@ -3,16 +3,66 @@
 import asyncio
 import logging
 from dataclasses import dataclass
+from urllib.parse import urljoin
 from uuid import UUID
 
 from src.application.ports.research import ResearchResult
 from src.application.ports.web_evidence import EvidenceRead
 from src.application.services.web_evidence import WebEvidenceService
+from src.application.services.web_evidence_policy import WebEvidenceError
 from src.application.services.web_fetch_tasks import finish_owned, spawn_owned
 from src.infrastructure.public_https import PublicHTTPSClient
 from src.infrastructure.publisher_links import PublisherSource, rfc_url
 
 logger = logging.getLogger(__name__)
+
+
+class PublisherEvidenceIssuer(WebEvidenceService):
+    """Admit explicit anchor-only RFC parents after common source guards without broadening the default evidence issuer."""
+
+    _static_extractors = frozenset({"static-html-utf8-v1", "publisher-anchors-utf8-v1"})
+
+    def validate_source(self, observation, url, mode):
+        """Require truthful parent-only metadata and exact trusted raw-anchor binding before signing a new extractor kind."""
+        super().validate_source(observation, url, mode)
+        page = observation.page
+        if mode != "static" or page.extractor_version != "publisher-anchors-utf8-v1":
+            return
+        try:
+            rfc_url(url, self.source.number, parent=True)
+            final, child, sha, anchors = self.source.parent_binding
+            rfc_url(final, self.source.number, parent=True)
+            rfc_url(child, self.source.number, parent=False)
+            for row in anchors:
+                if (
+                    type(row) is not tuple
+                    or len(row) != 4
+                    or type(row[0]) is not str
+                    or not 0 < len(row[0]) <= 2048
+                    or row[0] != row[0].strip()
+                    or type(row[2]) is not int
+                    or row[2] < 1
+                    or type(row[3]) is not int
+                    or row[3] < 0
+                    or rfc_url(urljoin(final, row[0]), self.source.number, parent=False)
+                    != child
+                ):
+                    raise ValueError("publisher_anchor_metadata")
+            if (
+                final != page.final_url
+                or sha != page.body_sha256
+                or page.text != "\n".join(row[0] for row in anchors)
+                or page.title is not None
+                or observation.dates != ()
+                or observation.cache_seconds != 0
+                or page.advertised_canonical_url is not None
+                or not anchors
+                or any(row[1] != child for row in anchors)
+            ):
+                raise ValueError("publisher_parent_metadata")
+        except Exception:
+            raise WebEvidenceError("evidence_integrity") from None
+        logger.info("publisher_anchor_only_source_verified")
 
 
 @dataclass(frozen=True, slots=True, repr=False)
@@ -39,7 +89,7 @@ class PublisherEvidenceResolver:
         self.source = PublisherSource(
             number, client if client is not None else PublicHTTPSClient()
         )
-        self.evidence = WebEvidenceService(self.source)
+        self.evidence = PublisherEvidenceIssuer(self.source)
         self.admission, self.operations, self.closing = asyncio.Lock(), set(), False
         logger.info("publisher_evidence_resolver_initialized")
 
