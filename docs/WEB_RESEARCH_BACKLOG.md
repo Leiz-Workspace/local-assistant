@@ -2,7 +2,7 @@
 
 **Purpose:** Assess web research prerequisites before scheduling or activating new capabilities.
 
-**Current disposition — 2026-11-02:** D60selected optional publisher resolver/native/all-page integration VERIFIED3/3/oneCORE/oneexport/3pages. CurrentBraveone-queryobservationaccepted; originaldirect-hitfailure and broader coverage/freshness/reliability/browser/rights/production gates remain open. Complete current-source full5837PASS/0FAIL/ERROR/SKIP/2039.08s on745files plus independent preservation VERIFIED; [actual result](D46_D60_REMEDIATION_RESULT.md). Full native tests make real CORE requests; zero-new-inference is scoped to CE005revalidation. No model/provider/default/production change.
+**Current disposition — 2026-11-03:** D60fresh discovery/native/archive/all3-page workflow VERIFIED3/3, originaldirect-hitfailures retained. Bilingual panel FAILED/INCOMPLETE4valid/1upstream-error/3not-run; keepBrave and all frozen thresholds. Current750-source full5889PASS/0FAIL/ERROR/SKIP/2128.68s and independent preservation VERIFIED, all745prior bytes unchanged. [Actual results and scope](D60_FRESH_DISCOVERY_RESULT.md). No model/provider/default/production change.
 
 ## WEB-ONBOARD-001 — Actual search provider/account
 
@@ -181,4 +181,4 @@ P1 correction depends on retained first records and [parent diagnostic](evidence
 
 P1; dependency: original ResearchService, publisher/source/report/native/archive services and selected SearXNG-Brave. One optional composition/evaluation milestone, with risks of source substitution, archived authority, raw-provider retention, upstream refusal and score inflation; rollback omits the unregistered service. [ADR152](ADR/152-fresh-search-publisher-evidence-composition.md), [frozen protocol](D60_FRESH_DISCOVERY_PROTOCOL.md), [first results](D60_FRESH_DISCOVERY_RESULT.md).
 
-Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archive-after-revocation/all3pages. Coverage FAILED/INCOMPLETE:4valid official-locator responses, one declared upstream failure,3not dispatched; original8-question denominator/6minimum/every-topic requirements unchanged. Keep Brave; no polling/retry/provider replacement or automatic new panel. Current750-source full5889collected/RUNNING, historical745-source5837PASS remains historical. No production activation or model/default change.
+Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archive-after-revocation/all3pages. Coverage FAILED/INCOMPLETE:4valid official-locator responses, one declared upstream failure,3not dispatched; original8-question denominator/6minimum/every-topic requirements unchanged. Keep Brave; no polling/retry/provider replacement or automatic new panel. Current750-source full5889PASS/0FAIL/ERROR/SKIP and independent preservation VERIFIED; historical745-source5837PASS remains historical. No production activation or model/default change.

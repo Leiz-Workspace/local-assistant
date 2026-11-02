@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current732-file full **5759 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1870.65s/exit0, all732frozen files and728historical files unchanged. Joined current-boot audit confirms business data/security with explicit quota timestamp-only delta; same15containers and initial native=0 restored after owned CORE exit0. Existing Vault unseal after reboot is explicitly recorded. [Current result](D87_CURRENT_FULL_RESULT.md), [terminal/audit receipt](evidence/d87-current-20261027-full-acceptance.json). D14selected local semantic42/42/profile remains opt-in/default-off; historical scores/full5674 retained. Human/device/model/rights/product acceptance remains open; no tag, push or deployment.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; hearing0/24anddevice/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
 
 ## Completed local engineering evidence
 
