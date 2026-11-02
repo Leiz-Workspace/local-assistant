@@ -2,7 +2,7 @@
 
 Purpose: preserve unsuccessful full-regression and optimization observations separately from the verified coding/web functional evidence.
 
-Date: 2026-11-02. The unchanged reranker is an integration-test dependency. These experiments never authorize a model, SDK, provider, production or default replacement.
+Date: 2026-11-02. **Terminal current-source state: VERIFIED — 5837PASS/0FAIL/0ERROR/0SKIP/2039.08seconds and independent read-only preservation.** [Actual receipt](evidence/d46-d60-20261102-final-acceptance.json). Earlier pending statements below are dated checkpoints, superseded by the completed result at the end. The unchanged reranker is an integration-test dependency. These experiments never authorize a model, SDK, provider, production or default replacement.
 
 ## Preserved software failures
 
@@ -50,3 +50,10 @@ The ADR150CORE-resident full finished **5836PASS/1FAIL/0ERROR/0SKIP in2160.25sec
 
 
 Inference-count scope correction: zero new requests refers to CE005exact-output revalidation only. Unfiltered full runs include existing actual CORE coding/traffic tests, so no global zero-inference claim is made. Their repeated fixture observations do not replace first-study scores or become a fresh independent quality campaign; see [accounting clarification](D46_D60_REMEDIATION_RESULT.md#inference-accounting-clarification--2026-11-02).
+
+
+## Final completed current-source verification
+
+The ADR151same-environment full completed5837PASS/0FAIL/0ERROR/0SKIP in2039.08seconds/exit0, source745exact before/after and235execution dependencies retained. The original paired reranker passed inside this actual full; its immutable comparison matches all1080original scores/ranks exactly, delta0, identical original contract/fingerprint. Candidate peakRAM1600.00390625MiB/CPU-only. All original480/481CPU/8GiBAS/4096MiBRSS/60query/600wall guards remain; no failed450CPU/parity optimization was promoted and no general stability claim follows.
+
+Actual owned COREexit0/reaped/guardNone, native0/same15containers/boot restored. Independent read-only acceptance VERIFIED: schema0006/security/business rows preserved; only quota updated_at drift with usage[0,0,0], strict row equality=False explicitly. Fresh current-run authenticatedQdrant0before/after; original pre-task authenticatedsnapshot remains unavailable.176D70inputs/0of24hearinglabels unchanged. No host/shared-process/model/provider/default/production/release changes. [Final scope and accounting](D46_D60_REMEDIATION_RESULT.md).
