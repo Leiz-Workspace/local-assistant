@@ -42,3 +42,8 @@ The new full and post-run read-only audit must finish before current-source soft
 
 
 ADR150original-source probe completed **1PASS/0FAIL/0ERROR/0SKIP in477.05seconds**. All three original rounds/resource assertions passed; total dedicated probe child CPU477.828508seconds includes pytest/uv overhead and is not a worker-only CPU measurement or450CPUoptimization eligibility. Original native0/same15containers restored,745application files unchanged. The conditional same-environment current full is now running against a separately frozen196-input record; no current full acceptance yet.
+
+
+The ADR150CORE-resident full finished **5836PASS/1FAIL/0ERROR/0SKIP in2160.25seconds**, again CPU exit152after2rounds. Its actual passive/CPU3 snapshot is retained; all original data/security/runtime and current authenticated empty-Qdrant inventory were independently preserved. The solo PASS does not establish loaded-run reliability.
+
+[ADR151](ADR/151-owned-cpu-partition-for-core-resident-original-probe.md) separates only the calling operator thread and its subsequent CORE/monitor/test children from CPU3andSMT11, leaving unrelated processes/host policy untouched. Actual simultaneous snapshot confirms CORE threads avoid the pair and original reranker threads useCPU3. One genuine CORE-resident original comparison **PASS1/1/0FAIL/ERROR/SKIP in473.40seconds**, native COREexit0/reaped/guardNone and original runtime restored. This is one bounded environment observation, not a proven cause or broad performance claim. The separately frozen235-input same745-source full is now running; all original caps/assertions and failed-variant promotion rejections remain unchanged.
