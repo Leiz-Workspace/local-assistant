@@ -15,6 +15,9 @@ from src.infrastructure.inference.coding_reasoning import (
     MODE,
     CodingReasoningAdapter,
     CodingRequest,
+    CodingRequestV2,
+    CodingReasoningV2Adapter,
+    V2_MODE,
 )
 from src.infrastructure.inference.structured_profile import StructuredProfileError
 
@@ -181,3 +184,58 @@ async def test_cancelled_request_joins_the_owned_native_operation():
         await asyncio.wait_for(task, 2)
     assert exited.is_set() and adapter.last_attempt.spent
     assert adapter.last_attempt.active is None
+
+
+def test_second_mode_is_distinct_and_does_not_change_first_mode_budgets():
+    """Keep both native budgets matched to their validators and retain unchanged first-mode and fast identities."""
+    first = CodingRequest(messages())
+    second = CodingRequestV2(messages())
+    a = first.payload(first.messages[1]["content"], (), False)
+    b = second.payload(second.messages[1]["content"], (), False)
+    assert (
+        a["max_tokens"] == first.max_tokens == 1024
+        and a["reasoning_budget_tokens"] == 512
+    )
+    assert (
+        b["max_tokens"] == second.max_tokens == 2048
+        and b["reasoning_budget_tokens"] == 1536
+    )
+    assert first.messages[1] == second.messages[1] == messages()[1]
+    assert (
+        CodingReasoningV2Adapter._mode == V2_MODE
+        and CodingWorkflowService._proposal_preset == "fast"
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("fault", [None, "context", "over_budget"])
+async def test_second_mode_uses_its_own_token_headroom_and_native_identity(fault):
+    """Accept valid usage above the first budget but deny context/output overflow before treating a second-mode completion as verified."""
+    calls = []
+
+    def handle(request):
+        """Supply explicit native-shaped second-mode metadata with no real model or socket."""
+        calls.append(request.url.path)
+        value = response(request.url.path)
+        if request.url.path == "/tokenize" and fault == "context":
+            value = dict(tokens=list(range(30700)))
+        if request.url.path == "/v1/chat/completions":
+            value["usage"]["completion_tokens"] = (
+                2049 if fault == "over_budget" else 1700
+            )
+        return httpx.Response(200, json=value)
+
+    adapter = CodingReasoningV2Adapter(transport=httpx.MockTransport(handle))
+    value = options()
+    value["preset"] = V2_MODE
+    if fault is None:
+        result = await adapter.complete(**value)
+        assert (
+            result.preset_selected == V2_MODE
+            and result.content == answer()
+            and result.output_tokens == 1700
+        )
+    else:
+        with pytest.raises(InferenceFailure):
+            await adapter.complete(**value)
+        assert calls.count("/v1/chat/completions") == (0 if fault == "context" else 1)

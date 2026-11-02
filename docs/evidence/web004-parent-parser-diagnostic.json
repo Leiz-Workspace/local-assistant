@@ -1,0 +1,30 @@
+{
+  "anchor_status": "PASS",
+  "attempts": 1,
+  "body_bytes": 938808,
+  "body_sha256": "0b157a1a3c227e57b510c20c359e16232165117ff22f2067faceb5b3f159678f",
+  "child_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+  "description": "One public-source diagnostic; raw HTML stays private and outside delivery.",
+  "model_requests": 0,
+  "observed_anchors": [
+    [
+      "/rfc/rfc9111.html",
+      "https://www.rfc-editor.org/rfc/rfc9111.html",
+      124,
+      15756
+    ],
+    [
+      "/rfc/rfc9111.html",
+      "https://www.rfc-editor.org/rfc/rfc9111.html",
+      3069,
+      260
+    ]
+  ],
+  "parent_body_sha256": "0b157a1a3c227e57b510c20c359e16232165117ff22f2067faceb5b3f159678f",
+  "provider_requests": 0,
+  "static_error_code": "web_fetch_html_invalid",
+  "static_error_type": "WebFetchError",
+  "static_status": "FAILED",
+  "parser_error_kind": "ERR_TAG_NAME_MISMATCH",
+  "first_web_operator_report_or_model_attempts": 0
+}

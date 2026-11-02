@@ -11,6 +11,8 @@ import pytest
 from apps.api.services.publisher_evidence import PublisherEvidenceResolver
 from src.application.ports.research import ResearchQuery, ResearchResult, ResearchSource
 from src.application.ports.web_fetch import PublicResponse
+from src.application.services.web_evidence import WebEvidenceService
+from src.application.services.web_evidence_policy import WebEvidenceError
 from src.infrastructure.publisher_links import observed_link, rfc_url
 
 PARENT = "https://www.rfc-editor.org/info/rfc9112/"
@@ -175,3 +177,31 @@ async def test_child_cancel_busy_and_shutdown_join_before_admission_release():
         and not resolver.operations
         and not resolver.admission.locked()
     )
+
+
+@pytest.mark.asyncio
+async def test_anchor_only_issuer_is_explicit_and_default_issuer_keeps_original_gate():
+    """Admit malformed-unrelated-DOM anchor metadata only through the dedicated issuer and preserve the old static extractor allowlist."""
+    owner, client = uuid4(), Client()
+    client.parent_body = b'<html><body><h2>Unrelated mismatch</h1><a href="/rfc/rfc9112.html">Full text</a></body></html>'
+    resolver = PublisherEvidenceResolver(9112, client=client)
+    value = await resolver.resolve(owner, discovery(owner), "Q1:S1")
+    assert value.parent.snapshot.extractor_version == "publisher-anchors-utf8-v1"
+    assert (
+        value.parent.snapshot.title is None
+        and value.parent.snapshot.text == "/rfc/rfc9112.html"
+    )
+    assert value.child.snapshot.extractor_version == "static-html-utf8-v1"
+    observation = await resolver.source.read(PARENT, "static")
+    default = WebEvidenceService(resolver.source)
+    with pytest.raises(WebEvidenceError, match="evidence_integrity"):
+        default.validate_source(observation, PARENT, "static")
+    for altered in [
+        replace(observation, page=replace(observation.page, title="Forged title")),
+        replace(observation, cache_seconds=300),
+        replace(observation, page=replace(observation.page, text="Pretend full text")),
+    ]:
+        with pytest.raises(WebEvidenceError, match="evidence_integrity"):
+            resolver.evidence.validate_source(altered, PARENT, "static")
+    await default.shutdown()
+    await resolver.shutdown()

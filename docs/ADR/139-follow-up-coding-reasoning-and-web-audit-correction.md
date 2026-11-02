@@ -1,0 +1,25 @@
+# ADR 139 — Follow-up coding reasoning and web audit correction
+
+**Purpose:** Assess concrete failures from the first D46/D60 remediation without changing any first result, quality criterion, model or provider.
+
+Date: 2026-11-02. Status: Accepted for a separately frozen follow-up under the owner's D46/D60 request; implementation followed completion and joined retirement of the first frozen full run.
+
+## Observed first results
+
+CODE-EVAL-004 completed12first generations/12protocol tests but only9/12functional repairs. The three retained failures hardcode one masking example, split at the first separator, or mishandle zero-length suffixes. Native reasoning prefixes mostly enumerate administrative constraints until the512-token reasoning cap; the final code still fails the frozen native suites. This observation motivates a hypothesis, not proof that a larger budget will fix it.
+
+The one current Brave/SearXNG request was accepted. The independent new resolver regression received the938808-byte publisher landing but failed before any report/model/export. The source archive contains only discovery metadata and an interrupted publication stage. Its private operator then shadowed the source-manifest variable with a ResearchSource locator. The final audit raised regression_source_changed; first exit1/log/output/store remain retained and are not relabeled as a successful operator run. Actual current application hashes still match their freeze.
+
+## Assessment and bounded decision
+
+P1 follow-up; dependency complete retained first outcomes and joined current full/runtime. Effort one named-mode extension, one new twelve-case cohort and one corrected fixed-workflow integration regression, then a full run of the final source. Risks remain overfitting, accounting/budget mislabeling, output truncation, controller evidence loss and extra latency.
+
+Evaluate a separately named coding reasoning mode with1536native reasoning tokens within2048total, staying within the original workflow's2048requested-output upper bound and60second deadline. Preserve the512/1024mode and all originalfast paths; do not call the new mode fast/balanced or change default config. Count the actual thinking prompt with the new cap and reserve before inference. Add only a generic instruction to use reasoning on requirements/test traces rather than restating administration, derive a general algorithm and avoid hardcoded example outputs. No case-specific answers, hidden feedback, imported helper widening, model switch or resource guard change.
+
+Preregister twelve new APIs/specifications/visible and held-out examples; no old model-scored case is regenerated as a replacement score. Native oracle checks must precede inference. Strict acceptance remains12/12first functional passes, unchanged trusted fixture review, complete first wire and joined cleanup. Report every miss and keep the9/12cohort intact. This remains a targeted same-agent-authored local study, not broad independent quality certification.
+
+A separate one-fetch/zero-model/zero-provider diagnostic retained the exact landing SHA and found full-DOM extraction rejects ERR_TAG_NAME_MISMATCH while both actual allowed anchors are present. Use a dedicated RFC-parent anchor-only extractor with an explicit version and complete original body/resource hashes, no publication/canonical/semantic claims; keep generic full-text parsing unchanged for all child/other sources. Preserve public TLS/IP/body/redirect limits and reject missing/base/ambiguous anchors. The existing evidence issuer correctly refuses this new extractor kind. Add a protected accepted-extractor seam with the unchanged singleton default; only an unregistered publisher issuer may admit the new kind after exact parent/body/anchor/unknown-metadata checks. Never impersonate full-text extraction or broaden the default issuer. Correct the private operator's manifest/locator identities, always preserve a source-audit failure result, and publish the observed chain before model work so later closure errors cannot discard provenance. Give the correction a new source snapshot/output root/freeze and retain first executed bytes. One corrected original-workflow regression may use newly acquired sources and one native assessment/export; this is an engineering regression after a concrete controller bug, not an automatic neural-quality retry. Keep the original direct-result failure and every earlier artifact. Do not repeat the consumed current Brave observation or switch provider.
+
+## Acceptance and rollback
+
+Require native case/oracle/request accounting, current source hashes, parent/anchor/child lineage, original3claim/evidence oracle, reopened artifacts and every PDF page visually inspected. Unit and native controls must verify named-mode isolation, original defaults and full-source acceptance. Keep the first742-file full as its own snapshot, then test any later source changes separately. Rollback omits the new optional mode/uses the retained original services; no action grants, models, configs, Vault policies, schema, collections or hearing labels change.

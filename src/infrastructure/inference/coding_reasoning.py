@@ -13,6 +13,8 @@ from src.infrastructure.inference.structured_profile import StructuredProfileErr
 
 logger = logging.getLogger(__name__)
 MODE = "coding_reasoning_v1"
+V2_MODE = "coding_reasoning_v2"
+FOCUS = " Use private reasoning to trace the selected visible tests and derive a general algorithm, including applicable boundary cases. Spend reasoning on utility behavior rather than enumerating these administrative constraints. Never hardcode example outputs or input values. Return only the final JSON; you have executed nothing."
 CONTRACT = " Preserve the exact existing imports, logger binding, public function signatures and initial audit calls. Derive edge behavior from the supplied issue and selected tests. Check the proposed logic against that specification before returning; add no helpers, imports or default arguments."
 SCHEMA = dict(
     type="object",
@@ -68,17 +70,20 @@ class CodingRequest(ReasoningProfileAdapter):
 class CodingReasoningAdapter:
     """Implement only the named coding mode; never impersonate fast, select a model or activate an API route."""
 
+    _mode = MODE
+    _request_class = CodingRequest
+
     def __init__(self, *, endpoint=None, transport=None):
         """Bind trusted native test seams without network activity, configuration writes or model loading."""
         self.endpoint, self.transport = endpoint, transport
         self.last_attempt = None
-        logger.info("coding_reasoning_adapter_initialized mode=%s", MODE)
+        logger.info("coding_reasoning_adapter_initialized mode=%s", self._mode)
 
     async def complete(self, *, profile, messages, preset, temperature, max_tokens):
         """Count the exact thinking prompt, make one native request and preserve its original complete JSON without repair or retry."""
         if (
             profile != "core"
-            or preset != MODE
+            or preset != self._mode
             or type(temperature) not in (int, float)
             or temperature != 0
             or type(max_tokens) is not int
@@ -88,7 +93,7 @@ class CodingReasoningAdapter:
                 "Unsupported coding mode.", code="coding_reasoning_scope"
             )
         try:
-            attempt = CodingRequest(
+            attempt = self._request_class(
                 messages, endpoint=self.endpoint, transport=self.transport
             )
             self.last_attempt = attempt
@@ -104,7 +109,7 @@ class CodingReasoningAdapter:
                 count = await gateway._count_input_tokens(
                     client, attempt.messages, thinking=True
                 )
-            if count + 1024 + 256 > 32768:
+            if count + attempt.max_tokens + 256 > 32768:
                 raise StructuredProfileError("input")
             result = await attempt.complete(attempt.messages[1]["content"])
             resolve_candidate(result.content)
@@ -127,9 +132,33 @@ class CodingReasoningAdapter:
         return CompletionResult(
             result.content,
             result.model_id,
-            MODE,
+            self._mode,
             "stop",
             result.input_tokens,
             result.output_tokens,
             latency_ms=int(result.wall_seconds * 1000),
         )
+
+
+class CodingRequestV2(CodingRequest):
+    """Preserve the first-mode contract while explicitly reserving1536reasoning tokens within the original2048token workflow upper bound."""
+
+    def __init__(self, messages, *, endpoint=None, transport=None):
+        """Bind a separately named bounded hypothesis without mutating first-mode schemas, source messages or default configuration."""
+        super().__init__(messages, endpoint=endpoint, transport=transport)
+        self.messages[0]["content"] += FOCUS
+        self.max_tokens = 2048
+        logger.info("coding_reasoning_v2_request_bound total=2048 reasoning=1536")
+
+    def payload(self, text, images, stream):
+        """Set only the preregistered reasoning budget while keeping exact source roles, structural shape and unchanged final values."""
+        value = super().payload(text, images, stream)
+        value["reasoning_budget_tokens"] = 1536
+        return value
+
+
+class CodingReasoningV2Adapter(CodingReasoningAdapter):
+    """Expose the larger bounded mode only through its distinct host-selected identity and fresh source/oracle qualification."""
+
+    _mode = V2_MODE
+    _request_class = CodingRequestV2

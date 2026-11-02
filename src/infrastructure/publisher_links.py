@@ -1,5 +1,6 @@
 """Extract one actually observed RFC full-text anchor through unchanged bounded HTTPS transport, never guessed URLs or browser/page instructions."""
 
+import asyncio
 import hashlib
 import logging
 from html.parser import HTMLParser
@@ -11,6 +12,9 @@ from src.application.services.web_fetch_policy import (
     representation,
 )
 from src.infrastructure.web_evidence_source import ObservedWebSource
+from src.application.ports.web_fetch import FetchedPage, PublicResponse
+from src.application.ports.web_evidence import EvidenceResource, ObservedSource
+from src.application.services.web_fetch_policy import header_map, public_address
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +89,92 @@ def observed_link(parent, number, raw):
     return next(iter(children)), hashlib.sha256(raw).hexdigest(), tuple(parser.links)
 
 
+async def parent_observation(client, requested, number):
+    """Read only exact publisher hops and issue explicitly anchor-only parent evidence without relaxing generic full-text parsing."""
+    target = rfc_url(requested, number, parent=True)
+    resources, redirects, seen = [], [], set()
+    try:
+        async with asyncio.timeout(15):
+            while True:
+                if target in seen:
+                    raise ValueError("publisher_redirect_cycle")
+                seen.add(target)
+                response = await client.get(target)
+                if (
+                    type(response) is not PublicResponse
+                    or type(response.status) is not int
+                    or type(response.body) is not bytes
+                    or len(response.body) > 1048576
+                ):
+                    raise ValueError("publisher_response_invalid")
+                public_address(response.pinned_address)
+                headers = header_map(response.headers)
+                resources.append(
+                    EvidenceResource(
+                        target,
+                        "Document",
+                        response.status,
+                        len(response.body),
+                        hashlib.sha256(response.body).hexdigest(),
+                    )
+                )
+                if response.status in {301, 302, 303, 307, 308}:
+                    if len(redirects) >= 3:
+                        raise ValueError("publisher_redirect_limit")
+                    location = headers.get("location")
+                    if (
+                        type(location) is not str
+                        or not 0 < len(location) <= 2048
+                        or location != location.strip()
+                    ):
+                        raise ValueError("publisher_redirect_invalid")
+                    destination = rfc_url(
+                        urljoin(target, location), number, parent=True
+                    )
+                    redirects.append((target, destination))
+                    target = destination
+                    continue
+                if response.status != 200:
+                    raise ValueError("publisher_http_status")
+                media, encoding = representation(response.headers)
+                if media != "text/html" or encoding not in {"utf-8", "utf8", "ascii"}:
+                    raise ValueError("publisher_parent_representation")
+                response.body.decode(encoding, errors="strict")
+                if b"\x00" in response.body:
+                    raise ValueError("publisher_parent_binary_data")
+                child, sha, anchors = observed_link(target, number, response.body)
+                text = "\n".join(row[0] for row in anchors)
+                page = FetchedPage(
+                    requested,
+                    target,
+                    tuple(redirects),
+                    media,
+                    None,
+                    text,
+                    sha,
+                    hashlib.sha256(text.encode()).hexdigest(),
+                    None,
+                    extractor_version="publisher-anchors-utf8-v1",
+                )
+                logger.info(
+                    "publisher_parent_anchor_only_evidence_complete resources=%d",
+                    len(resources),
+                )
+                return ObservedSource(page, (), tuple(resources), 0), (
+                    target,
+                    child,
+                    sha,
+                    anchors,
+                )
+    except Exception as error:
+        logger.warning(
+            "publisher_parent_rejected kind=%s code=%s",
+            type(error).__name__,
+            getattr(error, "code", "publisher_parent_invalid"),
+        )
+        raise
+
+
 class PublisherSource:
     """Delegate explicit sources unchanged and capture only configured RFC pages with strict publisher hop restrictions."""
 
@@ -112,6 +202,12 @@ class PublisherSource:
             return await ObservedWebSource(static_client=self.client).read(url, mode)
         parent = urlsplit(url).path.startswith("/info/")
         rfc_url(url, self.number, parent=parent)
+        if parent:
+            observation, binding = await parent_observation(
+                self.client, url, self.number
+            )
+            self.parent_binding = binding
+            return observation
         capture = PublisherCapture(self.client, self.number, parent)
         observation = await ObservedWebSource(static_client=capture).read(url, mode)
         if parent:

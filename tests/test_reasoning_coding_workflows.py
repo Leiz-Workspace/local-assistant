@@ -8,15 +8,20 @@ from test_check_jobs import job_store as job_store
 from test_coding_workflow_service import propose
 from test_coding_workflow_service import workflow_service as workflow_service
 
-from apps.api.services.reasoning_coding_workflows import ReasoningCodingWorkflowService
+from apps.api.services.reasoning_coding_workflows import (
+    ReasoningCodingWorkflowService,
+    ReasoningCodingV2WorkflowService,
+)
 from src.application.services.workspace_policy import WorkspaceAccessError
-from src.infrastructure.inference.coding_reasoning import MODE
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("wrong_mode", [False, True])
+@pytest.mark.parametrize(
+    "service_class", [ReasoningCodingWorkflowService, ReasoningCodingV2WorkflowService]
+)
 async def test_opt_in_mode_keeps_explicit_review_and_rejects_fast_reply(
-    workflow_service, wrong_mode
+    workflow_service, wrong_mode, service_class
 ):
     """Capture real selected source and require a matching named result without applying a generated edit or accepting an old preset label."""
     original, source, root, core = workflow_service
@@ -27,9 +32,14 @@ async def test_opt_in_mode_keeps_explicit_review_and_rejects_fast_reply(
         async def complete(self, **options):
             """Return an authored candidate with an intentionally matching or mismatching preset."""
             result = await core.complete(**options)
-            return replace(result, preset_selected="fast" if wrong_mode else MODE)
+            return replace(
+                result,
+                preset_selected="fast"
+                if wrong_mode
+                else service_class._proposal_preset,
+            )
 
-    service = ReasoningCodingWorkflowService(
+    service = service_class(
         original.workspace,
         original.approvals,
         original.patches,
@@ -39,7 +49,7 @@ async def test_opt_in_mode_keeps_explicit_review_and_rejects_fast_reply(
     before = (root / "sample.py").read_bytes()
     try:
         result = await propose((service, source, root, core))
-        assert core.calls[0]["preset"] == MODE
+        assert core.calls[0]["preset"] == service_class._proposal_preset
         if wrong_mode:
             assert result["state"] == "proposal_failed" and result["patch"] is None
         else:
