@@ -2,7 +2,7 @@
 
 **Purpose:** Assess web research prerequisites before scheduling or activating new capabilities.
 
-**Current disposition — 2026-11-03:** D60fresh discovery/native/archive/all3-page workflow VERIFIED3/3, originaldirect-hitfailures retained. Bilingual panel FAILED/INCOMPLETE4valid/1upstream-error/3not-run; keepBrave and all frozen thresholds. Current750-source full5889PASS/0FAIL/ERROR/SKIP/2128.68s and independent preservation VERIFIED, all745prior bytes unchanged. [Actual results and scope](D60_FRESH_DISCOVERY_RESULT.md). No model/provider/default/production change.
+**Current disposition — 2026-11-03:** D60fresh report3/3and unchanged750-source full5889remain VERIFIED. Brave website rate limiting now proven by exact responseSHA/length; new30-second panel1/8andpost-effective-cooldown panel0/8failed, original4/8retained. [Diagnosis and dependency](D60_BRAVE_RATE_LIMIT_RESULT.md). Four new calls/no retries/no models; fresh preservation VERIFIED. OfficialAPIevaluation is PROPOSED in ADR153, pending owner route/account/credential decision; no default/provider change.
 
 ## WEB-ONBOARD-001 — Actual search provider/account
 
@@ -182,3 +182,8 @@ P1 correction depends on retained first records and [parent diagnostic](evidence
 P1; dependency: original ResearchService, publisher/source/report/native/archive services and selected SearXNG-Brave. One optional composition/evaluation milestone, with risks of source substitution, archived authority, raw-provider retention, upstream refusal and score inflation; rollback omits the unregistered service. [ADR152](ADR/152-fresh-search-publisher-evidence-composition.md), [frozen protocol](D60_FRESH_DISCOVERY_PROTOCOL.md), [first results](D60_FRESH_DISCOVERY_RESULT.md).
 
 Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archive-after-revocation/all3pages. Coverage FAILED/INCOMPLETE:4valid official-locator responses, one declared upstream failure,3not dispatched; original8-question denominator/6minimum/every-topic requirements unchanged. Keep Brave; no polling/retry/provider replacement or automatic new panel. Current750-source full5889PASS/0FAIL/ERROR/SKIP and independent preservation VERIFIED; historical745-source5837PASS remains historical. No production activation or model/default change.
+
+
+## WEB-BRAVE-RATE-001 — Confirmed anonymous frontend throttling
+
+P1before8/8availability/broad promotion. Dependencies: actual upstream recovery or owner-reviewed officialBraveAPIaccount/token/quota. Effort: diagnosis complete; one separately frozen APIcompatibility/sample milestone if chosen. Risks: repeated website bans, credential/cost/quota, altered result ordering and weak reliability claims. Original fixed criteria and both new failed recovery cohorts retained; no more automatic panel. [Actual4-call diagnosis](D60_BRAVE_RATE_LIMIT_RESULT.md), [concrete proposed ADR153](ADR/153-proposed-official-brave-api-after-frontend-rate-limiting.md). Waiting retains website configuration; rollback of optionalAPIevaluation leaves current route/model/data unchanged. APIchoice/credential is pending; no deployment or model decision.

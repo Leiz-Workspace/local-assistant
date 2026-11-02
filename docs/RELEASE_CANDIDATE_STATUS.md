@@ -73,3 +73,6 @@ D14structuredfix2026-10-26: [formatintegrationverified,functionalqualitygateFAIL
 
 
 D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is locally qualified on fresh42/42facts+format/profile, with independently reconstructedwire/context, nativecancel,5provenance/retirement/baselinePASS. [Full evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md). Earlier invalid researchcaller/fullCORE41/42andalloriginalscores preserved, four studies246firstgenerations/0automaticretry, no model/default/production activation.568scopedPASS/current732/all730oldexact is not a new732-file full run or release/manual/rights approval.
+
+
+2026-11-03 selected-provider diagnosis: [Brave frontend rate limiting now proven](D60_BRAVE_RATE_LIMIT_RESULT.md); new30-second and post-effective-cooldown recovery panels remainFAILED, original4/8preserved.4newprovidercalls/0retries/0models, source750andretained5889full unchanged; fresh preservation VERIFIED. OfficialAPI is only a concrete ADR153proposal, pending owner route/account/credential decision; no endpoint/default/model change, deployment or release.
