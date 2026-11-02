@@ -4780,3 +4780,11 @@ Commit a5f68f5 pin same745application files và166execution/evidence inputs. Cle
 - ADR148 freezes a private exact-command uv delegate selecting CPU3 before original worker exec/thread creation. Original two threads/batch4/model/SDK/corpus and480/481CPU/8GiBAS/4096MiBRSS/600wall guards unchanged. Other uv calls unchanged; no late scheduling mutation.
 - Actual original-state/authenticated empty-Qdrant preflight passed; fresh unchanged745-source full collected5837tests and is running. No full acceptance yet.14launcher/retirement controls and separate70delivery/supervisor controls PASS; these are not added to full counts. Private test temporary directories isolated from the active full.
 - [Resource record](../docs/D46_D60_RESOURCE_VERIFICATION.md). All176D70inputs and0/24listening labels preserved. No model/provider/default/shared-service/config/production/release change or new download.
+
+
+### 2026-11-02 — Original reranker full retained FAIL; one bounded original-environment probe
+
+- Inherited-original745-source full finished5836PASS/1FAIL/0ERROR/0SKIP in2147.54s. Exact worker/all threads observed onCPU3 with480/481CPUlimits; exit152after2rounds. No old comparison reused. Owned CORE exit0/reaped, native0/same15containers restored; independent original DB/security/schema/Qdrant preservation verified with only quota updated_at drift.
+- ADR149fixed-prefix reuse failed micro maxscore delta0.03632059693336487/rank parity;0full dispatches, rejected. Prior450CPU optimization-promotion failures remain rejected; no criterion relaxed.16private prefix controls pass, not model-quality acceptance.
+- ADR150defines a separate original-source test environment: exact-command uv delegate sets only its own passive OpenMP/zero-spin variables then CPU3 before exec. Original model/profile/fingerprint/algorithm/two threads/batch4/SDK/corpus and all original480/481CPU/AS8GiB/RSS4096MiB/query60s/wall600sassertions unchanged.16launcher/accounting controls and22conditional-full controls PASS.
+- One original-test probe is running without CORE/database credentials; only onePASS/zeroFAIL/ERROR/SKIP/joined-original-runtime permits a fresh same-source full. No failed optimization variant promoted or450CPUeligibility claimed. D46exact-first-output12/12/0newinference and D60linked3/3/native/all3-pageQA remain verified; final software/audit acceptance pending.
