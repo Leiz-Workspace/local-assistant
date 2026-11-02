@@ -4788,3 +4788,10 @@ Commit a5f68f5 pin same745application files và166execution/evidence inputs. Cle
 - ADR149fixed-prefix reuse failed micro maxscore delta0.03632059693336487/rank parity;0full dispatches, rejected. Prior450CPU optimization-promotion failures remain rejected; no criterion relaxed.16private prefix controls pass, not model-quality acceptance.
 - ADR150defines a separate original-source test environment: exact-command uv delegate sets only its own passive OpenMP/zero-spin variables then CPU3 before exec. Original model/profile/fingerprint/algorithm/two threads/batch4/SDK/corpus and all original480/481CPU/AS8GiB/RSS4096MiB/query60s/wall600sassertions unchanged.16launcher/accounting controls and22conditional-full controls PASS.
 - One original-test probe is running without CORE/database credentials; only onePASS/zeroFAIL/ERROR/SKIP/joined-original-runtime permits a fresh same-source full. No failed optimization variant promoted or450CPUeligibility claimed. D46exact-first-output12/12/0newinference and D60linked3/3/native/all3-pageQA remain verified; final software/audit acceptance pending.
+
+
+### 2026-11-02 — ADR150original-resource probe PASS; conditional full running
+
+- Exact original comparison1PASS/0FAIL/0ERROR/0SKIP in477.05s, all3rounds/original resource assertions. Dedicated total probe childCPU477.828508s includes pytest/uv overhead; not a worker-only CPU measurement or450CPUoptimization-promotion claim. Original native0/same15containers restored and745source files unchanged. All rejected variants and original failed fulls remain intact.
+- Conditional full frozen in commitced241a:745application files/196execution inputs; source, original profile/fingerprint, two threads/batch4/algorithm/model/SDK/corpus and every original cap unchanged. Private exact-worker passive/inherited environment only. Actual original DB/security/runtime/authenticated empty-Qdrant preflight passed;5837tests collected, full running.
+- 22conditional-supervisor controls and58corrected delivery controls PASS, separate from full count. No ZIP, full acceptance, provider/model/default/production/release change or additional coding/web generation.

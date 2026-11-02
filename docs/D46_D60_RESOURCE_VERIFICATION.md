@@ -39,3 +39,6 @@ The new full and post-run read-only audit must finish before current-source soft
 
 
 2026-11-02 original-environment continuation: ADR148full FAILED as recorded above; do not treat pre-exec scheduling as an established correction. [ADR150](ADR/150-original-worker-passive-inherited-verification-environment.md) freezes one original live-test probe with exact-command process-local passive waiting and CPU3. All original480/481CPU/8GiBAS/4096MiBRSS/60query/600wall assertions remain. Failed optimization candidates remain rejected under their additional450CPU/parity criteria; this separate original-source probe claims no variant-promotion eligibility. Only actual probe PASS permits one same-environment full, with fresh preflight and post-join preservation checks.
+
+
+ADR150original-source probe completed **1PASS/0FAIL/0ERROR/0SKIP in477.05seconds**. All three original rounds/resource assertions passed; total dedicated probe child CPU477.828508seconds includes pytest/uv overhead and is not a worker-only CPU measurement or450CPUoptimization eligibility. Original native0/same15containers restored,745application files unchanged. The conditional same-environment current full is now running against a separately frozen196-input record; no current full acceptance yet.
