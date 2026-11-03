@@ -55,3 +55,8 @@ Trial vẫn giữ nguyên default/registry selections, source PASS, original Pip
 Khảo sát/proposal P1 đã chuẩn bị; implementation/download/inference chưa được duyệt. [Receipt kiểm chứng khảo sát](evidence/d74-vi-survey-20261103-verification.json). Không có benchmark mới để báo cáo thắng/thua hoặc model đã được thay.
 
 Ghi chú provenance: verifier đầu phát hiện trường SHA của response tree API giữ commit-ref thay vì tree ID đã resolve. [Đối chiếu độc lập](evidence/d74-upstream-git-tree-identity-20261103.json) tái dựng đủ23Git tree objects khớp tree mà commit tham chiếu; các source blob tải về được kiểm tra hash riêng. Giữ lỗi kiểm tra đầu, không bỏ qua mismatch hoặc suy source hợp lệ chỉ từ URL.
+
+
+## Phản hồi sau trial — 2026-11-03
+
+[Chủ dự án nhận xét ba giọng](D74_OWNER_VOICE_FEEDBACK_20261103.md) đều ổn, thích Trúc Ly/Ngọc Huyền hơn nhưng ngữ điệu máy móc, giờ/ngày và Python/API chưa đọc đúng. Đây là sở thích ở cấp nhóm, không phải nhãn24clip, chọn model hoặc quality PASS. Giữ nguyên snapshot metadata/benchmark/audio; task điều tra cách đọc và prosody đã đánh giá trong backlog. ADR155 chưa được duyệt/chưa chạy; không thay model hoặc tự tải ứng viên khác.

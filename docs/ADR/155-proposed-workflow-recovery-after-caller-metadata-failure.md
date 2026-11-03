@@ -6,7 +6,7 @@
 
 ## Owner disposition — 2026-11-03
 
-The owner selected “Chờ nghe 24 clip” instead of approving recovery. [Decision receipt](../evidence/d74-owner-wait-listening-20261103.json) binds the exact proposed plan and retained listening artifacts. **OWNER DEFERRED PENDING LISTENING / NOT APPROVED / NOT EXECUTED.** Keep the recovery entry point locked; listening comments do not themselves authorize new inference or select a model. No new ratings have been submitted.
+The owner selected “Chờ nghe 24 clip” instead of approving recovery. [Decision receipt](../evidence/d74-owner-wait-listening-20261103.json) binds the exact proposed plan and retained listening artifacts. **OWNER DEFERRED PENDING LISTENING / NOT APPROVED / NOT EXECUTED.** Keep the recovery entry point locked; listening comments do not themselves authorize new inference or select a model. At that initial waiting decision, no new ratings had been submitted. The later [owner group feedback](../D74_OWNER_VOICE_FEEDBACK_20261103.md) now prefers Trúc Ly/Ngọc Huyền but reports mechanical prosody and incorrect date/time/Python/API reading. This is not a recovery approval or final voice/model acceptance; recovery remains locked, and the fixed Trúc Ly lane is unchanged.
 
 ## Context and decision requested
 
