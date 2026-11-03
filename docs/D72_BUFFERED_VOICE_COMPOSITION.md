@@ -2,7 +2,7 @@
 
 **Purpose:** Document actual local ASR→CORE→TTS integration and its source, owner, timing, cancellation and activation limits.
 
-**Status:** PASS local offline composition; production activation/model selection gated. D70 actual listening remains owner-deferred, not accepted. [Design](ADR/112-bounded-voice-composition-without-model-selection.md), [native protocol](ADR/113-native-voice-evaluation-matrix.md), [acceptance/source/raw hashes](evidence/d72-native-voice-composition-acceptance.json).
+**Status:** PASS local offline composition; production activation/model selection gated. D70owner listening24/24is now recorded with quality limitations; [D74decision proposal](D74_VOICE_DECISION_BRIEF.md) keeps model/voice/product choices pending. [Design](ADR/112-bounded-voice-composition-without-model-selection.md), [native protocol](ADR/113-native-voice-evaluation-matrix.md), [acceptance/source/raw hashes](evidence/d72-native-voice-composition-acceptance.json).
 
 ## Implemented behavior
 
@@ -33,4 +33,4 @@ Readonly audit preserves661prior sources,917protected files,176original inputs a
 
 ## Activation boundary and next work
 
-No product recording-to-model endpoint or new model default is enabled. Product activation still needs explicit approved ASR/TTS/voice choices, licenses, no-speech/short-word policy and actual owner listening. This local milestone accepts verified composition and fail-closed nonactivation, not a deployed voice product. D73 owns audio retention/delete/security controls; D74 must report remaining phase/release gates honestly.
+No product recording-to-model endpoint or new model default is enabled. Product activation still needs explicit approved ASR/TTS/voice choices, licenses, no-speech/short-word policy and physical-device acceptance. Owner listening is recorded for original D70outputs; it does not approve these six D72example outputs or a production voice. This local milestone accepts verified composition and fail-closed nonactivation, not a deployed voice product. D73 owns audio retention/delete/security controls; D74 must report remaining phase/release gates honestly.

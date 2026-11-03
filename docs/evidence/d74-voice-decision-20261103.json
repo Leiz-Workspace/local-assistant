@@ -1,0 +1,345 @@
+{
+  "description": "D74 decision-board data derived from retained D70/D72/D74 observations and owner listening; proposal only, no new measurements or deployment approval.",
+  "status": "PROPOSAL_READY_OWNER_DECISION_PENDING",
+  "recorded_at_utc": "2026-11-03T08:16:15.543264+00:00",
+  "task": "VOICE-TTS-DECISION-001",
+  "source_sha256": {
+    "docs/evidence/d70-owner-listening-20261103.json": "0ca6890ee4759dbd6d3501e8636927d4fe8d5868d30c80391a487e7a2e4c6f9c",
+    "docs/evidence/d70-owner-listening-20261103-verification.json": "81b55cdfba00142cebe9fc77bf630cf60fbe2c2e51180ed9d56b2a44ebfa2207",
+    "docs/evidence/d70-tts-readonly-measurement-audit.json": "0c6255316a0ce797721137872d2efb9af272df11f734e8d48bdccec6279b9fb7",
+    "docs/evidence/d70-piper-lessac-license-followup.json": "6f95a6bacc178ce6be560f99a5df46ce2ecde07df79e7b263e99568b25cf19b2",
+    "docs/evidence/d72-native-voice-composition-acceptance.json": "255ec8a019f1b3f43b6e7b2c437fdcdef654504ecbf63fa8473035d1397ff2be",
+    "docs/evidence/d72-vad-asr-comparison-first.json": "8b4aefe797634fb44db65d35709060b067a45aee5043dc4c6603974911e0acf6",
+    "docs/evidence/d74-local-engineering-review.json": "d9c709481d95e2953b04ff1e75e57db366736fb8f2dacf81a66ca049f1f5e2a5",
+    "configs/tts-evaluation-candidates.json": "13cb85888f34b7c6631014f53527810e317493fde1d0d066bc081a4d95d6846a",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "docs/ADR/096-offline-registry-tts-comparison.md": "af33976ecd0c09a8af7cf0bbd29df8f2fd45ac1cd6af4f5bcda6036cd07b7a56",
+    "docs/ADR/111-owner-deferred-tts-listening-and-explicit-recording.md": "6a8c0778e330a164e6307d4bef70c182a8bc9a1e9ba7216b2b774aa44b8fcaeb",
+    "docs/ADR/112-bounded-voice-composition-without-model-selection.md": "1363abfb4f0ff4b91b0c07a3fae4918ce1e405f0bea88f3c6db40d7237061b1b",
+    "docs/ADR/113-native-voice-evaluation-matrix.md": "4c1f1674313d14de87b52b3b9f630e842b2f9d2aad38dda1787bba093ded80ed",
+    "data/backups/d70-tts-evaluation/models/qwen3-tts-0.6b/85e237c12c027371202489a0ec509ded67b5e4b5/config.json": "81aca2b6fac304944d8acf345272d8a9a727d5fc2e2e66b222ab4729340c7455",
+    "data/backups/d70-tts-evaluation/models/piper-en/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/MODEL_CARD": "fbee1529c89d36b3fe76d7e9f3f832dce17f44900a52d76a9bda735654766b4d",
+    "data/backups/d70-tts-evaluation/models/piper-vi/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/MODEL_CARD": "302db8a930ffc2b1c2181db26deaf8272116eca2b08b8f80da6375b0a994af7b",
+    "data/backups/d70-tts-evaluation/venv/lib/python3.12/site-packages/qwen_tts/inference/qwen3_tts_model.py": "e1da450732857c1f5fe3e36ebab85db2f6dc6a48caaff6973f463384e30275e4",
+    "data/backups/d70-tts-evaluation/runtime-source/piper-curated/archived-distribution-metadata/piper_tts-1.8.0.dist-info/METADATA": "5067e2929cd7cd8fb4d636c354141f9d9410bcbda70f7307a9ce70805f414ad2"
+  },
+  "tts_cpu_measurements": [
+    {
+      "candidate": "qwen3-tts-0.6b",
+      "attempted": 18,
+      "successful_waveforms": 12,
+      "explicit_vietnamese_refusals": 6,
+      "worker_wall_seconds": 224.78415130800568,
+      "import_seconds": 5.738236354001856,
+      "load_seconds": 1.1954032959984033,
+      "lifetime_worker_rss_kib": 5797248,
+      "lifetime_worker_rss_gib": 5.5286865234375,
+      "lifetime_worker_rss_mib": 5661.375,
+      "duration_weighted_rtf": 4.565644401578317
+    },
+    {
+      "candidate": "piper-en",
+      "attempted": 6,
+      "successful_waveforms": 6,
+      "explicit_vietnamese_refusals": 0,
+      "worker_wall_seconds": 1.5294089300004998,
+      "import_seconds": 0.12934736299939686,
+      "load_seconds": 0.805502251998405,
+      "lifetime_worker_rss_kib": 247688,
+      "lifetime_worker_rss_gib": 0.23621368408203125,
+      "lifetime_worker_rss_mib": 241.8828125,
+      "duration_weighted_rtf": 0.03251578254678827
+    },
+    {
+      "candidate": "piper-vi",
+      "attempted": 6,
+      "successful_waveforms": 6,
+      "explicit_vietnamese_refusals": 0,
+      "worker_wall_seconds": 1.4021297459985362,
+      "import_seconds": 0.12642527100251755,
+      "load_seconds": 0.7687582130020019,
+      "lifetime_worker_rss_kib": 230476,
+      "lifetime_worker_rss_gib": 0.21979904174804688,
+      "lifetime_worker_rss_mib": 225.07421875,
+      "duration_weighted_rtf": 0.03208622288436907
+    }
+  ],
+  "buffered_voice_examples": [
+    {
+      "index": 0,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 45.93673075400875,
+      "stages": [
+        [
+          "asr",
+          9.654043890972389
+        ],
+        [
+          "llm",
+          0.49322336600744165
+        ],
+        [
+          "tts",
+          35.789321753021795
+        ]
+      ],
+      "output_samples": 75520,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909644,
+      "tts_lifetime_worker_RSS_KiB": 5795388
+    },
+    {
+      "index": 1,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 11.358684989012545,
+      "stages": [
+        [
+          "asr",
+          9.662266986997565
+        ],
+        [
+          "llm",
+          0.22806184101500548
+        ],
+        [
+          "tts",
+          1.4681991679826751
+        ]
+      ],
+      "output_samples": 54428,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909624,
+      "tts_lifetime_worker_RSS_KiB": 229276
+    },
+    {
+      "index": 2,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 13.980016462010099,
+      "stages": [
+        [
+          "asr",
+          12.052031069993973
+        ],
+        [
+          "llm",
+          0.4746522160130553
+        ],
+        [
+          "tts",
+          1.453191592998337
+        ]
+      ],
+      "output_samples": 67245,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 5909872,
+      "tts_lifetime_worker_RSS_KiB": 233196
+    },
+    {
+      "index": 3,
+      "asr": "whisper-small-ct2",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 49.31466564600123,
+      "stages": [
+        [
+          "asr",
+          5.593595551996259
+        ],
+        [
+          "llm",
+          0.39197923499159515
+        ],
+        [
+          "tts",
+          43.328972158022225
+        ]
+      ],
+      "output_samples": 110080,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 897892,
+      "tts_lifetime_worker_RSS_KiB": 5796324
+    },
+    {
+      "index": 4,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 7.775020888017025,
+      "stages": [
+        [
+          "asr",
+          5.973300400975859
+        ],
+        [
+          "llm",
+          0.31135384799563326
+        ],
+        [
+          "tts",
+          1.4902199950010981
+        ]
+      ],
+      "output_samples": 90837,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 897876,
+      "tts_lifetime_worker_RSS_KiB": 266800
+    },
+    {
+      "index": 5,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 7.849131955008488,
+      "stages": [
+        [
+          "asr",
+          6.095408494002186
+        ],
+        [
+          "llm",
+          0.4216874720004853
+        ],
+        [
+          "tts",
+          1.3319106939889025
+        ]
+      ],
+      "output_samples": 57772,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true,
+      "asr_lifetime_worker_RSS_KiB": 898008,
+      "tts_lifetime_worker_RSS_KiB": 228432
+    }
+  ],
+  "asr_existing_comparison": [
+    {
+      "candidate": "qwen3-asr-0.6b",
+      "ungated": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 45,
+          "reference_words": 591,
+          "character_edits": 99,
+          "reference_characters": 1984,
+          "WER": 0.07614213197969544,
+          "CER": 0.049899193548387094
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 26,
+          "reference_words": 460,
+          "character_edits": 84,
+          "reference_characters": 2038,
+          "WER": 0.05652173913043478,
+          "CER": 0.04121687929342493
+        }
+      },
+      "gated": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 53,
+          "reference_words": 591,
+          "character_edits": 119,
+          "reference_characters": 1984,
+          "WER": 0.08967851099830795,
+          "CER": 0.05997983870967742
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 53,
+          "reference_words": 460,
+          "character_edits": 203,
+          "reference_characters": 2038,
+          "WER": 0.11521739130434783,
+          "CER": 0.09960745829244357
+        }
+      },
+      "negative_ungated_nonempty": 4,
+      "negative_gated_nonempty": 0,
+      "negatives": 5,
+      "lifetime_worker_rss_kib": 5909672
+    },
+    {
+      "candidate": "whisper-small-ct2",
+      "ungated": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 121,
+          "reference_words": 591,
+          "character_edits": 248,
+          "reference_characters": 1984,
+          "WER": 0.20473773265651438,
+          "CER": 0.125
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 28,
+          "reference_words": 460,
+          "character_edits": 80,
+          "reference_characters": 2038,
+          "WER": 0.06086956521739131,
+          "CER": 0.03925417075564279
+        }
+      },
+      "gated": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 118,
+          "reference_words": 591,
+          "character_edits": 229,
+          "reference_characters": 1984,
+          "WER": 0.1996615905245347,
+          "CER": 0.11542338709677419
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 54,
+          "reference_words": 460,
+          "character_edits": 193,
+          "reference_characters": 2038,
+          "WER": 0.11739130434782609,
+          "CER": 0.09470068694798822
+        }
+      },
+      "negative_ungated_nonempty": 5,
+      "negative_gated_nonempty": 0,
+      "negatives": 5,
+      "lifetime_worker_rss_kib": 961508
+    }
+  ],
+  "owner_listening_outputs": 24,
+  "owner_listening_kind": "human_owner_on_speakers",
+  "grouped_piper_vi_note": true,
+  "qwen_0_6b_instruct_ignored_by_retained_sdk": true,
+  "style_control_verification": "Static AST and retained config only; model SDK not imported or executed.",
+  "recommendation": {
+    "english": "Qwen Ryan remains the strongest qualitative lead among these owner-reviewed EN outputs; retain as an evaluation candidate, activation gated by latency and explicit owner choice.",
+    "vietnamese": "Neither reviewed VI configuration satisfies current owner voice requirements; no approved TTS VI candidate.",
+    "activation": "Retain current nonactivation until owner choices and product gates are satisfied."
+  },
+  "product_latency_budget_seconds": null,
+  "physical_microphone_test_performed": false,
+  "model_requests": 0,
+  "search_provider_requests": 0,
+  "new_model_downloads": 0,
+  "model_or_voice_selected": null,
+  "configuration_changed": false,
+  "production_enabled": false,
+  "d60_disposition": "owner_deferred",
+  "architecture_changed": false,
+  "historical_sdk_manifest_verified": true,
+  "historical_sdk_manifest_sha256": "d740aa63ae5ebf5f27be8113ed0ac79367c499ffffb71b4bde1a774c7377f3bf",
+  "historical_scored_freeze_sha256": "859e32ad71d623e0c27ab3a940c48f26356104db27faf609574a454dddb804fc",
+  "pinned_piper_cards_and_qwen_config_git_blob_verified": true
+}

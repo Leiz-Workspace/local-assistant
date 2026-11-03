@@ -1,0 +1,59 @@
+{
+  "description": "Primary-source text/metadata recheck for the D74 proposal only. No inference, credentials, account/license acceptance, audio upload or model/package download. Web-tool complete response byte hashes were not captured.",
+  "recorded_at_utc": "2026-11-03T08:19:48.977974+00:00",
+  "sources": [
+    {
+      "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice/blob/85e237c12c027371202489a0ec509ded67b5e4b5/README.md",
+      "status": "READ",
+      "finding": "Pinned card declares Apache-2.0 and ten languages without Vietnamese; broad style claims are not proof of retained SDK support."
+    },
+    {
+      "url": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/MODEL_CARD",
+      "status": "WEB_TOOL_UNAVAILABLE",
+      "finding": "Use retained pinned card; not a newly retrieved card."
+    },
+    {
+      "url": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/MODEL_CARD",
+      "status": "WEB_TOOL_UNAVAILABLE",
+      "finding": "Use retained pinned card; not a newly retrieved card."
+    },
+    {
+      "url": "https://www.cstr.ed.ac.uk/projects/blizzard/2013/lessac_blizzard2013/license.html",
+      "status": "READ",
+      "finding": "Research-only grant for source dataset; weights and generated-output rights not independently resolved; no form submitted."
+    },
+    {
+      "url": "https://github.com/OHF-Voice/piper1-gpl/blob/v1.8.0/LICENSE.md",
+      "status": "NOT_FOUND",
+      "finding": "404; not used as evidence of license contents."
+    },
+    {
+      "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/MODEL_CARD",
+      "status": "WEB_TOOL_UNAVAILABLE",
+      "finding": "Alternative card view also unavailable via web tool; retained bytes used."
+    },
+    {
+      "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/MODEL_CARD",
+      "status": "WEB_TOOL_UNAVAILABLE",
+      "finding": "Alternative card view also unavailable via web tool; retained bytes used."
+    },
+    {
+      "url": "https://pypi.org/pypi/piper-tts/1.8.0/json",
+      "status": "READ",
+      "finding": "Official version metadata declares GPL-3.0-or-later; wheel SHA matches retained original download pin. No package downloaded."
+    },
+    {
+      "url": "https://github.com/OHF-Voice/piper1-gpl",
+      "status": "READ",
+      "finding": "Official repository reachable; current repository is not substituted for retained 1.8.0 runtime bytes."
+    }
+  ],
+  "web_tool_open_requests": 9,
+  "reads": 4,
+  "unavailable_card_views": 4,
+  "not_found": 1,
+  "rights_clearance_granted": false,
+  "model_or_dataset_downloaded": false,
+  "source_engine_changed": false,
+  "brave_search_requests": 0
+}

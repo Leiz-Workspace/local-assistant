@@ -2,14 +2,14 @@
 
 **Purpose:** Combine existing accepted image/video scopes with actual new voice examples, resource observations and current regression while keeping manual/production acceptance honest.
 
-**Status:** Engineering review COMPLETE; final voice/product phase acceptance PENDING. D70offline evaluation now includes owner complete/repeated listening24/24on speakers with quality limitations; this is not an all-candidate quality/model/license PASS. [Owner findings](D70_OWNER_LISTENING_20261103.md). Independent later implementation can be prepared without declaring this gate closed.
+**Status:** Engineering review COMPLETE; final voice/product phase acceptance PENDING. D70offline evaluation now includes owner complete/repeated listening24/24on speakers with quality limitations; this is not an all-candidate quality/model/license PASS. [Owner findings](D70_OWNER_LISTENING_20261103.md). [D74decision brief](D74_VOICE_DECISION_BRIEF.md) is prepared2026-11-03: existing candidate quality/CPU latency/RAM/rights/rollback/options, owner choice pending. [Physical microphone check](D74_PHYSICAL_MIC_CHECK.md) is ready/not executed. Independent later implementation can be prepared without declaring this gate closed.
 
 ## Verified engineering evidence
 
 - Original D61–D67 CORE vision/OCR/image/video/timeline/resource scopes remain retained and unchanged: see [D67 resource/context report](D67_EXISTING_MULTIMODAL_BENCHMARK.md). Those image/video model-quality observations are historical accepted examples, not new predictions in this review.
 - D68/D69 original ASR/VAD evaluations retained. New [D72 held-out comparison](D72_VAD_ASR_COMPARISON.md) covers40independent new speech sources/5negatives/2padded repeats,89requests per ASR and94VADcalls; preserve all lexical failures and keep concatenating VAD disabled.
 - [D71 recording](D71_EXPLICIT_RECORDING.md), [D72 six actual complete voice paths](D72_BUFFERED_VOICE_COMPOSITION.md), [D73 retention/delete/security](D73_AUDIO_RETENTION_SECURITY.md) have their own verified local scope and native fake-device tests.
-- Current **1043media/voice-related tests PASS74.39s/0FAIL/0SKIP**. One known warning is the deliberately duplicate Piper archive fixture. This is not the whole-project regression. Established read-only service/model/data/security baseline audit PASS; all inference workers/browser/UI processes retired.
+- Original phase verification recorded **1043media/voice-related tests PASS74.39s/0FAIL/0SKIP**; no rerun in this documentation task. One known warning is the deliberately duplicate Piper archive fixture. This is not the whole-project regression. Established read-only service/model/data/security baseline audit PASS; all inference workers/browser/UI processes retired.
 
 ## Actual voice resource matrix
 
@@ -27,7 +27,7 @@ CORE stays loaded at32K and its recorded NVIDIA process allocation remains9386Mi
 ## Listening completed; remaining manual and production gates
 
 1. D70listening dependency COMPLETE for offline evaluation: owner24/24complete/repeated listening on speakers recorded in [new evidence](D70_OWNER_LISTENING_20261103.md); original blank worksheet preserved. Resolve observed VIvoice dissatisfaction/quality failures in the separate approved product decision; do not call all candidates PASS.
-2. Explicit approved ASR/TTS/voice choices and complete engine/voice/license/deployment review. No product model default or recording-to-model endpoint has been activated.
+2. Explicit approved ASR/TTS/voice choices and complete engine/voice/license/deployment review. [Evidence-bound proposal](D74_VOICE_DECISION_BRIEF.md) now prepared; ENcandidate has latency/intonation limitations, VIvoice not accepted. No product model default or recording-to-model endpoint has been activated.
 3. Production no-speech and short/quiet-word policy. Current ASR can hallucinate on authored negatives; naive VAD concatenation degrades speech WER. The present comparison does not certify word boundaries or universal gating.
 4. Physical microphone acceptance and any final production E2E/load/restore/security/release gates. Native fake-device checks do not stand in for those user-device observations.
 

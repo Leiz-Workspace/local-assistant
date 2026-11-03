@@ -34,4 +34,4 @@ Original VAD3GiB/ASR8GiB virtual limits, CPU2/offline namespaces and14GiBsampled
 
 ## Remaining product gates
 
-Do not claim fine-grained short/quiet-word retention or enable VAD from this comparison. Any further gating proposal needs explicit source-clock/coverage evidence for its intended policy. Buffered application/native voice composition has its own acceptance evidence. Product ASR/TTS choices and voice license approval remain explicit owner decisions. Deferred D70 actual listening remains required before voice acceptance/model selection/release; these ASR metrics are not naturalness.
+Do not claim fine-grained short/quiet-word retention or enable VAD from this comparison. Any further gating proposal needs explicit source-clock/coverage evidence for its intended policy. Buffered application/native voice composition has its own acceptance evidence. Product ASR/TTS choices and voice license approval remain explicit owner decisions. Owner D70listening24/24is now recorded with quality limitations; [D74voice/model/rights/no-speech/device acceptance](D74_VOICE_DECISION_BRIEF.md) remains pending. These ASR metrics are not naturalness.
