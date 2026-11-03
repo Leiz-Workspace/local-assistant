@@ -1,8 +1,8 @@
 # D70 — So sánh TTS ngoại tuyến
 
-> **Trạng thái hiện tại — 2026-10-24:** D70 đã hoàn tất đo máy; nghe thực tế **0/24, chủ dự án để test sau**. [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) đã cho phép tiếp tục; D71–D73 đã kiểm chứng phạm vi local, D74 còn nghiệm thu sản phẩm. Các dòng “D71 NOT STARTED” ở lịch sử bên dưới mô tả thời điểm trước quyết định này. Các guard research vẫn đóng; xem phê duyệt và lượt chạy theo đúng ngày của từng thí nghiệm. Không mở lại evaluator campaign hoặc sửa điểm/nhãn cũ. Xem [trạng thái dự án hiện tại](RELEASE_CANDIDATE_STATUS.md), [hướng dẫn nghe](D70_MANUAL_LISTENING_TEST.md).
+> **Trạng thái hiện tại — 2026-11-03:** Chủ dự án đã nghe hết và nghe lại đủ **24/24** audio bằng loa, xác nhận không lỗi âm thanh. **D70 hoàn tất phép so sánh offline với hạn chế chất lượng**, không có model/voice được chọn hoặc triển khai. [Kết quả nghe và giới hạn](D70_OWNER_LISTENING_20261103.md). D71–D73 đã kiểm chứng phạm vi local; D74 còn nghiệm thu giọng/model/license/sản phẩm. Các checkpoint 0/24, “D71 NOT STARTED” và lượt evaluator bên dưới là lịch sử theo ngày; không mở lại campaign, sửa audio hoặc ghi đè pending gốc.
 
-**D70 acceptance clarification2026-10-23:** Machine measurements are recorded; **actual listening0/24 remains the unmet original AC**. Fresh native audio input is still omitted. Extra evaluator research is a route, not a replacement deliverable; no new trial scheduled. [Exact checklist and blocker](D70_ACCEPTANCE_STATUS.md).
+**Historical D70 acceptance clarification2026-10-23:** Machine measurements are recorded; **actual listening0/24 remains the unmet original AC**. Fresh native audio input is still omitted. Extra evaluator research is a route, not a replacement deliverable; no new trial scheduled. [Exact checklist and blocker](D70_ACCEPTANCE_STATUS.md).
 
 **Historical actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
 
@@ -15,7 +15,7 @@
 **Checkpoint ADR-103 trước đó2026-10-23:** Chủ dự án duyệt **“Duyệt một lượt diagnostic ADR-103”**. Lượt đã chạy39.749s/exit0/no timeout, raw `yes/no/no/yes` khớp4control và4EOS. Audit phát hiện helper mount vào worker còn chứa metadata/prepare code phía cha: **không coi là strict protocol PASS**, dù worker không truyền các reference đó vào input model. Đã tách pure runtime, native namespace probe PASS; chưa chạy lại original model. Scope một lượt đã dùng, diagnostic modes đóng lại; chỉ imports/load còn mở.249TTSrelated PASS7.63s/Ruff PASS. [Bằng chứng](evidence/d70-presence-diagnostic-first.json). D70 mở, reviewer NOT QUALIFIED/D71 chưa bắt đầu.
 
 
-**Trạng thái:** IN PROGRESS — chờ khả năng nghe thực tế theo quyết định chủ dự án ngày2026-10-22. ADR-097 bị từ chối; giữ nguyên AC và thứ tự D70→D71. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
+**Trạng thái lịch sử 2026-10-22:** IN PROGRESS — chờ khả năng nghe thực tế theo quyết định chủ dự án ngày2026-10-22. ADR-097 bị từ chối; giữ nguyên AC và thứ tự D70→D71. Source chuẩn bị `7ff5438`; D69 vẫn PASS tại `5653de4`. Chưa chuyển sang D71.
 
 ## Model, giọng và giấy phép
 

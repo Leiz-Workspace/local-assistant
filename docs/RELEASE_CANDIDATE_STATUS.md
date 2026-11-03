@@ -2,11 +2,11 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; hearing0/24anddevice/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; owner hearing24/24is recorded with quality limitations; device/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
 
 ## Completed local engineering evidence
 
-- D70machine benchmarks retained; a lossless offline24WAVplayer and blank owner worksheet are ready.
+- D70offline evaluation complete with quality limitations: [owner complete/repeated listening24/24on speakers](D70_OWNER_LISTENING_20261103.md); original machine results/audio/blank worksheet preserved. No positive all-candidate/model approval.
 - D71–D73explicit local recording/bounded native voice composition/ephemeral retention verified; D74engineering review completed, product acceptance open.
 - D75–D80owner-reviewed skill contracts, pinned MCP, trusted hooks, durable bounded plans, deterministic action-approved routing and immutable profile prompts verified as optional independent components. No production harness API/skill/server/model activation.
 - D81 original three-domain fixture now passes all3exact fact/quote pairs through an explicit optional structured adapter after concrete compiler fixes; original1/3format failure and all subsequent failed campaigns remain preserved.
@@ -19,19 +19,19 @@
 - D84actual same-cluster PostgreSQL12table/ACLrestore and owned vector/blob/config canary roundtrips complete/retired. D85bounded native resource/admission recovery complete; no hostOOM/global capacity claim.
 - D86recorder UI keyboard/responsive/dark-mode/native lifecycle review verified; release gate remains open.
 - D88fresh locked CPython3.12startup and second offline environment from complete isolated cache verified, first install failures retained. [Onboarding](D88_CLEAN_INSTALL_REHEARSAL.md), [model scorecard](D88_MODEL_PROVENANCE_SCORECARD.md).
-- D89[manual packet](D89_MANUAL_ACCEPTANCE_CHECKLIST.md) ready with14representative workflow evidence mappings. Owner hearing/device/release acceptance remains unperformed.
+- D89[manual packet](D89_MANUAL_ACCEPTANCE_CHECKLIST.md) ready with14representative workflow evidence mappings. Owner hearing24/24is now recorded; physical-device/product/release acceptance remains pending.
 
 ## Decisions still required by the existing scope
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
 | D87 full software snapshot | **COMPLETE5759PASS/0FAIL/0ERROR/0SKIP/exit0**,1870.65s/732files unchanged; all728previous files match | [Current terminal/qualified audit](evidence/d87-current-20261027-full-acceptance.json); historical5674/5596/5507/initial umask failure remain separate. Explicit quota timestamp-only delta, owned CORE cleanup and recorded Vault unseal prerequisite |
-| D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
+| D70actual listening | COMPLETE for original offline evaluation: owner24/24on speakers, adverse quality findings retained | [Owner review](D70_OWNER_LISTENING_20261103.md); no model/voice selected, no all-candidate quality PASS. D74voice/license/product decisions remain open |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
 | Original D14 measurements / selected local path | Original weighted measurements complete; historical composite CORE66.5/UNRESTRICTED52 and all first failures retained. Later selected semantic gate passes fresh42/42 facts+format per profile | [Selected local evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md); opt-in/default-off qualification, not universal quality or approval of product/API integration, model adoption or release |
 | Broader coding/web promotion | D46first7/10repair result with3failures retained; current Brave requests accepted; original direct-result gate FAILED, separate linked-source/report/native/visual variant verified | CODE-EVAL-002 fresh measurement complete:baseline7/12/concise7/12,no hint adoption; broader coding/WEB-SEARCH-003promotion remains P1. Protocol/full-suite PASS is not a successful-repair or upstream recovery score |
 | D86release gate | UI controls verified; pending product/manual gates remain | Confirm the planned scope actually satisfies acceptance and no critical unresolved blocker is being waived silently |
-| D89owner/device acceptance | Prepared, not completed | Real microphone/browser/listening checks and owner review of scope/known limits |
+| D89owner/device acceptance | Listening24/24recorded; physical device/product not completed | Real microphone/browser checks and owner review of scope/known limits |
 | D90release decision | NOT APPROVED/NOT TAGGED | Evidence-backed owner acceptance; only then tag/deploy an agreed scope |
 
 D81 original minimal-quote workflow is locally verified through a corrected optional adapter; historical failed scores are unchanged. General semantic quality and product/API integration remain outside that scoped PASS. Fresh Brave discovery remains qualified/degraded under the existing preserved provider decision, not declared recovered by a fixture/cached-source test.
@@ -40,7 +40,7 @@ D81 original minimal-quote workflow is locally verified through a corrected opti
 
 Current evidence is local/one-worker/operator-configured. OIDC/TLS/reverse-proxy exposure, multiworker load/SLO, full-host/model-OOM behavior, off-host/new-cluster/Vault-from-scratch recovery and production metrics exposure are not certified. Do not invent these as completed features or silently widen the current local boundary. Future expansion needs its own priority/dependency/effort/risk assessment and ADR where architecture changes.
 
-The owner's instruction permits independent work while manual listening is done later. It does not authorize fake listening labels, changing model choices, removing original AC, disregarding failed results or tagging an unfinished project asv1.0. Day90is a planning target, not a forced end; the master roadmap tracks the remaining closure work beyond it.
+The earlier owner instruction permitted independent work while listening was deferred; owner listening24/24is now recorded in the new D70report. It does not authorize fake listening labels, changing model choices, removing original AC, disregarding failed results or tagging an unfinished project asv1.0. Day90is a planning target, not a forced end; the master roadmap tracks the remaining closure work beyond it.
 
 
 ## Independent follow-up after the completed full snapshot

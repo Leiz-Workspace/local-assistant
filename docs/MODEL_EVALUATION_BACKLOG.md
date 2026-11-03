@@ -1,6 +1,6 @@
 # Model evaluation backlog and approval gates
 
-**Current owner decision2026-10-23:** D70 listening explicitly DEFERRED to the owner’s later manual test; machine measurements complete, naturalness0/24 remains unaccepted. D71 local recording and D72 local offline composition are verified under [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md), superseding the earlier scheduling prohibition. [Manual guide](D70_MANUAL_LISTENING_TEST.md) and [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Earlier checkpoints below are historical, not current D71 blockers. No evaluator retry/model change is scheduled.
+**Current status2026-11-03:** Owner complete/repeated listening on speakers recorded for24/24; D70 **EVALUATION COMPLETE WITH QUALITY LIMITATIONS**, not an all-candidates quality/model/license/deployment PASS. [Owner evidence and exact limitations](D70_OWNER_LISTENING_20261103.md). D71–D73 local scopes verified; D74product/voice/rights/no-speech decisions remain open. Original blank labels and every failed evaluator campaign remain historical; no evaluator rerun or model/default change. Earlier2026-10-23checkpoints below retain their dated status.
 
 **Latest actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
 

@@ -1,6 +1,6 @@
 # D70 Voxtral first paired attention diagnostic
 
-> **Trạng thái hiện tại — 2026-10-24:** D70 đã hoàn tất đo máy; nghe thực tế **0/24, chủ dự án để test sau**. [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) đã cho phép tiếp tục; D71–D73 đã kiểm chứng phạm vi local, D74 còn nghiệm thu sản phẩm. Các dòng “D71 NOT STARTED” ở lịch sử bên dưới mô tả thời điểm trước quyết định này. Các guard research vẫn đóng; xem phê duyệt và lượt chạy theo đúng ngày của từng thí nghiệm. Không mở lại evaluator campaign hoặc sửa điểm/nhãn cũ. Xem [trạng thái dự án hiện tại](RELEASE_CANDIDATE_STATUS.md), [hướng dẫn nghe](D70_MANUAL_LISTENING_TEST.md).
+> **Trạng thái hiện tại — 2026-11-03:** Chủ dự án đã nghe hết và nghe lại đủ **24/24** audio bằng loa, xác nhận không lỗi âm thanh. **D70 hoàn tất phép so sánh offline với hạn chế chất lượng**, không có model/voice được chọn hoặc triển khai. [Kết quả nghe và giới hạn](D70_OWNER_LISTENING_20261103.md). D71–D73 đã kiểm chứng phạm vi local; D74 còn nghiệm thu giọng/model/license/sản phẩm. Các checkpoint 0/24, “D71 NOT STARTED” và lượt evaluator bên dưới là lịch sử theo ngày; không mở lại campaign, sửa audio hoặc ghi đè pending gốc.
 
 **Purpose:** Record the explicitly approved original-weight eager/SDPA comparison, complete numerical evidence and remaining D70 gate without changing historical qualification or selecting a backend/model.
 

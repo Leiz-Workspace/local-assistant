@@ -2,7 +2,7 @@
 
 **Purpose:** Combine existing accepted image/video scopes with actual new voice examples, resource observations and current regression while keeping manual/production acceptance honest.
 
-**Status:** Engineering review COMPLETE; final voice/product phase acceptance PENDING. D70 listening is explicitly deferred by the owner; this is not a naturalness/model/license PASS. Independent later implementation can be prepared without declaring this gate closed.
+**Status:** Engineering review COMPLETE; final voice/product phase acceptance PENDING. D70offline evaluation now includes owner complete/repeated listening24/24on speakers with quality limitations; this is not an all-candidate quality/model/license PASS. [Owner findings](D70_OWNER_LISTENING_20261103.md). Independent later implementation can be prepared without declaring this gate closed.
 
 ## Verified engineering evidence
 
@@ -24,9 +24,9 @@
 
 CORE stays loaded at32K and its recorded NVIDIA process allocation remains9386MiB. Worker RSS is lifetime process RAM, not model-only/private/minimum RAM or VRAM. ASR and TTS workers run sequentially; do not sum RSS as a simultaneously measured peak. Latency includes worker load/conversion and may use warm files/caches; no streaming TTFA, cold-load/SLO or concurrency guarantee. D67 historical sampled CORE/media figures remain separately labelled in that report.
 
-## Open manual and production gates
+## Listening completed; remaining manual and production gates
 
-1. Owner actually listens to all24original D70 outputs and records per-output judgements: [manual guide](D70_MANUAL_LISTENING_TEST.md), [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Labels remain0/24.
+1. D70listening dependency COMPLETE for offline evaluation: owner24/24complete/repeated listening on speakers recorded in [new evidence](D70_OWNER_LISTENING_20261103.md); original blank worksheet preserved. Resolve observed VIvoice dissatisfaction/quality failures in the separate approved product decision; do not call all candidates PASS.
 2. Explicit approved ASR/TTS/voice choices and complete engine/voice/license/deployment review. No product model default or recording-to-model endpoint has been activated.
 3. Production no-speech and short/quiet-word policy. Current ASR can hallucinate on authored negatives; naive VAD concatenation degrades speech WER. The present comparison does not certify word boundaries or universal gating.
 4. Physical microphone acceptance and any final production E2E/load/restore/security/release gates. Native fake-device checks do not stand in for those user-device observations.
