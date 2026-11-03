@@ -4,6 +4,10 @@
 
 **Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; owner hearing24/24is recorded with quality limitations; device/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
 
+## Current approved voice research
+
+[ADR-154 actual result](D74_VI_VOICE_CAMPAIGN_RESULT.md):16 pinned payloads prepared;2 qualification/24 standalone TTS outputs complete. Workflow stopped after6 software-invalid slots/42 unattempted;161 corrected scoped tests PASS without further inference. First failures preserved and native/container baseline restored. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) replacement workflow is PROPOSED/NOT APPROVED/NOT EXECUTED. New owner listening, physical4second target, model/rights/product and release remain open. Original750 application bytes/current retained full5889 unchanged.
+
 ## Completed local engineering evidence
 
 - D70offline evaluation complete with quality limitations: [owner complete/repeated listening24/24on speakers](D70_OWNER_LISTENING_20261103.md); original machine results/audio/blank worksheet preserved. No positive all-candidate/model approval.

@@ -2,7 +2,7 @@
 
 **Mục đích:** Đối chiếu chất lượng nghe, độ trễ, RAM và quyền sử dụng của đúng các ứng viên đã đánh giá; đề xuất bước tiếp theo trước khi chọn giọng/model cho sản phẩm.
 
-**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS RECORDED / MODEL/PROTOCOL/PERFORMANCE PENDING; OWNER TARGET 4 SECONDS. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
+**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS RECORDED / PROTOCOL APPROVED / TTS STANDALONE COMPLETE / WORKFLOW RECOVERY PENDING; MODEL/PHYSICAL PERFORMANCE OPEN; OWNER TARGET 4 SECONDS. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
 
 ## Yêu cầu chủ dự án đã chốt
 
@@ -10,13 +10,13 @@
 
 ## Khảo sát ứng viên và trial đề xuất
 
-[Survey 2026-11-03](D74_VI_VOICE_CANDIDATE_SURVEY.md)/[ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md)/[protocol](D74_VI_VOICE_BENCHMARK_PROTOCOL.md) đã chuẩn bị: VieNeu-TTS v3 Turbo CPUFP32, Trúc Ly/Ngọc Huyền theo metadata nữ Bắc;16payload files608,816,450bytes, trialroot8GiB. Không download/load/inference/implementation hoặc chọn model. ASR Qwen cũ riêng prediction>4s17/20VI, Whisper nhanh hơn nhưng WER cao hơn; comparison giữ cả hai ASR và Piper baseline, không tự đổi default. Chủ dự án cần duyệt phạm vi trước khi triển khai/chạy trial.
+[ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) đã được chủ dự án duyệt. Đã tải đúng16 artifact608.816.450byte, chạy2 qualification và24 clip TTS. [Báo cáo](D74_VI_VOICE_CAMPAIGN_RESULT.md) giữ6 workflow slot lỗi bộ đọc metadata CORE và42 chưa chạy; không có latency workflow hợp lệ. Bản sửa161 tests PASS, chưa chạy native lại. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) đề nghị một lượt workflow thay thế có phê duyệt mới; không lặp24clip/tải model. Chất giọng mới chờ nghe; target4giây vật lý, model/default và activation chưa đạt/chưa chọn.
 
 ## Kết luận đề xuất
 
 **Giữ trạng thái chưa kích hoạt voice. Ưu tiên tiếp theo là đối chiếu yêu cầu VI giọng nữ miền Bắc với bằng chứng ứng viên.** Tiếng Anh vẫn trong mục tiêu; Qwen Ryan chỉ là ứng viên EN đáng xem xét về chất lượng trong tập đã nghe, không phải ưu tiên triển khai trước VI hoặc lựa chọn đã duyệt. Với tiếng Việt, chưa có cấu hình TTS đã nghe nào đáp ứng yêu cầu hiện tại: Qwen VI-Auto lỗi nặng; Piper VI đọc đúng nhưng chất giọng không được chủ dự án chấp nhận. Nhận định về ứng viên EN là suy luận từ nhận xét của một người trên corpus nhỏ, không chứng minh đáp ứng giọng nữ miền Bắc cho VI hoặc model tốt nhất nói chung.
 
-Đề xuất này không chọn model thay chủ dự án. Không có model/voice mới, tuning, download, inference, chuyển GPU hoặc thay cấu hình trong tác vụ chuẩn bị hồ sơ.
+Đề xuất này không chọn model thay chủ dự án. Tác vụ chuẩn bị hồ sơ ban đầu không chạy model. Trial mới chỉ theo phê duyệt ADR-154; không đổi model/default sản phẩm, chuyển GPU hoặc cấu hình dùng chung.
 
 ## 1. Chất lượng, RAM và tốc độ TTS đã đo
 

@@ -49,10 +49,14 @@ Bước chuẩn bị tiếp theo có thể đối chiếu metadata/provenance v�
 | VOICE-VI-NORTH-FEMALE-001 | P1; ưu tiên thiết kế/đánh giá trước kích hoạt VI, chưa có model được chọn | Metadata/rights của ứng viên, benchmark D70/D72, protocol và approval cụ thể khi cần thay đổi | Một milestone đối chiếu/proposal; effort chạy/triển khai chưa ước lượng khi chưa có phương án | Voice không đúng vùng/giới tính/cảm nhận, sai dấu/phát âm, thiếu quyền hoặc vượt tài nguyên |
 | VOICE-EN-001 | P1 trong mục tiêu voice; sau ưu tiên VI, lịch/release chưa chốt | Bằng chứng EN đã có, quyết định chất giọng và độ trễ/rights | Một milestone quyết định trước khi ước lượng tích hợp | Tự coi EN benchmark là sản phẩm hoặc bỏ yêu cầu EN khi ưu tiên VI |
 | VOICE-LANGUAGE-CUSTOM-001 | P2; **PENDING LATER VERSION**, chưa xếp ngày/phiên bản | Ngôn ngữ ASR/TTS thực sự hỗ trợ, UI chọn language/voice, provenance/rights và thiết kế mapping được duyệt | Một milestone thiết kế; implementation/benchmark chưa ước lượng | Nhầm Auto với hỗ trợ chính thức, silent fallback, sai voice/ngôn ngữ hoặc để input tự tải/chọn model |
-| VOICE-LATENCY-AC-001 | P1; **target 4 giây đã chốt, protocol/benchmark PENDING** | Phạm vi submission→first-audible thực tế, workload/measurement plan và quyền chạy phù hợp | Một milestone thiết kế/benchmark; effort chạy chưa ước lượng khi chưa có phương án | Nhầm target đã chốt với đạt hiệu năng, nhầm PCM với playback hoặc timeout với UX; che load/cache/device/concurrency |
+| VOICE-LATENCY-AC-001 | P1; **target 4 giây đã chốt; ADR154 protocol đã duyệt, workflow recovery/physical timing PENDING** | Phạm vi submission→first-audible thực tế, workload/measurement plan và quyền chạy phù hợp | Một milestone thiết kế/benchmark; effort chạy chưa ước lượng khi chưa có phương án | Nhầm target đã chốt với đạt hiệu năng, nhầm PCM với playback hoặc timeout với UX; che load/cache/device/concurrency |
 
 Đây là phân loại backlog, không tự cấp quyền triển khai hay thêm phase/ngày. Nếu thiết kế chọn ngôn ngữ, streaming hoặc runtime làm thay đổi kiến trúc, phải có ADR riêng trước khi áp dụng.
 
 ## Những bằng chứng giữ nguyên
 
 D70 nghe 24/24 và bộ capture/playback microphone người dùng đã đạt trong phạm vi đã báo cáo. Giữ mọi audio/nhãn/kết quả chưa đạt, lựa chọn model/config hiện có và D60 đang chờ. D74 sản phẩm và D90 release vẫn mở. Cập nhật yêu cầu này chỉ sửa tài liệu/thêm evidence, không sửa source, download, inference, endpoint, Vault, Docker hoặc database.
+
+## Trạng thái thử nghiệm sau phê duyệt ADR-154
+
+[Campaign thực tế](D74_VI_VOICE_CAMPAIGN_RESULT.md) có24clip TTS mới chờ chủ dự án nghe; chưa chốt giọng. Workflow dừng vì lỗi bộ đọc metadata,6slot không hợp lệ/42chưa chạy; bản sửa161tests PASS không phải benchmark native mới. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) chuẩn bị riêng lượt workflow thay thế, chờ duyệt, không tải thêm hoặc lặp standalone. Yêu cầu4giây first-audible vật lý giữ nguyên và chưa được kiểm chứng.
