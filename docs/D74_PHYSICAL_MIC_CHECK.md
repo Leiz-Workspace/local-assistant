@@ -2,7 +2,7 @@
 
 **Mục đích:** Hướng dẫn chủ dự án kiểm tra phần recorder local đã có bằng thiết bị thật, tách biệt với TTS listening và ASR/CORE/TTS sản phẩm.
 
-**Trạng thái 2026-11-03:** BASIC OWNER SMOKE PASS / EXTENDED CHECKS PENDING. Chủ dự án đã kiểm tra bằng Brave với microphone cắm vào PC: nghe rõ, đủ câu, không rè; Dừng/Hủy/Escape/chuyển tab đều tắt thu. [Nhận xét gốc và phạm vi evidence](evidence/d74-owner-physical-mic-20261103.json). Đây là kết quả do chủ dự án báo cáo, agent không tự quan sát, mở microphone hoặc cấp quyền. [Phạm vi recorder D71](D71_EXPLICIT_RECORDING.md) vẫn giữ nguyên.
+**Trạng thái 2026-11-03:** OWNER-REPORTED CAPTURE/PLAYBACK CHECKS PASS. Chủ dự án đã kiểm tra bằng Brave với microphone cắm vào PC: nghe rõ, đủ câu, không rè; Dừng/Hủy/Escape/chuyển tab đều tắt thu. Ba kiểm tra bổ sung mở/reload, từ chối quyền và giới hạn 30 giây đều được chủ dự án xác nhận đạt. [Kết quả tổng hợp](evidence/d74-owner-physical-mic-completion-20261103.json), [báo cáo đầu giữ nguyên](evidence/d74-owner-physical-mic-20261103.json). Đây là kết quả do chủ dự án báo cáo, agent không tự quan sát, mở microphone hoặc cấp quyền. [Phạm vi recorder D71](D71_EXPLICIT_RECORDING.md) vẫn giữ nguyên.
 
 ## Kết quả đã nhận và phần còn lại
 
@@ -13,10 +13,13 @@
 | Hủy | PASS cho việc tắt thu |
 | Escape | PASS cho việc tắt thu |
 | Chuyển tab | PASS cho việc tắt thu |
+| Mở/reload trang | PASS: microphone không tự thu |
+| Từ chối quyền | PASS: hiện lỗi, không thu âm |
+| Giới hạn 30 giây | PASS: tự dừng thu theo báo cáo; không có phép đo elapsed time độc lập |
 
-Không cần làm lại năm quan sát này. Còn **ba tình huống chưa có báo cáo**: mở/reload trang không tự thu; từ chối quyền microphone; giới hạn ghi 30 giây. Những chi tiết xóa preview/audio sau hủy, không tự ghi lại khi trở về tab và feedback chưa được xác nhận riêng; không gộp chúng vào PASS chỉ từ câu “tắt thu”.
+**Đã hoàn tất bộ kiểm tra thu âm/nghe lại vừa yêu cầu:** 8 quan sát bao phủ 7 tình huống (ghi/nghe lại và dừng nằm trong cùng một tình huống). Không còn ba mục bổ sung chờ kết quả, không cần làm lại. Giữ rõ ranh giới: xóa preview/audio, TTL, không tự ghi lại sau hủy/trở về tab và feedback chưa được báo cáo riêng; không gộp những thuộc tính đó vào PASS thu âm hoặc tự chốt toàn bộ nghiệm thu D89/sản phẩm.
 
-Ngày nhận báo cáo là 2026-11-03; ngày test cụ thể, bản Brave, hệ điều hành và model/cổng kết nối microphone chưa được cung cấp. Không suy ra chúng từ môi trường server. Không nhận hoặc yêu cầu file ghi âm. [Receipt đối chiếu tài liệu](evidence/d74-owner-physical-mic-20261103-verification.json).
+Ngày nhận báo cáo là 2026-11-03; ngày test cụ thể, bản Brave, hệ điều hành và model/cổng kết nối microphone chưa được cung cấp. Không suy ra chúng từ môi trường server. Không nhận hoặc yêu cầu file ghi âm. [Receipt đối chiếu mới](evidence/d74-owner-physical-mic-completion-20261103-verification.json); [receipt đầu](evidence/d74-owner-physical-mic-20261103-verification.json) giữ nguyên trạng thái ở thời điểm chưa có follow-up.
 
 ## Mở recorder khi muốn kiểm tra
 
