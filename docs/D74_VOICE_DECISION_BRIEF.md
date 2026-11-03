@@ -2,11 +2,15 @@
 
 **Mục đích:** Đối chiếu chất lượng nghe, độ trễ, RAM và quyền sử dụng của đúng các ứng viên đã đánh giá; đề xuất bước tiếp theo trước khi chọn giọng/model cho sản phẩm.
 
-**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** PROPOSAL READY / OWNER DECISION PENDING. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
+**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS RECORDED / MODEL-PROTOCOL-LATENCY DECISION PENDING. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
+
+## Yêu cầu chủ dự án đã chốt
+
+[Voice product requirements](VOICE_PRODUCT_REQUIREMENTS.md), 2026-11-03: mục tiêu có VI và EN, hiện ưu tiên **VI / nữ miền Bắc**. Tiếng Anh giữ trong mục tiêu, chưa tự xếp một release; ngôn ngữ tùy biến **PENDING bản sau**. Giới hạn thời gian chờ chưa rõ với chủ dự án nên để **PENDING**, không đặt số hoặc sửa timeout. Đây là yêu cầu sản phẩm, không chọn hoặc duyệt thay model.
 
 ## Kết luận đề xuất
 
-**Giữ trạng thái chưa kích hoạt voice.** Với tiếng Anh, giữ Qwen Ryan làm ứng viên ưu tiên xem xét tiếp về chất lượng trong tập đã nghe, đồng thời giải quyết giới hạn độ trễ CPU trước khi chọn. Với tiếng Việt, chưa có cấu hình TTS đã nghe nào đáp ứng yêu cầu hiện tại: Qwen VI-Auto lỗi nặng; Piper VI đọc đúng nhưng chất giọng không được chủ dự án chấp nhận. Nhận định ưu tiên EN là suy luận từ nhận xét của một người trên corpus nhỏ, chưa phải phê duyệt hoặc kết luận model tốt nhất nói chung.
+**Giữ trạng thái chưa kích hoạt voice. Ưu tiên tiếp theo là đối chiếu yêu cầu VI giọng nữ miền Bắc với bằng chứng ứng viên.** Tiếng Anh vẫn trong mục tiêu; Qwen Ryan chỉ là ứng viên EN đáng xem xét về chất lượng trong tập đã nghe, không phải ưu tiên triển khai trước VI hoặc lựa chọn đã duyệt. Với tiếng Việt, chưa có cấu hình TTS đã nghe nào đáp ứng yêu cầu hiện tại: Qwen VI-Auto lỗi nặng; Piper VI đọc đúng nhưng chất giọng không được chủ dự án chấp nhận. Nhận định về ứng viên EN là suy luận từ nhận xét của một người trên corpus nhỏ, không chứng minh đáp ứng giọng nữ miền Bắc cho VI hoặc model tốt nhất nói chung.
 
 Đề xuất này không chọn model thay chủ dự án. Không có model/voice mới, tuning, download, inference, chuyển GPU hoặc thay cấu hình trong tác vụ chuẩn bị hồ sơ.
 
@@ -40,7 +44,7 @@ Không sửa SDK để ép instruction, đổi lên model lớn hơn, kéo tốc
 
 [Sáu ví dụ native](D72_BUFFERED_VOICE_COMPOSITION.md), [số đo gốc có stage/RSS](evidence/d74-local-engineering-review.json). Mỗi hàng chỉ là một ví dụ wiring, gồm nạp worker, ASR → CORE → TTS và chuyển đổi PCM; không phải median/p95 hoặc thời gian câu đầu bắt đầu phát. ASR/TTS chạy tuần tự, không cộng hai RSS thành peak đồng thời. Qwen D70 và D72 khác workload, không tráo số RAM giữa hai phép đo. CORE trong phép đo lịch sử giữ allocation VRAM riêng 9386 MiB; không suy ra VRAM trống hiện tại hay khả năng chuyển TTS lên GPU.
 
-**Chưa có ngân sách độ trễ sản phẩm do chủ dự án chốt.** Các số 46–49 giây của Qwen là đánh đổi cần duyệt rõ, chưa được coi là đáp ứng hội thoại tương tác. Không lấy quảng cáo latency của upstream thay cho số đo tại máy này. Nếu cần khảo sát GPU/streaming/persistent worker, phải có ADR và benchmark tài nguyên/cancel/concurrency riêng; chưa triển khai phương án đó.
+**Chưa có ngân sách độ trễ sản phẩm do chủ dự án chốt; chủ dự án yêu cầu được giải thích.** [Định nghĩa và ví dụ minh họa](VOICE_PRODUCT_REQUIREMENTS.md) tách từ lúc gửi tới tiếng trả lời đầu tiên khỏi số đo PCM đầy đủ; con số ví dụ không phải AC. Các số 46–49 giây của Qwen là đánh đổi cần duyệt rõ, chưa được coi là đáp ứng hội thoại tương tác. Không lấy quảng cáo latency của upstream thay cho số đo tại máy này. Nếu cần khảo sát GPU/streaming/persistent worker, phải có ADR và benchmark tài nguyên/cancel/concurrency riêng; chưa triển khai phương án đó.
 
 ## 3. Giấy phép và provenance
 
@@ -66,9 +70,9 @@ Nghe TTS bằng loa không chứng minh luồng thoại sản phẩm đã đạt
 |---|---|---|---|
 | A. Giữ voice chưa kích hoạt, hoàn thiện recorder/device và hồ sơ sản phẩm | Bảo toàn lựa chọn; phần engineering độc lập có thể tiếp tục. Chưa có voice sản phẩm để sử dụng | Microphone/browser thật và quyết định scope; một milestone nghiệm thu thiết bị; không được ghi fake-device thành test người dùng | **Khuyến nghị hiện tại**, không thay cấu hình |
 | B. Xét riêng Qwen Ryan cho EN với model/weights hiện có | Nhận xét EN tốt nhất trong tập chủ dự án vừa nghe; CPU buffered hiện 46–49 s, style instruction bị bỏ qua ở SDK đã giữ | Chủ dự án chốt độ trễ/chất lượng mong muốn và protocol mới trước mọi tuning/chuyển runtime; effort một thiết kế/đo/nghe milestone, chưa ước lượng thời gian chạy khi protocol chưa có | Ứng viên cân nhắc; **chưa chọn hoặc xếp lịch chạy** |
-| C. Giải quyết VI voice bằng đề xuất riêng | VI-Auto không đáp ứng; Piper VI voice hiện tại không hợp sở thích | Yêu cầu chất giọng và proposal đã có benchmark/rights/resource/migration/rollback; effort thiết kế đánh giá trước, effort model mới chưa biết; rủi ro đổi tone vẫn không giải quyết phát âm hoặc rights | **Chưa đề cử model/voice mới**, cần chủ dự án duyệt phạm vi trước triển khai |
+| C. Đối chiếu VI nữ miền Bắc bằng đề xuất riêng, ưu tiên hiện tại | VI-Auto không đáp ứng; Piper VI voice hiện tại không hợp sở thích | Yêu cầu VI/nữ miền Bắc đã ghi; cần proposal có benchmark/rights/resource/migration/rollback; effort thiết kế đánh giá trước, effort model mới chưa biết; rủi ro đổi tone vẫn không giải quyết phát âm hoặc rights | **Chưa đề cử model/voice mới**, cần chủ dự án duyệt phạm vi trước triển khai |
 
-Muốn chọn phương án B cần nêu rõ: chỉ EN hay VI cũng bắt buộc; độ trễ chấp nhận được; yêu cầu giọng/intonation. Nếu VI bắt buộc và phải tự nhiên theo sở thích hiện tại, bằng chứng đang có chưa đủ để chốt TTS. Việc hoàn thành bảng này không được dùng làm approval thay model, mở endpoint hoặc đóng D74.
+VI hiện là ưu tiên, nữ miền Bắc đã được yêu cầu; không hỏi lại EN/VI như một lựa chọn còn trống. Tiếng Anh giữ trong mục tiêu. Độ trễ tối đa để pending sau giải thích; bằng chứng đang có chưa đủ để chọn TTS thỏa toàn bộ yêu cầu VI/giọng/tự nhiên. Ngôn ngữ tùy biến chỉ là backlog bản sau, chưa có trial/model được duyệt. Việc hoàn thành bảng này không được dùng làm approval thay model, mở endpoint hoặc đóng D74.
 
 ## 6. Migration, rollback và kiểm chứng
 
