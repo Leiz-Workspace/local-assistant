@@ -1,0 +1,69 @@
+{
+  "description": "Owner follow-up rejects API pronunciation in the new English candidates: first letter sounds Vietnamese A instead of English /eɪ/. Actual retained engine-input traces already contain English /eɪ piː aɪ/; correct frontend is not acoustic acceptance. No internal model cause is established.",
+  "recorded_at_utc": "2026-11-03T18:01:05.063250+00:00",
+  "owner_verbatim": "Vẫn chưa ổn lắm sao API đọc là A-Pi-Ai chứ không phải là Ei-Pi-AI như tiếng anh ?",
+  "owner_heard": "A-Pi-Ai",
+  "owner_required": "Ei-Pi-AI",
+  "expected_english_ipa": "/eɪ piː aɪ/",
+  "actual_engine_API_phonemes": "ˈeɪ pˈiː ˈaɪ",
+  "API_pronunciation_status": "OWNER_REPORTED_NOT_ACCEPTABLE",
+  "reported_scope": "Group API feedback; exact clip identities not specified.",
+  "prior_API_buzz_status": "OPEN_NOT_REASSESSED_IN_THIS_MESSAGE",
+  "python_status": "OPEN_NOT_REASSESSED_IN_THIS_MESSAGE",
+  "prior_date_and_prosody_acceptance": "UNCHANGED_ON_REVIEWED_PANEL",
+  "possible_failure_region": "Acoustic realization after the verified frontend; specific network/voice/tokenization/decoder mechanism not established.",
+  "engine_traces": [
+    {
+      "id": "truc-ly-english-01",
+      "phoneme_reference_present": true,
+      "native_sha256": "72f09f2ad958259c5176adc8c1387552c7574e6c8e56722fbba0096d2fc6654c"
+    },
+    {
+      "id": "truc-ly-english-02",
+      "phoneme_reference_present": true,
+      "native_sha256": "68eac2e0f269e1db34d954fc6b5c1bd02e90190f5b045ba2fa99a28145b63a55"
+    },
+    {
+      "id": "truc-ly-english-03",
+      "phoneme_reference_present": true,
+      "native_sha256": "7873c3bc06eeccb13d1d62ed4b81c6a97802ca228b0b31461221e42c76ac2942"
+    },
+    {
+      "id": "truc-ly-english-04",
+      "phoneme_reference_present": true,
+      "native_sha256": "2d0af816ee9d6b4e8acc18a2c4232b519360d93ab184b40fe29acb40308d4a4a"
+    },
+    {
+      "id": "ngoc-huyen-english-01",
+      "phoneme_reference_present": true,
+      "native_sha256": "eb1fc4af8963f36563197f81e0c736f262cb52d42deca525f956ac724a25c86b"
+    },
+    {
+      "id": "ngoc-huyen-english-02",
+      "phoneme_reference_present": true,
+      "native_sha256": "4b7f8a8d3bddaf5d62b28a743d64f5a95e01814408aa5c98712f7efc12c412cf"
+    },
+    {
+      "id": "ngoc-huyen-english-03",
+      "phoneme_reference_present": true,
+      "native_sha256": "7cdd3de933bfdaf8a4b609350769c0deaffbc61d2b951c745f730eba6a0cc934"
+    },
+    {
+      "id": "ngoc-huyen-english-04",
+      "phoneme_reference_present": true,
+      "native_sha256": "da8ae8c072e38d74981cd585b3d56fc03e12a508bfcb8ac82abb2c4c116ad60a"
+    }
+  ],
+  "source_sha256": {
+    "native_result": "cd083e356b414ace27fae8a90679ce7dfd26b0414b580db3c4b700fa86e93eac",
+    "frontend": "c43cc81027679de722bbae3c11eef6583b54197793af2635f88a036063561cb8",
+    "listening_page": "061091ef7f5ae5d9418a9bb71a4561a293302c96bf1b6271f25d8522366c6671",
+    "public_result": "4a894899ea83950a951fb818c77d17a1cc37b7ee9d7143f49639d0e8b1dce1e3"
+  },
+  "new_model_calls": 0,
+  "new_downloads": 0,
+  "source_or_config_changes": 0,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED"
+}
