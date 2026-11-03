@@ -62,3 +62,10 @@ D60fresh closure: see the [actual first workflow/failed coverage/current full re
 
 
 2026-11-03 resumed panel:3valid/1rate-limit/4not-run after extended idle at180-secondspacing, unchanged8/8criteria remainunmet. Exact new256-byte rate-limit response retained; no older score erased. Private cooldown prototype tested27cases within83relatedPASS, no production activation. Source750/retainedfull5889/current read-only preservation VERIFIED,30executioninputs/176D70inputs/hearing0/24exact. No new full/model/provider/default/shared-service/data change. [Actual outcome](D60_BRAVE_RESUMED_RESULT.md).
+
+
+## API reference diagnostic — 2026-11-04
+
+[Actual result and eight paired listening clips](D74_API_REFERENCE_DIAGNOSTIC_RESULT.md): first16-slot diagnostic remains stopped at Ngọc Huyền isolated-A13frames/EOSfalse (4complete/1failed/11unattempted); no retry or raised cap. A separately declared8-slot full-carrier cohort completes all4exact phoneme/token/speaker/anchor pairs with reference-code on/off; combined13actualTTS≤16, not original16PASS. Final257scoped software PASS/0FAIL/ERROR/SKIP4.29s, RuffPASS;250initialPASS. Exact token roundtrip/zero unknowns do not establish acoustic Ei or absence of APIbuzz.
+
+VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 remain P1 pending owner listening for Ei/buzz/timbre. No automatic reference-off/model/voice/default selection; weights/SDK/presets unchanged. Python not re-evaluated; reviewed date/time and preferred `clauses` retained. All750application/210protected/19prior research files and prior audio unchanged. No new downloads, ASR/CORE/Brave calls, shared service changes or ADR155workflow execution. Physical4second/rights/no-speech/product/D90release remain open; D60owner-deferred. Full5889/earlier236scoped counts remain historical, not new full runs.
