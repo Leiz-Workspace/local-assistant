@@ -1,0 +1,162 @@
+{
+  "description": "PROPOSED preregistered packet, not run. Eight new neutral authored VI texts x three fixed voice variants; six retained D72 sources chosen by duration quantiles plus two existing VI-labelled negatives, reused transparently for timing/compatibility.",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "tts_cases": [
+    {
+      "id": "vi-voice-01",
+      "category": "greeting_rhythm",
+      "text": "Chị Linh sẽ nhắc bạn nghỉ sau mỗi giờ làm việc.",
+      "utf8_bytes": 64
+    },
+    {
+      "id": "vi-voice-02",
+      "category": "question_intonation",
+      "text": "Bạn muốn nhận thông báo vào sáng mai hay chiều nay?",
+      "utf8_bytes": 63
+    },
+    {
+      "id": "vi-voice-03",
+      "category": "numbers_currency",
+      "text": "Đơn hàng có 27 món, tổng cộng 300.000 đồng.",
+      "utf8_bytes": 55
+    },
+    {
+      "id": "vi-voice-04",
+      "category": "date_time",
+      "text": "Cuộc hẹn lúc 09:15 ngày 14/11; chị sẽ nhắc bạn trước mười phút.",
+      "utf8_bytes": 84
+    },
+    {
+      "id": "vi-voice-05",
+      "category": "tone_contrast",
+      "text": "Chị Mỹ nghỉ ở nhà, còn em nghĩ về buổi họp.",
+      "utf8_bytes": 60
+    },
+    {
+      "id": "vi-voice-06",
+      "category": "instruction",
+      "text": "Nhớ đóng cửa sổ trước khi bật máy điều hòa nhé.",
+      "utf8_bytes": 66
+    },
+    {
+      "id": "vi-voice-07",
+      "category": "longer_clause",
+      "text": "Bản sao lưu đã xong; dữ liệu vẫn nằm trên máy của bạn.",
+      "utf8_bytes": 73
+    },
+    {
+      "id": "vi-voice-08",
+      "category": "borrowed_terms_diagnostic",
+      "text": "Tệp Python và API đã sẵn sàng; hãy kiểm tra lại trước khi gửi.",
+      "utf8_bytes": 80
+    }
+  ],
+  "tts_variants": [
+    "piper-vi original baseline",
+    "VieNeu v3 Turbo Trúc Ly",
+    "VieNeu v3 Turbo Ngọc Huyền"
+  ],
+  "standalone_scored_tts_calls": 24,
+  "qualification_tts_calls": 2,
+  "workflow_sources": [
+    {
+      "id": "heldout-vi_vn-0036",
+      "kind": "independent_public_speech",
+      "language": "vi",
+      "sample_count": 81600,
+      "sample_rate": 16000,
+      "seconds": 5.1,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/heldout-vi_vn-0036.f32",
+      "waveform_sha256": "9224e75af1f911f1daac894a3703503a3b93deb5635eca86435a449714e6d236",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": false
+    },
+    {
+      "id": "heldout-vi_vn-0024",
+      "kind": "independent_public_speech",
+      "language": "vi",
+      "sample_count": 158400,
+      "sample_rate": 16000,
+      "seconds": 9.9,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/heldout-vi_vn-0024.f32",
+      "waveform_sha256": "5a49c966bdc72263766724643076f50d32bc1b17b73b75818bc5dcb6d2bd9ce0",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": false
+    },
+    {
+      "id": "heldout-vi_vn-0078",
+      "kind": "independent_public_speech",
+      "language": "vi",
+      "sample_count": 206400,
+      "sample_rate": 16000,
+      "seconds": 12.9,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/heldout-vi_vn-0078.f32",
+      "waveform_sha256": "de4aefea4ef830f02c6aaf6ccd8be8ba536d68c0de22035b2db0e0734ed2a03f",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": false
+    },
+    {
+      "id": "heldout-vi_vn-0040",
+      "kind": "independent_public_speech",
+      "language": "vi",
+      "sample_count": 301440,
+      "sample_rate": 16000,
+      "seconds": 18.84,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/heldout-vi_vn-0040.f32",
+      "waveform_sha256": "f14f9012b7ebb5067eabf3281f22ee6e413d9d68e750e785d38e97d8a0cb5f8c",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": false
+    },
+    {
+      "id": "negative-1",
+      "kind": "authored_no_speech",
+      "language": "vi",
+      "sample_count": 48000,
+      "sample_rate": 16000,
+      "seconds": 3.0,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/negative-1.f32",
+      "waveform_sha256": "7cbfd2f03791445884e5f241c68ee4bcccf0dbaefcb729fbded215795624a7ae",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": true
+    },
+    {
+      "id": "negative-3",
+      "kind": "authored_no_speech",
+      "language": "vi",
+      "sample_count": 48000,
+      "sample_rate": 16000,
+      "seconds": 3.0,
+      "waveform_path": "data/backups/d72-vad-asr-comparison-first/vad-inputs/negative-3.f32",
+      "waveform_sha256": "5d0eafe074ccf4e5123ecfadf975a0711cfe805dee54ea12642ebc23db0f6777",
+      "reference_source": "retained D72 corpus; not a new independent holdout",
+      "expected_no_answer": true
+    }
+  ],
+  "workflow_asr_variants": [
+    "qwen3-asr-0.6b original CPU float32",
+    "whisper-small-ct2 original CPU int8"
+  ],
+  "workflow_tts_variants": [
+    "piper-vi original baseline",
+    "VieNeu v3 Turbo Trúc Ly fixed before predictions"
+  ],
+  "workflow_load_states": [
+    "fresh owned worker process",
+    "resident warmed model with no answer/audio cache"
+  ],
+  "workflow_turns": 48,
+  "maximum_asr_calls": 48,
+  "maximum_workflow_core_calls": 48,
+  "maximum_core_recovery_calls": 2,
+  "maximum_total_core_calls": 50,
+  "maximum_workflow_tts_calls": 48,
+  "maximum_total_tts_calls": 74,
+  "automatic_retries": 0,
+  "babble_retries": 0,
+  "owner_live_microphone_included": false,
+  "source_corpus_sha256": "982c2a1a8eb6fb44706b6ff4227f1da23ade61b1c6ca8fba4ba094d0af562558",
+  "performance_result": null,
+  "voice_selection": null,
+  "first_audible_target_seconds": 4,
+  "actual_physical_speaker_timing_measurement": "NOT_IMPLEMENTED; digital render timing must be labelled proxy, never acceptance proof of physical audibility"
+}

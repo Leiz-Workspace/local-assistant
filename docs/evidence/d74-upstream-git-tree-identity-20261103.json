@@ -1,0 +1,152 @@
+{
+  "description": "Initial verification incorrectly compared the commit-ref tree response sha with the resolved commit tree id and failed. The API response retained the requested commit ref in its top-level sha/url. Independently reconstructed all23Git tree objects from canonical modes/name sorting/raw child hashes; all match the commit referenced tree and declared subtree objects. Individual downloaded source blobs are verified separately. No upstream code/model executed.",
+  "status": "VERIFIED_BY_CONTENT_RECONSTRUCTION",
+  "commit_sha": "04044e1b8f822f946bafb2c88b716459f4164152",
+  "commit_tree_sha": "eecd385d6e9ff3f282b6ecb34202d605cae12f0b",
+  "api_returned_top_level_sha": "04044e1b8f822f946bafb2c88b716459f4164152",
+  "initial_direct_field_equality": false,
+  "recursive_response_truncated": false,
+  "tree_objects_verified": 23,
+  "checks": [
+    {
+      "path": "/",
+      "git_tree_sha1": "eecd385d6e9ff3f282b6ecb34202d605cae12f0b",
+      "expected_sha1": "eecd385d6e9ff3f282b6ecb34202d605cae12f0b",
+      "verified": true
+    },
+    {
+      "path": ".github",
+      "git_tree_sha1": "82844c48ce15958c8c79a0a5cb9a25e54ec8a8f5",
+      "expected_sha1": "82844c48ce15958c8c79a0a5cb9a25e54ec8a8f5",
+      "verified": true
+    },
+    {
+      "path": ".github/workflows",
+      "git_tree_sha1": "c4fd36280e91b119ac8e067a27f2746aa450eca7",
+      "expected_sha1": "c4fd36280e91b119ac8e067a27f2746aa450eca7",
+      "verified": true
+    },
+    {
+      "path": "apps",
+      "git_tree_sha1": "5b95ca5ff3cd555852befcb3691f03c5b67c61f4",
+      "expected_sha1": "5b95ca5ff3cd555852befcb3691f03c5b67c61f4",
+      "verified": true
+    },
+    {
+      "path": "client",
+      "git_tree_sha1": "9311d11b4565e795d18b258d4cf8c2262227d34b",
+      "expected_sha1": "9311d11b4565e795d18b258d4cf8c2262227d34b",
+      "verified": true
+    },
+    {
+      "path": "docker",
+      "git_tree_sha1": "2c5c1f98116f64a851eeddc924ead27e63e37a2e",
+      "expected_sha1": "2c5c1f98116f64a851eeddc924ead27e63e37a2e",
+      "verified": true
+    },
+    {
+      "path": "docs",
+      "git_tree_sha1": "49e7dae6aa90f638eb19ed705c96bd0bb9add960",
+      "expected_sha1": "49e7dae6aa90f638eb19ed705c96bd0bb9add960",
+      "verified": true
+    },
+    {
+      "path": "examples",
+      "git_tree_sha1": "2bb59a820d21f5e13e32e941a057bdd474ee6aa5",
+      "expected_sha1": "2bb59a820d21f5e13e32e941a057bdd474ee6aa5",
+      "verified": true
+    },
+    {
+      "path": "examples/audio_ref",
+      "git_tree_sha1": "a028a9f61cf6e07fea3bdc0ec0e31442de586ded",
+      "expected_sha1": "a028a9f61cf6e07fea3bdc0ec0e31442de586ded",
+      "verified": true
+    },
+    {
+      "path": "examples/srt",
+      "git_tree_sha1": "d0e2c4c049b141a10a4f59e0b6d762db0778a8b5",
+      "expected_sha1": "d0e2c4c049b141a10a4f59e0b6d762db0778a8b5",
+      "verified": true
+    },
+    {
+      "path": "finetune",
+      "git_tree_sha1": "0096fbf5dce38ce99cfc765e48f4fdc277220f5d",
+      "expected_sha1": "0096fbf5dce38ce99cfc765e48f4fdc277220f5d",
+      "verified": true
+    },
+    {
+      "path": "finetune/tests",
+      "git_tree_sha1": "0200a7a7bfbc6dd5bc22ce5b6f88b6b43ac6dd5d",
+      "expected_sha1": "0200a7a7bfbc6dd5bc22ce5b6f88b6b43ac6dd5d",
+      "verified": true
+    },
+    {
+      "path": "finetune/vieneu_lora",
+      "git_tree_sha1": "aa073a38d8e40d46e2df9b853d8014d7523728f5",
+      "expected_sha1": "aa073a38d8e40d46e2df9b853d8014d7523728f5",
+      "verified": true
+    },
+    {
+      "path": "src",
+      "git_tree_sha1": "6eadae8f87e6bc4a7f0958a8388a14458f568289",
+      "expected_sha1": "6eadae8f87e6bc4a7f0958a8388a14458f568289",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu",
+      "git_tree_sha1": "eb829f1c198d2aa99f9476bb408b8425c5d4f540",
+      "expected_sha1": "eb829f1c198d2aa99f9476bb408b8425c5d4f540",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu/_v3_turbo_engine",
+      "git_tree_sha1": "e57b6537b79645a4b713d1f108537677be987abb",
+      "expected_sha1": "e57b6537b79645a4b713d1f108537677be987abb",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu/_v3_turbo_engine/speaker",
+      "git_tree_sha1": "2f0bc28e2fc39c6b1bc73990b664c90f8e1337d7",
+      "expected_sha1": "2f0bc28e2fc39c6b1bc73990b664c90f8e1337d7",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu/assets",
+      "git_tree_sha1": "bacf03dd51849aea439e7117346f71f28e470f90",
+      "expected_sha1": "bacf03dd51849aea439e7117346f71f28e470f90",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu/assets/samples",
+      "git_tree_sha1": "cf180db8fe4d88384925f4370bd18ac2719e6dac",
+      "expected_sha1": "cf180db8fe4d88384925f4370bd18ac2719e6dac",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu/v3_turbo_serve",
+      "git_tree_sha1": "84c7ce16d43376db13ac2b8ac95446a8da4cc52c",
+      "expected_sha1": "84c7ce16d43376db13ac2b8ac95446a8da4cc52c",
+      "verified": true
+    },
+    {
+      "path": "src/vieneu_utils",
+      "git_tree_sha1": "39f12a0aefee707c60a32ffec7bef70660330932",
+      "expected_sha1": "39f12a0aefee707c60a32ffec7bef70660330932",
+      "verified": true
+    },
+    {
+      "path": "tests",
+      "git_tree_sha1": "deb250c5cbc133f8a5c308d61a2b3a21a95c5f27",
+      "expected_sha1": "deb250c5cbc133f8a5c308d61a2b3a21a95c5f27",
+      "verified": true
+    },
+    {
+      "path": "tests/fused",
+      "git_tree_sha1": "a31c351e0ba13ff79a48d59b717d4f8e9e4705c2",
+      "expected_sha1": "a31c351e0ba13ff79a48d59b717d4f8e9e4705c2",
+      "verified": true
+    }
+  ],
+  "source_commit_metadata_sha256": "c7c47be30a1f038c009884b971f5da31ee8844bece4a87d8f13e988a0c90e22a",
+  "source_recursive_tree_sha256": "9a5eb7a2204635f9b618dda0a8b80b23ad206a6eadd6e80cb3f8671992a9d346"
+}

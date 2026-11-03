@@ -40,6 +40,8 @@ Phương án cần xét trước nay là **VI giọng nữ miền Bắc**, khôn
 
 Bước chuẩn bị tiếp theo có thể đối chiếu metadata/provenance và bằng chứng của các ứng viên đã thống nhất với tiêu chí mới, lập protocol/đề xuất cụ thể cho khoảng trống còn lại. Một đề xuất tải/đổi model hoặc voice phải có benchmark, hiệu năng/tài nguyên, migration, rollback và chủ dự án duyệt trước khi thực hiện. Tài liệu này không phê duyệt một lượt inference, download hoặc thử nghiệm mới.
 
+**Khảo sát/proposal đã chuẩn bị ngày 2026-11-03:** [shortlist có nguồn](D74_VI_VOICE_CANDIDATE_SURVEY.md) đề xuất đánh giá VieNeu-TTS v3 Turbo FP32/CPU, Trúc Ly và Ngọc Huyền; chưa chọn hoặc tải model. [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md)/[protocol](D74_VI_VOICE_BENCHMARK_PROTOCOL.md) giữ comparison Piper/both ASR, tổng16payload files608,816,450bytes và cap8GiB toàn thư mục trial. Bằng chứng ASR cũ cho thấy Qwen riêng prediction đã vượt4giây ở17/20câuVI; thay TTS một mình không đủ. Implementation/benchmark/giọng nghe/first-audible vẫn chưa đạt hoặc chưa thực hiện.
+
 ## Backlog và đánh giá trước khi xếp lịch
 
 | Task | Ưu tiên / trạng thái | Dependency | Effort | Rủi ro |
