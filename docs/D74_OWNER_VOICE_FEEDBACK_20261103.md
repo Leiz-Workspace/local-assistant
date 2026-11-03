@@ -39,3 +39,6 @@ Mục tiêu tối đa4giây từ submission tới first-audible vẫn chưa đư
 ## Sau lệnh triển khai chất lượng của chủ dự án
 
 [Bộ so sánh mới ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) đã có48clip/221scoped tests PASS, giữ nguyên toàn bộ24clip và phản hồi ở snapshot trước. Renderer và adapter giữ dấu hỏi chỉ là nghiên cứu, chưa áp dụng sản phẩm hoặc chứng minh khắc phục mọi lỗi nghe;12/16cặp raw–reading giống hệt. Chờ nhận xét mới. Lệnh “Làm đi” cho tác vụ chất lượng không mở khóa ADR155workflow hoặc chọn model/voice.
+
+
+**Latest scoped owner assessment:** [English/API follow-up](D74_ENGLISH_READING_FOLLOWUP.md) records reviewed date/time correct and `clauses` preferred best/most natural. Python must sound English and API buzz/tremble in both voices remain unresolved quality gates. Eight new English-preserving candidates/236final scoped software PASS are ready for listening, using the exact same model/voices/accepted prosody and original17research files. Earlier one decoder regression failure is retained separately/cause unconfirmed. No product/voice/model selection, physical4second or ADR155workflow approval is inferred.

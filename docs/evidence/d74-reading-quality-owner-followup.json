@@ -1,0 +1,24 @@
+{
+  "description": "Owner feedback on ADR156: date/time reading correct and clauses profile preferred as best/most natural; Python must sound English, API buzz/tremble reported for both voices. This is scoped panel feedback, not full product/voice approval.",
+  "recorded_at_utc": "2026-11-03T17:42:31.679250+00:00",
+  "owner_verbatim": "Đọc giờ, ngày đã chuẩn, phần \"cách đọc + ngắt câu và giữ dấu hỏi\" là tốt nhất và tự nhiên nhất. Nhưng phần Python lúc đọc là Py thon, lúc đọc là Py thờ, lẽ ra phải đọc giống tiếng anh ở đoạn này, và lúc phát âm API cả 2 giọng đều bị rè, run",
+  "panel_result_sha256": "98c96f1d81ce328c37a0614f6c291dcdbe68ccb99706ab3597119a97e3ac235e",
+  "listening_page_sha256": "a7718e4ab5dff7993c54060b06367900b12c91df06761491921dc4ecfa04e7dc",
+  "listening_index_sha256": "11fd02961191471704c61c1a8d4e35337971dc1aa8183e1f9e23bd1e7e766fb4",
+  "time_date": "OWNER_CONFIRMED_CORRECT_ON_REVIEWED_PANEL",
+  "processing_preference": "clauses",
+  "relative_naturalness": "Best and most natural among compared profiles according to owner",
+  "python": "UNRESOLVED_ENGLISH_PRONUNCIATION_REQUIRED",
+  "api": "UNRESOLVED_BUZZ_OR_TREMBLE_BOTH_VOICES",
+  "english_names_requirement": "Preserve English pronunciation rather than Vietnamese transliteration.",
+  "voice_choice_between_two": null,
+  "per_clip_ratings": null,
+  "new_device_information": null,
+  "product_activation_approved": false,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "followup_tasks": [
+    "VOICE-ENGLISH-READING-001",
+    "VOICE-API-ARTIFACT-001"
+  ]
+}

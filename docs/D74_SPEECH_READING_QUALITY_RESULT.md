@@ -53,3 +53,8 @@ Gửi nhận xét theo mã câu, giọng và bản bạn thích ngay trong chat.
 **221tests PASS /0FAIL/0ERROR/0SKIP,4,37giây**, lint/format PASS trước freeze và native. Các test bao gồm quy tắc đọc/lịch, protected text/trace, giữ câu hỏi và sampling/preset, cap/chunk không chia sai cụm giờ, namespace không model cho probe, lifecycle mismatch/cancel, bộ điều khiển48slot/fail-first, trang nghe và các regression liên quan. Ba probe không model giữ120hàng chẩn đoán; probe cuối xác minh dấu hỏi và cụm giờ được giữ. Đây là software/native-integrity PASS, không phải acoustic quality PASS.
 
 VOICE-TEXT-READING-001: renderer và regression đã triển khai; **phát âm/giờ-ngày trong audio chưa xác nhận khắc phục**. VOICE-PROSODY-001: đường giữ dấu hỏi và chia câu đã triển khai/thử nghiệm; **độ tự nhiên chưa được xác nhận cải thiện**. Cần nhận xét trên bộ mới để quyết định giữ hoặc bỏ từng policy; không tự tải/thay model nếu chưa đạt. ADR-155 vẫn chưa được duyệt/chưa chạy. Quyền sử dụng, no-speech, first-audible, model selection, D74 sản phẩm và D90 release còn mở; D60 tiếp tục chờ.
+
+
+## Nhận xét sau khi chủ dự án nghe
+
+[Receipt và follow-up](D74_ENGLISH_READING_FOLLOWUP.md) cập nhật trạng thái: chủ dự án xác nhận giờ/ngày đã chuẩn, `clauses` tốt nhất/tự nhiên nhất; Python/API cần đọc như tiếng Anh và API rè/run ở cảhai giọng. Các câu “chưa có nhãn nghe” ở snapshot thực thi trên đây là trạng thái trước phản hồi. Không ghi đè metrics/audio/receipts. Renderer tiếng Anh mới giữ nguyên date/prosody đã được xác nhận;8clip mới vẫn chưa có đánh giá.

@@ -86,3 +86,6 @@ D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is
 
 
 **Current speech-quality research:** [ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) adds a tested isolated speech renderer/question-preserving adapter and48 complete paired TTS clips on existing weights;221scoped tests PASS,0ASR/CORE/new downloads.12/16raw–reading pairs identical; acoustic pronunciation/naturalness, physical4seconds and product model/rights acceptance remain OPEN. No release/default or ADR155workflow approval is inferred.
+
+
+**Latest scoped owner assessment:** [English/API follow-up](D74_ENGLISH_READING_FOLLOWUP.md) records reviewed date/time correct and `clauses` preferred best/most natural. Python must sound English and API buzz/tremble in both voices remain unresolved quality gates. Eight new English-preserving candidates/236final scoped software PASS are ready for listening, using the exact same model/voices/accepted prosody and original17research files. Earlier one decoder regression failure is retained separately/cause unconfirmed. No product/voice/model selection, physical4second or ADR155workflow approval is inferred.

@@ -38,3 +38,6 @@ The roadmap keeps D74 product acceptance open. Preparing independent harness/ski
 
 
 **Owner-authorized quality follow-up:** [ADR156 completed technical panel](D74_SPEECH_READING_QUALITY_RESULT.md):221scoped PASS/48newTTS outputs, question punctuation preserved through an isolated phoneme adapter;12/16raw–reading pairs identical. New owner listening/acoustic acceptance remains pending; original24clips and7oldoperators unchanged, no product model/default activation or ADR155workflow.
+
+
+**Latest scoped owner assessment:** [English/API follow-up](D74_ENGLISH_READING_FOLLOWUP.md) records reviewed date/time correct and `clauses` preferred best/most natural. Python must sound English and API buzz/tremble in both voices remain unresolved quality gates. Eight new English-preserving candidates/236final scoped software PASS are ready for listening, using the exact same model/voices/accepted prosody and original17research files. Earlier one decoder regression failure is retained separately/cause unconfirmed. No product/voice/model selection, physical4second or ADR155workflow approval is inferred.

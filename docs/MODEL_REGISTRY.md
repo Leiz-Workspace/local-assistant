@@ -113,3 +113,6 @@ Owner [group listening feedback](D74_OWNER_VOICE_FEEDBACK_20261103.md) now prefe
 
 
 The later owner instruction “Làm đi” authorizes [ADR156 isolated speech-quality work](D74_SPEECH_READING_QUALITY_RESULT.md) on those same weights/presets:48 paired TTS outputs and221scoped tests, no new model/default. Experimental text/phoneme policy changes are separate variants, not a model replacement or validated acoustic fix. New listening is pending and ADR155workflow remains unapproved.
+
+
+**Latest scoped owner assessment:** [English/API follow-up](D74_ENGLISH_READING_FOLLOWUP.md) records reviewed date/time correct and `clauses` preferred best/most natural. Python must sound English and API buzz/tremble in both voices remain unresolved quality gates. Eight new English-preserving candidates/236final scoped software PASS are ready for listening, using the exact same model/voices/accepted prosody and original17research files. Earlier one decoder regression failure is retained separately/cause unconfirmed. No product/voice/model selection, physical4second or ADR155workflow approval is inferred.
