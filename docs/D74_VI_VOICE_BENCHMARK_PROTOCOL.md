@@ -2,7 +2,7 @@
 
 **Purpose:** Define a bounded, reviewable comparison before any candidate download or model request, preserving original baselines and separating software, voice quality and actual audibility.
 
-**Date:** 2026-11-03. **Status:** PROPOSED / NOT APPROVED / NO RUNNER IMPLEMENTED / NO EXECUTION. [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) controls scope/resources/rollback. [Fixed packet](evidence/d74-vi-voice-proposed-packet-20261103.json), [proposed payload pins](evidence/d74-vi-turbo-proposed-artifacts-20261103.json).
+**Date:** 2026-11-03. **Status:** OWNER APPROVED / IMPLEMENTED / TTS STANDALONE COMPLETE / WORKFLOW STOPPED. [Actual execution](D74_VI_VOICE_CAMPAIGN_RESULT.md) retains six software-invalid slots and42 unattempted; no retry or physical4second PASS. [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) controls scope/resources/rollback. [Fixed packet](evidence/d74-vi-voice-proposed-packet-20261103.json), [proposed payload pins](evidence/d74-vi-turbo-proposed-artifacts-20261103.json).
 
 ## Preconditions and source freeze
 
@@ -52,4 +52,4 @@ No new quality/latency score threshold is tuned after predictions. The existing 
 
 Before execution, the runner needs real software regression/lifecycle/failure/cancel/boundary tests, formatter/lint checks and a final freeze. After any approved execution, report exact commands/settings, counts including failures/unattempted, all timings/resources/voice judgments, source/payload preservation and joined owned-process cleanup. No software PASS is a model-quality or physical4second PASS.
 
-This proposal has no download, live inference, runner tests or trial results. The present verification only checks metadata/hash arithmetic, source/packet provenance, original-file preservation and documentation. Further architecture work, a different voice/model/backend/cap or production migration requires a reviewed amendment/owner decision; there is no automatic fallback to Nano/int8/GPU/cloud.
+The original metadata proposal had no downloads, inference or runner tests. The later approved execution has separate [receipts and actual limitations](D74_VI_VOICE_CAMPAIGN_RESULT.md); immutable proposal JSON records remain historical. The corrected workflow has not run; [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) requires a new approval after the software stop. Further architecture work, a different voice/model/backend/cap or production migration requires a reviewed amendment/owner decision; there is no automatic fallback to Nano/int8/GPU/cloud.

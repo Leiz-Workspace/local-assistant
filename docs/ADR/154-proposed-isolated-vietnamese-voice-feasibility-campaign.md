@@ -2,7 +2,7 @@
 
 **Purpose:** Propose a bounded comparison for the owner's Vietnamese/female/Northern voice requirement and four-second response target without replacing agreed models or changing passing production components.
 
-**Date:** 2026-11-03. **Status:** PROPOSED / NOT APPROVED / NOT IMPLEMENTED / NOT EXECUTED. The owner authorized the metadata survey and proposal, not downloading or running additional models. [Survey](../D74_VI_VOICE_CANDIDATE_SURVEY.md), [protocol](../D74_VI_VOICE_BENCHMARK_PROTOCOL.md).
+**Date:** 2026-11-03. **Status:** OWNER APPROVED / IMPLEMENTED / PARTIALLY EXECUTED / WORKFLOW STOPPED. The owner explicitly approved this bounded campaign with “Duyệt”. Preparation, two qualification calls and24 standalone outputs completed; six workflow slots are software-invalid and42 unattempted. [Approval receipt](../evidence/d74-adr154-owner-approval-20261103.json), [actual result](../D74_VI_VOICE_CAMPAIGN_RESULT.md). Original proposal hashes remain in the approval receipt; model selection/deployment is not approved. [Survey](../D74_VI_VOICE_CANDIDATE_SURVEY.md), [protocol](../D74_VI_VOICE_BENCHMARK_PROTOCOL.md).
 
 ## Context
 
@@ -47,3 +47,9 @@ Publisher cards state Apache-2.0 for Turbo/codec and make explicit preset-asset 
 P1 for VOICE-VI-NORTH-FEMALE-001 and VOICE-LATENCY-AC-001. Dependencies: owner candidate/campaign approval, pinned artifacts and dependency lock, tested/frozen operator, existing protected originals, adequate resources and actual listening/timing evidence. Effort: one preparation/implementation/qualification milestone plus one bounded comparison/audit milestone; engineering time remains unestimated until implementation is reviewed. Risks: wrong voice metadata versus SDK assets, precision/phonemizer differences, hidden downloads/retries, ASR accuracy-speed tradeoff, CPU contention, cached timing and mistaking renderer activity for physical sound.
 
 **No production migration now.** Trial stores results separately, retains original model/config/audio/hash snapshots and admits no product traffic. A future promotion would need explicit model/voice selection, exact performance/quality/resource/rights evidence, an owner-approved integration design and rollback. Rollback here stops admission, joins only owned workers/CORE child/test UI, restores the captured native/container baseline and retains failed results. Never stop a pre-existing shared service or delete original models/data. D60 remains owner-deferred; D74 product and D90 release remain OPEN.
+
+## Execution disposition — 2026-11-03
+
+The approved campaign consumed26 TTS/6 ASR/6 CORE attempts, without retry. The new research caller misread Fast gateway metadata (`preset_selected` versus `preset`); six otherwise complete CORE responses were rejected before TTS. This is a caller failure, not evidence that CORE or the voice candidate failed. The first caller and all outputs/freezes remain preserved. The corrected caller, fatal metadata handling and cancellation cleanup have161 scoped software tests PASS; no corrected native inference has run. The first interrupted cleanup receipt remains unchanged; a separate inspection verifies the exact original native0/container baseline restored. [Result and limitations](../D74_VI_VOICE_CAMPAIGN_RESULT.md).
+
+This approval is not reused for a retry after the software stop. [ADR-155](155-proposed-workflow-recovery-after-caller-metadata-failure.md) proposes one replacement workflow-only campaign with the same assets/caps and a new explicit approval gate. New owner listening/physical timing/product selection remain open.

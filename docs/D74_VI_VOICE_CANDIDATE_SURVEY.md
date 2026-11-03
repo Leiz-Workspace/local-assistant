@@ -2,7 +2,7 @@
 
 **Mục đích:** Đưa ra shortlist có nguồn, chi phí tài nguyên và đề xuất thử nghiệm để chủ dự án duyệt; không tự thay model đang thống nhất.
 
-**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** SURVEY / PROPOSAL COMPLETE; DOWNLOAD / IMPLEMENTATION / BENCHMARK NOT APPROVED OR RUN. [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md), [protocol](D74_VI_VOICE_BENCHMARK_PROTOCOL.md), [evidence/hash nguồn](evidence/d74-vi-candidate-survey-20261103.json).
+**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** SURVEY COMPLETE; ADR-154 ĐÃ DUYỆT VÀ CHẠY MỘT PHẦN. Đã có24 clip TTS, workflow dừng vì lỗi bộ đọc metadata; chưa chọn model hoặc xác minh4giây. [Kết quả thực tế](D74_VI_VOICE_CAMPAIGN_RESULT.md). Các số liệu khảo sát bên dưới là snapshot trước khi chạy. [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md), [protocol](D74_VI_VOICE_BENCHMARK_PROTOCOL.md), [evidence/hash nguồn](evidence/d74-vi-candidate-survey-20261103.json).
 
 ## Đề xuất để duyệt
 

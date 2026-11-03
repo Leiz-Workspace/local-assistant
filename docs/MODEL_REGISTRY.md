@@ -103,3 +103,7 @@ Owner explicitly requested UNRESTRICTED testing. [Paired text measurement](MODEL
 ## Proposed research addition — 2026-11-03, not selected/deployed
 
 [VIvoice metadata survey](D74_VI_VOICE_CANDIDATE_SURVEY.md) proposes separately evaluating `pnnbao-ump/VieNeu-TTS-v3-Turbo` CPU ONNX FP32 at revision `61b85e3d937fbbacb387714180e8182823512523`, with bundled Northern female presets Trúc Ly/Ngọc Huyền. [ADR154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) is PROPOSED/NOT APPROVED/NOT IMPLEMENTED/NOT EXECUTED; model/codec/preset payloads not downloaded. This is not a replacement of the original Qwen/Piper nominations, selection or migration. Existing benchmarks are preserved; new quality/RAM/first-audible latency remain unmeasured. Owner benchmark/resource/rights/migration/rollback approval rules still apply.
+
+## Approved research addendum — 2026-11-03
+
+VieNeu-TTS v3 Turbo CPU ONNX FP32 is an owner-approved isolated research candidate under ADR-154, not a replacement/default or selected voice. [Actual partial trial](D74_VI_VOICE_CAMPAIGN_RESULT.md) retains24 standalone outputs and a failed research workflow; new voice listening/physical latency/rights and model selection remain open. Original Qwen3-TTS versus Piper registry nominations and all historical results remain unchanged. [Proposed ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) requires new approval for replacement workflow execution; no additional candidate is admitted.

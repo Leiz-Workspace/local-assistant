@@ -330,6 +330,11 @@ P1 remainsbeforequalitypromotion. [ADR135](ADR/135-bounded-request-local-reasoni
 
 Localcomponent/remediationtask COMPLETEforselectedpath; defaultAPIintegration/generalquality/rights/release is not adopted. Latency/tokens increase explicitly measured.568scopedPASS/0SKIP/6.17s; current732/all730oldexact/full5674historical. Fourstudies246firstgenerations; no further campaign/download/switch scheduled. Broader coding-quality debt and owner/manual gates retain their own acceptance.
 
-## D74 VI Northern female survey and proposed comparison — 2026-11-03
+## D74 VI Northern female survey and proposed comparison — historical pre-approval snapshot, 2026-11-03
 
 [Survey](D74_VI_VOICE_CANDIDATE_SURVEY.md)/[ADR154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) prepare one additional TTS trial, VieNeu-TTS v3 Turbo CPUFP32 plus its mandatory pinned codec/denoiser/preset assets. Trúc Ly/Ngọc Huyền are metadata nominations, not heard/winning/selected voices. Existing Qwen/Whisper/Piper/CORE choices and all first outcomes unchanged. No new download/SDK install/model request or benchmark; maximum4second physical first-audible target still UNVERIFIED. Source revisions, exact payload bytes, reused-corpus/cold-warm design, request/resource caps, listening/device limits and rollback are reviewable before owner approval. Other surveyed candidates are not admitted into the campaign.
+
+
+## ADR-154 approved partial execution and recovery gate — 2026-11-03
+
+[Actual report](D74_VI_VOICE_CAMPAIGN_RESULT.md): exact16 payloads/CPU SDK prepared;2 qualification and24 standalone TTS outputs complete, new owner voice ratings still missing. Six workflow slots invalid due caller metadata handling,42 unattempted. Corrected161 scoped tests PASS; no native retry. All previous model choices, source/configuration and first outputs retained. P1 replacement48-slot workflow is concretely prepared under [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md): dependencies new explicit approval/exact pins/software freeze/headroom; effort one bounded≤60-minute native milestone; risks schema/ASR errors, RAM contention and PCM-versus-physical timing. No new weights, repeated standalone, model/default selection or migration. Physical≤4seconds, listening/rights/no-speech/product acceptance remain OPEN; custom languages remain PENDING later version.
