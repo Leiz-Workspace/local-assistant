@@ -90,3 +90,8 @@ Trước một tích hợp được duyệt sau này, phải pin model/voice/run
 ## Bản sửa nghiên cứu và panel mới theo yêu cầu chủ dự án
 
 [ADR156 thực tế](D74_SPEECH_READING_QUALITY_RESULT.md): đã có renderer speech riêng và adapter giữ câu hỏi qua phoneme API của model hiện có;221scoped PASS/48clip mới/54chunk native/0retry.12/16cặp đối chứng–sửa cách đọc giống hệt, nên không coi lỗi đọc giờ/ngày đã khắc phục; Python/API dùng phiên âm Việt thử nghiệm, cần nghe so sánh. Ngữ điệu tự nhiên vẫn cần chủ dự án xác nhận. Không chọn voice/model, không sửa sản phẩm/weights/SDK, không chạy ADR155workflow.
+
+
+## English/API follow-up sau nhận xét mới
+
+[Chủ dự án đã xác nhận](D74_ENGLISH_READING_FOLLOWUP.md) date/time chuẩn và thích `clauses` nhất; giữ phần đó. Python đọc chưa đúng tiếng Anh và API rè/run ở cảhai giọng vẫn là quality blocker. Bản input-only mới bỏ phiên âm Việt,236scoped PASS/8clip mới chờ nghe;17file nghiên cứu đã có nguyên hash. Không chọn giữahai giọng hoặc kích hoạt sản phẩm/workflow recovery.

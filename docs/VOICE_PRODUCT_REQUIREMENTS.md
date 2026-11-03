@@ -66,3 +66,7 @@ D70 nghe 24/24 và bộ capture/playback microphone người dùng đã đạt t
 ## Triển khai nghiên cứu theo lệnh “Làm đi”
 
 [ADR156 và kết quả48clip](D74_SPEECH_READING_QUALITY_RESULT.md): phần render speech riêng và đường giữ dấu hỏi đã có221test PASS, chạy đúng48TTS trên weights hiện có; chưa tích hợp sản phẩm hoặc xác nhận chất lượng nghe.12/16cặp raw–reading giống hệt; không báo lỗi giờ/ngày đã được sửa trong audio. Chờ nhận xét bộ so sánh mới; ADR155workflow vẫn chưa duyệt/chưa chạy. Text hiển thị/model/default/target4giây giữ nguyên.
+
+## Chủ dự án xác nhận phần date/prosody, giữ lỗi tiếng Anh riêng
+
+[Phản hồi mới và bản sửa tiếp](D74_ENGLISH_READING_FOLLOWUP.md): giờ/ngày đã chuẩn trên bộ nghe; `clauses` được đánh giá tốt nhất/tự nhiên nhất. Đây là phạm vi đã đạt cần giữ nguyên, không phải mọi quality gate đạt. Python phải đọc như tiếng Anh; API rè/run ở cả2giọng chưa đạt. Renderer mới bỏ chỉ phiên âm Việt và đã tạo8clip trên cùng weights; chờ nghe, chưa chọn voice/model hoặc mở ADR155workflow.
