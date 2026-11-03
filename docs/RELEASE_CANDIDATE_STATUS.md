@@ -83,3 +83,6 @@ D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is
 
 
 2026-11-03 resumed provider verification: [fixed panel3/8valid thenrate-limit](D60_BRAVE_RESUMED_RESULT.md),8/8stillOPEN and all oldscores retained. Private cooldown prototype is controlled preparation only. Source750/currentfull5889/fresh source-data-runtime audit remainVERIFIED;4newcalls/0retries/0models, no provider/model/default/production or releasechange.
+
+
+**Current speech-quality research:** [ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) adds a tested isolated speech renderer/question-preserving adapter and48 complete paired TTS clips on existing weights;221scoped tests PASS,0ASR/CORE/new downloads.12/16raw–reading pairs identical; acoustic pronunciation/naturalness, physical4seconds and product model/rights acceptance remain OPEN. No release/default or ADR155workflow approval is inferred.

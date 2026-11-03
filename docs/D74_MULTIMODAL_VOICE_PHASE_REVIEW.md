@@ -35,3 +35,6 @@ CORE stays loaded at32K and its recorded NVIDIA process allocation remains9386Mi
 4. Requested physical microphone capture/playback smoke is now owner-reported PASS on Brave/PC microphone, including all three follow-up scenarios in the [current checklist](D74_PHYSICAL_MIC_CHECK.md). Preview/delete/TTL and unreported lifecycle details remain outside that accepted smoke scope. Final production E2E/load/restore/security/release gates stay open. Neither this owner report nor native fake-device checks certify the whole product flow.
 
 The roadmap keeps D74 product acceptance open. Preparing independent harness/skills/security code does not mark voice accepted, lower these gates, select models or approve release. [Exact engineering evidence](evidence/d74-local-engineering-review.json).
+
+
+**Owner-authorized quality follow-up:** [ADR156 completed technical panel](D74_SPEECH_READING_QUALITY_RESULT.md):221scoped PASS/48newTTS outputs, question punctuation preserved through an isolated phoneme adapter;12/16raw–reading pairs identical. New owner listening/acoustic acceptance remains pending; original24clips and7oldoperators unchanged, no product model/default activation or ADR155workflow.
