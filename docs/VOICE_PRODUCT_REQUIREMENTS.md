@@ -70,3 +70,10 @@ D70 nghe 24/24 và bộ capture/playback microphone người dùng đã đạt t
 ## Chủ dự án xác nhận phần date/prosody, giữ lỗi tiếng Anh riêng
 
 [Phản hồi mới và bản sửa tiếp](D74_ENGLISH_READING_FOLLOWUP.md): giờ/ngày đã chuẩn trên bộ nghe; `clauses` được đánh giá tốt nhất/tự nhiên nhất. Đây là phạm vi đã đạt cần giữ nguyên, không phải mọi quality gate đạt. Python phải đọc như tiếng Anh; API rè/run ở cả2giọng chưa đạt. Renderer mới bỏ chỉ phiên âm Việt và đã tạo8clip trên cùng weights; chờ nghe, chưa chọn voice/model hoặc mở ADR155workflow.
+
+
+## API reference diagnostic — 2026-11-04
+
+[Actual result and eight paired listening clips](D74_API_REFERENCE_DIAGNOSTIC_RESULT.md): first16-slot diagnostic remains stopped at Ngọc Huyền isolated-A13frames/EOSfalse (4complete/1failed/11unattempted); no retry or raised cap. A separately declared8-slot full-carrier cohort completes all4exact phoneme/token/speaker/anchor pairs with reference-code on/off; combined13actualTTS≤16, not original16PASS. Final257scoped software PASS/0FAIL/ERROR/SKIP4.29s, RuffPASS;250initialPASS. Exact token roundtrip/zero unknowns do not establish acoustic Ei or absence of APIbuzz.
+
+VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 remain P1 pending owner listening for Ei/buzz/timbre. No automatic reference-off/model/voice/default selection; weights/SDK/presets unchanged. Python not re-evaluated; reviewed date/time and preferred `clauses` retained. All750application/210protected/19prior research files and prior audio unchanged. No new downloads, ASR/CORE/Brave calls, shared service changes or ADR155workflow execution. Physical4second/rights/no-speech/product/D90release remain open; D60owner-deferred. Full5889/earlier236scoped counts remain historical, not new full runs.

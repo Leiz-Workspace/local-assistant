@@ -1,0 +1,184 @@
+{
+  "description": "Actual API diagnostic retains stopped first16-slot cohort and separately declared8-slot carrier cohort. Four complete initial outputs, one short-A EOS failure, eleven initial unattempted; eight complete carrier outputs. No acoustic pronunciation/buzz acceptance inferred.",
+  "recorded_at_utc": "2026-11-03T18:34:35.154401+00:00",
+  "status": "CARRIER_PAIRS_COMPLETE_FIRST_COHORT_REMAINS_STOPPED",
+  "initial_cohort": {
+    "declared": 16,
+    "attempts": 5,
+    "complete": 4,
+    "failed": 1,
+    "unattempted": 11,
+    "error": "ValueError:native_generation_did_not_end",
+    "failed_id": "with_reference-ngoc-huyen-letter-a",
+    "failed_frames": [
+      {
+        "frames": 13,
+        "eos": false
+      }
+    ],
+    "failed_samples": 49920,
+    "failed_sample_rate": 48000,
+    "reference_off_attempted": false
+  },
+  "carrier_cohort": {
+    "declared": 8,
+    "attempts": 8,
+    "complete": 8,
+    "failed": 0,
+    "unattempted": 0,
+    "status": "CARRIER_PAIRS_COMPLETE_QUALITY_UNVERIFIED"
+  },
+  "all_declared_observations": 24,
+  "actual_request_budget": {
+    "combined": 13,
+    "ceiling": 16,
+    "unused": 3
+  },
+  "asr_calls": 0,
+  "core_calls": 0,
+  "retries": 0,
+  "paired_inputs": [
+    {
+      "case": "vi-carrier",
+      "voice": "Trúc Ly",
+      "phonemes_identical": true,
+      "speaker_embedding_identical": true,
+      "anchor_identical": true,
+      "text_ids_identical": true,
+      "with_reference_rows": 59,
+      "without_reference_rows": 0,
+      "audio_same": false,
+      "with_tts_seconds": 0.8088579719988047,
+      "without_tts_seconds": 0.7893011079995631,
+      "with_duration_seconds": 2.48,
+      "without_duration_seconds": 2.56
+    },
+    {
+      "case": "vi-carrier",
+      "voice": "Ngọc Huyền",
+      "phonemes_identical": true,
+      "speaker_embedding_identical": true,
+      "anchor_identical": true,
+      "text_ids_identical": true,
+      "with_reference_rows": 63,
+      "without_reference_rows": 0,
+      "audio_same": false,
+      "with_tts_seconds": 0.9026245700006257,
+      "without_tts_seconds": 0.8429082960010419,
+      "with_duration_seconds": 2.56,
+      "without_duration_seconds": 2.8
+    },
+    {
+      "case": "english-carrier",
+      "voice": "Trúc Ly",
+      "phonemes_identical": true,
+      "speaker_embedding_identical": true,
+      "anchor_identical": true,
+      "text_ids_identical": true,
+      "with_reference_rows": 59,
+      "without_reference_rows": 0,
+      "audio_same": false,
+      "with_tts_seconds": 0.5337813339992863,
+      "without_tts_seconds": 0.4729199770008563,
+      "with_duration_seconds": 1.6,
+      "without_duration_seconds": 1.6
+    },
+    {
+      "case": "english-carrier",
+      "voice": "Ngọc Huyền",
+      "phonemes_identical": true,
+      "speaker_embedding_identical": true,
+      "anchor_identical": true,
+      "text_ids_identical": true,
+      "with_reference_rows": 63,
+      "without_reference_rows": 0,
+      "audio_same": false,
+      "with_tts_seconds": 0.5964744880002399,
+      "without_tts_seconds": 0.635416721999718,
+      "with_duration_seconds": 1.68,
+      "without_duration_seconds": 1.92
+    }
+  ],
+  "retirements": [
+    {
+      "cohort": "initial",
+      "mode": "with_reference",
+      "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+      "pid": 225524,
+      "returncode": -15,
+      "peak_sampled_rss_bytes": 1279168512,
+      "resource_samples": 121,
+      "wall_seconds": 3.654981915999997,
+      "failure": "ValueError:native_generation_did_not_end",
+      "forced": true
+    },
+    {
+      "cohort": "carriers",
+      "mode": "with_reference",
+      "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+      "pid": 243546,
+      "returncode": 0,
+      "peak_sampled_rss_bytes": 1322450944,
+      "resource_samples": 165,
+      "wall_seconds": 4.7491366539998126,
+      "failure": null,
+      "forced": false
+    },
+    {
+      "cohort": "carriers",
+      "mode": "without_reference",
+      "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+      "pid": 243707,
+      "returncode": 0,
+      "peak_sampled_rss_bytes": 1334198272,
+      "resource_samples": 159,
+      "wall_seconds": 4.684174601001359,
+      "failure": null,
+      "forced": false
+    }
+  ],
+  "sum_owned_worker_wall_seconds": 13.088293171001169,
+  "resource_or_frame_caps_increased": false,
+  "new_model_or_packages": 0,
+  "baseline_restored": true,
+  "protected_originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "prior_research_files_unchanged": 19,
+  "initial_diagnostic_files_frozen": 4,
+  "carrier_files_frozen": 2,
+  "final_software": {
+    "passed": 257,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.29
+  },
+  "initial_software_passed": 250,
+  "owner_English_or_API_acceptance": null,
+  "model_selection": null,
+  "physical_first_audible": "UNVERIFIED",
+  "workflow_recovery_approved": false,
+  "frontend_findings": {
+    "token_roundtrip_exact": true,
+    "unknown_tokens": 0,
+    "first_probe_rejection": "Standalone compact secondary-stress form did not match an over-specific canonical string expectation; not token loss.",
+    "initial_probe_retained": true
+  },
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/api-reference-first",
+  "private_sha256": {
+    "initial_freeze": "9461178612dc541ab517f306b4f1a862c0931890334928ea2a5a1fb3f918ed44",
+    "initial_result": "b70eef9c585a9ba36040bdfb278896e2c00eaca129855ec4edb31bb3a53ace89",
+    "initial_probe_failure": "ce1076df209dcf32d8b575b10549858e60df794509c1572018ec5862ec69ad2d",
+    "tokenizer_investigation": "ea8914d15a87ae4f5844e5d9bc25b07cd116024866118980280c5139a1bc5540",
+    "initial_final_frontend": "9b3588cf9dbfef4e17d8fa450f1916a63c96bceabce48bb0fe670ade9c9a0ffb",
+    "carrier_freeze": "764f9f9edf5237f908efbc5e3837fb9ab5a4702101a378e954af717b517a9567",
+    "carrier_frontend": "c3ff20e716c7b6becd244e127de6163e0b6080df3253b55e96eb59ec94f03a20",
+    "carrier_result": "7822ee4fa7a3fd4134a90e73ff7850155d378bd2d7b30fb4fe8173abd78b5a61",
+    "carrier_page": "754d791f6202f23cc305fe5bb0d8c590fb2dbcb1911964296054c0638aac359e",
+    "carrier_index": "dadbc78b1f966ab1076fa6b30b3aa44881e4f2253caff3ba426796a66e19a75d",
+    "all_new_code": "5447b04e2c4a15fe06601f38eef99780700c5b787098207dec436c2cb75249b2"
+  },
+  "parent_root_bytes": 1299830488
+}

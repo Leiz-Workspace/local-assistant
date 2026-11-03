@@ -205,3 +205,10 @@ Worker217.312967s/replay5.337580s, exit0/no timeout/reaped; whole-worker peak **
 
 
 **API first-letter follow-up:** [Owner rejects API acoustic pronunciation](D74_ENGLISH_READING_FOLLOWUP.md) as A-Pi-Ai versus required English Ei-Pi-AI. All8native input traces contain correct English reference phonemes; VOICE-ENGLISH-READING-001 remains blocked on acoustic validation, not closed by text/G2P/token coverage. Specific internal cause unproven; no new model run or change follows from this diagnostic record. Prior date/prosody acceptance retained; Python/APIbuzz stillopen because not re-evaluated in this message.
+
+
+## API reference diagnostic — 2026-11-04
+
+[Actual result and eight paired listening clips](D74_API_REFERENCE_DIAGNOSTIC_RESULT.md): first16-slot diagnostic remains stopped at Ngọc Huyền isolated-A13frames/EOSfalse (4complete/1failed/11unattempted); no retry or raised cap. A separately declared8-slot full-carrier cohort completes all4exact phoneme/token/speaker/anchor pairs with reference-code on/off; combined13actualTTS≤16, not original16PASS. Final257scoped software PASS/0FAIL/ERROR/SKIP4.29s, RuffPASS;250initialPASS. Exact token roundtrip/zero unknowns do not establish acoustic Ei or absence of APIbuzz.
+
+VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 remain P1 pending owner listening for Ei/buzz/timbre. No automatic reference-off/model/voice/default selection; weights/SDK/presets unchanged. Python not re-evaluated; reviewed date/time and preferred `clauses` retained. All750application/210protected/19prior research files and prior audio unchanged. No new downloads, ASR/CORE/Brave calls, shared service changes or ADR155workflow execution. Physical4second/rights/no-speech/product/D90release remain open; D60owner-deferred. Full5889/earlier236scoped counts remain historical, not new full runs.
