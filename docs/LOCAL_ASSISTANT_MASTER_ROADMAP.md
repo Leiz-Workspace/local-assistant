@@ -1,6 +1,6 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 4.93 (owner accepts reviewed date/prosody; English/API defects open;8 targeted clips ready) · **Updated:** 2026-11-04 (Asia/Ho_Chi_Minh)
+> **Version:** 4.94 (API English candidate still fails owner listening despite correct frontend; date/prosody retained) · **Updated:** 2026-11-04 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
 > **VERIFIED 2026-11-03:** Current750-source full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0 and independent preservation accepted. All745prior application bytes unchanged; five additions. [Fresh D60 result and limits](D60_FRESH_DISCOVERY_RESULT.md), [actual terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json). Earlier5837/745andallfirstscores/failures remain historical; broad coverage/production acceptance is separate.
@@ -992,3 +992,6 @@ v4.92 (owner-authorized follow-up): ADR156 implements an isolated speech-only re
 
 
 v4.93 (2026-11-04): Owner confirms reviewed date/time correct and `clauses` best/most natural, but Python must sound English and API has buzz/tremble in both voices. Scope findings preserved without global quality/model approval. ADR157 new input-only renderer removes only Vietnamese lexicon edits, keeping10preferred/7olderresearch files and their date/prosody unchanged. Model-free probe8inputs has English references/0unknown tokens. Eight newTTS/14chunks complete/EOS/exit0/no retry, with4exact retained baseline clips;2new outputs match older raw audio. Final236scoped PASS4.22s, first existing audio-decoder1FAIL/235PASS retained/causeunconfirmed; isolated1PASS and later236PASS do not claim decoder fixed. New owner listening pending for English/API; original750/protected210/models/config/48priorclips/24originals/ADR155plan preserved. No new weights/packages/ASR/CORE/workflow/provider/service action. ADR155unapproved, physical4second/rights/no-speech/product/D90release open, D60deferred.
+
+
+v4.94 (2026-11-04): Owner hears API as A-Pi-Ai instead of required Ei-Pi-AI on new candidates. All8saved native traces already contain Englishˈeɪ pˈiː ˈaɪ; correct frontend is not acoustic pronunciation PASS. API remains owner-reported unacceptable, internal acoustic/preset/decoder cause not established. Python and priorAPIbuzz not reassessed by this message, remainopen; reviewed date/prosody acceptance unchanged. Documentation-only/0newmodelcalls/sourcechanges, all native/audio/proposal evidence preserved; no model/default/ADR155workflow/release approval.

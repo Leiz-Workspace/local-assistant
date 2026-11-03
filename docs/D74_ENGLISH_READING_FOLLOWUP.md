@@ -38,3 +38,10 @@ Lượt scoped cuối **236PASS/0FAIL/0ERROR/0SKIP,4,22giây**, lint/format PASS
 Tests mới bảo vệ phần date/prosody đã đạt, giữ English tokens/trace, khóa probe-to-input/unknown-token, namespace không weights cho probe,8slot/fail-first/no-retry và trang nghe. 750file ứng dụng/210đầu vào bảo vệ/17file nghiên cứu cũ,48clip trước/24clip gốc và planADR155 nguyên hash. Full5889 là snapshot ứng dụng trước, không phải một lượt full mới.
 
 Phần nghe mới vẫn cần người dùng xác nhận; không tuyên bố Python/API hoặc tiếng rè đã được khắc phục chỉ từ frontend/signal metrics. ADR155workflow tiếp tục chưa duyệt/chưa chạy. Chưa có model/voice/default activation, physical first-audible≤4giây, quyền sử dụng hoặc release approval. D60 tiếp tục chờ.
+
+
+## Phản hồi tiếp theo: API vẫn đọc sai chữ A
+
+Chủ dự án nghe bản mới và báo “A-Pi-Ai”, yêu cầu “Ei-Pi-AI” theo tiếng Anh. [Receipt và đối chiếu log](evidence/d74-api-first-letter-owner-feedback.json) xác minh cả8trace native đã nhận `ˈeɪ pˈiː ˈaɪ`; tokenizer normalization làNFC, không phải một quy tắc đổi chữA tiếngAnh sangA tiếngViệt. Điều này xác nhận sửa frontend chưa đủ: API pronunciation tiếp tục **OWNER REPORTED NOT ACCEPTABLE**. Không bịa nguyên nhân chính xác trong network/preset/tokenizer/decoder; khả năng lỗi nằm ở quá trình hiện thực âm thanh sau frontend cần được kiểm riêng.
+
+Tin nhắn này không cập nhật Python hoặc việc API còn rè/run, nên hai phần đó vẫn mở; không tự coi đã hết lỗi. Giờ/ngày và sở thích `clauses` trước đó giữ nguyên. Chỉ ghi nhận/đối chiếu bằng chứng, không sinh clip mới, thay text/model/settings, chạy ADR155 hoặc đánh dấu quality PASS.
