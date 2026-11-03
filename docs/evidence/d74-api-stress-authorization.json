@@ -1,0 +1,19 @@
+{
+  "description": "Latest explicit owner “Làm đi” continues the proposed same-text/same-voice term-only investigation after rejection of the previous diagnostic. Engineering selects a four-request ceiling; no new model or product activation.",
+  "authorized": true,
+  "owner_response": "Làm đi",
+  "recorded_at_utc": "2026-11-03T18:58:42.355050+00:00",
+  "adr_sha256": "9dea5b0e4b4846b52910de6641cd3c1dfb1f22ebd17d2957a34c1b328e2052bb",
+  "owner_prior_rejection_sha256": "255fec314ec5832baee16560de16706ce0866a9e9dfd2f41a892dee19f76027e",
+  "tts_calls_ceiling": 4,
+  "inner_generations_ceiling": 6,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "original_frame_caps_unchanged": true,
+  "model_selection": null,
+  "workflow_recovery_authorized": false,
+  "product_activation": false
+}

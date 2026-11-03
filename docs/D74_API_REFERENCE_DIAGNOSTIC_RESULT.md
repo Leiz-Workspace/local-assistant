@@ -50,3 +50,10 @@ Ba worker TTS lần lượt dùng peak RSS RAM lấy mẫu khoảng **1219,9 / 1
 VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 vẫn P1, trạng thái chất lượng OPEN và bộ diagnostic mới NOT ACCEPTED theo nhận xét nhóm. Chưa chọn `without_reference`; kết quả nhỏ, thích ứng theo lỗi và carrier có thể không khái quát. Python không nằm trong lượt mới nên vẫn mở; giờ/ngày và `clauses` đã chấp nhận theo panel trước giữ nguyên. Không thay đổi đề cử/lựa chọn model trong registry. 257 tests PASS là kiểm thử phần mềm lịch sử, không được dùng để phủ nhận kết quả nghe.
 
 ADR-155 với 48 workflow vẫn chưa duyệt/chưa chạy. D60 tiếp tục để pending theo yêu cầu. D74 voice/model/rights/no-speech, đo vật lý first-audible ≤4 giây, tích hợp sản phẩm và D90 release vẫn mở; D70 đánh giá offline 24/24 với giới hạn chất lượng giữ nguyên.
+
+
+## Same-text API stress follow-up — 2026-11-04
+
+[ADR159 actual result and four same-text pairs](D74_API_STRESS_COMPARISON_RESULT.md): latest owner “Làm đi” continues narrowly on the old english-01/04 sentences and both retained voices.4newTTS/6innerchunks complete/EOS/exit0/no retry; four exact ADR157baselines reused. Only API stress marks change at the old ProsodyAdapter phonemizer dependency, preserving text/date/clauses/question/Pythoninput/referenceON/sampling/frame caps. Two first date chunks match old audio byte-for-byte.267scoped software PASS4.78s/RuffPASS; two initial test-fixture failures retained.
+
+Ei/APIbuzz/whole-sentence naturalness remain unaccepted pending owner listening; unchanged Python phones do not certify its waveform. The rejected carrier trial remains OWNER_REPORTED_WORSE_NOT_ACCEPTED; no ref-off or model/voice/default/policy adoption.25prior research/750application/210protected/SDK/model/audio preserved, no ASR/CORE/provider/download/service change. ADR155workflow unapproved/unexecuted; physical4second/rights/no-speech/product/D90release open, D60owner-deferred;5889full remains historical.
