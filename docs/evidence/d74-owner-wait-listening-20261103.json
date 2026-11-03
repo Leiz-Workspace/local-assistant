@@ -1,0 +1,17 @@
+{
+  "description": "Explicit owner choice to wait for listening to the 24 retained clips instead of approving ADR155 workflow recovery. No new voice ratings, native execution or model selection is authorized.",
+  "owner_response": "Chờ nghe 24 clip",
+  "recorded_at_utc": "2026-11-03T10:50:29.353680+00:00",
+  "reviewed_commit": "a81bda7",
+  "recovery_status": "OWNER_DEFERRED_PENDING_LISTENING_NOT_APPROVED_NOT_EXECUTED",
+  "recovery_plan_sha256": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5",
+  "partial_result_sha256": "82f8e13b37df7497ddd2ae10f841a62c48844529315fe3b6d7cdd0d0f3af6112",
+  "listening_page_sha256": "90f1d718b81d6e063fb5e56d45d943926b8801d5a7baa3ffc813d5ab03efa7d3",
+  "listening_audio_index_sha256": "5f839a42e4a3255d54793b03623c52dac997c7c4b33f632e5826668f72343197",
+  "clips_available": 24,
+  "new_owner_ratings": null,
+  "new_model_calls": 0,
+  "model_selection": null,
+  "physical_first_audible_gate": "UNVERIFIED",
+  "next_action": "Owner listens locally and may submit comments by clip ID in chat. Do not run workflow recovery without a later explicit approval bound to ADR155."
+}

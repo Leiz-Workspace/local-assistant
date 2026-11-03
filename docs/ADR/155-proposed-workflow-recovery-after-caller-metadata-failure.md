@@ -4,6 +4,10 @@
 
 **Date:** 2026-11-03. **Status:** PROPOSED / NOT APPROVED / NOT EXECUTED. [Actual first campaign](../D74_VI_VOICE_CAMPAIGN_RESULT.md), [frozen recovery plan](../evidence/d74-adr155-proposed-workflow-recovery-20261103.json).
 
+## Owner disposition — 2026-11-03
+
+The owner selected “Chờ nghe 24 clip” instead of approving recovery. [Decision receipt](../evidence/d74-owner-wait-listening-20261103.json) binds the exact proposed plan and retained listening artifacts. **OWNER DEFERRED PENDING LISTENING / NOT APPROVED / NOT EXECUTED.** Keep the recovery entry point locked; listening comments do not themselves authorize new inference or select a model. No new ratings have been submitted.
+
 ## Context and decision requested
 
 The owner approved ADR-154. Its16 payloads, SDK preparation, two qualification calls and24 standalone TTS outputs completed. The new research caller incorrectly required `preset_selected`; the unchanged Fast gateway returns `preset`. Six workflow slots consumed six ASR/six CORE calls but no workflow TTS and are invalid for performance scoring;42 slots remain unattempted. All first artifacts and the interrupted cleanup record remain immutable. A subsequent read-only inspection verified native0 and the exact original container baseline.
