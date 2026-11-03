@@ -2,7 +2,7 @@
 
 **Mục đích:** Gom bằng chứng kỹ thuật và các kiểm tra người dùng cần làm sau, không bắt chủ dự án chỉnh JSON hoặc chấm lại benchmark.
 
-**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. Full snapshot lúc chuẩn bị phiếu đã hoàn tất5674PASS/0FAIL/0ERROR/0SKIP/1798.59s,728files giữ nguyên (snapshot hiện tại xem [release status](RELEASE_CANDIDATE_STATUS.md)), audit sau kiểm thử đạt với delta timestamp quota đã ghi rõ. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Đã có [xác nhận nghe đủ 24/24 bằng loa và nhận xét](D70_OWNER_LISTENING_20261103.md) ngày 2026-11-03; chưa có nghiệm thu microphone thật hoặc sản phẩm/release.
+**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. Full snapshot lúc chuẩn bị phiếu đã hoàn tất5674PASS/0FAIL/0ERROR/0SKIP/1798.59s,728files giữ nguyên (snapshot hiện tại xem [release status](RELEASE_CANDIDATE_STATUS.md)), audit sau kiểm thử đạt với delta timestamp quota đã ghi rõ. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Đã có [xác nhận nghe đủ 24/24 bằng loa và nhận xét](D70_OWNER_LISTENING_20261103.md) ngày 2026-11-03; đã có [microphone thật cơ bản PASS do chủ dự án báo cáo](D74_PHYSICAL_MIC_CHECK.md) trên Brave/PC; ba tình huống mở trang/từ chối quyền/giới hạn30giây và nghiệm thu sản phẩm/release còn mở.
 
 ## Đối chiếu phần nghe đã hoàn tất
 
