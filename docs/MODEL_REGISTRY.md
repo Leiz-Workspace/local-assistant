@@ -107,3 +107,6 @@ Owner explicitly requested UNRESTRICTED testing. [Paired text measurement](MODEL
 ## Approved research addendum — 2026-11-03
 
 VieNeu-TTS v3 Turbo CPU ONNX FP32 is an owner-approved isolated research candidate under ADR-154, not a replacement/default or selected voice. [Actual partial trial](D74_VI_VOICE_CAMPAIGN_RESULT.md) retains24 standalone outputs and a failed research workflow; new voice listening/physical latency/rights and model selection remain open. Original Qwen3-TTS versus Piper registry nominations and all historical results remain unchanged. [Proposed ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) requires new approval for replacement workflow execution; no additional candidate is admitted.
+
+
+Owner [group listening feedback](D74_OWNER_VOICE_FEEDBACK_20261103.md) now prefers Trúc Ly and Ngọc Huyền over the Piper comparison voice, while reporting mechanical prosody and incorrect time/date/Python/API reading. This preference does not select a product model/voice or authorize ADR155 recovery. Original registry nominations and first outcomes remain unchanged; reading/prosody investigation is assessed backlog only.

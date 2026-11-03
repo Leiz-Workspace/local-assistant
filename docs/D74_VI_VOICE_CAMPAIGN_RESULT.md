@@ -6,7 +6,7 @@
 
 ## Lựa chọn hiện tại của chủ dự án
 
-Chủ dự án chọn **“Chờ nghe 24 clip”**, chưa duyệt ADR-155. [Receipt quyết định](evidence/d74-owner-wait-listening-20261103.json) giữ đúng plan và trang nghe; chưa có nhận xét nghe mới. Giữ workflow recovery chưa chạy. Chủ dự án có thể gửi nhận xét theo mã clip ngay trong chat, không cần chỉnh JSON.
+Chủ dự án ban đầu chọn **“Chờ nghe 24 clip”**, chưa duyệt ADR-155; [receipt quyết định](evidence/d74-owner-wait-listening-20261103.json) giữ nguyên lịch sử. Sau đó đã có [phản hồi nhóm ba giọng](D74_OWNER_VOICE_FEEDBACK_20261103.md): cả ba đều ổn, thích Trúc Ly và Ngọc Huyền hơn; ngữ điệu máy móc, giờ/ngày đọc sai format, Python/API đọc chưa đúng. Chưa có nhãn từng clip hoặc lựa chọn giữa hai giọng. Các lỗi chất lượng còn mở; workflow recovery vẫn chưa được duyệt/chưa chạy.
 
 ## Những gì đã chạy
 
@@ -38,7 +38,7 @@ Hai tín hiệu ngắt tới wrapper/controller khiến receipt lúc đầu còn
 
 Mở [trang nghe24clip](../data/backups/d74-vi-approved-campaign-20261103/review/index.html) trong checkout hiện tại. [Toàn bộ7file code/test hiện tại](../data/backups/d74-vi-approved-campaign-20261103/review/full-code.zip) được đóng gói riêng; audio/SDK/weights không đưa vào Git. Trang nhúng đủ 24 WAV float gốc, không cần server, không microphone/upload/JavaScript hoặc tài nguyên mạng. Bấm phát từng clip. Mỗi mã gồm `piper-vi`, `truc-ly` hoặc `ngoc-huyen`, rồi `vi-voice-01` đến `08`.
 
-Bạn có thể gửi nhận xét ngay trong chat theo mã clip: phát âm/dấu/đọc số ngày giờ; ngắt nhịp; rè/méo/đứt tiếng; cảm nhận nữ/miền Bắc; tự nhiên và mức chắc chắn. Chưa có nhận xét nghe mới; metadata giọng và EOS không phải đánh giá chất lượng. D70 cũ, 24 audio và nhận xét cũ được giữ nguyên.
+Bạn có thể gửi nhận xét ngay trong chat theo mã clip: phát âm/dấu/đọc số ngày giờ; ngắt nhịp; rè/méo/đứt tiếng; cảm nhận nữ/miền Bắc; tự nhiên và mức chắc chắn. Phản hồi nhóm mới đã được ghi riêng; metadata giọng và EOS không thay thế nhận xét chất lượng. Ngữ điệu, cách đọc giờ/ngày và Python/API còn vấn đề. D70 cũ, 24 audio và nhận xét cũ được giữ nguyên.
 
 ## Bản sửa và bước tiếp theo
 
@@ -46,4 +46,4 @@ Bản sửa cùng trang nghe có **161 tests PASS / 0 FAIL / 0 ERROR / 0 SKIP, 4
 
 750 file ứng dụng/cấu hình/test cũ và 210 đầu vào bảo vệ vẫn đúng mã băm. Full 5.889 PASS trước đây thuộc snapshot ứng dụng đó; đây không phải một lượt full regression mới. Mã nghiên cứu mới nằm trong `benchmarks/`, có bộ test riêng. Không sửa model/default, source sản phẩm, Docker, Vault, database hoặc gọi Brave.
 
-[ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) chuẩn bị một lượt workflow thay thế 48 slot với bản sửa; chưa duyệt/chưa chạy. Giữ 24 clip hiện có, không lặp qualification/standalone hoặc tải model. Cần quyền chạy mới vì ADR-154 yêu cầu dừng và không tự retry khi lỗi phần mềm; sửa code không tự cấp quyền chạy lại benchmark. Cảm nhận giọng của chủ dự án và phép đo first-audible vật lý vẫn là gate riêng, không đóng D74 bằng PCM proxy.
+[ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) chuẩn bị một lượt workflow thay thế 48 slot với bản sửa; chưa duyệt/chưa chạy. Giữ 24 clip hiện có, không lặp qualification/standalone hoặc tải model. Cần quyền chạy mới vì ADR-154 yêu cầu dừng và không tự retry khi lỗi phần mềm; sửa code không tự cấp quyền chạy lại benchmark. Phản hồi nhóm đã nhận nhưng độ tự nhiên/cách đọc chưa đạt mong muốn; cần điều tra VOICE-TEXT-READING-001 và VOICE-PROSODY-001 trước nghiệm thu. Phép đo first-audible vật lý vẫn là gate riêng, không đóng D74 bằng PCM proxy.
