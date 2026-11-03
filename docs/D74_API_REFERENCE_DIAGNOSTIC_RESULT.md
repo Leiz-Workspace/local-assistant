@@ -2,13 +2,21 @@
 
 **Mục đích:** Ghi kết quả điều tra yêu cầu đọc API như tiếng Anh “Ei–Pi–Ai”, giữ nguyên lỗi đầu tiên, các bản đã nghe và phần giờ/ngày/ngắt câu đã được chấp nhận.
 
-**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** tám clip câu đầy đủ đã hoàn tất kỹ thuật; phát âm, rè/run và chất giọng **CHỜ NGHE**, chưa xác nhận sửa được lỗi. Không thay model, chọn giọng hoặc áp dụng cấu hình mới vào sản phẩm. [ADR-158](ADR/158-paired-api-phoneme-and-reference-diagnostic.md), [kết quả máy](evidence/d74-api-reference-result.json), [kiểm tra sau chạy](evidence/d74-api-reference-verification.json).
+**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** **OWNER REPORTED WORSE / NOT ACCEPTED**. Chủ dự án đánh giá bộ mới “Còn tệ hơn cả bản trước nữa”; hướng thử này không được đưa vào sản phẩm. [Phản hồi nguyên văn](evidence/d74-api-reference-owner-rejection.json). Tám clip đã hoàn tất kỹ thuật nhưng mục tiêu cải thiện chất lượng không đạt theo đánh giá nhóm. Giữ nguyên model và bản `clauses` trước. [ADR-158](ADR/158-paired-api-phoneme-and-reference-diagnostic.md), [kết quả máy tại thời điểm chạy](evidence/d74-api-reference-result.json), [kiểm tra sau chạy](evidence/d74-api-reference-verification.json).
+
+## Kết luận sau phản hồi
+
+Loại bộ thử mới khỏi hướng áp dụng; giữ tất cả audio, source và lỗi làm bằng chứng. Nhận xét chưa chỉ rõ clip/điều kiện nào, mức rè, phát âm Ei hoặc chất giọng riêng từng mẫu. Không tự tạo tám nhãn FAIL, MOS, xác nhận đã nghe đủ hoặc kết luận riêng ref-on/ref-off. API vẫn chưa đạt; Python chưa được đánh giá lại. Phần giờ/ngày và `clauses` được chủ dự án chấp nhận trước đó giữ nguyên phạm vi.
+
+Rà soát source và packet cho thấy hai câu carrier mới khác cả bốn câu English trước; adapter chẩn đoán nhận phoneme trực tiếp, trong khi bản được thích đi qua chuẩn bị text/chia câu/ghép audio. Bất biến chỉ được kiểm soát giữa hai điều kiện trong cùng cặp mới. Vì thế chưa xác định việc bỏ tham chiếu, context, decoder hoặc khả năng model là nguyên nhân làm bộ mới tệ hơn. Phản hồi của chủ dự án được giữ làm quyết định không chấp nhận, không yêu cầu nghe lại bộ này.
+
+Bước kỹ thuật tiếp theo của hai task P1 là chuẩn bị giả thuyết có căn cứ source và protocol tối thiểu trên **cùng câu/giọng/đường `clauses` trước**, chỉ thay một ranh giới xử lý thuật ngữ. Dependency, effort và rủi ro được ghi trong [receipt phản hồi](evidence/d74-api-reference-owner-rejection.json). Chưa xếp lịch chạy audio mới hoặc dùng ba suất còn dư của lượt cũ; chưa có bằng chứng cho một cách sửa mới. Không thay model hoặc tiếp tục sửa phoneme bằng phỏng đoán.
 
 ## Nghe đối chiếu
 
 [Mở trang nghe tám clip, bốn cặp](../data/backups/d74-vi-approved-campaign-20261103/api-reference-first/context-followup/review/index.html). Mỗi hàng có cùng câu và giọng Trúc Ly hoặc Ngọc Huyền; hai bên lần lượt dùng/không dùng mã âm thanh tham chiếu của preset. Đặc trưng người nói vẫn được truyền nguyên hash ở cả hai bên, nhưng cảm nhận chất giọng có thể thay đổi.
 
-Hai câu mới: “Chị sẽ hướng dẫn cách gọi API ngay bây giờ.” và “Please say A, P, I.” Với mỗi cặp, cần nghe: chữ A có thành **Ei** không, API có rè/run không, và giọng còn tự nhiên/giống giọng mong muốn không. Không suy ra bên nào tốt hơn từ tên điều kiện hoặc thời gian xử lý. Đây là đối chiếu chẩn đoán có nhãn, không phải benchmark mù độc lập.
+Hai câu mới: “Chị sẽ hướng dẫn cách gọi API ngay bây giờ.” và “Please say A, P, I.” Các tiêu chí nghe đã đề ra là Ei, rè/run và chất giọng. Bộ này hiện được lưu như kết quả không được chấp nhận, không yêu cầu chủ dự án nghe lại. Không suy ra bên nào tốt hơn từ tên điều kiện hoặc thời gian xử lý. Đây là đối chiếu chẩn đoán có nhãn, không phải benchmark mù độc lập.
 
 [Bốn clip hoàn chỉnh của lượt đầu cùng trạng thái lỗi/chưa chạy](../data/backups/d74-vi-approved-campaign-20261103/api-reference-first/review/index.html). Clip Ngọc Huyền thiếu kết thúc không được phát như một clip đạt. [Toàn bộ sáu file code/test mới](../data/backups/d74-vi-approved-campaign-20261103/api-reference-first/context-followup/review/full-code.zip); bản source đã chạy cũng được giữ riêng trong `executed-source/` của từng lượt.
 
@@ -39,6 +47,6 @@ Ba worker TTS lần lượt dùng peak RSS RAM lấy mẫu khoảng **1219,9 / 1
 
 ## Trạng thái và bước tiếp theo
 
-VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 vẫn P1: nghe bốn cặp để xác định Ei, rè/run và thay đổi giọng trước khi đề xuất tiếp. Chưa tự chọn `without_reference`; kết quả nhỏ, thích ứng theo lỗi và carrier có thể không khái quát. Python không nằm trong lượt mới nên vẫn mở; giờ/ngày và `clauses` đã chấp nhận theo panel trước giữ nguyên. Không thay đổi đề cử/lựa chọn model trong registry.
+VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 vẫn P1, trạng thái chất lượng OPEN và bộ diagnostic mới NOT ACCEPTED theo nhận xét nhóm. Chưa chọn `without_reference`; kết quả nhỏ, thích ứng theo lỗi và carrier có thể không khái quát. Python không nằm trong lượt mới nên vẫn mở; giờ/ngày và `clauses` đã chấp nhận theo panel trước giữ nguyên. Không thay đổi đề cử/lựa chọn model trong registry. 257 tests PASS là kiểm thử phần mềm lịch sử, không được dùng để phủ nhận kết quả nghe.
 
 ADR-155 với 48 workflow vẫn chưa duyệt/chưa chạy. D60 tiếp tục để pending theo yêu cầu. D74 voice/model/rights/no-speech, đo vật lý first-audible ≤4 giây, tích hợp sản phẩm và D90 release vẫn mở; D70 đánh giá offline 24/24 với giới hạn chất lượng giữ nguyên.
