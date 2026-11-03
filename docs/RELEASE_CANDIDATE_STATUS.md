@@ -6,7 +6,7 @@
 
 ## Current approved voice research
 
-[ADR-154 actual result](D74_VI_VOICE_CAMPAIGN_RESULT.md):16 pinned payloads prepared;2 qualification/24 standalone TTS outputs complete. Workflow stopped after6 software-invalid slots/42 unattempted;161 corrected scoped tests PASS without further inference. First failures preserved and native/container baseline restored. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) replacement workflow is PROPOSED/NOT APPROVED/NOT EXECUTED. New owner listening, physical4second target, model/rights/product and release remain open. Original750 application bytes/current retained full5889 unchanged.
+[ADR-154 actual result](D74_VI_VOICE_CAMPAIGN_RESULT.md):16 pinned payloads prepared;2 qualification/24 standalone TTS outputs complete. Workflow stopped after6 software-invalid slots/42 unattempted;161 corrected scoped tests PASS without further inference. First failures preserved and native/container baseline restored. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) replacement workflow is OWNER DEFERRED PENDING24-CLIP LISTENING/NOT APPROVED/NOT EXECUTED. New owner listening, physical4second target, model/rights/product and release remain open. Original750 application bytes/current retained full5889 unchanged.
 
 ## Completed local engineering evidence
 

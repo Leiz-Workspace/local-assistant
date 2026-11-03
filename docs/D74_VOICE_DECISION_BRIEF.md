@@ -10,7 +10,7 @@
 
 ## Khảo sát ứng viên và trial đề xuất
 
-[ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) đã được chủ dự án duyệt. Đã tải đúng16 artifact608.816.450byte, chạy2 qualification và24 clip TTS. [Báo cáo](D74_VI_VOICE_CAMPAIGN_RESULT.md) giữ6 workflow slot lỗi bộ đọc metadata CORE và42 chưa chạy; không có latency workflow hợp lệ. Bản sửa161 tests PASS, chưa chạy native lại. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) đề nghị một lượt workflow thay thế có phê duyệt mới; không lặp24clip/tải model. Chất giọng mới chờ nghe; target4giây vật lý, model/default và activation chưa đạt/chưa chọn.
+[ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md) đã được chủ dự án duyệt. Đã tải đúng16 artifact608.816.450byte, chạy2 qualification và24 clip TTS. [Báo cáo](D74_VI_VOICE_CAMPAIGN_RESULT.md) giữ6 workflow slot lỗi bộ đọc metadata CORE và42 chưa chạy; không có latency workflow hợp lệ. Bản sửa161 tests PASS, chưa chạy native lại. [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) đề nghị một lượt workflow thay thế có phê duyệt mới; không lặp24clip/tải model. Chủ dự án đã chọn “Chờ nghe 24 clip”; ADR-155 chưa được duyệt/chưa chạy. Chưa có nhận xét nghe mới. Chất giọng mới chờ nghe; target4giây vật lý, model/default và activation chưa đạt/chưa chọn.
 
 ## Kết luận đề xuất
 

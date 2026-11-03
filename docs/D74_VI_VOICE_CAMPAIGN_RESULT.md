@@ -4,6 +4,10 @@
 
 **Ngày:** 2026-11-03. **Trạng thái:** TTS standalone hoàn tất về kỹ thuật; workflow bị vô hiệu do lỗi bộ chạy, đã dừng. D74 sản phẩm và D90 release vẫn OPEN. [Phê duyệt](evidence/d74-adr154-owner-approval-20261103.json), [kết quả có mã băm](evidence/d74-adr154-partial-result-20261103.json), [kiểm chứng cuối](evidence/d74-adr154-final-verification-20261103.json), [ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md).
 
+## Lựa chọn hiện tại của chủ dự án
+
+Chủ dự án chọn **“Chờ nghe 24 clip”**, chưa duyệt ADR-155. [Receipt quyết định](evidence/d74-owner-wait-listening-20261103.json) giữ đúng plan và trang nghe; chưa có nhận xét nghe mới. Giữ workflow recovery chưa chạy. Chủ dự án có thể gửi nhận xét theo mã clip ngay trong chat, không cần chỉnh JSON.
+
 ## Những gì đã chạy
 
 Đã tải đúng 16 artifact được duyệt, tổng **608.816.450 byte**; kiểm kích thước và SHA256 LFS hoặc Git blob của từng file. SDK riêng có 26 package, khóa phiên bản và mã băm bằng `uv`; không cài Torch/CUDA. Toàn bộ thư mục trước review khoảng 1,09 GB, dưới giới hạn 8 GiB. Hai preset thực tế chứa metadata nữ/Bắc/tự nhiên và được gọi đúng tên, không dùng alias hoặc giọng mặc định thay thế.
