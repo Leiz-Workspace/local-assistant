@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi nhận API đã được người dùng xác nhận đọc đúng, Python còn sai, và kiểm chứng cách đọc theo ngữ cảnh trên đúng SDK/model hiện có.
 
-**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** chuẩn hóa đúng 5/5 ví dụ La Mã/từ Việt có kỳ vọng rõ; 10 clip hoàn chỉnh, **chưa có kết quả nghe bộ mới**. [Phản hồi nguyên văn](evidence/d74-api-python-roman-owner-feedback.json), [protocol](D74_ROMAN_CONTEXT_PROTOCOL.md), [kết quả máy](evidence/d74-roman-context-result.json), [xác minh sau chạy](evidence/d74-roman-context-verification.json).
+**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái cập nhật:** chủ dự án xác nhận **VI/vi đã ổn trên panel đã nghe**; tiếng Anh còn accent Việt/chưa đạt. [Phản hồi mới](evidence/d74-vi-xi-bilingual-owner-feedback.json). Kết quả kỹ thuật5/5 kỳ vọng chuẩn hóa/10clip dưới đây giữ nguyên; không tự tạo nhãn từng clip. [Kiểm XI và mục tiêu cùng giọng Anh–Mỹ](D74_XI_BILINGUAL_RESULT.md). [Phản hồi nguyên văn](evidence/d74-api-python-roman-owner-feedback.json), [protocol](D74_ROMAN_CONTEXT_PROTOCOL.md), [kết quả máy](evidence/d74-roman-context-result.json), [xác minh sau chạy](evidence/d74-roman-context-verification.json).
 
 ## Kết quả phân biệt ngữ cảnh
 

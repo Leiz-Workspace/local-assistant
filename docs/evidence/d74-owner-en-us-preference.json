@@ -1,0 +1,11 @@
+{
+  "description": "Owner selects American English for future same-voice bilingual pronunciation assessment. No model/reference/training/download approval is implied.",
+  "recorded_at_utc": "2026-11-03T19:33:21.688467+00:00",
+  "question": "Để chấm phát âm tiếng Anh nhất quán trong cùng chất giọng, bạn muốn theo chuẩn nào? Tôi vẫn tiếp tục hoàn thiện kiểm tra XI trong lúc chờ.",
+  "owner_response": "Anh–Mỹ",
+  "english_accent_target": "en-US",
+  "same_voice_identity_required": true,
+  "model_selection": null,
+  "new_reference_or_training_authorized": false,
+  "source_or_model_changes": 0
+}

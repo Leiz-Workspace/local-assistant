@@ -1,0 +1,43 @@
+{
+  "description": "Technical verification of original-policy XI controls and documented owner same-voice en-US target, not a new English-accent or acoustic acceptance.",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "recorded_at_utc": "2026-11-03T19:37:19.680978+00:00",
+  "frontend_cases": 9,
+  "unambiguous_frontend_targets_matched": 5,
+  "new_native_complete_outputs": 6,
+  "inner_chunks": 6,
+  "review_audio_elements": 6,
+  "forbidden_media_capabilities": 0,
+  "old_research_files_unchanged": 31,
+  "new_source_test_files": {
+    "benchmarks/scripts/vi_xi_context.py": "fe712a2bb1940c1c547473a8d84fd7eb7f1033562468043c63bb82557826c511",
+    "benchmarks/tests/test_vi_xi_context.py": "b384fb2c58ff6959b9cdb1dcb69fee1394a22c080b58d5c71590bf1a7e774370"
+  },
+  "source_snapshot_and_archive_exact": true,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_inventory_entries_verified_before_load": 4295,
+  "worker_exit": 0,
+  "baseline_restored": true,
+  "software_passed": 282,
+  "software_failed": 0,
+  "software_skipped": 0,
+  "software_seconds": 5.25,
+  "new_markdown_links_verified": 44,
+  "vi_context_owner_acceptance": "SCOPED_PREVIOUS_PANEL",
+  "xi_new_owner_ratings": null,
+  "english_accent_target": "en-US",
+  "same_voice_identity_required": true,
+  "new_model_reference_or_training": 0,
+  "english_accent_fix": null,
+  "accepted_api_vi_date_clauses_preserved": true,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "result_sha256": "1379c5c1aeef77eeef773b65841fac101ec7e039169e426829f57298f892b629",
+  "bilingual_assessment_sha256": "5bd6a0d498942888e9b81078653bc495492cbd77fc44ad2da4baa46920bd1325",
+  "parent_root_bytes": 1352414320
+}
