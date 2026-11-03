@@ -1,0 +1,81 @@
+{
+  "description": "Exact owner group feedback rejects latest API carrier diagnostic as worse than the previous version. No per-clip/component scores or causal attribution are inferred; frozen machine observations remain unchanged.",
+  "recorded_at_utc": "2026-11-03T18:47:38.254308+00:00",
+  "owner_verbatim": "Còn tệ hơn cả bản trước nữa",
+  "status": "OWNER_REPORTED_WORSE_NOT_ACCEPTED",
+  "reported_scope": "Group feedback following the latest eight-clip paired listening page; exact clip IDs, conditions heard and playback completion are not specified.",
+  "comparison_baseline": "Previous version, not identified by exact clip or processing profile in this message",
+  "per_clip_ratings": null,
+  "reference_on_vs_off_preference": null,
+  "individual_ei_or_buzz_or_timbre_assessment": null,
+  "all_eight_listened_confirmation": null,
+  "quality_pass": false,
+  "adoption": "DO_NOT_PROMOTE_THIS_DIAGNOSTIC",
+  "prior_date_time_and_clauses_acceptance": "UNCHANGED_ON_REVIEWED_PANEL",
+  "prior_api_pronunciation": "REMAINS_OPEN_OWNER_REPORTED_NOT_ACCEPTABLE",
+  "python_status": "OPEN_NOT_REASSESSED",
+  "causal_conclusion": "NOT_ESTABLISHED",
+  "static_comparison": {
+    "new_carrier_texts_differ_from_prior_four_English_cases": true,
+    "new_diagnostic_uses_direct_frozen_phonemes": true,
+    "preferred_path_uses_text_clause_preparation_and_joining": true,
+    "within_new_pairs_only_reference_code_admission_changes": true,
+    "old_to_new_comparison_is_not_a_same_text_control": true,
+    "scope": "These source/input differences prevent attributing the owner-reported regression specifically to reference codes, tokenizer, decoder or intrinsic model capability."
+  },
+  "next_task": {
+    "id": "VOICE-ENGLISH-READING-001 / VOICE-API-ARTIFACT-001",
+    "priority": "P1",
+    "status": "QUALITY_OPEN_DIAGNOSTIC_REJECTED",
+    "next_engineering_step": "Design a minimal same-text comparison on the preserved clauses path, changing one term-handling boundary only after a source-backed hypothesis; no native follow-up is scheduled by this feedback receipt.",
+    "dependencies": [
+      "Unchanged accepted date/time/clause source and original audio",
+      "Exact common sentence/voice/input and decoder provenance",
+      "Falsifiable term-handling hypothesis before new inference"
+    ],
+    "effort": "One source/hypothesis and minimal-protocol milestone; any new acoustic comparison estimated separately",
+    "risks": [
+      "Overfitting repeated listening",
+      "Changing perceived voice or accepted prosody",
+      "Correct input phonemes with wrong acoustic realization",
+      "Confounding whole-sentence changes with acronym handling"
+    ],
+    "rollback": "Reject experimental variants from adoption; preserve all observations and unchanged prior clauses path, no product cutover to undo."
+  },
+  "source_sha256": {
+    "carrier_native_result": "7822ee4fa7a3fd4134a90e73ff7850155d378bd2d7b30fb4fe8173abd78b5a61",
+    "carrier_listening_page": "754d791f6202f23cc305fe5bb0d8c590fb2dbcb1911964296054c0638aac359e",
+    "carrier_audio_index": "dadbc78b1f966ab1076fa6b30b3aa44881e4f2253caff3ba426796a66e19a75d",
+    "initial_stopped_result": "b70eef9c585a9ba36040bdfb278896e2c00eaca129855ec4edb31bb3a53ace89",
+    "public_diagnostic_result": "2ff290a8165d24a6d9901af7d44b6764a600d5753c3c143d4faba9061d20aea7",
+    "post_run_verification": "e9e17ab6884d9b3803c676a544c7663f5286bd670f93e86e9db71fd9ee620714",
+    "prior_english_owner_rejection": "b5fc5fa89eacbba50ca6b73be191aec00020f88584ab9b5b99f1f01829d30bc4",
+    "prior_date_prosody_owner_assessment": "ba8632a7e08fec9d80e6e476b5595769e15fb1e9dae918255a887e309ebb5cdc",
+    "unchanged_recovery_proposal": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5",
+    "original_diagnostic_protocol": "ade9272ff176ba24df831a96dc59364ebc04a85260583ba7ab8dee898d4d38e1",
+    "carrier_protocol": "2a89e4c769ca26f3dc47e9295020aa153a9aed6157feb0d2f827d6e9fe503057"
+  },
+  "six_diagnostic_source_test_files": {
+    "benchmarks/scripts/vi_api_reference_worker.py": "cbb11cd07681e52dc6c02fb8ce7ba299ca2494d9e702774152726185f7ef4013",
+    "benchmarks/scripts/vi_api_reference_trial.py": "3569c80f52f153085293e1c9d970887bb05a0aa75706c35f984e1e534011d086",
+    "benchmarks/tests/test_vi_api_reference_worker.py": "33e8f4dec5902834590dcd90bd2595e7c3f3fb1411f80b30e7d9681d8c5b709e",
+    "benchmarks/tests/test_vi_api_reference_trial.py": "494962d623030625de1da4d3250831737c0c85216ca2ff80953d37d5c5fa82b5",
+    "benchmarks/scripts/vi_api_context_followup.py": "5457af2198e1a4101d55278aff6685954bb146bd41aec0a77b2b926e6149826d",
+    "benchmarks/tests/test_vi_api_context_followup.py": "43a63910cf41ec1c6e9540bc625fd62b27b0162490cd997a2911bca23447b0b9"
+  },
+  "prior_research_files_unchanged": 19,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "baseline_restored": true,
+  "new_native_or_provider_requests": 0,
+  "new_downloads": 0,
+  "code_or_configuration_changes": 0,
+  "new_software_tests": 0,
+  "prior_scoped_257_pass": "HISTORICAL_SOFTWARE_ONLY_NOT_ACOUSTIC_QUALITY",
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "release_status": "NOT_RELEASED"
+}
