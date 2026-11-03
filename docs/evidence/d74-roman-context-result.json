@@ -1,0 +1,270 @@
+{
+  "description": "Existing normalization correctly handles the five fixed unambiguous Roman/Vietnamese contexts. Ten original-policy native controls complete, no acoustic correctness or Python fix inferred. Accepted API pronunciation retained by owner feedback.",
+  "recorded_at_utc": "2026-11-03T19:17:57.951930+00:00",
+  "status": "CONTEXT_CONTROLS_COMPLETE_ACOUSTIC_UNVERIFIED",
+  "frontend_cases": 9,
+  "unambiguous_roman_targets": 5,
+  "unambiguous_roman_normalization_matches": 5,
+  "identifier_target": "OWNER_UNSPECIFIED_OBSERVATION_ONLY",
+  "python_tag_vs_bare_phonemes_identical": true,
+  "python_reference": "pˈaɪθən",
+  "python_status": "OWNER_REPORTED_ENGLISH_PRONUNCIATION_NOT_ACCEPTABLE",
+  "python_new_english_context": "UNREVIEWED_CONTROL_NOT_A_FIX",
+  "api_pronunciation": "OWNER_CONFIRMED_CORRECT_ON_PRIOR_REVIEWED_PANEL",
+  "api_buzz": "NOT_REASSESSED_BY_LATEST_OWNER_MESSAGE",
+  "tts_attempts": 10,
+  "completed_inner_chunks": 10,
+  "unattempted": 0,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "native_metrics": [
+    {
+      "id": "truc-ly-lower-word",
+      "voice": "Trúc Ly",
+      "case": "lower-word",
+      "source_text": "Hành vi vi phạm này cần được kiểm tra.",
+      "normalized": "hành vi vi phạm này cần được kiểm tra.",
+      "phonemes": [
+        "hˈe-2ɲ vˈi vˈi fˈaː6m nˈa2j kˈə2n ɗˌyə6c kˈiɛ4m tʃˈaː."
+      ],
+      "native_sha256": "f1acd998cbb2afae37b239c7894f216a8ff310773db5798676fb0c34a7024a76",
+      "wav_sha256": "fa79e0d961ec6d739a754ed7e2d6b4ba05d3789c3150405036bd39b0f44d53ed",
+      "full_tts_seconds": 0.7107623449992388,
+      "duration_seconds": 1.92,
+      "chunks": [
+        {
+          "frames": 24,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-upper-word",
+      "voice": "Trúc Ly",
+      "case": "upper-word",
+      "source_text": "VI PHẠM là cụm từ tiếng Việt.",
+      "normalized": "vi phạm là cụm từ tiếng việt.",
+      "phonemes": [
+        "vˈi fˈaː6m lˌaː2 kˈu6m t̪ˌy2 t̪ˈiɛɜŋ vˈiɛ6t̪."
+      ],
+      "native_sha256": "ed803d34b0f8a7da5ef6c973643aa8e040362da52d2f30bb05d4b0dc9c482c77",
+      "wav_sha256": "57f841f13b284629ffc477eddfdcff4728cdc1e4b80d7302a64b3b23db5a0516",
+      "full_tts_seconds": 0.5351001290000568,
+      "duration_seconds": 1.52,
+      "chunks": [
+        {
+          "frames": 19,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-roman-six",
+      "voice": "Trúc Ly",
+      "case": "roman-six",
+      "source_text": "Chương VI có sáu mục.",
+      "normalized": "chương sáu có sáu mục.",
+      "phonemes": [
+        "tʃˈyəŋ sˈaɜw kˈɔɜ sˈaɜw mˈu6c."
+      ],
+      "native_sha256": "6e04fc229564e67cd2c7fb689b53c3e919750af2bfa4fd41ceb15acba2508a5e",
+      "wav_sha256": "a5a1bfb88938e2bb2ef4770dfc437100d5cc0b66402596aac287afc89ffdba98",
+      "full_tts_seconds": 0.41003619600087404,
+      "duration_seconds": 1.12,
+      "chunks": [
+        {
+          "frames": 14,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-roman-mixed",
+      "voice": "Trúc Ly",
+      "case": "roman-mixed",
+      "source_text": "CHƯƠNG VI nói về hành vi vi phạm.",
+      "normalized": "chương sáu nói về hành vi vi phạm.",
+      "phonemes": [
+        "tʃˈyəŋ sˈaɜw nˈɔɜj vˈe2 hˈe-2ɲ vˈi vˈi fˈaː6m."
+      ],
+      "native_sha256": "ea0a99f22de0a18a8bb460fccb7f094272bdf3545f48a7c8079b65c0418fecbf",
+      "wav_sha256": "b8f579ebb01f112d3429b760e49d6b1f38a615cd9a127b1ec00b83b58fb4fd70",
+      "full_tts_seconds": 0.6126519030003692,
+      "duration_seconds": 1.68,
+      "chunks": [
+        {
+          "frames": 21,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-python-english",
+      "voice": "Trúc Ly",
+      "case": "python-english",
+      "source_text": "I write code in Python every day.",
+      "normalized": "i write code in python every day.",
+      "phonemes": [
+        "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθən ˈɛvɹi dˈeɪ."
+      ],
+      "native_sha256": "c6a65904cc45a302467df76338389a46ad535225d97eb34c4f559e6585025a5b",
+      "wav_sha256": "2625e6924463a12a1ea015c89c60b4b504f34f1d75f0e27bb9123bba2887fdd9",
+      "full_tts_seconds": 0.7012034889994538,
+      "duration_seconds": 2.08,
+      "chunks": [
+        {
+          "frames": 26,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-lower-word",
+      "voice": "Ngọc Huyền",
+      "case": "lower-word",
+      "source_text": "Hành vi vi phạm này cần được kiểm tra.",
+      "normalized": "hành vi vi phạm này cần được kiểm tra.",
+      "phonemes": [
+        "hˈe-2ɲ vˈi vˈi fˈaː6m nˈa2j kˈə2n ɗˌyə6c kˈiɛ4m tʃˈaː."
+      ],
+      "native_sha256": "0a958884838ba2a21cec5040bf99663a51a8b4117726251bb8626052d11f5fa0",
+      "wav_sha256": "281c291a0b89a7c30d2b56acd1e1f177a56f72756ee5c2cf965ae14e984442c5",
+      "full_tts_seconds": 0.7693634650004242,
+      "duration_seconds": 2.24,
+      "chunks": [
+        {
+          "frames": 28,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-upper-word",
+      "voice": "Ngọc Huyền",
+      "case": "upper-word",
+      "source_text": "VI PHẠM là cụm từ tiếng Việt.",
+      "normalized": "vi phạm là cụm từ tiếng việt.",
+      "phonemes": [
+        "vˈi fˈaː6m lˌaː2 kˈu6m t̪ˌy2 t̪ˈiɛɜŋ vˈiɛ6t̪."
+      ],
+      "native_sha256": "96f5e570543b44bbe0a5f7592f8725a728220dc61e7e6e02c7cf5b77f6ab4537",
+      "wav_sha256": "8f39281b0bf1f1c5a4539fe9cfb9094f8fd16d4ba58a66fad072a73c85a1eca6",
+      "full_tts_seconds": 0.6597820239985595,
+      "duration_seconds": 1.84,
+      "chunks": [
+        {
+          "frames": 23,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-roman-six",
+      "voice": "Ngọc Huyền",
+      "case": "roman-six",
+      "source_text": "Chương VI có sáu mục.",
+      "normalized": "chương sáu có sáu mục.",
+      "phonemes": [
+        "tʃˈyəŋ sˈaɜw kˈɔɜ sˈaɜw mˈu6c."
+      ],
+      "native_sha256": "6c618e0c57e6959a207487e4da274d5961000b6ddd269f9ec4922de8fea3eb14",
+      "wav_sha256": "3ff743ae27456f632af1068c9fc31fc693a099f5fb4a2dd63adc4ef40b415ea9",
+      "full_tts_seconds": 0.5132647860009456,
+      "duration_seconds": 1.44,
+      "chunks": [
+        {
+          "frames": 18,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-roman-mixed",
+      "voice": "Ngọc Huyền",
+      "case": "roman-mixed",
+      "source_text": "CHƯƠNG VI nói về hành vi vi phạm.",
+      "normalized": "chương sáu nói về hành vi vi phạm.",
+      "phonemes": [
+        "tʃˈyəŋ sˈaɜw nˈɔɜj vˈe2 hˈe-2ɲ vˈi vˈi fˈaː6m."
+      ],
+      "native_sha256": "748015aea2448e2abf9f57cc784e5ce09564c67c64c50b80dc3bcec47040d1b1",
+      "wav_sha256": "442ccaedadf244f37e23170a3ca441a2ac6f00aee2df52a2d2964aab60ffc142",
+      "full_tts_seconds": 0.7300626680007554,
+      "duration_seconds": 2.0,
+      "chunks": [
+        {
+          "frames": 25,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-python-english",
+      "voice": "Ngọc Huyền",
+      "case": "python-english",
+      "source_text": "I write code in Python every day.",
+      "normalized": "i write code in python every day.",
+      "phonemes": [
+        "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθən ˈɛvɹi dˈeɪ."
+      ],
+      "native_sha256": "0fe4f8e9a8ccb2630cdee70c44003273e015eda46ae4392c6448a71e2490e0f3",
+      "wav_sha256": "ec4794c492c8bb5c8aa6fb462b8d3c2d6a6263ae5ac825d172b365a266e6ddc6",
+      "full_tts_seconds": 0.8192517799998313,
+      "duration_seconds": 2.16,
+      "chunks": [
+        {
+          "frames": 27,
+          "eos": true
+        }
+      ]
+    }
+  ],
+  "retirement": {
+    "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+    "pid": 316550,
+    "returncode": 0,
+    "peak_sampled_rss_bytes": 1322844160,
+    "resource_samples": 296,
+    "wall_seconds": 8.511439180998423,
+    "failure": null,
+    "forced": false
+  },
+  "new_normalization_rules": 0,
+  "new_pronunciation_edits": 0,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_preserved": 29,
+  "new_source_test_files": 2,
+  "sdk_inventory_entries_verified": 4295,
+  "baseline_restored": true,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "software": {
+    "passed": 275,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 5.03
+  },
+  "owner_new_audio_ratings": null,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/roman-context-first",
+  "private_sha256": {
+    "investigation/native/investigation.json": "5b6e577237f883aa6a5681428a345d34a24a9ccf97c079201c09cef29e4fa8d5",
+    "probe/native/frontend.json": "8cfea221fb50b8ed96904b68f22917bc1618b30736fdaae097b4388569140c00",
+    "software-verification.json": "afe2e36cc250b0074749bfed5d64a43c6c00b116d9a2b90ad846555e89a8709f",
+    "software-terminal.log": "964d327be93cca057adc1ab7413016a2a0e595afb614a36cc23c90c2475155f0",
+    "execution-freeze.json": "8c4294ffbecc942e2a9d77aa6b96109603cadd3669eb887d46584636cbf564e9",
+    "campaign-result.json": "558b0c155d5783839d50afe3cd8ff3fccac185adfb7cf5ab71953cfaf10880e5",
+    "worker/retirement.json": "fd41fefa23308f6708195dc5c8b463a7b46dc5fd55e0dbdd8cb616bfd0e37d89",
+    "review/index.html": "f5c45ebebd207d8c9187188b3354804f19a67af966df36164365216759b4e31f",
+    "review/index.json": "005aeb6bfbbd9c3848906a4b5a79991d1b3398f5ac0a5a5edaea8cdecdefbf68",
+    "review/full-code.zip": "65710f8948f2368e4febdc4c4800c0b7b2d7683a13bcb0d08674ffd13d0d3321"
+  },
+  "parent_root_bytes": 1340529435
+}

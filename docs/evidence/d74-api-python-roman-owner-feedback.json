@@ -1,0 +1,28 @@
+{
+  "description": "Owner confirms API pronunciation correct in the latest reviewed panel, still rejects English Python, and requests Roman numeral versus Vietnamese-word context tests. No per-clip ratings or API buzz/general quality acceptance inferred.",
+  "recorded_at_utc": "2026-11-03T19:13:25.186856+00:00",
+  "owner_verbatim": "API đã phát âm đúng nhưng mà Python tiếng anh lại k đúng, tôi muốn kiểm tra xem phân biệt được số la mã không ví dụ như vi phạm có đọc thành 6 phạm không và VI trong ngữ cảnh số la mã có đọc là vi k",
+  "api_pronunciation": "OWNER_CONFIRMED_CORRECT_ON_REVIEWED_PANEL",
+  "api_buzz": "NOT_REASSESSED_IN_THIS_MESSAGE",
+  "python": "OWNER_REPORTED_ENGLISH_PRONUNCIATION_NOT_ACCEPTABLE",
+  "per_clip_ratings": null,
+  "all_clips_listened_confirmation": null,
+  "prior_date_time_clauses_acceptance": "UNCHANGED",
+  "roman_context_request": true,
+  "model_selection": null,
+  "product_activation": false,
+  "workflow_recovery_approved": false,
+  "new_native_calls": 0,
+  "source_sha256": {
+    "result": "045f6a108010eb1decacfc7862d32b745c1eb33384df23c21d8ca3a90452f827",
+    "listening_page": "c023246e30ad6f577e2bb8d0be4b41f48cd690c28f0a7af41843d7a4afa2e6f2",
+    "audio_index": "9aed5d2180dfd9594d7e01dafdd43f4d985ed5038dbcd3ed105121b6d3a8fae4",
+    "native_result": "3ecd0b6ab0337cbf5cb5389cb3f05f72d86bc232623b2a082476513995534e7c"
+  },
+  "retained_api_operator_sha256": {
+    "benchmarks/scripts/vi_api_stress_worker.py": "57ebbcc00ae994486531c45e9e40d76ae7f62c708e449d11f4ca5ce6bf1ca061",
+    "benchmarks/scripts/vi_api_stress_trial.py": "46328a102da57f1e7ac2aeb8eeec93f9670edbdf6b25852ff02c3cbf979ed059",
+    "benchmarks/tests/test_vi_api_stress_worker.py": "7c7f71c19942cf7a40612a5bbea65be667d314616dd7c860502a2b653ab0d2b6",
+    "benchmarks/tests/test_vi_api_stress_trial.py": "904ad7aa7051ddb9268bab509149925e872ecdfcff901bfb3ee7ae85a74e4f6c"
+  }
+}
