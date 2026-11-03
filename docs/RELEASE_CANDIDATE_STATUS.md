@@ -76,3 +76,6 @@ D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is
 
 
 2026-11-03 selected-provider diagnosis: [Brave frontend rate limiting now proven](D60_BRAVE_RATE_LIMIT_RESULT.md); new30-second and post-effective-cooldown recovery panels remainFAILED, original4/8preserved.4newprovidercalls/0retries/0models, source750andretained5889full unchanged; fresh preservation VERIFIED. OfficialAPI is only a concrete ADR153proposal, pending owner route/account/credential decision; no endpoint/default/model change, deployment or release.
+
+
+2026-11-03 resumed provider verification: [fixed panel3/8valid thenrate-limit](D60_BRAVE_RESUMED_RESULT.md),8/8stillOPEN and all oldscores retained. Private cooldown prototype is controlled preparation only. Source750/currentfull5889/fresh source-data-runtime audit remainVERIFIED;4newcalls/0retries/0models, no provider/model/default/production or releasechange.

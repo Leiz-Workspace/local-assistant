@@ -2,7 +2,7 @@
 
 **Purpose:** Assess web research prerequisites before scheduling or activating new capabilities.
 
-**Current disposition — 2026-11-03:** D60fresh report3/3and unchanged750-source full5889remain VERIFIED. Brave website rate limiting now proven by exact responseSHA/length; new30-second panel1/8andpost-effective-cooldown panel0/8failed, original4/8retained. [Diagnosis and dependency](D60_BRAVE_RATE_LIMIT_RESULT.md). Four new calls/no retries/no models; fresh preservation VERIFIED. OfficialAPIevaluation is PROPOSED in ADR153, pending owner route/account/credential decision; no default/provider change.
+**Current disposition — 2026-11-03:** Newowner-requested post-idle fixed panel3valid/1rate-limit/4not-run with180-secondstarts;8/8stillOPEN, all older first scores retained. [Actual resumed result](D60_BRAVE_RESUMED_RESULT.md). Private cooldown prototype27cases/83relatedPASS is unregistered preparation, not a provider-recovery promise. Source750/full5889/fresh preservation remain VERIFIED;4calls/0retries/0models. Keep selected website route/default/model; officialAPIproposal ADR153remains unactivated.
 
 ## WEB-ONBOARD-001 — Actual search provider/account
 
@@ -187,3 +187,8 @@ Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archiv
 ## WEB-BRAVE-RATE-001 — Confirmed anonymous frontend throttling
 
 P1before8/8availability/broad promotion. Dependencies: actual upstream recovery or owner-reviewed officialBraveAPIaccount/token/quota. Effort: diagnosis complete; one separately frozen APIcompatibility/sample milestone if chosen. Risks: repeated website bans, credential/cost/quota, altered result ordering and weak reliability claims. Original fixed criteria and both new failed recovery cohorts retained; no more automatic panel. [Actual4-call diagnosis](D60_BRAVE_RATE_LIMIT_RESULT.md), [concrete proposed ADR153](ADR/153-proposed-official-brave-api-after-frontend-rate-limiting.md). Waiting retains website configuration; rollback of optionalAPIevaluation leaves current route/model/data unchanged. APIchoice/credential is pending; no deployment or model decision.
+
+
+## WEB-COOLDOWN-LOCAL-001 — Production integration assessment
+
+P2conditional on selected-provider availability/owner interface decision. Dependencies: trusted provider injection, research45-second budget, API retry metadata, process/state ownership and authenticated quotas. Effort: one architecture/integration milestone with ADR before wiring. Risks: per-process RAM cooldown lost on restart, multiple workers dispatching separately, blocking fast request budgets and confusing a local retry lower bound with a real upstream reset. Private prototype now has27controlled cases,83relatedPASS; optional only, no production/default/API change. Scope of future work must settle state sharing/persistence/queue semantics and verify cancellation/restart/auth boundaries plus current-source full before activation. Rollback retains original unwrapped provider. [Actual outcome and limitations](D60_BRAVE_RESUMED_RESULT.md).
