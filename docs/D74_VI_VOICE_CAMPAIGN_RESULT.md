@@ -47,3 +47,8 @@ Bản sửa cùng trang nghe có **161 tests PASS / 0 FAIL / 0 ERROR / 0 SKIP, 4
 750 file ứng dụng/cấu hình/test cũ và 210 đầu vào bảo vệ vẫn đúng mã băm. Full 5.889 PASS trước đây thuộc snapshot ứng dụng đó; đây không phải một lượt full regression mới. Mã nghiên cứu mới nằm trong `benchmarks/`, có bộ test riêng. Không sửa model/default, source sản phẩm, Docker, Vault, database hoặc gọi Brave.
 
 [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) chuẩn bị một lượt workflow thay thế 48 slot với bản sửa; chưa duyệt/chưa chạy. Giữ 24 clip hiện có, không lặp qualification/standalone hoặc tải model. Cần quyền chạy mới vì ADR-154 yêu cầu dừng và không tự retry khi lỗi phần mềm; sửa code không tự cấp quyền chạy lại benchmark. Phản hồi nhóm đã nhận nhưng độ tự nhiên/cách đọc chưa đạt mong muốn; cần điều tra VOICE-TEXT-READING-001 và VOICE-PROSODY-001 trước nghiệm thu. Phép đo first-audible vật lý vẫn là gate riêng, không đóng D74 bằng PCM proxy.
+
+
+## Sau lệnh triển khai chất lượng của chủ dự án
+
+[Bộ so sánh mới ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) đã có48clip/221scoped tests PASS, giữ nguyên toàn bộ24clip và phản hồi ở snapshot trước. Renderer và adapter giữ dấu hỏi chỉ là nghiên cứu, chưa áp dụng sản phẩm hoặc chứng minh khắc phục mọi lỗi nghe;12/16cặp raw–reading giống hệt. Chờ nhận xét mới. Lệnh “Làm đi” cho tác vụ chất lượng không mở khóa ADR155workflow hoặc chọn model/voice.

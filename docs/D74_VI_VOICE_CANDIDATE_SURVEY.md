@@ -60,3 +60,8 @@ Ghi chú provenance: verifier đầu phát hiện trường SHA của response t
 ## Phản hồi sau trial — 2026-11-03
 
 [Chủ dự án nhận xét ba giọng](D74_OWNER_VOICE_FEEDBACK_20261103.md) đều ổn, thích Trúc Ly/Ngọc Huyền hơn nhưng ngữ điệu máy móc, giờ/ngày và Python/API chưa đọc đúng. Đây là sở thích ở cấp nhóm, không phải nhãn24clip, chọn model hoặc quality PASS. Giữ nguyên snapshot metadata/benchmark/audio; task điều tra cách đọc và prosody đã đánh giá trong backlog. ADR155 chưa được duyệt/chưa chạy; không thay model hoặc tự tải ứng viên khác.
+
+
+## Sau lệnh triển khai chất lượng của chủ dự án
+
+[Bộ so sánh mới ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) đã có48clip/221scoped tests PASS, giữ nguyên toàn bộ24clip và phản hồi ở snapshot trước. Renderer và adapter giữ dấu hỏi chỉ là nghiên cứu, chưa áp dụng sản phẩm hoặc chứng minh khắc phục mọi lỗi nghe;12/16cặp raw–reading giống hệt. Chờ nhận xét mới. Lệnh “Làm đi” cho tác vụ chất lượng không mở khóa ADR155workflow hoặc chọn model/voice.

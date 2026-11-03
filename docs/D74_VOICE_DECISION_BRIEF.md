@@ -85,3 +85,8 @@ Tác vụ này chỉ thêm tài liệu/evidence và liên kết trạng thái: *
 Trước một tích hợp được duyệt sau này, phải pin model/voice/runtime, giữ config trước thay đổi, kiểm tra đúng ngôn ngữ/sample clock/owner/auth/budget/stop/cancel và output hoàn chỉnh. Rollback phải ngừng admission mới, dừng/join công việc đang sở hữu, hủy kết quả muộn, phục hồi đúng config trước đó và giữ bằng chứng/audio gốc. Chi tiết ADR, benchmark và rollback phải đi cùng phương án cụ thể, không coi phần khung này là đủ để triển khai.
 
 [Evidence số liệu và hash đầu vào](evidence/d74-voice-decision-20261103.json), [receipt kiểm chứng tài liệu](evidence/d74-voice-decision-20261103-verification.json). Application/config/test 750 file giữ nguyên; full 5889 PASS là kết quả trước đó cho snapshot này, không chạy lại trong nhiệm vụ tài liệu. Các số đo runtime/CORE và audit dịch vụ ở bảng là lịch sử đã ghi, không tuyên bố đo lại hiện trạng server.
+
+
+## Bản sửa nghiên cứu và panel mới theo yêu cầu chủ dự án
+
+[ADR156 thực tế](D74_SPEECH_READING_QUALITY_RESULT.md): đã có renderer speech riêng và adapter giữ câu hỏi qua phoneme API của model hiện có;221scoped PASS/48clip mới/54chunk native/0retry.12/16cặp đối chứng–sửa cách đọc giống hệt, nên không coi lỗi đọc giờ/ngày đã khắc phục; Python/API dùng phiên âm Việt thử nghiệm, cần nghe so sánh. Ngữ điệu tự nhiên vẫn cần chủ dự án xác nhận. Không chọn voice/model, không sửa sản phẩm/weights/SDK, không chạy ADR155workflow.

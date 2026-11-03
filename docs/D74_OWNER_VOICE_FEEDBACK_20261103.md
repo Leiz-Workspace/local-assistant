@@ -34,3 +34,8 @@ Hai hướng dưới đây là đề xuất điều tra và thiết kế, chưa 
 [ADR-155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) vẫn **NOT APPROVED / NOT EXECUTED**. Nhận xét nghe không tự cấp quyền chạy lại 48 slot. Fixed workflow voice vẫn là Trúc Ly theo preregistration; không đổi sang Ngọc Huyền sau khi xem kết quả. Nếu sửa text đọc hoặc settings, đó là biến thể cần đánh giá riêng, không được tráo vào benchmark gốc và ghi là cùng cấu hình.
 
 Mục tiêu tối đa4giây từ submission tới first-audible vẫn chưa được kiểm chứng. Quyền sử dụng, no-speech, chất lượng, model/voice selection, D74 sản phẩm và D90 release còn mở. D60 giữ trạng thái chờ. Chỉ cập nhật tài liệu và devlog; không inference, tải model, đổi source/config, Vault, database, Docker hoặc provider.
+
+
+## Sau lệnh triển khai chất lượng của chủ dự án
+
+[Bộ so sánh mới ADR156](D74_SPEECH_READING_QUALITY_RESULT.md) đã có48clip/221scoped tests PASS, giữ nguyên toàn bộ24clip và phản hồi ở snapshot trước. Renderer và adapter giữ dấu hỏi chỉ là nghiên cứu, chưa áp dụng sản phẩm hoặc chứng minh khắc phục mọi lỗi nghe;12/16cặp raw–reading giống hệt. Chờ nhận xét mới. Lệnh “Làm đi” cho tác vụ chất lượng không mở khóa ADR155workflow hoặc chọn model/voice.
