@@ -2,7 +2,7 @@
 
 **Mục đích:** Giúp chủ dự án hoàn tất phần nghe 24 audio TTS đã tạo, giữ nguyên kết quả benchmark và mọi file gốc.
 
-**Trạng thái:** Chủ dự án hoãn kiểm thử nghe theo [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md). Benchmark máy đã có kết quả; chất lượng nghe **chưa được chấp nhận**. D71 được phép tiếp tục. Không cần tải model, chạy inference, cấp key hoặc chỉnh JSON để nghe.
+**Trạng thái 2026-11-03:** Chủ dự án đã gửi nhận xét và xác nhận nghe hết/lặp lại đủ 24/24 bằng loa. [Kết quả đã lưu](D70_OWNER_LISTENING_20261103.md): phép so sánh D70 hoàn tất với hạn chế chất lượng; voice/model/product chưa phê duyệt. Quyết định hoãn trước đây vẫn giữ trong [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md). Hướng dẫn này dùng cho việc đối chiếu sau; không yêu cầu nghe lại toàn bộ. Không cần tải model, chạy inference, cấp key hoặc chỉnh JSON để nghe.
 
 ## Mở bộ audio
 
@@ -13,7 +13,7 @@
 
 Trang nghe WAV gốc: [mở file offline](../data/backups/d89-native-tts-listening/index.html). [Bản Opus lịch sử](../data/backups/d70-tts-listening-review/index.html) giữ nguyên.
 
-Đã kiểm tra độc lập24hashWAV/waveform và browser đọc được metadata/duration của đủ24file, không phát thử hoặc nghe. Việc browser decode được không phải đánh giá chất lượng;0/24nhận xét nghe vẫn chưa điền. [Báo cáo số đo](D70_OFFLINE_TTS_COMPARISON.md). [Nhãn gốc đang trống](../data/backups/d70-tts-listening-review/review.pending.json) phải được giữ nguyên; ghi kết quả vào bản mới hoặc gửi trong chat để nhập sau.
+Đã kiểm tra độc lập24hashWAV/waveform và browser đọc được metadata/duration của đủ24file, không phát thử hoặc nghe. Việc browser decode được không phải đánh giá chất lượng. Snapshot chuẩn bị ban đầu có 0/24 nhãn; nhận xét nghe mới của chủ dự án bao phủ 24/24, lưu riêng ở [báo cáo](D70_OWNER_LISTENING_20261103.md). [Báo cáo số đo](D70_OFFLINE_TTS_COMPARISON.md). [Nhãn gốc đang trống](../data/backups/d70-tts-listening-review/review.pending.json) phải được giữ nguyên; ghi kết quả vào bản mới hoặc gửi trong chat để nhập sau.
 
 ## Ghi nhận xét
 

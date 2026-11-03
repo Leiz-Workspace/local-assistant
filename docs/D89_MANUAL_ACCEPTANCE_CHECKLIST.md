@@ -2,15 +2,17 @@
 
 **Mục đích:** Gom bằng chứng kỹ thuật và các kiểm tra người dùng cần làm sau, không bắt chủ dự án chỉnh JSON hoặc chấm lại benchmark.
 
-**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. Full snapshot mới nhất đã hoàn tất5674PASS/0FAIL/0ERROR/0SKIP/1798.59s,728files giữ nguyên, audit sau kiểm thử đạt với delta timestamp quota đã ghi rõ. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Chưa có xác nhận nghe/thiết bị của chủ dự án.
+**Trạng thái:** ENGINEERING WORKFLOW EVIDENCE CHECKED / OWNER ACCEPTANCE PENDING. Full snapshot lúc chuẩn bị phiếu đã hoàn tất5674PASS/0FAIL/0ERROR/0SKIP/1798.59s,728files giữ nguyên (snapshot hiện tại xem [release status](RELEASE_CANDIDATE_STATUS.md)), audit sau kiểm thử đạt với delta timestamp quota đã ghi rõ. Các bằng chứng kỹ thuật dưới đây không tự trở thành nghiệm thu thủ công hay quyền chọn/triển khai model. Đã có [xác nhận nghe đủ 24/24 bằng loa và nhận xét](D70_OWNER_LISTENING_20261103.md) ngày 2026-11-03; chưa có nghiệm thu microphone thật hoặc sản phẩm/release.
 
-## Mở phần nghe khi bạn rảnh
+## Đối chiếu phần nghe đã hoàn tất
+
+Chủ dự án đã làm xong bước nghe ngày báo cáo 2026-11-03; các bước dưới đây là hướng dẫn tham khảo, không yêu cầu chấm lại.
 
 1. Mở [trang24WAV gốc](../data/backups/d89-native-tts-listening/index.html). Chỉ cần chép riêng file HTML này về máy có loa/tai nghe; đủ audio đã nhúng, không cần mạng/server/key.
 2. Nghe hết từng mục. Ghi mã mục và nhận xét phát âm, nhịp/ngắt, lỗi âm thanh, độ tự nhiên/mức chắc chắn vào [phiếu đã tạo](D70_MANUAL_LISTENING_RESULTS.pending.md), hoặc gửi nhận xét trong chat sau. Không cần biết JSON, không bắt buộc MOS; có thể chia nhiều buổi.
 3. Nếu chưa nghe/không hiểu đủ ngôn ngữ, giữ CHƯA TEST/chưa chắc. Không mặc định QwenVI-Auto là hỗ trợ tiếng Việt chính thức; sáu explicit-VI refusals vẫn ở báo cáo.
 
-Trang mới giữ nguyên byte WAV. Kiểm tra hash và browser metadata24/24đã hoàn tất, **không phải đã nghe24/24**. [Hướng dẫn đầy đủ](D70_MANUAL_LISTENING_TEST.md); packet nhãn gốc vẫn null/unlistened.
+Trang mới giữ nguyên byte WAV. Kiểm tra hash và browser metadata24/24là bằng chứng chuẩn bị lịch sử; nay chủ dự án đã xác nhận nghe hết/lặp lại24/24bằng loa, lưu riêng trong [kết quả mới](D70_OWNER_LISTENING_20261103.md). [Hướng dẫn đầy đủ](D70_MANUAL_LISTENING_TEST.md); packet nhãn gốc vẫn null/unlistened.
 
 ## Ít nhất10workflow đại diện để đối chiếu
 

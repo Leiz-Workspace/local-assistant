@@ -13,7 +13,7 @@
 | Vision | CORE Qwen3.5-9B native vision + compatible projector | Default strategy | `Qwen3-VL-4B/8B` optional only if evidence warrants |
 | ASR | **`Qwen3-ASR-0.6B`** vs Whisper/faster-whisper | Planned comparison | Benchmark Vietnamese/English accuracy, latency, memory |
 | VAD | Silero VAD v5 | Discussed candidate | Not proven deployed by D24 evidence |
-| TTS | **`Qwen3-TTS-0.6B`** vs Piper | Planned comparison | Verify Vietnamese output, latency, licensing |
+| TTS | **`Qwen3-TTS-0.6B`** vs Piper | Offline comparison + owner listening24/24 complete; no selection/deployment | [D70owner findings](D70_OWNER_LISTENING_20261103.md): quality limitations, VI-Auto failures, disliked PiperVIvoice; product/rights approval open |
 | OCR | Native PDF parsing first; OCR/VLM fallback | Strategy, no fixed model | Do not invent an OCR model decision |
 | Coding | CORE + deterministic Git/search/patch/test tools | Initial strategy | Specialist coder model only after benchmark |
 | Larger LLM | Qwen3-14B / ~20B / 27B+ options | Optional future comparisons | Not replacements for CORE by default |
