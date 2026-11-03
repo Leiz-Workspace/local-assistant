@@ -2,7 +2,21 @@
 
 **Mục đích:** Hướng dẫn chủ dự án kiểm tra phần recorder local đã có bằng thiết bị thật, tách biệt với TTS listening và ASR/CORE/TTS sản phẩm.
 
-**Trạng thái 2026-11-03:** READY / NOT EXECUTED. Chủ dự án đã nghe TTS D70 bằng loa; chưa có kết quả microphone thật. Agent không tự mở microphone, cấp quyền hoặc điền PASS. [Phạm vi recorder D71](D71_EXPLICIT_RECORDING.md) vẫn giữ nguyên.
+**Trạng thái 2026-11-03:** BASIC OWNER SMOKE PASS / EXTENDED CHECKS PENDING. Chủ dự án đã kiểm tra bằng Brave với microphone cắm vào PC: nghe rõ, đủ câu, không rè; Dừng/Hủy/Escape/chuyển tab đều tắt thu. [Nhận xét gốc và phạm vi evidence](evidence/d74-owner-physical-mic-20261103.json). Đây là kết quả do chủ dự án báo cáo, agent không tự quan sát, mở microphone hoặc cấp quyền. [Phạm vi recorder D71](D71_EXPLICIT_RECORDING.md) vẫn giữ nguyên.
+
+## Kết quả đã nhận và phần còn lại
+
+| Quan sát | Kết quả chủ dự án báo cáo |
+|---|---|
+| Nghe lại bản ghi | PASS: rõ, đủ câu, không rè |
+| Dừng | PASS: tắt thu |
+| Hủy | PASS cho việc tắt thu |
+| Escape | PASS cho việc tắt thu |
+| Chuyển tab | PASS cho việc tắt thu |
+
+Không cần làm lại năm quan sát này. Còn **ba tình huống chưa có báo cáo**: mở/reload trang không tự thu; từ chối quyền microphone; giới hạn ghi 30 giây. Những chi tiết xóa preview/audio sau hủy, không tự ghi lại khi trở về tab và feedback chưa được xác nhận riêng; không gộp chúng vào PASS chỉ từ câu “tắt thu”.
+
+Ngày nhận báo cáo là 2026-11-03; ngày test cụ thể, bản Brave, hệ điều hành và model/cổng kết nối microphone chưa được cung cấp. Không suy ra chúng từ môi trường server. Không nhận hoặc yêu cầu file ghi âm. [Receipt đối chiếu tài liệu](evidence/d74-owner-physical-mic-20261103-verification.json).
 
 ## Mở recorder khi muốn kiểm tra
 

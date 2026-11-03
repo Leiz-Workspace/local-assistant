@@ -58,7 +58,7 @@ Nguồn chính đã kiểm tra lại: [Qwen model card đúng revision](https://
 
 [D72 trên 20 câu độc lập mỗi ngôn ngữ](D72_VAD_ASR_COMPARISON.md): Qwen ASR ungated WER VI 7.614%, EN 5.652%; Whisper VI 20.474%, EN 6.087%. Trên 5 negative, Qwen sinh text 4/5 và Whisper 5/5 khi không gate. Gating loại được cả 5 nhưng làm giảm chất lượng nhiều nhóm speech, đặc biệt EN; chưa chứng nhận giữ từ ngắn/nhỏ tiếng. Giữ VAD concatenation chưa kích hoạt và ASR chưa chọn default. Không biến một tập nhỏ thành xác suất hallucination chung hoặc tự đặt ngưỡng VAD sản phẩm.
 
-Nghe TTS bằng loa vừa hoàn tất không chứng minh microphone/luồng thoại người dùng đã đạt. Bước độc lập tiếp theo có thể làm là [kiểm tra recorder bằng microphone thật](D74_PHYSICAL_MIC_CHECK.md): không gọi model và không gửi audio lên server. Luồng recorder → ASR → CORE → TTS với người dùng thật phải chờ model/voice, endpoint/auth/retention và giới hạn đã được duyệt; sáu ví dụ CLI D72 chưa phải endpoint sản phẩm. Không hứa chạy E2E người dùng trên giao diện recorder hiện chưa có upload.
+Nghe TTS bằng loa không chứng minh luồng thoại sản phẩm đã đạt. Chủ dự án nay đã báo cáo [microphone thật cơ bản PASS](D74_PHYSICAL_MIC_CHECK.md) trên Brave/PC: bản nghe rõ/đủ câu/không rè, Dừng/Hủy/Escape/chuyển tab tắt thu. Còn ba tình huống mở trang/từ chối quyền/giới hạn 30 giây chưa có báo cáo; các chi tiết chưa nêu giữ chưa xác nhận. Đây là recorder local, không có kết quả gọi model hoặc upload audio. Luồng recorder → ASR → CORE → TTS với người dùng thật phải chờ model/voice, endpoint/auth/retention và giới hạn đã được duyệt; sáu ví dụ CLI D72 chưa phải endpoint sản phẩm. Không hứa chạy E2E người dùng trên giao diện recorder hiện chưa có upload.
 
 ## 5. Các phương án để duyệt và điều kiện chuyển bước
 
