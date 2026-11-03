@@ -1,0 +1,178 @@
+{
+  "description": "Original SDK distinguishes five fixed XI/xi mang context targets; six native controls complete, acoustic review pending. Owner VI acceptance, same-voice en-US target and rejected English accent recorded separately.",
+  "recorded_at_utc": "2026-11-03T19:33:42.948377+00:00",
+  "status": "XI_CONTROLS_COMPLETE_ACOUSTIC_UNVERIFIED",
+  "frontend_cases": 9,
+  "unambiguous_xi_targets": 5,
+  "unambiguous_normalized_matches": 5,
+  "observation_only_controls": 4,
+  "tts_attempts": 6,
+  "completed_inner_chunks": 6,
+  "unattempted": 0,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_normalization_rules": 0,
+  "new_pronunciation_edits": 0,
+  "metrics": [
+    {
+      "id": "truc-ly-xi-word",
+      "voice": "Trúc Ly",
+      "source_text": "Xi măng được dùng để xây nhà.",
+      "normalized": "xi măng được dùng để xây nhà.",
+      "phonemes": [
+        "sˈi mˈaŋ ɗˌyə6c zˈu2ŋ ɗˌe4 sˈəɪ ɲˈaː2."
+      ],
+      "wav_sha256": "6bb37958ad9c779ad7521f6a75282f87922ae1f7d4d4386a1ae79ad51e089093",
+      "tts_seconds": 0.6238157409989071,
+      "duration_seconds": 1.6,
+      "chunks": [
+        {
+          "frames": 20,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-roman-eleven",
+      "voice": "Trúc Ly",
+      "source_text": "Chương XI có mười một mục.",
+      "normalized": "chương mười một có mười một mục.",
+      "phonemes": [
+        "tʃˈyəŋ mˈyə2j mˈo6t̪ kˈɔɜ mˈyə2j mˈo6t̪ mˈu6c."
+      ],
+      "wav_sha256": "2ff19175b63fe48c50160279cd7893518bffe590bc09a31c38645f6575faf1ff",
+      "tts_seconds": 0.5499498240005778,
+      "duration_seconds": 1.44,
+      "chunks": [
+        {
+          "frames": 18,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "truc-ly-xi-mixed",
+      "voice": "Trúc Ly",
+      "source_text": "Chương XI nói về xi măng và cách sử dụng.",
+      "normalized": "chương mười một nói về xi măng và cách sử dụng.",
+      "phonemes": [
+        "tʃˈyəŋ mˈyə2j mˈo6t̪ nˈɔɜj vˈe2 sˈi mˈaŋ vˌaː2 kˈe-ɜc sˈy4 zˈu6ŋ."
+      ],
+      "wav_sha256": "dbe2509ba3287a3e2b7c24b8adcb8362e6019feda01e31631f0da5b879d480fa",
+      "tts_seconds": 0.7904542370015406,
+      "duration_seconds": 2.16,
+      "chunks": [
+        {
+          "frames": 27,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-xi-word",
+      "voice": "Ngọc Huyền",
+      "source_text": "Xi măng được dùng để xây nhà.",
+      "normalized": "xi măng được dùng để xây nhà.",
+      "phonemes": [
+        "sˈi mˈaŋ ɗˌyə6c zˈu2ŋ ɗˌe4 sˈəɪ ɲˈaː2."
+      ],
+      "wav_sha256": "0eeaa52853bd684f4f2652dc0dd4e5c6cf0f67f705bd8a8183af4fe1cd1f2e16",
+      "tts_seconds": 0.6356253139983892,
+      "duration_seconds": 1.76,
+      "chunks": [
+        {
+          "frames": 22,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-roman-eleven",
+      "voice": "Ngọc Huyền",
+      "source_text": "Chương XI có mười một mục.",
+      "normalized": "chương mười một có mười một mục.",
+      "phonemes": [
+        "tʃˈyəŋ mˈyə2j mˈo6t̪ kˈɔɜ mˈyə2j mˈo6t̪ mˈu6c."
+      ],
+      "wav_sha256": "058bb6d6100fb3727fbd77e4379342647adf602b9caafa080c20ca6881e81e44",
+      "tts_seconds": 0.6639280780000263,
+      "duration_seconds": 1.76,
+      "chunks": [
+        {
+          "frames": 22,
+          "eos": true
+        }
+      ]
+    },
+    {
+      "id": "ngoc-huyen-xi-mixed",
+      "voice": "Ngọc Huyền",
+      "source_text": "Chương XI nói về xi măng và cách sử dụng.",
+      "normalized": "chương mười một nói về xi măng và cách sử dụng.",
+      "phonemes": [
+        "tʃˈyəŋ mˈyə2j mˈo6t̪ nˈɔɜj vˈe2 sˈi mˈaŋ vˌaː2 kˈe-ɜc sˈy4 zˈu6ŋ."
+      ],
+      "wav_sha256": "40233a777ad71fabbbcc2d0a1899b81b6a00524ef5011f463d0d1ae6a22bea1b",
+      "tts_seconds": 0.9693525150014466,
+      "duration_seconds": 2.8,
+      "chunks": [
+        {
+          "frames": 35,
+          "eos": true
+        }
+      ]
+    }
+  ],
+  "retirement": {
+    "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+    "pid": 340995,
+    "returncode": 0,
+    "peak_sampled_rss_bytes": 1339166720,
+    "resource_samples": 219,
+    "wall_seconds": 6.300756413000272,
+    "failure": null,
+    "forced": false
+  },
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_preserved": 31,
+  "new_source_test_files": 2,
+  "sdk_inventory_entries_verified": 4295,
+  "baseline_restored": true,
+  "new_downloads": 0,
+  "new_reference_assets": 0,
+  "new_training": 0,
+  "software": {
+    "passed": 282,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 5.25
+  },
+  "owner_vi_distinction": "CONFIRMED_OK_ON_PREVIOUS_REVIEWED_PANEL",
+  "owner_new_xi_audio_ratings": null,
+  "english_target": "en-US",
+  "same_voice_bilingual_requirement": true,
+  "english_quality": "OWNER_REPORTED_VIETNAMESE_ACCENT_NOT_ACCEPTABLE",
+  "english_accent_fix": null,
+  "api_pronunciation": "PRIOR_ACCEPTED_SCOPE_UNCHANGED",
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/xi-context-first",
+  "private_sha256": {
+    "probe/native/frontend.json": "8f188fc6f7fa60fe9304844e59679ffc8761b3a498b5753209e26e9f7bf6a5b1",
+    "software-verification.json": "4ddf73863830d81b3ebe975ccb37681b8f68ae46ee97ec0590d70f0279775896",
+    "software-terminal.log": "f7e57f326e1ed2ba0340c91794fb63346a9fee9f1946bd527a390109d8e3d60c",
+    "execution-freeze.json": "e657b71ffe69346f79bc440d60ad43ee4a99fec297a7d9a37bfb8e274a235d99",
+    "campaign-result.json": "75be19cf689ff87a7abd05974d0b76872e36756f5c03b46025d1960a6d07577a",
+    "worker/retirement.json": "27d9aac0ab566889c28ee5b99802de6181fd3420638d23baeb023f3ab762a65a",
+    "review/index.html": "bd16648b1365643d42910afa6d3d18cb405cc3f883c9e6e17571fd9bf0bb0ec7",
+    "review/index.json": "8c8d78dcf59f52cae32074ee72ef654778c7e199f6839898d7a2035e8c5b55e3",
+    "review/full-code.zip": "13e4bfa3739dfa81e8810db9a5dfa0875e42a6985eb1c7805677d6413785d92b"
+  },
+  "parent_root_bytes": 1352414320
+}
