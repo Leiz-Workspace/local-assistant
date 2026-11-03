@@ -1,0 +1,62 @@
+{
+  "description": "Explicit owner confirmation of a maximum four-second wait from user submission to first audible answer. A product acceptance target, not measured performance, a runtime timeout change or permission to change/download models.",
+  "status": "TARGET_CONFIRMED_PERFORMANCE_UNVERIFIED",
+  "recorded_at_utc": "2026-11-03T09:06:57.536328+00:00",
+  "report_received_date": "2026-11-03",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "owner_confirmation_verbatim": "4 giây đi",
+  "prior_requirements_path": "docs/evidence/d74-voice-requirements-20261103.json",
+  "prior_requirements_sha256": "7146f1a356584e949d03895cb23a79f32f89bd912f63886ebef30aaa88463a32",
+  "prior_latency_status": "PENDING_EXPLANATION_AND_OWNER_DECISION",
+  "desired_languages": [
+    "vi",
+    "en"
+  ],
+  "current_language_priority": "vi",
+  "vietnamese_voice_preference": {
+    "gender": "female",
+    "accent": "Northern Vietnamese",
+    "naturalness": "requires_owner_acceptance"
+  },
+  "english_scope": {
+    "desired": true,
+    "implementation_schedule": null,
+    "release_assignment": null,
+    "voice_preference": null
+  },
+  "additional_custom_languages": {
+    "status": "PENDING_LATER_VERSION",
+    "languages": null,
+    "release_version": null,
+    "scheduled_day": null,
+    "implementation_approved": false
+  },
+  "maximum_wait_seconds": 4,
+  "start_boundary": "explicit submission of the completed spoken question",
+  "end_boundary": "first audible meaningful answer speech at the user playback device",
+  "includes": [
+    "ASR",
+    "answer generation",
+    "TTS",
+    "audio delivery and playback startup"
+  ],
+  "excludes": [
+    "user speaking time before submission",
+    "duration until full spoken answer finishes"
+  ],
+  "not_a_p95_substitute": true,
+  "artificial_acknowledgement_or_silence_not_counted_as_answer": true,
+  "existing_d72_measurement_boundary": "submission to complete buffered response PCM; not actual first-audible playback",
+  "product_first_audible_measured": false,
+  "target_met": null,
+  "benchmark_protocol_status": "PENDING_WORKLOAD_AND_MEASUREMENT_DESIGN",
+  "existing_runtime_timeouts_changed": false,
+  "model_or_voice_selected": null,
+  "model_replacement_approved": false,
+  "additional_model_download_approved": false,
+  "production_activation_approved": false,
+  "source_configuration_changed": false,
+  "architecture_changed": false,
+  "model_requests": 0,
+  "search_provider_requests": 0
+}
