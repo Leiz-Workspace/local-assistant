@@ -1,0 +1,18 @@
+{
+  "description": "Owner explicitly requests Roman versus Vietnamese vi context verification while preserving accepted API pronunciation; engineering bounds10new original-policy controls, not a model or pronunciation-policy change.",
+  "authorized": true,
+  "recorded_at_utc": "2026-11-03T19:16:47.363382+00:00",
+  "owner_feedback_sha256": "6bd097ef0a7c8cffd3497a25e8477bf34913e291fb3ed2048d1c8751c653c15b",
+  "protocol_sha256": "acefb8756cf119e27d33ea7babf9150760e48b83c66ff605dfa6886f5e831534",
+  "tts_ceiling": 10,
+  "inner_chunks_ceiling": 10,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "api_operator_changed": false,
+  "model_selection": null,
+  "workflow_recovery_authorized": false,
+  "product_activation": false
+}

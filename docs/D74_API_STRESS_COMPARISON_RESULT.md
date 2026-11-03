@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi kết quả phép thử hẹp sau khi bộ đối chiếu khác câu bị chủ dự án đánh giá tệ hơn; giữ nguyên ngắt câu, giờ/ngày và toàn bộ bằng chứng trước.
 
-**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** bốn clip mới hoàn tất kỹ thuật; chất lượng phát âm/rè/tự nhiên **CHƯA ĐƯỢC CHẤP NHẬN**. [ADR-159](ADR/159-api-stress-only-on-retained-clause-path.md), [quyền thực hiện theo “Làm đi”](evidence/d74-api-stress-authorization.json), [kết quả máy](evidence/d74-api-stress-result.json), [kiểm tra sau chạy](evidence/d74-api-stress-verification.json).
+**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái cập nhật:** chủ dự án xác nhận **API phát âm đúng trên panel đã nghe**, Python tiếng Anh vẫn sai. [Phản hồi nguyên văn](evidence/d74-api-python-roman-owner-feedback.json). API rè/run và độ tự nhiên không được xác nhận lại riêng trong tin này; không suy ra chọn giọng/model hoặc nghiệm thu sản phẩm. Các kết quả máy dưới đây giữ nguyên. [ADR-159](ADR/159-api-stress-only-on-retained-clause-path.md), [quyền thực hiện theo “Làm đi”](evidence/d74-api-stress-authorization.json), [kết quả máy tại thời điểm chạy](evidence/d74-api-stress-result.json), [kiểm tra sau chạy](evidence/d74-api-stress-verification.json).
 
 ## Nghe đúng cặp trước–sau
 
@@ -35,4 +35,4 @@ TTS từng request khoảng 0,917/1,711/0,983/1,821 giây; thời lượng phát
 
 ## Trạng thái tiến độ
 
-Hai task P1 English/API còn mở, chờ kết quả nghe bộ bốn cặp mới; các mục cũ không được chấm lại. Phần giờ/ngày/clauses đã chấp nhận giữ nguyên phạm vi. Python còn mở; ADR15548workflow vẫn chưa duyệt/chưa chạy. D60 tiếp tục pending theo yêu cầu, D74 quyền/no-speech/model/voice/physical4second/product và D90release vẫn mở. Nếu bộ mới vẫn sai hoặc tệ hơn, loại policy khỏi hướng áp dụng, giữ kết quả và không tự retry hay chọn model khác.
+API pronunciation đã được xác nhận đúng trong phạm vi panel; giữ policy/audio/source này. Python vẫn không đạt và task P1 English còn mở; API artifact/timbre chưa được đánh giá lại nên không đóng theo nhận xét pronunciation. [Kiểm tra ngữ cảnh La Mã và Python tiếp theo](D74_ROMAN_CONTEXT_RESULT.md) không sửa API hoặc tự chọn model khác. Phần giờ/ngày/clauses đã chấp nhận giữ nguyên phạm vi. ADR15548workflow vẫn chưa duyệt/chưa chạy. D60 pending theo yêu cầu, D74 quyền/no-speech/model/voice/physical4second/product và D90release vẫn mở.
