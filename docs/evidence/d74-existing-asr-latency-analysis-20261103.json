@@ -1,0 +1,33 @@
+{
+  "description": "Pure recomputation of retained D72 per-case ASR prediction timing and WER. No new inference or independent quality test; frozen worker code times transcribe separately from import/load.",
+  "status": "RECOMPUTED_EXISTING_OBSERVATIONS",
+  "source_path": "docs/evidence/d72-vad-asr-comparison-first.json",
+  "source_sha256": "8b4aefe797634fb44db65d35709060b067a45aee5043dc4c6603974911e0acf6",
+  "worker_path": "scripts/asr_evaluation_worker.py",
+  "worker_sha256": "295787f1526aa00233966b0224d7a140330c492a3616c5449757723b18141c80",
+  "rows": [
+    {
+      "candidate": "qwen3-asr-0.6b",
+      "retained_vi_cases": 20,
+      "min_prediction_wall_seconds": 2.5264407020004,
+      "median_prediction_wall_seconds": 5.654497986994102,
+      "max_prediction_wall_seconds": 10.08568647201173,
+      "prediction_wall_over_four": 17,
+      "ungated_vi_WER": 0.07614213197969544,
+      "includes_model_load": false,
+      "includes_tts_or_core_or_playback": false
+    },
+    {
+      "candidate": "whisper-small-ct2",
+      "retained_vi_cases": 20,
+      "min_prediction_wall_seconds": 1.6967869740037713,
+      "median_prediction_wall_seconds": 2.274339796495042,
+      "max_prediction_wall_seconds": 2.9136948859959375,
+      "prediction_wall_over_four": 0,
+      "ungated_vi_WER": 0.20473773265651438,
+      "includes_model_load": false,
+      "includes_tts_or_core_or_playback": false
+    }
+  ],
+  "new_model_requests": 0
+}

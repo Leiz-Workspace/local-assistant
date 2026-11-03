@@ -8,6 +8,10 @@
 
 [Voice product requirements](VOICE_PRODUCT_REQUIREMENTS.md), 2026-11-03: mục tiêu có VI và EN, hiện ưu tiên **VI / nữ miền Bắc**. Tiếng Anh giữ trong mục tiêu, chưa tự xếp một release; ngôn ngữ tùy biến **PENDING bản sau**. Chủ dự án đã chọn **tối đa 4 giây từ gửi câu hỏi tới bắt đầu nghe lời trả lời**. Hiệu năng chưa được kiểm chứng; không đổi runtime timeout. Đây là yêu cầu sản phẩm, không chọn hoặc duyệt thay model.
 
+## Khảo sát ứng viên và trial đề xuất
+
+[Survey 2026-11-03](D74_VI_VOICE_CANDIDATE_SURVEY.md)/[ADR-154](ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md)/[protocol](D74_VI_VOICE_BENCHMARK_PROTOCOL.md) đã chuẩn bị: VieNeu-TTS v3 Turbo CPUFP32, Trúc Ly/Ngọc Huyền theo metadata nữ Bắc;16payload files608,816,450bytes, trialroot8GiB. Không download/load/inference/implementation hoặc chọn model. ASR Qwen cũ riêng prediction>4s17/20VI, Whisper nhanh hơn nhưng WER cao hơn; comparison giữ cả hai ASR và Piper baseline, không tự đổi default. Chủ dự án cần duyệt phạm vi trước khi triển khai/chạy trial.
+
 ## Kết luận đề xuất
 
 **Giữ trạng thái chưa kích hoạt voice. Ưu tiên tiếp theo là đối chiếu yêu cầu VI giọng nữ miền Bắc với bằng chứng ứng viên.** Tiếng Anh vẫn trong mục tiêu; Qwen Ryan chỉ là ứng viên EN đáng xem xét về chất lượng trong tập đã nghe, không phải ưu tiên triển khai trước VI hoặc lựa chọn đã duyệt. Với tiếng Việt, chưa có cấu hình TTS đã nghe nào đáp ứng yêu cầu hiện tại: Qwen VI-Auto lỗi nặng; Piper VI đọc đúng nhưng chất giọng không được chủ dự án chấp nhận. Nhận định về ứng viên EN là suy luận từ nhận xét của một người trên corpus nhỏ, không chứng minh đáp ứng giọng nữ miền Bắc cho VI hoặc model tốt nhất nói chung.

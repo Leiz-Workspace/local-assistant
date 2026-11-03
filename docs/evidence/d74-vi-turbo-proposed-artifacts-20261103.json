@@ -1,0 +1,189 @@
+{
+  "description": "PROPOSED download allowlist only: CPU FP32 VieNeu-TTS v3 Turbo, mandatory MOSS ONNX codec, denoiser eagerly loaded by upstream, and bundled preset assets. No model/codec/preset payload is downloaded by constructing this manifest.",
+  "status": "PROPOSED_NOT_APPROVED_NOT_DOWNLOADED",
+  "sdk_source_repository": "pnnbao97/VieNeu-TTS",
+  "sdk_source_revision": "04044e1b8f822f946bafb2c88b716459f4164152",
+  "entries": [
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/vieneu_prefill.onnx",
+      "bytes": 324499,
+      "lfs_sha256": "27f8b064f6b57b5448e95d095f1959588c005d614678045c2b97ecccf3b7a0f7",
+      "git_blob_sha1": "d132cbac82e9a5771d1a391b8403cc0ae0b5714d",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/vieneu_decode_step.onnx",
+      "bytes": 306134,
+      "lfs_sha256": "bedc379cea61ea5d616312750d95ad3924e055856662d19187a889a5edc24ceb",
+      "git_blob_sha1": "f7f4dc384f86f01cc0fbd941aeee12215038edca",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/vieneu_acoustic_cached.onnx",
+      "bytes": 7207223,
+      "lfs_sha256": "f631e3387c788c3d8b9a5ac5df94952af5bc4c4d1049ff8a751e76a246fff2d4",
+      "git_blob_sha1": "23b4642fbf8940ce2abaf8e052065925e1c79680",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/vieneu_backbone_shared.data",
+      "bytes": 415319040,
+      "lfs_sha256": "c7c072193db33d0542457e2612c7272c44c4279d1cafaf0aa4c379964911db2f",
+      "git_blob_sha1": "861bb38eec7ee27055285e74fd847a4994194ba9",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/vieneu_v3_heads.npz",
+      "bytes": 52219622,
+      "lfs_sha256": "fb22484baa424bbb775133a6e5f0d00d6299b2b256fbe3312a864b85b9aed01e",
+      "git_blob_sha1": "5aacf07cb1e45ec1182b60a5cac66be997e12307",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/config.json",
+      "bytes": 2152,
+      "lfs_sha256": null,
+      "git_blob_sha1": "9d6c81dbafafaf833371207f5efe35664cb917ba",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "onnx_update/tokenizer.json",
+      "bytes": 22320,
+      "lfs_sha256": null,
+      "git_blob_sha1": "5c9785c19639481f69f407f8b96859f0ea0d65af",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "config.json",
+      "bytes": 1553,
+      "lfs_sha256": null,
+      "git_blob_sha1": "aa9c4e4550e8b9cf06ee47ad16009ef9609c8928",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "path": "denoiser.onnx",
+      "bytes": 42661414,
+      "lfs_sha256": "b7621953291cfe05e695a9c0ff4255aa2f93239fc17c26627e18b7b6b8f72f0b",
+      "git_blob_sha1": "99ec4ada2921d9c3a18a444d328fe89eaeed3790",
+      "downloaded_in_this_task": false,
+      "role": "tts_fp32_or_standard_sdk_auxiliary"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "moss_audio_tokenizer_decode_full.onnx",
+      "bytes": 681902,
+      "lfs_sha256": "0fbbafe3fd4afa2a019af5c5ced204af6e2d1db044fa40f021525d2aee95b4ac",
+      "git_blob_sha1": "364cf6154c209cc8f709e8931dc9e21dc94132f7",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "moss_audio_tokenizer_decode_shared.data",
+      "bytes": 44198912,
+      "lfs_sha256": "e69d52e0f4e84ca27850557ee54face46632d3a5a16c89bd246c7c408466dcad",
+      "git_blob_sha1": "435aa9e8047313a6ceaaa643a4ee754317719719",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "moss_audio_tokenizer_decode_step.onnx",
+      "bytes": 351400,
+      "lfs_sha256": "9527c86a29e1837edec1f74db57d5eeaadb3a715af3382703566460afed25855",
+      "git_blob_sha1": "c1eee2aaf1dbcb551c0adfdc87722cbe5c90a004",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "codec_browser_onnx_meta.json",
+      "bytes": 17036,
+      "lfs_sha256": null,
+      "git_blob_sha1": "886953a56489516b847b7c1c953bde063eb78faa",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "moss_audio_tokenizer_encode.onnx",
+      "bytes": 815775,
+      "lfs_sha256": "eadea4a645abdcf98714c7aead122ee2ce7da6e080f9f80b977cd1ca8e19473a",
+      "git_blob_sha1": "e7b213e4b35bc4fe7d975829bc2234048bb4bab0",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "path": "moss_audio_tokenizer_encode.data",
+      "bytes": 44507136,
+      "lfs_sha256": "aa751265b2bab2887eac224484546b194875aa7494b607115439b3dc6b228a2c",
+      "git_blob_sha1": "2ee3e74a1b956b8472c149cda271d85f0d737eab",
+      "downloaded_in_this_task": false,
+      "role": "mandatory_codec_constructor_bundle"
+    },
+    {
+      "repository": "pnnbao97/VieNeu-TTS",
+      "revision": "04044e1b8f822f946bafb2c88b716459f4164152",
+      "path": "src/vieneu/assets/voices_v3_turbo.json",
+      "bytes": 180332,
+      "lfs_sha256": null,
+      "git_blob_sha1": "3e07d6dd0bf594c04b873f4ddf578cb8090a04da",
+      "downloaded_in_this_task": false,
+      "role": "bundled_preset_voice_vectors_and_reference_codes"
+    }
+  ],
+  "payload_artifacts": 16,
+  "payload_bytes": 608816450,
+  "source_curation_policy": "Only original source files needed for the selected backend plus the one explicitly listed Turbo voice asset; do not fetch legacy/Nano voice assets, reference audio, speaker_encoder or any undeclared neural models.",
+  "new_candidate": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+  "backend": "CPU_ONNX_FP32",
+  "precision_comparison_included": false,
+  "voices_for_proposed_review": [
+    "Trúc Ly",
+    "Ngọc Huyền"
+  ],
+  "new_model_download_approved": false,
+  "sdk_dependency_lock_status": "NOT_BUILT_NOT_INSTALLED; exact lock and package hashes must be frozen and non-neural package contents audited before execution",
+  "execution_allowed": false,
+  "total_isolated_root_budget_gib": 8,
+  "total_isolated_root_budget_includes": [
+    "payload",
+    "SDK",
+    "package cache",
+    "source",
+    "results"
+  ]
+}

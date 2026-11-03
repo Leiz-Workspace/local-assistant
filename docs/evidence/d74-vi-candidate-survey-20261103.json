@@ -1,0 +1,246 @@
+{
+  "description": "Metadata/source-text-only VI female Northern voice survey. All candidate quality, first-audible latency and RAM requirements remain UNMEASURED locally; new model choices/architecture/downloads not approved.",
+  "status": "SURVEY_AND_PROPOSAL_PREPARED_NO_MODEL_EXECUTION",
+  "observed_at_utc": "2026-11-03T09:23:33.723381+00:00",
+  "hardware": {
+    "description": "Read-only instantaneous host sample during metadata research, not a benchmark, reservation or proof of fit alongside loaded CORE.",
+    "observed_at_utc": "2026-11-03T09:23:33.722396+00:00",
+    "cpu": {
+      "CPU(s)": "16",
+      "Model name": "AMD Ryzen 7 7700 8-Core Processor",
+      "Thread(s) per core": "2",
+      "Core(s) per socket": "8"
+    },
+    "memory": {
+      "MemTotal_bytes": 32220790784,
+      "MemAvailable_bytes": 22538399744,
+      "SwapTotal_bytes": 8589930496,
+      "SwapFree_bytes": 8589930496
+    },
+    "gpu_query": "NVIDIA GeForce RTX 4070 Ti SUPER, 16376 MiB, 828 MiB, 15113 MiB",
+    "native_llama_server_processes": 0,
+    "running_container_count": 15,
+    "container_inventory_sha256": "7a54013bcf742ba33b8d77d466552939ef482aa81b89ebb82c8b0a6a1e3646f2",
+    "available_disk_bytes": 595639332864
+  },
+  "source_records": [
+    {
+      "path": "data/backups/d74-vi-survey-20261103/dependency-fetch.json",
+      "bytes": 712,
+      "sha256": "8d64578a4db5d11e487d7c756d510f3a953355646676f15d911b434ae78ab719"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/engine-text-fetch.json",
+      "bytes": 1315,
+      "sha256": "41d819372d42ea6037dd38c64d367678271f96d6480136a47ba9a46d89e71b69"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/f5-README.txt",
+      "bytes": 3692,
+      "sha256": "55e19b267adde25a1dcd7fdd37daecf89032fdbc325b9749a6d5a0f37ab6cdd4"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/f5-api.json",
+      "bytes": 2284,
+      "sha256": "5e63696848986fad40fa5123a26d40dd9b598de43644648e150f4fdd488a9545"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/hardware-snapshot.json",
+      "bytes": 816,
+      "sha256": "5cc17e3d61be453a8c830dcb4050f8a38d5cd52482c88ab93b9d737b878cf3c0"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/metadata-fetch.json",
+      "bytes": 2195,
+      "sha256": "e435db1ef920c8a865b384274167618429b9fd3e416c52e06007e29079a060d3"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/moss-codec-api.json",
+      "bytes": 2641,
+      "sha256": "46c101e32e326d1e730f303b2ab73cce2faca07522c83975c9b48f1b92c74975"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/nano-README.txt",
+      "bytes": 15403,
+      "sha256": "b384262645214848872036daae39265a268b86c4403f44d6ff4caddf5a183df1"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/nano-api.json",
+      "bytes": 3102,
+      "sha256": "e4d0965bc7ff7f632ae90363a064b40e7476f5534e41734bcb015bfedfa3f6d0"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/nano-config.json",
+      "bytes": 2927,
+      "sha256": "3762f1716fd8d7a1451ddf2e051c03b0a341e8adda4f1dbd0db0ae9777514e56"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/old03-README.txt",
+      "bytes": 8616,
+      "sha256": "b9afac372247c000673cc222db16e98d07eee4df49b4a2371fa0ed66a115814e"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/old03-api.json",
+      "bytes": 3051,
+      "sha256": "68bf9b9ad19f6f1fdcf5b58de4606167c2b3d0bcfd69d989b1e7b8396e854203"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/pinned-text-fetch.json",
+      "bytes": 9414,
+      "sha256": "0bbf3cf50f7fcea342f9867b06088fa0a2da9b2fb73cd657c1dca3542a51cb04"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/sea-g2p-pypi.json",
+      "bytes": 17429,
+      "sha256": "a22bf79fb3ca0130cea524a62d461e020ab68320fc063520a1b60ad7f4ebe8d6"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/turbo-README.txt",
+      "bytes": 15458,
+      "sha256": "5d5bb2de661fabc0e073b3b844dc131696fac3dddd5ea882d10fd9a849108eb7"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/turbo-api.json",
+      "bytes": 14020,
+      "sha256": "bcefd5647881c6d2f1a47bb92dad76e0622550868619e089bae7a22b20a7e8d7"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/turbo-config.json",
+      "bytes": 1553,
+      "sha256": "eee8e032cb936a60312f594a8156c086173a9c0255a545bd11a448f22a7c77ae"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/turbo-voice-manifest.json",
+      "bytes": 3855,
+      "sha256": "c11561e2b31636c1cd6d7244894342d37e03283171f9cfc4bd9fbb782debda7e"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-LICENSE.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-README.md.txt",
+      "bytes": 34593,
+      "sha256": "2991064db0951965178660c53d12bdd74817f9b5a733d6ece6954cd69fd2f76e"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-commit.json",
+      "bytes": 6331,
+      "sha256": "c7c47be30a1f038c009884b971f5da31ee8844bece4a87d8f13e988a0c90e22a"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-docs_streaming.md.txt",
+      "bytes": 24269,
+      "sha256": "7d20149cf40c92097021cee61c24ab626086d149764b2ddc5ff5021737149000"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-pyproject.toml.txt",
+      "bytes": 5991,
+      "sha256": "b36fc3303dceff0dddbe9f49067d0c82f3c11802e0dd82a2b58208f375d8df63"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-src_vieneu__v3_turbo_engine_onnx_runtime_lite.py.txt",
+      "bytes": 32607,
+      "sha256": "7747ac18fb5b660a810a434461bd8386ba40b0b46d559c07907db0c19414084e"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-src_vieneu_utils_core_utils.py.txt",
+      "bytes": 43314,
+      "sha256": "87e991f12ebfc13ba4fab97fb60e0d748eb4e3db0bdee1053ee32ae50decec56"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-src_vieneu_utils_phonemize_text.py.txt",
+      "bytes": 19882,
+      "sha256": "ce3c0ab79b1232cb9a62dc8360aedbdd7646318f46d59036603615a957dfe6a7"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-src_vieneu_v3nano.py.txt",
+      "bytes": 26685,
+      "sha256": "0e0bb4c356d3c0292c8e0990f03de7e6a7e246db6b004d66e5dacb070c738de3"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-src_vieneu_v3turbo.py.txt",
+      "bytes": 38604,
+      "sha256": "10757905d3f6454e17c834ec32c73d33b5b9d322d05397295c0bbeb5f3ffb3ad"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/upstream-tree.json",
+      "bytes": 39753,
+      "sha256": "9a5eb7a2204635f9b618dda0a8b80b23ad206a6eadd6e80cb3f8671992a9d346"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/vixtts-README.txt",
+      "bytes": 2422,
+      "sha256": "0f25385f06c990f58affcc68424b0666ed76172e5a7bf64c50887a22e492b56d"
+    },
+    {
+      "path": "data/backups/d74-vi-survey-20261103/vixtts-api.json",
+      "bytes": 4516,
+      "sha256": "6bda2cf1d5b1aa7075dc17aef6ad34635ef1175cae0c0dee7092b94c7488bdb5"
+    }
+  ],
+  "candidate_revisions": [
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "metadata_license": "apache-2.0",
+      "gated": false
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Nano",
+      "revision": "aba295eb96a6fa6003ebe417cc1f2802a7adc1dc",
+      "metadata_license": "apache-2.0",
+      "gated": false
+    },
+    {
+      "repository": "pnnbao-ump/VieNeu-TTS-0.3B",
+      "revision": "4c4056e33bea543dd62115abc84c1612be8166c9",
+      "metadata_license": "apache-2.0",
+      "gated": false
+    },
+    {
+      "repository": "hynt/F5-TTS-Vietnamese-ViVoice",
+      "revision": "5c14cdd4e3f62b69e75140558bea2b2e293ee8f1",
+      "metadata_license": "cc-by-nc-sa-4.0",
+      "gated": false
+    },
+    {
+      "repository": "capleaf/viXTTS",
+      "revision": "c06f4378883110615941aab481532a9802440b05",
+      "metadata_license": "other",
+      "gated": false
+    }
+  ],
+  "proposed_artifacts_path": "docs/evidence/d74-vi-turbo-proposed-artifacts-20261103.json",
+  "proposed_artifacts_sha256": "c85f751b1d986a97eb4d3f0ad6898764fdac3b0454ef2375084892f2d481f36f",
+  "local_new_model_benchmarks": null,
+  "first_audible_target_seconds": 4,
+  "target_met": null,
+  "new_model_weight_downloads": 0,
+  "new_codec_weight_downloads": 0,
+  "new_voice_embedding_or_speech_token_downloads": 0,
+  "new_audio_downloads_or_uploads": 0,
+  "new_sdk_installations": 0,
+  "upstream_code_executed": false,
+  "local_model_requests": 0,
+  "selected_provider_requests": 0,
+  "current_application_files": 750,
+  "selected_model_changed": false,
+  "shared_service_changed": false,
+  "proposed_packet_path": "docs/evidence/d74-vi-voice-proposed-packet-20261103.json",
+  "proposed_packet_sha256": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a",
+  "existing_asr_recomputation_path": "docs/evidence/d74-existing-asr-latency-analysis-20261103.json",
+  "existing_asr_recomputation_sha256": "2ed7212240fcff9b8e08915ec5220e0b5b9b1a6097f008c3b884031510a6bc96",
+  "preset_metadata_difference": "Pinned model card says23presets; voice manifest contains25; SDK names have changed. Actual fixed SDK preset asset must be checked before qualification, not assumed from metadata.",
+  "upstream_source_findings": [
+    "CPU/GPU auto selection must be forced toCPU ONNX",
+    "Original constructor fetches mandatory separate MOSS codec and eagerly loads denoiser",
+    "Default babble retries must be explicitly disabled and actual call counts audited",
+    "Style argument is deprecated/ignored in inspected v3 Turbo",
+    "Preset vector JSON is a neural/reference asset; not downloaded in this survey",
+    "SDK dependency lock/runner not built; model download and execution not approved"
+  ],
+  "upstream_tree_identity_proof_path": "docs/evidence/d74-upstream-git-tree-identity-20261103.json",
+  "upstream_tree_identity_proof_sha256": "40453a709e867a9e0691fedb894d1ecbe062a45b35fdd52e0e64056b70ef2d7b"
+}
