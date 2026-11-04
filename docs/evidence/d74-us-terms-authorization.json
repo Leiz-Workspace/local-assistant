@@ -1,0 +1,29 @@
+{
+  "description": "Owner explicitly says “Tiếp đi và thử với các từ khác nữa” under the recorded en-US/same-voice requirement. One exact paired study; no model/reference/training/product change.",
+  "authorized": true,
+  "owner_response": "Tiếp đi và thử với các từ khác nữa",
+  "recorded_at_utc": "2026-11-04T03:28:25.176608+00:00",
+  "adr_sha256": "17d3aac1d1a2e011bb22a70f9da843c224a69381943db146adf68810bf105534",
+  "accent_preference_sha256": "96891a1f116b02424a14558efa835d0a4e9f5b7feca94fbc2eabb9493ba59794",
+  "accepted_api_feedback_sha256": "6bd097ef0a7c8cffd3497a25e8477bf34913e291fb3ed2048d1c8751c653c15b",
+  "source_references_sha256": "95adc08a26cc7c930fb7735155ede6027c9256c7e0c99fd13fc65e7d0c4d605a",
+  "tts_ceiling": 20,
+  "expected_unique_requests": 16,
+  "logical_observations": 24,
+  "retained_baselines": 4,
+  "shared_unchanged_controls": 4,
+  "inner_chunks_ceiling": 20,
+  "roles": [
+    "baseline",
+    "us"
+  ],
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_models_or_reference_assets": 0,
+  "new_training": 0,
+  "original_allowances_never_increased": true,
+  "model_selection": null,
+  "product_activation": false,
+  "workflow_recovery_authorized": false
+}

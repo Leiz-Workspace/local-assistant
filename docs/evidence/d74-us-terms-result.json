@@ -1,0 +1,405 @@
+{
+  "description": "Actual same-text en-US term comparison:16new requests/16chunks,4exact old Python baselines and4shared unchanged controls for24logical observations. No English/API/voice acoustic acceptance inferred.",
+  "recorded_at_utc": "2026-11-04T03:29:44.381668+00:00",
+  "status": "US_TERM_PAIRS_COMPLETE_ACOUSTIC_UNVERIFIED",
+  "sentences": 6,
+  "voices": 2,
+  "pairs": 12,
+  "logical_observations": 24,
+  "logical_complete": 24,
+  "new_tts_attempts": 16,
+  "new_inner_chunks": 16,
+  "request_ceiling": 20,
+  "unused_request_budget": 4,
+  "retained_old_baselines": 4,
+  "shared_unchanged_controls": 4,
+  "unattempted_native": 0,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "interventions": [
+    "Python US vowel",
+    "GitHub native whole-word dictionary form",
+    "server explicit rhotic representation"
+  ],
+  "unchanged_phone_controls": [
+    "Docker",
+    "browser",
+    "database"
+  ],
+  "api_policy": "ORIGINAL_ACCEPTED_STRESS_FUNCTION_UNCHANGED_BOTH_ROLES; NEW MIXED AUDIO STILL REQUIRES LISTENING",
+  "all_frame_allowances_never_increased": true,
+  "metrics": [
+    {
+      "id": "truc-ly-python-vi",
+      "case": "python-vi",
+      "voice": "Trúc Ly",
+      "source_text": "Bạn muốn học Python hay dùng API của ứng dụng?",
+      "baseline_status": "RETAINED_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "2cca1a8a8f5af3f49e543f85dbe836fd42d2a32bea1d51895cbbfe82e2766245",
+      "candidate_wav_sha256": "9fe2a47c1530adb6c53343f58de554734c5cda7e3da4855b638ba97171761629",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "python",
+          "start": 20,
+          "before": "pˈaɪθən",
+          "after": "pˈaɪθɑːn"
+        }
+      ],
+      "shared_frame_cap": 162,
+      "original_caps": [
+        162,
+        164
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": "Retained preset/source pins; no retrospective speaker hash measurement",
+      "baseline_tts_seconds": 0.9165779209997709,
+      "candidate_tts_seconds": 0.8863010320001194
+    },
+    {
+      "id": "truc-ly-python-en",
+      "case": "python-en",
+      "voice": "Trúc Ly",
+      "source_text": "I write code in Python every day.",
+      "baseline_status": "RETAINED_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "2625e6924463a12a1ea015c89c60b4b504f34f1d75f0e27bb9123bba2887fdd9",
+      "candidate_wav_sha256": "3f970941aa3aa25cf849e95d112ae5b01f9d18be267582596912617d69ebe720",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "python",
+          "start": 20,
+          "before": "pˈaɪθən",
+          "after": "pˈaɪθɑːn"
+        }
+      ],
+      "shared_frame_cap": 102,
+      "original_caps": [
+        102,
+        104
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": "Retained preset/source pins; no retrospective speaker hash measurement",
+      "baseline_tts_seconds": 0.7012034889994538,
+      "candidate_tts_seconds": 0.6744427550002001
+    },
+    {
+      "id": "truc-ly-docker",
+      "case": "docker",
+      "voice": "Trúc Ly",
+      "source_text": "Chị sẽ dùng Docker để chạy ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "SHARED_CONTROL_COMPLETE",
+      "baseline_wav_sha256": "6d424de7ed4ae05a68fe77e8e5978004e14a4159777e08debab390757da47700",
+      "candidate_wav_sha256": "6d424de7ed4ae05a68fe77e8e5978004e14a4159777e08debab390757da47700",
+      "audio_identical": true,
+      "phoneme_edits": [],
+      "shared_frame_cap": 118,
+      "original_caps": [
+        118,
+        118
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.6586912069997197,
+      "candidate_tts_seconds": 0.6586912069997197
+    },
+    {
+      "id": "truc-ly-github",
+      "case": "github",
+      "voice": "Trúc Ly",
+      "source_text": "Mã nguồn được lưu trên GitHub của dự án.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "92d7dfe9f2b1d11347eb1282c629f094237cdaf79317ce20db20bc74471653f4",
+      "candidate_wav_sha256": "7be30577f31e26ae8e98cb6386979b2408f37dd13d8dc634a69384cd43844de3",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "github",
+          "start": 31,
+          "before": "ɡˈɪt hˈʌb",
+          "after": "ɡˈɪthʌb"
+        }
+      ],
+      "shared_frame_cap": 136,
+      "original_caps": [
+        140,
+        136
+      ],
+      "fresh_pair_voice_hashes_identical": true,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.7533941750007216,
+      "candidate_tts_seconds": 0.6770277249997889
+    },
+    {
+      "id": "truc-ly-browser",
+      "case": "browser",
+      "voice": "Trúc Ly",
+      "source_text": "Mở browser để kiểm tra trang web của ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "SHARED_CONTROL_COMPLETE",
+      "baseline_wav_sha256": "bf75cc663ac9cbb6a5a5308e106967e597f2095a473726166fe25223639ffa00",
+      "candidate_wav_sha256": "bf75cc663ac9cbb6a5a5308e106967e597f2095a473726166fe25223639ffa00",
+      "audio_identical": true,
+      "phoneme_edits": [],
+      "shared_frame_cap": 146,
+      "original_caps": [
+        146,
+        146
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.7645936219996656,
+      "candidate_tts_seconds": 0.7645936219996656
+    },
+    {
+      "id": "truc-ly-server-database",
+      "case": "server-database",
+      "voice": "Trúc Ly",
+      "source_text": "Server đang kết nối với database của ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "ee49849843d20e835409021bd8948c35d94f59d2844f666fab2305b740d28f67",
+      "candidate_wav_sha256": "13f346ad5c3c86142ba75a970766d44395db910ec7ec23cc386ba4896c8d4a8d",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "server",
+          "start": 0,
+          "before": "sˈɜːvɚ",
+          "after": "sˈɜːɹvɚ"
+        }
+      ],
+      "shared_frame_cap": 148,
+      "original_caps": [
+        148,
+        150
+      ],
+      "fresh_pair_voice_hashes_identical": true,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.7568919759996788,
+      "candidate_tts_seconds": 0.8132892629982962
+    },
+    {
+      "id": "ngoc-huyen-python-vi",
+      "case": "python-vi",
+      "voice": "Ngọc Huyền",
+      "source_text": "Bạn muốn học Python hay dùng API của ứng dụng?",
+      "baseline_status": "RETAINED_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "8df30594dae603ff8e70d0c6f4801244b1d231e097f9cbc567e8dd2e5c375695",
+      "candidate_wav_sha256": "83b0e5ea2553beee7bcaf1eecf74620b1eb7467156282a18922589eff42cb6b2",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "python",
+          "start": 20,
+          "before": "pˈaɪθən",
+          "after": "pˈaɪθɑːn"
+        }
+      ],
+      "shared_frame_cap": 162,
+      "original_caps": [
+        162,
+        164
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": "Retained preset/source pins; no retrospective speaker hash measurement",
+      "baseline_tts_seconds": 0.9833345459992415,
+      "candidate_tts_seconds": 0.9867402889994992
+    },
+    {
+      "id": "ngoc-huyen-python-en",
+      "case": "python-en",
+      "voice": "Ngọc Huyền",
+      "source_text": "I write code in Python every day.",
+      "baseline_status": "RETAINED_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "ec4794c492c8bb5c8aa6fb462b8d3c2d6a6263ae5ac825d172b365a266e6ddc6",
+      "candidate_wav_sha256": "1bb89aa501790ed91dd9d5f38706f5782d64acfeb579f3e40398635fdf100a60",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "python",
+          "start": 20,
+          "before": "pˈaɪθən",
+          "after": "pˈaɪθɑːn"
+        }
+      ],
+      "shared_frame_cap": 102,
+      "original_caps": [
+        102,
+        104
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": "Retained preset/source pins; no retrospective speaker hash measurement",
+      "baseline_tts_seconds": 0.8192517799998313,
+      "candidate_tts_seconds": 0.7326682050006639
+    },
+    {
+      "id": "ngoc-huyen-docker",
+      "case": "docker",
+      "voice": "Ngọc Huyền",
+      "source_text": "Chị sẽ dùng Docker để chạy ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "SHARED_CONTROL_COMPLETE",
+      "baseline_wav_sha256": "1633678f2f1dc6d53a392f28310b0f6b6ec7efedd4177b6e29f89f43af53020b",
+      "candidate_wav_sha256": "1633678f2f1dc6d53a392f28310b0f6b6ec7efedd4177b6e29f89f43af53020b",
+      "audio_identical": true,
+      "phoneme_edits": [],
+      "shared_frame_cap": 118,
+      "original_caps": [
+        118,
+        118
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.6853815060003399,
+      "candidate_tts_seconds": 0.6853815060003399
+    },
+    {
+      "id": "ngoc-huyen-github",
+      "case": "github",
+      "voice": "Ngọc Huyền",
+      "source_text": "Mã nguồn được lưu trên GitHub của dự án.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "94611f96394cde7b1187375d0ef10042cfc98f6ed7aa44833f001afe4a5f3e3c",
+      "candidate_wav_sha256": "aff1b687ef8bb2c66ce247a3533543a550679a89328d18dc157ac3d03dfa8be5",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "github",
+          "start": 31,
+          "before": "ɡˈɪt hˈʌb",
+          "after": "ɡˈɪthʌb"
+        }
+      ],
+      "shared_frame_cap": 136,
+      "original_caps": [
+        140,
+        136
+      ],
+      "fresh_pair_voice_hashes_identical": true,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.7868308569995861,
+      "candidate_tts_seconds": 0.7805856240011053
+    },
+    {
+      "id": "ngoc-huyen-browser",
+      "case": "browser",
+      "voice": "Ngọc Huyền",
+      "source_text": "Mở browser để kiểm tra trang web của ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "SHARED_CONTROL_COMPLETE",
+      "baseline_wav_sha256": "377aec46fd13ab1e8c3370cda9d48a30f8ff10b00c86e0ee6d39267c050c33a3",
+      "candidate_wav_sha256": "377aec46fd13ab1e8c3370cda9d48a30f8ff10b00c86e0ee6d39267c050c33a3",
+      "audio_identical": true,
+      "phoneme_edits": [],
+      "shared_frame_cap": 146,
+      "original_caps": [
+        146,
+        146
+      ],
+      "fresh_pair_voice_hashes_identical": null,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.8469338740014791,
+      "candidate_tts_seconds": 0.8469338740014791
+    },
+    {
+      "id": "ngoc-huyen-server-database",
+      "case": "server-database",
+      "voice": "Ngọc Huyền",
+      "source_text": "Server đang kết nối với database của ứng dụng.",
+      "baseline_status": "NATIVE_COMPLETE",
+      "candidate_status": "NATIVE_COMPLETE",
+      "baseline_wav_sha256": "e00a3d1efa1e8a38de65611d48132e548da88ba9a7b7e0eab8b06816df3e3a0e",
+      "candidate_wav_sha256": "9f3042b32960ebe0893035f60d68ead08e0b17e6429862d5fa0539bd5eaeb042",
+      "audio_identical": false,
+      "phoneme_edits": [
+        {
+          "term": "server",
+          "start": 0,
+          "before": "sˈɜːvɚ",
+          "after": "sˈɜːɹvɚ"
+        }
+      ],
+      "shared_frame_cap": 148,
+      "original_caps": [
+        148,
+        150
+      ],
+      "fresh_pair_voice_hashes_identical": true,
+      "retained_baseline_voice_provenance": null,
+      "baseline_tts_seconds": 0.9370360649991198,
+      "candidate_tts_seconds": 0.9767325459997664
+    }
+  ],
+  "retirements": {
+    "baseline": {
+      "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+      "pid": 286303,
+      "returncode": 0,
+      "peak_sampled_rss_bytes": 1377128448,
+      "resource_samples": 288,
+      "wall_seconds": 8.223226543999772,
+      "failure": null,
+      "forced": false
+    },
+    "us": {
+      "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+      "pid": 286426,
+      "returncode": 0,
+      "peak_sampled_rss_bytes": 1367543808,
+      "resource_samples": 299,
+      "wall_seconds": 8.531267733000277,
+      "failure": null,
+      "forced": false
+    }
+  },
+  "baseline_restored": true,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_preserved": 33,
+  "new_source_test_files": 4,
+  "sdk_inventory_entries_verified_before_load": 4295,
+  "new_model_or_reference_assets": 0,
+  "new_training": 0,
+  "software": {
+    "passed": 295,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 5.31
+  },
+  "owner_new_acoustic_ratings": null,
+  "english_target": "en-US",
+  "same_voice_identity_required": true,
+  "model_selection": null,
+  "product_activation": false,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/us-terms-first",
+  "private_sha256": {
+    "investigation/native/investigation.json": "6296a45bcb53d2b6c652e3ef4b5fc841021e99ff3ce7982a1c97bc29f171f652",
+    "probe/native/frontend.json": "76c3ad00dc4783b378a4fc05c1c2c2cd67def88ebd26eb3f723a0fd9445198ac",
+    "software-verification.json": "4d491024627a1999764b77711e34d04d7c41f6e9e8c395753f1189ee014f64b6",
+    "software-terminal.log": "1e97a0b628b6985495f04ba90d5624a47a9597e866e03d60e7f4f39b616c843e",
+    "execution-freeze.json": "2ab0c9134b695c61958b6cce55a9a6446021104ab6ff255a16f6b3c25c20cc41",
+    "campaign-result.json": "592fd05aaef974ce20df43ccbc01f7c979d43d682b56e55cfe2241e8a4ef7c18",
+    "baseline/retirement.json": "51726edd8e6a6d64a0d670abe740ae72e8959a868584d9dfdc67f7b98ecd8b8e",
+    "us/retirement.json": "dd42b50a205518a647f2ece474b654fa042b4bc653ad6dae0ef64b588b930b3c",
+    "review/index.html": "8af08d9754aa88085605d2db5a5927efe76ac9291ec19d2c14326815fe18cbe3",
+    "review/truc-ly.html": "5beb63330e23095ae7da2462f4b6aaf211da637f9ab078cc97782cb3b00ee35b",
+    "review/ngoc-huyen.html": "a7a8dd5da4e37765c338726bc7da42ae768a55f083af182222bf0857251f9786",
+    "review/index.json": "00dc7e818e024007b3fb7d4b2d37e0823812e2f414017842ad59c0aee4d61375",
+    "review/full-code.zip": "093b8da9f277c18c2ab77b33a9a6f1dc6c445f742b43eaf742ff0dbee5b95a46"
+  },
+  "parent_root_bytes": 1405871527
+}

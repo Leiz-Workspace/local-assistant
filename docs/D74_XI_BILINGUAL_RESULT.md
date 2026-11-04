@@ -39,3 +39,12 @@ VI/vi đã được chủ dự án xác nhận trên panel trước, không ch�
 750application/210protected/31prior research/4295SDKentries/weights/presets/audio cũ giữ nguyên, native/container baseline phục hồi. Không reading-rule/model/reference/download/training/ASR/CORE/Brave/Vault/database/Docker mutation; chỉ đọc tài liệu công khai và thêm benchmark/test/báo cáo.
 
 Python/English-US và bilingual identity còn mở; API pronunciation/date/clauses/VI accepted-scope giữ nguyên, APIbuzz/timbre không tự đóng. D60 deferred; ADR155workflow chưa duyệt/chưa chạy, rights/no-speech/physical4second/model/voice/product/D90release vẫn mở.
+
+
+## Same-voice US term comparison — 2026-11-04
+
+[ADR160 actual result and paired listening pages](D74_US_TERMS_COMPARISON_RESULT.md): owner explicitly continues PythonUS plus other words. Six exact sentences/two retained voices; change only Python US vowel, GitHub whole-word dictionary form and server rhotic hypothesis. Docker/browser/database input phones unchanged, accepted API function and clause path retained. Shared min(original) frame budgets never increased; GitHub fresh baseline allowance conservatively reduced140→136.
+
+16newTTS/16chunks/EOS/exit0/no retry +4oldPythonbaselines +4sharedunchangedcontrols =24logicalobservations/12pairs,20actualplayers split into two voice pages. Eight changed pairs differ in waveform; no acoustic PASS inferred. Four fresh GitHub/server pairs match measuredspeaker/reference hashes; oldPython provenance bound to retained source/audio without retrospective measurements.295scoped software PASS5.31s/RuffPASS;4newsource/test,33oldresearch/750application/210protected/SDK/model/audio preserved,baseline restored. No model/reference/training/app/config/ASR/CORE/Brave changes.
+
+VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001 now have a real paired word panel; en-US pronunciation/accent, perceived voice similarity, naturalness and API inside new mixed audio await listening. Accepted prior API/VI/date/clauses remain scoped, XI review pending. No model/voice/default/policy adoption; D60deferred/ADR155workflowunapproved, physical4second/rights/no-speech/product/D90releaseopen;5889full historical.
