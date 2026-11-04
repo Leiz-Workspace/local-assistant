@@ -1,0 +1,33 @@
+# D74 — Ngọc Huyền: cùng bộ 10 câu Việt–Anh
+
+**Mục đích:** Ghi kết quả lượt thử riêng Ngọc Huyền theo [ADR162](ADR/162-ngoc-huyen-matched-context-validation.md), sau chỉ dẫn “Làm đi”. Dùng đúng bộ câu đã thử với Trúc Ly để so sánh; không tinh chỉnh lại Trúc Ly hoặc thay model.
+
+**Trạng thái: 10/10 clip hoàn chỉnh; CHỜ NGHE NGỌC HUYỀN.** Chưa kết luận tiếng Anh được sửa hoặc tốt hơn. Phản hồi cũ Ngọc Huyền đọc I thành i vẫn giữ nguyên. Trúc Ly đã được chấp nhận mức hiện tại với hạn chế “this” nghe thành “dít”, vòng tinh chỉnh đó đã dừng.
+
+## Trang nghe
+
+- [Bốn câu tiếng Anh](../data/backups/d74-vi-approved-campaign-20261103/ngoc-huyen-validation-first/review/english.html): I, think/this, ship/sheep, right/light, Python/server, GitHub/browser.
+- [Ba câu Việt–Anh](../data/backups/d74-vi-approved-campaign-20261103/ngoc-huyen-validation-first/review/mixed.html): API/Python/server, GitHub/Docker, ngày giờ và câu hỏi.
+- [Ba câu tiếng Việt](../data/backups/d74-vi-approved-campaign-20261103/ngoc-huyen-validation-first/review/vietnamese.html): số tiền, XI/xi măng, VI/hành vi vi phạm và nhịp câu.
+
+Tên câu giống [bộ Trúc Ly](D74_TRUC_LY_VALIDATION_RESULT.md). Chú ý I còn đọc thành i không, phụ âm cuối, thuật ngữ, API có rè/run không, ngắt câu và độ tự nhiên/chất giọng. Chỉ cần báo tên clip và chỗ nghe chưa ổn; không yêu cầu điền JSON/MOS. Trang nghe nhúng nguyên WAV, không thu âm, JavaScript, upload hoặc mạng.
+
+## Giữ nguyên điều kiện
+
+Dùng lại rõ ràng probe SDK không nạp weights của ADR161; không công bố là probe mới. Xác minh SHA, renderer nguồn và tất cả field: cùng source/rendered text, 12 đoạn theo thứ tự, phones, dấu hỏi, gaps, ngày giờ/số/VI-XI và conservative caps. Chỉ đổi preset sang Ngọc Huyền đã có. API stress, Python/GitHub/server targets, model/weights/SDK, reference codes ON, seed/sampling và ghép waveform giữ nguyên. Không thêm lexicon/reference, tải thêm, train, tăng cap hoặc sửa audio.
+
+Thêm hai module nghiên cứu và một file test riêng, giữ nguyên 40 file nghiên cứu trước. Packet chỉ đọc được bind SHA và giọng khi worker sẵn sàng. Worker chặn sai ID/text/voice, lặp request và quá ngân sách. Kế thừa bộ lập kế hoạch/kiểm native của Trúc Ly, nên tên log kiểm tra vẫn có thể mang prefix truc_validation; request thật/readiness và speaker/reference-code hashes xác nhận Ngọc Huyền, khớp preset Ngọc Huyền ở panel cũ và khác Trúc Ly. Không suy từ hash thành giọng cảm nhận hoặc phát âm đúng.
+
+## Kết quả thực tế
+
+10 request TTS mới/12 inner chunks, tất cả EOS/hoàn chỉnh, 0 retry/0 chưa gọi, một worker exit0 và được thu hồi; baseline dịch vụ/native phục hồi. Không ASR/CORE/Brave hoặc ADR155 workflow. Trần 10 request/16 chunks/120 giây được giữ. Bộ câu do người triển khai soạn, không benchmark mù độc lập.
+
+317 kiểm thử liên quan PASS/0 FAIL/0 ERROR/0 SKIP trong 5,34 giây; Ruff E4,E7,E9,F và format PASS trước source freeze. 11 test mới kiểm packet/corpus/voice, drift, ID/text/replay/budget, original multi-chunk/reference/sampling/join, namespace read-only, authority, media và first-error/cancellation/cleanup. Lần focused đầu có 10 PASS/1 FAIL vì thư mục fixture không private, guard gốc từ chối đúng; sửa fixture thành0700, sau đó11 PASS/0,31giây. Giữ receipt đầu, không sửa guard hoặc gọi model trước khi sửa. Full5889/750 vẫn là snapshot lịch sử, không phải full regression mới.
+
+Worker wall14,703 giây; peak sampled RSS RAM1456,0 MiB, TTS riêng từng câu0,742–2,388 giây. Giữ CPU0,1/hai threads/AS8 GiB/RSS2 GiB/aggregate8 GiB/headroom14 GiB/root8 GiB, không GPU. Chưa đo submission→first-audible vật lý4giây. Audit xác minh đủ10actual event/request/native outputs, 12chunks, 10/4/3/3player coverage, source freeze/snapshot/ZIP/terminal/authority, 750application/210protected/40research cũ và4295SDKentries. Không thay app/config/Vault/database/Docker/model/preset hoặc audio cũ.
+
+[Result receipt](evidence/d74-ngoc-validation-result.json), [verification](evidence/d74-ngoc-validation-verification.json), [full version ba file code/test](../data/backups/d74-vi-approved-campaign-20261103/ngoc-huyen-validation-first/review/full-code.zip).
+
+## Tiến độ
+
+VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001: Ngọc Huyền đã có cùng corpus hoàn chỉnh, phần nghe còn mở. Dependency tiếp theo là phản hồi nghe Ngọc Huyền; effort một milestone đánh giá; rủi ro lỗi phát âm/identity/naturalness ngoài panel nhỏ. Không tự lên lịch tuning hoặc chọn voice/model/default sản phẩm. Trúc Ly accepted-with-limitations/refinement stopped giữ nguyên; kết quả không đạt tiếng Anh trước đây của Ngọc Huyền không bị xóa hoặc thay điểm. D60 deferred, ADR15548workflow chưa duyệt/chưa chạy, physical4second/rights/no-speech/product/D90release còn mở.

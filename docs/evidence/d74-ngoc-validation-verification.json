@@ -1,0 +1,35 @@
+{
+  "description": "Technical audit of genuine Ngoc Huyen requests/events/native plans/audio, retained corpus, actual preset binding and original evidence; no pronunciation judgment.",
+  "date": "2026-11-04",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "actual_requests_verified": 10,
+  "inner_chunks_verified": 12,
+  "embedded_players": {
+    "index": 10,
+    "english": 4,
+    "mixed": 3,
+    "vietnamese": 3
+  },
+  "matched_source_rendered_text_and_plans": true,
+  "actual_voice_binding_matches_prior_ngoc_huyen": true,
+  "actual_voice_binding_differs_from_truc_ly": true,
+  "source_freeze_snapshots_zip_exact": true,
+  "software_passed": 317,
+  "software_failed": 0,
+  "software_errors": 0,
+  "software_skipped": 0,
+  "software_seconds": 5.34,
+  "old_research_files_preserved": 40,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_entries_post_run_verified": 4295,
+  "baseline_restored": true,
+  "worker_exit": 0,
+  "owner_ratings": null,
+  "physical_first_audible": "UNVERIFIED",
+  "product_activation": false,
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "result_sha256": "a1c55f39887c12fb24687af6f44769f98c8d104a66050b5b7648d799a1b53502"
+}

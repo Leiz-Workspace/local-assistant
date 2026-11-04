@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi kết quả thực tế của lượt xác minh rộng hơn theo [ADR161](ADR/161-truc-ly-broader-context-validation.md), sau khi chủ dự án chấp nhận phát âm Trúc Ly trên panel en-US trước. Đây là bộ câu mở rộng do người triển khai soạn, không phải benchmark mù độc lập.
 
-**Trạng thái: CHỦ DỰ ÁN CHẤP NHẬN MỨC HIỆN TẠI, CÒN HẠN CHẾ; DỪNG TINH CHỈNH TRÚC LY.** [Phản hồi nguyên văn](evidence/d74-truc-validation-owner-acceptance.json) cho biết đã đủ ổn, nhưng phụ âm cuối tiếng Anh chưa rõ, ví dụ “this” nghe thành “dít”. Ghi nhận giới hạn này, không coi là phát âm hoàn hảo hoặc tự gán điểm từng clip. Ngọc Huyền chưa chạy bộ 10 câu mới này; nhận xét không đạt tiếng Anh ở panel cũ vẫn được giữ riêng.
+**Trạng thái: CHỦ DỰ ÁN CHẤP NHẬN MỨC HIỆN TẠI, CÒN HẠN CHẾ; DỪNG TINH CHỈNH TRÚC LY.** [Phản hồi nguyên văn](evidence/d74-truc-validation-owner-acceptance.json) cho biết đã đủ ổn, nhưng phụ âm cuối tiếng Anh chưa rõ, ví dụ “this” nghe thành “dít”. Ghi nhận giới hạn này, không coi là phát âm hoàn hảo hoặc tự gán điểm từng clip. [Lượt riêng Ngọc Huyền sau đó](D74_NGOC_HUYEN_VALIDATION_RESULT.md) đã tạo đủ cùng 10 câu và chờ nghe; nhận xét không đạt tiếng Anh ở panel cũ vẫn được giữ riêng.
 
 ## Nghe và phản hồi
 
@@ -30,4 +30,4 @@ Worker wall 13,567 giây; peak RSS RAM lấy mẫu 1402,1 MiB; TTS riêng từng
 
 ## Tiến độ
 
-VOICE-ENGLISH-READING-001 và VOICE-BILINGUAL-IDENTITY-001: Trúc Ly được chấp nhận ở mức hiện tại với hạn chế đã ghi; dừng vòng tinh chỉnh này theo ý chủ dự án. Phần Ngọc Huyền trên cùng corpus vẫn PENDING, chưa có lượt chạy mới hoặc bằng chứng đã sửa lỗi I. Nếu tiếp tục đánh giá Ngọc Huyền, giữ nguyên corpus/policy/model và kết quả cũ, cần module kiểm thử và giới hạn riêng vì bộ chạy ADR161 chỉ cho Trúc Ly; effort một milestone đánh giá, rủi ro phụ âm/identity/naturalness và chạm cap. Không suy ra product adoption hoặc độ chính xác mọi câu. API/date/VI acceptance trước giữ đúng phạm vi; không bịa nhãn XI hay điểm acoustic riêng từ nhận xét tổng thể. ADR155 48 workflow chưa duyệt/chưa chạy. D60 deferred; physical4second/rights/no-speech/model/voice/product/D90 release còn mở.
+VOICE-ENGLISH-READING-001 và VOICE-BILINGUAL-IDENTITY-001: Trúc Ly được chấp nhận ở mức hiện tại với hạn chế đã ghi; dừng vòng tinh chỉnh này theo ý chủ dự án. Phần Ngọc Huyền trên cùng corpus đã hoàn thành lượt tạo audio riêng theo ADR162, chờ nghe; chưa có bằng chứng đã sửa lỗi I. Module kiểm thử và giới hạn riêng giữ nguyên corpus/policy/model và kết quả cũ; bộ chạy ADR161 vẫn chỉ cho Trúc Ly. Không suy ra product adoption hoặc độ chính xác mọi câu. API/date/VI acceptance trước giữ đúng phạm vi; không bịa nhãn XI hay điểm acoustic riêng từ nhận xét tổng thể. ADR155 48 workflow chưa duyệt/chưa chạy. D60 deferred; physical4second/rights/no-speech/model/voice/product/D90 release còn mở.
