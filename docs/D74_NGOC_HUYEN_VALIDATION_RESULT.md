@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi kết quả lượt thử riêng Ngọc Huyền theo [ADR162](ADR/162-ngoc-huyen-matched-context-validation.md), sau chỉ dẫn “Làm đi”. Dùng đúng bộ câu đã thử với Trúc Ly để so sánh; không tinh chỉnh lại Trúc Ly hoặc thay model.
 
-**Trạng thái: 10/10 clip hoàn chỉnh; CHỜ NGHE NGỌC HUYỀN.** Chưa kết luận tiếng Anh được sửa hoặc tốt hơn. Phản hồi cũ Ngọc Huyền đọc I thành i vẫn giữ nguyên. Trúc Ly đã được chấp nhận mức hiện tại với hạn chế “this” nghe thành “dít”, vòng tinh chỉnh đó đã dừng.
+**Trạng thái: 10/10 clip hoàn chỉnh; CHỦ DỰ ÁN BÁO API VẪN ĐỌC SAI.** [Phản hồi và đối chiếu đầu vào](evidence/d74-ngoc-api-owner-feedback.json) ghi API chưa đạt; chưa có tên clip/cách đọc sai cụ thể hoặc đánh giá những mục còn lại. Chưa kết luận tiếng Anh được sửa hoặc tốt hơn. Phản hồi cũ Ngọc Huyền đọc I thành i vẫn giữ nguyên. Trúc Ly đã được chấp nhận mức hiện tại với hạn chế “this” nghe thành “dít”, vòng tinh chỉnh đó đã dừng.
 
 ## Trang nghe
 
@@ -11,6 +11,12 @@
 - [Ba câu tiếng Việt](../data/backups/d74-vi-approved-campaign-20261103/ngoc-huyen-validation-first/review/vietnamese.html): số tiền, XI/xi măng, VI/hành vi vi phạm và nhịp câu.
 
 Tên câu giống [bộ Trúc Ly](D74_TRUC_LY_VALIDATION_RESULT.md). Chú ý I còn đọc thành i không, phụ âm cuối, thuật ngữ, API có rè/run không, ngắt câu và độ tự nhiên/chất giọng. Chỉ cần báo tên clip và chỗ nghe chưa ổn; không yêu cầu điền JSON/MOS. Trang nghe nhúng nguyên WAV, không thu âm, JavaScript, upload hoặc mạng.
+
+## Vì sao vẫn có lỗi API?
+
+Hai câu có API của Ngọc Huyền nhận cùng câu nguồn, text đã xử lý, toàn bộ phone plans và actual phonemes như Trúc Ly. API vẫn dùng `ˌeɪ pˌiː ˈaɪ` và đúng một lần xử lý ở mỗi câu. Native WAV được kiểm nguyên hash. Không thấy bằng chứng mất quy tắc API hoặc đầu vào quay về cách đọc cũ.
+
+Lượt này là đánh giá cùng cách xử lý khi đổi sang preset Ngọc Huyền, chưa có sửa riêng giọng đó. Cùng phiên âm không bảo đảm cách phát âm nghe được giống nhau khi speaker/reference conditioning khác. Chưa đủ bằng chứng tách nguyên nhân cụ thể trong model/reference/decoder; không suy ra chắc chắn do một thành phần hoặc tự phỏng đoán cách viết âm tiết mới.317 software tests và EOS xác minh bộ chạy, không chứng nhận API đọc đúng. Ngọc Huyền chưa đạt yêu cầu API theo phản hồi; bản Trúc Ly accepted-with-limitations giữ nguyên.
 
 ## Giữ nguyên điều kiện
 
@@ -30,4 +36,4 @@ Worker wall14,703 giây; peak sampled RSS RAM1456,0 MiB, TTS riêng từng câu0
 
 ## Tiến độ
 
-VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001: Ngọc Huyền đã có cùng corpus hoàn chỉnh, phần nghe còn mở. Dependency tiếp theo là phản hồi nghe Ngọc Huyền; effort một milestone đánh giá; rủi ro lỗi phát âm/identity/naturalness ngoài panel nhỏ. Không tự lên lịch tuning hoặc chọn voice/model/default sản phẩm. Trúc Ly accepted-with-limitations/refinement stopped giữ nguyên; kết quả không đạt tiếng Anh trước đây của Ngọc Huyền không bị xóa hoặc thay điểm. D60 deferred, ADR15548workflow chưa duyệt/chưa chạy, physical4second/rights/no-speech/product/D90release còn mở.
+VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001: Ngọc Huyền đã có cùng corpus hoàn chỉnh, API bị chủ dự án báo đọc sai, các mục còn lại chưa có nhãn riêng. Dependency tiếp theo là mô tả lỗi nghe cụ thể và giả thuyết có căn cứ trước một phương án sửa riêng; effort một milestone đánh giá; rủi ro lỗi phát âm/identity/naturalness ngoài panel nhỏ. Không tự lên lịch tuning hoặc chọn voice/model/default sản phẩm. Trúc Ly accepted-with-limitations/refinement stopped giữ nguyên; kết quả không đạt tiếng Anh trước đây của Ngọc Huyền không bị xóa hoặc thay điểm. D60 deferred, ADR15548workflow chưa duyệt/chưa chạy, physical4second/rights/no-speech/product/D90release còn mở.
