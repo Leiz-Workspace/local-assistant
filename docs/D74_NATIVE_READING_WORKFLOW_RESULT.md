@@ -50,3 +50,8 @@ Audit đầu so nhầm slot wrapper códescription với bare row; audit kế ti
 1. AUDIO-VAD-ASR-001 follow-up — P1 trước product: xử lý false speech/no-speech với guard/dataset thích hợp. Dependency là16negative failures và D72gated/ungated evidence; effort một milestone thiết kế/controls rồi một bounded measurement. Rủi ro loại nhầm giọng nhỏ/EN, cắt sample clock hoặc lặp lại VAD concatenation vốn chưa qualified. Không tự bật gate cũ.
 2. VOICE-LATENCY-AC-001 — P1: tối ưu/profile ASR/TTS và vòng đời đã nạp theo dữ liệu; resident giúp nhưng Trúc Ly vẫn có lượt>4s. Dependency scope tài nguyên/identity/model đã chốt, stage measurements và protocol; effort một profiling/design milestone rồi measurement riêng. Rủi ro đổi CPU/GPU/concurrency ảnh hưởng shared resources, chất lượng hoặc coi PCM là physical playback. Chưa xếp một lượt tuning/native tiếp hoặc đổi model.
 3. Endpoint/auth/retention/playback và first-audible trên Brave/PC, rights/model/default/product signoff vẫn riêng; microphone smoke cũ giữ PASS đúng phạm vi. D60deferred; D90 NOT RELEASED. Original ADR155raw vẫn không chạy; ADR165là cohort mới đã được owner cho chạy, không gộp điểm.
+
+
+## Follow-up riêng — 2026-11-04
+
+[ADR166 whole-clip presence](D74_WHOLE_CLIP_PRESENCE_RESULT.md) đã có prototype và100quan sát Silero thật:5negative bị chặn/40speech gốc nhận đủ, nhưng2quiet EN controls bị từ chối.524relatedPASS; không bật gate, không thêm native ASR/CORE/TTS hoặc sửa điểm48lượt trên. Chỉ sentinel được dùng để kiểm đường chặn; D74/no-speech/product và4giây vẫn chưa PASS.

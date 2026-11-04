@@ -34,3 +34,12 @@ Rủi ro có căn cứ: bản benchmark gốc chưa chứa reading policy mới,
 ADR155 yêu cầu **“Request one new explicit approval for one replacement48-slot workflow campaign only.”** Chủ dự án trước đó chọn “Chờ nghe24clip”; các nhận xét nghe và yêu cầu dừng tinh chỉnh không tự phê duyệt48lượt native. Yêu cầu mới “Chay để xác nhận đi” sau đó đã cho phép cohort ADR165 riêng và cohort đó đã đo xong; entry point, kế hoạch và hash ADR155 cũ giữ nguyên.
 
 D60 tiếp tục deferred theo chủ dự án. Rights/model/default/product/D90release và4giây thật còn mở; không chuyển ngày hoặc ghi hoàn tất chỉ vì dừng tinh chỉnh phát âm.
+
+
+## D74 whole-clip presence follow-up — 2026-11-04
+
+[ADR166 prototype and actual results](D74_WHOLE_CLIP_PRESENCE_RESULT.md): the optional research gate admits the identical full PCM/clock when original Silero v5 finds speech, otherwise the original pipeline refuses before downstream ASR/CORE/TTS. Existing application/models/thresholds/defaults stay unchanged; no concatenation or product activation. 524 related PASS/0FAIL/ERROR/SKIP in 6.47s, including 61 new controls.
+
+100 actual VAD observations / 7 clean workers cover 40 unique original VI/EN speech recordings (40 admitted), 2 padded repeats (2 admitted), 5 authored negatives (5 refused) and 6 derived quiet controls (4 admitted, 2 EN refused). The panel is reused, quiet controls have inherited coarse labels and downstream calls are explicit software sentinels, not native ASR/CORE/TTS. Six original D74 ASR input hashes match; 1903 prior code/evidence files plus the 750-application/210-protected baseline and native/container state remain preserved. Original ADR165 16/16 erroneous negative replies and latency failures are not overwritten; no max4second/device/product PASS.
+
+AUDIO-VAD-ASR-002 P1 is assessed as the next research candidate: detector-only amplitude-normalized view while ASR keeps original PCM, with separately fixed bilingual/quiet/negative controls, source/view provenance, one design/control and bounded comparison milestone. Risks are noise/DC/clipping amplification and overfit; no algorithm/gain/model switch, new measurement or activation is chosen here. Short/quiet-word sensitivity, native full-workflow integration, physical timing/rights/default/product/D90release remain OPEN; D60 deferred and both pronunciation cycles stopped.
