@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi kết quả thực tế của lượt xác minh rộng hơn theo [ADR161](ADR/161-truc-ly-broader-context-validation.md), sau khi chủ dự án chấp nhận phát âm Trúc Ly trên panel en-US trước. Đây là bộ câu mở rộng do người triển khai soạn, không phải benchmark mù độc lập.
 
-**Trạng thái: 10/10 clip hoàn chỉnh; CHỜ NGHE.** Chưa kết luận bộ câu mới đạt phát âm, độ tự nhiên hoặc giữ cùng chất giọng. Ngọc Huyền vẫn không đạt tiếng Anh theo phản hồi trước; không chạy lại giọng đó hoặc sửa phiên âm I khi đầu vào cũ đã là /aɪ/.
+**Trạng thái: CHỦ DỰ ÁN CHẤP NHẬN MỨC HIỆN TẠI, CÒN HẠN CHẾ; DỪNG TINH CHỈNH TRÚC LY.** [Phản hồi nguyên văn](evidence/d74-truc-validation-owner-acceptance.json) cho biết đã đủ ổn, nhưng phụ âm cuối tiếng Anh chưa rõ, ví dụ “this” nghe thành “dít”. Ghi nhận giới hạn này, không coi là phát âm hoàn hảo hoặc tự gán điểm từng clip. Ngọc Huyền chưa chạy bộ 10 câu mới này; nhận xét không đạt tiếng Anh ở panel cũ vẫn được giữ riêng.
 
 ## Nghe và phản hồi
 
@@ -10,7 +10,7 @@
 - [Ba câu Việt–Anh](../data/backups/d74-vi-approved-campaign-20261103/truc-ly-validation-first/review/mixed.html): Python/API/server, GitHub/Docker, 09:15 ngày 14/11/2026 và câu hỏi.
 - [Ba câu tiếng Việt](../data/backups/d74-vi-approved-campaign-20261103/truc-ly-validation-first/review/vietnamese.html): 12 sản phẩm/125000 đồng; Chương XI/xi măng và Chương VI/hành vi vi phạm; nhịp câu hỏi.
 
-Mỗi clip có câu nguồn và điểm cần nghe ngay trên trang. Báo tên clip nào đọc sai, từ nghe được, có rè/run hay không, cả câu có tự nhiên và còn đúng chất giọng Trúc Ly bạn thích không. Không cần nhập JSON hoặc chấm MOS. Không có thu microphone, JavaScript, upload hoặc mạng trong các trang nghe; audio nhúng giữ nguyên WAV đã sinh.
+Mỗi clip có câu nguồn và điểm cần nghe ngay trên trang. Các trang được giữ để đối chiếu; không yêu cầu nghe hoặc tinh chỉnh Trúc Ly thêm trong vòng này. Chủ dự án chấp nhận tổng thể nhưng không cung cấp điểm phát âm/tự nhiên/identity riêng từng clip hoặc xác nhận nghe đủ từng mục. Không cần nhập JSON hoặc chấm MOS. Không có thu microphone, JavaScript, upload hoặc mạng trong các trang nghe; audio nhúng giữ nguyên WAV đã sinh.
 
 ## Cách thực hiện
 
@@ -30,4 +30,4 @@ Worker wall 13,567 giây; peak RSS RAM lấy mẫu 1402,1 MiB; TTS riêng từng
 
 ## Tiến độ
 
-VOICE-ENGLISH-READING-001 và VOICE-BILINGUAL-IDENTITY-001: lượt xác minh rộng hơn đã tạo đủ clip, phần nghe đang mở. Dependency tiếp theo là nhận xét pronunciation/accent, naturalness, identity và API trong ngữ cảnh mới; effort một milestone nghe/ghi nhận, rủi ro panel nhỏ và lỗi ngoài corpus. Không tự hẹn lượt tuning mới hoặc suy ra product adoption. API/date/VI acceptance trước giữ đúng phạm vi; XI cũ và bản XI mới chưa được xác nhận nghe. ADR155 48 workflow chưa duyệt/chưa chạy. D60 deferred; physical4second/rights/no-speech/model/voice/product/D90 release còn mở.
+VOICE-ENGLISH-READING-001 và VOICE-BILINGUAL-IDENTITY-001: Trúc Ly được chấp nhận ở mức hiện tại với hạn chế đã ghi; dừng vòng tinh chỉnh này theo ý chủ dự án. Phần Ngọc Huyền trên cùng corpus vẫn PENDING, chưa có lượt chạy mới hoặc bằng chứng đã sửa lỗi I. Nếu tiếp tục đánh giá Ngọc Huyền, giữ nguyên corpus/policy/model và kết quả cũ, cần module kiểm thử và giới hạn riêng vì bộ chạy ADR161 chỉ cho Trúc Ly; effort một milestone đánh giá, rủi ro phụ âm/identity/naturalness và chạm cap. Không suy ra product adoption hoặc độ chính xác mọi câu. API/date/VI acceptance trước giữ đúng phạm vi; không bịa nhãn XI hay điểm acoustic riêng từ nhận xét tổng thể. ADR155 48 workflow chưa duyệt/chưa chạy. D60 deferred; physical4second/rights/no-speech/model/voice/product/D90 release còn mở.
