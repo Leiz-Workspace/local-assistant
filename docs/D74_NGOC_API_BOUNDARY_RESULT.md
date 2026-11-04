@@ -2,7 +2,7 @@
 
 **Mục đích:** Kiểm tra một giả thuyết tối thiểu sau khi chủ dự án mô tả API nghe thành “E - Pe-I, A - Pe - I”. [Phản hồi nguyên văn](evidence/d74-ngoc-api-exact-owner-feedback.json), [ADR163](ADR/163-ngoc-huyen-api-dictionary-boundary-trial.md).
 
-**Trạng thái: 1 clip mới hoàn chỉnh; CHỜ NGHE.** Bản cũ Ngọc Huyền vẫn được ghi API chưa đạt; chưa kết luận bản mới sửa được lỗi. Trúc Ly giữ đúng bản accepted-with-limitations, vòng tinh chỉnh đã dừng.
+**Trạng thái: CHỦ DỰ ÁN BÁO CẢI THIỆN NHƯNG API VẪN SAI; DỪNG TINH CHỈNH.** [Phản hồi nguyên văn](evidence/d74-ngoc-api-owner-stop.json) chốt dừng phần này. Giữ lỗi và mọi bản audio, không coi candidate đã sửa thành công hoặc tự áp dụng mặc định. Trúc Ly giữ đúng bản accepted-with-limitations, vòng tinh chỉnh đã dừng.
 
 ## Nghe đối chiếu
 
@@ -10,7 +10,7 @@
 
 Cùng câu: “Bạn có thể gọi API bằng Python trên server này không?”. Bản cũ là WAV Ngọc Huyền nguyên gốc từ bộ 10 câu, không sinh lại. Bản thử mới đặt bên dưới, được nhúng nguyên WAV; trang không có JavaScript, microphone, upload, network hay autoplay.
 
-Nghe API có đúng Ei–Pi–Ai không, còn E–Pe–I/A–Pe–I hay rè/run không; Python/server, nhịp và chất giọng của cả câu có bị ảnh hưởng không. Không yêu cầu nghe lại 10 clip hoặc nhập JSON/MOS. Một câu đạt cũng không tự chứng nhận mọi ngữ cảnh.
+Các clip giữ để đối chiếu; không yêu cầu nghe hoặc tạo thêm clip trong vòng này. Chủ dự án nhận xét tổng thể tốt hơn nhưng chưa đúng, không cung cấp điểm riêng về Python/server, rè/run, nhịp hoặc identity. Không tự bổ sung các nhãn đó.
 
 ## Căn cứ và thay đổi duy nhất
 
@@ -30,4 +30,4 @@ Một worker exit0/joined, baseline dịch vụ/native phục hồi; wall3,167s/
 
 [Actual receipt](evidence/d74-ngoc-api-boundary-result.json), [verification](evidence/d74-ngoc-api-boundary-verification.json), [full version ba file code/test](../data/backups/d74-vi-approved-campaign-20261103/ngoc-api-boundary-first/review/full-code.zip). Audit bind actual request/event/native/chunk, only-two-spaces/equalcap/voicehashes, nguyênWAV cũ/mới, codefreeze/snapshots/ZIP/terminal/authority và4295SDKentries. Không nhãn nghe giả, không tự chọn bản thử làm mặc định.
 
-VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 P1: một cặp đối chiếu hoàn chỉnh, dependency tiếp theo là nghe; effort một đánh giá cặp, rủi ro authored-case overfit/regression và không cải thiện. Không tự xếp lượt tuning tiếp. Ngọc Huyền baseline API rejection/English I→i cũ và Trúc Ly acceptance/refinement stop giữ nguyên. ADR15548workflow chưa duyệt/chưa chạy; D60deferred, physical4second/rights/no-speech/product/D90release còn mở.
+VOICE-ENGLISH-READING-001/VOICE-API-ARTIFACT-001 P1: cặp đối chiếu đã nhận phản hồi cải thiện nhưng chưa đạt, dừng tinh chỉnh theo chủ dự án. [Bước tiếp theo](D74_NEXT_WORKFLOW_VALIDATION.md) là chuẩn bị kiểm thử luồng và độ trễ D74; không tự xếp lượt tuning tiếp. Ngọc Huyền baseline API rejection/English I→i cũ và Trúc Ly acceptance/refinement stop giữ nguyên. ADR15548workflow chưa duyệt/chưa chạy; D60deferred, physical4second/rights/no-speech/product/D90release còn mở.
