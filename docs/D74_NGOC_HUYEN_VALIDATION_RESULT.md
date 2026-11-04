@@ -2,7 +2,7 @@
 
 **Mục đích:** Ghi kết quả lượt thử riêng Ngọc Huyền theo [ADR162](ADR/162-ngoc-huyen-matched-context-validation.md), sau chỉ dẫn “Làm đi”. Dùng đúng bộ câu đã thử với Trúc Ly để so sánh; không tinh chỉnh lại Trúc Ly hoặc thay model.
 
-**Trạng thái: 10/10 clip hoàn chỉnh; CHỦ DỰ ÁN BÁO API VẪN ĐỌC SAI.** [Phản hồi và đối chiếu đầu vào](evidence/d74-ngoc-api-owner-feedback.json) ghi API chưa đạt; chưa có tên clip/cách đọc sai cụ thể hoặc đánh giá những mục còn lại. Chưa kết luận tiếng Anh được sửa hoặc tốt hơn. Phản hồi cũ Ngọc Huyền đọc I thành i vẫn giữ nguyên. Trúc Ly đã được chấp nhận mức hiện tại với hạn chế “this” nghe thành “dít”, vòng tinh chỉnh đó đã dừng.
+**Trạng thái: 10/10 clip hoàn chỉnh; CHỦ DỰ ÁN BÁO API VẪN ĐỌC SAI.** [Phản hồi và đối chiếu đầu vào](evidence/d74-ngoc-api-owner-feedback.json) ghi API chưa đạt; chủ dự án sau đó mô tả [“E - Pe-I, A - Pe - I”](evidence/d74-ngoc-api-exact-owner-feedback.json), chưa có tên clip cụ thể hoặc đánh giá những mục còn lại. Chưa kết luận tiếng Anh được sửa hoặc tốt hơn. Phản hồi cũ Ngọc Huyền đọc I thành i vẫn giữ nguyên. Trúc Ly đã được chấp nhận mức hiện tại với hạn chế “this” nghe thành “dít”, vòng tinh chỉnh đó đã dừng.
 
 ## Trang nghe
 
@@ -37,3 +37,8 @@ Worker wall14,703 giây; peak sampled RSS RAM1456,0 MiB, TTS riêng từng câu0
 ## Tiến độ
 
 VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001: Ngọc Huyền đã có cùng corpus hoàn chỉnh, API bị chủ dự án báo đọc sai, các mục còn lại chưa có nhãn riêng. Dependency tiếp theo là mô tả lỗi nghe cụ thể và giả thuyết có căn cứ trước một phương án sửa riêng; effort một milestone đánh giá; rủi ro lỗi phát âm/identity/naturalness ngoài panel nhỏ. Không tự lên lịch tuning hoặc chọn voice/model/default sản phẩm. Trúc Ly accepted-with-limitations/refinement stopped giữ nguyên; kết quả không đạt tiếng Anh trước đây của Ngọc Huyền không bị xóa hoặc thay điểm. D60 deferred, ADR15548workflow chưa duyệt/chưa chạy, physical4second/rights/no-speech/product/D90release còn mở.
+
+
+## One-pair boundary follow-up — 2026-11-04
+
+[ADR163 result and two-player comparison](D74_NGOC_API_BOUNDARY_RESULT.md) tests only removing two API phone spaces to match the pinned native dictionary, on retained mixed-api text/Ngọc Huyền/reference/sampling/cap172.1newrequest/1chunk/EOS plus1immutable oldbaseline,328relatedPASS; no Trúc Ly run/model/reference change. Owner hearing pending, no API fix inferred. The other9metadata rows are not requests; all old10outputs and rejection remain unchanged.
