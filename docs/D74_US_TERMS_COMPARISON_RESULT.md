@@ -2,7 +2,18 @@
 
 **Mục đích:** Đối chiếu thay đổi phiên âm có căn cứ cho Python/GitHub/server, thêm Docker/browser/database làm kiểm tra, giữ nguyên model, giọng và đường API/ngắt câu trước.
 
-**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** hoàn tất kỹ thuật 12 cặp/24 vị trí audio; **chưa có đánh giá nghe bản mới**. Không tuyên bố đã sửa accent Mỹ hoặc giữ nguyên cảm nhận giọng chỉ dựa trên hash đầu vào. [ADR-160](ADR/160-us-term-phonemes-with-retained-voice-and-api.md), [authority](evidence/d74-us-terms-authorization.json), [actual result](evidence/d74-us-terms-result.json), [verification](evidence/d74-us-terms-verification.json).
+**Ngày:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái cập nhật:** chủ dự án xác nhận **Trúc Ly phát âm chuẩn Anh–Mỹ trên bộ đã nghe**, **Ngọc Huyền không đạt**, ví dụ “I” đọc như “i”. [Phản hồi nguyên văn và trace](evidence/d74-us-terms-owner-voice-assessment.json). Đây là nhận xét theo giọng/cấp panel, chưa có nhãn từng clip hoặc xác nhận riêng naturalness/identity/API trong bản mixed mới. Giữ kết quả kỹ thuật 12 cặp/24 vị trí audio và mọi file trước. [ADR-160](ADR/160-us-term-phonemes-with-retained-voice-and-api.md), [authority](evidence/d74-us-terms-authorization.json), [actual result tại thời điểm chạy](evidence/d74-us-terms-result.json), [verification](evidence/d74-us-terms-verification.json).
+
+## Quyết định sau khi nghe
+
+| Giọng | Đánh giá chủ dự án | Hướng tiếp tục |
+|---|---|---|
+| Trúc Ly | Phát âm chuẩn Anh–Mỹ trên panel đã nghe | Giữ nguyên audio/source; ưu tiên cho bước xác minh song ngữ VI/en-US tiếp theo |
+| Ngọc Huyền | Không đạt tiếng Anh, nhiều lỗi; I nghe như i | Chưa đủ điều kiện tiếng Anh theo panel này; giữ kết quả làm bằng chứng, không suy ra chất lượng VI bị bác bỏ |
+
+Đã kiểm tra lại **cả baseline và candidate của câu “I write code in Python every day.” ở hai giọng**. Cả bốn trace thật đều bắt đầu bằng `ˈaɪ`; token/probe/native binding đã được kiểm và các clip đều kết thúc EOS. Chưa có bằng chứng frontend biến pronoun I thành `/i/`. Ngọc Huyền vẫn tạo cách đọc không đạt theo người nghe dù nhận đầu vào `/aɪ/`; chưa xác định cơ chế riêng của model/reference/decoder và không kết luận giọng này không bao giờ có thể nói tiếng Anh tốt.
+
+Không tạo per-clip PASS/FAIL, MOS, xác nhận nghe đủ hoặc gán lỗi riêng baseline/candidate khi người dùng chưa chỉ rõ. Naturalness, mức giống giọng và API trong mixed audio mới vẫn chưa có xác nhận riêng. Ưu tiên nghiên cứu Trúc Ly phù hợp với mục tiêu cùng giọng Việt/Anh, chưa phải chọn voice/model/default hay kích hoạt sản phẩm.
 
 ## Trang nghe trước–sau
 
@@ -44,4 +55,6 @@ Worker baseline wall8,223giây/peak sampledRSS RAM1313,3MiB; worker US8,531giây
 
 ## Tiến độ
 
-VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001 đã có paired word panel thực tế, acoustic en-US/identity/naturalness còn mở. API pronunciation, VI/date/prosody accepted-scope trước giữ nguyên; API trong clip mới cần kiểm lại. XI chưa có nhận xét nghe mới. Model/voice/default/policy sản phẩm chưa chọn; ADR155workflow chưa duyệt/chưa chạy, D60 deferred, rights/no-speech/physical4second/product/D90release vẫn mở.
+VOICE-ENGLISH-READING-001/VOICE-BILINGUAL-IDENTITY-001 có kết quả nghe theo giọng: Trúc Ly accepted pronunciation trong phạm vi panel, Ngọc Huyền rejected English. Bước tiếp theo ưu tiên xác minh Trúc Ly trên corpus VI/en-US/mixed rộng hơn, tách rubric pronunciation/accent khỏi naturalness/identity; dependency là panel/source hiện có, corpus khai báo trước và bounded protocol/code riêng được kiểm thử. Effort một milestone xác minh, rủi ro overfit panel nhỏ và regression ngoài từ đã sửa; chưa xếp lịch native thêm hoặc dùng suất dư của lượt cũ. Giữ toàn bộ source/audio đã qua nghe.
+
+API pronunciation, VI/date/prosody accepted-scope trước giữ nguyên; API trong clip mới cần kiểm lại. XI chưa có nhận xét nghe mới. Model/voice/default/policy sản phẩm chưa chọn; ADR155workflow chưa duyệt/chưa chạy, D60 deferred, rights/no-speech/physical4second/product/D90release vẫn mở.
