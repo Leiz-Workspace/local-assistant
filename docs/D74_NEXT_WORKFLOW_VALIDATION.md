@@ -8,6 +8,10 @@
 
 D74 vẫn OPEN. Microphone Brave/PC capture/playback smoke đã được chủ dự án xác nhận trong phạm vi ghi nhận; chưa phải recorder→ASR→CORE→TTS sản phẩm. Các số TTS riêng không chứng minh chờ tối đa4giây.
 
+## Bước1 đã thực hiện — 2026-11-04
+
+[Reading bridge và kiểm thử](D74_WORKFLOW_READING_BRIDGE_RESULT.md) đã có386relatedPASS,20/20model-free frontend cases và10oldcontrol parity. Giữ nguyên source/product model/default; native48case và first-audible4giây chưa đo. Kế tiếp chuẩn bị đúng operator/scope cho native reading-aware workflow, không chạy nhầm ADR155raw cũ.
+
 ## Công việc ưu tiên kế tiếp
 
 **VOICE-LATENCY-AC-001 / D74 workflow recovery — P1.** Kiểm luồng nhận dạng giọng nói → CORE tạo câu trả lời → TTS, xác minh lời trả lời hoàn chỉnh và đo phần nào gây chờ. Ngừng các lượt thử phát âm bổ sung.
