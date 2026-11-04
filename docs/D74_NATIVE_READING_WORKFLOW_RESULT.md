@@ -55,3 +55,8 @@ Audit đầu so nhầm slot wrapper códescription với bare row; audit kế ti
 ## Follow-up riêng — 2026-11-04
 
 [ADR166 whole-clip presence](D74_WHOLE_CLIP_PRESENCE_RESULT.md) đã có prototype và100quan sát Silero thật:5negative bị chặn/40speech gốc nhận đủ, nhưng2quiet EN controls bị từ chối.524relatedPASS; không bật gate, không thêm native ASR/CORE/TTS hoặc sửa điểm48lượt trên. Chỉ sentinel được dùng để kiểm đường chặn; D74/no-speech/product và4giây vẫn chưa PASS.
+
+
+## Separate local gate follow-up — 2026-11-04
+
+[ADR169detector147/147 and ADR168native8/8](D74_DETECTOR_PEAK_GATE_RESULT.md) now verify the new detector-only peak normalization/whole-clip gate in a separate finite scope,592relatedPASS.4speech native outputs/4correct no-speech early refusals; models and prior scores in this report remain unchanged. Gate product activation/quiet-ASRsemantics/real mic/noise/physical4seconds/rights/default/product/release remain OPEN; no original failed row is rescored.

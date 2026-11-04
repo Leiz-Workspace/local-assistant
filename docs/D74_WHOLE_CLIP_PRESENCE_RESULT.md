@@ -41,3 +41,8 @@ Panel được cố định trước khi chạy: toàn bộ 47 mẫu D72 cũ qua
 **AUDIO-VAD-ASR-002 — P1, đề xuất nghiên cứu:** đánh giá một bản audio chuẩn hóa biên độ **chỉ cho detector**, còn ASR vẫn nhận PCM/clock gốc. Dependency: lỗi quiet EN đã giữ nguyên, exact source/view hash binding và corpus VI/EN/quiet/negative cố định riêng trước khi đo. Effort: một milestone thiết kế/controls và so sánh hữu hạn. Rủi ro: khuếch đại noise/DC/clipping, lệch provenance và overfit hai câu đã biết. Chưa chọn thuật toán/gain, chưa triển khai hoặc chạy phương án này; cần benchmark trước quyết định tích hợp.
 
 Sau khi sensitivity/negative controls phù hợp, mới nối detector native vào workflow thật và đo lại theo scope riêng. VOICE-LATENCY-AC-001 vẫn cần profile ASR/TTS; không cộng segmentation-only vào số cũ để giả lập max 4 giây. Short-speech/word retention, first-audible trên PC, endpoint/auth/retention/playback, quyền sử dụng và lựa chọn model/default/sản phẩm vẫn OPEN. D60 deferred; D90 NOT RELEASED.
+
+
+## Separate local gate follow-up — 2026-11-04
+
+[ADR169detector147/147 and ADR168native8/8](D74_DETECTOR_PEAK_GATE_RESULT.md) now verify the new detector-only peak normalization/whole-clip gate in a separate finite scope,592relatedPASS.4speech native outputs/4correct no-speech early refusals; models and prior scores in this report remain unchanged. Gate product activation/quiet-ASRsemantics/real mic/noise/physical4seconds/rights/default/product/release remain OPEN; no original failed row is rescored.
