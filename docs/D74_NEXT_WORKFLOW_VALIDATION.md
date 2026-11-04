@@ -1,6 +1,6 @@
 # D74 — Bước tiếp theo sau khi dừng tinh chỉnh phát âm
 
-**Mục đích:** Xếp công việc kế tiếp theo kết quả thật, sau khi chủ dự án dừng vòng sửa Ngọc Huyền. Đây là kế hoạch chuẩn bị; chưa cho phép chạy native hoặc thay lựa chọn model.
+**Mục đích:** Xếp công việc kế tiếp theo kết quả thật, sau khi chủ dự án dừng vòng sửa Ngọc Huyền. Phần chuẩn bị và một lượt native reading-aware đã hoàn tất theo ADR165; tài liệu này ghi kết quả và việc còn lại, không tự cho phép lượt chạy mới hoặc thay lựa chọn model.
 
 ## Trạng thái đã chốt
 
@@ -10,23 +10,27 @@ D74 vẫn OPEN. Microphone Brave/PC capture/playback smoke đã được chủ d
 
 ## Bước1 đã thực hiện — 2026-11-04
 
-[Reading bridge và kiểm thử](D74_WORKFLOW_READING_BRIDGE_RESULT.md) đã có386relatedPASS,20/20model-free frontend cases và10oldcontrol parity. Giữ nguyên source/product model/default; native48case và first-audible4giây chưa đo. Kế tiếp chuẩn bị đúng operator/scope cho native reading-aware workflow, không chạy nhầm ADR155raw cũ.
+[Reading bridge và kiểm thử](D74_WORKFLOW_READING_BRIDGE_RESULT.md) đã có386relatedPASS,20/20model-free frontend cases và10oldcontrol parity. Giữ nguyên source/product model/default. [ADR165native48case](D74_NATIVE_READING_WORKFLOW_RESULT.md) sau đó đã được owner yêu cầu chạy: đủ48observations,32speechcomplete/16negativefail, buffered target chưa đạt. First-audible trên thiết bị chưa đo; không chạy nhầm ADR155raw cũ.
 
-## Công việc ưu tiên kế tiếp
+## Kế hoạch đã thực hiện và phần thiết bị còn lại
 
-**VOICE-LATENCY-AC-001 / D74 workflow recovery — P1.** Kiểm luồng nhận dạng giọng nói → CORE tạo câu trả lời → TTS, xác minh lời trả lời hoàn chỉnh và đo phần nào gây chờ. Ngừng các lượt thử phát âm bổ sung.
+**VOICE-LATENCY-AC-001 / D74 workflow recovery — P1.** Các bước 1–3 dưới đây đã có kết quả ADR164/165; bước 4 và các gate chất lượng vẫn mở. Ngừng các lượt thử phát âm bổ sung.
 
 1. Rà soát caller đã sửa, packet/corpus và chính sách đọc đã được chấp nhận. [ADR155](ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md) khóa kế hoạch2ASR×2TTS×2trạng thái×6nguồn=48slot, lane Turbo Trúc Ly gốc và Piper VI control. Nó chưa mô tả việc ghép toàn bộ renderer/US-term/API nghiên cứu mới vào phản hồi CORE tùy ý. Không âm thầm chạy bản gốc rồi gọi đó là bản đọc đã được nghe; không mở whitelist của các study đã đóng băng. Cần xác định adapter/lifecycle nào đã có và khoảng trống tích hợp, thêm test hoặc ADR riêng nếu thay cách kết hợp.
 2. Chuẩn bị bản kế hoạch cụ thể cho caller/renderer đã kiểm thử, nguồn/phạm vi, request/resource limits và rollback; giữ nguyên các model/lane đã thỏa thuận. Trúc Ly chỉ là lane nghiên cứu sẵn trong kế hoạch cũ, không phải lựa chọn sản phẩm mới; Ngọc Huyền có thể giữ pending tùy chọn, không kéo theo vòng tuning tiếp. Không tự đổi ASR, streaming, context, cap hoặc GPU để đạt4giây.
 3. Sau khi phạm vi native phù hợp được duyệt, chạy đúng lượt hữu hạn đã đóng băng. Giữ riêng6workflow slot cũ software-invalid/42chưa gọi; không gộp score với lượt mới. Ghi số lỗi, transcript, complete native audio, cold/warm, ASR/CORE/TTS stages, RAM và cleanup. Thử silence/noise/missing speech theo corpus đã duyệt; không biến test phần mềm thành chứng nhận không hallucinate.
 4. Phép đo CLI submission→complete PCM là proxy kỹ thuật. Phải nối endpoint/auth/retention và playback phù hợp trước khi xác nhận submission→first-audible trên Brave/PC≤4giây. Kiểm Stop/Hủy trong luồng thật và giữ bộ microphone smoke đã PASS. Không đánh PASS4giây từ TTS-only hoặc từ PCM có sẵn.
 
+## Bước3 đã đo thật — 2026-11-04
+
+Owner tiếp tục “Chay để xác nhận đi” cho cohort reading-aware riêng ADR165; không suy phê duyệt từ nhận xét nghe trước đó. Đã chạy48/48,0retry/0guardfailure; [số đo và lỗi thực tế](D74_NATIVE_READING_WORKFLOW_RESULT.md). Kế tiếp ưu tiên false speech/no-speech và profileASR/TTS theo dữ liệu trước product; không tự bật VAD cũ hoặc thay model. Target4giây và thiết bị vẫn chưa đạt/chưa xác minh đúng phạm vi.
+
 ## Dependency, effort, rủi ro và giới hạn hiện tại
 
-Dependency: kết quả nghe đã lưu, source/SDK/assets hiện có, caller metadata fix, thiết kế adapter cho phản hồi CORE, bộ test và phê duyệt phạm vi native. Effort một milestone kiểm tra/tích hợp/test chuẩn bị; một milestone benchmark riêng (kế hoạch ADR155 gốc tối đa60phút), rồi đo thiết bị khi có luồng sản phẩm phù hợp. Chưa hứa mọi việc xong trong một lượt.
+Dependency chuẩn bị, adapter, tests và lượt đo native hữu hạn đã được đáp ứng theo ADR164/165. Việc tiếp theo là thiết kế guard no-speech và profile ASR/TTS, mỗi phần cần controls và phạm vi đo riêng; sau đó đo thiết bị khi có luồng sản phẩm phù hợp. Effort và rủi ro được đánh giá trong báo cáo ADR165; chưa tự xếp một lượt native tiếp theo.
 
 Rủi ro có căn cứ: bản benchmark gốc chưa chứa reading policy mới, các study giới hạn câu/preset, ASR đã có độ trễ và hallucination trên negative, PCM không đồng nghĩa đã phát tiếng, co-residency/cancel/cleanup và nhầm chất lượng nghiên cứu với sản phẩm. Giữ immutable first outcomes, finite budgets và rollback dừng/join riêng workers, xác minh baseline/source; không chạm shared services/weights/Vault/database.
 
-ADR155 yêu cầu **“Request one new explicit approval for one replacement48-slot workflow campaign only.”** Chủ dự án trước đó chọn “Chờ nghe24clip”; các nhận xét nghe và yêu cầu dừng tinh chỉnh không tự phê duyệt48lượt native. Tài liệu này chỉ chuẩn bị bước tiếp theo, không gỡ khóa entry point hoặc sửa kế hoạch/hash cũ.
+ADR155 yêu cầu **“Request one new explicit approval for one replacement48-slot workflow campaign only.”** Chủ dự án trước đó chọn “Chờ nghe24clip”; các nhận xét nghe và yêu cầu dừng tinh chỉnh không tự phê duyệt48lượt native. Yêu cầu mới “Chay để xác nhận đi” sau đó đã cho phép cohort ADR165 riêng và cohort đó đã đo xong; entry point, kế hoạch và hash ADR155 cũ giữ nguyên.
 
 D60 tiếp tục deferred theo chủ dự án. Rights/model/default/product/D90release và4giây thật còn mở; không chuyển ngày hoặc ghi hoàn tất chỉ vì dừng tinh chỉnh phát âm.
