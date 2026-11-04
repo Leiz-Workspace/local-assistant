@@ -1,0 +1,45 @@
+{
+  "description": "Post-run technical audit of the single10-output broader Truc Ly validation; no acoustic listening labels inferred.",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "date": "2026-11-04",
+  "actual_requests_verified": 10,
+  "inner_chunks_verified": 12,
+  "embedded_players": {
+    "index": 10,
+    "english": 4,
+    "mixed": 3,
+    "vietnamese": 3
+  },
+  "ordered_native_probe_plans": true,
+  "voice_reference_binding_unchanged": true,
+  "source_snapshot_zip_and_freeze_exact": true,
+  "software_passed": 306,
+  "software_failed": 0,
+  "software_errors": 0,
+  "software_skipped": 0,
+  "software_seconds": 5.39,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_preserved": 37,
+  "sdk_entries_post_run_verified": 4295,
+  "baseline_restored": true,
+  "worker_exit": 0,
+  "owner_ratings": null,
+  "product_activation": false,
+  "physical_first_audible": "UNVERIFIED",
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "audit_command_issues": [
+    {
+      "error": "AttributeError: MediaParser has no attribute audio",
+      "resolution": "Used existing media attribute."
+    },
+    {
+      "error": "FileNotFoundError: per-case result file",
+      "resolution": "Read the actual worker events.jsonl result events instead."
+    }
+  ],
+  "audit_resolution": "One-off checker commands corrected only; no source/artifact edit, inference rerun or result selection.",
+  "result_sha256": "05ad0e0d16d0423a4676dc711da50feea708aecd87b51df87b3e829057707c50"
+}
