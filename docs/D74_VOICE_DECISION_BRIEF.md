@@ -2,11 +2,11 @@
 
 **Mục đích:** Đối chiếu chất lượng nghe, độ trễ, RAM và quyền sử dụng của đúng các ứng viên đã đánh giá; đề xuất bước tiếp theo trước khi chọn giọng/model cho sản phẩm.
 
-**Ngày:** 2026-11-03, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS RECORDED / PROTOCOL APPROVED / TTS STANDALONE COMPLETE / WORKFLOW RECOVERY PENDING; MODEL/PHYSICAL PERFORMANCE OPEN; OWNER TARGET 4 SECONDS. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
+**Ngày cập nhật:** 2026-11-04, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS RECORDED / PROTOCOL APPROVED / TTS STANDALONE COMPLETE / ADR165 READING WORKFLOW MEASURED; LATENCY/NO-SPEECH GATES NOT ACCEPTED; MODEL/PHYSICAL PERFORMANCE OPEN; OWNER TARGET 4 SECONDS. VOICE-TTS-DECISION-001 hoàn tất phần chuẩn bị hồ sơ; lựa chọn và kích hoạt chưa được duyệt. D70 đã hoàn tất phép so sánh offline với nhận xét 24/24. D74 sản phẩm vẫn OPEN; D60 tiếp tục chờ theo yêu cầu chủ dự án.
 
 ## Yêu cầu chủ dự án đã chốt
 
-[Voice product requirements](VOICE_PRODUCT_REQUIREMENTS.md), 2026-11-03: mục tiêu có VI và EN, hiện ưu tiên **VI / nữ miền Bắc**. Tiếng Anh giữ trong mục tiêu, chưa tự xếp một release; ngôn ngữ tùy biến **PENDING bản sau**. Chủ dự án đã chọn **tối đa 4 giây từ gửi câu hỏi tới bắt đầu nghe lời trả lời**. Hiệu năng chưa được kiểm chứng; không đổi runtime timeout. Đây là yêu cầu sản phẩm, không chọn hoặc duyệt thay model.
+[Voice product requirements](VOICE_PRODUCT_REQUIREMENTS.md), 2026-11-03: mục tiêu có VI và EN, hiện ưu tiên **VI / nữ miền Bắc**. Tiếng Anh giữ trong mục tiêu, chưa tự xếp một release; ngôn ngữ tùy biến **PENDING bản sau**. Chủ dự án đã chọn **tối đa 4 giây từ gửi câu hỏi tới bắt đầu nghe lời trả lời**. Lượt buffered ADR165 đã đo và chưa đạt target; first-audible trên thiết bị chưa được kiểm chứng. Không đổi runtime timeout. Đây là yêu cầu sản phẩm, không chọn hoặc duyệt thay model.
 
 ## Khảo sát ứng viên và trial đề xuất
 
@@ -14,9 +14,9 @@
 
 ## Kết luận đề xuất
 
-**Dừng tinh chỉnh phát âm theo chủ dự án; ưu tiên chuẩn bị kiểm thử workflow và độ trễ D74.** Trúc Ly được chấp nhận mức hiện tại với hạn chế phụ âm cuối; Ngọc Huyền API cải thiện nhưng vẫn sai, vòng sửa đã dừng. Giữ các bản nghe và kết quả chưa đạt, không tự chọn voice/model/default sản phẩm. [Kế hoạch bước tiếp theo](D74_NEXT_WORKFLOW_VALIDATION.md) rà soát caller và tích hợp reading policy đã được nghe trước một benchmark ASR→CORE→TTS hữu hạn; ADR155 cũ chưa bao gồm toàn bộ policy mới, chưa duyệt/chưa chạy. Mốc4giây submission→first-audible trên thiết bị và rights/no-speech/product acceptance vẫn mở.
+**Dừng tinh chỉnh phát âm theo chủ dự án; ưu tiên các lỗi no-speech và độ trễ đã quan sát ở D74.** Trúc Ly được chấp nhận mức hiện tại với hạn chế phụ âm cuối; Ngọc Huyền API cải thiện nhưng vẫn sai, vòng sửa đã dừng. Giữ các bản nghe và kết quả chưa đạt, không tự chọn voice/model/default sản phẩm. [ADR165native result](D74_NATIVE_READING_WORKFLOW_RESULT.md) đã đo48/48 trên reading bridge:32speechcomplete,16no-speech bị trả lời sai, buffered4s chưa đạt. Ưu tiên guard không-lời-nói và profilingASR/TTS, rồi tích hợp đo thiết bị; old ADR155raw vẫn không chạy/không thay đổi. Mốc4giây submission→first-audible trên thiết bị và rights/no-speech/product acceptance vẫn mở.
 
-Đề xuất này không chọn model thay chủ dự án. Tác vụ chuẩn bị hồ sơ ban đầu không chạy model. Trial mới chỉ theo phê duyệt ADR-154; không đổi model/default sản phẩm, chuyển GPU hoặc cấu hình dùng chung.
+Đề xuất này không chọn model thay chủ dự án. Tác vụ chuẩn bị hồ sơ ban đầu không chạy model. Các trial được ghi riêng theo ADR154–165 và phạm vi đã duyệt tương ứng; không đổi model/default sản phẩm, chuyển GPU hoặc cấu hình dùng chung.
 
 ## 1. Chất lượng, RAM và tốc độ TTS đã đo
 
@@ -172,3 +172,12 @@ Ngọc Huyền new-corpus status: NATIVE COMPLETE / OWNER REPORTS API PRONUNCIAT
 [ADR164 implementation/software result](D74_WORKFLOW_READING_BRIDGE_RESULT.md): optional research bridge now preserves original CORE answer while binding/auditing separately rendered speech, verifies reading-profile/native provenance and reuses original VoicePipeline/gateway/playback conversion.386related PASS/0FAIL/ERROR/SKIP6.09s including58new controls; original SDK probe20/20planned/0unknown, all10accepted Trúc Ly controls exact phone/chunk/gap/cap parity.46priorresearch/750application/210protected/4295SDKentries unchanged;0newnative model/provider/download/product actions. This is software/frontend proof, not native workflow/physical4second acceptance.
 
 Next bounded work is the exact reading-aware workflow operator/scope and real measurements; ADR155 old plan stays immutable/locked. Arbitrary CORE text remains subject to declared protected-input/ambiguous-mapping/chunk/token bounds, with no truncation or hidden fallback. Both pronunciation refinement cycles remain stopped; no new model/voice/default selection. Native/full-product/rights/no-speech/device/4second/D90release gates open; D60deferred.
+
+
+## D74 real-model reading workflow — 2026-11-04
+
+[ADR165 measured result](D74_NATIVE_READING_WORKFLOW_RESULT.md): owner “Chay để xác nhận đi” authorizes a new fixed reading-aware cohort;48/48observed,48ASR/48CORE/48TTS,0retry/0unattempted/0runtime-or-guard failure.32speech trials produce complete native/playback audio; all16negative trials (2old sources×8combinations) incorrectly produce text and spoken answers. Buffered≤4s only6/32speech, Trúc Ly1/16; warm Whisper–Trúc Ly3.335–6.363s, warm Qwen–Trúc Ly4.264–11.122s. Physical first-audible remains UNVERIFIED; max4second/no-speech gates NOT ACCEPTED, not a D74/product PASS.
+
+398related software PASS/0FAIL/ERROR/SKIP6.11s; actual48chain/24reading mapping/56workers+COREretirement/source/archive/14ASRcheckpoint/4295SDK/23475TTSruntime/52oldresearch/750application/210protected preservation verified, baseline restored. All24COREanswers required zero text/term edits: native wiring is verified, complex-edit runtime coverage is not invented. Original answer semantics/acoustic quality not rescored; all first observations retained. New Trúc Ly/Piper/bothASR research comparison does not choose a model/default; both pronunciation refinement cycles remain stopped. Old ADR155raw stays unexecuted/unchanged; new ADR165completed separately.
+
+Next P1 work: AUDIO-VAD-ASR-001 follow-up on16no-speech failures, preserving quiet/EN speech/clocks; one design/control milestone then bounded measurement, risk false speech rejection/known old concatenation regressions. VOICE-LATENCY-AC-001 needs stage-based ASR/TTS profiling and separately scoped optimization; resident helps but does not satisfy max4s for Trúc Ly. No model/GPU/context/cap/gate changes or new campaign scheduled. Device/auth/retention/rights/default/product/D90release remain open; D60owner-deferred.

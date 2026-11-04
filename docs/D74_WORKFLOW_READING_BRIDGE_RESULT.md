@@ -27,3 +27,8 @@ Source probe được giữ nguyên snapshot sáu file tại thời điểm ch�
 Bước1 của [kế hoạch workflow](D74_NEXT_WORKFLOW_VALIDATION.md) đã có implementation/software proof. Cần một operator/scope hữu hạn dùng đúng bridge/native profile trước khi đo48case thật; ADR155 cũ giữ nguyên/không tự mở khóa và không tráo bản raw thành reading policy mới. Sau benchmark, submission→completePCM vẫn là proxy; first-audible4giây cần đo trên luồng sản phẩm/Brave-PC sau endpoint/auth/retention/playback phù hợp. Không lấy thời gian test/probe/TTS riêng làm PASS.
 
 Trúc Ly accepted-with-limitations/refinement stopped và Ngọc Huyền improved-but-incorrect/refinement stopped giữ nguyên. D60deferred; D74model/default/rights/no-speech/device/product/D90release còn mở.
+
+
+## Native follow-up — 2026-11-04
+
+Owner then says “Chay để xác nhận đi”; [separate ADR165first measurement](D74_NATIVE_READING_WORKFLOW_RESULT.md) completes48real-model observations with the unchanged bridge:32speech complete,16negative wrongly answered; max4second target not met in this buffered cohort.398relatedPASS/56workers+COREjoined/baseline restored. This supersedes pending measurement status, not the immutable preparation receipt. All24real COREanswers had zero edits, so do not claim native coverage of edited arbitrary responses or acoustic/device acceptance. Old ADR155raw remains unchanged; new scope was separately authorized by the actual run request.

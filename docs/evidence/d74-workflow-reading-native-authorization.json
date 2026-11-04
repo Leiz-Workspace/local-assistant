@@ -1,0 +1,30 @@
+{
+  "description": "Owner explicitly asks Chay để xác nhận đi after being told48real-model cases and4second timing are unverified. Authorizes this separate fixed reading-aware native validation, no model/default/voice change.",
+  "authorized": true,
+  "date": "2026-11-04",
+  "owner_verbatim": "Chay để xác nhận đi",
+  "slots": 48,
+  "policy": "truc-ly-workflow-reading-1",
+  "limits": {
+    "asr": 48,
+    "core": 48,
+    "tts": 48,
+    "optional_recovery_core": 2,
+    "retries": 0,
+    "wall_seconds": 3600
+  },
+  "bindings": {
+    "docs/ADR/165-reading-aware-native-voice-workflow-validation.md": "f36da0453f60fa2087c025428711652dfa053e68fad288bc02ef6079b6394817",
+    "docs/ADR/164-reading-policy-bridge-for-voice-workflows.md": "0e493ee130a26a93933dfede2e411e05fcb74ae898d564b612a6c004db600d49",
+    "docs/evidence/d74-workflow-reading-preparation.json": "761f2b4d80d583d08301cb7aefaa7d58615d3875d1f0a25300ee77e422ae4b29",
+    "docs/evidence/d74-ngoc-api-owner-stop.json": "01c3ad7d146ac999997ab9230db8dca5a22febbf0b98835f75d0a7e41dca26d8",
+    "docs/evidence/d74-adr155-proposed-workflow-recovery-20261103.json": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5"
+  },
+  "fixed_order": "Whisper then Qwen; Truc Ly reading then Piper control; fresh then resident; original six-source order.",
+  "packet_sha256": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a",
+  "new_models_or_reference_assets": 0,
+  "downloads": 0,
+  "product_activation": false,
+  "physical_first_audible": "UNVERIFIED",
+  "old_ADR155_entrypoint_activated": false
+}
