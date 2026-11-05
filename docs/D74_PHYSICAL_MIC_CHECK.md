@@ -2,6 +2,14 @@
 
 **Mục đích:** Hướng dẫn chủ dự án kiểm tra phần recorder local đã có bằng thiết bị thật, tách biệt với TTS listening và ASR/CORE/TTS sản phẩm.
 
+## Trang thử voice đã chạy — 2026-11-05
+
+**URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.
+
+766relatedPythonPASS/20JSPASS, Braveheadless fake-mic/muted/mocked-model UI PASS; browser thật không mock GET/POSTcookie/Origin cũng PASS, không mở microphone. RealHTTPnative6/6:4speech ASR/CORE/playback exactprior, clientroundtrip1.972–3.250s và2negative chặn đúng;6VAD/4ASR/CORE/TTS+1readiness,0retry/guard/runtimefault, toàn bộmodel thu hồi. Lượt Prepare43.843s riêng trướcGửi; không gộp thành cold4secondPASS. Giữ firstCSPfixturefailure/oldresults, không nới policy/model/cap hoặc tải thêm.
+
+**P1 còn lại: chủ dự án kiểm chứng actualmic→Brave→loa/physical4seconds qua URL có thật**, không coi marker “Chuẩn bị phát” là tiếng loa. Web service riêng đangchạy/loopback/4giờ; groupmodel8phút,24attempts/3prepares perwebprocess, RAM-only turnfiles/ephemeral browserresults. Phạm vi userdevice/voice/model/rights/default/product/D74/D90release vẫnOPEN; D60deferred, pronunciationcycles dừng. Full5889là lịch sử, không rerun hoặc tự đóng ngày/gate còn thiếu.
+
 **Trạng thái 2026-11-03:** OWNER-REPORTED CAPTURE/PLAYBACK CHECKS PASS. Chủ dự án đã kiểm tra bằng Brave với microphone cắm vào PC: nghe rõ, đủ câu, không rè; Dừng/Hủy/Escape/chuyển tab đều tắt thu. Ba kiểm tra bổ sung mở/reload, từ chối quyền và giới hạn 30 giây đều được chủ dự án xác nhận đạt. [Kết quả tổng hợp](evidence/d74-owner-physical-mic-completion-20261103.json), [báo cáo đầu giữ nguyên](evidence/d74-owner-physical-mic-20261103.json). Đây là kết quả do chủ dự án báo cáo, agent không tự quan sát, mở microphone hoặc cấp quyền. [Phạm vi recorder D71](D71_EXPLICIT_RECORDING.md) vẫn giữ nguyên.
 
 ## Kết quả đã nhận và phần còn lại
