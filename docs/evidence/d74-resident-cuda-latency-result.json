@@ -1,0 +1,534 @@
+{
+  "description": "Actual D74 resident CPU and same-checkpoint CUDA quality/latency measurements; local buffered compute only.",
+  "date": "2026-11-05",
+  "status": "LOCAL_BUFFERED_COMPUTE_PASS",
+  "physical_first_audible": "UNVERIFIED",
+  "D74_product": "OPEN",
+  "D90_release": "NOT_RELEASED",
+  "model_default_change": false,
+  "checkpoint_downloads": 0,
+  "cuda_software_prepared": true,
+  "software": {
+    "passed": 690,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 7.97,
+    "new_tests": 98,
+    "historical_full_passed": 5889,
+    "historical_full_rerun": false
+  },
+  "cpu": {
+    "rows": 36,
+    "wall_seconds": 214.42485692599985,
+    "latency_gates": [
+      {
+        "asr": "whisper-small-ct2",
+        "threads": 2,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 6.198502864999682,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      },
+      {
+        "asr": "whisper-small-ct2",
+        "threads": 4,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 5.172904550000567,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      },
+      {
+        "asr": "whisper-small-ct2",
+        "threads": 8,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 4.796931865999795,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      },
+      {
+        "asr": "qwen3-asr-0.6b",
+        "threads": 2,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 10.422806044000026,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      },
+      {
+        "asr": "qwen3-asr-0.6b",
+        "threads": 4,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 9.695784629999253,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      },
+      {
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "speech_cases": 4,
+        "negative_cases": 2,
+        "complete_coverage": true,
+        "maximum_complete_pcm_seconds": 8.953011433000029,
+        "compute_proxy_within4": false,
+        "physical_first_audible": "UNVERIFIED",
+        "quality_parity": "SEPARATE_AUDIT"
+      }
+    ],
+    "exact_profile_pairs": 16,
+    "baseline_preserved": true
+  },
+  "quality": {
+    "qwen3-asr-0.6b": {
+      "passed": true,
+      "exact_text_matches": 40,
+      "cpu": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 45,
+          "reference_words": 591,
+          "character_edits": 99,
+          "reference_characters": 1984,
+          "WER": 0.07614213197969544,
+          "CER": 0.049899193548387094
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 26,
+          "reference_words": 460,
+          "character_edits": 84,
+          "reference_characters": 2038,
+          "WER": 0.05652173913043478,
+          "CER": 0.04121687929342493
+        }
+      },
+      "cuda": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 45,
+          "reference_words": 591,
+          "character_edits": 99,
+          "reference_characters": 1984,
+          "WER": 0.07614213197969544,
+          "CER": 0.049899193548387094
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 26,
+          "reference_words": 460,
+          "character_edits": 84,
+          "reference_characters": 2038,
+          "WER": 0.05652173913043478,
+          "CER": 0.04121687929342493
+        }
+      },
+      "receipt_sha256": "8e10fc71e235d2a0da8eb662dade2b1a3e916d399c33f03018251797d26be529"
+    },
+    "whisper-small-ct2": {
+      "passed": false,
+      "exact_text_matches": 22,
+      "cpu": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 121,
+          "reference_words": 591,
+          "character_edits": 248,
+          "reference_characters": 1984,
+          "WER": 0.20473773265651438,
+          "CER": 0.125
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 28,
+          "reference_words": 460,
+          "character_edits": 80,
+          "reference_characters": 2038,
+          "WER": 0.06086956521739131,
+          "CER": 0.03925417075564279
+        }
+      },
+      "cuda": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 121,
+          "reference_words": 591,
+          "character_edits": 253,
+          "reference_characters": 1984,
+          "WER": 0.20473773265651438,
+          "CER": 0.1275201612903226
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 27,
+          "reference_words": 460,
+          "character_edits": 79,
+          "reference_characters": 2038,
+          "WER": 0.058695652173913045,
+          "CER": 0.03876349362119725
+        }
+      },
+      "receipt_sha256": "b3375a875f950918e87ef78c379cdcc6698ab05a7103708890bd47bcb7d5ccdb"
+    }
+  },
+  "native": {
+    "rows": [
+      {
+        "id": "cuda-recovery-00",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 2.000017916001525,
+        "stage_seconds": [
+          [
+            "asr",
+            0.36282436800138385
+          ],
+          [
+            "llm",
+            0.2921885720006685
+          ],
+          [
+            "tts",
+            1.3449062019990379
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-01",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 2.582485179998912,
+        "stage_seconds": [
+          [
+            "asr",
+            0.7050626060008653
+          ],
+          [
+            "llm",
+            0.37285559399970225
+          ],
+          [
+            "tts",
+            1.504437940000571
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-02",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0078",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 3.3337257000002865,
+        "stage_seconds": [
+          [
+            "asr",
+            0.7996234160000313
+          ],
+          [
+            "llm",
+            0.45962015999975847
+          ],
+          [
+            "tts",
+            2.0744043689992395
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-03",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0040",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 3.0199235119998775,
+        "stage_seconds": [
+          [
+            "asr",
+            1.0595037719995162
+          ],
+          [
+            "llm",
+            0.35689766200084705
+          ],
+          [
+            "tts",
+            1.6034315709985094
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-04",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "negative-1",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "asr_execution": "cuda",
+        "code": "no_speech",
+        "error_class": "VoiceError"
+      },
+      {
+        "id": "cuda-recovery-05",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "negative-3",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "asr_execution": "cuda",
+        "code": "no_speech",
+        "error_class": "VoiceError"
+      }
+    ],
+    "maximum_complete_pcm_seconds": 3.3337257000002865,
+    "wall_seconds": 26.01367059399854,
+    "calls": {
+      "tts": 4,
+      "asr": 4,
+      "core": 4
+    },
+    "vad_calls": 6,
+    "readiness_asr_calls": 1,
+    "exact_CPU8_ASR_CORE_native_playback_pairs": 4,
+    "baseline_preserved": true,
+    "root": "data/backups/d74-cuda-root-guard-confirmation-first",
+    "current_root_disk_guard": "EXPLICIT_CURRENT_ROOT"
+  },
+  "retained_first_failure": {
+    "root": "data/backups/d74-cuda-asr-first",
+    "cause": "Detector-copy directory incorrectly mounted for native ASR; original-source digest refused before transcribe.",
+    "native_asr_dispatches": 1,
+    "native_asr_results": 0,
+    "native_core_calls": 0,
+    "native_tts_calls": 0,
+    "quality_predictions": 80,
+    "readiness_asr_calls": 3,
+    "original_sources_snapshotted": true,
+    "automatic_retry": false
+  },
+  "audit": {
+    "status": "PASS",
+    "sha256": "819f47f451a1da45116edde93aba5585ee5fa0b7f3dc13304dd23f62a71d2b87",
+    "previous_hashed_files": 2959,
+    "original_application_files": 750,
+    "protected_inputs": 210,
+    "ASR_artifacts": 14,
+    "SDK_hashed_files": 15870,
+    "observations": {
+      "vad": 49,
+      "asr_results": 112,
+      "readiness_asr": 5,
+      "tts_results": 32
+    },
+    "actual_ASR_inferences": 117,
+    "rejected_native_dispatches": 1,
+    "owned_process_groups_retired": 34,
+    "known_first_failed_worker_exit": 1,
+    "remaining_worker_or_CORE_failures": 0,
+    "CUDA_native_exact_CPU8_pairs": 8
+  },
+  "private_roots": [
+    "data/backups/d74-resident-cpu-first",
+    "data/backups/d74-cuda-asr-sdk-first",
+    "data/backups/d74-cuda-asr-first",
+    "data/backups/d74-cuda-source-binding-recovery-first",
+    "data/backups/d74-cuda-root-guard-confirmation-first"
+  ],
+  "hashes": {
+    "data/backups/d74-resident-cpu-first/result.json": "d162b7e0f1e7434f11af655cadb5cdad3aaa6d96f27d27a92f730534fde947c3",
+    "data/backups/d74-cuda-asr-first/result.json": "c76b2679110bf3b46f81c226c17a0d86dd563cbdb140fe5a912ad97dc44966cd",
+    "data/backups/d74-cuda-source-binding-recovery-first/result.json": "84490694265ea9540c90189fd258c066dddea6a0decd95f984b9cb3f038a43ec",
+    "data/backups/d74-cuda-source-binding-recovery-first/execution-freeze.json": "901f200670defa0a349bdd45f09656acbd7f4220d5a24e2b94722233c23594ff",
+    "data/backups/d74-cuda-source-binding-recovery-first/software-verification.json": "b54195e4fdb729f0acd972cc55e0a5a69e6774d17f95b2d24f97b47d24269399",
+    "data/backups/d74-cuda-asr-sdk-first/cuda-probe.json": "8686e837e860ae73e3fbe13db1de97f91c6cae143d4e7136fb7d58f9efcd3c4b",
+    "data/backups/d74-cuda-root-guard-confirmation-first/result.json": "efe0f9ce51653bceb74f1fc71e36e1b369dba6eec7895ee5b7b4fd49cb6bc75b",
+    "data/backups/d74-cuda-root-guard-confirmation-first/execution-freeze.json": "75e7115df1ac3f65806bf96a815513ff0ad63476e13483b78b0ed47e272a3e56",
+    "data/backups/d74-cuda-root-guard-confirmation-first/software-verification.json": "8fefa27950043ca4e1c7e4b469cf9848500452cbdec25375f78e43eddeb75c47"
+  },
+  "full_code_archive": "data/backups/d74-cuda-root-guard-confirmation-first/full-code.zip",
+  "retained_first_success": {
+    "rows": [
+      {
+        "id": "cuda-recovery-00",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 2.1462638760003756,
+        "stage_seconds": [
+          [
+            "asr",
+            0.4080589400000463
+          ],
+          [
+            "llm",
+            0.3059767329996248
+          ],
+          [
+            "tts",
+            1.432138546000715
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-01",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 2.670199030999356,
+        "stage_seconds": [
+          [
+            "asr",
+            0.7864941979987634
+          ],
+          [
+            "llm",
+            0.36964832400008163
+          ],
+          [
+            "tts",
+            1.513967032000437
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-02",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0078",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 3.2116835119995812,
+        "stage_seconds": [
+          [
+            "asr",
+            0.9125778079996962
+          ],
+          [
+            "llm",
+            0.46585319500081823
+          ],
+          [
+            "tts",
+            1.8331741630008764
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-03",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "heldout-vi_vn-0040",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "asr_execution": "cuda",
+        "buffered_latency_seconds": 3.542944279999574,
+        "stage_seconds": [
+          [
+            "asr",
+            1.261058319998483
+          ],
+          [
+            "llm",
+            0.3632062770011544
+          ],
+          [
+            "tts",
+            1.918606548999378
+          ]
+        ],
+        "complete_pcm_within4": true,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "cuda-recovery-04",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "negative-1",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "asr_execution": "cuda",
+        "code": "no_speech",
+        "error_class": "VoiceError"
+      },
+      {
+        "id": "cuda-recovery-05",
+        "asr": "qwen3-asr-0.6b",
+        "threads": 8,
+        "source": "negative-3",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "asr_execution": "cuda",
+        "code": "no_speech",
+        "error_class": "VoiceError"
+      }
+    ],
+    "maximum_complete_pcm_seconds": 3.542944279999574,
+    "wall_seconds": 25.192309336000108,
+    "calls": {
+      "tts": 4,
+      "asr": 4,
+      "core": 4
+    },
+    "vad_calls": 6,
+    "readiness_asr_calls": 1,
+    "exact_CPU8_ASR_CORE_native_PCM_pairs": 4,
+    "baseline_preserved": true,
+    "root": "data/backups/d74-cuda-source-binding-recovery-first",
+    "software_passed": 689
+  },
+  "guard_attribution_correction": {
+    "description": "Post-audit fix passes campaign root explicitly to every worker; first successful result retained, final separate6/6confirmation passes. Both completed roots below8GiB.",
+    "quality_rerun": false,
+    "additional_native_speech": 4,
+    "additional_native_negatives": 2,
+    "additional_readiness_calls": 1,
+    "inference_worker_code_changed": false,
+    "acceptance_or_cap_changed": false
+  }
+}

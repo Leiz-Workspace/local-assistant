@@ -2,6 +2,14 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
+## Trạng thái hiện tại — 2026-11-05
+
+[ADR170–172 / kết quả độ trễ thật](D74_RESIDENT_CUDA_LATENCY_RESULT.md): **LOCAL_BUFFERED_COMPUTE_PASS**, Qwen cùng checkpoint chạy CUDA FP32/eager + CORE32K/Fast512 + Trúc Ly CPU8 đã ready.4/4speech có audio hoàn chỉnh trong2,000–3,334giây;2/2negative chặn trước ASR/CORE/TTS.40/40transcript VI/EN trùng CPU;8native transcript/CORE/audio ở hai lượt PASS trùng byte với CPU8.690relatedPASS/98controls mới; full5889 là lịch sử, không chạy lại.
+
+Sáu nhóm CPU2/4/8 vẫn FAIL maximum4seconds. WhisperCUDA FAIL VI CER253/1984vs248/1984, không chạy native. Lượt CUDA đầu dừng vì mount nhầm bản detector; hash chặn trước inference, giữ nguyên kết quả/code đầu. Bản sửa source-binding đạt6/6 (max3,543s); đã sửa thêm disk-budget polling trỏ nhầm root cũ và xác nhận riêng6/6 (max3,334s), root/guard hiện tại đúng. Giữ cả hai lượt PASS và phiên bản đã chạy; không retry chất lượng, relabel hoặc che lỗi. Chỉ thêm SDK CUDA cô lập, không tải weights/thay model/default/voice/app/config hoặc dịch vụ dùng chung.750application/210protected/14ASRartifacts và runtime cũ giữ nguyên.
+
+**VOICE-LATENCY-AC-001 còn OPEN cho first-audible vật lý:** complete PCM chỉ là gate xử lý cục bộ, không phải tiếng từ loa trong4giây. App recorder chưa nối research runner này. P1 tiếp theo: contract/kiểm thử rồi endpoint nghiên cứu có xác thực và browser playback/đo thực trên Brave/PC; dependency gate hiện tại/explicit-submit/ready/cancel/retention, effort một milestone contract/control+tích hợp cô lập+lượt thiết bị, rủi ro khoảng dư<0,67giây/mạng/autoplay/co-memory/cold-start/cleanup. Chưa yêu cầu owner test một URL workflow chưa có. Model/voice/rights/default/product và D74/D90release vẫn OPEN; D60deferred, pronunciation cycles dừng.
+
 **Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; owner hearing24/24is recorded with quality limitations; device/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
 
 ## Current approved voice research
