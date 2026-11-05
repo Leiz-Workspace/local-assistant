@@ -1,5 +1,7 @@
 # D74 — Bước tiếp theo sau khi dừng tinh chỉnh phát âm
 
+
+**Current next work — 2026-11-05:** [Reviewable main integration campaign](D74_VOICE_INTEGRATION_REVIEW.md) now defines B1 identity/UI/contracts, B2 exact adapters/shared residency/borrowed CORE and one conditional B3 six-input panel. Owner approval is pending; no code or campaign has run under [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md). Existing trial/results and stopped pronunciation cycles remain unchanged. Physical first-audible and product/default decisions remain separate.
 **Mục đích:** Xếp công việc kế tiếp theo kết quả thật, sau khi chủ dự án dừng vòng sửa Ngọc Huyền. Phần chuẩn bị và một lượt native reading-aware đã hoàn tất theo ADR165; tài liệu này ghi kết quả và việc còn lại, không tự cho phép lượt chạy mới hoặc thay lựa chọn model.
 
 ## Trang thử voice đã chạy — 2026-11-05

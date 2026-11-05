@@ -1,0 +1,482 @@
+{
+  "description": "Documentation-only rights, actual-code architecture and owner-reviewable integration proposal; no model selection or product activation.",
+  "date": "2026-11-05",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "status": "READY_FOR_OWNER_REVIEW",
+  "ADR": "docs/ADR/174-proposed-opt-in-authenticated-voice-integration.md",
+  "owner_packet": "docs/D74_VOICE_INTEGRATION_REVIEW.md",
+  "rights_review": "docs/D74_VOICE_RIGHTS_REVIEW.md",
+  "owner_implementation_approval": "PENDING",
+  "existing_lane": {
+    "VAD": {
+      "repository": "snakers4/silero-vad",
+      "revision": "5cd2ba54db059f961e7545d4f211b44f005a6dfb",
+      "license": "MIT",
+      "policy": "Original v5 ONNX; detector-only peak-half-v2 copy; full original PCM and clock to ASR"
+    },
+    "ASR": {
+      "repository": "Qwen/Qwen3-ASR-0.6B",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "license": "Apache-2.0",
+      "profile": "CUDA FP32/eager/TF32 off; original generation; SDK 0.0.6"
+    },
+    "CORE": {
+      "repository": "bartowski/Qwen_Qwen3.5-9B-GGUF",
+      "revision": "182be2fd6c7bc44887d88a91cb03ff009cc9f549",
+      "artifact_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+      "profile": "Q6_K / 32K / Fast512",
+      "declared_license": "Apache-2.0",
+      "upstream_license_corroboration_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "upstream_ancestor_claim": false
+    },
+    "TTS": {
+      "repository": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "revision": "61b85e3d937fbbacb387714180e8182823512523",
+      "SDK_revision": "04044e1b8f822f946bafb2c88b716459f4164152",
+      "preset": "Truc Ly / existing accepted reading and reference hashes",
+      "profile": "CPU 8 / FP32",
+      "declared_license": "Apache-2.0",
+      "publisher_preset_rights_assurance": true,
+      "independent_speaker_contract_review": false,
+      "custom_cloning_proposed": false
+    },
+    "codec": {
+      "repository": "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX",
+      "revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "declared_license": "Apache-2.0"
+    },
+    "llama_cpp": {
+      "revision": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+      "license": "MIT"
+    }
+  },
+  "rights_disposition": {
+    "recommended_scope": "Personal-local source integration with existing artifacts; retained notices/provenance; implementation and activation separate owner decisions.",
+    "scope_not_approved": [
+      "New checkpoints, SDKs, voices or custom cloning",
+      "Binary/wheel/weights redistribution",
+      "Public or commercial hosting",
+      "Repository license choice",
+      "Final product/default activation"
+    ],
+    "runtime_findings": [
+      {
+        "component": "SEA-G2P 0.9.1",
+        "finding": "Apache-2.0 installed license; Rust-backed current path, not the historical eSpeak phonemizer"
+      },
+      {
+        "component": "FFmpeg 8.0.1 system executable",
+        "finding": "Installed ffmpeg -L: GPL-2.0-or-later and --enable-gpl; retain binary notices and review distribution scope"
+      },
+      {
+        "component": "SoundFile 0.14.0 / bundled libsndfile",
+        "finding": "BSD-3-Clause wrapper / LGPL-2.1 native COPYING; separate obligations"
+      },
+      {
+        "component": "Torch 2.10.0+cu128 / NVIDIA dependencies",
+        "finding": "Torch BSD notice does not replace CUDA/cuDNN component vendor terms"
+      },
+      {
+        "component": "Existing denoiser.onnx",
+        "finding": "Publisher covers packaged graph; SDK identifies Resemble origin and current upstream MIT notice; exact graph-to-upstream revision/notice mapping remains a distribution task"
+      },
+      {
+        "component": "Curated qwen-asr 0.0.6",
+        "finding": "License-only dist-info has Apache notice; absent METADATA does not mean absent SDK"
+      },
+      {
+        "component": "Repository LICENSE/NOTICE",
+        "finding": "Not found in repository root or ai; no license chosen automatically"
+      }
+    ],
+    "not_unconditional_legal_clearance": true
+  },
+  "primary_text_metadata_review": {
+    "requested_source_URLs": 16,
+    "successful_sources": 15,
+    "failed_sources": 1,
+    "sources": [
+      {
+        "name": "turbo-card",
+        "URL": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo/resolve/61b85e3d937fbbacb387714180e8182823512523/README.md",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 15458,
+        "sha256": "5d5bb2de661fabc0e073b3b844dc131696fac3dddd5ea882d10fd9a849108eb7",
+        "retained_path": "data/backups/d74-vi-survey-20261103/turbo-README.txt",
+        "retained_sha256": "5d5bb2de661fabc0e073b3b844dc131696fac3dddd5ea882d10fd9a849108eb7",
+        "retained_exact": true
+      },
+      {
+        "name": "sdk-license",
+        "URL": "https://raw.githubusercontent.com/pnnbao97/VieNeu-TTS/04044e1b8f822f946bafb2c88b716459f4164152/LICENSE",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+        "retained_path": "data/backups/d74-vi-approved-campaign-20261103/sources/LICENSE",
+        "retained_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+        "retained_exact": true
+      },
+      {
+        "name": "moss-onnx-card",
+        "URL": "https://huggingface.co/OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX/resolve/ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae/README.md",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 4892,
+        "sha256": "3c7b9e9ef1c8c5e5c829a077a1d32c1f7aea1668f2bf17ead318ff04bf1e6fe4"
+      },
+      {
+        "name": "asr-card",
+        "URL": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B/resolve/5eb144179a02acc5e5ba31e748d22b0cf3e303b0/README.md",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 57456,
+        "sha256": "5058416891bc47a2051557765997e8c42f8eb78a0e33c3e775bd17d4b0ba4d50",
+        "retained_path": "data/backups/d68-asr-evaluation/models/qwen3-asr-0.6b/5eb144179a02acc5e5ba31e748d22b0cf3e303b0/README.md",
+        "retained_sha256": "5058416891bc47a2051557765997e8c42f8eb78a0e33c3e775bd17d4b0ba4d50",
+        "retained_exact": true
+      },
+      {
+        "name": "core-quantized-card",
+        "URL": "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/182be2fd6c7bc44887d88a91cb03ff009cc9f549/README.md",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 13707,
+        "sha256": "1f8d5a900fdce1307dc5a1e3f494b483e1467dddd449b3bf22901c8c0cdcf4b8"
+      },
+      {
+        "name": "silero-license",
+        "URL": "https://raw.githubusercontent.com/snakers4/silero-vad/5cd2ba54db059f961e7545d4f211b44f005a6dfb/LICENSE",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 1075,
+        "sha256": "2e63e9a38b6e8fc0c7bc37ce174caca1862870856c6daf5697cfb785e925520b"
+      },
+      {
+        "name": "llama-license",
+        "URL": "https://raw.githubusercontent.com/ggml-org/llama.cpp/5c8854fd88319125125dc4b836c98b1b215b0f23/LICENSE",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 1078,
+        "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+        "retained_path": "runtimes/llama.cpp/LICENSE",
+        "retained_sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+        "retained_exact": true
+      },
+      {
+        "name": "sea-g2p-pypi",
+        "URL": "https://pypi.org/pypi/sea-g2p/0.9.1/json",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 17429,
+        "sha256": "a22bf79fb3ca0130cea524a62d461e020ab68320fc063520a1b60ad7f4ebe8d6"
+      },
+      {
+        "name": "resemble-license",
+        "URL": "https://raw.githubusercontent.com/resemble-ai/resemble-enhance/main/LICENSE",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 1068,
+        "sha256": "f4f7ca80af15e1d06a99e92e268b4294b116c71e1ca10d7bcc02c36ff22b94b7"
+      },
+      {
+        "name": "ffmpeg-legal",
+        "URL": "https://ffmpeg.org/legal.html",
+        "model_artifact_download": false,
+        "error": "ConnectTimeout"
+      },
+      {
+        "name": "cuda-12.8-eula",
+        "URL": "https://docs.nvidia.com/cuda/archive/12.8.0/eula/index.html",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 103610,
+        "sha256": "89954a91a7a9511feb97239d368772d785fda65b38c68f4d196dfbfc4fc1eeee"
+      },
+      {
+        "name": "apache-license",
+        "URL": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "name": "gnu-private-use",
+        "URL": "https://www.gnu.org/licenses/gpl-faq.html",
+        "model_artifact_download": false,
+        "http_status": 200,
+        "bytes": 197515,
+        "sha256": "6b48c709107e216b22c8415ed5c190c1c10818ac79f792563dfa501ee8dcec14"
+      },
+      {
+        "name": "qwen-asr-sdk-metadata",
+        "URL": "https://pypi.org/pypi/qwen-asr/0.0.6/json",
+        "http_status": 200,
+        "bytes": 65959,
+        "sha256": "f46c704f601bf5b40c383c84b5a6e192dd9ad33bcb3700d9412e4510bc673e0c"
+      },
+      {
+        "name": "core-original-metadata",
+        "URL": "https://huggingface.co/api/models/Qwen/Qwen3.5-9B",
+        "http_status": 200,
+        "bytes": 21294,
+        "sha256": "e8738365a940b727d1702f1568279a8e5216337cf2dc8c7450f68181dcea429a"
+      },
+      {
+        "name": "core-original-current-license",
+        "URL": "https://huggingface.co/Qwen/Qwen3.5-9B/resolve/c202236235762e1c871ad0ccb60c8ee5ba337b9a/LICENSE",
+        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "http_status": 200,
+        "bytes": 11544,
+        "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+        "scope": "Current upstream license corroboration, not a claim this upstream revision generated the pinned GGUF."
+      }
+    ],
+    "maximum_body_bytes_per_source": 2097152,
+    "scope": "Public README, LICENSE, package metadata and official legal HTML only; no model weights/SDK/binary downloads; no authentication.",
+    "web_parser_failure_is_not_http_fetch_failure": true
+  },
+  "installed_inventory": {
+    "occurrences": 175,
+    "unique_name_version_pairs": 133,
+    "occurrences_without_notice_in_dist_info": 17,
+    "environment_counts": {
+      "application": 56,
+      "TTS_CPU": 26,
+      "ASR_CPU_overlay": 46,
+      "ASR_source_overlay": 0,
+      "CUDA_ASR": 31,
+      "VAD": 16
+    },
+    "limits": "Installed metadata inventory, not a loaded-module list, complete transitive binary SBOM or shipping clearance; notices can exist outside dist-info."
+  },
+  "actual_code_findings": [
+    "Main API exists; apps/web exists but has no main UI content.",
+    "Existing main machine API rejects browser Origin/proxy headers and uses protected bearer-digest principal mapping.",
+    "Trial loopback cookie and fresh per-turn UUID are not stable product identity.",
+    "No identified common GPU residency coordinator across all main-app inference paths; per-conversation leases and D85 fixture are insufficient.",
+    "ASR owns resident GPU allocations during ready lifetime, requiring group-lifetime admission.",
+    "Trial-owned CORE and benchmark/private backup imports are not acceptable production dependencies."
+  ],
+  "proposed_campaign": {
+    "state": "PROPOSED_NOT_EXECUTED",
+    "feature_default": "OFF",
+    "product_activation": false,
+    "B1": "Main voice UI/in-process BFF, single-use pairing grant, principal-bound revocable sessions, owner-scoped machine API, no old API Origin-policy weakening; mock software tests only.",
+    "B2": "Extract exact qualified adapters; borrowed attested CORE; common conservative residency admission across all managed GPU paths; cancel/drain/cleanup; no shared CORE start/stop; one API worker.",
+    "B3": "Only after B1/B2 software/source/rights/resource gates pass, preregister and execute one isolated main-composition integration panel.",
+    "B3_inputs": [
+      {
+        "id": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "pcm_sha256": "0b6b73538e00b377e493b0361aa2d4dcc80d7a8be0207837a5cdac420648becf",
+        "sample_count": 81600
+      },
+      {
+        "id": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "pcm_sha256": "b0df8ca292a7329ef7dd15e36ca327d6e568f1c89351610f5d79eb24fedeaceb",
+        "sample_count": 158400
+      },
+      {
+        "id": "heldout-vi_vn-0078",
+        "expected_no_answer": false,
+        "pcm_sha256": "ed7596e9311a308f1f429dbcf6f9cfd70b1890bdb124fd396166f7e10be563d2",
+        "sample_count": 206400
+      },
+      {
+        "id": "heldout-vi_vn-0040",
+        "expected_no_answer": false,
+        "pcm_sha256": "6800ece72c3fb520d77952b4d32dbf3423242b8a843a86ba883291a79e9113de",
+        "sample_count": 301440
+      },
+      {
+        "id": "negative-1",
+        "expected_no_answer": true,
+        "pcm_sha256": "b3866de454bf853fd4a1e6d475ba503a8c01fa07feb2c30c47321c1685896cb8",
+        "sample_count": 48000
+      },
+      {
+        "id": "negative-3",
+        "expected_no_answer": true,
+        "pcm_sha256": "4b5ea5a19f3818b91da52a0f8ceea23f45c7eaf5627090a7e4d394f8ba3bef0a",
+        "sample_count": 48000
+      }
+    ],
+    "B3_input_freeze": {
+      "path": "data/backups/d74-voice-browser-trial-first/http-execution-freeze.json",
+      "sha256": "134bdc3329949e10a66b9d9994c3e5255d3b3f9558349046e103f0f8dd4d885b"
+    },
+    "B3_maximum_calls": {
+      "VAD": 6,
+      "ASR": 4,
+      "CORE": 4,
+      "TTS": 4,
+      "ASR_zero_readiness": 1,
+      "retries": 0
+    },
+    "B3_runtime": "Isolated RAM auth/config; free test slot; one operator-owned original CORE; application borrows and never retires shared CORE; operator cleanup only after joins.",
+    "B3_acceptance": "Exact prior transcripts/answers/playback bytes, complete HTTP responses <=4 seconds for all four speech cases, two correct early refusals, verified guards/cleanup; no physical speaker claim.",
+    "preregister_before_native": true,
+    "stop_on_unexpected_software_resource_or_provenance_fault": true,
+    "B4_pending": "Declared real-device/room/short-quiet-ASR and physical first-audible acceptance plus explicit final model/voice/default and product activation decision.",
+    "distribution_task": "P2; actual shipping SBOM/notices/vendor terms/denoiser lineage/project-license decision only if distribution is requested.",
+    "estimated_engineering_days": "B1 1-2; B2 2-3; B3 0.5-1; B4 uncertain; estimates are not calendar commitments or acceptance.",
+    "rollback": "Default off, reject late output, join only owned workers, release verified residency only after quiescence, retain borrowed CORE/auth/model/config/data/history."
+  },
+  "historical_evidence_not_rerun": {
+    "software": {
+      "python_PASS": 766,
+      "JS_PASS": 20,
+      "new_test_run_this_task": false
+    },
+    "native_HTTP": {
+      "speech": 4,
+      "negative": 2,
+      "PASS": 6,
+      "speech_client_seconds": [
+        1.972,
+        2.688,
+        3.25,
+        3.114
+      ],
+      "prepare_seconds": 43.843465,
+      "scope": "Warm-ready complete response; not physical first audible or cold latency",
+      "source_rows": [
+        {
+          "id": "heldout-vi_vn-0036",
+          "expected_no_answer": false,
+          "status": "EXACT_COMPLETE_PCM",
+          "client_roundtrip_seconds": 1.971841818998655,
+          "server_seconds": 1.9691672579992883,
+          "stages": {
+            "asr": 0.346260230999178,
+            "llm": 0.3167162270001427,
+            "tts": 1.2963818620009988
+          },
+          "playback_sha256": "12f41e1f942273485941379335e927071661ed14c242ffd22b00bb9c99490336"
+        },
+        {
+          "id": "heldout-vi_vn-0024",
+          "expected_no_answer": false,
+          "status": "EXACT_COMPLETE_PCM",
+          "client_roundtrip_seconds": 2.6881919400002516,
+          "server_seconds": 2.6850838709997333,
+          "stages": {
+            "asr": 0.6665409259985609,
+            "llm": 0.36791285700019216,
+            "tts": 1.6392818419990363
+          },
+          "playback_sha256": "2574fa4edd7d535cec2ff57f718c96e32cb4376ae4e399625dd285350fc11cc1"
+        },
+        {
+          "id": "heldout-vi_vn-0078",
+          "expected_no_answer": false,
+          "status": "EXACT_COMPLETE_PCM",
+          "client_roundtrip_seconds": 3.250093423999715,
+          "server_seconds": 3.2468643200008955,
+          "stages": {
+            "asr": 0.831849311998667,
+            "llm": 0.4815475660016091,
+            "tts": 1.921986300001663
+          },
+          "playback_sha256": "d9d0786932184bcabbf7f2dc2f2d70249a7bea513201cfbec8ede5451a8e9a87"
+        },
+        {
+          "id": "heldout-vi_vn-0040",
+          "expected_no_answer": false,
+          "status": "EXACT_COMPLETE_PCM",
+          "client_roundtrip_seconds": 3.114312344001519,
+          "server_seconds": 3.1115169179993245,
+          "stages": {
+            "asr": 1.092778135000117,
+            "llm": 0.36213799100005417,
+            "tts": 1.6439142439994612
+          },
+          "playback_sha256": "8cb60c762a7f5ed80f88a34fe500b86793d5329b69f8f5276557b1b09ea44e87"
+        },
+        {
+          "id": "negative-1",
+          "expected_no_answer": true,
+          "status": "CORRECT_NO_SPEECH",
+          "client_roundtrip_seconds": 0.022731365999788977
+        },
+        {
+          "id": "negative-3",
+          "expected_no_answer": true,
+          "status": "CORRECT_NO_SPEECH",
+          "client_roundtrip_seconds": 0.021925154000200564
+        }
+      ]
+    },
+    "resource_samples": {
+      "ASR_peak_VRAM_bytes": 4211081216,
+      "ASR_peak_RSS_bytes": 2627596288,
+      "TTS_peak_RSS_bytes": 1508126720,
+      "VAD_peak_RSS_bytes": 302534656,
+      "CORE_sampled_peak_VRAM_MiB": 8792,
+      "CORE_lifetime_peak_RSS_KiB": 8083548,
+      "concurrent_time_aligned_aggregate_peak_claim": false
+    },
+    "owner_feedback": "General positive: “Ổn rồi”; no numeric timing/per-case/production/model approval inferred.",
+    "physical_first_audible": "UNVERIFIED",
+    "D74_product": "OPEN",
+    "D90_release": "OPEN",
+    "D60": "OWNER_DEFERRED"
+  },
+  "unchanged_input_sha256": {
+    "docs/evidence/d74-voice-browser-trial-result.json": "e016ee9a92425257a472e25a7f7e8f7c72563f8d320dc605e99196887bf268ca",
+    "docs/evidence/d74-voice-browser-owner-feedback-20261105.json": "5d65119d5505a2048666e403d475fb46a024677fd7790c84305f0debe0e535f1",
+    "docs/evidence/d74-resident-cuda-latency-result.json": "283049dfcdc000cdba8f60057acb7b91d1895bef6ba61b59c5d35c428983197c",
+    "apps/api/main.py": "c60424a47c72ced6d8a3127f1ca9b767fa2d49d3d9b40b0ae887d101683796f5",
+    "apps/api/core/conversation_auth.py": "e7a59754227605a9c858a8edf150017464029db593fcb809ea586faf1e8ee0af",
+    "apps/api/routes/conversations.py": "77c35585d79b6834d4f4c595025e1d03ed592070aa43c759bfe4a332ee9e78af",
+    "apps/api/routes/chat.py": "84d6bde66f9a08cb4d28c74c265a9cdba01fe65b26e2e763481394fde376cf3e",
+    "apps/api/storage/lifecycle.py": "99996d73f665183ddd62d7de71edfc8880e65da6ad1b6f5d1a08aa161bc3e8c2",
+    "apps/api/services/llama_gateway.py": "c7d84baabdbd8baf688cace7a0fc8aec4f656f77b29b3e38e5282a488dbdadd3",
+    "src/infrastructure/inference/llama_adapter.py": "3894b9c45af63daef45d03035c7ab5c9d96fecb590206455dd8392968451f66e",
+    "src/application/services/voice_pipeline.py": "b0a7ee4c4f1ab256bd971d8d90091298dd1e89f16a5d01ee4be2ea4fe37eb383",
+    "apps/voice_trial/main.py": "423e126e7f260f22d49ba51310db9ff14b061f3c5688d42ea558be1a71f41e61",
+    "apps/voice_trial/native.py": "a162dfd10d61b960265014b81f7f95555a5a71e99fbd55dbe7efe7ee1e1de74e",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280"
+  },
+  "retained_local_receipts": {
+    "data/backups/d74-voice-integration-review-20261105/installed-license-inventory.json": "347df04b538ce27e468c64e48afdfcb433feedf486c0b807a8fcd05c60d1ac6c",
+    "data/backups/d74-voice-integration-review-20261105/local-component-license-receipt.json": "b867b703d691a51f4aa3961cf393fc81b1cc841d182c2dd69e57fa6dbabb2af1",
+    "data/backups/d74-voice-integration-review-20261105/primary-source-receipt.json": "bcf8062f44185d87d6e094be48c5932bd5f6b81981fc54743b967f615b24c93c",
+    "data/backups/d74-voice-integration-review-20261105/review-input-bindings.json": "3dbe90fac40edca35d11483e34cb8e829bf2ac0b39ed3b76eeb616167b8aceb3",
+    "data/backups/d74-voice-integration-review-20261105/supplementary-primary-receipt.json": "9c6135adfae86dd1fcd59635ad800bd3ef2028f9d2b99785d14977e9cfe1bc8b"
+  },
+  "actions_this_task": {
+    "model_weight_downloads": 0,
+    "SDK_or_binary_downloads": 0,
+    "installs": 0,
+    "native_inference_calls": 0,
+    "audio_uploads": 0,
+    "source_config_changes": 0,
+    "service_actions": 0,
+    "Vault_or_database_actions": 0,
+    "existing_audio_inspection": 0
+  },
+  "validation": {
+    "description": "Documentation-only validation; no pytest/browser/native campaign run, no source/config/runtime action.",
+    "status": "PASS",
+    "new_markdown_documents": 3,
+    "synchronized_existing_planning_documents": 9,
+    "public_JSON_valid": true,
+    "local_markdown_links_checked": 790,
+    "reviewed_input_hashes_unchanged": 15,
+    "live_trial_frozen_source_hashes_unchanged": 16,
+    "installed_metadata_hashes_verified": 175,
+    "installed_notice_hashes_verified": 231,
+    "owner_private_prefix_preserved_not_staged": true,
+    "root_AGENTS_preserved_not_staged": true,
+    "proposed_campaign_executed": false,
+    "new_test_run": false,
+    "source_config_changes": 0,
+    "tracked_changes_restricted_to_documentation": true
+  }
+}

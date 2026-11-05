@@ -1,5 +1,20 @@
 # Voice integration dependencies
 
+
+## Proposed main integration — 2026-11-05
+
+[Owner packet](D74_VOICE_INTEGRATION_REVIEW.md) and [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md) are **READY FOR OWNER REVIEW**, not approved execution. Existing trial/model/profile/data remain unchanged; no native calls in this preparation task.
+
+| Task | Priority / dependencies | Effort | Acceptance and principal risk |
+|---|---|---|---|
+| VOICE-MAIN-B1 | P1; owner approval, protected principal mapping | 1–2 engineering days | Default-off routes/UI/BFF, single-use pairing, revocation and auth-before-body; mock/legacy tests. Risk: anonymous trial identity leaking into product auth. |
+| VOICE-MAIN-B2 | P1; B1, existing exact artifact bindings | 2–3 days | Numeric-parity adapter extraction, approved borrowed CORE, all managed inference paths under residency admission, cancellation/join/Close session. Risk: GPU overlap or shared-CORE disruption. |
+| VOICE-MAIN-B3 | P1; B1/B2 software/source/resource/rights gates | 0.5–1 day | One preregistered retained 4-speech/2-negative panel; exact text/audio, all HTTP≤4s, clean guards; fixed budget/no retry. Risk: integration latency regression; no physical claim. |
+| VOICE-MAIN-B4 | P1 before activation; B3 and declared device/room/ASR protocol | Not fixed | Physical first-audible≤4s, short/quiet speech and owner final model/voice/default/product decision. “Ổn rồi” alone is not measured timing. |
+| VOICE-DISTRIBUTION-NOTICES | P2; only if distributing, actual package scope | Initially 1–2 days; remaining review uncertain | Shipping SBOM/notices, GPL/LGPL/vendor obligations, denoiser graph lineage and project-license decision. Installed inventory is not shipping clearance. |
+
+This orders dependencies without advancing day labels. Owner review A covers B1/B2 and B3 conditionally; B4/product activation and redistribution are not silently approved. Detailed caps, unchanged settings, failure handling and rollback are in ADR174.
+
 ## Trang thử voice đã chạy — 2026-11-05
 
 **URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.

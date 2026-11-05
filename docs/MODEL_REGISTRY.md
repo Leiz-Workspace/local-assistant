@@ -1,5 +1,7 @@
 # LOCAL ASSISTANT — MODEL REGISTRY & D24 RECONCILIATION
 
+
+**Current review — 2026-11-05:** [Exact-lane rights review](D74_VOICE_RIGHTS_REVIEW.md) and [main-app proposal](D74_VOICE_INTEGRATION_REVIEW.md) are ready for owner review. Model roles, pins, voices, profiles and adoption status are unchanged. Published Turbo preset assurances are distinguished from redistribution obligations; no new checkpoint or model selection. Physical timing and final product/default approval remain open.
 ## Trang thử voice đã chạy — 2026-11-05
 
 **URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.

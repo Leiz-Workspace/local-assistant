@@ -1,5 +1,7 @@
 # Current outstanding-work closure ledger
 
+
+**Current preparation — 2026-11-05:** [Rights review and concrete integration packet](D74_VOICE_INTEGRATION_REVIEW.md) completed. Next proposed work is B1/B2 default-off authenticated main-app integration, then one conditional B3 panel per [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md), pending owner review. Physical first-audible, final activation/model/default and D74/D90 release remain OPEN. Distribution work is conditional on actually shipping binaries/weights, not a blanket blocker to this personal-local proposal.
 **Purpose:** State exactly what the owner's UNRESTRICTED/outstanding-work request completed, what still lacks acceptance evidence, and the dependencies of any next work.
 
 **Owner feedback2026-11-05:** “Ổn rồi” — [general positive trial feedback recorded](evidence/d74-voice-browser-owner-feedback-20261105.json). No numeric speaker timing or per-case/device acceptance supplied; physical4second gate remains UNVERIFIED. No new inference or runtime/model/default action.
