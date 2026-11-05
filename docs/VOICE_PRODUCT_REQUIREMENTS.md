@@ -2,7 +2,15 @@
 
 **Mục đích:** Ghi đúng yêu cầu chủ dự án để định hướng D74 và backlog voice, tách biệt yêu cầu sản phẩm với việc chọn hoặc triển khai model.
 
-## Trạng thái hiện tại — 2026-11-05
+## Trang thử voice đã chạy — 2026-11-05
+
+**URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.
+
+766relatedPythonPASS/20JSPASS, Braveheadless fake-mic/muted/mocked-model UI PASS; browser thật không mock GET/POSTcookie/Origin cũng PASS, không mở microphone. RealHTTPnative6/6:4speech ASR/CORE/playback exactprior, clientroundtrip1.972–3.250s và2negative chặn đúng;6VAD/4ASR/CORE/TTS+1readiness,0retry/guard/runtimefault, toàn bộmodel thu hồi. Lượt Prepare43.843s riêng trướcGửi; không gộp thành cold4secondPASS. Giữ firstCSPfixturefailure/oldresults, không nới policy/model/cap hoặc tải thêm.
+
+**P1 còn lại: chủ dự án kiểm chứng actualmic→Brave→loa/physical4seconds qua URL có thật**, không coi marker “Chuẩn bị phát” là tiếng loa. Web service riêng đangchạy/loopback/4giờ; groupmodel8phút,24attempts/3prepares perwebprocess, RAM-only turnfiles/ephemeral browserresults. Phạm vi userdevice/voice/model/rights/default/product/D74/D90release vẫnOPEN; D60deferred, pronunciationcycles dừng. Full5889là lịch sử, không rerun hoặc tự đóng ngày/gate còn thiếu.
+
+## Checkpoint buffered compute trước trang thử — 2026-11-05
 
 [ADR170–172 / kết quả độ trễ thật](D74_RESIDENT_CUDA_LATENCY_RESULT.md): **LOCAL_BUFFERED_COMPUTE_PASS**, Qwen cùng checkpoint chạy CUDA FP32/eager + CORE32K/Fast512 + Trúc Ly CPU8 đã ready.4/4speech có audio hoàn chỉnh trong2,000–3,334giây;2/2negative chặn trước ASR/CORE/TTS.40/40transcript VI/EN trùng CPU;8native transcript/CORE/audio ở hai lượt PASS trùng byte với CPU8.690relatedPASS/98controls mới; full5889 là lịch sử, không chạy lại.
 
@@ -10,7 +18,7 @@ Sáu nhóm CPU2/4/8 vẫn FAIL maximum4seconds. WhisperCUDA FAIL VI CER253/1984v
 
 **VOICE-LATENCY-AC-001 còn OPEN cho first-audible vật lý:** complete PCM chỉ là gate xử lý cục bộ, không phải tiếng từ loa trong4giây. App recorder chưa nối research runner này. P1 tiếp theo: contract/kiểm thử rồi endpoint nghiên cứu có xác thực và browser playback/đo thực trên Brave/PC; dependency gate hiện tại/explicit-submit/ready/cancel/retention, effort một milestone contract/control+tích hợp cô lập+lượt thiết bị, rủi ro khoảng dư<0,67giây/mạng/autoplay/co-memory/cold-start/cleanup. Chưa yêu cầu owner test một URL workflow chưa có. Model/voice/rights/default/product và D74/D90release vẫn OPEN; D60deferred, pronunciation cycles dừng.
 
-**Ngày cập nhật:** 2026-11-05, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS/TARGET RECORDED / LOCAL BUFFERED COMPUTE QUALIFIED / PHYSICAL PERFORMANCE UNVERIFIED. [Yêu cầu ban đầu](evidence/d74-voice-requirements-20261103.json) giữ nguyên lịch sử; [xác nhận “4 giây đi”](evidence/d74-latency-target-4s-20261103.json) chốt giới hạn thời gian chờ.
+**Ngày cập nhật:** 2026-11-05, Asia/Ho_Chi_Minh. **Trạng thái:** REQUIREMENTS/TARGET RECORDED / LOCAL BUFFERED COMPUTE AND UI/HTTP QUALIFIED / PHYSICAL PERFORMANCE UNVERIFIED. [Yêu cầu ban đầu](evidence/d74-voice-requirements-20261103.json) giữ nguyên lịch sử; [xác nhận “4 giây đi”](evidence/d74-latency-target-4s-20261103.json) chốt giới hạn thời gian chờ.
 
 ## Yêu cầu đã xác nhận
 
@@ -59,7 +67,7 @@ Bước chuẩn bị tiếp theo có thể đối chiếu metadata/provenance v�
 | VOICE-PROSODY-001 | P1; đã thử adapter giữ dấu hỏi/chia câu; độ tự nhiên chờ đánh giá | Ví dụ nghe/tiêu chí chấp nhận; kiểm preset/chunking/dấu câu; protocol/quyền đánh giá | Một milestone điều tra/proposal, một milestone nghe so sánh; chưa ước lượng | Chưa xác định nguyên nhân; không hứa sửa bằng dấu câu/tốc độ, tự thay model hoặc sửa audio cũ |
 | VOICE-EN-001 | P1 trong mục tiêu voice; sau ưu tiên VI, lịch/release chưa chốt | Bằng chứng EN đã có, quyết định chất giọng và độ trễ/rights | Một milestone quyết định trước khi ước lượng tích hợp | Tự coi EN benchmark là sản phẩm hoặc bỏ yêu cầu EN khi ưu tiên VI |
 | VOICE-LANGUAGE-CUSTOM-001 | P2; **PENDING LATER VERSION**, chưa xếp ngày/phiên bản | Ngôn ngữ ASR/TTS thực sự hỗ trợ, UI chọn language/voice, provenance/rights và thiết kế mapping được duyệt | Một milestone thiết kế; implementation/benchmark chưa ước lượng | Nhầm Auto với hỗ trợ chính thức, silent fallback, sai voice/ngôn ngữ hoặc để input tự tải/chọn model |
-| VOICE-LATENCY-AC-001 | P1; **target 4 giây giữ nguyên; ADR172 local buffered compute PASS4/4; physical first-audible PENDING** | Phạm vi submission→first-audible thực tế, workload/measurement plan và quyền chạy phù hợp | Local compute đã xong; còn contract/control + tích hợp cô lập + kiểm chứng thiết bị | Nhầm target đã chốt với đạt hiệu năng, nhầm PCM với playback hoặc timeout với UX; che load/cache/device/concurrency |
+| VOICE-LATENCY-AC-001 | P1; **target 4 giây giữ nguyên; ADR173 UI/HTTP PASS6/6; physical first-audible PENDING** | Phạm vi submission→first-audible thực tế, workload/measurement plan và quyền chạy phù hợp | Local compute + UI/HTTP đã xong; còn kiểm chứng thiết bị thực | Nhầm target đã chốt với đạt hiệu năng, nhầm PCM với playback hoặc timeout với UX; che load/cache/device/concurrency |
 
 Đây là phân loại backlog, không tự cấp quyền triển khai hay thêm phase/ngày. Nếu thiết kế chọn ngôn ngữ, streaming hoặc runtime làm thay đổi kiến trúc, phải có ADR riêng trước khi áp dụng.
 
