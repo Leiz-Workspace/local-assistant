@@ -1,0 +1,14 @@
+{
+  "description": "Exact qualitative owner feedback after delivery of the working local voice trial, without inferred timing or device-specific acceptance.",
+  "date": "2026-11-05",
+  "owner_quote": "Ổn rồi",
+  "status": "POSITIVE_GENERAL_OWNER_FEEDBACK_RECORDED",
+  "URL": "http://127.0.0.1:8092",
+  "specific_test_cases": null,
+  "reported_elapsed_seconds": null,
+  "actual_browser_in_feedback": null,
+  "physical_first_audible_within_4_seconds": "UNVERIFIED",
+  "model_voice_default_or_license_approval": false,
+  "new_model_calls": 0,
+  "new_device_capture": false
+}

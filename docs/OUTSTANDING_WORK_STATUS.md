@@ -2,6 +2,8 @@
 
 **Purpose:** State exactly what the owner's UNRESTRICTED/outstanding-work request completed, what still lacks acceptance evidence, and the dependencies of any next work.
 
+**Owner feedback2026-11-05:** “Ổn rồi” — [general positive trial feedback recorded](evidence/d74-voice-browser-owner-feedback-20261105.json). No numeric speaker timing or per-case/device acceptance supplied; physical4second gate remains UNVERIFIED. No new inference or runtime/model/default action.
+
 ## Trang thử voice đã chạy — 2026-11-05
 
 **URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.

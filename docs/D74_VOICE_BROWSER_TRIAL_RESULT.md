@@ -48,3 +48,8 @@ Audit readonly xác nhận source16file (15code/test+ADR),750application/210prot
 ## Gate còn lại
 
 URLthật, UIfunctional, realbrowsercookie/Origin và realHTTPnative6/6 đã đạt; chưa có realmic→realbrowser→loa nghe thực tế. Các số nhận audio/scheduledplayback trên trang không phải physicalfirst-audible. Chủ dự án giờ chỉ cần mở link, Prepare, ghi/dừng/gửi và nghe; dùng bản ghi màn hình kèm tiếng loa nếu cần đối chiếu mốc4giây. Không yêu cầu nghe lại vòng phát âm đã dừng hoặc làm lại bộ mic cũ đã PASS. D60deferred; physical4seconds, voice/model/rights/default/product/D74vàD90release vẫn OPEN.
+
+
+## Phản hồi chủ dự án — 2026-11-05
+
+Chủ dự án phản hồi **“Ổn rồi”** sau khi nhận link trang thử. [Ghi nhận nguyên văn](evidence/d74-voice-browser-owner-feedback-20261105.json): phản hồi tổng quát tích cực đã được lưu; chưa có danh sách từng tình huống, thời gian nghe từ loa hoặc browser thực tế trong phản hồi này. Physical first-audible≤4seconds vẫn UNVERIFIED; model/voice/default/rights/product/D74/D90release chưa được duyệt thêm. Không có phép đo, inference, capture hoặc thay đổi source/config/service mới.
