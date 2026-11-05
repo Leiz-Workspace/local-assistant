@@ -1,6 +1,6 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 5.13 (Working loopback voice UI/native HTTP verified; physical first-audible/product open) · **Updated:** 2026-11-05 (Asia/Ho_Chi_Minh)
+> **Version:** 5.13.1 (Owner positive trial feedback recorded; physical first-audible/product open) · **Updated:** 2026-11-05 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
 > **VERIFIED 2026-11-03:** Current750-source full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0 and independent preservation accepted. All745prior application bytes unchanged; five additions. [Fresh D60 result and limits](D60_FRESH_DISCOVERY_RESULT.md), [actual terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json). Earlier5837/745andallfirstscores/failures remain historical; broad coverage/production acceptance is separate.
@@ -1030,3 +1030,6 @@ v5.12 (2026-11-05): Same-checkpoint resident latency research and source-binding
 
 
 v5.13 (2026-11-05): [ADR173 actual loopback UI/HTTP result](D74_VOICE_BROWSER_TRIAL_RESULT.md) completes the missing endpoint/browserplayback/control milestone. Originalcapture reused unchanged; explicit Prepare/Send, canonical1–20sPCM, separate detector view, owner/session/Origin/size/busy/budget/cancel/disconnect/TTL/stale-response/resource/cleanup controls, no usermedia persisted to disk/log/database.766Python/20JSPASS, real synthetic/muted/model-mocked browser controls and actual unmocked browser auth/origin PASS. First6public nativeHTTP requests pass with4ASR-CORE-playbackbyte-exact outputs/clientmax3.250s and2early refusals; all3workers+COREexit0/reaped, noRAMworkspace, originalbaseline/artifacts preserved.43.843s Prepare is outside submission and not coldlatency.15newfullcode/test files+ADR and first model-free sources retained; one CSPtestfixture/incomplete auditdirectory fixture failure corrected before native with no weakenedCSP/retry. Owned loopback webunit left live for owner; existing app/config/model/default/provider/data/sharedservices unchanged. Next required evidence is realmic/Brave/speaker firstaudible4seconds; no automatic physical/D74product/D90releasePASS.
+
+
+v5.13.1 (2026-11-05): Owner responds “Ổn rồi” after the real local voice URL delivery; [exact qualitative feedback](evidence/d74-voice-browser-owner-feedback-20261105.json) recorded. No elapsed time/per-case/device rating inferred; physicalfirst-audible4seconds UNVERIFIED and D74product/model/default/rights/D90release remainOPEN. Documentation only; no source/service change, new model calls/capture or repeated tests/benchmark.
