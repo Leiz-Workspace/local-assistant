@@ -1,5 +1,7 @@
 # Voice — Yêu cầu ngôn ngữ, chất giọng và thời gian chờ
 
+
+**Current requirements clarification — 2026-11-05:** [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md) proposes stable principal-bound UI sessions and shared GPU residency admission for optional main integration. The qualified lane, explicit Prepare/Send and existing budgets stay fixed; default-off software work/one conditional panel await owner decision. Final voice/model/default activation and physical first-audible≤4 seconds remain separate acceptance gates. [Rights review](D74_VOICE_RIGHTS_REVIEW.md) covers the existing artifacts; distribution obligations depend on actual packaging scope.
 **Mục đích:** Ghi đúng yêu cầu chủ dự án để định hướng D74 và backlog voice, tách biệt yêu cầu sản phẩm với việc chọn hoặc triển khai model.
 
 ## Trang thử voice đã chạy — 2026-11-05

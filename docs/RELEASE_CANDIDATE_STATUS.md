@@ -1,5 +1,7 @@
 # Local Assistant — Engineering candidate status
 
+
+**Current release disposition — 2026-11-05:** [Exact-artifact rights review](D74_VOICE_RIGHTS_REVIEW.md) and [default-off integration proposal](D74_VOICE_INTEGRATION_REVIEW.md) are READY FOR OWNER REVIEW. No production activation, release, model/default adoption or physical speaker acceptance follows. ADR174 implementation/conditional panel are proposed only; prior results remain historical.
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
 ## Trang thử voice đã chạy — 2026-11-05
