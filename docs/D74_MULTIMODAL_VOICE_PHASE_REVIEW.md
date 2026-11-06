@@ -1,0 +1,34 @@
+# D74 — Multimodal/voice engineering review and open acceptance gates
+
+**Purpose:** Combine existing accepted image/video scopes with actual new voice examples, resource observations and current regression while keeping manual/production acceptance honest.
+
+**Status:** Engineering review COMPLETE; final voice/product phase acceptance PENDING. D70 listening is explicitly deferred by the owner; this is not a naturalness/model/license PASS. Independent later implementation can be prepared without declaring this gate closed.
+
+## Verified engineering evidence
+
+- Original D61–D67 CORE vision/OCR/image/video/timeline/resource scopes remain retained and unchanged: see [D67 resource/context report](D67_EXISTING_MULTIMODAL_BENCHMARK.md). Those image/video model-quality observations are historical accepted examples, not new predictions in this review.
+- D68/D69 original ASR/VAD evaluations retained. New [D72 held-out comparison](D72_VAD_ASR_COMPARISON.md) covers40independent new speech sources/5negatives/2padded repeats,89requests per ASR and94VADcalls; preserve all lexical failures and keep concatenating VAD disabled.
+- [D71 recording](D71_EXPLICIT_RECORDING.md), [D72 six actual complete voice paths](D72_BUFFERED_VOICE_COMPOSITION.md), [D73 retention/delete/security](D73_AUDIO_RETENTION_SECURITY.md) have their own verified local scope and native fake-device tests.
+- Current **1043media/voice-related tests PASS74.39s/0FAIL/0SKIP**. One known warning is the deliberately duplicate Piper archive fixture. This is not the whole-project regression. Established read-only service/model/data/security baseline audit PASS; all inference workers/browser/UI processes retired.
+
+## Actual voice resource matrix
+
+| ASR | TTS | Language | Buffered latency | ASR worker peak RSS RAM | TTS worker peak RSS RAM |
+|---|---|---|---:|---:|---:|
+| qwen3-asr-0.6b | qwen3-tts-0.6b | en | 45.937s | 5.6359GiB | 5.5269GiB |
+| qwen3-asr-0.6b | piper-en | en | 11.359s | 5.6359GiB | 0.2187GiB |
+| qwen3-asr-0.6b | piper-vi | vi | 13.980s | 5.6361GiB | 0.2224GiB |
+| whisper-small-ct2 | qwen3-tts-0.6b | en | 49.315s | 0.8563GiB | 5.5278GiB |
+| whisper-small-ct2 | piper-en | en | 7.775s | 0.8563GiB | 0.2544GiB |
+| whisper-small-ct2 | piper-vi | vi | 7.849s | 0.8564GiB | 0.2178GiB |
+
+CORE stays loaded at32K and its recorded NVIDIA process allocation remains9386MiB. Worker RSS is lifetime process RAM, not model-only/private/minimum RAM or VRAM. ASR and TTS workers run sequentially; do not sum RSS as a simultaneously measured peak. Latency includes worker load/conversion and may use warm files/caches; no streaming TTFA, cold-load/SLO or concurrency guarantee. D67 historical sampled CORE/media figures remain separately labelled in that report.
+
+## Open manual and production gates
+
+1. Owner actually listens to all24original D70 outputs and records per-output judgements: [manual guide](D70_MANUAL_LISTENING_TEST.md), [blank worksheet](D70_MANUAL_LISTENING_RESULTS.pending.md). Labels remain0/24.
+2. Explicit approved ASR/TTS/voice choices and complete engine/voice/license/deployment review. No product model default or recording-to-model endpoint has been activated.
+3. Production no-speech and short/quiet-word policy. Current ASR can hallucinate on authored negatives; naive VAD concatenation degrades speech WER. The present comparison does not certify word boundaries or universal gating.
+4. Physical microphone acceptance and any final production E2E/load/restore/security/release gates. Native fake-device checks do not stand in for those user-device observations.
+
+The roadmap keeps D74 product acceptance open. Preparing independent harness/skills/security code does not mark voice accepted, lower these gates, select models or approve release. [Exact engineering evidence](evidence/d74-local-engineering-review.json).

@@ -1,0 +1,52 @@
+{
+  "description": "Retain a source-only failure triage against the pinned native SDK without new inference, imports, downloads or source changes.",
+  "status": "READONLY_TRIAGE_COMPLETE_ROOT_CAUSE_UNCONFIRMED",
+  "source_sha256": {
+    "data/backups/d70-voxtral-local-reviewer/venv/lib/python3.12/site-packages/transformers/models/voxtral/processing_voxtral.py": "30cfb09107a3c2f00d4ed3610c1c4c6233cd8cbee794c87ffbdcaaf89d3d3020",
+    "data/backups/d70-voxtral-local-reviewer/venv/lib/python3.12/site-packages/transformers/models/voxtral/modeling_voxtral.py": "479d48de97a84a9f53a039031fd56816ada81360e056285a996f3a296d49ddf9",
+    "data/backups/d70-voxtral-local-reviewer/model/generation_config.json": "cebeed3d4a1680c9b311863385d32b91008480dfbf8cf7abc2142447b8f73b76",
+    "data/backups/d70-voxtral-local-reviewer/model/README.md": "1bab81d52b2b8cab0a57603fc3ece9aec2afc53447bf4c4c3a45f620895c20d2",
+    "scripts/tts_voxtral_auditory_runtime.py": "9add4063180db958a47ce1b9d76ff1508a7e7f47a47993ad51f56ca388b2826d"
+  },
+  "findings": [
+    {
+      "component": "Native processor",
+      "reference": "data/backups/d70-voxtral-local-reviewer/venv/lib/python3.12/site-packages/transformers/models/voxtral/processing_voxtral.py",
+      "findings": "Native tokenizer output audio is converted to Whisper features and returned with input IDs; caller uses this path with lossless decoded-source and full feature replay. No missing input_features was observed in retained receipts.",
+      "limits": "Static source and same-native-path replay do not establish independent reference-model semantic equivalence."
+    },
+    {
+      "component": "Native forward and cached generation",
+      "reference": "data/backups/d70-voxtral-local-reviewer/venv/lib/python3.12/site-packages/transformers/models/voxtral/modeling_voxtral.py",
+      "findings": "Native forward projects audio and masked-scatters it into configured audio token slots. The native generation helper supplies input_features on the initial cache position only, by design. The caller passes the native input dictionary directly to generate.",
+      "limits": "No original-weight counterfactual eager/FP32/reference-runtime execution was approved or performed; no causal numerical diagnosis."
+    },
+    {
+      "component": "Native token IDs",
+      "reference": "data/backups/d70-voxtral-local-reviewer/model/generation_config.json",
+      "findings": "Original generation config BOS1/EOS2/PAD11 matches the approved deterministic worker; all twelve first outputs genuinely ended in EOS2.",
+      "limits": "Complete decoding establishes no answer correctness."
+    },
+    {
+      "component": "Original model card",
+      "reference": "data/backups/d70-voxtral-local-reviewer/model/README.md",
+      "findings": "Retained card describes audio-plus-text QA, native BF16 processor/generate usage and eight named languages without Vietnamese. No separate naturalness/MOS reviewer validation is established.",
+      "limits": "VI omission is a known risk and does not explain EN presence or identical-pair errors; no universal capability conclusion."
+    },
+    {
+      "component": "Preregistered control outcomes",
+      "reference": "docs/evidence/d70-voxtral-auditory-first.json",
+      "findings": "Both identical source/padded-waveform pairs were called SECOND; silence called YES; EN and VI speech called NO. Ten distinct source-conditioned FP32/BF16 feature hashes across twelve cases. No zero/constant-feature reuse across every case.",
+      "limits": "Cannot isolate prompt suitability, CPU BF16/SDPA numerical behavior or remaining native-runtime issues from one failed campaign."
+    }
+  ],
+  "new_original_model_runs": 0,
+  "new_recorded_audio_processing": 0,
+  "new_downloads": 0,
+  "SDK_changes": 0,
+  "causal_fix_proven": false,
+  "new_neural_experiment_scheduled": false,
+  "existing_strict_failure_unchanged": true,
+  "D70_complete": false,
+  "D71_started": false
+}

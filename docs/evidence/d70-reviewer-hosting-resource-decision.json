@@ -1,0 +1,25 @@
+{
+  "description": "Explicit owner resource replies and readonly existing-credential inventory resolve the earlier Space question without creating an account or altering Vault.",
+  "owner_Space_reply": "Chưa có Space riêng",
+  "owner_account_reply": "Chưa có tài khoản Hugging Face",
+  "owner_managed_Space_available": false,
+  "HF_account_available": false,
+  "Space_question_pending": false,
+  "account_question_pending": false,
+  "Vault_KV_v2_engines_inspected": [
+    "secret/"
+  ],
+  "Vault_secret_records_inspected": 14,
+  "matching_HF_credential_locations": 0,
+  "standard_local_HF_credentials_present": false,
+  "secret_values_retained": false,
+  "external_authentication_attempted": false,
+  "Vault_mutated": false,
+  "account_created": false,
+  "Space_created": false,
+  "provider_remediation_deployed": false,
+  "private_inventory_sha256": "70ec38d1065f6108e4ecde59c5264e92947e45dbf067b72f05be0d15440df602",
+  "first_inventory_error": "Ignored Vault response metadata was initially treated as a mount; fixed the readonly iterator type guard and retained first error log.",
+  "qualified_inventory_log_sha256": "2b4e34da9dbc4804523456bfab5cff0792deb33b97fc3ef16bfca77a58a0665e",
+  "inference_requests": 0
+}
