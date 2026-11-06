@@ -1,0 +1,132 @@
+{
+  "description": "D68 registry ASR candidates/artifact pins for isolated offline comparison only. No selected/deployed/default model, no existing role/config/artifact replacement. Sizes are storage metadata, not RAM/VRAM.",
+  "status": "EVALUATION_ONLY_NOT_SELECTED",
+  "task": "MODEL-EVAL-003",
+  "candidates": [
+    {
+      "id": "qwen3-asr-0.6b",
+      "repository": "Qwen/Qwen3-ASR-0.6B",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "declared_license": "apache-2.0",
+      "artifacts": [
+        {
+          "filename": "README.md",
+          "bytes": 57456,
+          "git_blob_sha1": "3a67d43f21febda213ff36efdb60ef10019af7f3",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "chat_template.json",
+          "bytes": 1161,
+          "git_blob_sha1": "c44736493efd71ec96218cc626904698cdb13235",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "config.json",
+          "bytes": 6193,
+          "git_blob_sha1": "8113d596dec2d1a2ef4552edfe005ee84d16d9ec",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "generation_config.json",
+          "bytes": 142,
+          "git_blob_sha1": "7382a4d347c0a865b76bb1b8277f66a5ac312854",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "merges.txt",
+          "bytes": 1671853,
+          "git_blob_sha1": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "model.safetensors",
+          "bytes": 1876091704,
+          "git_blob_sha1": "02eacfa01edf43c4bc94f412723f5b515762e326",
+          "lfs_sha256": "79d6cbd4c98c7bbffe9db2edac07f56cd6637d0d5944b27f6c2b8353840323ea"
+        },
+        {
+          "filename": "preprocessor_config.json",
+          "bytes": 330,
+          "git_blob_sha1": "8f7f07346466d5d494ec0d4969d1c3d0190eed72",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "tokenizer_config.json",
+          "bytes": 12487,
+          "git_blob_sha1": "b93109843922a40c6654c5449d3bf95372267c66",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "vocab.json",
+          "bytes": 2776833,
+          "git_blob_sha1": "4783fe10ac3adce15ac8f358ef5462739852c569",
+          "lfs_sha256": null
+        }
+      ]
+    },
+    {
+      "id": "whisper-small-ct2",
+      "repository": "Systran/faster-whisper-small",
+      "revision": "536b0662742c02347bc0e980a01041f333bce120",
+      "declared_license": "mit",
+      "artifacts": [
+        {
+          "filename": "README.md",
+          "bytes": 1998,
+          "git_blob_sha1": "16511f6106ead2fbc3a1480957a217c2661a5a98",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "config.json",
+          "bytes": 2370,
+          "git_blob_sha1": "e5047537059bd8f182d9ca64c470201585015187",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "model.bin",
+          "bytes": 483546902,
+          "git_blob_sha1": "504a7fe023f19460564a623887a9f77ea53ac708",
+          "lfs_sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671"
+        },
+        {
+          "filename": "tokenizer.json",
+          "bytes": 2203239,
+          "git_blob_sha1": "7818adb6de9fa3064d3ff81226fdd675be1f6344",
+          "lfs_sha256": null
+        },
+        {
+          "filename": "vocabulary.txt",
+          "bytes": 459861,
+          "git_blob_sha1": "c9074644d9d1205686f16d411564729461324b75",
+          "lfs_sha256": null
+        }
+      ]
+    }
+  ],
+  "corpus": {
+    "repository": "google/fleurs",
+    "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "declared_license": "cc-by-4.0",
+    "split": "test",
+    "languages": [
+      "vi_vn",
+      "en_us"
+    ],
+    "speech_cases_per_language": 20,
+    "selection": "First eligible TSV rows in original order,1\u201320seconds; freeze before predictions, preserve excluded IDs/reasons.",
+    "control_requests": 4,
+    "unique_control_waveforms": 2
+  },
+  "runtime_budget": {
+    "device": "cpu",
+    "threads": 2,
+    "batch": 1,
+    "max_new_tokens": 256,
+    "address_space_GiB": 8,
+    "CPU_seconds": 1200,
+    "wall_seconds": 900,
+    "new_storage_budget_GB": 6
+  },
+  "production_selection": null
+}

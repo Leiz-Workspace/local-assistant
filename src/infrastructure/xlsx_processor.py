@@ -14,6 +14,7 @@ from src.application.services.xlsx_contract import (
     validate_view,
 )
 from src.infrastructure.file_verifier import sandbox_command
+from src.infrastructure.native_input import rewind_native_input
 
 logger = logging.getLogger(__name__)
 XLSX_WALL_SECONDS = 10
@@ -37,7 +38,7 @@ def process_xlsx(source, operation="read", plan=None):
     )
     if len(metadata) > MAX_PLAN_BYTES:
         raise StoragePolicyError("xlsx_edits_too_large", 413)
-    source.seek(0)
+    rewind_native_input(source)
     try:
         with tempfile.TemporaryFile() as request, tempfile.TemporaryFile() as output:
             request.write(metadata)
@@ -70,7 +71,7 @@ def process_xlsx(source, operation="read", plan=None):
     except OSError:
         raise StoragePolicyError("xlsx_processing_unavailable", 503) from None
     finally:
-        source.seek(0)
+        rewind_native_input(source)
     if result.returncode or len(data) > MAX_OUTPUT_BYTES:
         raise StoragePolicyError("xlsx_processing_unavailable", 503)
     if operation == "rewrite" and data.startswith(b"PK\x03\x04"):

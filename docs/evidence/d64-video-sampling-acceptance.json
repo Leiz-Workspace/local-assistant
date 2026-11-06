@@ -1,0 +1,29 @@
+{
+  "description": "D64 local explicit-byte timestamped native frames, separate requested/observed rational clocks and audio metadata only; no model/API/ASR activation.",
+  "status": "PASS_LOCAL_TIMESTAMPED_REPRODUCIBLE_VIDEO_FRAMES",
+  "source_files": 576,
+  "all569_prior_source_bytes_unchanged": true,
+  "new_controls": 59,
+  "related_passed": 243,
+  "related_elapsed_seconds": 16.96,
+  "private_evaluator_controls": 7,
+  "private_audit_controls": 132,
+  "actual_samples": 2,
+  "frames_per_sample": 3,
+  "actual_elapsed_seconds": 0.931,
+  "identical_frame_hashes_and_pts": true,
+  "PTS_origin_and_audio_clock_preserved": true,
+  "pre_freeze_fixture_and_evaluator_failures_retained": true,
+  "models_replaced": 0,
+  "models_downloaded": 0,
+  "ASR_attempts": 0,
+  "independent_human": false,
+  "production_api_ui_wiring": false,
+  "prior_full": {
+    "passed": 4265,
+    "source_files": 562,
+    "current_full_claim": false
+  },
+  "collection_only": 4348,
+  "D65": "NEXT_FRAME_BASED_VIDEO_DESCRIPTION"
+}

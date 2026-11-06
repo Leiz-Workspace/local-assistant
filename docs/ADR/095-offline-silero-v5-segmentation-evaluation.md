@@ -1,0 +1,39 @@
+# ADR 095 Offline Silero VAD v5 segmentation evaluation
+
+**Purpose:** Define D69's existing nominated VAD candidate, independent speech-presence/control labels, exact sample-clock checks, resource boundaries and approval/rollback gates before provisioning or predictions.
+
+**Date:** 2026-10-22. **Status:** Accepted for offline evaluation following D68 source`d967148`, closure`b9f023b`, document-only binding`c96c82d`. No VAD/ASR/default selection or deployment authorized.
+
+## Priority, dependencies and risks
+
+MODEL-EVAL-004/D69 is existing P2 work, one evaluation milestone, dependent on D68's independent public Vietnamese/English speech, unchanged common float32 samples, first no-speech failures, bounded offline inference and original CORE/data/runtime audit. Both D68 candidates emitted text on known non-speech; this motivates evaluating VAD but does not prove it improves either ASR. Risks include evaluating v6 while claiming v5, state leaking between recordings, lost or duplicated tail samples, model padding mistaken for source audio, sample-rate/offset drift, coarse speech-presence labels mistaken for word boundaries, synthetic noise generalized to real rooms, hidden model downloads and treating an evaluated candidate as approved production policy.
+
+## Exact candidate and genuine runtime
+
+Use only original [snakers4/silero-vad tagv5.0](https://github.com/snakers4/silero-vad/tree/v5.0), annotated tag object`a27ffa1d13db33ee6d9898ee469c6302ccc46912`, target commit`5cd2ba54db059f961e7545d4f211b44f005a6dfb`. MIT license. Canonical `files/silero_vad.onnx`2313101bytes, Git blob`d0ccd9d7fc1f98033c04b4a2b03ed0e07e842a13`; pin and verify the complete file and retain computed SHA256. No v6, JIT checkpoint, new aligner, ASR rerun, alternate VAD or microphone acquisition.
+
+Use unmodified official `utils_vad.py` from the same commit, Git blob`88c11b90b146cdc9f86280ccf0c57e7f691655ae`,18709bytes, sourceSHA256`8e7d5e01aaed44f38ed91ab27658dff8ebae7c950bdfd31013f3ac53f9e9ec1e`. Call `OnnxWrapper` directly with local path/force_onnx_cpu=True and `get_speech_timestamps`, never TorchHub/download helpers/read_audio. The original source imports Torch/torchaudio even for in-memory ONNX inference: provision a separate ignored uv environment with CPU Torch2.10.0+cpu/torchaudio2.10.0+cpu, ONNXRuntime1.31.0 (same version as the current application), NumPy2.5.4. Do not modify app or D68 environments/lockfiles/configuration. Official source and dependency/license/versions are frozen before predictions; no unrelated model assets are acquired.
+
+Official ONNX session settings are one intra-op/one inter-op thread, CPUExecutionProvider only. Record this rather than claiming two engine threads. Restrict the process to logical CPUs0,1, Torch2threads/inter-op1, float32 mono16k samples. The original wrapper carries64context samples and recurrent state across512-sample windows, resets for each recording and pads only the final model input window. Source samples remain unchanged; retain actual sample counts and clamp returned segments to original length. No production normalizer policy changes.
+
+Fix threshold0.5, negative hysteresis threshold0.35, min_speech_duration_ms250, min_silence_duration_ms100, speech_pad_ms30, window512samples/32ms, return_seconds=False and max_speech_duration_s infinity for these bounded inputs. Never tune thresholds after observing this corpus. Record all returned integer sample intervals and per-window probabilities/state-reset/window counts; probabilities are model outputs, not calibrated truth confidence. A transparent observer may record official call results/reset events without modifying them.
+
+## Frozen evaluation inputs and honest labels
+
+Reuse exactly40 original FLEURS waveforms from D68 (20VI/20EN,9/10distinct sentence IDs). Upstream nonempty transcripts establish whole-recording speech presence; they do not label every sample as speech. Reuse the two unique D68 authored5second silence/seed7noise waveforms once each; VAD has no language hint, so do not inflate them to four independent signals. Add three predeclared known non-speech controls:5second50Hz sine at0.05amplitude,5second500Hz sine at0.05amplitude, and5seconds of zeros with two80-sample0.5amplitude clicks at exact1/3second positions.
+
+Add two composite cases: first selected VI and EN recordings in source order, surrounded by exactly5seconds of zeros on each side. Record exact source/prefix/tail sample mappings and a separate authored timeline origin of2seconds. A detected segment's absolute sample offset must equal origin+relative offset exactly. Emitted speech outside the coarse embedded source region, excluding the declared62ms window-plus-pad tolerance, is a known-padding false-positive duration; detections inside the source region do not certify word boundary accuracy. Count whole-recording speech presence/misses and false speech on five unique known-negative controls. No sample-level recall/word timestamp accuracy on human speech is claimed without independent fine-grained labels.
+
+Use47unique inputs:40speech,5known negatives and2padded composites, no additional cases. Two predeclared passes (forward order then reverse order), resetting each recording, provide94 observations and exact probability/segment replay comparison; this is planned repeatability testing, not outcome-driven retries or additional independent samples. Retain first results/errors and raw exact inputs. No audio/text truncation or output-driven selection/label repair.
+
+## Execution, resources and acceptance
+
+New bounded evaluation-only worker: readonly selected model/official source/reference-free waveforms/SDK, no host references/credentials/network/GPU, synthetic UID mapping,128MiB private tmpfs,3GiB address-space,180/181CPU-second and180wall-second budget. These are execution caps, not predicted RAM requirements. Original CORE stays loaded; record its PID/start/command/RAM/NVIDIA allocation and ordinary text recovery before/after. Retire/reap the namespace on timeout and retain partial observations. Measure import/load separately, each full official segmentation call, RTF, process lifetime peak RSS/CPU, complete coverage and both pass repeatability. No cold-storage/streaming-SLO/minimum-hardware claim.
+
+Acceptance is a tested/frozen original-source/candidate/corpus contract, genuine complete47-case/two-pass evaluation with all quality failures reported, deterministic reset behavior, complete source-bound valid sample intervals/offset mappings, current tests and unchanged608 prior source/model/config/data/runtime/CORE readonly audit. Evaluation completion is distinct from VAD quality approval: observed false positives/misses remain deployment blockers and are never hidden to mark the candidate ready. Any runtime error/incomplete evidence/state/clock/isolation failure leaves D69 open. No default VAD or combined VAD+ASR improvement is approved by this task.
+
+Only the single AUDIO_BACKLOG D68 documentation closure changed after the D68 audit: verify retained old bytes/current bytes/exact acceptedGitb9f023b via `d68-audio-progress-document-transition.json`. Preserve old freezes/scores and all other guard hashes. No broad source/model hash refresh.
+
+## Compatibility and rollback
+
+Keep registry SileroVADv5 as a candidate and preserve original ASR/CORE/UNRESTRICTED/embedding/reranker/VLM/default roles, D24E5 rollback and all existing sources/collections. Product integration still needs recording consent, source/owner-bound admission/cancellation, ASR replay on representative data, segmentation/short-speech/resource analysis and owner approval before selection/deployment. Rollback retires only owned evaluation jobs; leave retained private source/SDK/model/inputs/results until separately authorized cleanup. No production database/index/configuration migration occurs.

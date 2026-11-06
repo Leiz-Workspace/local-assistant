@@ -1,0 +1,6 @@
+{
+  "description": "First generator invocation used a script path and lacked project module import resolution; exit1 before audio/native work. Correct module invocation via uv run --no-sync python -m scripts.generate_transcript_video_golden succeeds without application change. Both logs retained, not an inference trial or test result.",
+  "status": "PREFLIGHT_INVOCATION_ERROR_RETAINED",
+  "first_log_sha256": "e00ad245f655a4137f6d7186d3f023c77eb3b07b4fad712c72406cba732677c1",
+  "corrected_log_sha256": "6ed6f49db04d10b0654e2e092734729a55b1343f4e3c7cf9bce759d48645f0df"
+}

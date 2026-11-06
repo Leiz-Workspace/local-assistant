@@ -1,0 +1,22 @@
+{
+  "description": "Official openai/whisper public JFK speech test fixture for D66 provided-transcript/frame composition; no ASR model/evaluation. License copied unchanged; source tests attest selected phrases/timing but do not establish a new independently reviewed full transcript.",
+  "revision": "86098128c0b4f24f0e2aa2994de830614b474227",
+  "retrieved_at_utc": "2026-10-22T05:36:34.221032+00:00",
+  "files": {
+    "jfk.flac": {
+      "url": "https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/tests/jfk.flac",
+      "sha256": "63a4b1e4c1dc655ac70961ffbf518acd249df237e5a0152faae9a4a836949715",
+      "bytes": 1152693
+    },
+    "WHISPER_LICENSE.txt": {
+      "url": "https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/LICENSE",
+      "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d",
+      "bytes": 1063
+    },
+    "whisper-test-transcribe.source.txt": {
+      "url": "https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/tests/test_transcribe.py",
+      "sha256": "39b1b2318bd29e16c5d64954bbe70fa560db4eeedd96aaab0f9cfbcce74acd6b",
+      "bytes": 1524
+    }
+  }
+}

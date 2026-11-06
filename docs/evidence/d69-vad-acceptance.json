@@ -1,0 +1,155 @@
+{
+  "description": "D69 original SileroVADv5 offline evaluation complete, not model/default deployment approval, word boundary certification or proof of improved combined ASR.",
+  "status": "PASS_LOCAL_ORIGINAL_V5_EVALUATION_NOT_SELECTED",
+  "source_implementation_commit": "48f9888",
+  "source_files": 612,
+  "all608_prior_source_bytes_unchanged": true,
+  "new_controls": 59,
+  "related_passed": 526,
+  "related_seconds": 16.88,
+  "private_audit_controls": 19,
+  "private_audit_seconds": 0.58,
+  "first_actual_observation": {
+    "complete_observations": 94,
+    "unique_inputs": 47,
+    "exact_replayed_inputs": 47,
+    "speech_presence_detected": 40,
+    "known_negative_false_positive_inputs": 0,
+    "source_bound_sample_clocks": true,
+    "coarse_padded_composites": [
+      {
+        "id": "padded-vi_vn",
+        "status": "ok",
+        "kind": "padded_source_composite",
+        "detected_speech": true,
+        "segments": [
+          {
+            "start": 90656,
+            "end": 99296
+          },
+          {
+            "start": 106016,
+            "end": 149984
+          },
+          {
+            "start": 157216,
+            "end": 173024
+          },
+          {
+            "start": 180256,
+            "end": 190944
+          },
+          {
+            "start": 193056,
+            "end": 217568
+          }
+        ],
+        "replay_exact": true,
+        "waveform_sha256": "3e97ac23ddfbf595b86f9d89123d1ae88b04208523ae3a9b979b11ea28a6da4b",
+        "timeline_origin_samples": 32000,
+        "absolute_sample_intervals": [
+          {
+            "start": 122656,
+            "end": 131296
+          },
+          {
+            "start": 138016,
+            "end": 181984
+          },
+          {
+            "start": 189216,
+            "end": 205024
+          },
+          {
+            "start": 212256,
+            "end": 222944
+          },
+          {
+            "start": 225056,
+            "end": 249568
+          }
+        ],
+        "known_padding_false_positive_samples_beyond_62ms_tolerance": 0,
+        "detected_inside_embedded_source": true
+      },
+      {
+        "id": "padded-en_us",
+        "status": "ok",
+        "kind": "padded_source_composite",
+        "detected_speech": true,
+        "segments": [
+          {
+            "start": 97312,
+            "end": 195040
+          },
+          {
+            "start": 201248,
+            "end": 227808
+          },
+          {
+            "start": 231456,
+            "end": 245216
+          }
+        ],
+        "replay_exact": true,
+        "waveform_sha256": "b9adc153c52783aafe31c3b1f3ab00d9436adda6b4aa3b953ad7eda080f77afd",
+        "timeline_origin_samples": 32000,
+        "absolute_sample_intervals": [
+          {
+            "start": 129312,
+            "end": 227040
+          },
+          {
+            "start": 233248,
+            "end": 259808
+          },
+          {
+            "start": 263456,
+            "end": 277216
+          }
+        ],
+        "known_padding_false_positive_samples_beyond_62ms_tolerance": 0,
+        "detected_inside_embedded_source": true
+      }
+    ],
+    "timing": {
+      "observed_audio_seconds": 970.36,
+      "full_call_seconds": 3.0390980850279448,
+      "duration_weighted_RTF": 0.003131928444111407,
+      "minimum_call_seconds": 0.015701707001426257,
+      "median_call_seconds": 0.02992518300015945,
+      "maximum_call_seconds": 0.07106300000305055
+    },
+    "process_wall_seconds": 4.880798229998618,
+    "import_seconds": 1.4517865859961603,
+    "load_seconds": 0.03799446799530415,
+    "peak_lifetime_process_RSS_KiB": 277724,
+    "process_CPU_seconds": 4.7737419999999995,
+    "same_CORE_identity_and_text_recovery": true,
+    "word_boundary_accuracy_not_evaluated": true,
+    "combined_ASR_improvement_not_evaluated": true,
+    "selected_model": null
+  },
+  "source_freeze_sha256": "84033adb2f7c513063da9fb3ef032454a21bbd1d082ef655733e10565ec44a85",
+  "auditor_input_freeze_sha256": "c9646f492dd9bb9d74344857821bb3faa35c5573026683d06ff0486e0da65465",
+  "readonly_audit_sha256": "e6aec37749587ec93a830591e0952896dd3af7a7ccdddb96e7f0068fde807930",
+  "actual_result_sha256": "d62162dfdae5d3a92542cd0e63016072caba002aed5a5f6c604678c2d7ea1e52",
+  "D68_ASR_first_results_unchanged": true,
+  "historical_full": {
+    "day": "D67",
+    "passed": 4495,
+    "source_files": 599
+  },
+  "current_full_regression": false,
+  "new_assessed_prerequisite": {
+    "task": "AUDIO-VAD-ASR-001",
+    "priority": "P1",
+    "schedule": "Before D72 acceptance",
+    "backlog": "docs/VOICE_INTEGRATION_BACKLOG.md"
+  },
+  "selected_model": null,
+  "combined_ASR_improvement_evaluated": false,
+  "word_boundary_accuracy_evaluated": false,
+  "production_model_config_or_data_changes": false,
+  "next_task": "D70 compare nominated Qwen3-TTS-0.6B versus Piper"
+}

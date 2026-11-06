@@ -1,0 +1,134 @@
+{
+  "description": "Complete first actual D64 timing/pixel-hash observations; no raw PNGs, inference prompts or speech transcription.",
+  "private_summary_sha256": "8c15516a10315efe31bd5e14c863cbf64c562d018bfdc1d25ae2628fd52b853c",
+  "actual": {
+    "description": "First D64 actual authored CFR reproducibility. Two explicit fixed native samples, synthetic tone metadata only; no ASR, source recording, model invocation, raw PNG or prompt archive.",
+    "status": "PASS_D64_TIMESTAMPED_REPRODUCIBLE_FRAMES",
+    "created_at_utc": "2026-10-22T05:18:33.334338+00:00",
+    "source_freeze_sha256": "953e33b37eddebd3ddb724d0ee0557d7c00e2ab5c2213814b5a96881355b6fb0",
+    "samples": [
+      {
+        "source_sha256": "a8880df87d3899ec51dd52e73b785d088372a68b5c4d71d240338ec92aff00a7",
+        "metadata": {
+          "width": 960,
+          "height": 360,
+          "codec": "ffv1",
+          "time_base_num": 1,
+          "time_base_den": 1000,
+          "origin_pts": 0,
+          "duration_seconds": 3.0,
+          "frame_count": 3,
+          "audio": [
+            {
+              "index": 1,
+              "codec": "pcm_s16le",
+              "sample_rate": 16000,
+              "channels": 1,
+              "time_base_num": 1,
+              "time_base_den": 1000,
+              "start_pts": 0
+            }
+          ]
+        },
+        "frames": [
+          {
+            "requested_ms": 0,
+            "frame_index": 0,
+            "pts": 0,
+            "relative_time_num": 0,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810"
+          },
+          {
+            "requested_ms": 1000,
+            "frame_index": 1,
+            "pts": 1000,
+            "relative_time_num": 1,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5"
+          },
+          {
+            "requested_ms": 2000,
+            "frame_index": 2,
+            "pts": 2000,
+            "relative_time_num": 2,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f"
+          }
+        ],
+        "processor": "ffmpeg-frames-v1",
+        "content_trust": "untrusted",
+        "persisted": false
+      },
+      {
+        "source_sha256": "a8880df87d3899ec51dd52e73b785d088372a68b5c4d71d240338ec92aff00a7",
+        "metadata": {
+          "width": 960,
+          "height": 360,
+          "codec": "ffv1",
+          "time_base_num": 1,
+          "time_base_den": 1000,
+          "origin_pts": 0,
+          "duration_seconds": 3.0,
+          "frame_count": 3,
+          "audio": [
+            {
+              "index": 1,
+              "codec": "pcm_s16le",
+              "sample_rate": 16000,
+              "channels": 1,
+              "time_base_num": 1,
+              "time_base_den": 1000,
+              "start_pts": 0
+            }
+          ]
+        },
+        "frames": [
+          {
+            "requested_ms": 0,
+            "frame_index": 0,
+            "pts": 0,
+            "relative_time_num": 0,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810"
+          },
+          {
+            "requested_ms": 1000,
+            "frame_index": 1,
+            "pts": 1000,
+            "relative_time_num": 1,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5"
+          },
+          {
+            "requested_ms": 2000,
+            "frame_index": 2,
+            "pts": 2000,
+            "relative_time_num": 2,
+            "relative_time_den": 1,
+            "width": 960,
+            "height": 360,
+            "png_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f"
+          }
+        ],
+        "processor": "ffmpeg-frames-v1",
+        "content_trust": "untrusted",
+        "persisted": false
+      }
+    ],
+    "model_attempts": 0,
+    "automatic_retries": 0,
+    "raw_frames_retained": false,
+    "elapsed_seconds": 0.931
+  }
+}

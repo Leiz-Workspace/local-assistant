@@ -10,6 +10,8 @@ import resource
 import subprocess
 import sys
 
+from src.infrastructure.native_input import rewind_native_input
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,6 +23,8 @@ def child_output(command, *, source=None, data=None, timeout=8, limit=4 * 1024 *
         output.seek(0)
         output.truncate()
         try:
+            if source is not None:
+                rewind_native_input(source)
             result = subprocess.run(
                 command,
                 stdin=source,
@@ -39,6 +43,9 @@ def child_output(command, *, source=None, data=None, timeout=8, limit=4 * 1024 *
             raise StoragePolicyError("ocr_processing_timeout", 413) from None
         except OSError:
             raise StoragePolicyError("ocr_processing_unavailable", 503) from None
+        finally:
+            if source is not None:
+                rewind_native_input(source)
         if result.returncode:
             raise StoragePolicyError("ocr_processing_unavailable", 503)
         output.seek(0)

@@ -1,0 +1,70 @@
+{
+  "description": "Predeclared public authored D63 chart/table/document questions and whole-answer functional oracles. Same-agent visible labels, no general or independent semantic certification.",
+  "model": "qwen3.5-9b-core",
+  "automatic_retries": 0,
+  "ordinary_text_recovery_expected": "VISION_TEXT_OK",
+  "cases": [
+    {
+      "id": "chart-maximum",
+      "fixture": "tests/fixtures/vision/d63/chart.png",
+      "question": "Which month has the highest number of completed requests, and what is its value? Answer only with that month and its value.",
+      "required_patterns": [
+        "\\bFebruary\\b",
+        "\\b30\\b"
+      ],
+      "forbidden_patterns": [
+        "\\bJanuary\\b",
+        "\\bMarch\\b"
+      ],
+      "allowed_numbers": [
+        "30"
+      ],
+      "requires_uncertainty": false
+    },
+    {
+      "id": "chart-absent-april",
+      "fixture": "tests/fixtures/vision/d63/chart.png",
+      "question": "How many completed requests are shown for April? Answer only for April; do not infer a missing period or list other months.",
+      "required_patterns": [
+        "(?:not (?:shown|visible|provided|present|specified|available)|cannot|unknown|no .{0,30}April)"
+      ],
+      "forbidden_patterns": [],
+      "allowed_numbers": [],
+      "requires_uncertainty": true
+    },
+    {
+      "id": "table-notebook-row",
+      "fixture": "tests/fixtures/vision/d63/table.png",
+      "question": "Chỉ cho biết số lượng và đơn giá VND của Vở trong bảng, gắn rõ mỗi giá trị với tên cột. Không liệt kê mặt hàng khác.",
+      "required_patterns": [
+        "(?:số lượng|quantity)[\\s:*=-]*5\\b",
+        "(?:đơn giá|unit price)(?:\\s*\\(?VND\\)?)?[\\s:*=-]*18[,.]?000\\b"
+      ],
+      "forbidden_patterns": [
+        "\\bbút\\b"
+      ],
+      "allowed_numbers": [
+        "5",
+        "18000",
+        "18,000",
+        "18.000"
+      ],
+      "requires_uncertainty": false
+    },
+    {
+      "id": "document-release-and-files",
+      "fixture": "tests/fixtures/vision/d63/document.png",
+      "question": "What release and file count are explicitly shown? Answer only those two labeled fields.",
+      "required_patterns": [
+        "release[\\s:*=-]*2\\.4\\b",
+        "(?:files|file count)[\\s:*=-]*12\\b"
+      ],
+      "forbidden_patterns": [],
+      "allowed_numbers": [
+        "2.4",
+        "12"
+      ],
+      "requires_uncertainty": false
+    }
+  ]
+}

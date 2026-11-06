@@ -1,0 +1,10 @@
+{
+  "description": "Only the D68 post-audit audio-backlog progress documentation changes after the608-source/model/data/runtime audit. Exact old snapshot retained; original source/first scores/model guards are unchanged. Future audits must verify old/new/Git binding explicitly for this single MD, not broadly rehash history.",
+  "path": "docs/AUDIO_BACKLOG.md",
+  "old_sha256": "d5076ae3df556943aacebe7dfe73b4b967dc18babee4467e9db2c2be92b89baf",
+  "new_sha256": "ca26f4b23df9e637fc25977e6f72eee80e6619c7b659ff9778d7601b5cd71ae0",
+  "preserved_path": "data/backups/d68-audio-backlog-before-acceptance.md",
+  "accepted_git": "b9f023bd635f45efb1436d64c5e84b22495a0b52",
+  "source_files_changed": 0,
+  "original_audit_sha256": "577692fc63928f46a4ac1e92dc2e8fea2357dd37b40e094789c03347397ac093"
+}

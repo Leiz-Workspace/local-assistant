@@ -1,0 +1,183 @@
+{
+  "description": "Complete original first D63 public authored image answers and observed cleanup; no raw raster/request payload retained.",
+  "private_summary_sha256": "1e85336731fe26be6201f0072ef41adb355cad9adc84cb56168048becdbd6835",
+  "actual": {
+    "description": "D63 first four frozen authored chart/table/document questions through unchanged CORE/mmproj and native normalization; original D61/D62 failures preserved. Same-agent visible oracles, no independent-human/general vision quality, secure model-memory erasure or server-side abort claim.",
+    "status": "PASS_D63_AUTHORED_IMAGE_GOLDENS_AND_TEXT_RECOVERY",
+    "source_freeze_sha256": "8d42cc98c33f7876b2e42d6afbd1c6c88b8a3743d50f96cf94aa21bd789b5585",
+    "cases": [
+      {
+        "id": "chart-maximum",
+        "fixture": "tests/fixtures/vision/d63/chart.png",
+        "source_sha256": "e61c280f9d814cb1bf8d111047ae977a2ea0882d3329b726adafc0512fc5ebc3",
+        "question": "Which month has the highest number of completed requests, and what is its value? Answer only with that month and its value.",
+        "status": "PASS",
+        "answer": "February, 30",
+        "uncertainties": [],
+        "owner_matches": true,
+        "source_matches": true,
+        "normalized_sha256": "e61c280f9d814cb1bf8d111047ae977a2ea0882d3329b726adafc0512fc5ebc3",
+        "width": 960,
+        "height": 640,
+        "model_id": "qwen3.5-9b-core",
+        "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+        "confidence": null,
+        "persisted": false,
+        "semantic_validation": false,
+        "received_at": "2026-10-22 05:05:13.655239+00:00",
+        "elapsed_seconds": 0.887
+      },
+      {
+        "id": "chart-absent-april",
+        "fixture": "tests/fixtures/vision/d63/chart.png",
+        "source_sha256": "e61c280f9d814cb1bf8d111047ae977a2ea0882d3329b726adafc0512fc5ebc3",
+        "question": "How many completed requests are shown for April? Answer only for April; do not infer a missing period or list other months.",
+        "status": "PASS",
+        "answer": "Not available",
+        "uncertainties": [
+          "The chart only displays data for January, February, and March. There is no visible bar or label for April, so the number of completed requests for April cannot be determined from the image."
+        ],
+        "owner_matches": true,
+        "source_matches": true,
+        "normalized_sha256": "e61c280f9d814cb1bf8d111047ae977a2ea0882d3329b726adafc0512fc5ebc3",
+        "width": 960,
+        "height": 640,
+        "model_id": "qwen3.5-9b-core",
+        "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+        "confidence": null,
+        "persisted": false,
+        "semantic_validation": false,
+        "received_at": "2026-10-22 05:05:14.926524+00:00",
+        "elapsed_seconds": 1.268
+      },
+      {
+        "id": "table-notebook-row",
+        "fixture": "tests/fixtures/vision/d63/table.png",
+        "source_sha256": "fcfe3251859833cea7967e7a651452b8c41e052301b64b751370418f1749ca33",
+        "question": "Chỉ cho biết số lượng và đơn giá VND của Vở trong bảng, gắn rõ mỗi giá trị với tên cột. Không liệt kê mặt hàng khác.",
+        "status": "PASS",
+        "answer": "Số lượng: 5 (cột Số lượng), Đơn giá: 18000 (cột Đơn giá (VND))",
+        "uncertainties": [],
+        "owner_matches": true,
+        "source_matches": true,
+        "normalized_sha256": "fcfe3251859833cea7967e7a651452b8c41e052301b64b751370418f1749ca33",
+        "width": 1000,
+        "height": 440,
+        "model_id": "qwen3.5-9b-core",
+        "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+        "confidence": null,
+        "persisted": false,
+        "semantic_validation": false,
+        "received_at": "2026-10-22 05:05:16.092146+00:00",
+        "elapsed_seconds": 1.16
+      },
+      {
+        "id": "document-release-and-files",
+        "fixture": "tests/fixtures/vision/d63/document.png",
+        "source_sha256": "d9217008566e726691ab2d9887c5ff67393a3a3f7bfdf3170eea92b951bfb4cb",
+        "question": "What release and file count are explicitly shown? Answer only those two labeled fields.",
+        "status": "PASS",
+        "answer": "Release: 2.4, Files: 12",
+        "uncertainties": [],
+        "owner_matches": true,
+        "source_matches": true,
+        "normalized_sha256": "d9217008566e726691ab2d9887c5ff67393a3a3f7bfdf3170eea92b951bfb4cb",
+        "width": 1000,
+        "height": 620,
+        "model_id": "qwen3.5-9b-core",
+        "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+        "confidence": null,
+        "persisted": false,
+        "semantic_validation": false,
+        "received_at": "2026-10-22 05:05:17.088135+00:00",
+        "elapsed_seconds": 0.993
+      }
+    ],
+    "text_CORE_attempts": 1,
+    "automatic_retries": 0,
+    "model_replacement": false,
+    "raw_images_or_model_prompts_persisted": false,
+    "human_independent": false,
+    "semantic_validation": false,
+    "ordinary_text_completion": {
+      "content": "VISION_TEXT_OK",
+      "model_id": "qwen3.5-9b-core",
+      "preset_selected": "fast",
+      "finish_reason": "stop",
+      "input_tokens": 24,
+      "output_tokens": 4,
+      "reasoning_tokens": null,
+      "latency_ms": 187
+    },
+    "ordinary_text_recovery_passed": true,
+    "native_attempts": 4,
+    "image_CORE_port_attempts": 4,
+    "model_transports": [
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      }
+    ],
+    "operations_remaining": 0,
+    "admission_released": true,
+    "service_closed": true,
+    "quota_charged": 4,
+    "elapsed_seconds": 4.513
+  }
+}

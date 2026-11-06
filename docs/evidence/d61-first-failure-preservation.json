@@ -1,0 +1,7 @@
+{
+  "description": "Complete original first2of3 functionality source/test/freeze/actual result and redacted log, retained before only-new image prompt repair. No model/config/source fixture/oracle change.",
+  "zip_sha256": "5e28d5c33af7eacd32d6ddd66b588fd2e028429d166f84e196226b84e7e6d0bf",
+  "files": 22,
+  "first_result_sha256": "519f35a85c64959edf4b29102abcff728a8cd5ff953a2291faa3c2c7604f5527",
+  "first_status": "FAILED_FUNCTIONAL_2_OF3"
+}
