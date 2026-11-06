@@ -38,9 +38,20 @@ jobs:
         name: List changed Python files
         env:
           EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          REF: ${{ github.ref }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           BEFORE_SHA: ${{ github.event.before }}
         run: |
+          # Lint guards changes entering develop. Promotions to staging/production carry
+          # code already linted there; linting their whole diff would only re-report the
+          # pre-existing debt in hash-protected historical files.
+          if [[ "$EVENT" == "pull_request" && "$BASE_REF" =~ ^(staging|production)$ ]] ||
+             [[ "$EVENT" == "push" && "$REF" =~ ^refs/(heads/(staging|production)|tags/) ]]; then
+            echo "Promotion ($EVENT ${BASE_REF:-$REF}): lint is enforced on changes into develop."
+            echo "python_files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if [ "$EVENT" = "pull_request" ]; then
             base="$BASE_SHA"
           elif [ -n "$BEFORE_SHA" ] && ! [[ "$BEFORE_SHA" =~ ^0+$ ]] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
