@@ -2,7 +2,7 @@
 
 **Purpose:** Define a concrete owner-reviewable path from the qualified local voice trial into the main application, preserving model choices, existing API security and measured runtime contracts.
 
-**Status:** PROPOSED / READY FOR OWNER REVIEW. The current request authorizes this design and rights review. It does not approve production activation, a model/default change or a new native campaign. Nothing below is enabled by writing this ADR.
+**Status:** ACCEPTED FOR B1/B2 AND ONE CONDITIONAL B3 CAMPAIGN — 2026-11-05. Owner explicitly replies “Làm đi và còn những D nào chưa xong nữa” to the concrete A approval question. This authorizes the implementation/software gates and the one conditional fixed native panel below. Product activation, model/default adoption, new models/downloads and D90 release remain excluded. [Implementation refinement ADR175](175-optional-main-voice-composition-and-entrypoint-binding.md) preserves the passed original sources.
 
 ## Context and evidence
 
@@ -77,4 +77,4 @@ No existing data or index migration is required. Additive optional routes and UI
 
 Rollback turns off new admission/feature, rejects late output, joins owned operations/workers, releases only verified leases and removes UI pairing/session state. Borrowed CORE, existing model/config/data/auth files and prior evidence are retained. If a native request cannot be proven quiescent, do not claim complete rollback or release unsafe admission.
 
-**Owner decision pending:** A = implement B1/B2 with the feature default-off, then one B3 campaign only when all stated gates pass. This does not approve product activation, a new model/default/voice or D90 release. B = retain research-only mode and defer main integration. The requested preparation task is complete when these documents/evidence are reviewable; no decision is silently recorded as approved.
+**Owner decision recorded:** A approved on 2026-11-05 = implement B1/B2 with the feature default-off, then one B3 campaign only when all stated gates pass. This does not approve product activation, a new model/default/voice or D90 release. B = retain research-only mode and defer main integration. The earlier preparation-only state is historical; this later explicit owner reply grants the bounded A campaign, without changing excluded product/model/default/redistribution decisions.
