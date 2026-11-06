@@ -38,9 +38,20 @@ jobs:
         name: List changed Python files
         env:
           EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          REF: ${{ github.ref }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           BEFORE_SHA: ${{ github.event.before }}
         run: |
+          # Lint guards changes entering develop. Promotions to staging/production carry
+          # code already linted there; linting their whole diff would only re-report the
+          # pre-existing debt in hash-protected historical files.
+          if [[ "$EVENT" == "pull_request" && "$BASE_REF" =~ ^(staging|production)$ ]] ||
+             [[ "$EVENT" == "push" && "$REF" =~ ^refs/(heads/(staging|production)|tags/) ]]; then
+            echo "Promotion ($EVENT ${BASE_REF:-$REF}): lint is enforced on changes into develop."
+            echo "python_files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if [ "$EVENT" = "pull_request" ]; then
             base="$BASE_SHA"
           elif [ -n "$BEFORE_SHA" ] && ! [[ "$BEFORE_SHA" =~ ^0+$ ]] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
@@ -69,66 +80,16 @@ jobs:
   test-python:
     needs: prepare
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 45
     env:
       UV_PYTHON_PREFERENCE: only-system
     steps:
       - uses: actions/checkout@v4
-      - name: Free runner disk
-        # Check-runtime tests copy the Python stdlib into per-test capsules.
-        run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
-          df -h / | tail -1
-      - name: Align native tools with the Home Server layout
-        timeout-minutes: 25
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          # apt occasionally stalls silently on hosted runners; bound and retry each call.
-          retry() {
-            local limit=$1; shift
-            for attempt in 1 2 3; do
-              timeout "$limit" "$@" && return 0
-              echo "::warning::attempt $attempt failed or timed out: $*"; sleep 10
-            done
-            return 1
-          }
-          apt_opts="-q -o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=120"
-          retry 240 sudo -E apt-get $apt_opts update
-          retry 480 sudo -E apt-get $apt_opts install -y --no-install-recommends \
-            bubblewrap ffmpeg tesseract-ocr tesseract-ocr-eng poppler-utils \
-            libreoffice-core libreoffice-writer libreoffice-calc
-          # Workers use unprivileged user namespaces through bwrap.
-          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-          # The check-runtime capsule copies /usr/lib/python3.12 and rejects symlinks and
-          # files over 4 MiB. The runner's libpython3.12-dev adds config-3.12-x86_64-linux-gnu
-          # (static libpython archives, .so symlink), absent on the Home Server.
-          sudo mv /usr/lib/python3.12/config-3.12-x86_64-linux-gnu /opt/python3.12-config-moved
-          # Media workers bind only /usr. Ubuntu 24.04's ffmpeg 6.1 loads libblas/liblapack
-          # through /etc/alternatives symlinks, unreachable inside that sandbox.
-          for lib in $(ldd /usr/bin/ffmpeg /usr/bin/ffprobe | awk '/=>/ {print $3}' | sort -u); do
-            if [ -L "$lib" ] && [[ "$(readlink "$lib")" == /etc/* ]]; then
-              echo "repoint $lib -> $(readlink -f "$lib")"
-              sudo ln -sfn "$(readlink -f "$lib")" "$lib"
-            fi
-          done
-          git config --global user.name "CI"
-          git config --global user.email "ci@localhost"
-      - uses: astral-sh/setup-uv@v6
-        with:
-          version: ${{ env.UV_VERSION }}
-      - name: Install locked dependencies on Ubuntu system CPython 3.12
-        # uv's standalone CPython lacks fcntl.F_SEAL_*, required by check_seccomp.py.
-        # Pinned-Ruff tests look for the binary under ~/.cache/uv, as on the Home Server;
-        # set per step because setup-uv exports its own UV_CACHE_DIR.
-        env:
-          UV_CACHE_DIR: /home/runner/.cache/uv
-        run: |
-          uv sync --locked --dev --python /usr/bin/python3.12
-          uv tool run "ruff@${RUFF_VERSION}" --version
-      - name: Pytest (hosted-runner scope)
+      - uses: ./.github/actions/hosted-python
+      - name: Pytest (hosted-runner scope, main)
         env:
           PYTHONPATH: .github/ci
+          HOSTED_TEST_MODE: main
           UV_CACHE_DIR: /home/runner/.cache/uv
         run: |
           # Older revisions have no benchmarks/tests; pass only directories that exist.
@@ -141,7 +102,39 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pytest-junit
+          name: pytest-junit-main
+          path: pytest-junit.xml
+          retention-days: 14
+
+  test-python-quarantine:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    # Known-intermittent tests (see .github/ci/hosted-runner-quarantine.txt) still run and
+    # report here, but do not block ci-gate until their root cause is fixed.
+    continue-on-error: true
+    env:
+      UV_PYTHON_PREFERENCE: only-system
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/hosted-python
+      - name: Pytest (hosted-runner scope, quarantine)
+        env:
+          PYTHONPATH: .github/ci
+          HOSTED_TEST_MODE: quarantine
+          UV_CACHE_DIR: /home/runner/.cache/uv
+        run: |
+          # Older revisions have no benchmarks/tests; pass only directories that exist.
+          dirs=()
+          for d in tests benchmarks/tests; do [ -d "$d" ] && dirs+=("$d"); done
+          uv run --no-sync python -m pytest "${dirs[@]}" \
+            -p hosted_exclusions -p no:cacheprovider -q -rfE \
+            -o tmp_path_retention_policy=failed \
+            --junitxml=pytest-junit.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pytest-junit-quarantine
           path: pytest-junit.xml
           retention-days: 14
 

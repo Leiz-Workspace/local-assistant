@@ -1,0 +1,13 @@
+{
+  "description": "Actual isolated D34 malformed-body baseline probe, no source/model/database/config mutation; native exception class only.",
+  "cases": [
+    {
+      "case": "nonfinite",
+      "raised": "ValueError"
+    },
+    {
+      "case": "surrogate_validation",
+      "raised": "UnicodeEncodeError"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Postboot focused report/export/session/source-policy regression and exact source/owned cleanup closure; previous-boot full4018 retained, Vault-dependent final audit still partial.",
+  "status": "PASS_FOCUSED_305_NOT_FULL_PHASE_ACCEPTANCE",
+  "passed": 305,
+  "failed": 0,
+  "skipped": 0,
+  "elapsed_seconds": 3.36,
+  "source_files": 538,
+  "all_frozen_source_bytes_unchanged": true,
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "log": {
+    "path": "data/backups/d60-postboot-related-regression.log",
+    "sha256": "9af86e2e9ef593f5d325c8e5ec8dd29ba9fb6abea04c32c081af99f9020370f9"
+  },
+  "private_direct_reference_controls": 18,
+  "private_postboot_runtime_controls": 4,
+  "private_candidate_controls": 19,
+  "owned_export_workers": 0,
+  "owned_browser_containers": 0,
+  "browser_jobs": 0,
+  "candidate_retired": true,
+  "candidate_temporary_secret_removed": true,
+  "D60_acceptance": false,
+  "Vault_final_audit": "PARTIAL_SEALED503",
+  "agreed_models_provider_source_configs_unchanged": true
+}

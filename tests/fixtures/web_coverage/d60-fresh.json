@@ -1,0 +1,19 @@
+{
+  "description": "First bounded D60 fresh panel: fixed bilingual questions and official URI presence labels, not semantic relevance or publication freshness. Publisher locators are explicitly separate from direct hits.",
+  "references": {
+    "searxng": {"hosts": ["docs.searxng.org"], "direct_paths": ["/dev/search_api.html", "/dev/search_api"], "publisher_paths": []},
+    "rfc": {"hosts": ["www.rfc-editor.org", "rfc-editor.org"], "direct_paths": ["/rfc/rfc9111.html", "/rfc/rfc9111.txt", "/rfc/rfc9111"], "publisher_paths": ["/info/rfc9111", "/info/rfc9111/"]},
+    "python": {"hosts": ["docs.python.org"], "direct_paths": ["/3/library/asyncio-task.html", "/3.13/library/asyncio-task.html", "/3.14/library/asyncio-task.html", "/3.15/library/asyncio-task.html"], "publisher_paths": []},
+    "cdp": {"hosts": ["chromedevtools.github.io"], "direct_paths": ["/devtools-protocol/tot/Browser/", "/devtools-protocol/1-3/Browser/", "/devtools-protocol/tot/Browser", "/devtools-protocol/1-3/Browser"], "publisher_paths": []}
+  },
+  "queries": [
+    {"id": "searxng-en", "topic": "searxng", "language": "en", "query": "SearXNG search API JSON format parameters"},
+    {"id": "searxng-vi", "topic": "searxng", "language": "vi", "query": "SearXNG API tìm kiếm tham số format json"},
+    {"id": "rfc-en", "topic": "rfc", "language": "en", "query": "RFC 9111 HTTP caching private response directive shared cache"},
+    {"id": "rfc-vi", "topic": "rfc", "language": "vi", "query": "RFC 9111 chỉ thị private phản hồi bộ nhớ đệm dùng chung"},
+    {"id": "python-en", "topic": "python", "language": "en", "query": "Python asyncio tasks cancellation TaskGroup official documentation"},
+    {"id": "python-vi", "topic": "python", "language": "vi", "query": "tài liệu Python asyncio tác vụ hủy cancellation TaskGroup"},
+    {"id": "cdp-en", "topic": "cdp", "language": "en", "query": "Chrome DevTools Protocol Browser setDownloadBehavior deny"},
+    {"id": "cdp-vi", "topic": "cdp", "language": "vi", "query": "Chrome DevTools Protocol setDownloadBehavior deny chặn tải xuống"}
+  ]
+}

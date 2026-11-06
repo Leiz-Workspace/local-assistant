@@ -1,0 +1,24 @@
+{
+  "description": "Owner accepts reviewed VI/vi distinction, reports English sounding Vietnamese-accented and asks whether the same voice can speak both languages correctly and distinguish Roman XI from xi mang. No per-clip labels, final model selection or new model authorization.",
+  "recorded_at_utc": "2026-11-03T19:26:57.856127+00:00",
+  "owner_verbatim": "Oke nhưng mà k có cách nào để vẫn là giọng đấy nhưng nói tiếng việt, tiếng anh vẫn chuẩn à ? Tôi thấy đọc tiếng anh mà nghe phát âm kiểu người Việt nói tiếng anh ấy, k chuẩn cho lắm. Còn VI và vi đã ổn rồi thế còn XI và xi măng thì sao ?",
+  "vi_roman_vs_word": "OWNER_CONFIRMED_OK_ON_REVIEWED_PANEL",
+  "english_quality": "OWNER_REPORTED_VIETNAMESE_ACCENT_NOT_ACCEPTABLE",
+  "same_voice_bilingual_requirement": true,
+  "xi_context_request": true,
+  "per_clip_ratings": null,
+  "api_pronunciation": "PRIOR_REVIEWED_ACCEPTANCE_UNCHANGED",
+  "model_selection": null,
+  "product_activation": false,
+  "new_model_download_authorized": false,
+  "source_sha256": {
+    "prior_result": "29b24947acd2a0c896a9dec2208a84aba4ad488c547a3d90722f0b9dab29f5d9",
+    "prior_page": "f5c45ebebd207d8c9187188b3354804f19a67af966df36164365216759b4e31f",
+    "prior_native_result": "558b0c155d5783839d50afe3cd8ff3fccac185adfb7cf5ab71953cfaf10880e5"
+  },
+  "retained_context_source_sha256": {
+    "benchmarks/scripts/vi_roman_context.py": "10171c217413dab9b65f25c42d2438b79bd0a1a85d8ab363938b8690361df15b",
+    "benchmarks/tests/test_vi_roman_context.py": "5eaee310ba640c817117abb8d3ae3583d183fb1eef8a3e539e730e5d8c672423"
+  },
+  "new_native_calls": 0
+}

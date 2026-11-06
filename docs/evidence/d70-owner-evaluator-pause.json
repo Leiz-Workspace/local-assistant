@@ -1,0 +1,37 @@
+{
+  "description": "Explicit owner pause/rejection and static/unit-controls verification only; no evaluator SDK import, model load/inference, CORE probe, database or fresh runtime audit. Earlier metadata check had a Git-subdirectory path error before publishing evidence; corrected root paths used here.",
+  "owner_reply": "Giữ cap 12 GiB, chưa chạy tiếp evaluator",
+  "decision_date": "2026-10-22",
+  "ADR100_decision": "REJECTED_BY_OWNER",
+  "configured_address_space_bytes": 12884901888,
+  "evaluator_execution_allowed": false,
+  "earlier_continuation_as_16GiB_approval_interpretation": "INCORRECT",
+  "historical_16GiB_trials_already_executed": true,
+  "historical_16GiB_trials_before_explicit_reply": true,
+  "historical_16GiB_trials_owner_approved": false,
+  "new_model_runs_after_explicit_reply": 0,
+  "owned_evaluator_processes_remaining": [],
+  "source_files": 632,
+  "all628_other_source_bytes_unchanged": true,
+  "all626_pre_evaluator_source_bytes_unchanged": true,
+  "necessary_modified_evaluator_source_test_files": 4,
+  "current_TTS_related_tests_passed": 208,
+  "current_TTS_related_seconds": 0.44,
+  "current_TTS_tests_scope": "Controlled/unit tests; neural engines and service/subprocess calls mocked, no live evaluator or full632-source suite",
+  "new_pause_controls": 9,
+  "historical_D70_evidence_files_byte_unchanged": 18,
+  "current_source_sha256": {
+    "scripts/tts_local_review.py": "7a005b194904bc95ecd844fd568a55226b800e74aeafa960078be85b2507d377",
+    "scripts/tts_local_review_worker.py": "3711490c2f8d12982d1b0310aecbd2f461eda360c64424a59cc3dc70f8a945e2",
+    "tests/test_tts_local_review.py": "7e8a802d54057464401f9ce961ab10633443b7a9b3bc5770f64bc1fd9d2193b3",
+    "tests/test_tts_local_review_worker.py": "e39c8dd214aed5a2d040feae0e134612411e2c72e34f422399fe807394b9c3d8"
+  },
+  "test_log_sha256": {
+    "data/backups/d70-owner-pause-controls.log": "09fea815238c8e54865aae9f9129177c8e43d01e98963d8b332258beaf003f82",
+    "data/backups/d70-owner-pause-runtime-controls.log": "b2f8e1b2046e62b5071731bbd154cca9ebfde96d5ebef76a2e2be1a912b48054"
+  },
+  "model_weights_SDK_audio_or_prior_results_removed": false,
+  "D70_complete": false,
+  "D71_started": false,
+  "background_monitoring_active": false
+}

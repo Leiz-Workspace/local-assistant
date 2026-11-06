@@ -1,0 +1,32 @@
+{
+  "description": "Actual D37 related regression includes54 new manual-plan cases and423 prior workspace/explanation/auth cases; actual original CORE diagnosis and explanation gates, no proposed reproduction executed.",
+  "targets": [
+    "tests/test_workspace_tools.py",
+    "tests/test_workspace_reader.py",
+    "tests/test_workspace_service.py",
+    "tests/test_workspace_startup.py",
+    "tests/integration/test_workspace_http.py",
+    "tests/test_workspace_policy.py",
+    "tests/test_readonly_workspace.py",
+    "tests/test_api_health.py",
+    "tests/test_conversation_auth.py",
+    "tests/test_conversation_api.py",
+    "tests/test_ingestion_startup.py",
+    "tests/test_retrieval_startup.py",
+    "tests/test_grounded_startup.py",
+    "tests/test_memory_api.py",
+    "tests/test_workspace_explanation.py",
+    "tests/test_workspace_explanation_service.py",
+    "tests/test_workspace_explanation_startup.py",
+    "tests/integration/test_workspace_explanation_http.py",
+    "tests/test_workspace_diagnosis.py",
+    "tests/test_workspace_diagnosis_service.py",
+    "tests/test_workspace_diagnosis_startup.py",
+    "tests/integration/test_workspace_diagnosis_http.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 7.57,
+  "summary": "477 passed in 7.22s",
+  "log_sha256": "4246d747580754d26f90a465f1b75d40bca0faaa7311442e528f48373dd05e45",
+  "source_freeze_sha256": "08076247072051b9239c9a41c91b81e33fca0cbc78104f5758886dd36f19b529"
+}

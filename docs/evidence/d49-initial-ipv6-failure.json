@@ -1,0 +1,16 @@
+{
+  "description": "Initial D49 unaccepted policy/parser gate: documentation prefix3fff::/20 omitted from explicit denial; its direct and unsafe-DNS-tail tests fail on old Python3.12.3. First outcome/source retained before policy-only repair; no real request/model/infrastructure/data change.",
+  "passed": 138,
+  "failed": 2,
+  "exit_code": 1,
+  "seconds": 0.18,
+  "failures": [
+    "special_address_3fff",
+    "unsafe_DNS_tail_3fff"
+  ],
+  "archive": {
+    "path": "data/backups/d49-before-ipv6-documentation-repair.zip",
+    "sha256": "0d72d8493bd6d1d437fc3853c9dff2802a49df61f2cf0f8f4911be6e1e0f5c34"
+  },
+  "log_sha256": "390cb994c1061cfaa5c6225702a267ee3f27324a10ad1c446936f602c270cea5"
+}

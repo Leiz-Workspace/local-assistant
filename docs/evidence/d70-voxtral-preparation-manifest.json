@@ -1,0 +1,94 @@
+{
+  "description": "Unapproved isolated local evaluator preparation manifest; public file metadata only, no weights, SDK installation, load or inference. Excludes the duplicate consolidated checkpoint.",
+  "repository": "mistralai/Voxtral-Mini-3B-2507",
+  "revision": "3060fe34b35ba5d44202ce9ff3c097642914f8f3",
+  "gated": false,
+  "files": [
+    {
+      "filename": "README.md",
+      "bytes": 16579,
+      "git_blob_sha1": "141e13ddcc4929c84b8c71e844d5c1649880365d",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/README.md"
+    },
+    {
+      "filename": "config.json",
+      "bytes": 1361,
+      "git_blob_sha1": "6f871b88f9d6f5f44dfbb96c4476a36b6356d189",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/config.json"
+    },
+    {
+      "filename": "generation_config.json",
+      "bytes": 108,
+      "git_blob_sha1": "252746de668bd0ce42a1169348c3fbcafead709b",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/generation_config.json"
+    },
+    {
+      "filename": "model-00001-of-00002.safetensors",
+      "bytes": 4977385976,
+      "git_blob_sha1": "164e17398db528f50e41c577a4dd6b8385d6e4af",
+      "lfs_sha256": "1facdc4c5a0e84f2881a59c4756441b7030a1f1036b2124c117540408d0e5fe9",
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/model-00001-of-00002.safetensors"
+    },
+    {
+      "filename": "model-00002-of-00002.safetensors",
+      "bytes": 4379088336,
+      "git_blob_sha1": "84b397d1387610c4328acf3f8660b9ce5957ecda",
+      "lfs_sha256": "0a103ba715bc0d656e94bf79d637d4f8f0f4fe6d76fb1d4db7ee46c6b940f631",
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/model-00002-of-00002.safetensors"
+    },
+    {
+      "filename": "model.safetensors.index.json",
+      "bytes": 68088,
+      "git_blob_sha1": "2aad3546cd656c211b989c7c21cf7b1f4d9fb407",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/model.safetensors.index.json"
+    },
+    {
+      "filename": "params.json",
+      "bytes": 731,
+      "git_blob_sha1": "f3d0c4ac36a3a832e39ee29c37eef9ac4f60c246",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/params.json"
+    },
+    {
+      "filename": "preprocessor_config.json",
+      "bytes": 357,
+      "git_blob_sha1": "a9f84a0f08fad60979c019eeb13dbfe70403adcd",
+      "lfs_sha256": null,
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/preprocessor_config.json"
+    },
+    {
+      "filename": "tekken.json",
+      "bytes": 14894206,
+      "git_blob_sha1": "dc72fbe4ba7df5ec37bec9671b68727fb5e1f15b",
+      "lfs_sha256": "4aaf3836c2a5332f029ce85a7a62255c966f47b6797ef81dedd0ade9c862e4a8",
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507/resolve/3060fe34b35ba5d44202ce9ff3c097642914f8f3/tekken.json"
+    }
+  ],
+  "model_artifacts": 9,
+  "serialized_weight_file_bytes": 9356474312,
+  "all_model_artifact_bytes": 9371455742,
+  "metadata_tensor_bytes": 9356382208,
+  "disk_budget_bytes": 21474836480,
+  "address_space_cap_bytes": 12884901888,
+  "host_MemAvailable_preflight_bytes": 15032385536,
+  "SDK_core_proposal": {
+    "python": "3.12.3",
+    "torch": "2.10.0+cpu",
+    "transformers": "4.57.3",
+    "numpy": "2.3.5",
+    "safetensors": "0.8.0",
+    "mistral-common[audio]": "1.8.1"
+  },
+  "SDK_transitive_resolution_and_installation_complete": false,
+  "existing_SDK_to_be_preserved": true,
+  "new_GPU_usage": false,
+  "actual_model_RAM_measured": false,
+  "load_approved": false,
+  "inference_approved": false,
+  "weights_downloaded": false,
+  "production_model_selected": false
+}

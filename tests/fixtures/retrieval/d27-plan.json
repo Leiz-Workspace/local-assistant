@@ -1,0 +1,33 @@
+{
+  "description": "Frozen D27-T01 baseline identity and future paired-reranker comparison gates; no model provisioning/adoption.",
+  "version": "d27-plan-v1",
+  "corpus_sha256": "0bc96e6c5bebacb3ffbd3eedd4fed466c730f2f540eef556aeb4654949bd7ee8",
+  "document_count": 24,
+  "query_count": 36,
+  "chunk_bytes": 256,
+  "top_k": 10,
+  "replay_rounds": 2,
+  "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+  "query_prefix_sha256": "9fab7feb99edb69f560d85cf1bb849dd556c37f383d0336574f78f1303e90740",
+  "diagnostic_quality_gates": {
+    "recall_at_3": 0.9,
+    "mrr_at_10": 0.85,
+    "group_recall_at_3": 0.8
+  },
+  "candidate_comparison_gates": {
+    "ndcg_at_10_min_improvement": 0.02,
+    "recall_at_3_min_delta": 0,
+    "mrr_at_10_min_delta": 0,
+    "group_recall_at_3_max_loss": 0.05,
+    "recall_at_10_min_delta": 0
+  },
+  "bootstrap": {
+    "seed": 2701,
+    "resamples": 2000,
+    "percentile": [
+      2.5,
+      97.5
+    ]
+  },
+  "candidate_status": "NOT_PROVISIONED_NOT_EVALUATED"
+}

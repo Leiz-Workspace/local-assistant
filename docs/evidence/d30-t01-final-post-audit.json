@@ -1,0 +1,32 @@
+{
+  "description": "Readonly D30-T01 memory journal post-regression source/journal/grant and shared-service inventory audit; no credentials or payload retained.",
+  "observed_date": "2026-10-19",
+  "revision": "0005",
+  "jobs": 0,
+  "heads": 0,
+  "file_count": 0,
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "immutable_manifest_update": false,
+  "mutable_state_update": true,
+  "truncate": false,
+  "old_schema_owners_acls_unchanged": true,
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "regression_owned_probe_operations_performed": true,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "vector_scope": "Owned removable source/ingestion/retrieval/grounded regression and memory quota/control probes only; V005 additive schema/new-table grants applied separately, old schema/source/vector/model state preserved.",
+  "memory": {
+    "settings": 0,
+    "receipts": 0,
+    "records": 0,
+    "app_temp": false,
+    "memory_identity_update": false,
+    "receipt_expiry_update": false,
+    "memory_text_update": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Direct-reference invocation refused before source/model/native activity because the freeze retained ADR080 pre-addendum hash. Complete first version retained; no actual cohort ran.",
+  "status": "FAILED_PREFLIGHT_DOCUMENT_HASH",
+  "source_attempts": 0,
+  "model_attempts": 0,
+  "native_batches": 0,
+  "archive": {
+    "path": "data/backups/d60-t04-designated-reference-preflight-failure.zip",
+    "sha256": "20cdeddb65458f47b2391efbd04bd2d112fd2355e01ab5d54192c3152d44ee59"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "description": "Actual original CORE diagnostic proposals on frozen authored synthetic cases; no proposed source/test/command executed.",
+  "freeze_sha256": "b65872032d5cddf7434716e84dfad603e72f23d70fa32127e58d67a35f649740",
+  "observations": [
+    {
+      "case_id": "increment_instead_of_double",
+      "http_status": 200,
+      "result": {
+        "status": "diagnosed",
+        "diagnosis": "The function double(value) incorrectly adds 1 to the input instead of multiplying by 2, causing double(3) to return 4 instead of 6.",
+        "citations": [
+          {
+            "path": "calc.py",
+            "source_sha256": "8d52c85afda5a39b0ec36dd6e938beb2488a2fd1f963f5a5023b997bbf551751",
+            "line_number": 2,
+            "quote": "def double(value):",
+            "column_start": 0,
+            "column_end": 18,
+            "column_unit": "unicode_code_points"
+          },
+          {
+            "path": "calc.py",
+            "source_sha256": "8d52c85afda5a39b0ec36dd6e938beb2488a2fd1f963f5a5023b997bbf551751",
+            "line_number": 3,
+            "quote": "    return value + 1",
+            "column_start": 0,
+            "column_end": 20,
+            "column_unit": "unicode_code_points"
+          }
+        ],
+        "plan": [
+          {
+            "step": 1,
+            "kind": "inspect_source",
+            "details": "Review the implementation of the double function in calc.py",
+            "expected_observation": "The function body should show 'return value + 1' instead of 'return value * 2'"
+          }
+        ],
+        "reproduction": {
+          "input": "Calling double(3) in a Python environment",
+          "steps": [
+            "Open calc.py",
+            "Locate the double function",
+            "Execute double(3) manually",
+            "Observe the returned value"
+          ],
+          "expected_result": "The function should return 6 when the input is 3"
+        },
+        "execution_status": "not_executed",
+        "content_trust": "untrusted",
+        "diagnosis_trust": "generated_untrusted",
+        "model_id": "qwen3.5-9b-core"
+      }
+    },
+    {
+      "case_id": "absent_retry",
+      "http_status": 200,
+      "result": {
+        "status": "insufficient_evidence",
+        "diagnosis": null,
+        "citations": [],
+        "plan": [],
+        "reproduction": null,
+        "execution_status": "not_executed",
+        "content_trust": "untrusted",
+        "diagnosis_trust": "generated_untrusted",
+        "model_id": "qwen3.5-9b-core"
+      }
+    }
+  ],
+  "execution_status": "not_executed",
+  "model_replacement": false
+}

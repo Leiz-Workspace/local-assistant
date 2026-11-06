@@ -1,0 +1,41 @@
+{
+  "description": "Read-only D36 audit after actual423 related PASS/exit0 and original CORE frozen explanation gate; historical1785 full separate, no fresh1923 full claim.",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "app_temp": false,
+  "memory_identity_update": false,
+  "memory_text_update": true,
+  "receipt_expiry_update": false,
+  "ingestion_immutable_update": false,
+  "ingestion_state_update": true,
+  "ingestion_truncate": false,
+  "source_trigger_security_definer": false,
+  "source_trigger_direct_app_execute": false,
+  "source_trigger_fixed_search_path": true,
+  "all_302_unchanged_baseline_files_and_protected_hashes_match": true,
+  "d36_eleven_evaluated_sources_match_freeze": true,
+  "only_prior_router_lifecycle_composition_changed": true,
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "obsolete_interrupted_and_reboot_partial_runs_retained_separately": true
+}

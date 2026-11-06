@@ -1,0 +1,16 @@
+{
+  "description": "Actual retained production-only isolated import/metadata/ASGI smoke for the optional feedback service; no new environment, socket, inference, data or route activation.",
+  "status": "PASS_REFERENCE_FEEDBACK_IMPORT_AND_ASGI_SMOKE",
+  "python_prefix": "data/backups/d88-clean-install-first/venv-offline-reference",
+  "python_version": "3.12.3",
+  "isolated_python_mode": true,
+  "pytest_installed": false,
+  "native_network_attempts": 0,
+  "model_inference_calls": 0,
+  "database_connections": 0,
+  "feedback_http_routes": 0,
+  "health_status": 200,
+  "missing_auth_status": 503,
+  "included_in_full_5674": false,
+  "behavioral_repair_or_release_claim": false
+}

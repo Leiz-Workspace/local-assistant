@@ -1,0 +1,343 @@
+{
+  "description": "One isolated Mwmbl built-in-engine SearXNG panel, unchanged original eight-query/four-reference corpus; no adoption, default-provider/model change, index submission/crawling, raw result persistence or Brave bypass. Small-index/unsupported filter limitations remain.",
+  "status": "CANDIDATE_EVALUATION_COMPLETE_NO_ADOPTION",
+  "source_freeze_sha256": "9f1831220efc320cc07c00c35332e8a52774b038bd531b9911fa1f7142aeadf2",
+  "failure": null,
+  "engine": "mwmbl",
+  "runtime": {
+    "container_id": "455cfae14afcf311dc0b637d4dc089184622fdc2543a7d1627e8b5f104307b69",
+    "image_id": "sha256:aa7270053bc3bf92155e2af83e2b0a7c3833c209cdeb8d396861a00c55ee7110",
+    "port": 35481,
+    "nonroot": true,
+    "readonly_root": true,
+    "cap_drop_all": true,
+    "no_new_privileges": true,
+    "memory_bytes": 805306368,
+    "NanoCPUs": 1000000000,
+    "PIDs_limit": 128,
+    "no_GPU": true
+  },
+  "observations": [
+    {
+      "query_id": "searxng-en",
+      "topic": "searxng",
+      "language": "en",
+      "queried_at": "2026-10-21T15:15:28.029361+00:00",
+      "elapsed_seconds": 0.677,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "searxng-vi",
+      "topic": "searxng",
+      "language": "vi",
+      "queried_at": "2026-10-21T15:15:28.706171+00:00",
+      "elapsed_seconds": 2.243,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "python-en",
+      "topic": "python",
+      "language": "en",
+      "queried_at": "2026-10-21T15:15:30.949025+00:00",
+      "elapsed_seconds": 2.266,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "python-vi",
+      "topic": "python",
+      "language": "vi",
+      "queried_at": "2026-10-21T15:15:33.214570+00:00",
+      "elapsed_seconds": 2.248,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "rfc-en",
+      "topic": "rfc",
+      "language": "en",
+      "queried_at": "2026-10-21T15:15:35.462294+00:00",
+      "elapsed_seconds": 2.246,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "rfc-vi",
+      "topic": "rfc",
+      "language": "vi",
+      "queried_at": "2026-10-21T15:15:37.708396+00:00",
+      "elapsed_seconds": 2.28,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "cdp-en",
+      "topic": "cdp",
+      "language": "en",
+      "queried_at": "2026-10-21T15:15:39.988563+00:00",
+      "elapsed_seconds": 2.245,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://developers.cloudflare.com/browser-run/cdp/",
+          "title_sha256": "29b39c214425c56b5da15cde0dbfe9c9235c7c2f622287428969f6755d07479a",
+          "snippet_sha256": "bf2d269758bf19ac5f5ed99928f62bf5ff3654601a839bb74595558ebc90333b",
+          "expected_primary": false
+        },
+        {
+          "rank": 2,
+          "url": "https://security-tracker.debian.org/tracker/CVE-2018-18344",
+          "title_sha256": "6353131ffb7abd44c8c2b865af474fe321a3729b40b231b26924049b5fda4829",
+          "snippet_sha256": "81150ed4e917a1533139b9bc8780d396b33707b3c1bd20ab86743ee84b5d7bf0",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://www.browserbase.com/blog/what-is-cdp",
+          "title_sha256": "29fc091d853bcd8f66c5e3bfff9c16bd16027b597a01815df4b46592f27fb6e1",
+          "snippet_sha256": "55662de63baef55801f29867fd051e87858f593e43d3130ae86ba05a7199d0b7",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    },
+    {
+      "query_id": "cdp-vi",
+      "topic": "cdp",
+      "language": "vi",
+      "queried_at": "2026-10-21T15:15:42.234083+00:00",
+      "elapsed_seconds": 2.262,
+      "status": "empty",
+      "error_type": null,
+      "error_code": null,
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false,
+      "attempted": true
+    }
+  ],
+  "wire_metadata": [
+    {
+      "query_id": "searxng-en",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 167,
+          "consumed_sha256": "7bd28aaa344e196240ea05f84808f236a1241e04287c15b0745ec3e33c44b094",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "searxng-vi",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 181,
+          "consumed_sha256": "f21b13af6afdb24c706c9d1ee6e98da62c96c5fbb767c55fb6a3a29219f026b2",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "python-en",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 183,
+          "consumed_sha256": "1d12c7a1c448f394970ce5872fa790e24f3a6967a6348a4340752f2071ef41da",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "python-vi",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 220,
+          "consumed_sha256": "91f24d8fdf5929947fe882ff0f07511699607c4e9127dfe08f329bb235e6e2a0",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "rfc-en",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 182,
+          "consumed_sha256": "524f698c67561e93a89fed1ae225257d98cf364cca82e537eb4ed847f66af350",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "rfc-vi",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 207,
+          "consumed_sha256": "43a4a969e11f6d66d8cecdd281701728c6232b1c0866c6ebdb5177b3fcb5c457",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    },
+    {
+      "query_id": "cdp-en",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 2010,
+          "consumed_sha256": "662bf4febff733ebeace714b8df2f65ee6799ba15061916b498c22d3f9d65836",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 3
+        }
+      ]
+    },
+    {
+      "query_id": "cdp-vi",
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 205,
+          "consumed_sha256": "777b05459dd2e192dfa0b6ac21101b5cc2738ca45a8a68662480074fcd9654d0",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 0
+        }
+      ]
+    }
+  ],
+  "score": {
+    "queries": 8,
+    "executed": 8,
+    "provider_attempts": 8,
+    "accepted": 8,
+    "expected_primary_present": 0,
+    "primary_presence_at5": 0.0,
+    "mean_reciprocal_primary_rank": 0.0,
+    "required_live_primary_families_present": false
+  },
+  "container_stats_point": {
+    "CPUPerc": "0.10%",
+    "MemUsage": "86.06MiB / 768MiB",
+    "MemPerc": "11.21%",
+    "PIDs": "8"
+  },
+  "original15_runtime_metadata_unchanged": true,
+  "cleanup_confirmed": true,
+  "temporary_secret_removed": true,
+  "model_calls": 0,
+  "source_fetches": 0,
+  "new_images_or_packages": 0,
+  "automatic_retries": 0,
+  "provider_adopted": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "elapsed_seconds": 19.264,
+  "artifact": {
+    "path": "data/backups/d60-t04-first-mwmbl-candidate.json",
+    "sha256": "c4ee9500d24cde510578db73851834b646b14e95d805d9201762dbb6cbfe87a6"
+  },
+  "qualification": "UNQUALIFIED_REQUIRED_PRIMARY_FAMILIES_ABSENT"
+}

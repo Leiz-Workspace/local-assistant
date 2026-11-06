@@ -1,0 +1,195 @@
+{
+  "description": "Pinned real D53 Brave search metadata resumed explicitly with current CORE query selection and newly acquired original official-source proofs. Historical search times and zero current provider requests are disclosed in the report. All original failures/scores stay unchanged; no fresh upstream recovery or general quality claim.",
+  "status": "PASS_ARCHIVED_ACTUAL_DISCOVERY_FRESH_SOURCE_NATIVE_ARCHIVE",
+  "started_at_utc": "2026-10-22T02:27:05.206553+00:00",
+  "source_freeze_sha256": "3a813321157baf7e19ec9855e1b86026b22d66b57d88a28ef261f99464e917a7",
+  "source_attempts": 2,
+  "actual_public_source_observations": [
+    {
+      "family": "searxng",
+      "requested_url": "https://docs.searxng.org/dev/search_api.html",
+      "final_url": "https://docs.searxng.org/dev/search_api.html",
+      "title": "Search API - SearXNG Documentation (2026.10.19+81371861f)",
+      "fetched_at": "2026-10-22 02:27:06.289462+00:00",
+      "source_text_sha256": "cc2cbad08739d87455518f5f3231de3e671d1ee708a988291a669f104bdaec4c",
+      "source_resources": [
+        {
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 46464,
+          "body_sha256": "cbcfae9b57f92250ec070f51f07b00786bcb64192a6fda9d0f58d0e4e9fcacc4"
+        }
+      ],
+      "selected_quote_sha256": "fceb2eca432e42b1e11d44f4fd77ceb2cb8ddb7ba3644c44cb77d8e8f4827c90",
+      "selected_quote_words": 14,
+      "selected_span": [
+        2563,
+        2638
+      ],
+      "date_claims": [],
+      "canonical_verified": false,
+      "verified_freshness": null
+    },
+    {
+      "family": "rfc",
+      "requested_url": "https://datatracker.ietf.org/doc/html/rfc9111",
+      "final_url": "https://datatracker.ietf.org/doc/html/rfc9111",
+      "title": "RFC 9111 - HTTP Caching",
+      "fetched_at": "2026-10-22 02:27:07.135414+00:00",
+      "source_text_sha256": "fedce2bdc4a87a21315dd19725aa0f1d074f4c71785f4463193c5a89b9237590",
+      "source_resources": [
+        {
+          "url": "https://datatracker.ietf.org/doc/html/rfc9111",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 273479,
+          "body_sha256": "89d09556167113ea5b78d3f9159e7229b3d530272255fc1f44a6a577fdd3e52d"
+        }
+      ],
+      "selected_quote_sha256": "e09a64cca2742b9b70d8385cffea6d5bf0bdd37b66cb490e1c256155c7fc6831",
+      "selected_quote_words": 15,
+      "selected_span": [
+        53989,
+        54089
+      ],
+      "date_claims": [],
+      "canonical_verified": false,
+      "verified_freshness": null
+    }
+  ],
+  "automatic_retries": 0,
+  "provider_requests": 0,
+  "browser_runs": 0,
+  "model_replacement": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "discovery_provenance": "archived_actual_brave_metadata",
+  "selected_actual_results": [
+    {
+      "family": "searxng",
+      "query_id": "searxng-en",
+      "rank": 1,
+      "url": "https://docs.searxng.org/dev/search_api.html",
+      "observed_at": "2026-10-21 08:30:57.384449+00:00",
+      "title_sha256": "d4e644edd8deedfcb4488959377cfc9f452ccd9540673dbe1b1df7df09d4b18c",
+      "snippet_sha256": "71972e10bc4141b55f4fba70ceb101d014ca9881997758ae2c1b41c4e43e3d22"
+    },
+    {
+      "family": "rfc",
+      "query_id": "rfc-en",
+      "rank": 1,
+      "url": "https://datatracker.ietf.org/doc/html/rfc9111",
+      "observed_at": "2026-10-21 08:31:00.620654+00:00",
+      "title_sha256": "d5b62c483f72a87aba8091322bc5269cfa70aa8ae2ca9931d42787ee95fa2b4b",
+      "snippet_sha256": "430afa7bf4c3c212799ba4665c6d34673902ef34a64b07d4859f81644f2415bf"
+    }
+  ],
+  "plan_queries": 2,
+  "archived_observations": 8,
+  "observed_statuses": [
+    "supported",
+    "contradicted",
+    "insufficient"
+  ],
+  "observed_evidence_ids": [
+    [
+      "E1"
+    ],
+    [
+      "E2"
+    ],
+    []
+  ],
+  "functional_claims_correct": 3,
+  "citations": 2,
+  "pdf_pages": 3,
+  "source_markdown_sha256": "93263768707660a1f328ea2e5548d3f3b4610de671d408c88292f7c3afb3f4c4",
+  "source_excerpts_complete": true,
+  "elapsed_seconds": 5.213,
+  "plan_CORE_attempts": 1,
+  "assessment_CORE_attempts": 1,
+  "native_batches": 1,
+  "report_key_revoked": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admissions_released": true,
+  "actual_DNS": [
+    {
+      "host": "docs.searxng.org",
+      "addresses": [
+        "185.199.110.153",
+        "185.199.111.153",
+        "185.199.109.153",
+        "185.199.108.153",
+        "2606:50c0:8000::153",
+        "2606:50c0:8001::153",
+        "2606:50c0:8003::153",
+        "2606:50c0:8002::153"
+      ]
+    },
+    {
+      "host": "datatracker.ietf.org",
+      "addresses": [
+        "104.16.45.99",
+        "104.16.44.99",
+        "2606:4700::6810:2c63",
+        "2606:4700::6810:2d63"
+      ]
+    }
+  ],
+  "actual_TLS": [
+    {
+      "host": "docs.searxng.org",
+      "selected_pin": "185.199.110.153",
+      "actual_peer": "185.199.110.153",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "datatracker.ietf.org",
+      "selected_pin": "104.16.45.99",
+      "actual_peer": "104.16.45.99",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "all_source_native_socket_FDs_closed": true,
+  "persisted_state": "complete",
+  "persisted_attempts": [
+    "discover",
+    "publish"
+  ],
+  "archived_after_issuers_revoked": true,
+  "original_D53_archive_sha256": "ce877587af04e0aa14db6b30b303a6c1ef429e77ceeff63c899918af02be6c3f",
+  "original_D53_corpus_sha256": "e4b87f014aa17d99bc20e6d251aaab5dfb62575c1b7b9b06db212aba9bf40341",
+  "original_eight_queries_all_preserved": true,
+  "original_D53_URI_labels_and_first3_of8_score_unchanged": true,
+  "raw_provider_titles_snippets_persisted": false,
+  "old_live_receipts_reused": false,
+  "private_summary_sha256": "9dc6b40467c4e8e4bf887078a5d2f7ef072d2d5a2c8ae3d8476937e7ef6eada0",
+  "all_three_pages_visually_reviewed": true,
+  "original_fresh_search_failures_preserved": true,
+  "fresh_upstream_recovery_measured": false,
+  "artifacts": {
+    "docx": {
+      "path": "docs/evidence/d60-archived-discovery-report.docx",
+      "bytes": 38809,
+      "sha256": "d99178429ba215ffc96557e57ad0f922b374d8a4f9ab495fcc97173ea051c8a7"
+    },
+    "pdf": {
+      "path": "docs/evidence/d60-archived-discovery-report.pdf",
+      "bytes": 47041,
+      "sha256": "3a42b60e5a1b83053b7596e6dcb0c08df68a7123c0cad82abeda7e7ca3e28854"
+    },
+    "markdown": {
+      "path": "docs/evidence/d60-archived-discovery-report.md",
+      "bytes": 3627,
+      "sha256": "93263768707660a1f328ea2e5548d3f3b4610de671d408c88292f7c3afb3f4c4"
+    }
+  }
+}

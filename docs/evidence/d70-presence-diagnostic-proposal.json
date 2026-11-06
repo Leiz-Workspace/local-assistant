@@ -1,0 +1,68 @@
+{
+  "description": "Source and protocol metadata for the proposed factual-only ADR-103 diagnostic. Code/fixtures are prepared, but real packet preparation and inference remain blocked pending an explicit reply. No model response or naturalness claim.",
+  "status": "IMPLEMENTED_AND_FIXTURE_TESTED_EXECUTION_NOT_APPROVED",
+  "question": "Does this audio contain any intelligible human speech? Answer exactly yes, no, or uncertain.",
+  "maximum_new_tokens": 16,
+  "heldout_existing_public_sources": [
+    {
+      "parent_only_identity": "en_us-0001",
+      "sample_count": 126720,
+      "source_sha256": "ba28baf3162a91509342ddbd17f5dc906e664c65dfa0693bd55aa4fcd3ad5273",
+      "not_in_previous_local_controls": true
+    },
+    {
+      "parent_only_identity": "vi_vn-0001",
+      "sample_count": 148800,
+      "source_sha256": "8cf49bc6f5f2e54188db71944091fd25ebf09eb1d3aeeadd6ff8412a301d4d15",
+      "not_in_previous_local_controls": true
+    }
+  ],
+  "authored_control_plan": {
+    "silence_samples": 60000,
+    "noise_samples": 60000,
+    "noise_seed": 102,
+    "noise_mean": 0,
+    "noise_standard_deviation": 0.05,
+    "order_seed": 103,
+    "sample_rate": 16000
+  },
+  "source_files": 636,
+  "prior_source_files": 634,
+  "new_source_files": [
+    "scripts/tts_local_review_diagnostic.py",
+    "tests/test_tts_local_review_diagnostic.py"
+  ],
+  "necessary_changed_existing_source_files": [
+    "scripts/tts_local_review.py",
+    "scripts/tts_local_review_worker.py"
+  ],
+  "new_tests_passed": 22,
+  "related_TTS_tests_passed": 244,
+  "related_TTS_seconds": 6.18,
+  "test_log_sha256": {
+    "data/backups/d70-presence-diagnostic-tests-first.log": "69b680e76cf30285a759783b566dc4f699a2514d45963f216457991cbf59ec74",
+    "data/backups/d70-presence-diagnostic-tests-qualified.log": "87e9a025e8ef33ce9e318eee128de12d7ced22fd7583a40653849b53472d1a30"
+  },
+  "address_space_cap_bytes": 12884901888,
+  "host_preflight_required_bytes": 15032385536,
+  "real_diagnostic_packet_created": false,
+  "real_audio_inference_executed": false,
+  "reviewer_qualified": false,
+  "D70_complete": false,
+  "D71_started": false,
+  "necessary_source_sha256": {
+    "scripts/tts_local_review.py": "caf00ad812ed9b70f3f425da1861838d33b5fa544a5a3fcb55b9d4bc13815d11",
+    "scripts/tts_local_review_worker.py": "ddc82b187c5ef0f62c7dfe4dc9ffd74080a38e34358dbfa4a0ac0cf85c14cfa5",
+    "scripts/tts_local_review_diagnostic.py": "7a236d9264f665958d60bb88adeb566c2f072fff8703182d4ae8856eb070531b",
+    "tests/test_tts_local_review_diagnostic.py": "91abd53168c1ce6f2c5b8e1d9918ccb8d46e5aa7a9081cea48eec9fdd5e0af0e"
+  },
+  "all632_other_prior_source_files_byte_unchanged": true,
+  "original_audit_inputs_reverified": 176,
+  "source_freeze_sha256": "bd93589654983ac42420593aeab7fc95d651eda1f4d30bfec1dac733103e1801",
+  "source_freeze_path": "data/backups/d70-presence-diagnostic-proposal-source-freeze.json",
+  "current_approved_modes": [
+    "imports",
+    "load"
+  ],
+  "ADR103_sha256": "4fbe296739701db40266a38dbf61056b83e1e6a5583513e4ac801cf09e4f4d64"
+}

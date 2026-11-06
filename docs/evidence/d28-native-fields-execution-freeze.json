@@ -1,0 +1,11 @@
+{
+  "description": "Freeze real native DOCX/XLSX extraction-to-citation golden verification before execution; no embedding or model inference/admission is claimed.",
+  "test_sha256": "02cf650e5726b1f959d1d8c61579bca614b4c301b1526c5f63bf883aa83934ad",
+  "test_file": "tests/integration/test_grounded_native_fields.py",
+  "fixtures": {
+    "tests/fixtures/docx/styled-table.docx": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+    "tests/fixtures/xlsx/styled-formulas.xlsx": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2"
+  },
+  "scope": "Real retained source/SQL/native extraction and plan/citation mapping only; golden paragraphs and cell fields from fixture README; not Qwen token admission or model quality.",
+  "no_model_or_source_changes": true
+}

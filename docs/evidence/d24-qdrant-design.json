@@ -1,0 +1,14 @@
+{
+  "description": "D24 owned empty schema/index probe on existing shared Qdrant; no production vectors or collection created.",
+  "passed": true,
+  "server_version": "1.18.2",
+  "dimension": 768,
+  "distance": "Cosine",
+  "indexes_verified": 10,
+  "owner_uuid_tenant_index": true,
+  "probe_removed": true,
+  "existing_collection_count": 0,
+  "before_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "after_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "model_fingerprint": "e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc"
+}

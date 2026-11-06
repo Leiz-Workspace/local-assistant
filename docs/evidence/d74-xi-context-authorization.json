@@ -1,0 +1,18 @@
+{
+  "description": "Owner explicitly asks XI versus xi mang verification; engineering limits6existing-model requests. No English-accent/model/reference/training change is authorized or executed.",
+  "authorized": true,
+  "recorded_at_utc": "2026-11-03T19:31:01.760644+00:00",
+  "owner_feedback_sha256": "d417cfb5d498613c3682607ac925b4ca7f6771b301da74c2bee4d79ef03bbe1b",
+  "protocol_sha256": "1889b6626cdaaa2f90b33b8408754762fae7d4481c122feb5ef583983ec7e0dc",
+  "tts_ceiling": 6,
+  "inner_chunks_ceiling": 6,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "new_reading_rules": 0,
+  "model_selection": null,
+  "product_activation": false,
+  "workflow_recovery_authorized": false
+}

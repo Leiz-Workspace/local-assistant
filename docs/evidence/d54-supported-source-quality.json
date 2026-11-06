@@ -1,0 +1,61 @@
+{
+  "description": "D54 supported512-token source quality with direct accepted-gateway compatibility test; original unsupported256 draft retained.",
+  "evaluated_files": [
+    "src/application/ports/research.py",
+    "src/application/services/research_policy.py",
+    "src/application/services/research.py",
+    "tests/test_research_policy.py",
+    "tests/test_research.py"
+  ],
+  "evaluated_python_files": 5,
+  "described_functions_classes": 59,
+  "new_pytest_cases": 64,
+  "related_expected": 2251,
+  "checks": [
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "src/application/ports/research.py",
+        "src/application/services/research_policy.py",
+        "src/application/services/research.py",
+        "tests/test_research_policy.py",
+        "tests/test_research.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "src/application/ports/research.py",
+        "src/application/services/research_policy.py",
+        "src/application/services/research.py",
+        "tests/test_research_policy.py",
+        "tests/test_research.py"
+      ],
+      "exit_code": 0,
+      "output": "5 files already formatted\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_research_policy.py",
+        "tests/test_research.py",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "64 tests collected in 0.04s"
+    }
+  ],
+  "source_freeze_sha256": "fd708d349e53c0fb03ccafd4a1f443cf1b38a5de222d02718ba5991cd044f281"
+}

@@ -1,0 +1,21 @@
+{
+  "description": "D69 offline evaluation of the originally nominated Silero VAD v5 only; no selected/default/deployed VAD or ASR, no production model/configuration change.",
+  "status": "EVALUATION_ONLY_NOT_SELECTED",
+  "task": "MODEL-EVAL-004",
+  "repository": "snakers4/silero-vad",
+  "tag": "v5.0",
+  "annotated_tag_object": "a27ffa1d13db33ee6d9898ee469c6302ccc46912",
+  "commit": "5cd2ba54db059f961e7545d4f211b44f005a6dfb",
+  "declared_license": "MIT",
+  "artifacts": [
+    {"path": "files/silero_vad.onnx", "bytes": 2313101, "git_blob_sha1": "d0ccd9d7fc1f98033c04b4a2b03ed0e07e842a13"},
+    {"path": "utils_vad.py", "bytes": 18709, "git_blob_sha1": "88c11b90b146cdc9f86280ccf0c57e7f691655ae"},
+    {"path": "README.md", "bytes": 5063, "git_blob_sha1": "b4c6449a6a052d8d2352884a7a93f757b63487f8"},
+    {"path": "LICENSE", "bytes": 1075, "git_blob_sha1": "0bf5e90cac691b999d4a35044f97167d7bbbf0b9"}
+  ],
+  "runtime": {"torch": "2.10.0+cpu", "torchaudio": "2.10.0+cpu", "onnxruntime": "1.31.0", "numpy": "2.5.4", "device": "cpu", "provider": "CPUExecutionProvider", "onnx_intra_op_threads": 1, "onnx_inter_op_threads": 1, "logical_CPU_affinity": [0, 1]},
+  "segmentation": {"sample_rate": 16000, "window_samples": 512, "context_samples": 64, "threshold": 0.5, "negative_hysteresis_threshold": 0.35, "min_speech_duration_ms": 250, "min_silence_duration_ms": 100, "speech_pad_ms": 30, "return_seconds": false},
+  "corpus": {"speech_recordings": 40, "unique_known_negative_controls": 5, "padded_composites": 2, "unique_inputs": 47, "planned_passes": ["forward", "reverse"], "observations": 94, "padded_composite_silence_each_side_seconds": 5, "authored_timeline_origin_seconds": 2},
+  "execution_caps": {"address_space_GiB": 3, "CPU_seconds": 180, "wall_seconds": 180, "private_tmpfs_MiB": 128},
+  "selected_model": null
+}

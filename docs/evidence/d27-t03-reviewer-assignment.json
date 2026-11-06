@@ -1,0 +1,11 @@
+{
+  "description": "Record the owner volunteering for independent relevance review; assignment is not completed review, labels or adoption approval.",
+  "observed_date": "2026-10-19",
+  "reviewer_designation": "project_owner",
+  "assignment_source": "Owner explicitly volunteered to perform the independent review in this session.",
+  "status": "ASSIGNED_REVIEW_PENDING",
+  "completed_pairs": 0,
+  "attestation_supplied": false,
+  "adoption_approved": false,
+  "packet_file_sha256": "a2beb318d08812f4614cef5fb48f2a572f4ff70d4183d47990e7b58e1186352b"
+}

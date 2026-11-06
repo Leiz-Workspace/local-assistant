@@ -1,0 +1,2507 @@
+{
+  "description": "Complete original first D67 warm existing-model measurements, qualified as sampled RSS/allocation and full-port latency only. Matrix complete; phase IN PROGRESS pending distinct current full4495 and final audit.",
+  "private_summary_sha256": "9016ad1164ba889f12e62a8f1fd4c65e048b4a811201cf1fffb7007498cfba4a",
+  "phase_status": "IN_PROGRESS_FULL4495_RUNNING_FINAL_AUDIT_PENDING",
+  "actual": {
+    "description": "D67 original warm sequential CORE context/media/resource observations, not TTFT/decode TPS/cold-start/context reasoning/ASR/SLO certification. Original cache/32K/parallel1/config/resources unchanged; every first result retained.",
+    "status": "PASS_D67_EXISTING_MULTIMODAL_RESOURCE_CONTEXT_MATRIX",
+    "source_freeze_sha256": "38bbfb6147a3a5c1958a0d8ce5aedf20d10aef87ff37660dfe7ff2c316a8f1cd",
+    "runtime_parameters": {
+      "--alias": "qwen3.5-9b-core",
+      "--host": "127.0.0.1",
+      "--port": "8080",
+      "--ctx-size": "32768",
+      "--parallel": "1",
+      "--n-gpu-layers": "99"
+    },
+    "core_identity": {
+      "pid": 37256,
+      "start_ticks": 63900
+    },
+    "text": [
+      {
+        "id": "text-before",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.035149688003002666,
+        "completion_started_monotonic": 39717.402709978,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 168
+        },
+        "completion_wall_seconds": 0.17062228800205048,
+        "completion_finished_monotonic": 39717.573332607,
+        "end_to_end_output_tokens_per_second": 29.304495084135265
+      },
+      {
+        "id": "text-before",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.0055802889983169734,
+        "completion_started_monotonic": 39717.578942761,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 110
+        },
+        "completion_wall_seconds": 0.11230403700028546,
+        "completion_finished_monotonic": 39717.691247229,
+        "end_to_end_output_tokens_per_second": 44.52199701411705
+      },
+      {
+        "id": "text-before",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.00573237199569121,
+        "completion_started_monotonic": 39717.697009176,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 115
+        },
+        "completion_wall_seconds": 0.11688555599539541,
+        "completion_finished_monotonic": 39717.813895123,
+        "end_to_end_output_tokens_per_second": 42.77688511142446
+      },
+      {
+        "id": "context-128",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 966,
+        "authored_messages_sha256": "f73604d54ed39f2950a4dc853102cd41e8f243c6062a73da2310d57d3aeacf8a",
+        "actual_template_token_count": 191,
+        "token_count_preflight_seconds": 0.013132539002981503,
+        "completion_started_monotonic": 39717.82711261,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 191,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 171
+        },
+        "completion_wall_seconds": 0.17643859700183384,
+        "completion_finished_monotonic": 39718.003551627,
+        "end_to_end_output_tokens_per_second": 17.00308238094196
+      },
+      {
+        "id": "context-128",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 966,
+        "authored_messages_sha256": "f73604d54ed39f2950a4dc853102cd41e8f243c6062a73da2310d57d3aeacf8a",
+        "actual_template_token_count": 191,
+        "token_count_preflight_seconds": 0.005964053998468444,
+        "completion_started_monotonic": 39718.009558781,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 191,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 84
+        },
+        "completion_wall_seconds": 0.08563853400119115,
+        "completion_finished_monotonic": 39718.095197726,
+        "end_to_end_output_tokens_per_second": 35.03095931042296
+      },
+      {
+        "id": "context-128",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 966,
+        "authored_messages_sha256": "f73604d54ed39f2950a4dc853102cd41e8f243c6062a73da2310d57d3aeacf8a",
+        "actual_template_token_count": 191,
+        "token_count_preflight_seconds": 0.006056484999135137,
+        "completion_started_monotonic": 39718.101303853,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 191,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 85
+        },
+        "completion_wall_seconds": 0.08993847900273977,
+        "completion_finished_monotonic": 39718.191242723,
+        "end_to_end_output_tokens_per_second": 33.35613447397317
+      },
+      {
+        "id": "context-2048",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 12486,
+        "authored_messages_sha256": "bd8a404e5c66a4290a7c186b5bc554b5b05bbb4ad251203a07a89e304bb41f1c",
+        "actual_template_token_count": 2111,
+        "token_count_preflight_seconds": 0.008681222003360745,
+        "completion_started_monotonic": 39718.199994957,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 2111,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 562
+        },
+        "completion_wall_seconds": 0.5640606349988957,
+        "completion_finished_monotonic": 39718.764056053,
+        "end_to_end_output_tokens_per_second": 5.318577141987356
+      },
+      {
+        "id": "context-2048",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 12486,
+        "authored_messages_sha256": "bd8a404e5c66a4290a7c186b5bc554b5b05bbb4ad251203a07a89e304bb41f1c",
+        "actual_template_token_count": 2111,
+        "token_count_preflight_seconds": 0.009479777996602934,
+        "completion_started_monotonic": 39718.773604199,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 2111,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 95
+        },
+        "completion_wall_seconds": 0.09721379300026456,
+        "completion_finished_monotonic": 39718.870818453,
+        "end_to_end_output_tokens_per_second": 30.85981842095016
+      },
+      {
+        "id": "context-2048",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 12486,
+        "authored_messages_sha256": "bd8a404e5c66a4290a7c186b5bc554b5b05bbb4ad251203a07a89e304bb41f1c",
+        "actual_template_token_count": 2111,
+        "token_count_preflight_seconds": 0.008121348997519817,
+        "completion_started_monotonic": 39718.878997841,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 2111,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 99
+        },
+        "completion_wall_seconds": 0.1004435659997398,
+        "completion_finished_monotonic": 39718.979441747,
+        "end_to_end_output_tokens_per_second": 29.867517845869504
+      },
+      {
+        "id": "context-8192",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 49350,
+        "authored_messages_sha256": "f7466a59b56ad261e83d5edbe488689e922692ff8d767acd9a56114ab0ffba73",
+        "actual_template_token_count": 8255,
+        "token_count_preflight_seconds": 0.016350940000847913,
+        "completion_started_monotonic": 39718.995851388,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 8255,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 1291
+        },
+        "completion_wall_seconds": 1.2931752920048893,
+        "completion_finished_monotonic": 39720.289027291,
+        "end_to_end_output_tokens_per_second": 2.319871109931984
+      },
+      {
+        "id": "context-8192",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 49350,
+        "authored_messages_sha256": "f7466a59b56ad261e83d5edbe488689e922692ff8d767acd9a56114ab0ffba73",
+        "actual_template_token_count": 8255,
+        "token_count_preflight_seconds": 0.016192686001886614,
+        "completion_started_monotonic": 39720.305281191,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 8255,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 118
+        },
+        "completion_wall_seconds": 0.12002515199856134,
+        "completion_finished_monotonic": 39720.425306804,
+        "end_to_end_output_tokens_per_second": 24.994761098373438
+      },
+      {
+        "id": "context-8192",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 49350,
+        "authored_messages_sha256": "f7466a59b56ad261e83d5edbe488689e922692ff8d767acd9a56114ab0ffba73",
+        "actual_template_token_count": 8255,
+        "token_count_preflight_seconds": 0.017981687000428792,
+        "completion_started_monotonic": 39720.443345116,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 8255,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 116
+        },
+        "completion_wall_seconds": 0.11907617499673506,
+        "completion_finished_monotonic": 39720.562421502,
+        "end_to_end_output_tokens_per_second": 25.19395672629102
+      },
+      {
+        "id": "context-16384",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 98502,
+        "authored_messages_sha256": "2fb1e2b65c3d2c7bec6f027165642caf769ccd0ed9f519d7d957a0f707e8259f",
+        "actual_template_token_count": 16447,
+        "token_count_preflight_seconds": 0.02612865399714792,
+        "completion_started_monotonic": 39720.588620987,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 16447,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 1773
+        },
+        "completion_wall_seconds": 1.7755212129995925,
+        "completion_finished_monotonic": 39722.364142651,
+        "end_to_end_output_tokens_per_second": 1.6896446958984819
+      },
+      {
+        "id": "context-16384",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 98502,
+        "authored_messages_sha256": "2fb1e2b65c3d2c7bec6f027165642caf769ccd0ed9f519d7d957a0f707e8259f",
+        "actual_template_token_count": 16447,
+        "token_count_preflight_seconds": 0.026095872999576386,
+        "completion_started_monotonic": 39722.390349781,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 16447,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 148
+        },
+        "completion_wall_seconds": 0.14999175100092543,
+        "completion_finished_monotonic": 39722.540341872,
+        "end_to_end_output_tokens_per_second": 20.001099927031923
+      },
+      {
+        "id": "context-16384",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 98502,
+        "authored_messages_sha256": "2fb1e2b65c3d2c7bec6f027165642caf769ccd0ed9f519d7d957a0f707e8259f",
+        "actual_template_token_count": 16447,
+        "token_count_preflight_seconds": 0.02586669599986635,
+        "completion_started_monotonic": 39722.56625794,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 16447,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 150
+        },
+        "completion_wall_seconds": 0.15169606400013436,
+        "completion_finished_monotonic": 39722.717954535,
+        "end_to_end_output_tokens_per_second": 19.776386551448976
+      },
+      {
+        "id": "context-31500",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 189198,
+        "authored_messages_sha256": "6f70f92cf40dddd69554485cd7c851d460f9d0aefba0a2268548d0ccb6be18a6",
+        "actual_template_token_count": 31563,
+        "token_count_preflight_seconds": 0.04491973800031701,
+        "completion_started_monotonic": 39722.762946417,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 31563,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 3414
+        },
+        "completion_wall_seconds": 3.4171022070004256,
+        "completion_finished_monotonic": 39726.180048965,
+        "end_to_end_output_tokens_per_second": 0.8779368652930745
+      },
+      {
+        "id": "context-31500",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 189198,
+        "authored_messages_sha256": "6f70f92cf40dddd69554485cd7c851d460f9d0aefba0a2268548d0ccb6be18a6",
+        "actual_template_token_count": 31563,
+        "token_count_preflight_seconds": 0.04732621800212655,
+        "completion_started_monotonic": 39726.227466212,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 31563,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 204
+        },
+        "completion_wall_seconds": 0.20739066199894296,
+        "completion_finished_monotonic": 39726.434857204,
+        "end_to_end_output_tokens_per_second": 14.465453608587692
+      },
+      {
+        "id": "context-31500",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 189198,
+        "authored_messages_sha256": "6f70f92cf40dddd69554485cd7c851d460f9d0aefba0a2268548d0ccb6be18a6",
+        "actual_template_token_count": 31563,
+        "token_count_preflight_seconds": 0.04395535300136544,
+        "completion_started_monotonic": 39726.478891564,
+        "completion": {
+          "content": "CONTEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 31563,
+          "output_tokens": 3,
+          "reasoning_tokens": null,
+          "latency_ms": 205
+        },
+        "completion_wall_seconds": 0.2076996469986625,
+        "completion_finished_monotonic": 39726.686591532,
+        "end_to_end_output_tokens_per_second": 14.443934033355958
+      },
+      {
+        "id": "context-overflow",
+        "repeat": 0,
+        "status": "EXPECTED_REFUSAL",
+        "input_UTF8_bytes": 204198,
+        "authored_messages_sha256": "e3ce979388cc4220d0fc7f0e1effce46a2d8da8a1e93e60a71fc842af2df890c",
+        "actual_template_token_count": 34063,
+        "token_count_preflight_seconds": 0.04715938799927244,
+        "completion_started_monotonic": 39726.733827131,
+        "error_type": "InferenceFailure",
+        "error_code": "context_overflow",
+        "completion_wall_seconds": 0.048550776999036316,
+        "completion_finished_monotonic": 39726.782378299,
+        "end_to_end_output_tokens_per_second": null
+      },
+      {
+        "id": "text-after",
+        "repeat": 0,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.0053869589974056,
+        "completion_started_monotonic": 39735.748686359,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 212
+        },
+        "completion_wall_seconds": 0.21406249499705154,
+        "completion_finished_monotonic": 39735.962749184,
+        "end_to_end_output_tokens_per_second": 23.357664779478856
+      },
+      {
+        "id": "text-after",
+        "repeat": 1,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.006166550003399607,
+        "completion_started_monotonic": 39735.968965006,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 113
+        },
+        "completion_wall_seconds": 0.11487408399989363,
+        "completion_finished_monotonic": 39736.083839401,
+        "end_to_end_output_tokens_per_second": 43.52591834381574
+      },
+      {
+        "id": "text-after",
+        "repeat": 2,
+        "status": "PASS",
+        "input_UTF8_bytes": 51,
+        "authored_messages_sha256": "e29dbae41dd9cd614a90123d8e77ade4317a6c1651a89353104e2e9edea3b72f",
+        "actual_template_token_count": 24,
+        "token_count_preflight_seconds": 0.005435259001387749,
+        "completion_started_monotonic": 39736.089303844,
+        "completion": {
+          "content": "BENCH_TEXT_OK",
+          "model_id": "qwen3.5-9b-core",
+          "preset_selected": "fast",
+          "finish_reason": "stop",
+          "input_tokens": 24,
+          "output_tokens": 5,
+          "reasoning_tokens": null,
+          "latency_ms": 111
+        },
+        "completion_wall_seconds": 0.11240421500406228,
+        "completion_finished_monotonic": 39736.20170849,
+        "end_to_end_output_tokens_per_second": 44.48231767660403
+      }
+    ],
+    "media": [
+      {
+        "repeat": 0,
+        "status": "PASS",
+        "started_monotonic": 39726.782420377,
+        "observation": {
+          "timeline": {
+            "owner_id": "d1b26539-b1c9-4b70-81d2-d01ffe3d6776",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "events": [
+              {
+                "kind": "provided_transcript",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 11,
+                "end_den": 1,
+                "text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 0,
+                "end_den": 1,
+                "text": "READY",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 4,
+                "start_num": 4,
+                "start_den": 1,
+                "end_num": 4,
+                "end_den": 1,
+                "text": "MOVING",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 8,
+                "start_num": 8,
+                "start_den": 1,
+                "end_num": 8,
+                "end_den": 1,
+                "text": "DONE",
+                "uncertainties": []
+              }
+            ],
+            "summary_text": "Unverified provided-transcript and sampled-frame timeline.\nSpeech text is supplied; no ASR, word alignment or continuous-motion verification.\nSource SHA256: 0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b\nNormalized PCM SHA256: 252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3\n[0/1s..11/1s] provided_transcript 0: \"And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.\"; uncertainties=\\u005b\\u005d\n[0/1s] frame 0: \"READY\"; uncertainties=\\u005b\\u005d\n[4/1s] frame 4: \"MOVING\"; uncertainties=\\u005b\\u005d\n[8/1s] frame 8: \"DONE\"; uncertainties=\\u005b\\u005d\n",
+            "summary_sha256": "6f98c69b31a2d949cb88516b8bd751d52366622e068eb46e1ff7d58cc7fae3d0",
+            "transcript_origin": "provided_reference",
+            "audio_transcribed": false,
+            "word_alignment_verified": false,
+            "continuous_motion_verified": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "description_result": {
+            "owner_id": "d1b26539-b1c9-4b70-81d2-d01ffe3d6776",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "question_sha256": "7936ccbcf5e7cf4ef6055f7037fe88e04cb8ed536a271acf57dce94292293e16",
+            "metadata": {
+              "width": 960,
+              "height": 360,
+              "codec": "ffv1",
+              "time_base_num": 1,
+              "time_base_den": 1000,
+              "origin_pts": 0,
+              "duration_seconds": 11.0,
+              "frame_count": 11,
+              "audio": [
+                {
+                  "index": 1,
+                  "codec": "pcm_s16le",
+                  "sample_rate": 16000,
+                  "channels": 1,
+                  "time_base_num": 1,
+                  "time_base_den": 1000,
+                  "start_pts": 0
+                }
+              ]
+            },
+            "frames": [
+              {
+                "requested_ms": 0,
+                "frame_index": 0,
+                "pts": 0,
+                "relative_time_num": 0,
+                "relative_time_den": 1,
+                "image_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810",
+                "answer": "READY",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 4000,
+                "frame_index": 4,
+                "pts": 4000,
+                "relative_time_num": 4,
+                "relative_time_den": 1,
+                "image_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5",
+                "answer": "MOVING",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 8000,
+                "frame_index": 8,
+                "pts": 8000,
+                "relative_time_num": 8,
+                "relative_time_den": 1,
+                "image_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f",
+                "answer": "DONE",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              }
+            ],
+            "received_at": "2026-10-22 06:20:56.279534+00:00",
+            "observed_frames_only": true,
+            "continuous_motion_verified": false,
+            "audio_transcribed": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "normalized_audio": {
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "sample_count": 176000,
+            "source_codec": "pcm_s16le",
+            "source_sample_rate": 16000,
+            "source_channels": 1,
+            "source_sample_count": 176000,
+            "time_base_num": 1,
+            "time_base_den": 1000,
+            "first_pts": 0,
+            "sample_rate": 16000,
+            "channels": 1,
+            "processor": "native-pcm-v1",
+            "content_trust": "untrusted",
+            "persisted": false
+          },
+          "deterministic_join_repeat_identical": true
+        },
+        "operation_wall_seconds": 3.3293721610025386,
+        "finished_monotonic": 39730.111792698
+      },
+      {
+        "repeat": 1,
+        "status": "PASS",
+        "started_monotonic": 39730.111822213,
+        "observation": {
+          "timeline": {
+            "owner_id": "ca48e8cf-fc57-454f-870d-72f41014f9ad",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "events": [
+              {
+                "kind": "provided_transcript",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 11,
+                "end_den": 1,
+                "text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 0,
+                "end_den": 1,
+                "text": "READY",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 4,
+                "start_num": 4,
+                "start_den": 1,
+                "end_num": 4,
+                "end_den": 1,
+                "text": "MOVING",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 8,
+                "start_num": 8,
+                "start_den": 1,
+                "end_num": 8,
+                "end_den": 1,
+                "text": "DONE",
+                "uncertainties": []
+              }
+            ],
+            "summary_text": "Unverified provided-transcript and sampled-frame timeline.\nSpeech text is supplied; no ASR, word alignment or continuous-motion verification.\nSource SHA256: 0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b\nNormalized PCM SHA256: 252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3\n[0/1s..11/1s] provided_transcript 0: \"And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.\"; uncertainties=\\u005b\\u005d\n[0/1s] frame 0: \"READY\"; uncertainties=\\u005b\\u005d\n[4/1s] frame 4: \"MOVING\"; uncertainties=\\u005b\\u005d\n[8/1s] frame 8: \"DONE\"; uncertainties=\\u005b\\u005d\n",
+            "summary_sha256": "6f98c69b31a2d949cb88516b8bd751d52366622e068eb46e1ff7d58cc7fae3d0",
+            "transcript_origin": "provided_reference",
+            "audio_transcribed": false,
+            "word_alignment_verified": false,
+            "continuous_motion_verified": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "description_result": {
+            "owner_id": "ca48e8cf-fc57-454f-870d-72f41014f9ad",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "question_sha256": "7936ccbcf5e7cf4ef6055f7037fe88e04cb8ed536a271acf57dce94292293e16",
+            "metadata": {
+              "width": 960,
+              "height": 360,
+              "codec": "ffv1",
+              "time_base_num": 1,
+              "time_base_den": 1000,
+              "origin_pts": 0,
+              "duration_seconds": 11.0,
+              "frame_count": 11,
+              "audio": [
+                {
+                  "index": 1,
+                  "codec": "pcm_s16le",
+                  "sample_rate": 16000,
+                  "channels": 1,
+                  "time_base_num": 1,
+                  "time_base_den": 1000,
+                  "start_pts": 0
+                }
+              ]
+            },
+            "frames": [
+              {
+                "requested_ms": 0,
+                "frame_index": 0,
+                "pts": 0,
+                "relative_time_num": 0,
+                "relative_time_den": 1,
+                "image_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810",
+                "answer": "READY",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 4000,
+                "frame_index": 4,
+                "pts": 4000,
+                "relative_time_num": 4,
+                "relative_time_den": 1,
+                "image_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5",
+                "answer": "MOVING",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 8000,
+                "frame_index": 8,
+                "pts": 8000,
+                "relative_time_num": 8,
+                "relative_time_den": 1,
+                "image_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f",
+                "answer": "DONE",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              }
+            ],
+            "received_at": "2026-10-22 06:20:59.100905+00:00",
+            "observed_frames_only": true,
+            "continuous_motion_verified": false,
+            "audio_transcribed": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "normalized_audio": {
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "sample_count": 176000,
+            "source_codec": "pcm_s16le",
+            "source_sample_rate": 16000,
+            "source_channels": 1,
+            "source_sample_count": 176000,
+            "time_base_num": 1,
+            "time_base_den": 1000,
+            "first_pts": 0,
+            "sample_rate": 16000,
+            "channels": 1,
+            "processor": "native-pcm-v1",
+            "content_trust": "untrusted",
+            "persisted": false
+          },
+          "deterministic_join_repeat_identical": true
+        },
+        "operation_wall_seconds": 2.8208709449972957,
+        "finished_monotonic": 39732.932693328
+      },
+      {
+        "repeat": 2,
+        "status": "PASS",
+        "started_monotonic": 39732.932715409,
+        "observation": {
+          "timeline": {
+            "owner_id": "7c03ce36-b896-4bc6-a7e3-795383800477",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "events": [
+              {
+                "kind": "provided_transcript",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 11,
+                "end_den": 1,
+                "text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 0,
+                "start_num": 0,
+                "start_den": 1,
+                "end_num": 0,
+                "end_den": 1,
+                "text": "READY",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 4,
+                "start_num": 4,
+                "start_den": 1,
+                "end_num": 4,
+                "end_den": 1,
+                "text": "MOVING",
+                "uncertainties": []
+              },
+              {
+                "kind": "frame",
+                "index": 8,
+                "start_num": 8,
+                "start_den": 1,
+                "end_num": 8,
+                "end_den": 1,
+                "text": "DONE",
+                "uncertainties": []
+              }
+            ],
+            "summary_text": "Unverified provided-transcript and sampled-frame timeline.\nSpeech text is supplied; no ASR, word alignment or continuous-motion verification.\nSource SHA256: 0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b\nNormalized PCM SHA256: 252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3\n[0/1s..11/1s] provided_transcript 0: \"And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.\"; uncertainties=\\u005b\\u005d\n[0/1s] frame 0: \"READY\"; uncertainties=\\u005b\\u005d\n[4/1s] frame 4: \"MOVING\"; uncertainties=\\u005b\\u005d\n[8/1s] frame 8: \"DONE\"; uncertainties=\\u005b\\u005d\n",
+            "summary_sha256": "6f98c69b31a2d949cb88516b8bd751d52366622e068eb46e1ff7d58cc7fae3d0",
+            "transcript_origin": "provided_reference",
+            "audio_transcribed": false,
+            "word_alignment_verified": false,
+            "continuous_motion_verified": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "description_result": {
+            "owner_id": "7c03ce36-b896-4bc6-a7e3-795383800477",
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "question_sha256": "7936ccbcf5e7cf4ef6055f7037fe88e04cb8ed536a271acf57dce94292293e16",
+            "metadata": {
+              "width": 960,
+              "height": 360,
+              "codec": "ffv1",
+              "time_base_num": 1,
+              "time_base_den": 1000,
+              "origin_pts": 0,
+              "duration_seconds": 11.0,
+              "frame_count": 11,
+              "audio": [
+                {
+                  "index": 1,
+                  "codec": "pcm_s16le",
+                  "sample_rate": 16000,
+                  "channels": 1,
+                  "time_base_num": 1,
+                  "time_base_den": 1000,
+                  "start_pts": 0
+                }
+              ]
+            },
+            "frames": [
+              {
+                "requested_ms": 0,
+                "frame_index": 0,
+                "pts": 0,
+                "relative_time_num": 0,
+                "relative_time_den": 1,
+                "image_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810",
+                "answer": "READY",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 4000,
+                "frame_index": 4,
+                "pts": 4000,
+                "relative_time_num": 4,
+                "relative_time_den": 1,
+                "image_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5",
+                "answer": "MOVING",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              },
+              {
+                "requested_ms": 8000,
+                "frame_index": 8,
+                "pts": 8000,
+                "relative_time_num": 8,
+                "relative_time_den": 1,
+                "image_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f",
+                "answer": "DONE",
+                "uncertainties": [],
+                "model_id": "qwen3.5-9b-core"
+              }
+            ],
+            "received_at": "2026-10-22 06:21:01.911758+00:00",
+            "observed_frames_only": true,
+            "continuous_motion_verified": false,
+            "audio_transcribed": false,
+            "semantic_validation": false,
+            "confidence": null,
+            "persisted": false
+          },
+          "normalized_audio": {
+            "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+            "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+            "sample_count": 176000,
+            "source_codec": "pcm_s16le",
+            "source_sample_rate": 16000,
+            "source_channels": 1,
+            "source_sample_count": 176000,
+            "time_base_num": 1,
+            "time_base_den": 1000,
+            "first_pts": 0,
+            "sample_rate": 16000,
+            "channels": 1,
+            "processor": "native-pcm-v1",
+            "content_trust": "untrusted",
+            "persisted": false
+          },
+          "deterministic_join_repeat_identical": true
+        },
+        "operation_wall_seconds": 2.8105661980007426,
+        "finished_monotonic": 39735.743281687
+      }
+    ],
+    "ASR_attempts": 0,
+    "automatic_retries": 0,
+    "model_replacements": 0,
+    "TTFT_measured": false,
+    "decode_TPS_measured": false,
+    "cold_load_measured": false,
+    "population_p95_or_SLO_measured": false,
+    "raw_media_or_prompts_retained": false,
+    "resource_points": [
+      {
+        "observed_at_utc": "2026-10-22T06:20:43.587725+00:00",
+        "CORE_resident_RAM_MiB": 9585.90625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32744,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39717.434783188,
+        "collection_seconds": 0.03725264300010167
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:43.826540+00:00",
+        "CORE_resident_RAM_MiB": 9687.58984375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32766,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39717.672016467,
+        "collection_seconds": 0.03644509999867296
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:44.062071+00:00",
+        "CORE_resident_RAM_MiB": 9765.8984375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32786,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39717.906253136,
+        "collection_seconds": 0.032947728999715764
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:44.296094+00:00",
+        "CORE_resident_RAM_MiB": 9839.33984375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32805,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39718.140087467,
+        "collection_seconds": 0.03235709900036454
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:44.529753+00:00",
+        "CORE_resident_RAM_MiB": 9623.42578125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32827,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39718.375074504,
+        "collection_seconds": 0.03431859099509893
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:44.764926+00:00",
+        "CORE_resident_RAM_MiB": 9623.42578125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32850,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39718.609054225,
+        "collection_seconds": 0.033287530997768044
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:44.999425+00:00",
+        "CORE_resident_RAM_MiB": 9695.046875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32872,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39718.848171591,
+        "collection_seconds": 0.038224844000069425
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:45.238156+00:00",
+        "CORE_resident_RAM_MiB": 9686.55859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32892,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39719.084153149,
+        "collection_seconds": 0.03560732000187272
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:45.472645+00:00",
+        "CORE_resident_RAM_MiB": 9675.140625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32915,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39719.317613684,
+        "collection_seconds": 0.032952567999018356
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:45.706379+00:00",
+        "CORE_resident_RAM_MiB": 9676.7265625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32938,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39719.558122411,
+        "collection_seconds": 0.040024222995270975
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:45.948850+00:00",
+        "CORE_resident_RAM_MiB": 9677.8125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32963,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39719.792653389,
+        "collection_seconds": 0.034078453994879965
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:46.182008+00:00",
+        "CORE_resident_RAM_MiB": 9679.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 32986,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39720.024614943,
+        "collection_seconds": 0.03150066500529647
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:46.413779+00:00",
+        "CORE_resident_RAM_MiB": 9780.34375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33008,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39720.257463329,
+        "collection_seconds": 0.0323660159992869
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:46.645581+00:00",
+        "CORE_resident_RAM_MiB": 9780.34765625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33028,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39720.492190742,
+        "collection_seconds": 0.034476786000595894
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:46.881511+00:00",
+        "CORE_resident_RAM_MiB": 9730.65625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33049,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39720.726665055,
+        "collection_seconds": 0.03393032800522633
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:47.115443+00:00",
+        "CORE_resident_RAM_MiB": 9731.65625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33072,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39720.959861759,
+        "collection_seconds": 0.032709956998587586
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:47.348469+00:00",
+        "CORE_resident_RAM_MiB": 9733.2421875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33096,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39721.193347111,
+        "collection_seconds": 0.03296508100174833
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:47.582672+00:00",
+        "CORE_resident_RAM_MiB": 9734.328125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33119,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39721.426679607,
+        "collection_seconds": 0.03284087000065483
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:47.816574+00:00",
+        "CORE_resident_RAM_MiB": 9735.828125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33142,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39721.661352149,
+        "collection_seconds": 0.03419611400022404
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:48.050969+00:00",
+        "CORE_resident_RAM_MiB": 9736.9140625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33166,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39721.89486403,
+        "collection_seconds": 0.03302824900310952
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:48.283473+00:00",
+        "CORE_resident_RAM_MiB": 9737.9140625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33189,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39722.129550709,
+        "collection_seconds": 0.034376679999695625
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:48.519748+00:00",
+        "CORE_resident_RAM_MiB": 9838.9453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33213,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39722.365760182,
+        "collection_seconds": 0.03570138500072062
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:48.760116+00:00",
+        "CORE_resident_RAM_MiB": 9842.8125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33233,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39722.611910622,
+        "collection_seconds": 0.04052986500028055
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:49.002843+00:00",
+        "CORE_resident_RAM_MiB": 9842.8125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33254,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39722.847886631,
+        "collection_seconds": 0.03444785199826583
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:49.236981+00:00",
+        "CORE_resident_RAM_MiB": 9793.62109375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33277,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39723.081473673,
+        "collection_seconds": 0.03248611000162782
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:49.469803+00:00",
+        "CORE_resident_RAM_MiB": 9794.70703125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33300,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39723.313804415,
+        "collection_seconds": 0.0317912860045908
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:49.702141+00:00",
+        "CORE_resident_RAM_MiB": 9796.20703125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33323,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39723.54617969,
+        "collection_seconds": 0.03186596600426128
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:49.935400+00:00",
+        "CORE_resident_RAM_MiB": 9797.29296875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33346,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39723.779082197,
+        "collection_seconds": 0.03239716299867723
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:50.168120+00:00",
+        "CORE_resident_RAM_MiB": 9798.29296875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33369,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39724.012662386,
+        "collection_seconds": 0.03309864000038942
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:50.403216+00:00",
+        "CORE_resident_RAM_MiB": 9799.37890625,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33393,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39724.247409507,
+        "collection_seconds": 0.03428138200251851
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:50.636347+00:00",
+        "CORE_resident_RAM_MiB": 9800.96484375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33417,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39724.47935345,
+        "collection_seconds": 0.03146398700482678
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:50.868885+00:00",
+        "CORE_resident_RAM_MiB": 9801.96484375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33440,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39724.712463213,
+        "collection_seconds": 0.032627241998852696
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:51.101517+00:00",
+        "CORE_resident_RAM_MiB": 9803.05078125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33463,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39724.944939887,
+        "collection_seconds": 0.03200793900032295
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:51.334392+00:00",
+        "CORE_resident_RAM_MiB": 9804.05078125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33486,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39725.177783104,
+        "collection_seconds": 0.032354274997487664
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:51.567097+00:00",
+        "CORE_resident_RAM_MiB": 9805.13671875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33509,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39725.410571449,
+        "collection_seconds": 0.03229751899925759
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:51.800025+00:00",
+        "CORE_resident_RAM_MiB": 9806.63671875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33532,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39725.643065195,
+        "collection_seconds": 0.03200208899943391
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:52.032388+00:00",
+        "CORE_resident_RAM_MiB": 9807.16796875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33555,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39725.8760255,
+        "collection_seconds": 0.03246698500151979
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:52.266243+00:00",
+        "CORE_resident_RAM_MiB": 9908.44921875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33579,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39726.110728079,
+        "collection_seconds": 0.03421496800001478
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:52.499830+00:00",
+        "CORE_resident_RAM_MiB": 9908.44921875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33600,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39726.344747216,
+        "collection_seconds": 0.03332942999986699
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:52.734345+00:00",
+        "CORE_resident_RAM_MiB": 9908.453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33621,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39726.582489874,
+        "collection_seconds": 0.03555045399843948
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:52.970449+00:00",
+        "CORE_resident_RAM_MiB": 9908.453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33641,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1349788,
+            "start_ticks": 3972678,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.26953125
+          },
+          {
+            "pid": 1349791,
+            "start_ticks": 3972678,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.64453125
+          },
+          {
+            "pid": 1349793,
+            "start_ticks": 3972679,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 17.171875
+          }
+        ],
+        "collected_monotonic": 39726.817037044,
+        "collection_seconds": 0.03334899699984817
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:53.204590+00:00",
+        "CORE_resident_RAM_MiB": 9908.453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33641,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39727.05137812,
+        "collection_seconds": 0.03382007400068687
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:53.439296+00:00",
+        "CORE_resident_RAM_MiB": 9908.453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33641,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1349805,
+            "start_ticks": 3972705,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.30859375
+          },
+          {
+            "pid": 1349806,
+            "start_ticks": 3972705,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.640625
+          },
+          {
+            "pid": 1349807,
+            "start_ticks": 3972705,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 36.96484375
+          },
+          {
+            "pid": 1349812,
+            "start_ticks": 3972725,
+            "kind": "ffmpeg",
+            "RAM_RSS_MiB": 43.36328125
+          }
+        ],
+        "collected_monotonic": 39727.283517867,
+        "collection_seconds": 0.031712578995211516
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:53.671987+00:00",
+        "CORE_resident_RAM_MiB": 9908.453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33641,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39727.514860241,
+        "collection_seconds": 0.030869299996993504
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:53.903389+00:00",
+        "CORE_resident_RAM_MiB": 9531.90234375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33645,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39727.746621373,
+        "collection_seconds": 0.030509099997289013
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:54.135335+00:00",
+        "CORE_resident_RAM_MiB": 9283.8125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33669,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39727.980660958,
+        "collection_seconds": 0.03354848700109869
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:54.370982+00:00",
+        "CORE_resident_RAM_MiB": 10017.59375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33693,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39728.218909669,
+        "collection_seconds": 0.037733619996288326
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:54.608533+00:00",
+        "CORE_resident_RAM_MiB": 9658.0546875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33715,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39728.453146812,
+        "collection_seconds": 0.033626732998527586
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:54.843959+00:00",
+        "CORE_resident_RAM_MiB": 9708.30859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33739,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39728.688295061,
+        "collection_seconds": 0.03466523699898971
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:55.078426+00:00",
+        "CORE_resident_RAM_MiB": 9711.89453125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33746,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39728.922427689,
+        "collection_seconds": 0.03311316700273892
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:55.313337+00:00",
+        "CORE_resident_RAM_MiB": 9658.02734375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33769,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39729.156308759,
+        "collection_seconds": 0.033580757000891026
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:55.548099+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33793,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39729.391620923,
+        "collection_seconds": 0.03482915100175887
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:55.781303+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33799,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39729.632104135,
+        "collection_seconds": 0.03953278900007717
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:56.022221+00:00",
+        "CORE_resident_RAM_MiB": 9658.05859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33823,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39729.865751159,
+        "collection_seconds": 0.03314840300299693
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:56.258314+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33847,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39730.10192106,
+        "collection_seconds": 0.03569599599723006
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:56.490732+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33849,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1349925,
+            "start_ticks": 3973011,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.27734375
+          },
+          {
+            "pid": 1349926,
+            "start_ticks": 3973011,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.64453125
+          },
+          {
+            "pid": 1349927,
+            "start_ticks": 3973012,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 34.23046875
+          }
+        ],
+        "collected_monotonic": 39730.334370605,
+        "collection_seconds": 0.031179477999103256
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:56.723413+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33849,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1349939,
+            "start_ticks": 3973037,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.3125
+          },
+          {
+            "pid": 1349940,
+            "start_ticks": 3973038,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.64453125
+          },
+          {
+            "pid": 1349941,
+            "start_ticks": 3973038,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 36.9140625
+          }
+        ],
+        "collected_monotonic": 39730.568579305,
+        "collection_seconds": 0.03322003699577181
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:56.956383+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33849,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1349939,
+            "start_ticks": 3973037,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.3125
+          },
+          {
+            "pid": 1349940,
+            "start_ticks": 3973038,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.64453125
+          },
+          {
+            "pid": 1349941,
+            "start_ticks": 3973038,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 41.76953125
+          }
+        ],
+        "collected_monotonic": 39730.800655896,
+        "collection_seconds": 0.03160139299870934
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:57.188538+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33849,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39731.032217799,
+        "collection_seconds": 0.03086835800058907
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:57.422378+00:00",
+        "CORE_resident_RAM_MiB": 9658.05859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33873,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39731.265967304,
+        "collection_seconds": 0.03322865199879743
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:57.656951+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33896,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39731.501172099,
+        "collection_seconds": 0.03467878199444385
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:57.890174+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33902,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39731.734415482,
+        "collection_seconds": 0.032875113996851724
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:58.125019+00:00",
+        "CORE_resident_RAM_MiB": 9658.02734375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33926,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39731.96958373,
+        "collection_seconds": 0.034669815002416726
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:58.361286+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33949,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39732.205241428,
+        "collection_seconds": 0.03515029000118375
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:58.593556+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33955,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39732.437320463,
+        "collection_seconds": 0.031502879995969124
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:58.827232+00:00",
+        "CORE_resident_RAM_MiB": 9658.05859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 33979,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39732.671519907,
+        "collection_seconds": 0.03370858599373605
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:59.062742+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34003,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39732.906287297,
+        "collection_seconds": 0.034281312000530306
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:59.296752+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34006,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1350080,
+            "start_ticks": 3973293,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.2734375
+          },
+          {
+            "pid": 1350081,
+            "start_ticks": 3973293,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.64453125
+          },
+          {
+            "pid": 1350082,
+            "start_ticks": 3973294,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 34.19140625
+          }
+        ],
+        "collected_monotonic": 39733.140660765,
+        "collection_seconds": 0.032562442000198644
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:59.531218+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34006,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1350093,
+            "start_ticks": 3973319,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.328125
+          },
+          {
+            "pid": 1350094,
+            "start_ticks": 3973320,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.640625
+          },
+          {
+            "pid": 1350095,
+            "start_ticks": 3973320,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 36.94140625
+          },
+          {
+            "pid": 1350098,
+            "start_ticks": 3973334,
+            "kind": "ffprobe",
+            "RAM_RSS_MiB": 53.0390625
+          }
+        ],
+        "collected_monotonic": 39733.376352206,
+        "collection_seconds": 0.03375779799534939
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:59.763853+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34006,
+        "native_process_RSS_observed": [
+          {
+            "pid": 1350093,
+            "start_ticks": 3973319,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 2.328125
+          },
+          {
+            "pid": 1350094,
+            "start_ticks": 3973320,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 1.640625
+          },
+          {
+            "pid": 1350095,
+            "start_ticks": 3973320,
+            "kind": "native_worker_or_namespace",
+            "RAM_RSS_MiB": 40.71484375
+          }
+        ],
+        "collected_monotonic": 39733.609283118,
+        "collection_seconds": 0.03239109300193377
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:20:59.997409+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34006,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39733.847045846,
+        "collection_seconds": 0.036451381994993426
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:00.237327+00:00",
+        "CORE_resident_RAM_MiB": 9658.05859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34030,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39734.081997781,
+        "collection_seconds": 0.034493146995373536
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:00.474209+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34053,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39734.317975685,
+        "collection_seconds": 0.035484041000017896
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:00.715399+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34060,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39734.559736587,
+        "collection_seconds": 0.03881156699935673
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:00.949520+00:00",
+        "CORE_resident_RAM_MiB": 9658.02734375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34083,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39734.796381153,
+        "collection_seconds": 0.03613797800062457
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:01.188551+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34108,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39735.032449776,
+        "collection_seconds": 0.03558138199878158
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:01.421695+00:00",
+        "CORE_resident_RAM_MiB": 9708.28125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34113,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39735.266931967,
+        "collection_seconds": 0.03399029000138398
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:01.656078+00:00",
+        "CORE_resident_RAM_MiB": 9658.05859375,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34137,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39735.500214694,
+        "collection_seconds": 0.03276877600001171
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:01.892160+00:00",
+        "CORE_resident_RAM_MiB": 9708.3125,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34160,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39735.735826097,
+        "collection_seconds": 0.03509820299950661
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:02.128264+00:00",
+        "CORE_resident_RAM_MiB": 9725.13671875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34182,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39735.984444625,
+        "collection_seconds": 0.04725701900315471
+      },
+      {
+        "observed_at_utc": "2026-10-22T06:21:02.375235+00:00",
+        "CORE_resident_RAM_MiB": 9725.13671875,
+        "CORE_compute_allocation_VRAM_MiB": 9386.0,
+        "point_sample_not_peak": true,
+        "core_identity": {
+          "pid": 37256,
+          "start_ticks": 63900
+        },
+        "core_cpu_ticks": 34203,
+        "native_process_RSS_observed": [],
+        "collected_monotonic": 39736.219791686,
+        "collection_seconds": 0.034113790999981575
+      }
+    ],
+    "resource_sampler_error": null,
+    "native_audio_attempts": 3,
+    "native_video_attempts": 3,
+    "native_image_attempts": 9,
+    "image_CORE_attempts": 9,
+    "clip_quota_current_window": 3,
+    "image_quota_current_window": 9,
+    "clip_operations_remaining": 0,
+    "image_operations_remaining": 0,
+    "admissions_released": true,
+    "services_closed": true,
+    "sampler_task_retired": true,
+    "model_transports": [
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      }
+    ],
+    "elapsed_seconds": 18.852557734004222,
+    "CPU_clock_ticks_per_second": 100,
+    "resource_summary": {
+      "samples": 81,
+      "CORE_RAM_RSS_MiB_min": 9283.8125,
+      "CORE_RAM_RSS_MiB_sampled_max": 10017.59375,
+      "CORE_VRAM_allocation_MiB_min": 9386.0,
+      "CORE_VRAM_allocation_MiB_sampled_max": 9386.0,
+      "native_process_identities_observed": 20,
+      "largest_single_native_process_sampled_RSS_MiB": 53.0390625,
+      "CORE_process_CPU_ticks_delta": 1459,
+      "sampled_maxima_not_true_peaks": true,
+      "unique_or_minimum_RAM_measured": false,
+      "native_process_RSS_sum_is_not_private_RAM": true
+    },
+    "latency_summary": {
+      "text-before": {
+        "observations": 3,
+        "minimum_seconds": 0.11230403700028546,
+        "median_seconds": 0.11688555599539541,
+        "maximum_seconds": 0.17062228800205048,
+        "population_p95_or_SLO_measured": false
+      },
+      "context-128": {
+        "observations": 3,
+        "minimum_seconds": 0.08563853400119115,
+        "median_seconds": 0.08993847900273977,
+        "maximum_seconds": 0.17643859700183384,
+        "population_p95_or_SLO_measured": false
+      },
+      "context-2048": {
+        "observations": 3,
+        "minimum_seconds": 0.09721379300026456,
+        "median_seconds": 0.1004435659997398,
+        "maximum_seconds": 0.5640606349988957,
+        "population_p95_or_SLO_measured": false
+      },
+      "context-8192": {
+        "observations": 3,
+        "minimum_seconds": 0.11907617499673506,
+        "median_seconds": 0.12002515199856134,
+        "maximum_seconds": 1.2931752920048893,
+        "population_p95_or_SLO_measured": false
+      },
+      "context-16384": {
+        "observations": 3,
+        "minimum_seconds": 0.14999175100092543,
+        "median_seconds": 0.15169606400013436,
+        "maximum_seconds": 1.7755212129995925,
+        "population_p95_or_SLO_measured": false
+      },
+      "context-31500": {
+        "observations": 3,
+        "minimum_seconds": 0.20739066199894296,
+        "median_seconds": 0.2076996469986625,
+        "maximum_seconds": 3.4171022070004256,
+        "population_p95_or_SLO_measured": false
+      },
+      "text-after": {
+        "observations": 3,
+        "minimum_seconds": 0.11240421500406228,
+        "median_seconds": 0.11487408399989363,
+        "maximum_seconds": 0.21406249499705154,
+        "population_p95_or_SLO_measured": false
+      },
+      "media-provided-transcript-frames": {
+        "observations": 3,
+        "minimum_seconds": 2.8105661980007426,
+        "median_seconds": 2.8208709449972957,
+        "maximum_seconds": 3.3293721610025386,
+        "population_p95_or_SLO_measured": false
+      }
+    }
+  }
+}

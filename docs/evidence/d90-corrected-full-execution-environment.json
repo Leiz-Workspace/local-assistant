@@ -1,0 +1,13 @@
+{
+  "description": "Actual corrected running pytest child uses0022; logs/source freeze/metadata remain0600 in0700root. No parent global or production permission changes.",
+  "pytest_pid": 1436710,
+  "observed_child_umask": "0022",
+  "root_mode": "0700",
+  "artifact_modes": {
+    "data/backups/d90-followup-full-corrected/pytest.log": "0600",
+    "data/backups/d90-followup-full-corrected/result.json": "0600",
+    "data/backups/d90-followup-full-corrected/source-freeze.json": "0600",
+    "data/backups/d90-followup-full-corrected-supervisor.log": "0600"
+  },
+  "source_freeze_sha256": "ef7f1a750cde6c3986195f5628ad9e90d07bedc3c6cc6f013539bd9454999cdf"
+}

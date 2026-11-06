@@ -1,0 +1,55 @@
+{
+  "description": "D67 local original CORE warm sequential context/media/resource observations accepted after current full4495 and final read-only audit; no resource/model/configuration selection, true peak, TTFT, decode TPS, cold-load, SLO or production claim.",
+  "status": "PASS_LOCAL_EXISTING_MULTIMODAL_RESOURCE_CONTEXT_EVALUATION",
+  "source_files": 599,
+  "all596_prior_source_bytes_unchanged": true,
+  "new_controls": 34,
+  "related_passed": 389,
+  "related_elapsed_seconds": 22.95,
+  "private_evaluator_controls": 6,
+  "private_full_runner_controls": 3,
+  "private_audit_controls": 244,
+  "actual_matrix_elapsed_seconds": 18.852557734004222,
+  "resource_observations": 81,
+  "successful_text_completions": 21,
+  "expected_context_overflow_refusals": 1,
+  "media_operations": 3,
+  "image_CORE_completions": 9,
+  "text_after_media_passed": 3,
+  "text_after_media_total": 3,
+  "largest_successful_actual_prompt_tokens": 31563,
+  "rejected_actual_prompt_tokens": 34063,
+  "CORE_RAM_RSS_MiB_sampled_range": [
+    9283.8125,
+    10017.59375
+  ],
+  "CORE_VRAM_allocation_MiB_sampled_range": [
+    9386.0,
+    9386.0
+  ],
+  "largest_single_native_process_RSS_observed_MiB": 53.0390625,
+  "sampled_maxima_not_true_peaks": true,
+  "unique_or_minimum_RAM_measured": false,
+  "TTFT_measured": false,
+  "decode_TPS_measured": false,
+  "cold_load_measured": false,
+  "population_p95_or_SLO_measured": false,
+  "model_replacements": 0,
+  "model_downloads": 0,
+  "ASR_evaluated": false,
+  "full_regression": {
+    "passed": 4495,
+    "failed": 0,
+    "skipped": 0,
+    "pytest_elapsed_seconds": 1737.73,
+    "wrapper_elapsed_seconds": 1738.87,
+    "log_sha256": "84df5ec9ac0d4a85957492f066d10d251730fcaaf75fffe2a178af94e5652396",
+    "source_freeze_sha256": "80a40f2977f940fe405cb99a0119526dd89d2fbd8fc79c504e1dc3715fc592c9"
+  },
+  "readonly_audit": {
+    "path": "docs/evidence/d67-full4495-multimodal-readonly-audit.json",
+    "sha256": "e75a162c672a86a40a84d7f01b6f7d4aa9b09242927e1ddc71d9088cf33d23d5",
+    "same_original_CORE_PID_start_and_parameters": true
+  },
+  "D68": "NEXT_REGISTRY_QWEN3_ASR_VERSUS_WHISPER_EVALUATION_NO_SELECTION"
+}

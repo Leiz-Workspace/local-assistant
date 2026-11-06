@@ -1,0 +1,9 @@
+{
+  "description": "Exact documentation-only D66 IN PROGRESS\u2192accepted local scope transition after successful actual/audit, committed2d93d98. Preserve original measurement-plan bytes and original freeze; inherit current accepted progress hash in D67 only for this single document. All596 application/source files and every other prior protected/evaluation/model/config/data guard unchanged.",
+  "path": "docs/AUDIO_BACKLOG.md",
+  "before_sha256": "35a62872914b4f283c808329cafe2843eafc0f5b894560f1c2862985dfa28d5c",
+  "accepted_current_sha256": "d5076ae3df556943aacebe7dfe73b4b967dc18babee4467e9db2c2be92b89baf",
+  "accepted_commit": "2d93d98",
+  "preserved_before_path": "data/backups/d66-audio-backlog-before-acceptance.md",
+  "source_files_changed": 0
+}

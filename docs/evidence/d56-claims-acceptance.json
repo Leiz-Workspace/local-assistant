@@ -1,0 +1,36 @@
+{
+  "description": "D56 local signed claim-citation integrity and unverified support acceptance. Original actual bare-array failure/original regression and test-wiring errors remain preserved; new SYSTEM clarification only, parser/schema/all actual oracles unchanged.",
+  "status": "PASS_LOCAL_SIGNED_CLAIM_CITATION_INTEGRITY",
+  "new_controls": 70,
+  "related_passed": 2388,
+  "related_skipped": 0,
+  "related_summary": "2388 passed in 141.39s (0:02:21)",
+  "related_log_sha256": "9cc1ad14498bb369587b97c0aa1909195b11c84010db7f7bb90c29c23e3ca496",
+  "original_related_passed": 2387,
+  "original_actual_failed": true,
+  "actual_completions_original": 1,
+  "actual_completions_distinct_repair": 1,
+  "distinct_repair_functional_authored_claims": "3/3",
+  "source_files": 508,
+  "source_protected_hashes": 1139,
+  "all503_D55_source_config_bytes_unchanged": true,
+  "source_freeze_sha256": "83c97e0b2cc373b0936cc7452472dab3f0cfd06f1cdd251be20ed6cd67f89afa",
+  "strict_schema_and_actual_oracles_unchanged": true,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "production_API_wiring": false,
+  "historical_D52_full_passed": 3534,
+  "new_full_suite_claim": false,
+  "actual_CORE": {
+    "path": "docs/evidence/d56-root-object-core-claims.json",
+    "sha256": "54a686bf44678b67a502d18f05e4e01fe7d13cfe3f6dffc9de09a16185b0df38"
+  },
+  "readonly_audit": {
+    "path": "docs/evidence/d56-final-readonly-audit.json",
+    "sha256": "30c40bb7b463fd3534cd2de51e1e15cf3bd6407d86289c7da0dd8086eb2ece8c"
+  },
+  "next_task": "D57 cited research reports with explicit limitations"
+}

@@ -1,0 +1,192 @@
+{
+  "description": "D68 local offline registry ASR comparison complete; evaluation is not ASR model selection, production acceptance, true cold-load/SLO or timestamp certification.",
+  "status": "PASS_LOCAL_OFFLINE_ASR_COMPARISON_NOT_SELECTED",
+  "source_implementation_commit": "d967148",
+  "source_files": 608,
+  "all599_prior_source_bytes_unchanged": true,
+  "new_controls": 87,
+  "related_passed": 467,
+  "related_seconds": 16.64,
+  "private_audit_controls": 32,
+  "private_audit_seconds": 1.02,
+  "qualified_common_freeze_sha256": "9184731711f4f2c60057958a469ca3e5c56cbb9397ea47745a6f175f7af15706",
+  "auditor_input_freeze_sha256": "1042dee5a40b48dadd3b0606d7833eddc0708c688fb2fa0933696a4063b0335d",
+  "readonly_audit_sha256": "577692fc63928f46a4ac1e92dc2e8fea2357dd37b40e094789c03347397ac093",
+  "first_observations": [
+    {
+      "candidate": "qwen3-asr-0.6b",
+      "expected_requests": 44,
+      "complete_requests": 44,
+      "corpus_sha256": "8add851ff4be5a452dea5eb564e5250650f1629b84323165344a8e073101f302",
+      "quality": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 27,
+          "reference_words": 549,
+          "character_edits": 74,
+          "reference_characters": 1916,
+          "WER": 0.04918032786885246,
+          "CER": 0.038622129436325675
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 21,
+          "reference_words": 428,
+          "character_edits": 80,
+          "reference_characters": 2254,
+          "WER": 0.04906542056074766,
+          "CER": 0.0354924578527063
+        }
+      },
+      "no_speech_false_positives": 3,
+      "peak_lifetime_process_RSS_KiB": 5903892,
+      "process_CPU_seconds": 370.05775900000003,
+      "process_wall_seconds": 202.36472435299947,
+      "import_seconds": 5.33486701700167,
+      "load_seconds": 1.162507884997467,
+      "execution": {
+        "device": "cpu",
+        "parameter_dtype": "torch.float32",
+        "attention_implementation": "eager"
+      },
+      "timing": {
+        "call_count": 44,
+        "audio_seconds": 438.12,
+        "total_call_seconds": 195.14807413599192,
+        "first_inference_call_seconds": 4.587060321995523,
+        "per_call_seconds": {
+          "minimum": 0.7912318079979741,
+          "median": 4.5465003614954185,
+          "maximum": 8.19538160799857
+        },
+        "per_call_RTF": {
+          "minimum": 0.15824636159959482,
+          "median": 0.47089376152421714,
+          "maximum": 0.5807015741157382
+        },
+        "duration_weighted_RTF": 0.44542151496391835,
+        "per_language_speech": {
+          "vi_vn": {
+            "recordings": 20,
+            "audio_seconds": 219.24,
+            "call_seconds": 104.66716768799961,
+            "duration_weighted_RTF": 0.4774090845101241
+          },
+          "en_us": {
+            "recordings": 20,
+            "audio_seconds": 198.88,
+            "call_seconds": 86.1842850069952,
+            "duration_weighted_RTF": 0.433348174813934
+          }
+        },
+        "first_call_includes_lazy_initialization": true,
+        "warmup_in_measured_process": false,
+        "cold_storage_or_SLO_claim": false
+      },
+      "same_CORE_identity_and_text_recovery": true,
+      "selected_model": null
+    },
+    {
+      "candidate": "whisper-small-ct2",
+      "expected_requests": 44,
+      "complete_requests": 44,
+      "corpus_sha256": "8add851ff4be5a452dea5eb564e5250650f1629b84323165344a8e073101f302",
+      "quality": {
+        "vi_vn": {
+          "observed_speech_cases": 20,
+          "word_edits": 105,
+          "reference_words": 549,
+          "character_edits": 211,
+          "reference_characters": 1916,
+          "WER": 0.1912568306010929,
+          "CER": 0.11012526096033402
+        },
+        "en_us": {
+          "observed_speech_cases": 20,
+          "word_edits": 28,
+          "reference_words": 428,
+          "character_edits": 91,
+          "reference_characters": 2254,
+          "WER": 0.06542056074766354,
+          "CER": 0.040372670807453416
+        }
+      },
+      "no_speech_false_positives": 4,
+      "peak_lifetime_process_RSS_KiB": 957248,
+      "process_CPU_seconds": 164.077294,
+      "process_wall_seconds": 90.68679190999683,
+      "import_seconds": 2.9790480809970177,
+      "load_seconds": 0.5423905429997831,
+      "execution": {
+        "device": "cpu",
+        "requested_compute_type": "int8",
+        "engine_compute_type": "int8_float32"
+      },
+      "timing": {
+        "call_count": 44,
+        "audio_seconds": 438.12,
+        "total_call_seconds": 86.76668075700582,
+        "first_inference_call_seconds": 2.168364899996959,
+        "per_call_seconds": {
+          "minimum": 1.4734848360021715,
+          "median": 1.9195936409996648,
+          "maximum": 2.7009038090036483
+        },
+        "per_call_RTF": {
+          "minimum": 0.10528163318013108,
+          "median": 0.2082859420159397,
+          "maximum": 0.3722408171990537
+        },
+        "duration_weighted_RTF": 0.1980431862435082,
+        "per_language_speech": {
+          "vi_vn": {
+            "recordings": 20,
+            "audio_seconds": 219.24,
+            "call_seconds": 43.264109087002,
+            "duration_weighted_RTF": 0.1973367500775497
+          },
+          "en_us": {
+            "recordings": 20,
+            "audio_seconds": 198.88,
+            "call_seconds": 36.85465322199889,
+            "duration_weighted_RTF": 0.18531100775341355
+          }
+        },
+        "first_call_includes_lazy_initialization": true,
+        "warmup_in_measured_process": false,
+        "cold_storage_or_SLO_claim": false
+      },
+      "same_CORE_identity_and_text_recovery": true,
+      "selected_model": null
+    }
+  ],
+  "actual_results_sha256": {
+    "qwen": "a3617f9430b4a164bfa69ec9fc63d3f69bf733d34a73512c62647053cb613810",
+    "whisper": "20b36e8388984e89dc58ffbf575d310e092d25ce1dd2bc5f28a5d392cef52e46"
+  },
+  "current_full_regression": false,
+  "historical_full_scope": {
+    "day": "D67",
+    "passed": 4495,
+    "source_files": 599,
+    "new_source_files_unchanged": true
+  },
+  "post_audit_single_progress_document": {
+    "path": "docs/AUDIO_BACKLOG.md",
+    "preserved_preclosure_path": "data/backups/d68-audio-backlog-before-acceptance.md",
+    "old_sha256": "d5076ae3df556943aacebe7dfe73b4b967dc18babee4467e9db2c2be92b89baf",
+    "new_sha256": "ca26f4b23df9e637fc25977e6f72eee80e6619c7b659ff9778d7601b5cd71ae0",
+    "source_files_changed": 0,
+    "git_binding_evidence": "docs/evidence/d68-audio-progress-document-transition.json"
+  },
+  "limitations": [
+    "20 recordings per language but9VI/10EN distinct sentence IDs, public training overlap unknown",
+    "Two unique no-speech signals yield four language-hinted requests; both candidates hallucinate",
+    "CPUfloat32 versus CT2int8_float32 with unequal engine/beam/no-speech suppression",
+    "First-call lazy initialization included, no warmup in measured process; storage caches may be warm",
+    "No word timestamp/aligner/streaming/production API/model default evaluated"
+  ],
+  "next_task": "D69 original SileroVADv5 evaluation; no ASR default selected",
+  "selected_model": null,
+  "production_model_or_config_changes": false
+}

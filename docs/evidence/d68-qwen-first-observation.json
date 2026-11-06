@@ -1,0 +1,40 @@
+{
+  "description": "D68 first Qwen common-corpus observation only; Whisper actual comparison/final readonly audit pending. Four controls are two unique waveforms repeated with language hints. No model selection or production claim.",
+  "status": "QWEN_FIRST_OBSERVED_COMPARISON_PENDING",
+  "result_sha256": "a3617f9430b4a164bfa69ec9fc63d3f69bf733d34a73512c62647053cb613810",
+  "qualified_common_freeze_sha256": "9184731711f4f2c60057958a469ca3e5c56cbb9397ea47745a6f175f7af15706",
+  "process": {
+    "exit_code": 0,
+    "timed_out": false,
+    "wall_seconds": 202.36472435299947,
+    "owned_process_reaped": true
+  },
+  "quality": {
+    "vi_vn": {
+      "observed_speech_cases": 20,
+      "word_edits": 27,
+      "reference_words": 549,
+      "character_edits": 74,
+      "reference_characters": 1916,
+      "WER": 0.04918032786885246,
+      "CER": 0.038622129436325675
+    },
+    "en_us": {
+      "observed_speech_cases": 20,
+      "word_edits": 21,
+      "reference_words": 428,
+      "character_edits": 80,
+      "reference_characters": 2254,
+      "WER": 0.04906542056074766,
+      "CER": 0.0354924578527063
+    }
+  },
+  "no_speech_observed": 4,
+  "no_speech_false_positives": 3,
+  "resources": {
+    "event": "complete",
+    "peak_lifetime_process_RSS_KiB": 5903892,
+    "process_CPU_seconds": 370.05775900000003
+  },
+  "selection": null
+}

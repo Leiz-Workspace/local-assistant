@@ -1,0 +1,94 @@
+{
+  "description": "Owner accepts Truc Ly US pronunciation on the reviewed term panel and rejects Ngoc Huyen with reported I-to-i error. Actual saved baseline/candidate I inputs are /aɪ/ for both presets; internal acoustic cause remains unknown. No per-clip scores or product choice inferred.",
+  "recorded_at_utc": "2026-11-04T03:41:09.655286+00:00",
+  "owner_verbatim": "Phát âm của trúc ly chuẩn Anh Mỹ nhưng giọng Ngọc Huyền k đạt và phát âm sai nhiều, ví dụ I đọc là i chứ không phải là /ai/",
+  "voice_assessment": {
+    "Trúc Ly": {
+      "pronunciation": "OWNER_CONFIRMED_EN_US_CORRECT_ON_REVIEWED_PANEL",
+      "scope": "Group assessment of latest term listening page; exact clips/roles and full completion not specified",
+      "per_clip_ratings": null,
+      "naturalness": null,
+      "perceived_identity": null,
+      "api_in_new_mixed_audio": null
+    },
+    "Ngọc Huyền": {
+      "pronunciation": "OWNER_REPORTED_NOT_ACCEPTABLE_ON_REVIEWED_PANEL",
+      "reported_defect": "English pronoun I heard as i instead of /aɪ/",
+      "scope": "Group rejection; exact baseline/candidate clip not specified",
+      "per_clip_ratings": null,
+      "other_wrong_words": null
+    }
+  },
+  "I_input_audit": [
+    {
+      "voice": "Trúc Ly",
+      "role": "baseline",
+      "source_text": "I write code in Python every day.",
+      "actual_phonemes": "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθən ˈɛvɹi dˈeɪ.",
+      "initial_I_phone": "ˈaɪ",
+      "wav_sha256": "2625e6924463a12a1ea015c89c60b4b504f34f1d75f0e27bb9123bba2887fdd9",
+      "generation_complete": true
+    },
+    {
+      "voice": "Trúc Ly",
+      "role": "us",
+      "source_text": "I write code in Python every day.",
+      "actual_phonemes": "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθɑːn ˈɛvɹi dˈeɪ.",
+      "initial_I_phone": "ˈaɪ",
+      "wav_sha256": "3f970941aa3aa25cf849e95d112ae5b01f9d18be267582596912617d69ebe720",
+      "generation_complete": true
+    },
+    {
+      "voice": "Ngọc Huyền",
+      "role": "baseline",
+      "source_text": "I write code in Python every day.",
+      "actual_phonemes": "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθən ˈɛvɹi dˈeɪ.",
+      "initial_I_phone": "ˈaɪ",
+      "wav_sha256": "ec4794c492c8bb5c8aa6fb462b8d3c2d6a6263ae5ac825d172b365a266e6ddc6",
+      "generation_complete": true
+    },
+    {
+      "voice": "Ngọc Huyền",
+      "role": "us",
+      "source_text": "I write code in Python every day.",
+      "actual_phonemes": "ˈaɪ ɹˈaɪt kˈoʊd ˈɪn pˈaɪθɑːn ˈɛvɹi dˈeɪ.",
+      "initial_I_phone": "ˈaɪ",
+      "wav_sha256": "1bb89aa501790ed91dd9d5f38706f5782d64acfeb579f3e40398635fdf100a60",
+      "generation_complete": true
+    }
+  ],
+  "frontend_I_mapping": "Actual retained engine input already /aɪ/ for both presets and both roles",
+  "specific_internal_cause": "NOT_ESTABLISHED",
+  "inference_limit": "Identical correct I input does not identify a specific model/reference/decoder mechanism or prove the voice can never speak English correctly.",
+  "next_research_priority": "Prioritize preserved Trúc Ly for broader same-voice VI/en-US validation; Ngọc Huyền is unqualified for English under this panel, with Vietnamese evidence retained separately.",
+  "new_native_or_provider_requests": 0,
+  "new_downloads": 0,
+  "source_or_config_changes": 0,
+  "new_software_tests": 0,
+  "prior_software_295_pass": "HISTORICAL_SOFTWARE_ONLY",
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_unchanged": 33,
+  "current_study_files_unchanged": 4,
+  "source_sha256": {
+    "public_result": "6c5b7970a230df098fd56511f6ee9df2ab908593aab15ffd5cb63d461702ceca",
+    "native_result": "592fd05aaef974ce20df43ccbc01f7c979d43d682b56e55cfe2241e8a4ef7c18",
+    "truc_ly_page": "5beb63330e23095ae7da2462f4b6aaf211da637f9ab078cc97782cb3b00ee35b",
+    "ngoc_huyen_page": "a7a8dd5da4e37765c338726bc7da42ae768a55f083af182222bf0857251f9786",
+    "audio_index": "00dc7e818e024007b3fb7d4b2d37e0823812e2f414017842ad59c0aee4d61375",
+    "verification": "62b26969dd698ce62c2a4b4699c50f5ebb67b2f81ec388b00c69e8b77ea77df4"
+  },
+  "executed_source_sha256": {
+    "benchmarks/scripts/vi_us_terms_worker.py": "886af8a518483302835ad5319233fc20183caeaf6def4c4664f3977fa45b82e2",
+    "benchmarks/scripts/vi_us_terms_trial.py": "12f2354fb9c3ee568901ef63557bec4f18558a9ffddcb3219cd4396cef84d8c9",
+    "benchmarks/tests/test_vi_us_terms_worker.py": "af5a2d6ede78fddff50a329a95806c0bd8e5d4deedd8b3b8959dcf40497f16ea",
+    "benchmarks/tests/test_vi_us_terms_trial.py": "0d0b743c17a389e7ebeda201271c7e02251c80d549b47bc4fbbf9972b8bdbb51"
+  },
+  "model_selection": null,
+  "product_voice_selection": null,
+  "product_activation": false,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED"
+}

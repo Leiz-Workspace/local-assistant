@@ -1,0 +1,14 @@
+{
+  "description": "After closing only outside-context bootstrap targets without a popup violation, controlled native gate4 PASS/1 FAIL/2.01s reaches DOMSnapshot but rejects native optional empty-string indices. First bootstrap failure and diagnostic retained; inspect protocol sentinel before changing only schema handling, keep dynamic text/source oracles.",
+  "passed": 4,
+  "failed": 1,
+  "seconds": 2.01,
+  "exit_code": 1,
+  "public_navigations": 0,
+  "archive": {
+    "path": "data/backups/d50-before-snapshot-sentinel-repair.zip",
+    "sha256": "7e78b67e2701c1170e63ad58b212343c7c924f900e671e664e8e88760008c83b"
+  },
+  "log_sha256": "8ec038dff1ef780b0b1e5bd94953670440f5b271a7792ca83e98a2d894a2ec23",
+  "bootstrap_diagnostic": "page/same_context=false/owned=false, closed without resume/host resources"
+}

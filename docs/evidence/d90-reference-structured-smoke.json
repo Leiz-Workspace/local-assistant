@@ -1,0 +1,20 @@
+{
+  "description": "Actual retained clean production-only reference environment smoke after structured compiler fix; socket connections forbidden, fixture inference only.",
+  "status": "PASS_REFERENCE_COMPONENT_IMPORT_ASGI_AND_GUARD_SMOKE",
+  "python_prefix": "data/backups/d88-clean-install-first/venv-offline-reference",
+  "python_version": "3.12.3",
+  "isolated_python_mode": true,
+  "pytest_installed": false,
+  "native_network_attempts": 0,
+  "model_inference_calls": 0,
+  "database_connections": 0,
+  "health_status": 200,
+  "missing_auth_status": 503,
+  "missing_auth_endpoint": "/api/v1/chat/completions",
+  "verified_excerpts": 3,
+  "structured_fixture_cases_verified": 8,
+  "structured_positive_cases": 6,
+  "explicit_refusal_cases": 2,
+  "included_in_full_5596": false,
+  "owner_acceptance_created": false
+}

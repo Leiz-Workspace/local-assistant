@@ -1,0 +1,39 @@
+{
+  "description": "D55 local caller-designated primary lookup and unverified signed-source comparison acceptance. Every first failure retained; actual public transport and actual CORE/authored contradiction measured separately.",
+  "status": "PASS_LOCAL_PRIMARY_LOOKUP_AND_RECONCILIATION",
+  "new_controls": 67,
+  "related_passed": 2318,
+  "related_skipped": 0,
+  "related_summary": "2318 passed in 140.86s (0:02:20)",
+  "related_log_sha256": "ffc5a02fef12746c856ec57b91e083ef942c52ef7fb06753eac2265d589ed915",
+  "source_files": 503,
+  "source_protected_hashes": 1104,
+  "all498_D54_source_config_bytes_unchanged": true,
+  "source_freeze_sha256": "f68da9302785f9740babc9dd7192e736aac3ab915aa04fef80531c037ea50ffe",
+  "actual_public": {
+    "path": "docs/evidence/d55-first-public-lookup.json",
+    "sha256": "7e89ea791b08c1ccaae16f7f2e816de6f25bd63f4878f4fde8f90fe717344892",
+    "sources": 2,
+    "elapsed_seconds": 1.192
+  },
+  "actual_CORE": {
+    "path": "docs/evidence/d55-first-core-conflict.json",
+    "sha256": "a243d369e126afbb204a343787298a7da76058ff7e3438586403aebc42cd26b8",
+    "completions": 1,
+    "authored_sources": 2,
+    "elapsed_seconds": 0.863
+  },
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "production_API_wiring": false,
+  "historical_D52_full_passed": 3534,
+  "new_full_suite_claim": false,
+  "readonly_audit": {
+    "path": "docs/evidence/d55-final-readonly-audit.json",
+    "sha256": "c19d394a9bb980448001736c53890f77964707fc5a419585cd58f247506741a0"
+  },
+  "next_task": "D56 claim-to-citation validation"
+}

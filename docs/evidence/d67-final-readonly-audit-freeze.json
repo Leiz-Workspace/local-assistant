@@ -1,0 +1,10 @@
+{
+  "description": "Complete current full4495 and previously tested244-control final verifier frozen before read-only closure. No global result invented from collection or older cohorts.",
+  "full_passed": 4495,
+  "private_audit_controls": 244,
+  "sha256": {
+    "docs/evidence/d67-final-audit-code-freeze.json": "b42c766aa6fd849b2b596e5bfcef70e68c80bd553d6f51c360e75247013eb61d",
+    "data/backups/d67-4495-full-regression.result.json": "30735d2c22845b50d148b67c733e3661d55b00afde62215fa65f10bb533c4916",
+    "data/backups/d67-4495-full-regression.log": "84df5ec9ac0d4a85957492f066d10d251730fcaaf75fffe2a178af94e5652396"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "description": "V006 source-memory privacy rollout after verified fresh V005 backup/restore; all11 old data tables and table/schema/column ACLs unchanged, exact source trigger/function post-restore verified.",
+  "revision": "0006",
+  "old_data_tables_preserved": 11,
+  "old_table_schema_and_column_acls_unchanged": true,
+  "new_tables": 0,
+  "new_source_triggers": 2,
+  "new_source_functions": 2,
+  "security_definer": false,
+  "public_function_execute": false,
+  "populated_memory_refused": true,
+  "post_restore_verified": true,
+  "post_restore_security_trigger_function_verified": true,
+  "post_restore_backup_sha256": "f7a96f4adf472b7721ab68d3dde19810854fc8b9841a1afb33de4be72de50e25",
+  "migration_source_sha256": "2f21c16ade332a777d42b6c67cc69ae39ff36626673072e989ca5429e997e4b0",
+  "pre_restore_manifest_sha256": "7b3a4123bc6c918777e3ec1a16af075506ce0fb0fba6b73eb0a96dc24e7d96d0",
+  "shared_service_restart": false,
+  "model_config_or_credential_change": false,
+  "production_flags_enabled": false,
+  "actual_runtime_source_privacy_tests_pending": true
+}

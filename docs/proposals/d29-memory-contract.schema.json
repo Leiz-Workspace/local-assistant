@@ -1,0 +1,419 @@
+{
+  "$defs": {
+    "FileEvidence": {
+      "additionalProperties": false,
+      "description": "Bind a native lexical file field quote to the original file hash and file-specific locator.",
+      "properties": {
+        "quote": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "minimum": 1,
+          "title": "End",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "file_quote",
+          "title": "Kind",
+          "type": "string"
+        },
+        "file_id": {
+          "format": "uuid",
+          "title": "File Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "locator": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "text",
+            "value",
+            "formula",
+            "cached_value"
+          ],
+          "title": "Field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote",
+        "start",
+        "end",
+        "kind",
+        "file_id",
+        "source_sha256",
+        "locator",
+        "field"
+      ],
+      "title": "FileEvidence",
+      "type": "object"
+    },
+    "ManualEvidence": {
+      "additionalProperties": false,
+      "description": "Record exact stored manual UTF-8 content identity without inventing an external source or producer.",
+      "properties": {
+        "kind": {
+          "const": "manual",
+          "title": "Kind",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "content_sha256"
+      ],
+      "title": "ManualEvidence",
+      "type": "object"
+    },
+    "MemoryConsent": {
+      "additionalProperties": false,
+      "description": "Bind immutable consent identity to one owner, class, scope and settings epoch with explicit expiry.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "owner_id": {
+          "format": "uuid",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "session",
+            "episodic",
+            "preference",
+            "project"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "scope_id": {
+          "format": "uuid",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "settings_revision": {
+          "minimum": 1,
+          "title": "Settings Revision",
+          "type": "integer"
+        },
+        "policy_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Policy Version",
+          "type": "integer"
+        },
+        "allow_extraction": {
+          "default": false,
+          "title": "Allow Extraction",
+          "type": "boolean"
+        },
+        "granted_at": {
+          "format": "date-time",
+          "title": "Granted At",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "revoked_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revoked At"
+        }
+      },
+      "required": [
+        "id",
+        "owner_id",
+        "kind",
+        "scope_id",
+        "settings_revision",
+        "granted_at",
+        "expires_at"
+      ],
+      "title": "MemoryConsent",
+      "type": "object"
+    },
+    "MemoryRecord": {
+      "additionalProperties": false,
+      "description": "Represent bounded untrusted memory with class/scope, explicit receipt, provenance and retention.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "owner_id": {
+          "format": "uuid",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "session",
+            "episodic",
+            "preference",
+            "project"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "scope_id": {
+          "format": "uuid",
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "consent_id": {
+          "format": "uuid",
+          "title": "Consent Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "manual",
+            "extracted"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "model_id": {
+          "anyOf": [
+            {
+              "maxLength": 256,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Id"
+        },
+        "provenance": {
+          "discriminator": {
+            "mapping": {
+              "conversation_message": "#/$defs/MessageEvidence",
+              "file_quote": "#/$defs/FileEvidence",
+              "manual": "#/$defs/ManualEvidence"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ManualEvidence"
+            },
+            {
+              "$ref": "#/$defs/MessageEvidence"
+            },
+            {
+              "$ref": "#/$defs/FileEvidence"
+            }
+          ],
+          "title": "Provenance"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "content_trust": {
+          "const": "untrusted",
+          "default": "untrusted",
+          "title": "Content Trust",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "owner_id",
+        "kind",
+        "scope_id",
+        "consent_id",
+        "text",
+        "method",
+        "provenance",
+        "created_at",
+        "updated_at",
+        "expires_at"
+      ],
+      "title": "MemoryRecord",
+      "type": "object"
+    },
+    "MemorySettings": {
+      "additionalProperties": false,
+      "description": "Represent one current owner epoch with memory and extraction independently default-disabled.",
+      "properties": {
+        "owner_id": {
+          "format": "uuid",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "extraction_enabled": {
+          "default": false,
+          "title": "Extraction Enabled",
+          "type": "boolean"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner_id",
+        "revision",
+        "updated_at"
+      ],
+      "title": "MemorySettings",
+      "type": "object"
+    },
+    "MessageEvidence": {
+      "additionalProperties": false,
+      "description": "Bind an exact user-message quote to conversation/message IDs and the complete source content hash.",
+      "properties": {
+        "quote": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "minimum": 1,
+          "title": "End",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "conversation_message",
+          "title": "Kind",
+          "type": "string"
+        },
+        "conversation_id": {
+          "format": "uuid",
+          "title": "Conversation Id",
+          "type": "string"
+        },
+        "message_id": {
+          "format": "uuid",
+          "title": "Message Id",
+          "type": "string"
+        },
+        "role": {
+          "const": "user",
+          "title": "Role",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote",
+        "start",
+        "end",
+        "kind",
+        "conversation_id",
+        "message_id",
+        "role",
+        "content_sha256"
+      ],
+      "title": "MessageEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Bind structural snapshots without claiming they were freshly read or owner-authorized by storage.",
+  "properties": {
+    "settings": {
+      "$ref": "#/$defs/MemorySettings"
+    },
+    "consent": {
+      "$ref": "#/$defs/MemoryConsent"
+    },
+    "record": {
+      "$ref": "#/$defs/MemoryRecord"
+    }
+  },
+  "required": [
+    "settings",
+    "consent",
+    "record"
+  ],
+  "title": "MemoryBundle",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Proposed D29 structural memory snapshot contract; no storage/source authorization, runtime bootstrap or model inference."
+}

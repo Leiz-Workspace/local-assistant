@@ -1,0 +1,459 @@
+{
+  "description": "Observed actual D38 native/Git/D35/original CORE case-wise coding baseline; authored synthetic task accuracy and resource policy are limited evidence, not a model replacement decision.",
+  "artifact": "data/backups/d38-live-coding-5b074a03768c499683e40ee49fc4cf22",
+  "freeze_sha256": "894774ff8944d9315365c51bcc7d28a971715060aad4154db2253807cc004e40",
+  "report": {
+    "description": "Actual existing-CORE deterministic coding baseline on frozen synthetic private fixtures; expected outputs checked by trusted host parent, no application command/edit authority.",
+    "cases_sha256": "cb756433b915a1b1dbd95ed8839c410bad9e15092a62c369a324a7f6e8bd2c86",
+    "attempted": 6,
+    "total": 6,
+    "passed": 4,
+    "tasks": [
+      {
+        "task_id": "floor_division",
+        "expected_count": 5,
+        "fixture_checkpoint": "487fd3cc37b16833702b03a1fec089817f23f841",
+        "original_sha256": "65d9c4eacd9c3a9d6a8acbe6b3f3b9dc17bd03346a7a5f6badee4f4ab073b551",
+        "model_replacement": false,
+        "passed": true,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": 3
+            },
+            {
+              "value": -3
+            },
+            {
+              "value": 3
+            },
+            {
+              "value": 0
+            },
+            {
+              "value": 393530540239137079296
+            }
+          ],
+          "elapsed_seconds": 0.0315
+        },
+        "before_outcomes": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model_seconds": 0.8381,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\"code\":\"\\\"\\\"\\\"Compute integer division for the fixture.\\\"\\\"\\\"\\ndef solve(a, b):\\n    \\\"\\\"\\\"Return the intended integer floor quotient.\\\"\\\"\\\"\\n    return int(a // b)\"}",
+        "proposal_sha256": "508ff272c46bf932597d73652954f6c5acb8cddf21733500ac87ec80c6772283",
+        "diff": "diff --git a/solve.py b/solve.py\nindex 0a6731c..a3a1f70 100644\n--- a/solve.py\n+++ b/solve.py\n@@ -1,4 +1,4 @@\n \"\"\"Compute integer division for the fixture.\"\"\"\n def solve(a, b):\n     \"\"\"Return the intended integer floor quotient.\"\"\"\n-    return int(a / b)\n+    return int(a // b)\n\\ No newline at end of file\n",
+        "after": {
+          "status": "completed",
+          "results": [
+            {
+              "value": 3
+            },
+            {
+              "value": -4
+            },
+            {
+              "value": 3
+            },
+            {
+              "value": 0
+            },
+            {
+              "value": 393530540239137101142
+            }
+          ],
+          "elapsed_seconds": 0.0278
+        },
+        "after_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "tool_attempts": 2,
+        "tool_output_bytes": 1617,
+        "status": "measured"
+      },
+      {
+        "task_id": "unique_order",
+        "expected_count": 4,
+        "fixture_checkpoint": "20546d07a672b342af769646d86ae75c77b495d2",
+        "original_sha256": "67cb8ff25b64fd5854c5046d1d385ae394019999575538f5eaf33944704ac209",
+        "model_replacement": false,
+        "passed": true,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": [
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "value": []
+            },
+            {
+              "value": [
+                -2,
+                -1,
+                0
+              ]
+            },
+            {
+              "value": [
+                5
+              ]
+            }
+          ],
+          "elapsed_seconds": 0.0274
+        },
+        "before_outcomes": [
+          false,
+          true,
+          false,
+          true
+        ],
+        "model_seconds": 1.3881,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\n\"code\": \"\\\"\\\"\\\"Deduplicate ordered integer values.\\\"\\\"\\\"\\n\\ndef solve(values):\\n    \\\"\\\"\\\"Return values in their intended first-occurrence order.\\\"\\\"\\\"\\n    seen = set()\\n    result = []\\n    for v in values:\\n        if v not in seen:\\n            seen.add(v)\\n            result.append(v)\\n    return result\"\n}",
+        "proposal_sha256": "a91095e8d7d418d6fe445ab4c49adfbb2bffaf000ddeaf5e649265f81a462d10",
+        "diff": "diff --git a/solve.py b/solve.py\nindex a595945..a1a378a 100644\n--- a/solve.py\n+++ b/solve.py\n@@ -1,4 +1,11 @@\n \"\"\"Deduplicate ordered integer values.\"\"\"\n+\n def solve(values):\n     \"\"\"Return values in their intended first-occurrence order.\"\"\"\n-    return sorted(set(values))\n+    seen = set()\n+    result = []\n+    for v in values:\n+        if v not in seen:\n+            seen.add(v)\n+            result.append(v)\n+    return result\n\\ No newline at end of file\n",
+        "after": {
+          "status": "completed",
+          "results": [
+            {
+              "value": [
+                3,
+                2,
+                1
+              ]
+            },
+            {
+              "value": []
+            },
+            {
+              "value": [
+                -1,
+                0,
+                -2
+              ]
+            },
+            {
+              "value": [
+                5
+              ]
+            }
+          ],
+          "elapsed_seconds": 0.0296
+        },
+        "after_outcomes": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "tool_attempts": 2,
+        "tool_output_bytes": 1636,
+        "status": "measured"
+      },
+      {
+        "task_id": "unicode_palindrome",
+        "expected_count": 5,
+        "fixture_checkpoint": "4b72d98fb23ef48ff7b710e627a047b74c9dc7ef",
+        "original_sha256": "1b45bc3f67e64358e105ba5a4d6bff5e2f02610536843dc52dbb0fd5429e596d",
+        "model_replacement": false,
+        "passed": false,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": false
+            },
+            {
+              "value": false
+            },
+            {
+              "value": false
+            },
+            {
+              "value": false
+            },
+            {
+              "value": false
+            }
+          ],
+          "elapsed_seconds": 0.0272
+        },
+        "before_outcomes": [
+          false,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model_seconds": 1.5041,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\"code\":\"\\\"\\\"\\\"Check normalized text symmetry.\\\"\\\"\\\"\\nimport unicodedata\\n\\ndef solve(text):\\n    \\\"\\\"\\\"Return whether normalized text reads equally in both directions.\\\"\\\"\\\"\\n    if not text:\\n        return True\\n    normalized = unicodedata.normalize('NFKD', text).casefold()\\n    stripped = ''.join(ch for ch in normalized if not ch.isspace())\\n    return stripped == stripped[::-1]\"",
+        "status": "model_or_proposal_failed",
+        "error_code": "coding_proposal_invalid"
+      },
+      {
+        "task_id": "word_counts",
+        "expected_count": 4,
+        "fixture_checkpoint": "763ff936d685da18215ae42101a79b7c142572ec",
+        "original_sha256": "b50fc64d67e885ecbe91399ea60f043ee4d1b38d4f611bbf34234468032e31e6",
+        "model_replacement": false,
+        "passed": true,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": {
+                "one": 1,
+                "": 1,
+                "one\ttwo\ntwo": 1
+              }
+            },
+            {
+              "value": {
+                "": 1
+              }
+            },
+            {
+              "value": {
+                "stra\u00dfe": 1,
+                "strasse": 1
+              }
+            },
+            {
+              "value": {
+                "hi,": 2,
+                "hi": 1
+              }
+            }
+          ],
+          "elapsed_seconds": 0.0271
+        },
+        "before_outcomes": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "model_seconds": 2.4218,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\n\"code\": \"\\\"\\\"\\\"Count normalized whitespace-delimited words.\\\"\\\"\\\"\\nimport unicodedata\\n\\ndef solve(text):\\n    \\\"\\\"\\\"Return intended casefolded word frequencies.\\\"\\\"\\\"\\n    counts = {}\\n    # Normalize Unicode to decomposed form then casefold for robust case-insensitivity\\n    normalized = unicodedata.normalize('NFD', text)\\n    # Split on any whitespace sequence, not just single space\\n    words = normalized.split()\\n    for word in words:\\n        # Apply casefolding to handle all Unicode case variations\\n        key = word.casefold()\\n        if key:  # Omit empty tokens\\n            counts[key] = counts.get(key, 0) + 1\\n    return counts\\n\"}",
+        "proposal_sha256": "a964311bac8a723cd13c4a46a67e89aeb59d0d817777cc20b0f004f22fad0e6d",
+        "diff": "diff --git a/solve.py b/solve.py\nindex c0cd236..0e1edf2 100644\n--- a/solve.py\n+++ b/solve.py\n@@ -1,7 +1,16 @@\n \"\"\"Count normalized whitespace-delimited words.\"\"\"\n+import unicodedata\n+\n def solve(text):\n     \"\"\"Return intended casefolded word frequencies.\"\"\"\n     counts = {}\n-    for word in text.lower().split(' '):\n-        counts[word] = counts.get(word, 0) + 1\n+    # Normalize Unicode to decomposed form then casefold for robust case-insensitivity\n+    normalized = unicodedata.normalize('NFD', text)\n+    # Split on any whitespace sequence, not just single space\n+    words = normalized.split()\n+    for word in words:\n+        # Apply casefolding to handle all Unicode case variations\n+        key = word.casefold()\n+        if key:  # Omit empty tokens\n+            counts[key] = counts.get(key, 0) + 1\n     return counts\n",
+        "after": {
+          "status": "completed",
+          "results": [
+            {
+              "value": {
+                "one": 2,
+                "two": 2
+              }
+            },
+            {
+              "value": {}
+            },
+            {
+              "value": {
+                "strasse": 2
+              }
+            },
+            {
+              "value": {
+                "hi,": 2,
+                "hi": 1
+              }
+            }
+          ],
+          "elapsed_seconds": 0.0266
+        },
+        "after_outcomes": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "tool_attempts": 2,
+        "tool_output_bytes": 2204,
+        "status": "measured"
+      },
+      {
+        "task_id": "window_sums",
+        "expected_count": 5,
+        "fixture_checkpoint": "3736996ef7234d8b64f4a6758a1b1ff965bc3b01",
+        "original_sha256": "4de399cc1def7fa8eaf440a381101b5428e7cc6c2d2132fd7d7b5dd0029f9181",
+        "model_replacement": false,
+        "passed": true,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": [
+                3
+              ]
+            },
+            {
+              "value": [
+                1,
+                2
+              ]
+            },
+            {
+              "value": []
+            },
+            {
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "value": []
+            }
+          ],
+          "elapsed_seconds": 0.0272
+        },
+        "before_outcomes": [
+          false,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model_seconds": 1.317,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\"code\":\"\\\"\\\"\\\"Summarize adjacent integer windows.\\\"\\\"\\\"\\n\\ndef solve(values, width):\\n    \\\"\\\"\\\"Return all intended contiguous window sums.\\\"\\\"\\\"\\n    if width <= 0 or width > len(values):\\n        return []\\n    return [sum(values[index:index + width]) for index in range(len(values) - width + 1)]\"}",
+        "proposal_sha256": "34f9d67f477f8a5d54bd3058d34d16796556828370c9c1e93a3cd77faaba4518",
+        "diff": "diff --git a/solve.py b/solve.py\nindex c440252..1c658ef 100644\n--- a/solve.py\n+++ b/solve.py\n@@ -1,4 +1,7 @@\n \"\"\"Summarize adjacent integer windows.\"\"\"\n+\n def solve(values, width):\n     \"\"\"Return all intended contiguous window sums.\"\"\"\n-    return [sum(values[index:index + width]) for index in range(len(values) - width)]\n+    if width <= 0 or width > len(values):\n+        return []\n+    return [sum(values[index:index + width]) for index in range(len(values) - width + 1)]\n\\ No newline at end of file\n",
+        "after": {
+          "status": "completed",
+          "results": [
+            {
+              "value": [
+                3,
+                5
+              ]
+            },
+            {
+              "value": [
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "value": [
+                6
+              ]
+            },
+            {
+              "value": []
+            },
+            {
+              "value": []
+            }
+          ],
+          "elapsed_seconds": 0.0264
+        },
+        "after_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "tool_attempts": 2,
+        "tool_output_bytes": 1693,
+        "status": "measured"
+      },
+      {
+        "task_id": "inclusive_clamp",
+        "expected_count": 5,
+        "fixture_checkpoint": "5eac721cdc5f183902c4bdd4aafc4ae24a97375b",
+        "original_sha256": "b1b6d284af5919a015114e510c747f44b5055c747005b9bd68f6c4981a9fc32d",
+        "model_replacement": false,
+        "passed": false,
+        "before": {
+          "status": "completed",
+          "results": [
+            {
+              "value": 1
+            },
+            {
+              "value": 1
+            },
+            {
+              "value": 1
+            },
+            {
+              "value": -5
+            },
+            {
+              "value": 7
+            }
+          ],
+          "elapsed_seconds": 0.027
+        },
+        "before_outcomes": [
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model_seconds": 0.9833,
+        "model_id": "qwen3.5-9b-core",
+        "completion": "{\n\"code\": \"\\\"\\\"\\\"Clamp integers into an inclusive interval.\\\"\\\"\\\"\\n\\ndef solve(value, low, high):\\n    \\\"\\\"\\\"Return the intended bounded integer value.\\\"\\\"\\\"\\n    return min(low, max(high, value))\"\n}",
+        "proposal_sha256": "0aa658b8bc8decdeb55b4f6b18f3572fce48578cedac2462cec52a2f228a2eca",
+        "diff": "diff --git a/solve.py b/solve.py\nindex 0f4e0b7..6250270 100644\n--- a/solve.py\n+++ b/solve.py\n@@ -1,4 +1,5 @@\n \"\"\"Clamp integers into an inclusive interval.\"\"\"\n+\n def solve(value, low, high):\n     \"\"\"Return the intended bounded integer value.\"\"\"\n-    return min(low, max(high, value))\n+    return min(low, max(high, value))\n\\ No newline at end of file\n",
+        "after": {
+          "status": "completed",
+          "results": [
+            {
+              "value": 1
+            },
+            {
+              "value": 1
+            },
+            {
+              "value": 1
+            },
+            {
+              "value": -5
+            },
+            {
+              "value": 7
+            }
+          ],
+          "elapsed_seconds": 0.0284
+        },
+        "after_outcomes": [
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
+        "tool_attempts": 2,
+        "tool_output_bytes": 1657,
+        "status": "measured"
+      }
+    ],
+    "specialist_model_adopted": false,
+    "production_edit_command_authority": false
+  }
+}

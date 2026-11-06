@@ -1,0 +1,38 @@
+{
+  "description": "All-page144DPI manual Poppler visual review of real native DOCX-to-PDF layout after prototype-only styling. Same exact original authored projection/font sizes; no actual CORE or source HTTP. Title rule removed, complete claim groups stay together, no sparse final page/clipping/overlap/missing Vietnamese glyphs.",
+  "status": "PASS_TWO_PAGE_CONTROLLED_VISUAL_REVIEW",
+  "pages_inspected": [
+    1,
+    2
+  ],
+  "dpi": 144,
+  "actual_CORE_calls": 0,
+  "source_HTTP": 0,
+  "input_sha256": "3b40562bf96e6c924406704a5c7ae9a7254385a44813a56af45794892984abf0",
+  "font_sizes_unchanged": true,
+  "original_claim_source_fields_unchanged": true,
+  "findings": [],
+  "artifacts": {
+    "docx": {
+      "path": "data/backups/d58-compact-visual/report.docx",
+      "sha256": "d48a77372e9ae4ef283cd667b5ff8ad4c0af30c0ffeeb2461412c8a8e54da258",
+      "bytes": 38310
+    },
+    "pdf": {
+      "path": "data/backups/d58-compact-visual/report.pdf",
+      "sha256": "4573236e558d4522d93b1b1cb73362436bdd20c13b2cc39fe2c106a1be7fde35",
+      "bytes": 43825
+    }
+  },
+  "images": [
+    {
+      "path": "data/backups/d58-compact-visual/page-1.png",
+      "sha256": "56e08de8743decb71c147448f25af6dbdf4c959eb0e9b4526183733905645d28"
+    },
+    {
+      "path": "data/backups/d58-compact-visual/page-2.png",
+      "sha256": "2b641400e3fe0aeb810d96d8853f58c2612660d652220611a7c4992756b47561"
+    }
+  ],
+  "original_two_visual_rejections_preserved": true
+}

@@ -1,0 +1,16 @@
+{
+  "description": "D61 audit code/control/current source and immutable first/repaired actual image evidence before readonly execution. Historical D60 full4120 is explicitly distinguished from current556-source related/native sample checks.",
+  "sha256": {
+    "data/backups/d61-native-vision-readonly-audit.py": "e3dbab0d0274f6cb15eb1e4c6cb0ed75a39f0e929753202199393d31b7c898d9",
+    "data/backups/test_d61_native_vision_readonly_audit.py": "8404c6fca7c7e67b51c493787e1f7428dae2ebb964e0e1f64aee3a3d22710b3a",
+    "data/backups/d61-final-audit-controls-first.log": "8a8d081a10d9748e92c7e44973ada5767bd1b7f27d896538ca86b8fb7be54af0",
+    "docs/evidence/d61-native-image-chat-repaired-freeze.json": "ea710ede37f188bda9392afb4e3f05beb74a4031961d23632836d08a9333461d",
+    "docs/evidence/d61-first-native-image-chat-result.json": "5569690642df421c8d64ed2f56067d77288b21916091c2e251db9c6fe5ad6a6d",
+    "docs/evidence/d61-first-failure-preservation.json": "d1c3629807e22cd09b6ec83fb4c56c8b9c5f093a04db8490fbb5b63de0756d6a",
+    "docs/evidence/d61-repaired-native-image-chat-result.json": "ced3bc54c2a02df9d665f15a016ac0474511ae128c53cedcba7c3844ee9d3aed"
+  },
+  "private_controls_passed": 57,
+  "current_source_files": 556,
+  "all545_prior_source_bytes_unchanged": true,
+  "new_full_claim": false
+}

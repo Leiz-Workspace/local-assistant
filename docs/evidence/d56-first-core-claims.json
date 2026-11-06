@@ -1,0 +1,38 @@
+{
+  "description": "First original CORE assessment over two authored signed sources/three predeclared claims. Citation integrity is exact source binding; statuses are unverified model assessments, not human-independent/general semantic evaluation or actual publisher fact-checking.",
+  "status": "FAILED",
+  "source_freeze_sha256": "d86842a41c6d460423b7ea83d578459cac6a17e68299ec7396116bc5f586d28c",
+  "actual_public_or_private_source_HTTP": 0,
+  "provider_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "error_type": "ClaimValidationError",
+  "error_code": "claim_assessment_invalid",
+  "shared_evidence_alive_after_validator_shutdown": true,
+  "core_port_attempts": 1,
+  "authored_source_reads": 2,
+  "charged_attempts": 1,
+  "model_completion": {
+    "content": "[{\"claim_id\": \"C1\", \"status\": \"supported\", \"evidence_ids\": [\"E1\"], \"reason\": \"Quote matches claim text exactly.\"}, {\"claim_id\": \"C2\", \"status\": \"contradicted\", \"evidence_ids\": [\"E2\"], \"reason\": \"Quote states 128 MiB, claim states 256 MiB.\"}, {\"claim_id\": \"C3\", \"status\": \"insufficient\", \"evidence_ids\": [], \"reason\": \"No evidence mentions launch year.\"}]",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 660,
+    "output_tokens": 116,
+    "reasoning_tokens": null,
+    "latency_ms": 1823
+  },
+  "validator_closed": true,
+  "evidence_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "signing_key_revoked": true,
+  "cache_empty": true,
+  "elapsed_seconds": 1.826,
+  "artifact": {
+    "path": "data/backups/d56-first-core-claims/summary.json",
+    "sha256": "147e6a76500873766a2f145e7f9a0c336b258c206b4aa98f4efa04c927824615"
+  }
+}

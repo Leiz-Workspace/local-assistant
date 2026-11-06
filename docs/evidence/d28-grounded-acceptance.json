@@ -1,0 +1,78 @@
+{
+  "description": "D28 local opt-in source-held CORE grounded generation acceptance from actual complete regression and native-field goldens; no model replacement or production enablement.",
+  "observed_date": "2026-10-19",
+  "base_commit": "b69172f",
+  "status": "PASS_LOCAL_OPT_IN",
+  "full_regression": {
+    "passed": 1334,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 1387.9,
+    "exit_code": 0
+  },
+  "additional_native_fields": {
+    "passed": 2,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 1.21,
+    "exit_code": 0,
+    "collected_after_full_run": true
+  },
+  "unique_tests_across_checkpoints": 1336,
+  "not_a_single_1336_case_full_run": true,
+  "focused": {
+    "passed": 82,
+    "seconds": 94.72,
+    "skipped": 0
+  },
+  "focused_tcp": {
+    "passed": 1,
+    "seconds": 14.31,
+    "skipped": 0
+  },
+  "focused_cases_are_subsets_of_full": true,
+  "actual_core_quality_cases": 6,
+  "actual_tcp_core_case": 1,
+  "controlled_model_fault_cases_distinct": true,
+  "native_field_goldens": {
+    "docx_fields": 7,
+    "xlsx_fields": 11,
+    "real_native_processors": true,
+    "model_or_embedding_admission_claim": false
+  },
+  "source_sha256": {
+    "src/application/services/grounded_answer.py": "9266d2fb747064414db8b1959233495651b53d3b2171468b837f51baa8cc9a0b",
+    "apps/api/services/grounded.py": "b90ce366b30e3a1adbbf68558512d4874f6139a08d065820e746e70d811819bd",
+    "apps/api/storage/grounded.py": "a61acd2145ecdbf0d12e9e11555c615f93b052e1e712a22058a7fa1feac89fdf",
+    "apps/api/routes/grounded.py": "d6e20473bdabab085e016b71a821ad3f22dbfad0b40a15af7e170bbfb7b503c0",
+    "apps/api/main.py": "6ace4377aa1e1fb7ff4f16cffdde5828e075d6ad9a2c0f5301b42f270f567ba1",
+    "apps/api/storage/lifecycle.py": "88776e92b4fb5a88d9466480c2505d26324e74bc1b6d5592b3c262308ec14904",
+    "tests/test_grounded_answer.py": "dc4aef8c9680908fe963d480dbc22a80e61ba76c8978c866b6a3551d5889aec0",
+    "tests/test_grounded_service.py": "e3b05017f3ac580d928ebdaf55cc9b415ff4c350482f733f2efa6e17446c552c",
+    "tests/test_grounded_startup.py": "b693293b311221b03d8302863d42787ffe41991d658a5f853c033fe0c27ec84d",
+    "tests/integration/test_grounded_http.py": "93ccaea5c63ce01960fc2901087fe56c62c10280209fd9f1a20f935c71fd5bff",
+    "docs/ADR/043-source-held-grounded-generation.md": "d76fbc733c35f7859db684eace244a8774ec90dff7c6f75ddaf56562ac02f64d",
+    "tests/fixtures/pdf/native-pages.pdf": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a"
+  },
+  "additional_test_sha256": {
+    "tests/integration/test_grounded_tcp.py": "3effb0b2b1a8567a02f74c730f1772a52f345ced640c2df6a2c12432441ed8f0",
+    "tests/integration/test_grounded_native_fields.py": "02cf650e5726b1f959d1d8c61579bca614b4c301b1526c5f63bf883aa83934ad"
+  },
+  "private_log_sha256": {
+    "data/backups/d28-final-regression.log": "5b0d3f87694264629c383d92c6a500d0fa15825bee4a697fc10be5b94a6b18bc",
+    "data/backups/d28-native-fields.log": "c1867a18177e260cb78b29d328080a7b6f7580451f467a4f536f84155e69cd48"
+  },
+  "initial_failure_retained": "d28-initial-failure.json",
+  "protected_identity": "d28-protected-identity.json",
+  "post_audit": "d28-final-post-audit.json",
+  "production_enabled": false,
+  "model_choices_changed": false,
+  "database_schema_changed": false,
+  "limitations": [
+    "Exact citations prove native source provenance, not every generated claim or general factuality.",
+    "Same-agent synthetic known-fact/injection cases are limited; no independent-human, broad production quality or calibrated confidence claim.",
+    "TCP uses ephemeral Uvicorn on the fixture event loop, not separate-process/load certification.",
+    "Client task/readers are joined; shared CORE backend prompt/KV-cache erasure or immediate compute cancellation is not certified.",
+    "All DB/vector writes were owned removable probes; no production collection or source adopted."
+  ]
+}

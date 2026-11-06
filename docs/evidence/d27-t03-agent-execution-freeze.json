@@ -1,0 +1,15 @@
+{
+  "description": "Freeze owner-delegated same-agent AI judgments and separately versioned absent-case correction before actual model inference; no human review or adoption claim.",
+  "scope": "OWNER_DELEGATED_AI_REVIEW_NO_HUMAN_OR_ADOPTION_CLAIM",
+  "new_challenge_inference_executed_at_freeze": false,
+  "sha256": {
+    "scripts/agent_reviewed_retrieval_trial.py": "679ceceb081d6b6a74c86d7fb614c9a79e8204ddb1856ad6ada825a74aac7c4c",
+    "tests/test_agent_reviewed_retrieval_trial.py": "45e4a20546363132d11cd1a8767b21d9b56629b477e1b04c2d30413e20d0546b",
+    "tests/integration/test_agent_reviewed_trial.py": "2052fd19ce33a7146cf8626d11ea6c362d1a2f7af811e64cbae2261123be0692",
+    "tests/fixtures/retrieval/d27-review-challenge-v2.json": "3a033fbbdb8456592ca6c9f8ab42136aa73e4dce60e846f422c91c204064d9d8",
+    "docs/evidence/d27-t03-agent-review-v1.json": "9d534eeca82f1d66a39d642eeb780b81e3b377415819042f262cdeb7330b2871",
+    "docs/evidence/d27-t03-agent-review-v2.json": "9c276a4ce1ea021976d23816d026a4076355e11058be54706c2f0c50aeab7b24",
+    "docs/evidence/d27-t03-agent-paired-plan.json": "1e25c2208db231d3356fb455c93ff27457b7ef35ca38c0de5089c58054d0b874",
+    "docs/ADR/042-owner-delegated-relevance-evaluation.md": "2f2cee0733e8f971c5c24472e630eabc6b82f500c40953ff91f1152cfbaecd1f"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "description": "Owner accepts the broader Truc Ly panel as sufficient with known English articulation limitations and stops this refinement cycle. Ngoc Huyen has not run this new10-sentence corpus; earlier English rejection is preserved.",
+  "date": "2026-11-04",
+  "owner_verbatim": "Ổn rồi tiếng anh thì mấy âm cuối k rõ như this đang bị đọc là dít nhưng mà tôi nghĩ có thể dừng lại phần này vì thế là ổn rồi còn giọng ngọc huyền chưa test",
+  "status": "OWNER_ACCEPTED_WITH_KNOWN_LIMITATIONS_STOP_CURRENT_REFINEMENT",
+  "voice": "Trúc Ly",
+  "scope": "Group feedback on the latest10-sentence broader VI/en-US/mixed listening panel; no per-clip labels or full-playback confirmation supplied.",
+  "known_limitation": {
+    "owner_observation": "English final sounds unclear; this heard as dít",
+    "objective_phonetic_diagnosis": null,
+    "internal_cause": "NOT_ESTABLISHED",
+    "further_tuning": "STOPPED_AT_OWNER_REQUEST"
+  },
+  "per_clip_scores": null,
+  "full_playback_confirmation": null,
+  "separate_naturalness_and_identity_scores": null,
+  "ngoc_huyen": {
+    "latest10_sentence_corpus": "NOT_RUN_PENDING_SEPARATE_EVALUATION",
+    "previous_us_term_panel": "OWNER_REPORTED_NOT_ACCEPTABLE_RETAINED",
+    "previous_reported_example": "I heard as i instead of /aɪ/",
+    "new_retest_or_fix_claimed": false
+  },
+  "bindings": {
+    "docs/ADR/161-truc-ly-broader-context-validation.md": "27c57a20a9560ecbd5fc725c1e04ad98b0967ca21d3417668e96b4393b71ad87",
+    "docs/evidence/d74-truc-validation-result.json": "05ad0e0d16d0423a4676dc711da50feea708aecd87b51df87b3e829057707c50",
+    "docs/evidence/d74-truc-validation-verification.json": "9bb4179cc74ece08c7b05a4842546c3b5f202eb862775a4e89698961f6f6254d",
+    "docs/evidence/d74-us-terms-owner-voice-assessment.json": "be352e80a33c961490a38ac2da5f4e44195fe31692bc7ec8e4a1d3779452dcc5"
+  },
+  "unchanged_research_files": 40,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "baseline_preserved": true,
+  "new_inference_calls": 0,
+  "new_software_tests": 0,
+  "source_or_config_changes": 0,
+  "new_downloads": 0,
+  "model_selection": null,
+  "product_voice_selection": null,
+  "product_activation": false,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED"
+}

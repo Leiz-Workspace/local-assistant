@@ -1,0 +1,15 @@
+{
+  "description": "Retained failed CPU BF16 batch1 v2 attempt; original budgets unchanged, no complete candidate metrics accepted.",
+  "tests_passed": 42,
+  "tests_failed": 1,
+  "seconds": 242.76,
+  "worker_launcher_exit_code": 152,
+  "worker_signal": "SIGXCPU (128+24)",
+  "completed_repetitions": 2,
+  "required_repetitions": 3,
+  "outcome": "FAILED_CPU_BUDGET_INCOMPLETE",
+  "accepted_candidate_metrics": null,
+  "source_archive": "data/backups/d27-t02-v2-source.zip",
+  "source_archive_sha256": "b4fad5597aac87c36998b0677aecb30107f6ca451a1273e3c292ee25ef1e875d",
+  "log_sha256": "31f89cfcd9a51ae689c6b854c81cadd18dc1f5af0cf25f4adea4e23d4128520c"
+}

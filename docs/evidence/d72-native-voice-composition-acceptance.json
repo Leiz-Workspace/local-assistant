@@ -1,0 +1,334 @@
+{
+  "description": "Accept bounded D72 local offline composition based on6actual complete corrected candidate paths, source/owner/clock/cancellation controls and held-out VAD/ASR comparison. Product activation/selection and D70 actual listening remain unaccepted.",
+  "status": "PASS_LOCAL_OFFLINE_COMPOSITION_PRODUCT_ACTIVATION_GATED",
+  "native_paths": [
+    {
+      "index": 0,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 45.93673075400875,
+      "stages": [
+        [
+          "asr",
+          9.654043890972389
+        ],
+        [
+          "llm",
+          0.49322336600744165
+        ],
+        [
+          "tts",
+          35.789321753021795
+        ]
+      ],
+      "output_samples": 75520,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    },
+    {
+      "index": 1,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 11.358684989012545,
+      "stages": [
+        [
+          "asr",
+          9.662266986997565
+        ],
+        [
+          "llm",
+          0.22806184101500548
+        ],
+        [
+          "tts",
+          1.4681991679826751
+        ]
+      ],
+      "output_samples": 54428,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    },
+    {
+      "index": 2,
+      "asr": "qwen3-asr-0.6b",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 13.980016462010099,
+      "stages": [
+        [
+          "asr",
+          12.052031069993973
+        ],
+        [
+          "llm",
+          0.4746522160130553
+        ],
+        [
+          "tts",
+          1.453191592998337
+        ]
+      ],
+      "output_samples": 67245,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    },
+    {
+      "index": 3,
+      "asr": "whisper-small-ct2",
+      "tts": "qwen3-tts-0.6b",
+      "language": "en",
+      "buffered_latency_seconds": 49.31466564600123,
+      "stages": [
+        [
+          "asr",
+          5.593595551996259
+        ],
+        [
+          "llm",
+          0.39197923499159515
+        ],
+        [
+          "tts",
+          43.328972158022225
+        ]
+      ],
+      "output_samples": 110080,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    },
+    {
+      "index": 4,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-en",
+      "language": "en",
+      "buffered_latency_seconds": 7.775020888017025,
+      "stages": [
+        [
+          "asr",
+          5.973300400975859
+        ],
+        [
+          "llm",
+          0.31135384799563326
+        ],
+        [
+          "tts",
+          1.4902199950010981
+        ]
+      ],
+      "output_samples": 90837,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    },
+    {
+      "index": 5,
+      "asr": "whisper-small-ct2",
+      "tts": "piper-vi",
+      "language": "vi",
+      "buffered_latency_seconds": 7.849131955008488,
+      "stages": [
+        [
+          "asr",
+          6.095408494002186
+        ],
+        [
+          "llm",
+          0.4216874720004853
+        ],
+        [
+          "tts",
+          1.3319106939889025
+        ]
+      ],
+      "output_samples": 57772,
+      "same_ASR_input_as_first_failure": true,
+      "ASR_raw_text_matches_first": true
+    }
+  ],
+  "successful_paths": 6,
+  "first_failed_paths_preserved": 6,
+  "caller_fix": "Use existing Fast512token minimum; production gateway/presets/context/model unchanged.",
+  "related_tests": {
+    "passed": 267,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 7.52
+  },
+  "native_source_freeze": {
+    "description": "Six original-candidate wiring paths; Qwen explicitVI remains unsupported and is not silently substituted. First results retained, no default selection.",
+    "matrix": [
+      [
+        "qwen3-asr-0.6b",
+        "qwen3-tts-0.6b",
+        "en"
+      ],
+      [
+        "qwen3-asr-0.6b",
+        "piper-en",
+        "en"
+      ],
+      [
+        "qwen3-asr-0.6b",
+        "piper-vi",
+        "vi"
+      ],
+      [
+        "whisper-small-ct2",
+        "qwen3-tts-0.6b",
+        "en"
+      ],
+      [
+        "whisper-small-ct2",
+        "piper-en",
+        "en"
+      ],
+      [
+        "whisper-small-ct2",
+        "piper-vi",
+        "vi"
+      ]
+    ],
+    "source_sha256": {
+      "/home/korosaki-ryukai/Workspace/Server/ai/scripts/voice_native_smoke.py": "9f033afb607d3d5a3aa31b4415603f6afb8ea3a060aadc2b601e0257d07afa3b",
+      "src/application/services/voice_pipeline.py": "b0a7ee4c4f1ab256bd971d8d90091298dd1e89f16a5d01ee4be2ea4fe37eb383",
+      "src/application/ports/voice.py": "a2757dfd9f63d081c61a1a08956111995b8ab7a707ef780065814b7f690060b3",
+      "docs/ADR/113-native-voice-evaluation-matrix.md": "4c1f1674313d14de87b52b3b9f630e842b2f9d2aad38dda1787bba093ded80ed"
+    }
+  },
+  "raw_evidence_sha256": {
+    "data/backups/d72-native-voice-smoke-compatible/core-recovery.json": "6496957cc2764d17078daf41d4be2ba6f584a1282732c5be1501665a97d03267",
+    "data/backups/d72-native-voice-smoke-compatible/freeze.json": "2aaba64f51a499952891bac0b24bf4c93f38ef12e3293a21fbbae1de64d2a8d3",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/asr/process.json": "c02587d3e9c7564b3330cdd35ab04ce3ff934cc9e9cce5ac4dd67901cade22b3",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/asr/request.json": "a307b876d8efac6950f7bf7b36b71886eff49cccf47621ecafd903b126df83a9",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/asr/samples/source.f32": "73b3ab7eb592b4b749de54c5ada53c0b8bc7c197bc621e5fce0ced7fed4ef35e",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/asr/stderr.log": "a9a6925a3a282d4fb4d3ef8e1c410f0fab241cc4e2ebbc33307e7f32e3c9b949",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/asr/stdout.jsonl": "ad8df0052a429743807ccb77d60d8902ca3d3aee1558b2f9d38ae9bc27f23ece",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/llm-request.json": "d3ee677c7554cbc5514abd29a0c0828916b855d483c541d136bb20c0f9dd76be",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/llm-response.json": "a925dd8e0c4b6da9f2fbbdbdbe56720e3464ede39ac50a4bae9b460ea8c27219",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/playback.s16le": "bf6e265a9349b48d8ea9e377b87f26ef013daca0d74589b9235ca6b9e8d957a9",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/result.json": "10f33cb0ed13397a6e67d9e97accbd2fc6be04108901b922930af849d9477061",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/native/reply.f32": "67483025bd2bce8b0580be4cec901e26f11f490f3240435da389ec9cf2900f42",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/native/reply.wav": "9e304d4816e583d1f50a6a5f52f8cdbe42211f974d83b000022e6d7e0fe702c5",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/playback-conversion.json": "57123fb324bf09e19b314a7b947586789297a0b20937c42b722e6b4cbc45dba4",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/process.json": "5fb70533e0ae3db5243258eac9ded6881aa6d819af61f0adf78641e891e1e164",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/request.json": "56b85dbe62d48d5e614e86947d2638430ff97f12f7342682f5eac70b7b3183c4",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/stderr.log": "6c8a5429952f560f8f9c3282916b9e40e23b9b6adf065acb2b5eae4f12d2a042",
+    "data/backups/d72-native-voice-smoke-compatible/path-00/tts/stdout.jsonl": "eedbd97133571bb0e85a3eae585449040d6e45475b91ace4a9afea1d3f56ddae",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/asr/process.json": "9d997a853b4786378e7ba4be34c64c4ab0f5f2923292f2cc12efca8bcbabc854",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/asr/request.json": "a307b876d8efac6950f7bf7b36b71886eff49cccf47621ecafd903b126df83a9",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/asr/samples/source.f32": "73b3ab7eb592b4b749de54c5ada53c0b8bc7c197bc621e5fce0ced7fed4ef35e",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/asr/stderr.log": "a9a6925a3a282d4fb4d3ef8e1c410f0fab241cc4e2ebbc33307e7f32e3c9b949",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/asr/stdout.jsonl": "019dac1d0a760a6c3147b5657e0ace19d39c624d8224ca4abe5e2ce9b6ac98c9",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/llm-request.json": "d3ee677c7554cbc5514abd29a0c0828916b855d483c541d136bb20c0f9dd76be",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/llm-response.json": "bec44f8241be17b98760e6df6016d614ce57826db84e542bfe026fe94caeff58",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/playback.s16le": "4925da4fe8e1a4306fc286309882fc3c1400ade3e740b2be17eb42a802d6ffd4",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/result.json": "e82039759b043289028e38910f90428407baca04a8e4e2178764c35bb17774ca",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/native/reply.f32": "61f6102c998eb9562bf7636727c11bf2849dc480567f08e407d747e2e6a4dea8",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/native/reply.wav": "8997ccf1babca543e8dc9ead0ebdf4fa9c1624295774939092866d6f0adbb3fd",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/playback-conversion.json": "221f2dfb0ceb434b1740f1cd067c65f24a3ef11838aff9c942a5b7ea415629e4",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/process.json": "1441712e1614d0a3712290ecc116a9eb530334089c5316316f075a7846274557",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/request.json": "df32dc11451f3fe5d3c4c95023079c7a6a4d5d9b26ee7ef88ab793001ce0c53e",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/stderr.log": "01a0acee64af58db2c140504657339c2ce3c448968476d634df5d960323b16b4",
+    "data/backups/d72-native-voice-smoke-compatible/path-01/tts/stdout.jsonl": "69e72035f64e40b6109bf831cbabe061f1c9b094d2b4f31de637af846c44f425",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/asr/process.json": "eff44000386e3f1eee3173a69a2a3fa21c7cda0f2d68b1787c3b92ee63b89d60",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/asr/request.json": "1959f5c0d4f27f1d8cc75058b2a64e089b8dab74a24ae29b8ddd6113cd6a0a4a",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/asr/samples/source.f32": "2a918c01b00a5c00b95868a1f4231186960539c96ccdade697b11d645cf29fa6",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/asr/stderr.log": "5365ba424ded7efb46dd75d201fdd524c907343b53584fba130a2be98b3f7e80",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/asr/stdout.jsonl": "f0b28010a3a2a3dbd8e4868b74941dff0022aa5166c4645f8c713a58a9411b02",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/llm-request.json": "212fd470eed07b83d7c5826e8274f1f259e590dbf21e91d9d947aebf538a9630",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/llm-response.json": "1a7ac87554de17f848b8060bd6d030e89c7298fe2e16115068e54920d066628f",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/playback.s16le": "43fa1246fcd2d9abeaeaf464f7d822b84c627c6d1e11369f6f52acd04a2f062d",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/result.json": "83390335b4c8d68133498328f194ce6ea2bc50f6b2d87ef5236d97ed015e691e",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/native/reply.f32": "41e8330a2c692f836bee463b68e625a15f484b1d5c137acc680fcd0f867bc4ad",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/native/reply.wav": "2569ce9013f55084763015e96e3d6894398a8e5410ac9585c1227b143e9d02b4",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/playback-conversion.json": "0b133351200127238a895926372b563dca4aa253208da714a6074614f63966fc",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/process.json": "494dd45c5be2f01738af0c8c41c3ebb8d9fc2672ca95360bc9b95abc9a598537",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/request.json": "8eff79e99b44cf1dd4a8817c64d8be91a0cfba5751fdf79ba7d88144d3a0d7c1",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/stderr.log": "f873c1c5079cb85aae9360c2614a1e15475f1d80fef218a2f54a4105a4699fb6",
+    "data/backups/d72-native-voice-smoke-compatible/path-02/tts/stdout.jsonl": "827a980cee92818a2501ef85d6a88e5f6394fe90f6ea9eaf0488d7d888ba4154",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/asr/process.json": "0f39e2d42822d464c984f19fef1ad41b696511ff04331bfd7d12bae6b72afa0a",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/asr/request.json": "7c686bdb0453b8a060c3244b33a80e59ca789c5fcf34a78d1488ebb1e26334aa",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/asr/samples/source.f32": "73b3ab7eb592b4b749de54c5ada53c0b8bc7c197bc621e5fce0ced7fed4ef35e",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/asr/stderr.log": "9a9d9b1d9892329bf2b0013fae2a953e206db7a6bc5619ff5e3ddf448d20773f",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/asr/stdout.jsonl": "ceaa227cb39650da66965f36798f5f872ac7df7bd48c0de9bc229c12776fa34b",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/llm-request.json": "fac568a8b0edb4d3a202030bf15aacc270046189cacc461cf0198e0a8dc80f60",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/llm-response.json": "89b1d4020de0f94bb8be0a528a1d3ccdde10bddea3a700ee72baa97499bd404a",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/playback.s16le": "6aa499ba48a4c0e3a86c17742d87c6feb42dc74e5eb682d00ca311a882a9e8df",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/result.json": "fcb33b1259e175b928b878e7f02b50e61e61abed17c742ee03099d53415635a9",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/native/reply.f32": "0e169faf9db3800784cdfd29ce22bd9b3226ba43d6cfbb024e0e4843dd0670b1",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/native/reply.wav": "3ad89b3427080efac979c51f6e846e12827ac96398fd8902e61e4b201d7ce460",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/playback-conversion.json": "0be0daad2b1c94bd43615562da8777b5192f861e1f3de0073a35102d0fc8dbb2",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/process.json": "bebe58271294fe594520c3a7482b550c6803ec89e54dbff7814ea53a336a5f5e",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/request.json": "5e62313ad0eb1b3e6723677cb2c1f63de0c5a5492ed699d1fbffbebadd03c4a9",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/stderr.log": "691e2bfe243912773a189d9746c0dff476510a795932fdb8743ee050a3e65f3d",
+    "data/backups/d72-native-voice-smoke-compatible/path-03/tts/stdout.jsonl": "38797541e783a0cd570d0454251f79cfc7160c1e2ed2d8cf8ba327b79bd85e56",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/asr/process.json": "16e290790ca4d1e61ed002f4e7a501be9ae4272f8fa8a4231933c3bbda987dc5",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/asr/request.json": "7c686bdb0453b8a060c3244b33a80e59ca789c5fcf34a78d1488ebb1e26334aa",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/asr/samples/source.f32": "73b3ab7eb592b4b749de54c5ada53c0b8bc7c197bc621e5fce0ced7fed4ef35e",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/asr/stderr.log": "9a9d9b1d9892329bf2b0013fae2a953e206db7a6bc5619ff5e3ddf448d20773f",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/asr/stdout.jsonl": "8f5d82a9ce001b384fa21df676c05dd230a50b3f481e9c765299f70f5520ae1a",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/llm-request.json": "fac568a8b0edb4d3a202030bf15aacc270046189cacc461cf0198e0a8dc80f60",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/llm-response.json": "66e76165cd222ca8204c035034c3c11b423e77c82b34f55d4bc209b277ba30cd",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/playback.s16le": "1ad3e46cbeabf85095a5f3e08ddb8920720596bf60292411acec984c9c6577fb",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/result.json": "e950be39c959219c1e396bb666a34375ebdc759239a8e0c210746c09253f9293",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/native/reply.f32": "6e6e19a67deaec98cd9689188f8f3fbc0a7c3c652a72feb9d9969a2032f9fe64",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/native/reply.wav": "5804c466680ef0c392163fbbc4ccf42a986a133345f6cf30fe19a62aa5dfa672",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/playback-conversion.json": "4bbf0b9c285812383f023a16d48eb1d246c7050401014785fdd42e58c7c1cf3b",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/process.json": "5a72bd0848ca6fd3de16b127ad388a4615c759a5ecd06d7183b4e90effd27c14",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/request.json": "b3808a6f73843c8cfb468b24570b3e804cefbd8eed64457cdc840935b50b55d1",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/stderr.log": "4f75843cb23a171a59e30d8da5d38a88be8a5d1958023a9aa9ec30765afac259",
+    "data/backups/d72-native-voice-smoke-compatible/path-04/tts/stdout.jsonl": "1f12901fe055e4543e738e19880e1fbcbece15345929e6d137d005bceb12fa2a",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/asr/process.json": "1c2ef961302f035e233bb7f6d9108ca5796d785d3c22ec1e3b3d0d3f721dcd53",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/asr/request.json": "7e436006c9126f7d8cbaf6b2cc57b3f7f5c0ff06a4e69fda712b7d3b24a6f4cd",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/asr/samples/source.f32": "2a918c01b00a5c00b95868a1f4231186960539c96ccdade697b11d645cf29fa6",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/asr/stderr.log": "205a6d455c8e83a1f19bcb3eabca1379a366b62ea572b2445a43f71a5951a294",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/asr/stdout.jsonl": "1de9bc44bf6bf7a5692dfcd4e2b83114deb688730ea37f530ff540a19bfaee1b",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/llm-request.json": "a056230ec34ff5fb50f985b8a005da7ff8b7d9cbf9560ff79f67bacd04898d7d",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/llm-response.json": "8c6347b9a139c05c2eaaae78fe0891d5049e2115f3b720ae2ad605ce547be8ef",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/playback.s16le": "d1358174f9f75c663914ba288149cecc4e4ad81c52bb8941ca0f6b661f665822",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/result.json": "334c97b242558fe71040c4292fe8d862169278d35249ddfcf53001c7e118966c",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/native/reply.f32": "f541eb163f879a514254d1b26f9ce8dd80d89450b7079e1f17f6e38ed713318b",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/native/reply.wav": "e2094640f9f5f2c56ea65ad7e69fb211cae80ddaff55946e11eb29a43720ad44",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/playback-conversion.json": "dd3ae9f8f2cdd48d61eb8938313f0b9c45ff097f03896396b511c0dd5a736c94",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/process.json": "fcb455660529ea1300b0c2753e00c000bf6463e1b87f282215d0484799f518e5",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/request.json": "73ec3c0f18528bbc223928413d44bd9928ca5d52d575d433eb492d030080e281",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/stderr.log": "841cb2b094feed555205a307752cd606c4a10cc16f0481ebd9d85143642d8516",
+    "data/backups/d72-native-voice-smoke-compatible/path-05/tts/stdout.jsonl": "749050637c00081bab7beb48f0bad75c6d3b375b63700a059a56bd482078fbc1",
+    "data/backups/d72-native-voice-smoke-compatible/result.json": "4764652d9fd367e7884fbee8c89f043518af893c36d6d4b9597c165bc2d1a542"
+  },
+  "first_failure_evidence": "docs/evidence/d72-native-voice-first-failure.json",
+  "VAD_ASR_evaluation": "docs/evidence/d72-vad-asr-comparison-first.json",
+  "original_core_recovery": {
+    "before": {
+      "pid": 37256,
+      "start_ticks": 63900,
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+      "RSS_RAM_KiB": 3171288,
+      "NVIDIA_process_allocation_VRAM_MiB": [
+        9386
+      ],
+      "ordinary_text_recovery": true
+    },
+    "after": {
+      "pid": 37256,
+      "start_ticks": 63900,
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+      "RSS_RAM_KiB": 3649548,
+      "NVIDIA_process_allocation_VRAM_MiB": [
+        9386
+      ],
+      "ordinary_text_recovery": true
+    }
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "original24_D70_pending_labels_unchanged": true,
+  "new_models_downloaded": 0,
+  "model_selected_or_deployed": false,
+  "VAD_enabled_in_product": false,
+  "D70_actual_listening_complete": false,
+  "D73": "NEXT"
+}

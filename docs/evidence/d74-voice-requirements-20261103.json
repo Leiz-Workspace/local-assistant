@@ -1,0 +1,47 @@
+{
+  "description": "Owner-stated product requirements: Vietnamese first, English retained as a desired language, customizable additional languages pending a later version. Female Northern Vietnamese voice desired for current Vietnamese scope. No model/voice chosen and no latency number inferred.",
+  "status": "REQUIREMENTS_RECORDED_LATENCY_PENDING",
+  "recorded_at_utc": "2026-11-03T09:02:38.494055+00:00",
+  "report_received_date": "2026-11-03",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "source": "project_owner_via_chat",
+  "owner_statement_verbatim": "Tôi muốn cả tiếng anh cả tiếng việt và có thể chọn thêm ngôn ngữ tùy biến nhưng để ở bản sau ghi pending, hiện tại là tiếng việt đi, chất giọng nữ miền bắc, thời gian chờ tối đa thì tôi chưa hiểu lắm",
+  "desired_languages": [
+    "vi",
+    "en"
+  ],
+  "current_language_priority": "vi",
+  "vietnamese_voice_preference": {
+    "gender": "female",
+    "accent": "Northern Vietnamese",
+    "naturalness": "requires_owner_acceptance"
+  },
+  "english_scope": {
+    "desired": true,
+    "implementation_schedule": null,
+    "release_assignment": null,
+    "voice_preference": null
+  },
+  "additional_custom_languages": {
+    "status": "PENDING_LATER_VERSION",
+    "languages": null,
+    "release_version": null,
+    "scheduled_day": null,
+    "implementation_approved": false
+  },
+  "maximum_wait_seconds": null,
+  "latency_status": "PENDING_EXPLANATION_AND_OWNER_DECISION",
+  "latency_explanation_boundary": "For a proposed conversational UX target: explicit user submission to first audible response; stored D72 buffered completion is a separate measured boundary, not actual playback timing.",
+  "latency_example_seconds": 4,
+  "latency_example_is_hypothetical": true,
+  "example_is_an_acceptance_threshold": false,
+  "existing_runtime_timeouts_changed": false,
+  "model_or_voice_selected": null,
+  "model_replacement_approved": false,
+  "additional_model_download_approved": false,
+  "production_activation_approved": false,
+  "source_configuration_changed": false,
+  "architecture_changed": false,
+  "model_requests": 0,
+  "search_provider_requests": 0
+}

@@ -1,0 +1,38 @@
+{
+  "description": "Current post-reboot readonly audit; prior full4018 and original pre-reboot starts remain historical, not relabeled as same-boot fresh results.",
+  "status": "PASS_POSTUNSEAL_READONLY_AUDIT",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "previous_full_boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+  "source_files": 538,
+  "source_bytes_unchanged": true,
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "worker_advisory_locks": 0,
+  "old_security_fingerprint_unchanged": true,
+  "narrow_grants_unchanged": true,
+  "trigger_security_unchanged": true,
+  "existing_CORE_restored_same_model_no_download": true,
+  "D60_status": "IN_PROGRESS",
+  "original14_identity_image_ports_preserved": true,
+  "original_start_times_changed_after_observed_host_reboot": true,
+  "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+  "selected_provider_healthy": true,
+  "selected_provider_runtime_limits_unchanged": true,
+  "original_CORE_healthy": true,
+  "signing_secret_mode": "0600",
+  "signing_secret_git_ignored": true
+}

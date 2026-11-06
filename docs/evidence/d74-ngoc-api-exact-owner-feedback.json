@@ -1,0 +1,21 @@
+{
+  "description": "Owner supplies the heard API realizations in the Ngoc Huyen panel; literal reported forms are preserved without asserting an objective acoustic transcription.",
+  "date": "2026-11-04",
+  "owner_verbatim": "Bị đọc là E - Pe-I, A - Pe - I",
+  "heard_forms": [
+    "E - Pe-I",
+    "A - Pe - I"
+  ],
+  "expected_owner_reading": "Ei-Pi-Ai in American English",
+  "context_voice": "Ngọc Huyền",
+  "exact_clip_ids": null,
+  "objective_phonetic_transcription": null,
+  "internal_cause": "NOT_ESTABLISHED",
+  "bindings": {
+    "docs/evidence/d74-ngoc-api-owner-feedback.json": "9cdc687b9efbd8f8e94f734ff0acdfa1defb87cb05685f578231cb2c705d82b2",
+    "docs/evidence/d74-ngoc-validation-result.json": "a1c55f39887c12fb24687af6f44769f98c8d104a66050b5b7648d799a1b53502",
+    "docs/evidence/d74-truc-validation-owner-acceptance.json": "19a797d00a75076574517ab3b294fe299580639cdf51950b956a6675d640c0c3"
+  },
+  "scope": "Continues the existing source-backed minimal Ngoc Huyen repair investigation; Truc Ly refinement remains stopped.",
+  "model_or_reference_change_authorized": false
+}

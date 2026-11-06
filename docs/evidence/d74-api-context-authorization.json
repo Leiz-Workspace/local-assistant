@@ -1,0 +1,18 @@
+{
+  "description": "Continuation of explicit owner request “Làm đi”: separately declared full-carrier API controls after the stopped standalone-A case, no retries or raised caps. Actual total5prior+8new<=16original ceiling. Stopped cohort and11unattempted rows remain immutable.",
+  "authorized": true,
+  "owner_response": "Làm đi",
+  "recorded_at_utc": "2026-11-03T18:31:25.450437+00:00",
+  "protocol_sha256": "2a89e4c769ca26f3dc47e9295020aa153a9aed6157feb0d2f827d6e9fe503057",
+  "original_result_sha256": "b70eef9c585a9ba36040bdfb278896e2c00eaca129855ec4edb31bb3a53ace89",
+  "prior_actual_attempts": 5,
+  "new_attempts_ceiling": 8,
+  "actual_combined_ceiling": 16,
+  "new_native_wall_seconds": 120,
+  "prior_worker_wall_seconds": 3.654981915999997,
+  "resource_or_frame_caps_increased": false,
+  "model_or_default_change": false,
+  "new_downloads": 0,
+  "retries": 0,
+  "workflow_recovery_authorized": false
+}

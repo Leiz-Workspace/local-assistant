@@ -1,0 +1,10 @@
+{
+  "description": "First new-study tests: 9 PASS/1 FAIL0.52s. Command-isolation test fixture created output with default permissions instead of required0700; namespace correctly refused it. No native probe/load/inference occurred.",
+  "passed": 9,
+  "failed": 1,
+  "seconds": 0.52,
+  "error": "ValueError:namespace_output",
+  "cause": "Public test output fixture was not mode0700",
+  "resolution": "Set fixture mkdir(mode=0o700), preserving the original namespace guard",
+  "native_calls": 0
+}

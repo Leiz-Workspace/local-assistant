@@ -1,0 +1,22 @@
+{
+  "description": "Actual D47 subprocess gate; no external search acceptance or fresh full-suite claim.",
+  "command": [
+    "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+    "check",
+    "--isolated",
+    "--select",
+    "E9,F,I",
+    "src/application/ports/search.py",
+    "src/application/services/search_pipeline.py",
+    "src/infrastructure/brave_search.py",
+    "tests/test_search_pipeline.py",
+    "tests/test_brave_search.py",
+    "tests/integration/test_search_pipeline_core_live.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.01,
+  "summary": "All checks passed!",
+  "log": "data/backups/d47-ruff-check.log",
+  "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+  "completed_at_utc": "2026-10-21T00:59:05.829465+00:00"
+}

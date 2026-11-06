@@ -1,0 +1,84 @@
+{
+  "description": "Owner-reported physical microphone/playback smoke on Brave with a microphone connected to a PC. Only explicitly reported observations pass; this is not agent observation, model inference or complete device/product acceptance.",
+  "status": "BASIC_OWNER_SMOKE_PASS_EXTENDED_CHECKS_PENDING",
+  "recorded_at_utc": "2026-11-03T08:51:21.803769+00:00",
+  "report_received_date": "2026-11-03",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "test_date": null,
+  "reviewer": "project_owner",
+  "reviewer_kind": "human_owner_via_chat",
+  "owner_report_verbatim": "Brave, microphone cắm vào PC. Nghe rõ, đủ câu, không rè. Dừng/Hủy/Escape/chuyển tab đều tắt thu.",
+  "browser": "Brave",
+  "browser_version": null,
+  "operating_system": null,
+  "microphone": "microphone connected to PC",
+  "microphone_model": null,
+  "connection_type": null,
+  "agent_observed": false,
+  "raw_audio_requested": false,
+  "raw_audio_received": false,
+  "reported_observations": [
+    {
+      "id": "playback",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Clear, complete sentence and no audible distortion reported."
+    },
+    {
+      "id": "stop_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Stop."
+    },
+    {
+      "id": "cancel_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Cancel; preview discard not separately reported."
+    },
+    {
+      "id": "escape_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Escape; audio discard not separately reported."
+    },
+    {
+      "id": "hidden_tab_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after switching tab; behavior on returning not separately reported."
+    }
+  ],
+  "unreported_scenarios": [
+    {
+      "id": "initial_load_no_auto_capture",
+      "status": "NOT_REPORTED"
+    },
+    {
+      "id": "permission_denial",
+      "status": "NOT_REPORTED"
+    },
+    {
+      "id": "thirty_second_limit",
+      "status": "NOT_REPORTED"
+    }
+  ],
+  "unreported_subclaims": [
+    "preview_discard_after_cancel",
+    "audio_discard_after_escape",
+    "no_automatic_restart_after_cancel",
+    "no_automatic_resume_on_tab_return",
+    "no_live_feedback_loop"
+  ],
+  "unreported_metadata": [
+    "browser_version",
+    "operating_system",
+    "microphone_model",
+    "connection_type",
+    "actual_test_date"
+  ],
+  "entire_checklist_pass": false,
+  "d74_product_accepted": false,
+  "model_or_voice_selected": null,
+  "source_configuration_changed": false,
+  "agent_microphone_activated": false,
+  "model_requests": 0,
+  "brave_search_requests": 0,
+  "service_audit_performed": false,
+  "server_process_state_verified": false
+}

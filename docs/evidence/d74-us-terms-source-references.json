@@ -1,0 +1,38 @@
+{
+  "description": "Primary text references and explicit engineering phone representations for the bounded US-term comparison; not acoustic quality labels.",
+  "recorded_at_utc": "2026-11-04T03:28:25.176335+00:00",
+  "python": {
+    "url": "https://dictionary.cambridge.org/pronunciation/english/python",
+    "us_ipa": "/ˈpaɪ.θɑːn/",
+    "candidate": "pˈaɪθɑːn"
+  },
+  "server": {
+    "url": "https://dictionary.cambridge.org/dictionary/english/server",
+    "american_entry": "/ˈsɜr·vər/",
+    "candidate": "sˈɜːɹvɚ",
+    "note": "Expanded rhotic engineering representation, not a claim of automatic acoustic equivalence"
+  },
+  "docker": {
+    "url": "https://dictionary.cambridge.org/dictionary/english/docker",
+    "us_ipa": "/ˈdɑː.kɚ/",
+    "action": "Retained SDK phones unchanged; homograph reference does not independently certify a brand voice"
+  },
+  "browser": {
+    "url": "https://dictionary.cambridge.org/us/pronunciation/english/browser",
+    "us_ipa": "/ˈbraʊ.zɚ/",
+    "action": "Retained SDK phones unchanged"
+  },
+  "github": {
+    "source": "Actual pinned sea-g2p dictionary probe",
+    "context": "ɡˈɪt hˈʌb",
+    "dictionary": "ɡˈɪthʌb",
+    "action": "Whole-word hypothesis, not an official external brand IPA claim"
+  },
+  "database": {
+    "source": "Actual pinned sea-g2p dictionary/context probe",
+    "phones": "dˈeɪɾəbˌeɪs",
+    "action": "Unchanged word control inside server sentence, not a claim of unchanged waveform"
+  },
+  "new_external_audio_downloads": 0,
+  "new_weights_or_sdk_downloads": 0
+}

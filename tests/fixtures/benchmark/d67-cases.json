@@ -1,0 +1,18 @@
+{
+  "description": "Predeclared original CORE warm sequential context/media/resource observations. Repetition counts are not token counts; no context reasoning, ASR, cold-load, TTFT, decode TPS or production SLO claim.",
+  "model": "qwen3.5-9b-core",
+  "repeats_per_successful_phase": 3,
+  "context_repetitions": [128, 2048, 8192, 16384, 31500],
+  "overflow_repetitions": 34000,
+  "overflow_expected_code": "context_overflow",
+  "context_expected": "CONTEXT_OK",
+  "text_expected": "BENCH_TEXT_OK",
+  "media_manifest": "tests/fixtures/video/d66-composite.json",
+  "visual_question_source": "tests/fixtures/video/d65-cases.json",
+  "resource_wait_between_samples_seconds": 0.2,
+  "overall_seconds": 600,
+  "temperature": 0,
+  "text_max_tokens": 512,
+  "automatic_retries": 0,
+  "sampling_maxima_are_true_peaks": false
+}

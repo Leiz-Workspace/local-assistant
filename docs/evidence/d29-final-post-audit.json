@@ -1,0 +1,27 @@
+{
+  "description": "Readonly D29 memory contract post-regression source/journal/grant and shared-service inventory audit; no credentials or payload retained.",
+  "observed_date": "2026-10-19",
+  "revision": "0004",
+  "jobs": 0,
+  "heads": 0,
+  "file_count": 0,
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "immutable_manifest_update": false,
+  "mutable_state_update": true,
+  "truncate": false,
+  "old_schema_owners_acls_unchanged": true,
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "regression_owned_probe_operations_performed": false,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "vector_scope": "Read-only D29 inventory; no D29 vector/source write, only rolled-back connection-private temporary schema fixtures.",
+  "memory_relations": 0,
+  "app_temp": false,
+  "migrator_temp": true,
+  "temporary_schema_probes_performed": true
+}

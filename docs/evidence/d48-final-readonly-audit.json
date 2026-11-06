@@ -1,0 +1,50 @@
+{
+  "description": "D48 exact-source full/related/first-live and readonly security/data/runtime audit; historical composition bytes explicitly Git-verified, all other accepted bytes unchanged.",
+  "status": "PASS_D48_FINAL_READONLY_AUDIT",
+  "source_files": 451,
+  "unique_current_source_protected_hashes": 897,
+  "authorized_composition_changes": [
+    "apps/api/main.py",
+    "apps/api/storage/lifecycle.py"
+  ],
+  "historical_bytes_verified_against_D47_commit": true,
+  "full_passed": 3010,
+  "related_passed": 1640,
+  "full_exit_code": 0,
+  "full_skipped": 0,
+  "full_log_sha256": "eb7550fbe784598d640c8a425a79943b8d2e40253d0ab0380fe126f3a81fb982",
+  "source_freeze_sha256": "173d646590bdae0d8c91b9b3fc92441be0bf1be8e4f29f66b6aa591c2c16e6ca",
+  "first_live_artifact": {
+    "path": "data/backups/d48-first-live-api/summary.json",
+    "sha256": "a916a4fe09a4a634879f6ffa679f01f1b7a0eb757c1dbf73aa21dd2df5d2f25a"
+  },
+  "parent_readonly_log_sha256": "ab082c0edd8db9f5501fdfbc93d889b101e4b1fe3377e5887466aa0b7367b387",
+  "revision": "0006",
+  "counts": {
+    "files": 0,
+    "ingestion_jobs": 0,
+    "ingestion_heads": 0,
+    "memory_settings": 0,
+    "memory_consents": 0,
+    "memories": 0
+  },
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "worker_advisory_locks": 0,
+  "old_schema_owners_acls_unchanged": true,
+  "models_configs_dependencies_migrations_vault_database_unchanged": true,
+  "prior_first_scores_and_failed_cohorts_preserved": true,
+  "production_search_flag_enabled": false,
+  "original14_identity_image_start_restart_ports_unchanged": true,
+  "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+  "selected_provider_healthy": true,
+  "selected_provider_runtime_limits_unchanged": true,
+  "original_CORE_healthy": true,
+  "signing_secret_mode": "0600",
+  "signing_secret_git_ignored": true
+}

@@ -1,0 +1,38 @@
+{
+  "description": "Owner reports the compact API candidate improved but remains incorrect, stops this pronunciation work and asks for the next project task. No product/default or workflow campaign approval inferred.",
+  "date": "2026-11-04",
+  "owner_verbatim": "Chưa được nhưng cũng ổn hơn rồi dừng phần này được rồi, tiếp theo làm gì",
+  "status": "OWNER_REPORTED_IMPROVED_STILL_INCORRECT_STOP_REFINEMENT",
+  "voice": "Ngọc Huyền",
+  "candidate": "ADR163 mixed-api dictionary-boundary candidate",
+  "relative_assessment": "Improved compared with the preceding version",
+  "api_correctness": "STILL_NOT_CORRECT",
+  "further_pronunciation_trials": "STOPPED_AT_OWNER_REQUEST",
+  "per_clip_scores": null,
+  "whole_sentence_naturalness": null,
+  "product_candidate_adoption": false,
+  "retained_truc_ly": "OWNER_ACCEPTED_WITH_LIMITATIONS_REFINEMENT_STOPPED",
+  "next_priority": "D74 full workflow validation and latency, first audit the frozen recovery plan against the accepted reading policy; no new native dispatch.",
+  "workflow_recovery_approved": false,
+  "bindings": {
+    "docs/evidence/d74-ngoc-api-boundary-result.json": "a5bb37e3d45a0425ffb427a8788bc60245659e06aad316087c75a497c19b5156",
+    "docs/evidence/d74-ngoc-api-boundary-verification.json": "ac4511e7d6a620abb62411100b1a8ce27bb4f3b39923aeb63ec6f09ede2da3aa",
+    "docs/evidence/d74-truc-validation-owner-acceptance.json": "19a797d00a75076574517ab3b294fe299580639cdf51950b956a6675d640c0c3",
+    "docs/ADR/155-proposed-workflow-recovery-after-caller-metadata-failure.md": "6cc2bdfd0d5617727bde1d34be59ef9bced7dcf1468336c46768433208303e26",
+    "docs/evidence/d74-adr155-proposed-workflow-recovery-20261103.json": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5"
+  },
+  "new_native_calls": 0,
+  "new_provider_calls": 0,
+  "new_downloads": 0,
+  "new_software_tests": 0,
+  "source_or_config_changes": 0,
+  "unchanged_research_files": 46,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "baseline_preserved": true,
+  "physical_first_audible": "UNVERIFIED",
+  "model_selection": null,
+  "product_activation": false
+}

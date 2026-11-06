@@ -1,0 +1,30 @@
+{
+  "description": "Technical audit of one native candidate, one reused baseline and two original WAV players; audible API correctness is not inferred.",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "date": "2026-11-04",
+  "actual_result_events": 1,
+  "new_inner_chunks": 1,
+  "original_baselines": 1,
+  "players": 2,
+  "identical_source_rendered_chunks_gaps_voice_reference": true,
+  "only_two_API_internal_spaces_removed": true,
+  "baseline_and_candidate_cap": 172,
+  "request_seed_source": "Retained Runtime.predict resets NumPy seed7 before every turbo request.",
+  "source_freeze_snapshots_zip_exact": true,
+  "software_passed": 328,
+  "software_failed": 0,
+  "software_errors": 0,
+  "software_skipped": 0,
+  "software_seconds": 5.45,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "old_research_files_unchanged": 43,
+  "sdk_entries_post_run_verified": 4295,
+  "baseline_restored": true,
+  "worker_exit": 0,
+  "owner_ratings": null,
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "result_sha256": "a5bb37e3d45a0425ffb427a8788bc60245659e06aad316087c75a497c19b5156"
+}

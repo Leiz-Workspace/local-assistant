@@ -1,0 +1,17 @@
+{
+  "description": "Reviewed additive V005 applied through existing Vault migrator after verified quiet backup; old data/security preserved and post-migration isolated restore verified.",
+  "revision": "0005",
+  "old_data_tables_preserved": 8,
+  "only_version_and_three_new_relations_changed": true,
+  "old_schema_owners_acls_unchanged": true,
+  "old_security_sha256": "cda4d29eda55652afa27955d6a03a552a12b4a4daeba4bf4cfd099151afc6cdc",
+  "new_schema_table_count": 12,
+  "new_memory_rows": 0,
+  "post_restore_verified": true,
+  "post_restore_security_verified": true,
+  "post_restore_backup_sha256": "a376f65fba083d73eb459451e3ab4ec9725c7a5dc752fd79d78075d808498f38",
+  "migration_source_sha256": "b228bf23acb034e8849b40f47a994044f703b10eb2df55c9500b05650008a652",
+  "runtime_memory_enabled": false,
+  "models_vault_docker_changed": false,
+  "shared_service_restart": false
+}

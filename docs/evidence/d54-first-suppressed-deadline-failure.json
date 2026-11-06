@@ -1,0 +1,19 @@
+{
+  "description": "D54 first56 controls PASS; two added fault tests FAIL/.14s because a dependency suppresses stage timeout and asyncio context clears cancellation count before the host guard. No actual model/provider request or accepted source change.",
+  "status": "FAILED_RETAINED",
+  "failed": 2,
+  "first_controls_passed": 56,
+  "archive": {
+    "path": "data/backups/d54-before-stage-deadline-repair.zip",
+    "sha256": "f4bbee462e93031295a2dbc6fcb45f7016f8c89c0c7edcc9307d89048e6a3177"
+  },
+  "files": {
+    "src/application/ports/research.py": "003be15bca1d83a8394f95b892d3da9cbacffdf4644829b11025468df8943f0d",
+    "src/application/services/research_policy.py": "111170160a72210b5cefe32d514b706a8c9b0e897945b4369305c36cfe488658",
+    "src/application/services/research.py": "f0d95933482e80cf6699cf63940a3b756a3929c7de3bf544e31c66da0c2b1a19",
+    "tests/test_research_policy.py": "4d4dfdbc6c418cdab9d7cc3cbb123950a7d7764f71d083f484e42c38f8cf5246",
+    "tests/test_research.py": "2384936f5a0791fa8b02fddf09da8a4165421566345708e84aac13ee5b84387a",
+    "data/backups/d54-first-controls.log": "9c38480cd4dcba38a262d28b4c9fece55f344e548f5d6aca919691b36e6362cd",
+    "data/backups/d54-first-suppressed-deadline.log": "7200e1543a9e7ffbf8e777cfcc268068af4f43977fd6087c04ec638e5fad86d3"
+  }
+}

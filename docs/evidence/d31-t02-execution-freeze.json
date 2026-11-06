@@ -1,0 +1,12 @@
+{
+  "description": "Pre-execution D31-T02 synthetic privacy gates and test/source freeze; model prompt/runtime unchanged.",
+  "base_commit": "d1721cd",
+  "sha256": {
+    "docs/D31_PRIVACY_TEST_PLAN.md": "a61c8edf36a0165798976c83182fe95ddc3b15441e729a3aaae1addb1130b90a",
+    "tests/integration/test_memory_privacy_boundaries.py": "9b2376b8625367600b6994aae26c18bf0fe1bf8335e03e4e68ee142244e43416",
+    "tests/integration/test_memory_privacy_core_live.py": "85d1b1a033cbb180d234002fd60e8ff1a86429d4f78e1804f59fd8a103d298ce",
+    "tests/integration/test_file_vector_privacy.py": "abf890b03463914d58b7e38b02521585a022fc9e172b1bd5e529393e497006c8",
+    "src/application/services/memory_selection.py": "4664219a33835f5b714abbe6d4c7f623818df8b68cf292604855e6b2d75b219a",
+    "apps/api/services/memory_extraction.py": "bcd63f9fc858029977732c40245562b3927c435248122f360cb15168a5566fec"
+  }
+}

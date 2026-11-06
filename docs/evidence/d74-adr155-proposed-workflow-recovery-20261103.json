@@ -1,0 +1,59 @@
+{
+  "description": "PROPOSED ADR155: one replacement48-slot workflow after caller fix; no approval or native recovery execution yet. Preserve all six invalid historical slots,42 unattempted and24 valid standalone clips.",
+  "status": "PROPOSED_NOT_APPROVED_NOT_EXECUTED",
+  "approval_required": true,
+  "prior_result_sha256": "974788fe447d5122c7d062600f1441997082052b8ff4d3d8bbbe64ea1e197c45",
+  "prior_freeze_sha256": "3821e930bd71e8564014da1ade621a2f72dad1b41db0500911b057f9f06709de",
+  "payload_manifest_sha256": "c85f751b1d986a97eb4d3f0ad6898764fdac3b0454ef2375084892f2d481f36f",
+  "packet_sha256": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a",
+  "prepared_inventory_sha256": "0a60bee53673f8fa2292890e82fa1f8a53d22ff146969a68cf003c4536e3fec7",
+  "operator_sha256": {
+    "benchmarks/scripts/vi_voice_report.py": "7b731465d47c2a857ab6bb74a987449af23a439f5dc745a991a44bcbcdd22d4b",
+    "benchmarks/scripts/vi_voice_campaign.py": "707c746beccbf85c7bf57cc01a0dd45221d60b3170bc91e9ecc73b7e39644f46",
+    "benchmarks/scripts/vi_voice_worker.py": "46fe7f424baca94343274f87d155287aa7a70c13085161d85139ffa3b8912999",
+    "benchmarks/scripts/vi_voice_preparation.py": "95449543f45839ae0d25a96116c9a2a2a3f43a004caa68bbc4183fe2d18ef886",
+    "benchmarks/tests/test_vi_voice_campaign.py": "83a877aaf386b12bdb0c92ee766f546d52c3e6af17eb465e8a927298130b57bc",
+    "benchmarks/tests/test_vi_voice_report.py": "7e730c2b4ed2f26d7523250e92d7863a74b58de7e854ffe33e7740a94d68f45f",
+    "benchmarks/tests/test_vi_voice_preparation.py": "da57722f131759b8f9e38db749311d00c7b4b81d733aea4c99a3dfe0d86a1750"
+  },
+  "software_verification_sha256": "b8450ca1b6011a64bd80b5cf7495ea74126d46c23b573a1e181cbfc0ce259262",
+  "software_passed": 161,
+  "workflow_slots": 48,
+  "new_calls_max": {
+    "asr": 48,
+    "workflow_core": 48,
+    "recovery_core": 2,
+    "tts": 48
+  },
+  "historical_plus_proposed_calls_max": {
+    "asr": 54,
+    "core": 56,
+    "tts": 74
+  },
+  "repeated_qualification": 0,
+  "repeated_standalone": 0,
+  "new_payload_downloads": 0,
+  "new_packages": 0,
+  "automatic_retries": 0,
+  "limits": {
+    "root_gib": 8,
+    "worker_as_gib": 8,
+    "tts_sampled_rss_gib": 2,
+    "aggregate_sampled_rss_gib": 8,
+    "preload_available_ram_gib": 14,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "threads": 2,
+    "tts_wall_seconds": 600,
+    "asr_wall_seconds": 900,
+    "turn_deadline_seconds": 180,
+    "campaign_wall_seconds": 3600
+  },
+  "fixed_workflow_turbo_voice": "Trúc Ly",
+  "physical_first_audible": "UNVERIFIED_NOT_MEASURED_BY_PCM",
+  "model_selection": null,
+  "entrypoint": "uv run --no-sync python -m benchmarks.scripts.vi_voice_campaign --workflow-recovery",
+  "guard": "Missing or mismatched separate ADR155 approval receipt refuses before model loading or output directory creation."
+}

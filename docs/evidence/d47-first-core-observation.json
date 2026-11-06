@@ -1,0 +1,15 @@
+{
+  "description": "First actual unchanged CORE authored search-snippet measurement with mocked provider; not a live provider or independent relevance benchmark.",
+  "artifact": {
+    "path": "data/backups/d47-search-core-f20fc0a06a5848fcaf1e1353e43c388a/summary.json",
+    "sha256": "8693e4e917910352ffbaf5610fd7c77b886fd861275daa32e44a4bc858dfe3c9"
+  },
+  "status": "PASS_AUTHORED_SEARCH_CORE_FIXTURE",
+  "exit_code": 0,
+  "actual_core_port_attempts": 1,
+  "mock_provider_requests": 1,
+  "external_provider_requests": 0,
+  "automatic_retries": 0,
+  "human_independent": false,
+  "semantic_validation": false
+}

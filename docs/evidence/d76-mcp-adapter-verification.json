@@ -1,0 +1,62 @@
+{
+  "description": "Verify independent owner/CORE-bound MCP2026-07-28 host allowlists and constrained exact-source stdio transport using only inert actual local fixtures. No production server or permission expansion.",
+  "status": "LOCAL_ADAPTER_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 27,
+  "related_tests": {
+    "passed": 214,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.5
+  },
+  "actual_native_demo": {
+    "description": "Actual inert local MCP2026-07-28 wire discovery/list/call and denied unsolicited tool; offline read-only exact-source subprocess, no production registration or user data.",
+    "protocol": "2026-07-28",
+    "server_id": "fixture",
+    "profile": "core",
+    "source_sha256": "aa83d9a7b4e1e979e4f1883ebd64ad761855cfe6893c5d3a396e32f9843f20a5",
+    "schema_sha256": "f3773972e064b54012672cab11fc786b38862cec458a4d0d1d88f9096398e964",
+    "admitted_tools": [
+      "echo"
+    ],
+    "unlisted_tool_denied": "not_allowed",
+    "actual_RPC_requests": 3,
+    "response_content_sha256": "24a55b7dfcab31c32819144f37016a519194517f161d8ce358b1a13f72dd19e4",
+    "result_trust": "untrusted",
+    "child_exit_code": 0,
+    "child_reaped": true,
+    "stderr_drainer_retired": true,
+    "stderr_bytes_discarded": 161,
+    "source_snapshot_removed": true,
+    "address_space_cap_bytes": 268435456,
+    "CPU_cap_seconds": 10,
+    "tmpfs_cap_bytes": 16777216,
+    "network_allowed": false,
+    "host_project_roots_mounted": false,
+    "production_server_registered": false,
+    "model_or_service_changes": false
+  },
+  "source_sha256": {
+    "src/application/services/mcp_adapter.py": "2ab9296d761f38f5e1aa105998fd290a849fef65a1913d0b89a25a8d18ec221b",
+    "src/infrastructure/mcp_stdio.py": "b7b81f1e2f2036548a7793248ddf22969aca1184dd6c5d99a2fa9cfff67719bc",
+    "tests/test_mcp_adapter.py": "38d24c7ff54849b19b914129bb8aea3589165367d2028c76746dc42dca393dce",
+    "tests/test_mcp_stdio.py": "e695f0a3156c08a10f19b18e0017ffcb60918e259b007b68f96fe690e6a2d928",
+    "tests/fixtures/mcp/echo_server.py": "aa83d9a7b4e1e979e4f1883ebd64ad761855cfe6893c5d3a396e32f9843f20a5"
+  },
+  "log_sha256": {
+    "data/backups/d76-mcp-first-tests.log": "e2c1b027c1f66c425862dd69c9132b46a09329487ca3852c40a469f0af34fe0d",
+    "data/backups/d76-mcp-qualified-tests.log": "47696f928685c672618ae15b7619c9bcd40cf896615bf5b17fab21ff3e2e43ba",
+    "data/backups/d76-native-boundary-first.log": "1a2a2e9a90fa08a0e6d68c572dae6029ad11dc0445cc58a49c871ea447615e4c",
+    "data/backups/d76-profile-bound-tests.log": "71a9c097b4cc19ca2f57fbb1a4c259fee465b8747f3f823078167df6c0b97f00",
+    "data/backups/d76-related-tests.log": "356db2ef62484dbee20752b7b827b58841b3436cb41d1533f07d7c06e7b80efe",
+    "data/backups/d76-related-completed-tests.log": "8dbec9c3384ef0b35661f490d576537ad8b9a3ed8e12851030a5e63d7b6c6296",
+    "data/backups/d76-native-protocol-demo.log": "76d109369707d2cd6e2ebb880c2405532caaf6fe9a37898d4e7eee3a63c97048",
+    "data/backups/d76-native-protocol-demo.json": "441bf6a6ad51fdfcea824ef877e6f1334d5d077cdf25d4bb5cbc967a8baaa487"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "D75_skill_source_bytes_unchanged": true,
+  "production_server_registered": false,
+  "external_server_contacted": false,
+  "models_data_or_services_changed": false,
+  "D74_product_gate_closed": false,
+  "next_independent_component": "D77 trusted pre/post/error/stop controls"
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Owner instruction “Làm đi” authorizes the preceding concrete quality-work proposal: investigate/implement time/date and Python/API speech rendering, examine existing-voice prosody and create new paired clips.48-call panel is the bounded engineering scope chosen for that work, not an assertion the owner explicitly specified its count. No ADR155 recovery/model selection/download authorization inferred.",
+  "authorized": true,
+  "owner_response": "Làm đi",
+  "prior_review_commit": "03e4642",
+  "recorded_at_utc": "2026-11-03T17:15:53.267155+00:00",
+  "adr": "156-isolated-speech-reading-and-question-preservation.md",
+  "adr_sha256": "88866b1c57549b74d606a00719aa518b46c6c8e7cbe4367c48e6b2eb62a51e9c",
+  "top_level_tts_ceiling": 48,
+  "inner_chunks_per_request_ceiling": 8,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_model_or_package_downloads": 0,
+  "retries": 0,
+  "voices": [
+    "Trúc Ly",
+    "Ngọc Huyền"
+  ],
+  "model_and_precision": "Existing pinned VieNeu v3 Turbo CPU ONNX FP32, unchanged",
+  "parent_root_budget_gib": 8,
+  "workflow_recovery_authorized": false,
+  "product_activation_authorized": false
+}

@@ -1,0 +1,71 @@
+{
+  "description": "Observed D25-T02 local durable PostgreSQL journal/schema and startup-compatibility acceptance; not vector worker or whole-Day acceptance.",
+  "observed_date": "2026-10-19",
+  "milestone": "D25-T02",
+  "status": "PASS_LOCAL_REPOSITORY_AND_SCHEMA",
+  "day25_status": "IN_PROGRESS",
+  "next": "D25-T03 bounded Qwen embedding and Qdrant upsert/delete/recovery worker",
+  "database_revision": "0004",
+  "tests": {
+    "new_journal_unit": 14,
+    "new_real_postgresql": 22,
+    "new_startup_compatibility": 8,
+    "new_total": 44,
+    "focused_journal_passed": 36,
+    "focused_journal_seconds": 2.56,
+    "related_passed": 111,
+    "related_seconds": 16.85,
+    "full_passed": 914,
+    "full_seconds": 120.13,
+    "skipped": 0,
+    "full_exit_code": 0,
+    "full_command": "Vault-backed uv run --no-sync python -m pytest tests/ -q -rs --tb=short with existing LIVE_E2E and explicit offline Qwen integration flags"
+  },
+  "gates": {
+    "immutable_plan_replay": true,
+    "bounded_capacity_race": true,
+    "old_lease_fenced": true,
+    "latest_generation_publication": true,
+    "source_delete_publish_race": true,
+    "transaction_fault_atomicity": true,
+    "terminal_cleanup_retained": true,
+    "exact_point_acknowledgements": true,
+    "actual_owner_root_and_composite_fk_scope": true,
+    "column_update_grants_verified": true,
+    "protected_pre_and_post_restore": true,
+    "post_restore_column_acls_verified": true,
+    "old_source_tables_owners_acls_unchanged": true,
+    "reviewed_file_startup_versions_only": true,
+    "selected_qwen_and_e5_rollback_unchanged": true,
+    "t01_code_unchanged": true,
+    "registry_unchanged": true,
+    "ruff_and_descriptions_verified": true,
+    "python_files": 9,
+    "described_definitions": 104
+  },
+  "not_implemented": [
+    "ingestion_http_admission",
+    "production_qwen_embedding_worker",
+    "actual_qdrant_upsert_delete",
+    "vector_generation_verification_and_recovery",
+    "D26_retrieval"
+  ],
+  "evidence": [
+    "docs/evidence/d25-t02-v003-rollout.json",
+    "docs/evidence/d25-t02-v004-grants.json",
+    "docs/evidence/d25-t02-post-schema-restore.json",
+    "docs/evidence/d25-t02-post-audit.json"
+  ],
+  "sha256": {
+    "migrations/versions/0003_ingestion_journal.py": "a9bb5193c1d7b3906ec8f56015fd18cea80db9f93cd84a76610b9fa01e6b5a4f",
+    "migrations/versions/0004_ingestion_column_grants.py": "fed1c51f519a754ee30462647ba4ec906d1a0dacf482c32e06142e2f724a505c",
+    "src/infrastructure/repositories/ingestion_journal.py": "a03c807e999c0c4e957e1c926006c87bdf3ac5451e2bd2e70e5e0c6565c71a87",
+    "apps/api/storage/files.py": "cd6fe4506c046ea0dc015dfdc001d5bfefed7d401382678f272feb9474f539e7",
+    "tests/test_ingestion_journal.py": "c2bf6508d3174f2da525cb3dfdb526c1fe02202e7746b020fedabb14d2e7a83d",
+    "tests/test_file_schema_compatibility.py": "3dba3792d667fa52582330eb5100a3410ef8d0b06bf8a59b0450a8b3dd77b5e9",
+    "tests/integration/test_ingestion_journal_postgres.py": "4f002cbebe052d885362762726662f1b3a7e2eb3c580332538040ccbe6d1da12",
+    "tests/integration/test_file_journal.py": "a55b5daf58090456d26fff2b55e221d8802614de2bb7c1ffa5ac3e8437778b40",
+    "tests/integration/test_file_recovery.py": "6f8774254a4afea85c7b79ef8cd09c44a24ef0ee50802e6f6549ad24c20db700"
+  },
+  "adr": "docs/ADR/034-durable-ingestion-journal.md"
+}

@@ -1,0 +1,32 @@
+{
+  "description": "Readonly D47 first-CORE/source/security/data/model verification after1459 related and one separately retained actual CORE authored case; real provider absent and D47 remains PARTIAL.",
+  "status": "PASS_INTERNAL_EVIDENCE_AUDIT_EXTERNAL_GATE_OPEN",
+  "source_files": 434,
+  "unique_source_protected_hashes": 859,
+  "new_python_files": 6,
+  "described_functions_classes": 67,
+  "new_unique_tests": 116,
+  "controlled_tests": 115,
+  "related_passed": 1459,
+  "separately_retained_actual_core_cases": 1,
+  "actual_core_port_attempts": 1,
+  "mock_provider_requests": 1,
+  "external_provider_requests": 0,
+  "owner_confirmed_no_provider": true,
+  "provider_account_entitlements_verified": false,
+  "prior_accepted_tracked_source_changes": [],
+  "agreed_models_configs_data_preserved": true,
+  "startup_route_vault_database_docker_changes": false,
+  "provider_activated": false,
+  "original_D46_score7_of10_and_all_failures_preserved": true,
+  "no_new_full_suite_claim": true,
+  "first_trial": {
+    "path": "data/backups/d47-search-core-f20fc0a06a5848fcaf1e1353e43c388a/summary.json",
+    "sha256": "8693e4e917910352ffbaf5610fd7c77b886fd861275daa32e44a4bc858dfe3c9"
+  },
+  "parent_readonly_audit": {
+    "path": "data/backups/d47-parent-readonly-audit.json",
+    "sha256": "8504ab5321a8304201f3d16f9beb5813eefd98840ff2876b761ce2862dd97ca5"
+  },
+  "parent_gate_log_sha256": "b28ffb0d0d539266622c39c0f36f692f7abd0317ecee9dc046ad04c2c59452b8"
+}

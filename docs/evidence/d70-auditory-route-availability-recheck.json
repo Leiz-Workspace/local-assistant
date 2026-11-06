@@ -1,0 +1,46 @@
+{
+  "description": "Record a bounded metadata-only recheck of previously considered public auditory reviewers and the unchanged original acceptance blocker. No media upload, inference, model change or acceptance waiver.",
+  "checked_at": "2026-10-23T16:26:43.560763+07:00",
+  "timestamp_method": "Explicit UTC+07; no timezone package installation.",
+  "read_only_metadata_GETs": 4,
+  "author_space": {
+    "url": "https://huggingface.co/api/spaces/yuantuo666/SpeechJudge-GRM",
+    "revision": "f0e86ebdcdb8114f6baa25791d05395f1e43d66b",
+    "runtime_stage": "RUNTIME_ERROR",
+    "runtime_revision": null
+  },
+  "community_space": {
+    "url": "https://huggingface.co/api/spaces/Den4ikAI/SpeechJudge-GRM",
+    "revision": "e16fd85d230ac043091476eb78faa6c2e24c5c66",
+    "runtime_stage": "RUNNING",
+    "expected_interface_verified": true,
+    "metadata_sha256": {
+      "space": "bbc91cc05a6300a93d75f72d12a90cb024df7c6f7fc92cc908ef8fa098585d64",
+      "config": "9de10e2a137dc2e231d0885ed2a3968f3a6ddf083f1a0fa7da5dd3398efdf190",
+      "info": "62f7372ebe08634873a980997060bd6926eaebed1e1a20fe4f968fa661aab344"
+    },
+    "successful_inference_recovery_demonstrated": false,
+    "prior_service_failure_preserved": "GPU task aborted",
+    "prior_one_campaign_scope_consumed": true
+  },
+  "metadata_limitation": "RUNNING and a matching interface do not establish recovered GPU inference or auditory qualification. No retry is inferred from metadata.",
+  "native_audio_tool_rechecked_this_turn": false,
+  "last_native_audio_input_evidence": "docs/evidence/d70-native-audio-acceptance-recheck.json",
+  "current_audio_capable_connector_tools_found": 0,
+  "media_uploads": 0,
+  "inference_requests": 0,
+  "new_original_weight_workers": 0,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "all661_source_bytes_unchanged": true,
+  "protected_files_verified": 917,
+  "original_inputs_verified": 176,
+  "original_review_pending_sha256": "14c9374dbb852e4f463121ecaa97a355421ef4879c9e99bf8dd35b09743276d6",
+  "actual_listening_labels_completed": 0,
+  "required_actual_listening_labels": 24,
+  "models_or_resource_caps_changed": false,
+  "additional_evaluator_trials_scheduled": false,
+  "D70_complete": false,
+  "D71_started": false,
+  "remaining_dependency": "A genuinely audio-capable reviewer to inspect all24 retained outputs and retain per-output qualitative observations; current tools and tested reviewers cannot supply them."
+}

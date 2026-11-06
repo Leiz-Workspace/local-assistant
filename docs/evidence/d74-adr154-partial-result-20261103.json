@@ -1,0 +1,134 @@
+{
+  "description": "Actual ADR154 approved partial execution: exact payload preparation and 24 standalone TTS outputs completed; workflow invalidated by research caller metadata bug, interrupted without retry. No product selection or first-audible acceptance.",
+  "recorded_at_utc": "2026-11-03T10:32:32.615179+00:00",
+  "status": "PARTIAL_WORKFLOW_INVALID_STOPPED",
+  "approved_manifest_sha256": "c85f751b1d986a97eb4d3f0ad6898764fdac3b0454ef2375084892f2d481f36f",
+  "approved_packet_sha256": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a",
+  "payload_files": 16,
+  "payload_bytes": 608816450,
+  "dependency_packages": 26,
+  "prepared_inventory_entries": 4295,
+  "qualification_calls": 2,
+  "standalone_calls": 24,
+  "standalone_outputs": 24,
+  "standalone_metrics": [
+    {
+      "variant": "piper-vi",
+      "cases": 8,
+      "native_sample_rate": 22050,
+      "minimum_synthesis_seconds": 0.07384072900094907,
+      "maximum_synthesis_seconds": 0.12165709600049013,
+      "import_seconds": 0.1247314730007929,
+      "load_seconds": 0.740794797999115,
+      "peak_sampled_rss_bytes": 251883520,
+      "native_completion_all": true,
+      "retirement_exit": 0
+    },
+    {
+      "variant": "truc-ly",
+      "cases": 8,
+      "native_sample_rate": 48000,
+      "minimum_synthesis_seconds": 0.6943892620001861,
+      "maximum_synthesis_seconds": 1.4376778269997885,
+      "import_seconds": 0.28241300899935595,
+      "load_seconds": 1.4655620749999798,
+      "peak_sampled_rss_bytes": 1447079936,
+      "native_completion_all": true,
+      "retirement_exit": 0
+    },
+    {
+      "variant": "ngoc-huyen",
+      "cases": 8,
+      "native_sample_rate": 48000,
+      "minimum_synthesis_seconds": 0.8193388789986784,
+      "maximum_synthesis_seconds": 1.6735540050012787,
+      "import_seconds": 0.282487611999386,
+      "load_seconds": 1.4600873429990315,
+      "peak_sampled_rss_bytes": 1515810816,
+      "native_completion_all": true,
+      "retirement_exit": 0
+    }
+  ],
+  "owner_new_voice_ratings": null,
+  "workflow_declared_slots": 48,
+  "workflow_dispatched_slots": 6,
+  "workflow_software_invalid_slots": 6,
+  "workflow_unattempted_slots": 42,
+  "workflow_valid_complete_turns": 0,
+  "actual_model_attempts": {
+    "tts": 26,
+    "asr": 6,
+    "core": 6
+  },
+  "no_speech_observations": [
+    {
+      "slot": "turn-04",
+      "empty_transcript": false,
+      "raw_result_sha256": "04d4a5efa1f108cc856a1e38da29ad940a1ef827f4220076be9698e8d76894d1"
+    },
+    {
+      "slot": "turn-05",
+      "empty_transcript": false,
+      "raw_result_sha256": "e58037717c4d1a1819a8a3b78dfebb7835fd85bbbaedf3f43838a49e1d8de528"
+    }
+  ],
+  "total_native_phase_wall_seconds": 120.47180692099937,
+  "workflow_error": "ResearchCORE indexed preset_selected; original Fast gateway emits preset. Complete native CORE responses were incorrectly rejected before TTS.",
+  "first_audible_seconds": null,
+  "first_audible_gate": "UNVERIFIED",
+  "initial_retirement": "Double interruption prevented CORE retirement receipt; initial result captured native1/baseline mismatch. Exact-command recovery inspection later verifies original native0/same containers. Missing CORE wait4/resource receipt is not invented.",
+  "cleanup_recovery": {
+    "description": "Manual joined-stop verification after interrupting the owned campaign; initial result and interrupted cleanup remain immutable. Only exact launch-command CORE child signalled; no shared service action.",
+    "owned_pid": 288673,
+    "process_exists": false,
+    "state_after": {
+      "boot_id": "b8101473-ab8d-4fc6-9de6-b16c5d2cbd17",
+      "native_pids": [],
+      "containers": [
+        "0503f9fb2dc9b64d0e6ec46f26c121402b4fec6e36326f960039d0116f2e8c94 minio-storage-monitor busybox:1.37.0 ",
+        "15a5f8d0266aa180a2d089b9fc74a32550941b4de7a3c9874330eb2cb85b07dd portainer portainer/portainer-ce:lts 8000/tcp, 9000/tcp, 0.0.0.0:8888->9443/tcp, [::]:8888->9443/tcp",
+        "1d0aae8018d7616997da4ff6859af569ffe214eae45dd4fd613cf1cca265a7b0 keycloak home-server/keycloak:26.7.0 8443/tcp, 9000/tcp, 0.0.0.0:8081->8080/tcp",
+        "22fa9716f7727a79b545c82cdf5af2a196cfed4b532be1e5100265b23aed5c9f rabbitmq rabbitmq:4.3.4-management-alpine 4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:5673->5672/tcp, 0.0.0.0:15673->15672/tcp",
+        "2cfa957c8c41e2ca74f6ffaf46bde380f3ab4b67ba183bc5ce524022bbf1c545 vault-storage-monitor busybox:1.37.0 ",
+        "2d9b4a0bbaeeba7d81ca314b01782d2e0cb0a0ff4d51eec9ad6762a164ac74a3 mongo-storage-monitor busybox:1.37.0 ",
+        "3bee43d6f9b939ab5e21bfb4ba8fd1d683ad670c16665c038755079ad497106b postgres-storage-monitor busybox:1.37.0 ",
+        "4d38a5c2ce61dcb455cff16d73928bd83663a78fa20ebdde065ce6d5dcead2c9 vault hashicorp/vault:2.0.3 0.0.0.0:8200->8200/tcp, 8201/tcp",
+        "86022780d59c6463a7ba77aed5fcd1de3baa15ea519bfe2e36a0391b7fb320ad rabbitmq-storage-monitor busybox:1.37.0 ",
+        "ab2cedd49bd6b2e1272f30fb154971c01b00b3d9d36879d971aaa293c067b629 minio home-server/minio:RELEASE.2025-10-15T17-29-55Z 0.0.0.0:9000->9000/tcp, 0.0.0.0:9002->9001/tcp",
+        "b03b80c44f8ad8af2bca3e27cbc98d0a3504590f762dc064993ae28c8d4fe154 qdrant-storage-monitor busybox:1.37.0 ",
+        "bac57909db3eff976c9d59484b0aafbd5ef2acf0c53b172aebb8bfff56646000 qdrant qdrant/qdrant:v1.18.2 0.0.0.0:6333-6334->6333-6334/tcp",
+        "cbc855c5eb8ac03d9dbdecddf864b52961f1d5434211a9ef77d5326cf91ab60d mongo mongo:7.0.39-jammy 0.0.0.0:27018->27017/tcp",
+        "d8e4398be644f7260f396b62b72dc5e5d6bb88ff7b774835850954fb07d97cfb postgres postgres:17.10-alpine 0.0.0.0:5433->5432/tcp",
+        "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658 local-assistant-searxng ghcr.io/searxng/searxng@sha256:aa7270053bc3bf92155e2af83e2b0a7c3833c209cdeb8d396861a00c55ee7110 127.0.0.1:8889->8080/tcp"
+      ]
+    },
+    "baseline_restored": true,
+    "initial_result_sha256": "974788fe447d5122c7d062600f1441997082052b8ff4d3d8bbbe64ea1e197c45"
+  },
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103",
+  "private_receipt_sha256": {
+    "preparation-receipt.json": "76d6adbc26ae91acf79ac35cb8b361cecb3614a9440fec64547edc987c11394e",
+    "audit-completion-attempt.json": "6b1dcb4e30250f539e5bca91ba7dbaa7c9c658d64adb83b8f1bfda562e3384da",
+    "audit-completion-receipt.json": "597cbc65067babd758ad824e616ce890cb69e9e38063c07637d475a5acf3c2d6",
+    "prepared-inventory.json": "0a60bee53673f8fa2292890e82fa1f8a53d22ff146969a68cf003c4536e3fec7",
+    "software-verification.json": "4b1700e95a1bcd42533a6a777ac0a72a66b3fd121ff0f4a530a15653baaa5cfd",
+    "execution-freeze.json": "3821e930bd71e8564014da1ade621a2f72dad1b41db0500911b057f9f06709de",
+    "campaign-result.json": "974788fe447d5122c7d062600f1441997082052b8ff4d3d8bbbe64ea1e197c45",
+    "interruption-cleanup-recovery.json": "9d616d9889659e92587bff92cabe7786f22117f87bf40d270d5f12a604de6190",
+    "review/index.json": "5f839a42e4a3255d54793b03623c52dac997c7c4b33f632e5826668f72343197"
+  },
+  "protected_scope": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "software_before_execution": {
+    "passed": 151,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 4.34
+  },
+  "production_model_change": false,
+  "additional_inference_after_stop": 0,
+  "brave_calls": 0,
+  "vault_database_docker_mutations": 0
+}

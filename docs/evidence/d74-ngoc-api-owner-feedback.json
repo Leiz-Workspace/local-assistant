@@ -1,0 +1,61 @@
+{
+  "description": "Owner reports API still pronounced incorrectly in the latest Ngoc Huyen panel. Actual API inputs match Truc Ly; specific internal acoustic cause and exact bad realization remain unknown.",
+  "date": "2026-11-04",
+  "owner_verbatim": "Sao chữ API vẫn bị đọc sai nhỉ ?",
+  "context_voice": "Ngọc Huyền",
+  "status": "OWNER_REPORTED_API_PRONUNCIATION_NOT_ACCEPTABLE",
+  "exact_clip_ids": null,
+  "exact_heard_realization": null,
+  "per_clip_ratings": null,
+  "other_clip_quality": null,
+  "buzz_or_tremble_rating": null,
+  "input_audit": [
+    {
+      "case": "mixed-api",
+      "source_text": "Bạn có thể gọi API bằng Python trên server này không?",
+      "actual_phones": [
+        "bˈaː6n kˈɔɜ tˈe4 ɣˈɔ6j ˌeɪ pˌiː ˈaɪ bˈa2ŋ pˈaɪθɑːn tʃˈen sˈɜːɹvɚ nˈa2j xˌoŋ?"
+      ],
+      "api_replacements": [
+        1
+      ],
+      "same_source_rendered_plans_and_actual_phones": true,
+      "ngoc_wav_sha256": "80a8cfeab17258c60aaab1f4462729019923c39302f35ca994cc06bb4b79dbf8",
+      "truc_wav_sha256": "8db33a7c9fc9a3ac6240c7671a2ed4ff5e8b95710b249acf9274e9b87c6b3788",
+      "different_speaker_reference_binding": true
+    },
+    {
+      "case": "mixed-time",
+      "source_text": "Hẹn bạn lúc 09:15 ngày 14/11/2026; bạn muốn nhận thông báo qua API không?",
+      "actual_phones": [
+        "hˈɛ6n bˈaː6n lˌuɜc tʃˈiɜn zˈəː2 mˈyə2j lˈam fˈuɜt̪ ŋˈa2j mˈyə2j bˈoɜn tˈaːɜŋ mˈyə2j mˈo6t̪ nˈam hˈaːj ŋˈi2n xˌoŋ tʃˈam hˈaːj mˈyəj sˈaɜw.",
+        "bˈaː6n mˈuəɜn ɲˈə6n tˈoŋ bˈaːɜw kwˈaː ˌeɪ pˌiː ˈaɪ xˌoŋ?"
+      ],
+      "api_replacements": [
+        0,
+        1
+      ],
+      "same_source_rendered_plans_and_actual_phones": true,
+      "ngoc_wav_sha256": "562b9a715559d92fb7fa53838ca77f8813d5a2e6a9cb1e15770fe340534ff445",
+      "truc_wav_sha256": "5cd827bb07aa702fb0585d52d8b11d3a65fa32ab51b2f0b57aa262dac663a1f4",
+      "different_speaker_reference_binding": true
+    }
+  ],
+  "retained_api_target": "ˌeɪ pˌiː ˈaɪ",
+  "finding": "No API source/rendered/phone/stress-policy drift between the two matched voice trials; both API spans were present in actual native input.",
+  "limitation": "Matching correct intended phones does not guarantee identical acoustic realization for different speaker/reference conditioning. Specific model/reference/decoder mechanism is not established.",
+  "latest_trial_scope": "Matched validation with the retained policy, not a voice-specific Ngoc Huyen repair.",
+  "bindings": {
+    "docs/evidence/d74-ngoc-validation-result.json": "a1c55f39887c12fb24687af6f44769f98c8d104a66050b5b7648d799a1b53502",
+    "docs/evidence/d74-ngoc-validation-verification.json": "d37dcdee04e29f622ab7560f599a434a465b9cc6b2701686c220cd918f3b53af",
+    "docs/evidence/d74-truc-validation-owner-acceptance.json": "19a797d00a75076574517ab3b294fe299580639cdf51950b956a6675d640c0c3"
+  },
+  "prior_truc_ly_accepted_with_limitations": "PRESERVED_REFINEMENT_STOPPED",
+  "new_native_calls": 0,
+  "new_provider_calls": 0,
+  "new_downloads": 0,
+  "source_or_config_changes": 0,
+  "new_software_tests": 0,
+  "model_selection": null,
+  "product_activation": false
+}

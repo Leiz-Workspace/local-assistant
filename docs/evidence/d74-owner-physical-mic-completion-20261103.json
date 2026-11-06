@@ -1,0 +1,86 @@
+{
+  "description": "Combined owner-reported capture/playback checklist on Brave and a microphone connected to PC: five first observations plus three follow-up observations. Earlier report stays unchanged. This completes the requested capture/playback smoke scope, not all privacy/lifecycle subclaims, model selection or product release.",
+  "status": "OWNER_REPORTED_CAPTURE_PLAYBACK_CHECKS_PASS",
+  "recorded_at_utc": "2026-11-03T08:56:49.570176+00:00",
+  "report_received_date": "2026-11-03",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "reviewer": "project_owner",
+  "reviewer_kind": "human_owner_via_chat",
+  "browser": "Brave",
+  "microphone": "microphone connected to PC",
+  "browser_version": null,
+  "operating_system": null,
+  "microphone_model": null,
+  "connection_type": null,
+  "test_date": null,
+  "first_report_path": "docs/evidence/d74-owner-physical-mic-20261103.json",
+  "first_report_sha256": "d69c05cf8a4db12e76500eb7ea031af1fc670a168ef5616d34bcf6c2710347be",
+  "first_report_verbatim": "Brave, microphone cắm vào PC. Nghe rõ, đủ câu, không rè. Dừng/Hủy/Escape/chuyển tab đều tắt thu.",
+  "followup_report_verbatim": "1. Mở/reload trang: microphone không tự thu. đạt\n2. Từ chối quyền microphone: hiện lỗi, không thu âm. đạt\n3. Ghi quá 30 giây: tự dừng thu. đạt",
+  "reported_observations": [
+    {
+      "id": "playback",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Clear, complete sentence and no audible distortion reported."
+    },
+    {
+      "id": "stop_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Stop."
+    },
+    {
+      "id": "cancel_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Cancel; preview discard not separately reported."
+    },
+    {
+      "id": "escape_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after Escape; audio discard not separately reported."
+    },
+    {
+      "id": "hidden_tab_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops after switching tab; behavior on returning not separately reported."
+    },
+    {
+      "id": "initial_load_no_auto_capture",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Opening/reloading the page does not start microphone capture."
+    },
+    {
+      "id": "permission_denial",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Denying microphone permission shows an error and does not capture."
+    },
+    {
+      "id": "thirty_second_limit",
+      "status": "PASS_OWNER_REPORTED",
+      "observation": "Capture stops automatically at the30second limit as reported; exact elapsed time not independently measured."
+    }
+  ],
+  "reported_observation_count": 8,
+  "requested_capture_playback_scenarios_covered": 7,
+  "requested_capture_playback_scope_complete": true,
+  "unreported_requested_capture_playback_scenarios": [],
+  "unreported_subclaims": [
+    "preview_discard_after_cancel",
+    "audio_discard_after_escape",
+    "no_automatic_restart_after_cancel",
+    "no_automatic_resume_on_tab_return",
+    "no_live_feedback_loop"
+  ],
+  "all_lifecycle_privacy_subclaims_verified": false,
+  "preview_delete_ttl_owner_verified": false,
+  "exact_timeout_measurement_seconds": null,
+  "agent_observed": false,
+  "agent_microphone_activated": false,
+  "raw_audio_requested": false,
+  "raw_audio_received": false,
+  "model_requests": 0,
+  "brave_search_requests": 0,
+  "model_or_voice_selected": null,
+  "product_or_release_accepted": false,
+  "source_configuration_changed": false,
+  "server_process_state_verified": false
+}
