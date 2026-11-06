@@ -1,0 +1,69 @@
+{
+  "description": "Actual D49 full-file AST descriptions and isolated Ruff correctness/import/format before first actual public fetch.",
+  "evaluated_files": [
+    "src/application/ports/web_fetch.py",
+    "src/application/services/web_fetch_policy.py",
+    "src/application/services/web_fetch_tasks.py",
+    "src/infrastructure/public_https.py",
+    "src/infrastructure/static_web_text.py",
+    "src/infrastructure/web_fetch.py",
+    "tests/test_web_fetch_policy.py",
+    "tests/test_static_web_text.py",
+    "tests/test_public_https.py",
+    "tests/test_web_fetch_service.py",
+    "tests/integration/test_public_https_tls.py"
+  ],
+  "described_functions_classes": 141,
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "src/application/ports/web_fetch.py",
+        "src/application/services/web_fetch_policy.py",
+        "src/application/services/web_fetch_tasks.py",
+        "src/infrastructure/public_https.py",
+        "src/infrastructure/static_web_text.py",
+        "src/infrastructure/web_fetch.py",
+        "tests/test_web_fetch_policy.py",
+        "tests/test_static_web_text.py",
+        "tests/test_public_https.py",
+        "tests/test_web_fetch_service.py",
+        "tests/integration/test_public_https_tls.py"
+      ],
+      "exit_code": 0,
+      "summary": "All checks passed!"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "src/application/ports/web_fetch.py",
+        "src/application/services/web_fetch_policy.py",
+        "src/application/services/web_fetch_tasks.py",
+        "src/infrastructure/public_https.py",
+        "src/infrastructure/static_web_text.py",
+        "src/infrastructure/web_fetch.py",
+        "tests/test_web_fetch_policy.py",
+        "tests/test_static_web_text.py",
+        "tests/test_public_https.py",
+        "tests/test_web_fetch_service.py",
+        "tests/integration/test_public_https_tls.py"
+      ],
+      "exit_code": 0,
+      "summary": "11 files already formatted"
+    }
+  ],
+  "source_freeze_sha256": "7a7deb712feaec5a1ed447a2a58dc9b62f3fefdd26bc35885c7090fd81baf327"
+}

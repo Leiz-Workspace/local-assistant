@@ -1,0 +1,102 @@
+{
+  "description": "First original CORE\u2192owner-signed authored claim report\u2192real nonroot networkless DOCX/PDF export. Finite functional/native/content evidence; visual acceptance is a separate all-page review. No live publisher/source HTTP, independent/general semantic quality, retry, model replacement or new runtime package.",
+  "status": "PASS_FIRST_ACTUAL_CORE_NATIVE_DOCX_PDF",
+  "source_freeze_sha256": "d24705178ac0f7edeab29f1b2dfb9db5209ee76d474bcb04e633087f1cc10fc2",
+  "actual_public_or_private_source_HTTP": 0,
+  "provider_calls": 0,
+  "browser_runs": 0,
+  "report_drafting_model_calls": 0,
+  "export_model_calls": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "artifacts": {
+    "docx": {
+      "path": "data/backups/d58-first-core-export/report.docx",
+      "sha256": "6110a7730eee16f5d4c699f97f4499c733ed247bbc3c64447b3db895fee9168a",
+      "bytes": 38535,
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "public_path": "docs/evidence/d58-first-authored-report.docx"
+    },
+    "pdf": {
+      "path": "data/backups/d58-first-core-export/report.pdf",
+      "sha256": "d175a8ce84beed3a76e9f785ef5137bcc08081e8b50533034249c67601ceb3da",
+      "bytes": 46820,
+      "media_type": "application/pdf",
+      "public_path": "docs/evidence/d58-first-authored-report.pdf"
+    },
+    "markdown": {
+      "path": "data/backups/d58-first-core-export/report.md",
+      "sha256": "aed6d9fe4b77ebe2d9e5653bb0233befe73af2e82231f3edad9345dd8540a72b",
+      "bytes": 3083,
+      "public_path": "docs/evidence/d58-first-authored-report.md"
+    }
+  },
+  "observed_statuses": [
+    "supported",
+    "contradicted",
+    "insufficient"
+  ],
+  "functional_claims_correct": 3,
+  "source_markdown_sha256": "aed6d9fe4b77ebe2d9e5653bb0233befe73af2e82231f3edad9345dd8540a72b",
+  "citation_count": 2,
+  "pdf_pages": 3,
+  "native_observations": {
+    "uid": 65534,
+    "gid": 65534,
+    "pid_namespace": "pid:[4026532987]",
+    "net_namespace": "net:[4026532989]",
+    "effective_capabilities": "0000000000000000",
+    "network_routes": 0,
+    "stderr_bytes": 414,
+    "stderr_sha256": "e42a6cae76562fe3739c342e3e928205f372e9aeec81ee09d56e97b33ef17c07"
+  },
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "visual_status": "PENDING_ALL_PAGE_REVIEW",
+  "shared_report_alive_after_export_shutdown": true,
+  "shared_evidence_alive_after_report_shutdown": true,
+  "core_port_attempts": 1,
+  "model_completion": {
+    "content": "{\"claims\": [{\"claim_id\": \"C1\", \"status\": \"supported\", \"evidence_ids\": [\"E1\"], \"reason\": \"Quote in E1 directly states the requirement.\"}, {\"claim_id\": \"C2\", \"status\": \"contradicted\", \"evidence_ids\": [\"E2\"], \"reason\": \"Quote in E2 states the quota is 128 MiB, contradicting the 256 MiB claim.\"}, {\"claim_id\": \"C3\", \"status\": \"insufficient\", \"evidence_ids\": [], \"reason\": \"No evidence provided regarding the launch year.\"}]}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 697,
+    "output_tokens": 132,
+    "reasoning_tokens": null,
+    "latency_ms": 2000
+  },
+  "authored_source_reads": 2,
+  "native_batches": 1,
+  "charged_model_attempts": 1,
+  "charged_native_attempts": 1,
+  "exports_closed": true,
+  "reports_closed": true,
+  "report_key_revoked": true,
+  "evidence_closed": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admissions_released": true,
+  "elapsed_seconds": 2.862,
+  "visual_images": [
+    {
+      "path": "data/backups/d58-first-core-export/page-1.png",
+      "sha256": "b4c61238d950f6c1b7936649fc3cf2790405e6103c1d4903644849a21e898491"
+    },
+    {
+      "path": "data/backups/d58-first-core-export/page-2.png",
+      "sha256": "e672f2338da8d6ff8189b78e9dc7fb60a9bb3964a14314396d522f15f9dbd687"
+    },
+    {
+      "path": "data/backups/d58-first-core-export/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "artifact": {
+    "path": "data/backups/d58-first-core-export/summary.json",
+    "sha256": "0ff1bab4d7201e514bcbace66d011d7a9b4c204ba1b8c62fad23698128c683fa"
+  },
+  "visual_review": "docs/evidence/d58-first-export-visual-review.json"
+}

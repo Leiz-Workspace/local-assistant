@@ -1,0 +1,85 @@
+{
+  "description": "First actual unchanged CORE comparison over two signed authored contradictory fixtures. Not live contradictory publisher evidence, human-independent review or semantic validation.",
+  "status": "PASS_FIRST_ACTUAL_CORE_AUTHORED_CONFLICT",
+  "source_freeze_sha256": "f68da9302785f9740babc9dd7192e736aac3ab915aa04fef80531c037ea50ffe",
+  "actual_public_or_private_source_HTTP": 0,
+  "browser_runs": 0,
+  "provider_calls": 0,
+  "automatic_retries": 0,
+  "human_independent": false,
+  "model_replacement": false,
+  "result": {
+    "owner_id": "a198d191-1dd4-433c-9fbe-7471a9fe85e6",
+    "goal": "Compare the required snapshot generation for restoring Atlas release 2.4. Report the conflict without choosing a winner.",
+    "evidence": [
+      {
+        "snapshot_id": "9c863bfd-1a17-46f9-9886-9218fc6f73c6",
+        "content_id": "ffba5f1d0c4ca413f70ffe4fd142bc873f7981c047791107e94ba512b7c98621",
+        "start": 0,
+        "end": 60,
+        "quote": "Atlas release 2.4 restore requires snapshot generation G-17.",
+        "quote_sha256": "8fc8ff3d2856b409ae4bc66196d3ad48c8716707710a75838aea3b0e86c8a81c",
+        "final_url": "https://example.org/d55-source-1",
+        "title": "Authored source",
+        "fetched_at": "2026-10-21 09:47:24.081251+00:00",
+        "date_claims": [],
+        "content_trust": "untrusted",
+        "semantic_validation": false
+      },
+      {
+        "snapshot_id": "8862dfe4-f9c0-4b0c-bfc8-5d4c1bbf785c",
+        "content_id": "640a00d42bc488a2b17e4770c2a69c79efdfa52fc54dd472916c0862305b0e83",
+        "start": 0,
+        "end": 60,
+        "quote": "Atlas release 2.4 restore requires snapshot generation G-18.",
+        "quote_sha256": "867125f4096aa81139c86783bd88c2f9d0fd52b140ba0dc1afd4b4a8b99cdb5b",
+        "final_url": "https://example.org/d55-source-2",
+        "title": "Authored source",
+        "fetched_at": "2026-10-21 09:47:24.081593+00:00",
+        "date_claims": [],
+        "content_trust": "untrusted",
+        "semantic_validation": false
+      }
+    ],
+    "agreements": [],
+    "conflicts": [
+      {
+        "topic": "Required snapshot generation for Atlas 2.4 restore",
+        "evidence_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    ],
+    "unresolved": [],
+    "completed_at": "2026-10-21 09:47:24.944041+00:00",
+    "model_attempts": 1,
+    "content_trust": "untrusted",
+    "semantic_validation": false,
+    "verified_freshness": null
+  },
+  "shared_evidence_alive_after_facade_shutdown": true,
+  "core_port_attempts": 1,
+  "model_completion": {
+    "content": "{\"agreements\": [], \"conflicts\": [{\"topic\": \"Required snapshot generation for Atlas 2.4 restore\", \"evidence_ids\": [\"E1\", \"E2\"]}], \"unresolved\": []}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 616,
+    "output_tokens": 45,
+    "reasoning_tokens": null,
+    "latency_ms": 860
+  },
+  "authored_source_reads": 2,
+  "charged_model_attempts": 1,
+  "facade_closed": true,
+  "evidence_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "signing_key_revoked": true,
+  "elapsed_seconds": 0.863,
+  "artifact": {
+    "path": "data/backups/d55-first-core-conflict/summary.json",
+    "sha256": "59da3ab464367777ad39d4e86e647e69fcedaf184ea12ef4d02a1ea7881f32cb"
+  }
+}

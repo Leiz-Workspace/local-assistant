@@ -1,0 +1,30 @@
+{
+  "description": "First D50 native worker test fails the actual confinement guard before browser start; CLI bare no-new-privileges is stored literally while the verifier requires explicit :true. Unstarted metadata-only diagnostic confirms encoding, not weaker isolation. Repair CLI spelling only and retain strict verifier.",
+  "pytest_passed": 0,
+  "pytest_failed": 1,
+  "pytest_seconds": 0.19,
+  "pytest_exit_code": 1,
+  "public_navigations": 0,
+  "actual_diagnostic": {
+    "NetworkMode": "none",
+    "ReadonlyRootfs": true,
+    "Privileged": false,
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "Memory": 1073741824,
+    "MemorySwap": 1073741824,
+    "NanoCpus": 1000000000,
+    "PidsLimit": 256,
+    "DeviceRequests": null,
+    "User": "1000:1000"
+  },
+  "archive": {
+    "path": "data/backups/d50-before-securityopt-encoding-repair.zip",
+    "sha256": "b97f95469f6883ca8ef60f1ba1fc397c0ca7d8b5ac67a18466908be7ed617ad3"
+  },
+  "log_sha256": "e3c15e60b76595760436b57f78ddac55aac7ad4c31af7178bc6d7dec054092b3"
+}

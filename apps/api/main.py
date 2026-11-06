@@ -31,6 +31,7 @@ from apps.api.routes.memory import router as memory_router
 from apps.api.routes.ocr import router as ocr_router
 from apps.api.routes.patches import router as patch_router
 from apps.api.routes.retrieval import router as retrieval_router
+from apps.api.routes.web_search import router as web_search_router
 from apps.api.routes.workflow_controls import router as workflow_control_router
 from apps.api.routes.workspace_diagnoses import router as workspace_diagnosis_router
 from apps.api.routes.workspace_explanations import (
@@ -71,6 +72,7 @@ app.include_router(ocr_router, prefix="/api/v1")
 app.include_router(chunk_router, prefix="/api/v1")
 app.include_router(ingestion_router, prefix="/api/v1")
 app.include_router(retrieval_router, prefix="/api/v1")
+app.include_router(web_search_router, prefix="/api/v1")
 app.include_router(grounded_router, prefix="/api/v1")
 app.include_router(memory_router, prefix="/api/v1")
 app.include_router(workspace_router, prefix="/api/v1")

@@ -1,0 +1,11 @@
+{
+  "description": "First new D60-T04 policy controls17 PASS/one FAIL: imported accepted check_result enforces output size, not a caller-forged snippet hash. New metadata helper must explicitly validate original complete result fields/hashes before projection; accepted services remain unchanged. Full initial source/test/log retained.",
+  "status": "FAILED_FIRST_NEW_POLICY_HASH_GUARD_RETAINED",
+  "passed": 17,
+  "failed": 1,
+  "archive": {
+    "path": "data/backups/d60-t04-before-metadata-hash-validation.zip",
+    "sha256": "9b35f2ee76ed33414c3ae82e8961a424a471f3a1502a368de8a76b560c9e9144"
+  },
+  "repair_scope": "New evaluation-only result integrity validator, no accepted source or model/config change"
+}

@@ -1,0 +1,102 @@
+{
+  "description": "Actual selected SearXNG runtime/source/evidence audit after1541 related PASS; original14 containers/model/config/data unchanged. Runtime stats are one point, not a peak or SLO.",
+  "status": "PASS_SELECTED_PROVIDER_RUNTIME",
+  "source_config_files": 443,
+  "unique_source_protected_hashes": 882,
+  "original14_containers_unchanged": true,
+  "original_core_healthy": true,
+  "selected_engine_names": [
+    "brave"
+  ],
+  "actual_runtime": {
+    "id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+    "image_id": "sha256:aa7270053bc3bf92155e2af83e2b0a7c3833c209cdeb8d396861a00c55ee7110",
+    "user": "searxng:searxng",
+    "health": "healthy",
+    "readonly": true,
+    "privileged": false,
+    "cap_drop": [
+      "ALL"
+    ],
+    "security_opt": [
+      "no-new-privileges:true"
+    ],
+    "memory": 805306368,
+    "memory_swap": 805306368,
+    "nano_cpus": 1000000000,
+    "pids_limit": 128,
+    "device_requests": null,
+    "ports": {
+      "8080/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "8889"
+        }
+      ]
+    },
+    "mounts": [
+      {
+        "Destination": "/etc/searxng",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/home/korosaki-ryukai/Workspace/Server/infras/searxng-server/config",
+        "Type": "bind"
+      },
+      {
+        "Destination": "/usr/local/searxng/local_log_policy.py",
+        "Mode": "ro",
+        "Propagation": "rprivate",
+        "RW": false,
+        "Source": "/home/korosaki-ryukai/Workspace/Server/infras/searxng-server/log_policy.py",
+        "Type": "bind"
+      }
+    ],
+    "networks": {
+      "local-assistant-search_default": {
+        "Aliases": [
+          "local-assistant-searxng",
+          "searxng"
+        ],
+        "DNSNames": [
+          "local-assistant-searxng",
+          "searxng",
+          "db1f8da3e103"
+        ],
+        "DriverOpts": null,
+        "EndpointID": "a313f332a1c6438e36ca8811fa06d07fd7a21ef6e8b21e1119c4f0c48cdcc2c4",
+        "Gateway": "172.18.0.1",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "GwPriority": 0,
+        "IPAMConfig": null,
+        "IPAddress": "172.18.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "Links": null,
+        "MacAddress": "1e:46:b4:9b:3f:4a",
+        "NetworkID": "f77855d0a653a263bc41c5bf7e39d535b2710a8481ad363da5a6efccec916228"
+      }
+    }
+  },
+  "point_resource_stats": {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.12%",
+    "Container": "local-assistant-searxng",
+    "ID": "db1f8da3e103",
+    "MemPerc": "11.77%",
+    "MemUsage": "90.42MiB / 768MiB",
+    "Name": "local-assistant-searxng",
+    "NetIO": "86.2kB / 38.9kB",
+    "PIDs": "8"
+  },
+  "private_signing_secret_mode": "0600",
+  "signing_secret_git_ignored": true,
+  "no_brave_API_key": true,
+  "selected_live_trial": {
+    "path": "data/backups/d47-searxng-selected-live/summary.json",
+    "sha256": "55f03d7e5a7ff1cfd6431589f426239e3a2fe4d09e6dbfeba13c0de2dcd64ed8"
+  },
+  "original_failed_cohorts_preserved": true,
+  "raw_provider_content_persisted": false
+}

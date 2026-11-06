@@ -1,0 +1,97 @@
+{
+  "description": "Pre-public D50 source descriptions, isolated Ruff correctness/import/format, Node syntax and actual collection; no tests skipped or inferred passed from collection.",
+  "new_files": [
+    "configs/browser-readonly-runtime.json",
+    "scripts/browser_readonly_worker.cjs",
+    "src/application/ports/browser.py",
+    "src/application/services/browser_policy.py",
+    "src/infrastructure/browser_cdp.py",
+    "src/infrastructure/browser_resources.py",
+    "src/infrastructure/browser_runtime.py",
+    "src/infrastructure/readonly_browser.py",
+    "tests/test_browser_cdp.py",
+    "tests/test_browser_policy.py",
+    "tests/test_browser_resources.py",
+    "tests/test_browser_runtime.py",
+    "tests/test_readonly_browser.py",
+    "tests/integration/test_browser_native.py"
+  ],
+  "evaluated_python_files": 12,
+  "described_functions_classes": 160,
+  "new_pytest_cases": 147,
+  "related_expected": 2006,
+  "checks": [
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "src/application/ports/browser.py",
+        "src/application/services/browser_policy.py",
+        "src/infrastructure/browser_cdp.py",
+        "src/infrastructure/browser_resources.py",
+        "src/infrastructure/browser_runtime.py",
+        "src/infrastructure/readonly_browser.py",
+        "tests/test_browser_cdp.py",
+        "tests/test_browser_policy.py",
+        "tests/test_browser_resources.py",
+        "tests/test_browser_runtime.py",
+        "tests/test_readonly_browser.py",
+        "tests/integration/test_browser_native.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "src/application/ports/browser.py",
+        "src/application/services/browser_policy.py",
+        "src/infrastructure/browser_cdp.py",
+        "src/infrastructure/browser_resources.py",
+        "src/infrastructure/browser_runtime.py",
+        "src/infrastructure/readonly_browser.py",
+        "tests/test_browser_cdp.py",
+        "tests/test_browser_policy.py",
+        "tests/test_browser_resources.py",
+        "tests/test_browser_runtime.py",
+        "tests/test_readonly_browser.py",
+        "tests/integration/test_browser_native.py"
+      ],
+      "exit_code": 0,
+      "output": "12 files already formatted\n"
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/browser_readonly_worker.cjs"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_browser_cdp.py",
+        "tests/test_browser_policy.py",
+        "tests/test_browser_resources.py",
+        "tests/test_browser_runtime.py",
+        "tests/test_readonly_browser.py",
+        "tests/integration/test_browser_native.py",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "147 tests collected in 0.09s"
+    }
+  ],
+  "source_freeze_sha256": "acd842ad9cf347c144ce7e6b497f284b1e02598b7124e7b76651b99168276465"
+}

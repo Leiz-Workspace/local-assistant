@@ -1,0 +1,52 @@
+{
+  "description": "D53 authored URI/date evaluator correctness/import/format/descriptions and actual collection; no inferred live score from fixtures.",
+  "evaluated_files": [
+    "tests/web_coverage_cases.py",
+    "tests/test_web_coverage_cases.py",
+    "tests/fixtures/web_coverage/d53-cases.json"
+  ],
+  "evaluated_python_files": 2,
+  "described_functions_classes": 11,
+  "new_pytest_cases": 23,
+  "related_expected": 2187,
+  "checks": [
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "tests/web_coverage_cases.py",
+        "tests/test_web_coverage_cases.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "tests/web_coverage_cases.py",
+        "tests/test_web_coverage_cases.py"
+      ],
+      "exit_code": 0,
+      "output": "2 files already formatted\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_web_coverage_cases.py",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "23 tests collected in 0.05s"
+    }
+  ],
+  "source_freeze_sha256": "6f8c497926f5ac846cb3e61164dd1b2593e0db0447cca7ad2291668ebc2e26c5"
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Distinct observed actual public HTTPS/static-text fetch; first HTTP200/closed-writer observer failure remains FAILED. One original DNS/TLS/HTTP call, no authored peer/fixture/model/subresource/retry, source binding only.",
+  "status": "PASS_OBSERVED_ACTUAL_PUBLIC_STATIC_FETCH",
+  "elapsed_seconds": 0.242,
+  "requested_url": "https://docs.searxng.org/dev/search_api.html",
+  "final_url": "https://docs.searxng.org/dev/search_api.html",
+  "HTTP_hops": 1,
+  "DNS_resolutions": 1,
+  "TLS_connections": 1,
+  "native_socket_FDs_closed": true,
+  "title": "Search API - SearXNG Documentation (2026.10.19+81371861f)",
+  "text_bytes": 4825,
+  "body_sha256": "cbcfae9b57f92250ec070f51f07b00786bcb64192a6fda9d0f58d0e4e9fcacc4",
+  "text_sha256": "cc2cbad08739d87455518f5f3231de3e671d1ee708a988291a669f104bdaec4c",
+  "canonical_verified": false,
+  "content_trust": "untrusted",
+  "model_calls": 0,
+  "automatic_retries": 0,
+  "raw_HTML_or_text_persisted": false,
+  "first_observer_failure_replaced": false,
+  "source_freeze_sha256": "a14a5dedceae6a3217ff888c31adedbf46f54e2c2f4a76babaf164ced090f9fe",
+  "artifact": {
+    "path": "data/backups/d49-observed-public-fetch/summary.json",
+    "sha256": "28cabec89f0a9de99584d8e564762e5b145f162e5f0c96e3801ccd1326c29459"
+  }
+}

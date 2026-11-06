@@ -1,0 +1,35 @@
+{
+  "description": "Original D52 first7/8 functional and2157 related PASS cohort/source/outcomes retained before exactly one necessary ADR-071 serializer repair.",
+  "archive": {
+    "path": "data/backups/d52-before-source-delimiter-repair.zip",
+    "sha256": "fbb6ab498f5487ba2d59c6ec6884fc8048425d4519ed7de326e6628af80b3592"
+  },
+  "source_before_sha256": "b97aa9d45322046f441078930658b030954bfea186a6461ef3b9c3a540d6229d",
+  "functional_passed": 7,
+  "functional_total": 8,
+  "original_related_passed": 2157,
+  "original_related_skipped": 0,
+  "original_related_exit_code": 0,
+  "files": {
+    "src/application/services/search_pipeline.py": "b97aa9d45322046f441078930658b030954bfea186a6461ef3b9c3a540d6229d",
+    "tests/web_redteam_cases.py": "33e9c7ce5c8aa11ed38eb63977ef3734a42e5b63e355a8859272f8c3426e5f59",
+    "tests/test_web_redteam_cases.py": "c64f586dd71ced7bbae0866965308b52c9f965e10794037aecc101800efc29f3",
+    "tests/integration/test_web_redteam_native.py": "1f71ff755e996a6840d67f40f01fe54fd46733bd96f41304038a84845b5518d4",
+    "tests/fixtures/web_redteam/d52-cases.json": "e69b4e402d7554488e68310f25f46e8d047737a86fc17dcc35a5367f5fe04e4b",
+    "docs/evidence/d52-redteam-freeze.json": "5c23bbab14f8cd0b7ab79724601bf9475758f3c931673460e5dea5f97fdd3e72",
+    "docs/evidence/d52-first-core-observations.json": "81114e7e0d9e195ae791b2127e0402a3cf8c8556749b4c9034b5c90c6d686c3a",
+    "docs/evidence/d52-related-regression.json": "07538cd744601f8a5e894e35fb2f7389a75a930f779fed18c3a261ec3ef56fbb",
+    "data/backups/d52-first-core-evaluation.py": "bdd889d96e8a8c4c82ea63b38a14db516640b7d80aa3a561d778ae264fbd02f7",
+    "data/backups/d52-first-core-evaluation.log": "8275ab1bb26a6ca822d31d82e36413afcc3f5f5685abecd404cd9150097dfcb8",
+    "data/backups/d52-related-regression.log": "4c4bc36ea674eecc06da2a5c2ce9058bba74ea2bc6961aad1a3b519f27722859",
+    "data/backups/d52-first-core-evaluation/title-role-spoof.json": "c4e9a6dca369e04cd70a2df760a20697ef788d3932630762e24ad134255552c1",
+    "data/backups/d52-first-core-evaluation/citation-poison.json": "5793fd952c974d1c1002e98565e386a7f86d5e3d02a0763b1ea463d04e51be80",
+    "data/backups/d52-first-core-evaluation/summary.json": "268c83968681ef57371c3ab7590180862d89d058c2c3cbd8bb7dea16d62130e1",
+    "data/backups/d52-first-core-evaluation/control-supported.json": "ea5bbecb6ff9320962f29f266a47c998d8d7fbfc46b3001838221727ee617748",
+    "data/backups/d52-first-core-evaluation/fake-tool-secret.json": "fcb10e682118b71196724abf309ce806f037950a728f9842dc87925154518789",
+    "data/backups/d52-first-core-evaluation/control-absent.json": "f77eb4f34761b978b23c2107ce797d544043229c93f6b6516c2a1d945466077e",
+    "data/backups/d52-first-core-evaluation/snippet-override.json": "3191f040009a4d7fdaec587991e28db473b33a5ff74b6a322cf6f9519e55dcce",
+    "data/backups/d52-first-core-evaluation/role-delimiters.json": "9064dab6d6a82bae9b8b00812cda1135be9fb4584bf3a8c596c024879a67a75f",
+    "data/backups/d52-first-core-evaluation/url-policy-spoof.json": "93b5265a076ef474fe460877f8057061b80423cd9f36716a2017f16725299b86"
+  }
+}

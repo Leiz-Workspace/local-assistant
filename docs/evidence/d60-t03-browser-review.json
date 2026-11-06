@@ -1,0 +1,96 @@
+{
+  "description": "D60-T03 official release/security scope review and unchanged cached compatibility/resources. Review complete; cached browser not qualified for current-security/broad production browsing and no runtime replacement adopted.",
+  "status": "REVIEW_COMPLETE_RETAIN_RESTRICTED_LOCAL_RUNTIME",
+  "official_review": {
+    "observed_date": "2026-10-21",
+    "crawler_release": {
+      "url": "https://github.com/webrecorder/browsertrix-crawler/releases/tag/v1.15.0",
+      "release": "v1.15.0",
+      "listed_date": "2026-10-02",
+      "release_notes_browser_bump": "Brave1.96.60"
+    },
+    "latest_non_prerelease_brave": {
+      "url": "https://github.com/brave/brave-browser/releases/tag/v1.97.59",
+      "release": "v1.97.59",
+      "chromium": "155.0.8059.85",
+      "listed_date": "2026-10-16"
+    },
+    "release_index_not_stable": {
+      "url": "https://github.com/brave/brave-browser/releases",
+      "example": "v1.98.60/Chromium156.0.8078.48 is marked Pre-release and is not treated as stable"
+    },
+    "crawler_security_policy": {
+      "url": "https://github.com/webrecorder/browsertrix-crawler/security",
+      "no_published_advisories_observed": true,
+      "absence_does_not_establish_security": true
+    },
+    "excluded_backend_advisory": {
+      "url": "https://github.com/webrecorder/browsertrix/security/advisories/GHSA-47vv-v544-r985",
+      "scope": "Browsertrix backend git custom behavior command injection; not automatically attributed to standalone cached worker"
+    },
+    "unavailable_sources": [
+      "Chrome release blog redirected to anti-bot; another page returned429; access not bypassed.",
+      "Brave website release-note path inaccessible; official GitHub latest release used."
+    ]
+  },
+  "cached": {
+    "image": "webrecorder/browsertrix-crawler@sha256:7f9d5e20e0f6efea2e9e257aa37e536495ac9f33422ab886e446dabf1065af2c",
+    "brave": "149.1.91.175",
+    "product": "Chrome/149.0.7827.155",
+    "native_sandbox": false
+  },
+  "native_controls": {
+    "summary": "13 passed in 12.42s",
+    "log_sha256": "f3af426925b21a189e7b3e2a8b866800a0269f1e5ac70a6613fbad0646d4f97d"
+  },
+  "resource_probe": {
+    "path": "data/backups/d60-t03-cached-browser-resource-probe.json",
+    "sha256": "6843c36c88b496480e66087ea2e6e1ad4c010750d62acbaf03cfc364ff958a1d",
+    "samples": [
+      {
+        "CPUPerc": "12.01%",
+        "MemUsage": "166MiB / 1GiB",
+        "MemPerc": "16.21%",
+        "PIDs": "97"
+      },
+      {
+        "CPUPerc": "1.41%",
+        "MemUsage": "166.5MiB / 1GiB",
+        "MemPerc": "16.26%",
+        "PIDs": "97"
+      },
+      {
+        "CPUPerc": "0.22%",
+        "MemUsage": "166.9MiB / 1GiB",
+        "MemPerc": "16.30%",
+        "PIDs": "97"
+      }
+    ],
+    "elapsed_seconds": 5.702
+  },
+  "all_cached_owned_resources_retired": true,
+  "current_security_approved": false,
+  "broad_production_browser_approved": false,
+  "new_runtime_adopted": false,
+  "new_model_or_image_downloads": 0,
+  "model_choice_changed": false,
+  "decision": "Retain exact cached local authored/blank compatibility scope, default-off production flags and no native Chromium sandbox claim. Live phase gate uses original static public source fetch. A newer release is a candidate requiring measured compatibility/security/resources/rollback before adoption, not an automatic approved upgrade.",
+  "qualification_followup": {
+    "priority": "P1 before broad production dynamic browsing",
+    "dependencies": [
+      "Frozen original D50/D52/D60 browser/evidence/attack oracles",
+      "Verified immutable candidate image/binary versions and operator cache/disk budget",
+      "Review of native sandbox availability, current upstream security and CDP/schema/cancel/resource limits"
+    ],
+    "effort": "One explicit candidate-runtime qualification/migration/rollback milestone, re-estimate after immutable candidate selection",
+    "risks": [
+      "Cached browser is older than official latest release",
+      "New crawler release may also lag latest stable engine",
+      "No published standalone advisories is not evidence of no vulnerabilities",
+      "Backend advisory scope must not be automatically attributed to standalone crawler",
+      "Breaking CDP/pipe/rendering/cancellation/resource ownership or widening permissions to pass sites"
+    ],
+    "migration": "No migration performed. Future candidate is isolated and measured on the same corpus before any configured-digest change or production use.",
+    "rollback": "Exact cached digest7f9d5e20.../original config/source/ownership retained; drain only candidate-owned resources and restore exact previous reviewed bytes if a later adoption fails. No model/database/source migration or reindex."
+  }
+}

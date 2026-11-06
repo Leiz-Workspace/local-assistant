@@ -1,0 +1,563 @@
+{
+  "description": "First frozen same-agent eight-query/four-primary measurement. Expected-primary URI presence is not full semantic relevance; date declaration quote is not verified publication/freshness. Every first failure retained; no engine/model fallback or post-score relabeling.",
+  "status": "EVALUATION_COMPLETE_GROUNDED_DATE_AND_CLEANUP",
+  "source_freeze_sha256": "6f8c497926f5ac846cb3e61164dd1b2593e0db0447cca7ad2291668ebc2e26c5",
+  "score": {
+    "queries": 8,
+    "reference_attempts": 4,
+    "provider_success": 6,
+    "provider_failed": 2,
+    "expected_primary_present": 3,
+    "expected_primary_presence_at5": 0.375,
+    "mean_reciprocal_primary_rank": 0.2916666666666667,
+    "by_language": {
+      "en": {
+        "queries": 4,
+        "primary_present": 1
+      },
+      "vi": {
+        "queries": 4,
+        "primary_present": 2
+      }
+    },
+    "references_observed": 3,
+    "date_markers_required": 1,
+    "date_markers_grounded": 1,
+    "verified_freshness": null,
+    "semantic_relevance_evaluated": false,
+    "human_independent": false,
+    "provider_or_model_comparison": false
+  },
+  "searches": [
+    {
+      "query_id": "searxng-en",
+      "topic": "searxng",
+      "language": "en",
+      "queried_at": "2026-10-21T08:30:57.384449+00:00",
+      "elapsed_seconds": 0.816,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "title_sha256": "d4e644edd8deedfcb4488959377cfc9f452ccd9540673dbe1b1df7df09d4b18c",
+          "snippet_sha256": "71972e10bc4141b55f4fba70ceb101d014ca9881997758ae2c1b41c4e43e3d22",
+          "expected_primary": true
+        },
+        {
+          "rank": 2,
+          "url": "https://docs.searxng.org/dev/engines/json_engine.html",
+          "title_sha256": "8fa6893dd7caf1a1587741e7883696498c70143692507bc83a43ab23c600c625",
+          "snippet_sha256": "ec5514c988aed8646302039a71d8c9ea94a78fbd04eccf48cf627fa4ba0e01a1",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://docs.searxng.org/dev/search_api",
+          "title_sha256": "fe927d1c0c050e3ac28e856b0d5ea5a26023b5be17b50104a22aa99d05ef5dba",
+          "snippet_sha256": "71972e10bc4141b55f4fba70ceb101d014ca9881997758ae2c1b41c4e43e3d22",
+          "expected_primary": false
+        },
+        {
+          "rank": 4,
+          "url": "https://docs.searxng.org/dev/search_api.html?highlight=format",
+          "title_sha256": "d9848edd98ac9c4d1036fea7ba81a96a36ae57e5e0d7fe7ac5e2bc08ff07b469",
+          "snippet_sha256": "71972e10bc4141b55f4fba70ceb101d014ca9881997758ae2c1b41c4e43e3d22",
+          "expected_primary": true
+        },
+        {
+          "rank": 5,
+          "url": "https://docs.searxng.org/_sources/dev/search_api.rst.txt",
+          "title_sha256": "b489b295cd8b390ed47ba61083530c810b091bcd00cbc86c1bef63c84062eff2",
+          "snippet_sha256": "e186781a42fac316fc07bebf1474075f31bcb6adda2f9d8132b1d141025bed42",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": 1,
+      "expected_primary_present": true,
+      "reciprocal_primary_rank": 1.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "searxng-vi",
+      "topic": "searxng",
+      "language": "vi",
+      "queried_at": "2026-10-21T08:30:58.200060+00:00",
+      "elapsed_seconds": 0.779,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "title_sha256": "d4e644edd8deedfcb4488959377cfc9f452ccd9540673dbe1b1df7df09d4b18c",
+          "snippet_sha256": "c710ff69fc399c5079ca0978e06a1433ca1df3862c2dbf2f03e9f99b14299b57",
+          "expected_primary": true
+        },
+        {
+          "rank": 2,
+          "url": "https://docs.searxng.org/dev/engines/json_engine.html",
+          "title_sha256": "8fa6893dd7caf1a1587741e7883696498c70143692507bc83a43ab23c600c625",
+          "snippet_sha256": "38962ea2f5a2403605ac470d2bcadf864a44394a703036d077f1582640130b86",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://docs.searxng.org/dev/search_api",
+          "title_sha256": "fe927d1c0c050e3ac28e856b0d5ea5a26023b5be17b50104a22aa99d05ef5dba",
+          "snippet_sha256": "c710ff69fc399c5079ca0978e06a1433ca1df3862c2dbf2f03e9f99b14299b57",
+          "expected_primary": false
+        },
+        {
+          "rank": 4,
+          "url": "https://docs.searxng.org/dev/engines/offline/search-indexer-engines.html",
+          "title_sha256": "6a340e320fa11190c9a1071d97d5867396560a8739525767d7b9757beabed2a4",
+          "snippet_sha256": "fa70d8fb01980be97584b7b0ca7da83d64eb84b43e2c82d8cf574f540ff28e0e",
+          "expected_primary": false
+        },
+        {
+          "rank": 5,
+          "url": "https://lagnchain.readthedocs.io/en/stable/ecosystem/searx.html",
+          "title_sha256": "98f71c2616b752fc141a56714896c3c8b18c20c06f4923eef2a6a23569b8b1b1",
+          "snippet_sha256": "ecaea642c460b1071fda3c1ce964c5003bb8dce7fb21378e694141906fb100e2",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": 1,
+      "expected_primary_present": true,
+      "reciprocal_primary_rank": 1.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "python-en",
+      "topic": "python",
+      "language": "en",
+      "queried_at": "2026-10-21T08:30:58.979386+00:00",
+      "elapsed_seconds": 0.799,
+      "status": "error",
+      "error_type": "SearxNGError",
+      "error_code": "searxng_response_invalid",
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "python-vi",
+      "topic": "python",
+      "language": "vi",
+      "queried_at": "2026-10-21T08:30:59.778353+00:00",
+      "elapsed_seconds": 0.842,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://discuss.python.org/t/is-urllib-parse-urljoin-harmful/109165",
+          "title_sha256": "98053f34adb2860e4092a5373bcf939cc10eaa615233cc51858ce79e354e050b",
+          "snippet_sha256": "6e114c9f58b6ff5852187fa58a4ad301123704a5a556b3e19dd1cb7f4ebda7cb",
+          "expected_primary": false
+        },
+        {
+          "rank": 2,
+          "url": "https://discuss.python.org/t/urllib-join-behavior/86423",
+          "title_sha256": "9d8f4bad1855c1a43c241b3bb8707967bf5dfdcc5efb650d8a60628fa56396e6",
+          "snippet_sha256": "5d03fc704499bfd01489c28d70b9b2f090f109f793b8ba6a9b1a7a665e264287",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://docs.python.org/3/library/urllib.parse.html",
+          "title_sha256": "775812566e71a848d7b8a9f6d04a7b77343e1384928c1a4689cbe57d179e6c3a",
+          "snippet_sha256": "2771f6c6b313d6bd488a16d665d2945ff3d02fdbc3b6e690eb88b75e34ef87af",
+          "expected_primary": true
+        },
+        {
+          "rank": 4,
+          "url": "https://github.com/python/cpython/issues/96015",
+          "title_sha256": "9f460a3993f1f7781bd3e43b9b81d2e07bd5ef760f5019354aa1b0aecdd30680",
+          "snippet_sha256": "7ec956104935ab4241f9be1f009fdcea6d25c1af8f3a24d49209f4b50b4edfb7",
+          "expected_primary": false
+        },
+        {
+          "rank": 5,
+          "url": "https://pytutorial.com/python-urljoin-build-urls-correctly/",
+          "title_sha256": "0b2823c7728007211f3f7bdc5faddf90759ad3245386eb03642e0b8917650ae8",
+          "snippet_sha256": "fd40e65d5f3ab40ead1c8929f9a7ba81e390a8782cb214003cc95eee68907ca4",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": 3,
+      "expected_primary_present": true,
+      "reciprocal_primary_rank": 0.3333333333333333,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "rfc-en",
+      "topic": "rfc",
+      "language": "en",
+      "queried_at": "2026-10-21T08:31:00.620654+00:00",
+      "elapsed_seconds": 1.933,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://datatracker.ietf.org/doc/html/rfc9111",
+          "title_sha256": "d5b62c483f72a87aba8091322bc5269cfa70aa8ae2ca9931d42787ee95fa2b4b",
+          "snippet_sha256": "430afa7bf4c3c212799ba4665c6d34673902ef34a64b07d4859f81644f2415bf",
+          "expected_primary": false
+        },
+        {
+          "rank": 2,
+          "url": "https://dl.acm.org/doi/10.17487/RFC9111",
+          "title_sha256": "a1e8bd6c1e756cb9813219fe6a12553f720ea7619630fe00b9e79c2492638a2f",
+          "snippet_sha256": "909724b5e92566c343df80824286c83a9a369347f438b6af363c763050be19e2",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://www.rfc-editor.org/rfc/rfc9111.pdf",
+          "title_sha256": "d8c8b1ba71febb8a7f939ce4d5dfb5656bffaebe6426f3b4587594b78e07d0b9",
+          "snippet_sha256": "daf5b6a7db70aca8fade9e63063349af5f185a6d354b3e6472e9ac22dce730ef",
+          "expected_primary": false
+        },
+        {
+          "rank": 4,
+          "url": "https://danburzo.ro/http-caching-refresher/",
+          "title_sha256": "9f2244013a0174acc4bf3f0c020e7a57936094bd68933ee55a50246b6cb42242",
+          "snippet_sha256": "50976c891cffa222b779c51feee54a0c4009c567769607a11ade2947efdf8061",
+          "expected_primary": false
+        },
+        {
+          "rank": 5,
+          "url": "https://datatracker.ietf.org/doc/rfc9111/bibtex/",
+          "title_sha256": "b24a63448115b8d3f93ce16e389e2579ad6d282bb0315fc7152df5cf9eee84ba",
+          "snippet_sha256": "de6d1b5ca246258ee22cd77ab1cbb66104b9445829e2a00596edf7b8e5f34b49",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "rfc-vi",
+      "topic": "rfc",
+      "language": "vi",
+      "queried_at": "2026-10-21T08:31:02.554077+00:00",
+      "elapsed_seconds": 0.718,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://www.rfc-editor.org/info/rfc9111/",
+          "title_sha256": "5c5ba4ed88c528f715826f27543ca5a9d397be8f900834a4634e8f37c7b45695",
+          "snippet_sha256": "430afa7bf4c3c212799ba4665c6d34673902ef34a64b07d4859f81644f2415bf",
+          "expected_primary": false
+        },
+        {
+          "rank": 2,
+          "url": "https://rfcinfo.com/rfc-9111/",
+          "title_sha256": "79d574f012982ca8c77ae97f5f23f1a9da19c00e2ae801b9d255b5a4c134906c",
+          "snippet_sha256": "bc75d9ebb1290c52774712ff281fe8fa5aa1b770066b04e4a07e003e9186bde6",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://archive.org/details/rfc9111",
+          "title_sha256": "67502a6c36d1a365f4c063bd2df48d3f67daa5d8b344a361e7883255de7f1bf9",
+          "snippet_sha256": "200b42537f5c37a230cd0f9c363ec2ab9b0fa213c3313e0d4f6f46a75d90f707",
+          "expected_primary": false
+        },
+        {
+          "rank": 4,
+          "url": "https://github.com/projectdiscovery/nuclei/issues/6725",
+          "title_sha256": "20e191d4d484c70be8170c076a684b2f223aae6c89cbd6f5157956601dd6a5e3",
+          "snippet_sha256": "87ea7100dc99a0a054747307e4c02a6f4d77e0531f3920721fed96cc2bad9624",
+          "expected_primary": false
+        },
+        {
+          "rank": 5,
+          "url": "https://datatracker.ietf.org/doc/rfc9111/",
+          "title_sha256": "d5b62c483f72a87aba8091322bc5269cfa70aa8ae2ca9931d42787ee95fa2b4b",
+          "snippet_sha256": "1f110fad5fcccf8a04746776970502c45a62a9792aa0ba1a40f9663d7ed064c6",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "cdp-en",
+      "topic": "cdp",
+      "language": "en",
+      "queried_at": "2026-10-21T08:31:03.272568+00:00",
+      "elapsed_seconds": 0.852,
+      "status": "results",
+      "error_type": null,
+      "error_code": null,
+      "results": [
+        {
+          "rank": 1,
+          "url": "https://pkg.go.dev/github.com/chromedp/cdproto/browser",
+          "title_sha256": "3bee56a7aca5482a837689ffc9f41c4a6d0181293da1fc512a4c50efbcb466c6",
+          "snippet_sha256": "797b851df26df1901c4394b789fc174a53212febc61d6cda9fdf623ee98279f1",
+          "expected_primary": false
+        },
+        {
+          "rank": 2,
+          "url": "https://issues.chromium.org/issues/549230310",
+          "title_sha256": "76ab83c6910b38e3fe92992cfb2cc6f6b3b5ef0a1c2cead753e4c037815e901a",
+          "snippet_sha256": "f247f23429800631188a0bb9e17ba384b86b0f4e1828d2c6f1f448f994547046",
+          "expected_primary": false
+        },
+        {
+          "rank": 3,
+          "url": "https://vanilla.aslushnikov.com/?Page.setDownloadBehavior=",
+          "title_sha256": "835686d45af28cdfe3f0b87b238d3f386c19c0e3635d611eb521bbd7d9882d3b",
+          "snippet_sha256": "ca1008ef5aac7072c7e202f8253c0af378c8263c023775bae0844cac3ba49183",
+          "expected_primary": false
+        },
+        {
+          "rank": 4,
+          "url": "https://chromedevtools.github.io/devtools-protocol/",
+          "title_sha256": "581d0159a9ae6047372d06e68046bec527dbff293c4a627ac944e59a363c863e",
+          "snippet_sha256": "bd42066ae83ee53df5e849a27ad08806022bc7a1fdf5b6290dd79fb1287d7ec7",
+          "expected_primary": false
+        },
+        {
+          "rank": 5,
+          "url": "https://stackoverflow.com/questions/59077558/how-do-you-programmatically-change-default-download-directory-on-chrome",
+          "title_sha256": "a6a444802f658dde5eaf2e784f54ded3739082f63991aad1f8107fcc1574566b",
+          "snippet_sha256": "dfad6d4ec4c1cd07f66125a62dfe797382ff796cb84673221d2c64f3d34ee2a3",
+          "expected_primary": false
+        }
+      ],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false
+    },
+    {
+      "query_id": "cdp-vi",
+      "topic": "cdp",
+      "language": "vi",
+      "queried_at": "2026-10-21T08:31:04.124857+00:00",
+      "elapsed_seconds": 0.227,
+      "status": "error",
+      "error_type": "SearxNGError",
+      "error_code": "searxng_upstream_unavailable",
+      "results": [],
+      "expected_primary_rank": null,
+      "expected_primary_present": false,
+      "reciprocal_primary_rank": 0.0,
+      "semantic_relevance_evaluated": false
+    }
+  ],
+  "references": [
+    {
+      "reference_id": "searxng",
+      "requested_url": "https://docs.searxng.org/dev/search_api.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": false,
+      "date_marker_grounded": false,
+      "final_url": "https://docs.searxng.org/dev/search_api.html",
+      "title": "Search API - SearXNG Documentation (2026.10.19+81371861f)",
+      "fetched_at": "2026-10-21T08:31:04.874267+00:00",
+      "text_sha256": "cc2cbad08739d87455518f5f3231de3e671d1ee708a988291a669f104bdaec4c",
+      "text_bytes": 4825,
+      "resources": [
+        {
+          "url": "https://docs.searxng.org/dev/search_api.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 46464,
+          "body_sha256": "cbcfae9b57f92250ec070f51f07b00786bcb64192a6fda9d0f58d0e4e9fcacc4"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown"
+    },
+    {
+      "reference_id": "python",
+      "requested_url": "https://docs.python.org/3/library/urllib.parse.html",
+      "status": "error",
+      "error_type": "WebEvidenceError",
+      "error_code": "evidence_source_failed",
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": false,
+      "date_marker_grounded": false
+    },
+    {
+      "reference_id": "rfc",
+      "requested_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": true,
+      "date_marker_grounded": true,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "title": "RFC 9111: HTTP Caching",
+      "fetched_at": "2026-10-21T08:31:05.903583+00:00",
+      "text_sha256": "18e587371605ef2af0c7434539cc89cfd3c9ee260aa0e508bccdc464ff3baad5",
+      "text_bytes": 75660,
+      "resources": [
+        {
+          "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 232630,
+          "body_sha256": "ce91ee9848d2b9ac46386b0f0cbd4bfd9c0cd1948ebc363834cadc7e0997f3d7"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown",
+      "date_marker_quote_sha256": "61dd8dd131141808b1af1524bbc81284d611e06766cb630588ce2d336bf0a76f",
+      "date_marker_start": 22,
+      "date_marker_end": 31,
+      "date_marker_source_url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "date_marker_fetched_at": "2026-10-21T08:31:05.903583+00:00"
+    },
+    {
+      "reference_id": "cdp",
+      "requested_url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Browser.pdl",
+      "status": "observed",
+      "error_type": null,
+      "error_code": null,
+      "verified_publication_date": null,
+      "verified_freshness": null,
+      "date_marker_required": false,
+      "date_marker_grounded": false,
+      "final_url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Browser.pdl",
+      "title": null,
+      "fetched_at": "2026-10-21T08:31:06.496290+00:00",
+      "text_sha256": "f1dbfbc408f59936fb51ab0acb2ed79c44e7ad52109d1d3d59c5eda5a7a858f3",
+      "text_bytes": 10554,
+      "resources": [
+        {
+          "url": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Browser.pdl",
+          "kind": "Document",
+          "status": 200,
+          "body_bytes": 12155,
+          "body_sha256": "3f2ff83cc3a997369a4d7bda3a726e1c83c4cc6cdab593831511ee3092a82da2"
+        }
+      ],
+      "page_date_claims": [],
+      "structured_publication_date": "unknown"
+    }
+  ],
+  "actual_DNS": [
+    {
+      "host": "docs.searxng.org",
+      "addresses": [
+        "185.199.111.153",
+        "185.199.108.153",
+        "185.199.109.153",
+        "185.199.110.153",
+        "2606:50c0:8002::153",
+        "2606:50c0:8003::153",
+        "2606:50c0:8000::153",
+        "2606:50c0:8001::153"
+      ]
+    },
+    {
+      "host": "docs.python.org",
+      "addresses": [
+        "151.101.0.223",
+        "151.101.192.223",
+        "151.101.64.223",
+        "151.101.128.223",
+        "2a04:4e42:f000::223"
+      ]
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "addresses": [
+        "104.18.20.81",
+        "104.18.21.81",
+        "2606:4700::6812:1451",
+        "2606:4700::6812:1551"
+      ]
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "addresses": [
+        "185.199.111.133",
+        "185.199.108.133",
+        "185.199.109.133",
+        "185.199.110.133",
+        "2606:50c0:8003::154",
+        "2606:50c0:8000::154",
+        "2606:50c0:8002::154",
+        "2606:50c0:8001::154"
+      ]
+    }
+  ],
+  "actual_TLS": [
+    {
+      "host": "docs.searxng.org",
+      "selected_pin": "185.199.111.153",
+      "actual_peer": "185.199.111.153",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "docs.python.org",
+      "selected_pin": "151.101.0.223",
+      "actual_peer": "151.101.0.223",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "selected_pin": "104.18.20.81",
+      "actual_peer": "104.18.20.81",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "selected_pin": "185.199.111.133",
+      "actual_peer": "185.199.111.133",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "native_socket_FDs_closed": true,
+  "cleanup_complete": true,
+  "original_public_transport_verified": true,
+  "provider_port_attempts": 8,
+  "reference_port_attempts": 4,
+  "model_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "raw_provider_snippets_HTML_text_or_proof_key_persisted": false,
+  "elapsed_seconds": 9.113,
+  "artifact": {
+    "path": "data/backups/d53-first-coverage-evaluation/summary.json",
+    "sha256": "ee242045257384a9813d5e14be0b07b984d2901e47d4a9c9fba8e804106eb780"
+  }
+}

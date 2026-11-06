@@ -1,0 +1,17 @@
+{
+  "description": "D58 initial policy35 PASS/native1 PASS; ownership55 PASS/two explicit cleanup-poison FAIL. Normal finite export_cleanup_uncertain propagated without closing admission in facade/native adapter. Original nine source/test files and exact logs retained before new-code-only error-handler repair.",
+  "initial_policy_passed": 35,
+  "first_actual_native_passed": 1,
+  "ownership_passed": 55,
+  "ownership_failed": 2,
+  "archive": {
+    "path": "data/backups/d58-before-explicit-cleanup-poison-repair.zip",
+    "sha256": "96fa1c51de451c9508bd02225ba9cb12403cf662fffcfcf1b7e0c0407857ddb6"
+  },
+  "logs": {
+    "data/backups/d58-first-policy-controls.log": "4af59690f181e1ee3c176189de7772498c1533953e107b6079b104a78db94839",
+    "data/backups/d58-first-native-controls.log": "73ab25e5a09c8277c54b97bb33c5b1bc964033e409a0798d74ea5db724db749b",
+    "data/backups/d58-first-ownership-controls.log": "5ccaf6222c0455d386d01c7ffb2788d6a46f56918246086f95330b37a065155a"
+  },
+  "accepted_D57_source_changes": []
+}

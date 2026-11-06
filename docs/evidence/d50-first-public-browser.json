@@ -1,0 +1,158 @@
+{
+  "description": "First actual public dynamic-browser observation, separately from147 authored controlled/native cases; fixed URL/oracles/source frozen before navigation.",
+  "status": "PASS_FIRST_ACTUAL_PUBLIC_DYNAMIC_BROWSER",
+  "source_freeze_sha256": "acd842ad9cf347c144ce7e6b497f284b1e02598b7124e7b76651b99168276465",
+  "artifact": {
+    "path": "data/backups/d50-first-public-browser/summary.json",
+    "sha256": "acfe4b24cd4b4b2d18c9e07e9de08c4b1535e3343a35a63f9b5e0e931af7172d"
+  },
+  "elapsed_seconds": 3.799,
+  "url": "https://quotes.toscrape.com/js/",
+  "final_url": "https://quotes.toscrape.com/js/",
+  "title": "Quotes to Scrape",
+  "text_bytes": 1540,
+  "text_sha256": "1e7d523b1ade85f7476dada82a1516c9338057a18e5e54f5c374f54b2a5ab70c",
+  "rendered_markers_present": true,
+  "same_response_static_baseline": {
+    "title": "Quotes to Scrape",
+    "text_bytes": 22,
+    "text_sha256": "f6b87ef8561fcd18c361497b15105eaa2c49848f837f887c22b08ebabd269927",
+    "rendered_markers_absent": true
+  },
+  "actual_HTTP_attempts": [
+    {
+      "url": "https://quotes.toscrape.com/js/",
+      "kind": "Document",
+      "status": 200,
+      "body_bytes": 5808,
+      "body_sha256": "a9067d4438044d45a1a895ed6939df4fa4d0487e17b82053dd694ad425466074",
+      "pinned_address": "35.211.122.109"
+    },
+    {
+      "url": "https://quotes.toscrape.com/static/bootstrap.min.css",
+      "kind": "Stylesheet",
+      "status": 200,
+      "body_bytes": 125934,
+      "body_sha256": "7b17c87b49e1b2fda08af17a8970a41e9172a1ca9f0e73d0d7be1dfc65544d8f",
+      "pinned_address": "35.211.122.109"
+    },
+    {
+      "url": "https://quotes.toscrape.com/static/main.css",
+      "kind": "Stylesheet",
+      "status": 200,
+      "body_bytes": 1368,
+      "body_sha256": "96031a019e640c3a19dbaa91e0729bbeb9bd30ba004eaf87a6fce9193862ab6b",
+      "pinned_address": "35.211.122.109"
+    },
+    {
+      "url": "https://quotes.toscrape.com/static/jquery.js",
+      "kind": "Script",
+      "status": 200,
+      "body_bytes": 84345,
+      "body_sha256": "f16ab224bb962910558715c82f58c10c3ed20f153ddfaa199029f141b5b0255c",
+      "pinned_address": "35.211.122.109"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css?family=Raleway:400,700",
+      "kind": "Stylesheet",
+      "status": 200,
+      "body_bytes": 398,
+      "body_sha256": "552e26da2260bee5ee2ebab08a263505827c52c7cb289c8f59cc12e27976ad87",
+      "pinned_address": "108.177.125.95"
+    }
+  ],
+  "actual_DNS": [
+    {
+      "host": "quotes.toscrape.com",
+      "addresses": [
+        "35.211.122.109"
+      ]
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "addresses": [
+        "35.211.122.109"
+      ]
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "addresses": [
+        "35.211.122.109"
+      ]
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "addresses": [
+        "35.211.122.109"
+      ]
+    },
+    {
+      "host": "fonts.googleapis.com",
+      "addresses": [
+        "108.177.125.95",
+        "2404:6800:4008:c01::5f"
+      ]
+    }
+  ],
+  "actual_TLS": [
+    {
+      "host": "quotes.toscrape.com",
+      "selected_pin": "35.211.122.109",
+      "actual_peer": "35.211.122.109",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "selected_pin": "35.211.122.109",
+      "actual_peer": "35.211.122.109",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "selected_pin": "35.211.122.109",
+      "actual_peer": "35.211.122.109",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "quotes.toscrape.com",
+      "selected_pin": "35.211.122.109",
+      "actual_peer": "35.211.122.109",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    },
+    {
+      "host": "fonts.googleapis.com",
+      "selected_pin": "108.177.125.95",
+      "actual_peer": "108.177.125.95",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "native_socket_descriptors_closed": true,
+  "owned_workers": [
+    {
+      "container_id": "f6230548ed649ee7f0a064abe3586fafc6fe9fa461407dfe8de62b432107e520",
+      "retired": true,
+      "closed": true,
+      "job_directory_absent": true,
+      "stderr_bytes": 35,
+      "stderr_sha256": "72e4236e2beca25a8904ee302f319129e58c10bb3ce3ebb2cd046eb803e0999f"
+    }
+  ],
+  "operations_remaining": 0,
+  "service_closed": true,
+  "browser_direct_network": false,
+  "model_calls": 0,
+  "automatic_retries": 0,
+  "raw_HTML_JS_or_extracted_text_persisted": false,
+  "semantic_validation": false,
+  "general_quality_coverage_freshness_or_SLO_established": false
+}

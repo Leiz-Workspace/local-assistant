@@ -1,0 +1,23 @@
+{
+  "description": "Actual D47 subprocess gate; no external search acceptance or fresh full-suite claim.",
+  "command": [
+    "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+    "-m",
+    "pytest",
+    "tests/integration/test_search_pipeline_core_live.py",
+    "-q",
+    "-rs",
+    "--tb=short",
+    "--show-capture=no",
+    "-o",
+    "tmp_path_retention_policy=failed",
+    "-o",
+    "tmp_path_retention_count=1"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.89,
+  "summary": "1 passed in 0.72s",
+  "log": "data/backups/d47-first-core-fixture.log",
+  "log_sha256": "6262dd4ae1e1610248aa7a1d90c86e6b7861110a1a434aeede186690d3652770",
+  "completed_at_utc": "2026-10-21T00:59:11.570204+00:00"
+}

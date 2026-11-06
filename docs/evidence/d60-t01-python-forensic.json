@@ -1,0 +1,91 @@
+{
+  "description": "One separate explicit source forensic probe after unchanged-corpus D60 follow-up; preserves original finite error and only exception types/known code frames. No hidden retry, raw message/page/locals, bypass or source substitution.",
+  "status": "FORENSIC_OBSERVATION_COMPLETE",
+  "source_freeze_sha256": "fe13aa3fe13d179e56589eddcc23614db4973885d6f18b4eb91380ad32343e6d",
+  "source_observed": false,
+  "outer_error_code": "evidence_source_failed",
+  "source_metadata": [
+    {
+      "status": "error",
+      "underlying_code": "web_fetch_internal",
+      "exception_chain": [
+        {
+          "type": "WebFetchError",
+          "code": "web_fetch_internal",
+          "frames": [
+            {
+              "module": "web_evidence_source.py",
+              "function": "read",
+              "line": 112
+            },
+            {
+              "module": "web_fetch.py",
+              "function": "fetch",
+              "line": 134
+            }
+          ]
+        },
+        {
+          "type": "WebEvidenceError",
+          "code": null,
+          "frames": [
+            {
+              "module": "web_fetch.py",
+              "function": "fetch",
+              "line": 118
+            },
+            {
+              "module": "web_fetch.py",
+              "function": "run",
+              "line": 47
+            },
+            {
+              "module": "web_evidence_source.py",
+              "function": "get",
+              "line": 64
+            },
+            {
+              "module": "evidence_metadata.py",
+              "function": "source_dates",
+              "line": 58
+            }
+          ]
+        },
+        {
+          "type": "other_exception",
+          "code": null,
+          "frames": [
+            {
+              "module": "evidence_metadata.py",
+              "function": "source_dates",
+              "line": 31
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_attempts": 1,
+  "provider_attempts": 0,
+  "model_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "all_native_socket_FDs_closed": true,
+  "actual_TLS": [
+    {
+      "host": "docs.python.org",
+      "selected_pin": "151.101.0.223",
+      "actual_peer": "151.101.0.223",
+      "hostname_verification": true,
+      "verify_required": true,
+      "tls_version": "TLSv1.3"
+    }
+  ],
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "elapsed_seconds": 0.655,
+  "artifact": {
+    "path": "data/backups/d60-t01-python-forensic.json",
+    "sha256": "cdcb8385a3c7e28d4e7c52c616c9e676f5853aa412719a328fca118aacf307f2"
+  }
+}

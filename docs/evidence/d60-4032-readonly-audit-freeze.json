@@ -1,0 +1,15 @@
+{
+  "description": "Pre-execution freeze for current-full4032 final readonly audit; guards require completed same-boot4032/zero skip/failure/exact log and source freeze before database/runtime audit. No new source/model/provider/data mutation.",
+  "status": "FROZEN_BEFORE_FINAL_READONLY_AUDIT",
+  "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+  "full_freeze_sha256": "9ae8ca2263b7a493d419890d40ff7b1a2b99acb7d2ba6f62cadbe408f8ab7f4c",
+  "expected_source_files": 540,
+  "private_controls_passed": 10,
+  "files_sha256": {
+    "data/backups/d60-4032-final-readonly-audit.py": "c1c337d805822cdafe0462a6c31c5d4f19a13812dfcdb7ccae477195ac1e5e48",
+    "data/backups/test_d60_4032_final_readonly_audit.py": "5c99618efe2767f6228cacf807751b9858388347963dc439c6f8a7936ad664ad",
+    "data/backups/d60-4032-final-readonly-audit-controls.log": "27eb5ae8749462bee4fc1349efc0be2576d5b5585c8e974541e7128c15164326"
+  },
+  "provider_choice": "retain_brave_wait_upstream",
+  "D60_acceptance": false
+}

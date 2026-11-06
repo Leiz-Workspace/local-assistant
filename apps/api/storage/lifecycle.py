@@ -17,6 +17,7 @@ from apps.api.storage.ingestion import initialize_ingestion_service
 from apps.api.storage.memory import initialize_memory_service
 from apps.api.storage.patches import initialize_patch_service
 from apps.api.storage.retrieval import initialize_retrieval_service
+from apps.api.storage.web_search import initialize_web_search_service
 from apps.api.storage.workspace_diagnoses import initialize_workspace_diagnoses
 from apps.api.storage.workspace_explanations import initialize_workspace_explanations
 from apps.api.storage.workspaces import initialize_workspace_service
@@ -49,7 +50,9 @@ async def conversation_lifespan(app: FastAPI):
     app.state.patch_service = None
     app.state.check_service = None
     app.state.coding_workflow_service = None
+    app.state.web_search_service = None
     try:
+        app.state.web_search_service = await initialize_web_search_service()
         app.state.workspace_service = await initialize_workspace_service()
         app.state.workspace_explanation_service = (
             await initialize_workspace_explanations(app.state.workspace_service)
@@ -108,6 +111,9 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.web_search_service is not None:
+            await app.state.web_search_service.shutdown()
+            app.state.web_search_service = None
         if app.state.coding_workflow_service is not None:
             await app.state.coding_workflow_service.shutdown()
             app.state.coding_workflow_service = None

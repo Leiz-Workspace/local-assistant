@@ -1,0 +1,64 @@
+{
+  "description": "Distinct D52 repaired-source quality and actual collection; exactly one justified prior source change under ADR-071. Collection alone is not completion.",
+  "evaluated_files": [
+    "tests/web_redteam_cases.py",
+    "tests/test_web_redteam_cases.py",
+    "tests/integration/test_web_redteam_native.py",
+    "tests/fixtures/web_redteam/d52-cases.json",
+    "src/application/services/search_pipeline.py",
+    "tests/test_search_prompt_encoding.py"
+  ],
+  "evaluated_python_files": 5,
+  "described_functions_classes": 41,
+  "new_pytest_cases": 30,
+  "related_expected": 2164,
+  "full_collected": 3534,
+  "checks": [
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "tests/web_redteam_cases.py",
+        "tests/test_web_redteam_cases.py",
+        "tests/integration/test_web_redteam_native.py",
+        "src/application/services/search_pipeline.py",
+        "tests/test_search_prompt_encoding.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "tests/web_redteam_cases.py",
+        "tests/test_web_redteam_cases.py",
+        "tests/integration/test_web_redteam_native.py",
+        "src/application/services/search_pipeline.py",
+        "tests/test_search_prompt_encoding.py"
+      ],
+      "exit_code": 0,
+      "output": "5 files already formatted\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_web_redteam_cases.py",
+        "tests/integration/test_web_redteam_native.py",
+        "tests/test_search_prompt_encoding.py",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "30 tests collected in 0.06s"
+    }
+  ],
+  "source_freeze_sha256": "b3205577f105990838e31b160a1d6f9b8466cbea766c8ef30d63650448f8e420"
+}
