@@ -1,0 +1,45 @@
+{
+  "description": "D61 local unwired explicit-byte image-chat adapter acceptance, existing CORE/mmproj and original native normalization; owner/hash association is unverified provenance, not stored-file authorization or a reusable receipt.",
+  "status": "PASS_LOCAL_NATIVE_CORE_IMAGE_CHAT_ADAPTER",
+  "new_controls": 105,
+  "related_passed": 158,
+  "related_failed": 0,
+  "related_skipped": 0,
+  "related_elapsed_seconds": 6.72,
+  "private_evaluator_controls": 10,
+  "private_audit_controls": 57,
+  "source_files": 556,
+  "all545_prior_source_config_bytes_unchanged": true,
+  "described_functions_classes": 99,
+  "freeze_descriptive_count_correction": "The repaired freeze copied the original98 definition count; exact current AST has99 after adding one replay test. Frozen hashes/outcomes/oracles unchanged.",
+  "first_actual": {
+    "functional_passed": 2,
+    "total": 3,
+    "status": "FAILED_UNCHANGED",
+    "elapsed_seconds": 3.163
+  },
+  "distinct_repaired_actual": {
+    "functional_passed": 3,
+    "total": 3,
+    "elapsed_seconds": 3.879,
+    "unchanged_image_question_oracles_and_model_options": true,
+    "ordinary_text_after_images": true
+  },
+  "normalization": "Original isolated native RGB/EXIF/metadata/2000px/4million-pixel/4MiB PNG boundary",
+  "model": "qwen3.5-9b-core",
+  "new_model_downloads": 0,
+  "model_replacements": 0,
+  "production_HTTP_UI_wiring": false,
+  "automatic_persistence": false,
+  "public_authored_questions_answers_retained_by_evaluator": true,
+  "raw_rasters_or_full_model_requests_retained": false,
+  "human_independent": false,
+  "semantic_validation": false,
+  "confidence": null,
+  "historical_full": {
+    "passed": 4120,
+    "source_files": 545,
+    "current_full_claim": false
+  },
+  "D62": "NEXT_NATIVE_FIRST_OCR_CORE_VLM_QUALITY"
+}

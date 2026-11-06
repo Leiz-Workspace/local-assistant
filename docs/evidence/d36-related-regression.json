@@ -1,0 +1,28 @@
+{
+  "description": "Actual D36 related regression includes74 new cases and349 unchanged D35/workspace/auth/API/startup cases, actual original CORE frozen source explanations; not a fresh full application run.",
+  "targets": [
+    "tests/test_workspace_tools.py",
+    "tests/test_workspace_reader.py",
+    "tests/test_workspace_service.py",
+    "tests/test_workspace_startup.py",
+    "tests/integration/test_workspace_http.py",
+    "tests/test_workspace_policy.py",
+    "tests/test_readonly_workspace.py",
+    "tests/test_api_health.py",
+    "tests/test_conversation_auth.py",
+    "tests/test_conversation_api.py",
+    "tests/test_ingestion_startup.py",
+    "tests/test_retrieval_startup.py",
+    "tests/test_grounded_startup.py",
+    "tests/test_memory_api.py",
+    "tests/test_workspace_explanation.py",
+    "tests/test_workspace_explanation_service.py",
+    "tests/test_workspace_explanation_startup.py",
+    "tests/integration/test_workspace_explanation_http.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 4.37,
+  "summary": "423 passed in 3.95s",
+  "log_sha256": "79fa563b52bc8afaa328dd51e8ae42fadf742296cbc94c8e4a94907996d8e9c9",
+  "source_freeze_sha256": "079ed2af4faac1e4ff9202ff18474e8481e1cba574e4d6386ce75d268272daa1"
+}

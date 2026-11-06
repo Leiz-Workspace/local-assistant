@@ -1,0 +1,61 @@
+{
+  "description": "Owner qualitative group feedback on the three ADR154 listening variants. Preserve the exact report without inventing per-clip scores, complete listening coverage, model adoption or recovery approval.",
+  "recorded_at_utc": "2026-11-03T16:49:35.356318+00:00",
+  "user_facing_date": "2026-11-03",
+  "user_timezone": "Asia/Saigon",
+  "owner_verbatim": "Cả 3 giọng đều ổn cá nhân tôi thích giọng trúc ly và ngọc huyền hơn nhưng ngữ điệu máy móc không tự nhiên, và giờ, ngày không đọc đúng format, và những tên tiếng anh riêng như Python hay API đọc không đúng",
+  "panel_variants": [
+    "piper-vi",
+    "truc-ly",
+    "ngoc-huyen"
+  ],
+  "overall_group_assessment": "All three voices are broadly okay; not a statement that all acceptance criteria passed.",
+  "preferred_voices": [
+    "Trúc Ly",
+    "Ngọc Huyền"
+  ],
+  "preference_between_turbo_voices": null,
+  "reported_quality_issues": [
+    {
+      "category": "prosody_naturalness",
+      "owner_observation": "Ngữ điệu máy móc, không tự nhiên.",
+      "voice_or_clip_attribution": "NOT_SPECIFIED_IN_GROUP_REPORT"
+    },
+    {
+      "category": "time_date_reading",
+      "owner_observation": "Giờ, ngày không đọc đúng format.",
+      "desired_spoken_format": null,
+      "voice_or_clip_attribution": "NOT_SPECIFIED_IN_GROUP_REPORT"
+    },
+    {
+      "category": "english_name_and_acronym_pronunciation",
+      "owner_observation": "Python và API đọc không đúng.",
+      "desired_pronunciation": null,
+      "voice_or_clip_attribution": "NOT_SPECIFIED_IN_GROUP_REPORT"
+    }
+  ],
+  "per_clip_ratings": null,
+  "explicit_all_24_clips_heard_confirmation": null,
+  "listening_device": null,
+  "new_artifact_noise_assessment": null,
+  "numeric_mos": null,
+  "voice_region_or_gender_confirmation": null,
+  "source_sha256": {
+    "prior_wait_decision": "a0f9d0190ec37fd21ad44b6040ba15a70bea52710c242132a8327525651cf465",
+    "partial_campaign": "82f8e13b37df7497ddd2ae10f841a62c48844529315fe3b6d7cdd0d0f3af6112",
+    "recovery_plan": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5",
+    "listening_page": "90f1d718b81d6e063fb5e56d45d943926b8801d5a7baa3ffc813d5ab03efa7d3",
+    "listening_audio_index": "5f839a42e4a3255d54793b03623c52dac997c7c4b33f632e5826668f72343197"
+  },
+  "earlier_d70_feedback": "UNCHANGED_SEPARATE_CORPUS",
+  "new_model_calls": 0,
+  "recovery_status": "FEEDBACK_RECEIVED_NOT_APPROVED_NOT_EXECUTED",
+  "model_selection": null,
+  "product_voice_selection": null,
+  "fixed_proposed_workflow_voice": "Trúc Ly unchanged from preregistration; this feedback does not change the lane.",
+  "physical_first_audible_gate": "UNVERIFIED",
+  "assessed_backlog_tasks": [
+    "VOICE-TEXT-READING-001",
+    "VOICE-PROSODY-001"
+  ]
+}

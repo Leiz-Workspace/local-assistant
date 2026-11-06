@@ -1,0 +1,221 @@
+{
+  "description": "Readonly response to the owner context/VRAM hypothesis. Local CORE memory/context and remote GPU worker error are separate; no context reduction, inference retry or model change.",
+  "status": "LOCAL_REMOTE_RESOURCE_BOUNDARY_VERIFIED_REMOTE_OOM_UNCONFIRMED",
+  "owner_request": "Tiếp tục đi có thể giảm context xuống tôi nghi bị vượt quá VRAM",
+  "observed_at_UTC": "2026-10-23T02:48:06.975629+00:00",
+  "local_GPU": {
+    "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "total_MiB": 16376,
+    "used_MiB": 10267,
+    "free_MiB": 5675,
+    "point_sample_only": true,
+    "not_historical_peak": true
+  },
+  "local_GPU_processes": [
+    {
+      "pid": 11364,
+      "process_name": "/usr/libexec/gnome-remote-desktop-daemon",
+      "allocation_MiB": 213
+    },
+    {
+      "pid": 37256,
+      "process_name": "/home/korosaki-ryukai/Workspace/Server/ai/runtimes/llama.cpp/build-cuda/bin/llama-server",
+      "allocation_MiB": 9386
+    },
+    {
+      "pid": 3668610,
+      "process_name": "/usr/share/rustdesk/rustdesk",
+      "allocation_MiB": 272
+    }
+  ],
+  "local_CORE": {
+    "pid": 37256,
+    "context_tokens": 32768,
+    "parallel": 1,
+    "selected_arguments": {
+      "--n-gpu-layers": "99",
+      "--ctx-size": "32768",
+      "--parallel": "1"
+    },
+    "GPU_allocation_MiB": 9386,
+    "ordinary_text_recovery": true,
+    "restarted": false,
+    "config_changed": false
+  },
+  "core_before": {
+    "pid": 37256,
+    "start_ticks": 63900,
+    "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+    "RSS_RAM_KiB": 3314112,
+    "NVIDIA_process_allocation_VRAM_MiB": [
+      9386
+    ],
+    "ordinary_text_recovery": true
+  },
+  "core_after": {
+    "pid": 37256,
+    "start_ticks": 63900,
+    "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50",
+    "RSS_RAM_KiB": 3314152,
+    "NVIDIA_process_allocation_VRAM_MiB": [
+      9386
+    ],
+    "ordinary_text_recovery": true
+  },
+  "local_KERNEL_check": {
+    "path": "data/backups/d70-context-resource-diagnostic-first/kernel-check.json",
+    "sha256": "e7db08f37e1a815ea18b225d88ec17c86dd56ab27d42e54f5e79064a5a16006f",
+    "matching_lines": 0,
+    "command_exit_code": 0,
+    "absence_is_not_OOM_exclusion": true
+  },
+  "retained_D67_context_evidence": {
+    "report": "docs/D67_EXISTING_MULTIMODAL_BENCHMARK.md",
+    "largest_observed_prompt_tokens": 31563,
+    "sampled_CORE_GPU_allocation_MiB": 9386,
+    "samples": 81,
+    "historical_local_scope_only": true,
+    "no_general_OOM_guarantee": true
+  },
+  "remote": {
+    "origin": "https://den4ikai-speechjudge-grm.hf.space",
+    "source_revision": "e16fd85d230ac043091476eb78faa6c2e24c5c66",
+    "deployed_revision": "e16fd85d230ac043091476eb78faa6c2e24c5c66",
+    "metadata_stage": "RUNNING",
+    "api_parameters": [
+      "target_text",
+      "audio_path_a",
+      "audio_path_b",
+      "num_generations"
+    ],
+    "context_override_exposed": false,
+    "output_token_override_exposed": false,
+    "GPU_duration_override_exposed": false,
+    "retained_source_sha256": "5048833ee621a8e6d1e2cb670d622d4b0c12d1aab1ee0f3f4b33334a048d439c",
+    "retained_GPU_duration_seconds": 30,
+    "retained_max_new_tokens": 1024,
+    "output_cap_is_not_context_window": true,
+    "retained_cuda_transfer_inside_GPU_function": true,
+    "GPU_resources_and_logs_accessible": false,
+    "OOM_confirmed": false,
+    "duration_exhaustion_confirmed": false,
+    "historical_error": "GPU task aborted",
+    "metadata_running_is_not_inference_qualification": true
+  },
+  "explanation": "Reducing local llama.cpp context changes only the local server. The failed specialist model executes on the provider; its current public interface exposes neither context/output-token nor GPU-duration controls. Remote30s duration including CUDA transfer is an investigation lead, not a measured cause.",
+  "action": {
+    "local_context_reduced": false,
+    "local_restart": false,
+    "remote_context_changed": false,
+    "media_uploaded": 0,
+    "inference_requests": 0,
+    "new_weights_downloaded": false,
+    "production_model_changed": false,
+    "AC_changed": false,
+    "old_first_evidence_changed": false
+  },
+  "source_files_verified": 645,
+  "protected_files_verified": 917,
+  "prior_D70_JSON_verified": 35,
+  "original_inputs_verified": 176,
+  "original_pending_reviews_unchanged": 24,
+  "system_readonly_audit": {
+    "description": "D62 current562-source global4265 and readonly closure after documented six-adapter native source synchronization.361 related controls/20 new native and20 metric cases; actual16of16 paired mode quality and2 absence observations recomputed from original complete outputs. First13of16/eight red regressions/D61 first2of3 retained. All other550 prior source bytes/models/data/security/runtime unchanged; imperfect quality and unverified semantics remain explicit.",
+    "status": "PASS_D62_FULL4265_NATIVE_QUALITY_READONLY_AUDIT",
+    "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+    "previous_full_boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+    "source_files": 562,
+    "source_bytes_unchanged": true,
+    "all550_other_prior_source_bytes_unchanged": true,
+    "new_additive_source_files": 6,
+    "necessary_modified_prior_source_files": 6,
+    "owned_browser_containers": 0,
+    "owned_export_processes": 0,
+    "spacing_stopped_after_first_backend_failure": true,
+    "revision": "0006",
+    "counts": {
+      "files": 0,
+      "ingestion_jobs": 0,
+      "ingestion_heads": 0,
+      "memory_settings": 0,
+      "memory_consents": 0,
+      "memories": 0
+    },
+    "usage": [
+      0,
+      0,
+      0
+    ],
+    "restore_probe_databases": 0,
+    "qdrant_collection_count": 0,
+    "worker_advisory_locks": 0,
+    "old_security_fingerprint_unchanged": true,
+    "narrow_grants_unchanged": true,
+    "trigger_security_unchanged": true,
+    "existing_CORE_restored_same_model_no_download": true,
+    "D60_status": "RECOVERY_AND_FULL_AUDIT_COMPLETE_FRESH_DISCOVERY_DEGRADED",
+    "D61_status": "LOCAL_NATIVE_IMAGE_CHAT_AND_AUDIT_COMPLETE",
+    "D62_status": "PAIRED_QUALITY_AND_CURRENT_FULL_AUDIT_COMPLETE",
+    "current_related_passed": 361,
+    "new_controlled_cases": 40,
+    "full_regression_scope": "CURRENT_D62_562_SOURCE_FILES_AFTER_ADR088",
+    "actual_image_questions_passed": 3,
+    "actual_image_questions_total": 3,
+    "ordinary_text_after_images_passed": true,
+    "first_actual_image_questions_passed": 2,
+    "first_actual_image_questions_total": 3,
+    "first_failure_retained": true,
+    "model_transport_operations_remaining": 0,
+    "unverified_vision_answers": true,
+    "quality_paired_modes_observed": 16,
+    "quality_requested_modes": 16,
+    "first_quality_observed_modes": 13,
+    "first_quality_requested_modes": 16,
+    "first_native_handoff_red_cases": 8,
+    "quality_original_errors_retained": true,
+    "quality_metrics_recomputed_from_complete_outputs": true,
+    "absence_gate_passed": 2,
+    "new_model_downloads": 0,
+    "measured_resources_are_RAM_VRAM_point_samples_not_peaks": true,
+    "general_quality_or_semantic_truth_certified": false,
+    "full_passed": 4265,
+    "full_failed": 0,
+    "full_skipped": 0,
+    "full_elapsed_seconds": 1710.11,
+    "full_log_sha256": "c400531a8abc06849f00f5320797026d8729183df0d71b1e3b73a59f54bae3c4",
+    "archived_actual_Brave_recovery": true,
+    "fresh_source_reads": 2,
+    "current_provider_requests": 0,
+    "original_claim_labels_correct": 3,
+    "all_owned_recovery_operations_retired": true,
+    "fresh_provider_recovery_measured": false,
+    "original14_identity_image_ports_preserved": true,
+    "original_start_times_changed_after_observed_host_reboot": true,
+    "selected_provider_id": "db1f8da3e103ca96c2205a8e9d16d957de6b4a8d6b4351bb68ecd286f717f658",
+    "selected_provider_healthy": true,
+    "selected_provider_runtime_limits_unchanged": true,
+    "original_CORE_healthy": true,
+    "signing_secret_mode": "0600",
+    "signing_secret_git_ignored": true
+  },
+  "focused_tests": {
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "log": "data/backups/d70-context-hypothesis-boundary-tests-first.log",
+    "log_sha256": "0d01c33cc7348dd2c33f14ab55819e61263f75f08ca7c4a7f899a09a19ea7e5a",
+    "scope": "Existing fixed-interface and closed-campaign software controls; no new auditory benchmark or full-suite run."
+  },
+  "metadata_sha256": {
+    "space": "bbc91cc05a6300a93d75f72d12a90cb024df7c6f7fc92cc908ef8fa098585d64",
+    "config": "9de10e2a137dc2e231d0885ed2a3968f3a6ddf083f1a0fa7da5dd3398efdf190",
+    "info": "62f7372ebe08634873a980997060bd6926eaebed1e1a20fe4f968fa661aab344"
+  },
+  "prior_actual_campaign_evidence_sha256": "7e33720668296fdb5451c3056c8629bbfa759f2f20a65d5d84e69609553a1791",
+  "primary_sources": [
+    "https://huggingface.co/docs/hub/spaces-zerogpu",
+    "https://huggingface.co/spaces/Den4ikAI/SpeechJudge-GRM/blob/e16fd85d230ac043091476eb78faa6c2e24c5c66/app.py"
+  ],
+  "D70_complete": false,
+  "D71_started": false
+}

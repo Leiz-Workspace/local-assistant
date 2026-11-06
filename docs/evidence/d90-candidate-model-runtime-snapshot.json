@@ -1,0 +1,83 @@
+{
+  "description": "Read-only current candidate artifact hashes; not model-quality, reproducible-build or release approval.",
+  "status": "ARTIFACT_SNAPSHOT_COMPLETE_NOT_RELEASED",
+  "checked_at_utc": "2026-10-23T19:03:26.448688+00:00",
+  "config_sha256": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+  "models": {
+    "core": {
+      "name": "qwen3.5-9b-core",
+      "model_path": "models/core/qwen3.5-9b/Qwen_Qwen3.5-9B-Q6_K.gguf",
+      "model": {
+        "bytes": 7958818848,
+        "sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef"
+      },
+      "projector_path": "models/core/qwen3.5-9b/mmproj-Qwen_Qwen3.5-9B-bf16.gguf",
+      "projector": {
+        "bytes": 921704896,
+        "sha256": "d89c4bc142d02ed64aeed5c0a358bdead9109f21f4ada03a6b2df17a1aa94d9e"
+      },
+      "configured_model_hash_matches": true,
+      "projector_hash_kind": "observed_current_bytes_not_new_upstream_attestation",
+      "load_requested_by_snapshot": false
+    },
+    "unrestricted": {
+      "name": "qwen3.5-9b-unrestricted",
+      "model_path": "models/unrestricted/qwen3.5-9b/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf",
+      "model": {
+        "bytes": 7359259008,
+        "sha256": "c0ba7beb68fd3fe47891bd549486d38dcf62d00817296ea314ad37017f5a4986"
+      },
+      "projector_path": "models/unrestricted/qwen3.5-9b/mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+      "projector": {
+        "bytes": 921704448,
+        "sha256": "05f662501f8bd45607b079723a3e238a4e888fd085a10a53f4057a0e250f6934"
+      },
+      "configured_model_hash_matches": true,
+      "projector_hash_kind": "observed_current_bytes_not_new_upstream_attestation",
+      "load_requested_by_snapshot": false
+    }
+  },
+  "runtime_git_commit": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "actual_loaded_core_executable": "runtimes/llama.cpp/build-cuda/bin/llama-server",
+  "runtime_files": {
+    "runtimes/llama.cpp/build-cuda/bin/libggml-base.so.0.26.0": {
+      "bytes": 955624,
+      "sha256": "a3f98fdcfed5170495595e159c1d4e063b1f2b478a8e4d42dd7e60b050e500cd"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libggml-cpu.so.0.26.0": {
+      "bytes": 1571592,
+      "sha256": "abe6f320b684f6ee76b426e7ae10fe50f1457c5682839753311f635fe639a281"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libggml-cuda.so.0.26.0": {
+      "bytes": 210394472,
+      "sha256": "94b65d9b1f565f4c8669a5f1c700cde8aee9e2462896c09ca2fe370a90baa23f"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libggml.so.0.26.0": {
+      "bytes": 60352,
+      "sha256": "c5ed4d9cd2ede07e18cea505a03b317752f621f05714a86bcfdb9a5ee0f70192"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libllama-common.so.0.6.0": {
+      "bytes": 6359200,
+      "sha256": "379c22209474df432522e5421cd9273067b0e12e680a176beae5646262433f25"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libllama-server-impl.so": {
+      "bytes": 7302200,
+      "sha256": "df45cb05af8b724f238f19c8432378fcae13e06986fa40ecae697f322f72475c"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libllama.so.0.6.0": {
+      "bytes": 5051240,
+      "sha256": "09c695fe788a31f285c034ec332f876a19aac460a9a6dfbb0ffa0bd32e8284d2"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/libmtmd.so.0.6.0": {
+      "bytes": 2012440,
+      "sha256": "09e3ffa347c02480f20e8c2c296224e40a2b19ac2fbff7dc7856c9ab5e3dff9a"
+    },
+    "runtimes/llama.cpp/build-cuda/bin/llama-server": {
+      "bytes": 17880,
+      "sha256": "371ca1fdff0174fcbe5fc3111340062dc8af8e961936ad02482932aae19e0803"
+    }
+  },
+  "downloaded_models": 0,
+  "models_loaded_by_snapshot": 0,
+  "release_approved": false
+}

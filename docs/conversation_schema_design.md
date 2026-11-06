@@ -7,6 +7,8 @@
 **Status:** APPROVED FOR IMPLEMENTATION — Thiết kế đã chốt, chưa nghiệm thu triển khai  
 **Project Root:** `~/Workspace/Server/ai`
 
+> **Implementation checkpoint 2026-10-17:** This document preserves the original design baseline. T01–T04 have historical focused PASS evidence; T05 passed localhost acceptance: 4/4 real PostgreSQL integrations including CORE, full suite 94/94 and actual API process restart/history/replay. T06 passed authenticated-localhost acceptance on 2026-10-18 (151/151 tests): owner UUID stored in existing JSONB metadata, bearer principal filters at service/repository/manager locks, periodic pool metrics, protected restore of rows/owners/ACLs and shared DB restart. Unowned legacy records remain quarantined; no DDL or silent backfill. See ADR-018; older design status below is historical. The current roadmap is `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`. ADR-016 specifies POST archive (superseding the PATCH row below), PATCH title/preset, environment credential injection and the direct localhost access boundary. Older “chưa triển khai” statements below describe the original baseline, not current progress.
+
 ---
 
 ## 1. Mục tiêu
@@ -486,3 +488,10 @@ Không triển khai trong Ngày 15:
 **Supersedes:** Tài liệu Day 15 SQLite trước đó. Source SQLite đã cung cấp không còn là baseline triển khai được chốt.
 
 **Next Action:** Bắt đầu D15-T01 — PostgreSQL Infrastructure, sau đó Migration V001.
+
+
+## D29 memory contract checkpoint — 2026-10-19
+
+**Purpose:** Link the separately consented memory design without changing accepted conversation-history ownership or persistence.
+
+[MEMORY_DESIGN.md](MEMORY_DESIGN.md) and ADR-044 define four classes/consent/provenance/retention. D29 design/contract63 cases PASS; proposed JSON/SQL schemas are not an applied migration or runtime feature. Conversation history does not grant memory consent; existing JSONB owner locking and quarantine of unowned history remain unchanged. D30 needs actual source authorization, default-off APIs/extraction and reviewed backup/migration/grants; D31 privacy/export/deletion remains later.

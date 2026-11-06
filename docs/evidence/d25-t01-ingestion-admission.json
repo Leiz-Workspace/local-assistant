@@ -1,0 +1,57 @@
+{
+  "description": "Observed D25-T01 source/model-bound ingestion planning and actual offline Qwen tokenizer admission acceptance; not durable indexing or Day25 completion.",
+  "milestone": "D25-T01",
+  "status": "PASS_LOCAL_PLANNER_AND_TOKEN_ADMISSION",
+  "day25_status": "IN_PROGRESS",
+  "next": "D25-T02 durable PostgreSQL ingestion journal; D25-T03 embedding/Qdrant worker remains TODO",
+  "tests": {
+    "new_unit": 58,
+    "new_actual_tokenizer": 3,
+    "focused_passed": 117,
+    "focused_seconds": 19.98,
+    "full_passed": 870,
+    "full_seconds": 114.48,
+    "skipped": 0,
+    "full_exit_code": 0,
+    "full_command": "uv run pytest -q through existing Vault-backed regression wrapper; LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1 enabled"
+  },
+  "observed_boundary": {
+    "repeated_leading_space_x_511_total_tokens": 512,
+    "repeated_leading_space_x_512_rejected": true,
+    "special_tokens_included": true,
+    "overflow_status": 422,
+    "partial_counts_allowed": false,
+    "normalization_or_truncation": false
+  },
+  "gates": {
+    "deterministic_plan_and_point_identity": true,
+    "source_scope_and_stale_fences": true,
+    "duplicate_and_tamper_rejection": true,
+    "model_contract_fingerprint_verified": true,
+    "exact_unicode_rows_and_quality_preserved": true,
+    "process_admission_timeout_group_join_tests": true,
+    "credential_free_offline_worker": true,
+    "protected_files_unchanged": true,
+    "registry_unchanged": true,
+    "selected_qwen_hash_unchanged": true,
+    "e5_rollback_byte_exact": true,
+    "ruff_correctness_imports_and_format": true,
+    "described_python_definitions": 35
+  },
+  "not_implemented": [
+    "durable_ingestion_journal",
+    "production_embedding_worker",
+    "qdrant_upsert_delete_reconciliation",
+    "active_generation_publication",
+    "ingestion_http_admission"
+  ],
+  "sha256": {
+    "src/application/services/ingestion_contract.py": "bae2101c4937e45c675f897f72134ba3262f2165ddb10e4d30d1a9dcb13fc77e",
+    "src/infrastructure/qwen_token_preflight.py": "1507e17fdc960068879ae3fbe27eb101c31698f7f3a4452a7a8c8982cc065ea9",
+    "scripts/qwen_ingestion_preflight.py": "9831d3fcbaabd31d096c37b85afc85a0b429111bbdbacdffcd0c19fbc39643e2",
+    "tests/test_ingestion_contract.py": "39b433172c4562ebfe90eb452bba54263200af4a0b4c25d0b3f0fb9a191308f2",
+    "tests/integration/test_ingestion_preflight.py": "19e71b709deab0255cf2e192701c0c21939f3ae3535bee2508292b350fb3e86b",
+    "scripts/qwen_ingestion_preflight.py.lock": "8ef52b1d75b5394933e79eb5eb81baf7f822e4f63e8c0dac08d3fdcc2c11cf10"
+  },
+  "adr": "docs/ADR/033-incremental-ingestion-lifecycle.md"
+}

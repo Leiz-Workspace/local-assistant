@@ -1,0 +1,28 @@
+{
+  "description": "Verify independent fixed metadata hooks and exact owner/run stop/task ownership; actual native workspace and pinned MCP adapters remain beneath authorization barriers. No action approval or production side effect granted.",
+  "status": "LOCAL_CONTROL_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 21,
+  "related_tests": {
+    "passed": 218,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 10.02
+  },
+  "source_sha256": {
+    "src/application/services/tool_hooks.py": "0b3a5d965338348047ec2c9affbac910821510bc36fdb4e91fd0d9b5e6acb187",
+    "tests/test_tool_hooks.py": "cd851c7701bb22b261442e9b1f1cc3b77606caf1f7fa1cbbabda350a89b1bf52",
+    "tests/test_tool_hooks_integration.py": "5b6ea004ae5730ff1893aa138d014801c2661d177edfd207cdad70064b770beb"
+  },
+  "log_sha256": {
+    "data/backups/d77-hooks-first-tests.log": "70fb6b7124c6652f5927342b5776f51d6250291007ced41b08922bbdbef39a72",
+    "data/backups/d77-hooks-native-tests.log": "7ca2ccfb9b8013a88d9f9d0cd25c39adf540d69fd88b2c08cc4e4b98b24d47ed",
+    "data/backups/d77-hooks-owned-cleanup.log": "4f37be9ee7a73c90e1657720f724f0ab482e67e0f4367543f18f0db5a0ed52a3",
+    "data/backups/d77-related-completed-tests.log": "f2ab5382afb9b3bdccc123369e113a6b1ec5ed76dd6f0c80845fc172ae01316c"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "D75_D76_source_bytes_unchanged": true,
+  "production_write_grant_created": false,
+  "uncertain_write_automatically_retried": false,
+  "D74_product_gate_closed": false,
+  "next_independent_component": "D78 bounded planner/checkpoint/resume"
+}

@@ -1,0 +1,1404 @@
+{
+  "description": "Frozen existing public authored native/CORE paired observations and absence checks; complete first scores/errors retained. Original model/routing/options remain, no alternative selection. RAM and VRAM are separate before/after point samples, not peaks/cold-start/comparative model requirements.",
+  "status": "INCOMPLETE",
+  "source_freeze_sha256": "be3cbb982ba757c82ada2e008531df9e65332b5d694847c079e0a613e61089f3",
+  "cases": [
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "native-pdf-ascii",
+      "fixture": "tests/fixtures/pdf/native-pages.pdf",
+      "page": 1,
+      "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "criterion": "transcription",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:37.430157+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 3,
+            "method": "native_pdf",
+            "engine": "pypdf",
+            "text": "Page one: Alpha 123\nSecond line.",
+            "width": 0,
+            "height": 0,
+            "words": [],
+            "confidence_score": null,
+            "confidence_basis": "not_applicable_native_text",
+            "review_required": false,
+            "uncertainties": [
+              "native_text_may_omit_images_or_order"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "none",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 32,
+            "reference_words": 6,
+            "observed_characters": 32,
+            "observed_words": 6,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": false,
+            "uncertainty_signaled": false,
+            "criterion": "transcription",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.215,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:37.663880+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "FAILED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:37.679974+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "error_type": "StoragePolicyError",
+          "error_code": "ocr_processing_unavailable",
+          "elapsed_seconds": 0.165,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:37.861187+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "native-pdf-empty",
+      "fixture": "tests/fixtures/pdf/native-pages.pdf",
+      "page": 3,
+      "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "criterion": "known_blank",
+      "observations": {
+        "native": {
+          "status": "FAILED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:37.881715+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "error_type": "StoragePolicyError",
+          "error_code": "ocr_processing_unavailable",
+          "elapsed_seconds": 0.164,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:38.064007+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "FAILED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:38.080831+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "error_type": "StoragePolicyError",
+          "error_code": "ocr_processing_unavailable",
+          "elapsed_seconds": 0.164,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:38.261972+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "clean-english-image",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "page": 1,
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "criterion": "transcription",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:38.283476+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 1,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD",
+            "width": 1200,
+            "height": 500,
+            "words": [
+              {
+                "text": "LOCAL",
+                "score": 94.95961,
+                "left": 64,
+                "top": 78,
+                "width": 138,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "OCR",
+                "score": 94.95961,
+                "left": 219,
+                "top": 78,
+                "width": 92,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "GOLDEN",
+                "score": 96.457649,
+                "left": 329,
+                "top": 78,
+                "width": 182,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "Invoice",
+                "score": 95.465088,
+                "left": 64,
+                "top": 168,
+                "width": 151,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "2048",
+                "score": 95.981491,
+                "left": 234,
+                "top": 168,
+                "width": 106,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "Total",
+                "score": 95.126923,
+                "left": 60,
+                "top": 258,
+                "width": 99,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              },
+              {
+                "text": "42",
+                "score": 96.497292,
+                "left": 179,
+                "top": 258,
+                "width": 50,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              },
+              {
+                "text": "USD",
+                "score": 95.990593,
+                "left": 251,
+                "top": 258,
+                "width": 87,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              }
+            ],
+            "confidence_score": 95.634,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": false,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 42,
+            "reference_words": 8,
+            "observed_characters": 42,
+            "observed_words": 8,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": false,
+            "uncertainty_signaled": false,
+            "criterion": "transcription",
+            "uncalibrated_engine_score": 95.634,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.315,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:38.615569+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:38.632105+00:00",
+            "CORE_resident_RAM_MiB": 9295.34375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD",
+            "tables": [],
+            "uncertain_regions": [],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+            "width": 1200,
+            "height": 500,
+            "page_number": 1,
+            "page_count": 1,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 42,
+            "reference_words": 8,
+            "observed_characters": 42,
+            "observed_words": 8,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": false,
+            "criterion": "transcription",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 1.097,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:39.745958+00:00",
+            "CORE_resident_RAM_MiB": 9450.71484375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "scanned-english-page",
+      "fixture": "tests/fixtures/ocr/scanned.pdf",
+      "page": 1,
+      "source_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "criterion": "transcription",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:39.766285+00:00",
+            "CORE_resident_RAM_MiB": 9450.71484375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 2,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD",
+            "width": 2000,
+            "height": 834,
+            "words": [
+              {
+                "text": "LOCAL",
+                "score": 95.393288,
+                "left": 107,
+                "top": 130,
+                "width": 230,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "OCR",
+                "score": 95.393288,
+                "left": 365,
+                "top": 130,
+                "width": 153,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "GOLDEN",
+                "score": 96.485741,
+                "left": 549,
+                "top": 130,
+                "width": 302,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "Invoice",
+                "score": 95.402359,
+                "left": 107,
+                "top": 280,
+                "width": 251,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "2048",
+                "score": 95.754684,
+                "left": 390,
+                "top": 280,
+                "width": 177,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "Total",
+                "score": 96.07222,
+                "left": 99,
+                "top": 430,
+                "width": 166,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              },
+              {
+                "text": "42",
+                "score": 96.619576,
+                "left": 298,
+                "top": 430,
+                "width": 83,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              },
+              {
+                "text": "USD",
+                "score": 96.647636,
+                "left": 418,
+                "top": 430,
+                "width": 146,
+                "height": 55,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              }
+            ],
+            "confidence_score": 95.898,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": false,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 42,
+            "reference_words": 8,
+            "observed_characters": 42,
+            "observed_words": 8,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": false,
+            "uncertainty_signaled": false,
+            "criterion": "transcription",
+            "uncalibrated_engine_score": 95.898,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.516,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:40.299231+00:00",
+            "CORE_resident_RAM_MiB": 9450.71484375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:40.314957+00:00",
+            "CORE_resident_RAM_MiB": 9450.71484375,
+            "CORE_compute_allocation_VRAM_MiB": 9202.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "LOCAL OCR GOLDEN\nInvoice 2048\nTotal 42 USD",
+            "tables": [],
+            "uncertain_regions": [],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "bceecb1430736f6ce53728323db360b8cd18b483807a4a04335f931a50d8e3f9",
+            "width": 2000,
+            "height": 834,
+            "page_number": 1,
+            "page_count": 2,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 42,
+            "reference_words": 8,
+            "observed_characters": 42,
+            "observed_words": 8,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": false,
+            "criterion": "transcription",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 1.935,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:42.267034+00:00",
+            "CORE_resident_RAM_MiB": 9730.8125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "scanned-blank-page",
+      "fixture": "tests/fixtures/ocr/scanned.pdf",
+      "page": 2,
+      "source_sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "criterion": "known_blank",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:42.286916+00:00",
+            "CORE_resident_RAM_MiB": 9730.8125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 2,
+            "page_count": 2,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "",
+            "width": 2000,
+            "height": 834,
+            "words": [],
+            "confidence_score": null,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": true,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred",
+              "no_text_detected_not_proof_of_blank"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 0,
+            "reference_words": 0,
+            "observed_characters": 0,
+            "observed_words": 0,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": true,
+            "criterion": "known_blank",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.415,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:42.717555+00:00",
+            "CORE_resident_RAM_MiB": 9730.8125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:42.732803+00:00",
+            "CORE_resident_RAM_MiB": 9730.8125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "",
+            "tables": [],
+            "uncertain_regions": [],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "aa7ec0ab7543a3afc14f74aef5f2701e6cf9f47049d31b3381759c9213753abe",
+            "width": 2000,
+            "height": 834,
+            "page_number": 2,
+            "page_count": 2,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 0,
+            "reference_words": 0,
+            "observed_characters": 0,
+            "observed_words": 0,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": false,
+            "criterion": "known_blank",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 1.65,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:44.399964+00:00",
+            "CORE_resident_RAM_MiB": 9765.75390625,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "blank-image",
+      "fixture": "tests/fixtures/ocr/blank.png",
+      "page": 1,
+      "source_sha256": "43376ce08514b0af97854f51ca5dda6668ea49fe53f4e2ab7ecc73d4685294bd",
+      "criterion": "known_blank",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:44.420542+00:00",
+            "CORE_resident_RAM_MiB": 9685.64453125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 1,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "",
+            "width": 1200,
+            "height": 500,
+            "words": [],
+            "confidence_score": null,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": true,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred",
+              "no_text_detected_not_proof_of_blank"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 0,
+            "reference_words": 0,
+            "observed_characters": 0,
+            "observed_words": 0,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": true,
+            "criterion": "known_blank",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.315,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:44.752125+00:00",
+            "CORE_resident_RAM_MiB": 9685.64453125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:44.767890+00:00",
+            "CORE_resident_RAM_MiB": 9685.64453125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "",
+            "tables": [],
+            "uncertain_regions": [],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "43376ce08514b0af97854f51ca5dda6668ea49fe53f4e2ab7ecc73d4685294bd",
+            "width": 1200,
+            "height": 500,
+            "page_number": 1,
+            "page_count": 1,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 0,
+            "reference_words": 0,
+            "observed_characters": 0,
+            "observed_words": 0,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": false,
+            "criterion": "known_blank",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.905,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:45.691381+00:00",
+            "CORE_resident_RAM_MiB": 9553.69140625,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "blurred-latent-text",
+      "fixture": "tests/fixtures/ocr/unclear.png",
+      "page": 1,
+      "source_sha256": "1d98d3bb6dddcadae9b4fc891521edd449f6338c4fcd867950f5a458fb4b34ed",
+      "criterion": "uncertainty_detection",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:45.712807+00:00",
+            "CORE_resident_RAM_MiB": 9538.87890625,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 1,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "",
+            "width": 500,
+            "height": 180,
+            "words": [],
+            "confidence_score": null,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": true,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred",
+              "no_text_detected_not_proof_of_blank"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 14,
+            "word_edits": 2,
+            "reference_characters": 14,
+            "reference_words": 2,
+            "observed_characters": 0,
+            "observed_words": 0,
+            "unexpected_token_count": 0,
+            "text_exact": false,
+            "character_error_rate": 1.0,
+            "word_error_rate": 1.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": true,
+            "criterion": "uncertainty_detection",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.265,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:45.994790+00:00",
+            "CORE_resident_RAM_MiB": 9538.87890625,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:46.011001+00:00",
+            "CORE_resident_RAM_MiB": 9538.87890625,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "uncertain TMS",
+            "tables": [],
+            "uncertain_regions": [
+              "uncertain TMS"
+            ],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "1d98d3bb6dddcadae9b4fc891521edd449f6338c4fcd867950f5a458fb4b34ed",
+            "width": 500,
+            "height": 180,
+            "page_number": 1,
+            "page_count": 1,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 4,
+            "word_edits": 1,
+            "reference_characters": 14,
+            "reference_words": 2,
+            "observed_characters": 13,
+            "observed_words": 2,
+            "unexpected_token_count": 1,
+            "text_exact": false,
+            "character_error_rate": 0.2857142857142857,
+            "word_error_rate": 0.5,
+            "groundtruth_token_disagreement": true,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": true,
+            "criterion": "uncertainty_detection",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.886,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:46.915158+00:00",
+            "CORE_resident_RAM_MiB": 9712.8359375,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    },
+    {
+      "description": "One complete frozen authored source/page paired-mode observation.",
+      "id": "vietnamese-table",
+      "fixture": "tests/fixtures/ocr/table-vie.png",
+      "page": 1,
+      "source_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "criterion": "table_grid",
+      "observations": {
+        "native": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:46.936648+00:00",
+            "CORE_resident_RAM_MiB": 9712.8359375,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+            "page_number": 1,
+            "page_count": 1,
+            "method": "tesseract",
+            "engine": "tesseract 5.5.0:eng",
+            "text": "Tén hang S6 lugng\nBut 3\nV6 5",
+            "width": 1000,
+            "height": 500,
+            "words": [
+              {
+                "text": "Tén",
+                "score": 92.970444,
+                "left": 50,
+                "top": 56,
+                "width": 72,
+                "height": 35,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "hang",
+                "score": 96.906792,
+                "left": 144,
+                "top": 56,
+                "width": 102,
+                "height": 44,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "S6",
+                "score": 70.293533,
+                "left": 563,
+                "top": 54,
+                "width": 51,
+                "height": 37,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "lugng",
+                "score": 67.747368,
+                "left": 633,
+                "top": 58,
+                "width": 115,
+                "height": 42,
+                "block": 1,
+                "paragraph": 1,
+                "line": 1
+              },
+              {
+                "text": "But",
+                "score": 95.669289,
+                "left": 54,
+                "top": 186,
+                "width": 70,
+                "height": 35,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "3",
+                "score": 96.578743,
+                "left": 563,
+                "top": 188,
+                "width": 21,
+                "height": 33,
+                "block": 1,
+                "paragraph": 1,
+                "line": 2
+              },
+              {
+                "text": "V6",
+                "score": 56.054577,
+                "left": 51,
+                "top": 306,
+                "width": 56,
+                "height": 35,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              },
+              {
+                "text": "5",
+                "score": 96.650436,
+                "left": 563,
+                "top": 309,
+                "width": 21,
+                "height": 32,
+                "block": 1,
+                "paragraph": 1,
+                "line": 3
+              }
+            ],
+            "confidence_score": 82.772,
+            "confidence_basis": "character_weighted_engine_score_not_probability",
+            "review_required": true,
+            "uncertainties": [
+              "ocr_score_not_calibrated",
+              "english_only",
+              "reading_order_and_table_grid_not_inferred"
+            ],
+            "tables": [],
+            "table_structure_status": "not_inferred",
+            "coordinate_space": "rendered_pixels",
+            "image_base64": null
+          },
+          "metrics": {
+            "character_edits": 7,
+            "word_edits": 6,
+            "reference_characters": 28,
+            "reference_words": 8,
+            "observed_characters": 28,
+            "observed_words": 8,
+            "unexpected_token_count": 6,
+            "text_exact": false,
+            "character_error_rate": 0.25,
+            "word_error_rate": 0.75,
+            "groundtruth_token_disagreement": true,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_text",
+            "grid": null,
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": true,
+            "criterion": "table_grid",
+            "uncalibrated_engine_score": 82.772,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 0.315,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:47.267977+00:00",
+            "CORE_resident_RAM_MiB": 9712.8359375,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        },
+        "core": {
+          "status": "OBSERVED",
+          "resource_before": {
+            "observed_at_utc": "2026-10-22T03:39:47.284848+00:00",
+            "CORE_resident_RAM_MiB": 9712.8359375,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          },
+          "output": {
+            "text": "",
+            "tables": [
+              {
+                "rows": [
+                  [
+                    "Tên hàng",
+                    "Số lượng"
+                  ],
+                  [
+                    "Bút",
+                    "3"
+                  ],
+                  [
+                    "Vở",
+                    "5"
+                  ]
+                ]
+              }
+            ],
+            "uncertain_regions": [],
+            "engine": "qwen3.5-9b-core",
+            "normalized_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+            "width": 1000,
+            "height": 500,
+            "page_number": 1,
+            "page_count": 1,
+            "review_required": true,
+            "confidence_score": null
+          },
+          "metrics": {
+            "character_edits": 0,
+            "word_edits": 0,
+            "reference_characters": 28,
+            "reference_words": 8,
+            "observed_characters": 28,
+            "observed_words": 8,
+            "unexpected_token_count": 0,
+            "text_exact": true,
+            "character_error_rate": 0.0,
+            "word_error_rate": 0.0,
+            "groundtruth_token_disagreement": false,
+            "semantic_hallucination_certified": false,
+            "metric_basis": "complete_table_cells",
+            "grid": {
+              "expected_cells": 6,
+              "matched_cells": 6,
+              "cell_accuracy": 1.0,
+              "exact_grid": true,
+              "actual_tables": 1,
+              "actual_rows": 3,
+              "actual_cells": 6
+            },
+            "native_grid_reconstruction_evaluated": false,
+            "known_blank_false_positive": false,
+            "review_required": true,
+            "uncertainty_signaled": false,
+            "criterion": "table_grid",
+            "uncalibrated_engine_score": null,
+            "confidence_probability": null,
+            "unreviewed_text_error": false
+          },
+          "elapsed_seconds": 1.575,
+          "resource_after": {
+            "observed_at_utc": "2026-10-22T03:39:48.877804+00:00",
+            "CORE_resident_RAM_MiB": 9477.2578125,
+            "CORE_compute_allocation_VRAM_MiB": 9234.0,
+            "point_sample_not_peak": true,
+            "native_worker_RSS_measured": false
+          }
+        }
+      }
+    }
+  ],
+  "absence": [
+    {
+      "id": "missing-invoice-due-date",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "question": "What is the invoice due date?",
+      "status": "OBSERVED",
+      "functional_absence_gate": true,
+      "answer": "not available",
+      "uncertainties": [
+        "The image contains invoice number and total amount, but no due date field is visible or legible."
+      ],
+      "owner_matches": true,
+      "source_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "normalized_sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "semantic_validation": false
+    },
+    {
+      "id": "missing-table-unit-price",
+      "fixture": "tests/fixtures/ocr/table-vie.png",
+      "question": "Trong ảnh, đơn giá của Bút là bao nhiêu?",
+      "status": "OBSERVED",
+      "functional_absence_gate": true,
+      "answer": "Không có thông tin đơn giá",
+      "uncertainties": [
+        "Ảnh chỉ hiển thị tên hàng và số lượng, không có cột đơn giá hoặc tổng giá",
+        "Không thể suy ra đơn giá từ dữ liệu hiện có"
+      ],
+      "owner_matches": true,
+      "source_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "normalized_sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+      "semantic_validation": false
+    }
+  ],
+  "native_attempts": 8,
+  "CORE_OCR_attempts": 6,
+  "text_CORE_attempts": 1,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "ordinary_text_recovery_passed": true,
+  "raw_images_or_full_model_requests_retained": false,
+  "explicit_public_fixture_outputs_retained": true,
+  "human_independent": false,
+  "general_accuracy_established": false,
+  "OCR_model_transports": [
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    }
+  ],
+  "QA_model_transports": [
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    },
+    {
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/v1/models",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chat/completions",
+          "status": 200
+        }
+      ],
+      "closed": true
+    }
+  ],
+  "image_QA_attempts": 2,
+  "image_QA_native_attempts": 2,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "elapsed_seconds": 14.175,
+  "first_measurement": true,
+  "private_summary_sha256": "6c10c772949b92c142c4883b4c5fbad6fa0bca3634689cf457a4593d82cfc6b8",
+  "observed_modes": 13,
+  "requested_modes": 16,
+  "all_first_errors_preserved": true
+}

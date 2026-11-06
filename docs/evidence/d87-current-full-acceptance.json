@@ -1,0 +1,50 @@
+{
+  "description": "Fresh complete current application regression and qualified post-audit; original strict data hash mismatch retained as quota timestamp-only operational delta. Software PASS is not manual/model/product/release acceptance.",
+  "status": "FULL_SOFTWARE_REGRESSION_PASS_PRODUCT_GATES_OPEN",
+  "full": {
+    "accepted_full_software_regression": true,
+    "boot_id": "55f305f2-2a8e-4ca1-9f28-ef5b75f36ff4",
+    "completed_at_utc": "2026-10-23T14:22:46.732248+00:00",
+    "description": "Fresh full current-source regression with actual existing integration credentials; no new model/default/provider or benchmark-original rerun.",
+    "elapsed_seconds": 1823.258268909005,
+    "errors": 0,
+    "exit_code": 0,
+    "failed": 0,
+    "log_sha256": "0d92d13e7eacc243404aa0e3187ce415faeb15d807e909a8364c7557857a6620",
+    "passed": 5405,
+    "pytest_pid": 800817,
+    "pytest_seconds": 1821.99,
+    "skipped": 0,
+    "source_bytes_unchanged": true,
+    "source_files": 707,
+    "source_freeze_sha256": "9806ba120185f354fc5a0b087050e74f5701ebad9f4a4881b48768ddd1ed76c9",
+    "started_at_utc": "2026-10-23T13:52:23.474037+00:00",
+    "status": "complete",
+    "summary": "================= 5405 passed, 1 warning in 1821.99s (0:30:21) =================",
+    "wrapper_pid": 800768
+  },
+  "source_freeze_sha256": "9806ba120185f354fc5a0b087050e74f5701ebad9f4a4881b48768ddd1ed76c9",
+  "post_full_qualified_audit_sha256": "c133b795a4bdde6c39b64f88e3ef88e25212115d68b33836d686e586595c2bbe",
+  "independent_audit_policy_tests": {
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.37,
+    "included_in_5405": false
+  },
+  "artifact_sha256": {
+    "data/backups/d87-full-first/result.json": "4e167cd63fbeea07007d22656a26b010bdb5ff5daf6fad8cb7e9a5e6b3efc67f",
+    "data/backups/d87-full-first/pytest.log": "0d92d13e7eacc243404aa0e3187ce415faeb15d807e909a8364c7557857a6620",
+    "data/backups/d87-full-first/source-freeze.json": "9806ba120185f354fc5a0b087050e74f5701ebad9f4a4881b48768ddd1ed76c9",
+    "data/backups/d87-post-full-readonly-audit.log": "d91b6250556b57e0a20cfbb4ee597507ccac8a27f1044d1e90c60c81f753f455",
+    "data/backups/d87-post-full-row-diagnostic.log": "ed5fc2e3e61319a088cda2c1d5d063d4d3d5e9f331482644ccaa6fe882caadea",
+    "data/backups/d87-post-full-row-diagnostic/result.json": "8b77b4a060182adebe61b91ca9b85310ee7df3483a2b4ef8b60f4c087bf96269",
+    "data/backups/d87-current-readonly-audit.py": "e05015ef64254f82556fa3c322e42845ef2d11657d0ac47a233ae22462eb6178",
+    "data/backups/test_d87_current_readonly_audit.py": "d06342fc7796295c941f2a8ee6459a1d6b1e06350d9b065bfeb25052a3468178",
+    "data/backups/d87-audit-policy-final-tests.log": "52128d6647445200f33d6e544253518ff28348e58af52b4db7b76ca286d96cb1",
+    "data/backups/d87-final-qualified-audit.log": "baf56c1c67551681deb521abdc9919d16cf99add61190d26b32919160ab30818"
+  },
+  "expected_warning": "Existing deliberately duplicated Piper ZIP fixture; one UserWarning",
+  "actual_listening_labels": 0,
+  "product_or_model_or_release_approved": false
+}

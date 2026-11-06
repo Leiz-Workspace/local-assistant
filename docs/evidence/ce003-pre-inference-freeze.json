@@ -1,0 +1,17 @@
+{
+  "description": "Fresh native campaign freeze after control and oracle validation; no quality scores inferred.",
+  "status": "PREPARED_BEFORE_INFERENCE",
+  "source_files": 728,
+  "all723_prior_files_unchanged": true,
+  "service_controls_passed": 31,
+  "service_seconds": 19.18,
+  "native_oracle_cases_passed": 6,
+  "native_oracle_seconds": 4.72,
+  "native_oracle_capsules": 12,
+  "private_eligibility_controls_passed": 10,
+  "private_seconds": 0.75,
+  "model_calls_before_campaign": 0,
+  "protocol_sha256": "31d9da1ebd287a6b0f7e409091762961bc42afb1bc5f2db22e567d69d19d87f8",
+  "corpus_sha256": "cbe231d750a90ca1e350498485827a88b28dbd3e8a55d3b1e6c8c3623640d27d",
+  "models_changed": 0
+}

@@ -1,0 +1,32 @@
+{
+  "description": "Predeclared one-attempt D61 visible authored image-chat functionality samples. Existing source images and original labels remain unchanged; no independent-human or broad accuracy claim.",
+  "cases": [
+    {
+      "id": "invoice-visible-facts",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "question": "What invoice number is visible, and what is the complete Total line? Copy the Total line literally.",
+      "expected_patterns": ["\\b2048\\b", "\\b42\\s*USD\\b"],
+      "requires_uncertainty": false
+    },
+    {
+      "id": "vietnamese-item-quantities",
+      "fixture": "tests/fixtures/ocr/table-vie.png",
+      "question": "Trong ảnh, số lượng Bút và Vở lần lượt là bao nhiêu?",
+      "expected_patterns": ["(?:\\bbút\\D{0,20}3\\b|\\b3\\D{0,8}bút\\b)", "(?:\\bvở\\D{0,20}5\\b|\\b5\\D{0,8}vở\\b)"],
+      "requires_uncertainty": false
+    },
+    {
+      "id": "absent-customer-name",
+      "fixture": "tests/fixtures/ocr/clean.png",
+      "question": "What is the customer name on this invoice?",
+      "expected_patterns": ["(?:not (?:shown|visible|provided|present|specified|available)|no .{0,30}customer|cannot|unknown)"],
+      "requires_uncertainty": true
+    }
+  ],
+  "model": "qwen3.5-9b-core",
+  "temperature": 0,
+  "seed": 7,
+  "max_tokens": 1024,
+  "automatic_retries": 0,
+  "ordinary_text_recovery_expected": "VISION_TEXT_OK"
+}

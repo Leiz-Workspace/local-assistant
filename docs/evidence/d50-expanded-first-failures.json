@@ -1,0 +1,18 @@
+{
+  "description": "Retain first expanded controlled/native failures before explicit frame denial, cancelled cleanup fence and native schema assertion corrections.",
+  "status": "FAILED_RETAINED",
+  "expanded_result": "121 passed; 3 failed in40.38s",
+  "cancel_cleanup_result": "1 failed in0.08s",
+  "archive_sha256": "66cdaf5652fcd496379cab93b99754aa25b92003528eb7f7b459252f734cc17a",
+  "files": {
+    "src/infrastructure/readonly_browser.py": "870932551b271d711bd982e33e79aee260e55365a83b4d84b27d71f50d481b2f",
+    "src/infrastructure/browser_cdp.py": "14c52e21aa4975489e3dfe9dd2b95a1f6ac5cbe2816243abb06ab94ff5719b01",
+    "tests/integration/test_browser_native.py": "a57b73ce45a3c27b1ed7a8c92a26f34e8494820280d2fbeacdae20a4ba4532ad",
+    "tests/test_readonly_browser.py": "3d536411a24b63ac6e6b397eb7d084284cf358a7558574a614f227cf7516c9a6",
+    "tests/test_browser_cdp.py": "b35fb19f36312714b07c418fbd07469291b3015faf778dd4f5345d68db950272",
+    "data/backups/d50-expanded-controlled.log": "03ba62491d2715a4d96327979b2f590064a7e57c2ce57f78867c8801065ff34f",
+    "data/backups/d50-cancel-uncertainty-first.log": "54c99aa7fdc151e2d17e0caa98c7345a09cb9e4b2243bba06fbd6dcd6ce6be38"
+  },
+  "public_navigation": 0,
+  "model_calls": 0
+}

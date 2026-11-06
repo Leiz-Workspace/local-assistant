@@ -1,0 +1,14 @@
+{
+  "description": "Verified protected backup/restore and actual additive V003 rollout through existing Vault migrator; no vector/model/source changes.",
+  "revision": "0003",
+  "previous_revision": "0002",
+  "backup_directory": "data/backups/d25-t02-pre-v003-20261018",
+  "restore_verified": true,
+  "restart_performed": false,
+  "old_rows_unchanged": true,
+  "old_security_unchanged": true,
+  "old_table_count": 7,
+  "new_table_count": 9,
+  "old_security_sha256": "379e7c23b1e5ad93cccafa9e43db5117f89ae83a046fc088583672e31e9f1f27",
+  "offline_sql_sha256": "af7ee254a986450b6f69ce77d23fcbe0d4de79703e5e35b31299df6005cb2f3b"
+}

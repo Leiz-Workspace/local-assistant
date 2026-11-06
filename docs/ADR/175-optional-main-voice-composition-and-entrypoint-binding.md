@@ -1,0 +1,28 @@
+# ADR 175 — Optional main voice composition and reversible inference admission
+
+**Purpose:** Implement the owner's approval of ADR174 while preserving the exact sources and runtime verification of the passed research page.
+
+**Status:** ACCEPTED implementation refinement under the owner's “Làm đi và còn những D nào chưa xong nữa” instruction, 2026-11-05. This records the existing authorization for B1/B2 and one conditional B3 panel; it does not select a new model or approve production activation.
+
+## Context
+
+The 8092 trial verifies a frozen source set and the earlier application baseline before model preparation. Editing the old main entry, gateway, recorder or numerical adapters would unnecessarily invalidate that retained evidence. The installed FastAPI also uses lazy included-router containers; filtering routes by `APIRoute` loses existing API operations.
+
+## Decision and effect
+
+- Add `apps.api.voice:create_app` as an optional main composition. With `ASSISTANT_VOICE_ENABLED=0` or absent, it returns the exact original main app. Explicit evaluation mode composes the original routes through a fresh public `APIRouter`, retaining the original database/resource lifespan once. No changes to existing main/lifespan/model/config files.
+- Enable only `integration_evaluation` purpose for now. A private operator manifest binds existing artifact trees, source hashes, reference codes and a separately attested CORE process. Production manifests/activation are not accepted. A lifetime exclusive lock on that manifest refuses multiple workers using it; this is not a distributed or host-wide GPU lock.
+- Install reversible wrappers on the declared gateway, context/classifier, coding, structured, vision and OCR entry points at optional-app startup. Include the pre-imported file-service OCR alias. Restore exact original callable identities only after owned work joins. Guard binding is explicit and tested; disabled applications have no wrappers. New native entry points require inventory/coverage review before activation.
+- A resident voice group excludes other managed GPU inference until Close session/expiry/revocation and verified retirement. Current-task borrowing permits only the owned voice CORE request; authority does not implicitly propagate to child tasks. Ordinary inference cancellation quarantines admission because native retirement is unknown. Health/static routes remain available. CPU-only embeddings are not promoted to a GPU path. NVML rejects unrecognized compute-process overlap without signalling foreign processes.
+- Extract existing numerical definitions into `src/infrastructure/voice`, removing benchmark runners, corpora, alternative loaders and private backup defaults. Retain original PCM, clocks, decoder parameters, CPU8 TTS, CUDA FP32/eager/TF32-off, reference/policy hashes and native conversion. Replace only content-fingerprint audit messages with finite events. Numerical parity and original source hashes are checked separately. Worker bytecode cache lookup is redirected to bounded private tmpfs, preventing stale source-tree bytecode from overriding the frozen Python sources.
+- Borrowed CORE is never started/stopped/reset by app code. Verify same-user boot/PID/start clock, complete command, executable/model hashes, loopback listener ownership, alias, 32K context and one slot. After cancellation, retain the actual in-flight CORE task until its bounded full response completes, then require idle slots. A disconnect alone is not retirement. Unknown completion quarantines the lease even if a later slot poll looks idle.
+- Retain original guards and budgets. Add separate main-process RSS accounting capped at 1 GiB; this does not raise worker+CORE 8 GiB/TTS 2 GiB, preload 14 GiB or CUDA limits. Bound request-body reading to 10 seconds inside the 65-second turn. This is an additional failure boundary, not a relaxed latency criterion.
+- UI pairing/session state and ephemeral audio remain in memory. An opaque 15-minute session is bound to an existing credential digest/principal, revalidated on every privileged action and by the active-owner watcher. Pairing grants expire after 120 seconds and are single use. Permanent bearer credentials stay outside browser JavaScript/URLs. No auth/database/Vault/model file is rewritten.
+
+## Validation, migration and rollback
+
+B1 tests cover default-off exact app/OpenAPI identity, all original enabled OpenAPI operations, bearer-before-body, Origin/proxy/CSRF, replay, cross-owner denial, revocation, quotas and shutdown. B2 covers original numerical/decoder parity, no benchmark/private-path imports, exact caps, explicit lease authority, cancellation/drain and uncertain-retirement refusal. Actual microphone, native latency and broad ASR quality are separate evidence.
+
+No data migration. Roll back to the original entry point or disable this optional composition, after joining only its workers and proving borrowed-CORE completion. Do not unbind admission or claim cleanup while native work is uncertain. Preserve all old source files, model artifacts, prior failures and results. The optional manifest/temporary auth are operator-owned evaluation metadata; production configuration remains unchanged.
+
+B3 is still exactly one conditional retained four-speech/two-negative panel, maximum 6 VAD/4 ASR/4 CORE/4 TTS plus one zero readiness, no retry/new model. Freeze source/inputs after software gates pass; stop on an unexpected software/resource/provenance fault and retain unattempted rows. Approval does not imply a PASS result or authorize an automatic replacement campaign. Physical first-audible, real room/short-quiet speech, final product/default decision and D90 release remain open.

@@ -1,0 +1,61 @@
+{
+  "description": "Independent manual all-page144DPI Poppler image inspection of the actual first frozen CORE\u2192report\u2192DOCX/Office-PDF artifacts. Same PDF is the actual Office rendering of the delivered DOCX bytes. Complete text/XML/native checks remain separate. No general/unseen layout or script fidelity claim.",
+  "status": "PASS_FIRST_ACTUAL_THREE_PAGE_VISUAL_REVIEW",
+  "trial_artifact": {
+    "path": "data/backups/d58-first-core-export/summary.json",
+    "sha256": "0ff1bab4d7201e514bcbace66d011d7a9b4c204ba1b8c62fad23698128c683fa"
+  },
+  "source_freeze_sha256": "d24705178ac0f7edeab29f1b2dfb9db5209ee76d474bcb04e633087f1cc10fc2",
+  "dpi": 144,
+  "pages_inspected": [
+    1,
+    2,
+    3
+  ],
+  "images": [
+    {
+      "path": "data/backups/d58-first-core-export/page-1.png",
+      "sha256": "b4c61238d950f6c1b7936649fc3cf2790405e6103c1d4903644849a21e898491"
+    },
+    {
+      "path": "data/backups/d58-first-core-export/page-2.png",
+      "sha256": "e672f2338da8d6ff8189b78e9dc7fb60a9bb3964a14314396d522f15f9dbd687"
+    },
+    {
+      "path": "data/backups/d58-first-core-export/page-3.png",
+      "sha256": "d872e368c6c56ce85cf83945318530435a32cb30f735dc45baec28236d1c24ad"
+    }
+  ],
+  "findings": [],
+  "title_black_without_border": true,
+  "original_claims_and_reasons_intact": true,
+  "two_complete_citation_entries": true,
+  "vietnamese_glyphs_readable": true,
+  "all_limitations_together": true,
+  "no_clipping_overlap_or_missing_glyphs": true,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "artifacts": {
+    "docx": {
+      "path": "data/backups/d58-first-core-export/report.docx",
+      "sha256": "6110a7730eee16f5d4c699f97f4499c733ed247bbc3c64447b3db895fee9168a",
+      "bytes": 38535,
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "public_path": "docs/evidence/d58-first-authored-report.docx"
+    },
+    "pdf": {
+      "path": "data/backups/d58-first-core-export/report.pdf",
+      "sha256": "d175a8ce84beed3a76e9f785ef5137bcc08081e8b50533034249c67601ceb3da",
+      "bytes": 46820,
+      "media_type": "application/pdf",
+      "public_path": "docs/evidence/d58-first-authored-report.pdf"
+    },
+    "markdown": {
+      "path": "data/backups/d58-first-core-export/report.md",
+      "sha256": "aed6d9fe4b77ebe2d9e5653bb0233befe73af2e82231f3edad9345dd8540a72b",
+      "bytes": 3083,
+      "public_path": "docs/evidence/d58-first-authored-report.md"
+    }
+  }
+}

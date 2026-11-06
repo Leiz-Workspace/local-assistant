@@ -1,0 +1,34 @@
+{
+  "description": "Actual isolated correctness/import/format checks on six new D46 test/evaluator modules; accepted production code unchanged.",
+  "evaluated_files": [
+    "tests/coding_mvp_cases.py",
+    "tests/integration/coding_mvp_trial.py",
+    "tests/integration/test_coding_mvp_live.py",
+    "tests/integration/test_coding_mvp_trial.py",
+    "tests/test_coding_mvp_cases.py",
+    "tests/test_coding_mvp_oracles.py"
+  ],
+  "described_functions_classes": 22,
+  "checks": [
+    {
+      "options": [
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "options": [
+        "format",
+        "--isolated",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "6 files already formatted\n"
+    }
+  ],
+  "pre_inference_freeze_sha256": "81afed398e21e0ac6e0714d45ec2dd29335995d14636e2ceac6601a137af360f"
+}

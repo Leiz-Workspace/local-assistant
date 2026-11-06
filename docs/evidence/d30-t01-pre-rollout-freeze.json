@@ -1,0 +1,19 @@
+{
+  "description": "D30-T01 pre-application migration/repository/source-compatibility review snapshot; actual tests and rollout remain pending.",
+  "base_commit": "ab6cff9",
+  "sha256": {
+    "docs/ADR/045-memory-journal-and-control-transactions.md": "79e9450a53d584c160c405b5bc65d2ec3024d2cf5dda3e8d5a201799d4c4cb4d",
+    "migrations/versions/0005_memory_journal.py": "b228bf23acb034e8849b40f47a994044f703b10eb2df55c9500b05650008a652",
+    "src/infrastructure/repositories/memory_journal.py": "30fb678a6716ee5b035b385ffb4100ed77cd9b0887032ae6864fb59e27b4c15b",
+    "tests/test_memory_journal.py": "8bf8a01f133ab158916d32a61201d3e89f050705f676f80fe3764fb7fe76a551",
+    "tests/integration/test_memory_journal_postgres.py": "3d038d9895878ab33a50b66b992ed14edea6832eb60322e7468765c079fe0667",
+    "apps/api/storage/files.py": "504740283c9afbfffe1dab2db8da1763023a160fcf9148408bd6bce07e4d15af",
+    "apps/api/services/ingestion.py": "c49e2517f62dafac351657edd8a4646b0cf82583460a7748c12f0c936f03df59",
+    "tests/test_file_schema_compatibility.py": "7ea24b7eb9c7b4886e6c8217e2a2437e14786e732886acb81627c49efb55c82e",
+    "tests/test_ingestion_schema_compatibility.py": "4ee52f75a18a48f2aed6b822943f0f61f63034dad48bda2fa80365882eac265d"
+  },
+  "offline_sql_sha256": "a27bc9e0f9907442b6c6489a24024d05dd42d46c6081e3507983e03dad18e767",
+  "backup_restore": "d30-t01-pre-migration-restore.json",
+  "unit_related_passed": 91,
+  "migration_applied": false
+}

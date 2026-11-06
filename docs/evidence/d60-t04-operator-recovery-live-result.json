@@ -1,0 +1,190 @@
+{
+  "description": "One separately frozen operator-requested post-recovery actual original CORE→selected owned SearXNG→actually returned fixed-family public sources→signed report→native DOCX/PDF→retained archives. Actual provider text stays ephemeral. Missing sources/refusals remain failed, no caller-designated fallback or retry.",
+  "status": "FAILED",
+  "source_freeze_sha256": "de1976beacca4626ca9472e6a08e09061683bd7a57424c521cb1b2a08de9d9c4",
+  "source_attempts": 0,
+  "actual_public_source_observations": [],
+  "automatic_retries": 0,
+  "browser_runs": 0,
+  "model_replacement": false,
+  "semantic_validation": false,
+  "verified_freshness": null,
+  "human_independent": false,
+  "artifacts": {},
+  "raw_provider_titles_snippets_persisted": false,
+  "discovery_archive_raw_query_text_retained": false,
+  "original_host_generated_plan_completion_retained": true,
+  "discovery": {
+    "description": "Complete live discovery outcome metadata; original provider/query text was not retained.",
+    "schema_version": "live-discovery-metadata-v1",
+    "raw_provider_payload_retained": false,
+    "raw_query_text_retained": false,
+    "result_status": "partial",
+    "model_attempts": 1,
+    "provider_attempts": 3,
+    "completed_at": "2026-10-22 00:24:32.598985+00:00",
+    "queries": [
+      {
+        "query_id": "Q1",
+        "query_sha256": "90563272cef7d3a7ce5fee965d6c3726738f811d37c23f7e0f0c394c54fdca61",
+        "status": "sources",
+        "attempted": true,
+        "error_code": null,
+        "received_at": "2026-10-22 00:24:32.339254+00:00",
+        "sources": [
+          {
+            "source_id": "Q1:S1",
+            "url": "https://docs.searxng.org/dev/search_api.html",
+            "title_sha256": "d4e644edd8deedfcb4488959377cfc9f452ccd9540673dbe1b1df7df09d4b18c",
+            "snippet_sha256": "261dd7631b0b675edc341bc46d5903b1ab9c27b1bf88a137ea45b6245332518f"
+          },
+          {
+            "source_id": "Q1:S2",
+            "url": "https://docs.searxng.org/dev/search_api",
+            "title_sha256": "fe927d1c0c050e3ac28e856b0d5ea5a26023b5be17b50104a22aa99d05ef5dba",
+            "snippet_sha256": "261dd7631b0b675edc341bc46d5903b1ab9c27b1bf88a137ea45b6245332518f"
+          },
+          {
+            "source_id": "Q1:S3",
+            "url": "https://docs.searxng.org/dev/search_api.html?highlight=format",
+            "title_sha256": "d9848edd98ac9c4d1036fea7ba81a96a36ae57e5e0d7fe7ac5e2bc08ff07b469",
+            "snippet_sha256": "261dd7631b0b675edc341bc46d5903b1ab9c27b1bf88a137ea45b6245332518f"
+          },
+          {
+            "source_id": "Q1:S4",
+            "url": "https://docs.searxng.org/_sources/dev/search_api.rst.txt",
+            "title_sha256": "b489b295cd8b390ed47ba61083530c810b091bcd00cbc86c1bef63c84062eff2",
+            "snippet_sha256": "b65e381d3d3f1e0203c0ec522fd82a8cdc608ebf2067ef16a5aef6afa9d3e114"
+          },
+          {
+            "source_id": "Q1:S5",
+            "url": "https://return42.github.io/searxng/dev/search_api.html",
+            "title_sha256": "936b1a1d38c6e614cd6625035992c7ddd113829038ac6506377a2d1a050a07d7",
+            "snippet_sha256": "9930bbd14cb33a2a97b96a2f8278a365e4e239e997add88eb92d512b0f6756dc"
+          }
+        ]
+      },
+      {
+        "query_id": "Q2",
+        "query_sha256": "93bac24ba0c5c38c204f6efe7b62818a6cee867ec01621c3306153238fb78960",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      },
+      {
+        "query_id": "Q3",
+        "query_sha256": "58007bc88ac26ef9b36a95dde6a7b4398d69fdf234f9f9208edf99adda118fdd",
+        "status": "error",
+        "attempted": true,
+        "error_code": "research_provider_failed",
+        "received_at": null,
+        "sources": []
+      }
+    ],
+    "content_trust": "untrusted",
+    "semantic_validation": false,
+    "verified_freshness": null
+  },
+  "provider_attempts": 3,
+  "plan_queries": 3,
+  "error_type": "LivePhaseError",
+  "error_code": "live_missing_primary_sources",
+  "plan_CORE_attempts": 1,
+  "assessment_CORE_attempts": 0,
+  "native_batches": 0,
+  "plan_completion": {
+    "content": "{\n  \"queries\": [\n    \"SearXNG Search API GET POST methods documentation\",\n    \"RFC 9111 unqualified private cache rules\",\n    \"SearXNG API endpoint specifications\"\n  ]\n}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 171,
+    "output_tokens": 53,
+    "reasoning_tokens": null,
+    "latency_ms": 910
+  },
+  "assessment_completion": null,
+  "report_key_revoked": true,
+  "evidence_key_revoked": true,
+  "cache_empty": true,
+  "operations_remaining": 0,
+  "admissions_released": true,
+  "actual_provider_port_attempts": 3,
+  "provider_wire_metadata": [
+    {
+      "ordinal": 1,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 18722,
+          "consumed_sha256": "c209119136282a3827640b339fa274cf78226c7921c8dae152ad449a30f2a4f7",
+          "body_complete": true,
+          "closed": true,
+          "reason": "accepted",
+          "strict_code": null,
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "selected_results": 5
+        }
+      ]
+    },
+    {
+      "ordinal": 2,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 196,
+          "consumed_sha256": "6b1ebe2cbd5abb7b504ae2195b20ef73b21513038290241ad0b4c195cdc18b94",
+          "body_complete": true,
+          "closed": true,
+          "reason": "empty_with_declared_upstream_failure",
+          "strict_code": "searxng_upstream_unavailable",
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "wire_results": 0,
+          "upstream_failures": 1
+        }
+      ]
+    },
+    {
+      "ordinal": 3,
+      "observations": [
+        {
+          "status": 200,
+          "consumed_bytes": 202,
+          "consumed_sha256": "c266a72397fb027c212b9b45f0f6fde8d156e5b85319a5aee4f486db1aeb2758",
+          "body_complete": true,
+          "closed": true,
+          "reason": "empty_with_declared_upstream_failure",
+          "strict_code": "searxng_upstream_unavailable",
+          "media_is_json": true,
+          "encoding_is_identity": true,
+          "wire_results": 0,
+          "upstream_failures": 1
+        }
+      ]
+    }
+  ],
+  "actual_DNS": [],
+  "actual_TLS": [],
+  "all_source_native_socket_FDs_closed": true,
+  "persisted_state": "paused",
+  "persisted_attempts": [
+    "discover"
+  ],
+  "acknowledged_blobs": {
+    "discover": {
+      "bytes": 2636,
+      "sha256": "b6145d0bf2ed967f50a970399b7849bc9104a67ea2217861f199a715a2f7cd23"
+    }
+  },
+  "archived_after_issuers_revoked": true,
+  "elapsed_seconds": 1.997,
+  "artifact": {
+    "path": "data/backups/d60-t04-operator-recovery-live-phase/summary.json",
+    "sha256": "053dd2a7d11532a758a3ac9238d2403a7c8f544137c7c6a963a162979ce1e7e9"
+  },
+  "invocation": "distinct_operator_requested_post_recovery",
+  "original_failed_cohorts_preserved": true
+}

@@ -1,0 +1,21 @@
+{
+  "description": "Primary-source follow-up to the previously inaccessible Lessac dataset license; no license form submitted, corpus/model downloaded or rights certificate inferred.",
+  "client_date": "2026-10-22",
+  "piper_revision": "5041a7a49ae5b3a0f30e6837769eb03fdbb231bd",
+  "model_card_sha256": {
+    "vais1000": "302db8a930ffc2b1c2181db26deaf8272116eca2b08b8f80da6375b0a994af7b",
+    "lessac_medium": "ce49eb457742208166d399a40cdec2c7fa9db77960930031564ab56f12882645"
+  },
+  "source_url": "https://www.cstr.ed.ac.uk/projects/blizzard/2013/lessac_blizzard2013/license.html",
+  "retrieval_channel": "web tool; source accessible in this later lookup",
+  "clauses_reviewed": [
+    "1.1 Research Purposes",
+    "3.2 research-only dataset grant"
+  ],
+  "source_dataset_commercial_rights_granted_by_this_license": false,
+  "weights_or_generated_output_license_resolved": false,
+  "interpretation": "Repository MIT and vais1000 source CC-BY4.0 alone do not independently settle all rights of a Lessac-finetuned voice. Dataset restrictions are not automatically relabelled as the weights/output license.",
+  "form_submitted": false,
+  "license_acceptance_clicked": false,
+  "model_changed": false
+}

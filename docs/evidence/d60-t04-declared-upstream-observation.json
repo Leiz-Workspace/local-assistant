@@ -1,0 +1,40 @@
+{
+  "description": "One separately frozen public provider-diagnostic query, not replay of the first live gate. Messages stay in memory and become finite declared categories; no CAPTCHA bypass, logging/metrics/service change or raw response persistence.",
+  "status": "DECLARED_CATEGORY_OBSERVATION_COMPLETE",
+  "source_freeze_sha256": "26394c4e14b7ecd32d79864631e5a0db7cf645c925866e8f39038442b7327392",
+  "provider_attempts": 1,
+  "accepted_results": 0,
+  "original_error_code": "searxng_upstream_unavailable",
+  "wire_metadata": [
+    {
+      "status": 200,
+      "consumed_bytes": 234,
+      "consumed_sha256": "b94d2948234baa9e2d17c2b135758083ba3f10d3eb9c86c3c9e40c0d9fa02d5d",
+      "body_complete": true,
+      "closed": true,
+      "reason": "empty_with_declared_upstream_failure",
+      "strict_code": "searxng_upstream_unavailable",
+      "media_is_json": true,
+      "encoding_is_identity": true,
+      "wire_results": 0,
+      "upstream_failures": 1,
+      "declared_upstream_categories": [
+        {
+          "engine": "brave",
+          "declared_categories": [
+            "rate_limit_declared"
+          ],
+          "provider_statement_not_wire_cause_proof": true
+        }
+      ]
+    }
+  ],
+  "model_calls": 0,
+  "source_reads": 0,
+  "automatic_retries": 0,
+  "raw_upstream_message_or_response_persisted": false,
+  "artifact": {
+    "path": "data/backups/d60-t04-declared-upstream-observation.json",
+    "sha256": "ebeb068856340deab67405919bb193e0bcefdd750915ce48fe8e7c2382130ed8"
+  }
+}

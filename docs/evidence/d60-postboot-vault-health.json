@@ -1,0 +1,8 @@
+{
+  "description": "Readonly TLS-verified Vault health after observed host reboot; no unseal, credential mutation or secret payload persisted.",
+  "http_status": 503,
+  "initialized": true,
+  "sealed": true,
+  "standby": true,
+  "version": "2.0.3"
+}

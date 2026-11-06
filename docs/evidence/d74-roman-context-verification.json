@@ -1,0 +1,41 @@
+{
+  "description": "Technical post-run verification of original Roman/Vietnamese reading paths and unreviewed Python context controls; owner API pronunciation acceptance preserved, no inferred audio quality labels.",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "recorded_at_utc": "2026-11-03T19:20:14.078275+00:00",
+  "unambiguous_frontend_targets_matched": 5,
+  "frontend_cases": 9,
+  "new_native_complete_outputs": 10,
+  "inner_chunks": 10,
+  "retained_api_python_outputs": 2,
+  "review_audio_elements": 12,
+  "forbidden_media_capabilities": 0,
+  "old_research_files_unchanged": 29,
+  "new_source_test_files": {
+    "benchmarks/scripts/vi_roman_context.py": "10171c217413dab9b65f25c42d2438b79bd0a1a85d8ab363938b8690361df15b",
+    "benchmarks/tests/test_vi_roman_context.py": "5eaee310ba640c817117abb8d3ae3583d183fb1eef8a3e539e730e5d8c672423"
+  },
+  "source_snapshots_and_archive_exact": true,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_inventory_entries_verified_before_load": 4295,
+  "worker_exit": 0,
+  "baseline_restored": true,
+  "software_passed": 275,
+  "software_failed": 0,
+  "software_skipped": 0,
+  "software_seconds": 5.03,
+  "new_markdown_links_verified": 35,
+  "accepted_api_operator_and_audio_unchanged": true,
+  "new_normalization_rules": 0,
+  "new_pronunciation_edits": 0,
+  "owner_new_audio_ratings": null,
+  "python_status": "OWNER_REPORTED_NOT_ACCEPTABLE",
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "result_sha256": "29b24947acd2a0c896a9dec2208a84aba4ad488c547a3d90722f0b9dab29f5d9",
+  "parent_root_bytes": 1340529435
+}

@@ -1,0 +1,30 @@
+{
+  "description": "Actual first complete original CORE frozen coding-baseline pytest invocation; no retries or score selection. Four repaired tasks and two failed tasks are measured model outcomes, not six successful repairs.",
+  "targets": [
+    "tests/integration/test_coding_baseline_live.py"
+  ],
+  "exit_code": 0,
+  "pytest_passed": 1,
+  "pytest_skipped": 0,
+  "pytest_seconds": 9.08,
+  "model_tasks_attempted": 6,
+  "model_tasks_passed": 4,
+  "model_tasks_failed": 2,
+  "functional_oracles_executed": 23,
+  "functional_oracles_passed": 20,
+  "functional_oracles_failed": 3,
+  "functional_oracles_not_executed_due_invalid_proposal": 5,
+  "failures": [
+    {
+      "task_id": "unicode_palindrome",
+      "cause": "JSONDecodeError: malformed generated JSON; proposal rejected without execution"
+    },
+    {
+      "task_id": "inclusive_clamp",
+      "cause": "Generated function retained incorrect clamp expression;3 of5 executed oracles failed"
+    }
+  ],
+  "source_freeze_sha256": "6aa9282e45263f43917118207b7b853c6b26cf14ba23bdf72800e692ab72f1b9",
+  "core_observations_sha256": "32756ec034aa3cb3412b1e79784ec58cdc69e2f2a4d00caf8c8b00122995f737",
+  "specialist_model_adopted": false
+}

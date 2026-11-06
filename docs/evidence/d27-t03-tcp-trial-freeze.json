@@ -1,0 +1,20 @@
+{
+  "description": "Freeze actual temporary localhost Uvicorn/TCP auth/source/ranking/dense rollback trial before execution; no production routing or network/load SLO adoption.",
+  "scope": "OWNED_LOOPBACK_TCP_ACCEPTANCE_ONLY",
+  "sources": 2,
+  "measurements": [
+    "dense",
+    "evaluation_only_reranker",
+    "dense_after_disable"
+  ],
+  "extra_requests": [
+    "unauthenticated_denied",
+    "Origin_denied",
+    "foreign_owner_empty"
+  ],
+  "server": "ephemeral127.0.0.1 socket; original fixture event loop/resources; lifespan off; join and close on exit",
+  "request_timeout_seconds": 90,
+  "server_start_timeout_seconds": 10,
+  "server_join_timeout_seconds": 15,
+  "test_sha256": "429be0e135384e697376a381cf3a822bb0767748a07432da79415796ba456722"
+}

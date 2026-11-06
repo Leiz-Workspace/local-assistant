@@ -1,0 +1,306 @@
+{
+  "description": "Actual detector/no-speech remediation: gain32candidate99of100FAIL retained, v2detector147of147PASS and8of8real-model voice gate checks PASS. Product/physical4seconds/quietASRsemantics remain OPEN.",
+  "date": "2026-11-04",
+  "status": "VERIFIED_LOCAL_DETECTOR_AND_NATIVE_NO_SPEECH_GATES_PASS",
+  "task": "AUDIO-VAD-ASR-002",
+  "adrs": [
+    "docs/ADR/167-detector-only-fixed-gain-comparison.md",
+    "docs/ADR/169-fixed-detector-peak-normalization-and-fresh-controls.md",
+    "docs/ADR/168-qualified-detector-native-voice-check.md"
+  ],
+  "model_replacements": false,
+  "product_gate_activated": false,
+  "software": {
+    "description": "Actual592relatedPASS/0FAIL/0ERROR/0SKIP before new native runs;68new controls across gain32/v2/native lifecycle and exact PCM storage.",
+    "status": "PASS",
+    "passed": 592,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 7.67,
+    "command": [
+      "uv",
+      "run",
+      "--no-sync",
+      "python",
+      "-m",
+      "pytest",
+      "benchmarks/tests/test_vi_voice_preparation.py",
+      "benchmarks/tests/test_vi_voice_campaign.py",
+      "benchmarks/tests/test_vi_voice_report.py",
+      "benchmarks/tests/test_vi_speech_text.py",
+      "benchmarks/tests/test_vi_speech_prosody.py",
+      "benchmarks/tests/test_vi_speech_quality.py",
+      "benchmarks/tests/test_vi_speech_worker.py",
+      "benchmarks/tests/test_vi_speech_review.py",
+      "benchmarks/tests/test_vi_english_reading.py",
+      "benchmarks/tests/test_vi_api_reference_worker.py",
+      "benchmarks/tests/test_vi_api_reference_trial.py",
+      "benchmarks/tests/test_vi_api_context_followup.py",
+      "benchmarks/tests/test_vi_api_stress_worker.py",
+      "benchmarks/tests/test_vi_api_stress_trial.py",
+      "tests/test_audio_normalizer.py",
+      "tests/test_voice_native_smoke.py",
+      "tests/test_tts_waveform.py",
+      "tests/test_voice_pipeline.py",
+      "tests/test_llama_adapter.py",
+      "benchmarks/tests/test_vi_roman_context.py",
+      "benchmarks/tests/test_vi_xi_context.py",
+      "benchmarks/tests/test_vi_us_terms_worker.py",
+      "benchmarks/tests/test_vi_us_terms_trial.py",
+      "benchmarks/tests/test_vi_truc_ly_validation.py",
+      "benchmarks/tests/test_vi_ngoc_huyen_validation.py",
+      "benchmarks/tests/test_vi_ngoc_api_boundary.py",
+      "benchmarks/tests/test_vi_workflow_reading_policy.py",
+      "benchmarks/tests/test_vi_workflow_reading_bridge.py",
+      "benchmarks/tests/test_vi_workflow_reading_native.py",
+      "benchmarks/tests/test_vi_voice_presence.py",
+      "benchmarks/tests/test_vi_voice_presence_check.py",
+      "tests/test_vad_evaluation.py",
+      "tests/test_vad_evaluation_worker.py",
+      "tests/test_voice_vad_comparison.py",
+      "benchmarks/tests/test_vi_voice_detector_view.py",
+      "benchmarks/tests/test_vi_voice_view_check.py",
+      "benchmarks/tests/test_vi_voice_detector_peak.py",
+      "benchmarks/tests/test_vi_voice_peak_check.py",
+      "benchmarks/tests/test_vi_voice_view_native.py",
+      "-q"
+    ],
+    "terminal_sha256": "a6d6409f193dfd581b04ed7698f948f761b3323eadf5b004a497b61f8f251276",
+    "ruff": "PASS E4,E7,E9,F; format/descriptions PASS",
+    "source_sha256": {
+      "benchmarks/scripts/vi_voice_view_native.py": "e7fcac1d9f81172eb7da3e2edf0a90c4ea062d6d89d5dcf7f1189c39691da6c1",
+      "benchmarks/tests/test_vi_voice_view_native.py": "b96ab37ed599d3c90bae39cc7dda5e0f224685b3d2797b4670ed4895148b91b6",
+      "benchmarks/scripts/vi_voice_detector_peak.py": "b0f2d18f20e3ef140c723b477ae4e98ffcd5e2f3c818128bf67261ede52a94fb",
+      "benchmarks/scripts/vi_voice_peak_check.py": "f7e38dae0f4e58446ca4a650c3946caca4b353877b0f7a16061838208b5ba788",
+      "benchmarks/tests/test_vi_voice_detector_peak.py": "92fcb2872b5fb890253166dfaf8f264194a4b160b6b44659c4b9353e275c541b",
+      "benchmarks/tests/test_vi_voice_peak_check.py": "44dcaa26c37ce3b787b71d371464c77a9549f96fd892dc1a5d0b0be7d5dfcdec",
+      "benchmarks/scripts/vi_voice_detector_view.py": "af821a044aebdfb5b2a5e357aadf8783e03b9c3cebbe1092061dde631d9b162b",
+      "benchmarks/scripts/vi_voice_view_check.py": "48a757cadd5a825dd8e14a99e3561a35bcc93d8fb0af5e5cf82fb0c224677d70",
+      "benchmarks/tests/test_vi_voice_detector_view.py": "7c46946a073da30fb979022d838af8abea3259dd0479205c026324b81a02e073",
+      "benchmarks/tests/test_vi_voice_view_check.py": "ea7fc970815f65521fffee927d775679de49d4a1d8d9f6ea5645326bdf44db6b",
+      "docs/ADR/168-qualified-detector-native-voice-check.md": "083c46a78170923e698f9a73026e8ab2c5e1cbfaeb2492cd774662ca48c54be2"
+    }
+  },
+  "history": {
+    "first_preparation": "134.183MiB cap failure before any model load; retained with source version",
+    "raw_gate": "ADR1665negatives refused but2of6quiet controls rejected; unchanged",
+    "gain32": {
+      "status": "FAIL",
+      "raw_correct": 87,
+      "candidate_correct": 99,
+      "total": 100,
+      "failed_case": "validation-en-02-quiet",
+      "observations": 388
+    }
+  },
+  "detector_v2": {
+    "status": "LOCAL_DETECTOR_GATES_PASS",
+    "correct": 147,
+    "total_rows": 147,
+    "primary_original_speech": 80,
+    "primary_per_language": {
+      "vi": 40,
+      "en": 40
+    },
+    "quiet_derivatives": 46,
+    "padded_repeats": 6,
+    "negative_rows": 15,
+    "negative_distinct_waveforms": 11,
+    "fresh_source_utterances": 20,
+    "observations": 288,
+    "workers": 9,
+    "maximum_actual_gain": 8192.0,
+    "mathematical_gain_bound": 16384,
+    "native_wall_seconds": 25.122589979000622
+  },
+  "native_voice": {
+    "status": "LOCAL_NATIVE_NO_SPEECH_GATE_PASS",
+    "turns": 8,
+    "unique_positive_sources": 2,
+    "unique_negative_sources": 2,
+    "positive_complete": 4,
+    "negative_correct_refusal": 4,
+    "calls": {
+      "tts": 4,
+      "asr": 4,
+      "core": 4
+    },
+    "VAD_observations": 8,
+    "retries": 0,
+    "rows": [
+      {
+        "id": "view-turn-00",
+        "asr": "whisper-small-ct2",
+        "source": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "stage_seconds": [
+          [
+            "asr",
+            7.470382774001337
+          ],
+          [
+            "llm",
+            0.370528261999425
+          ],
+          [
+            "tts",
+            3.3697857849983848
+          ]
+        ],
+        "buffered_latency_seconds": 11.210832372998993,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "view-turn-01",
+        "asr": "whisper-small-ct2",
+        "source": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "stage_seconds": [
+          [
+            "asr",
+            7.6612245779979276
+          ],
+          [
+            "llm",
+            0.3207340219960315
+          ],
+          [
+            "tts",
+            3.508442604004813
+          ]
+        ],
+        "buffered_latency_seconds": 11.490495359001216,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "view-turn-02",
+        "asr": "whisper-small-ct2",
+        "source": "negative-1",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "error_class": "VoiceError",
+        "code": "no_speech"
+      },
+      {
+        "id": "view-turn-03",
+        "asr": "whisper-small-ct2",
+        "source": "negative-3",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "error_class": "VoiceError",
+        "code": "no_speech"
+      },
+      {
+        "id": "view-turn-04",
+        "asr": "qwen3-asr-0.6b",
+        "source": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "stage_seconds": [
+          [
+            "asr",
+            12.029208432002633
+          ],
+          [
+            "llm",
+            0.3363357569978689
+          ],
+          [
+            "tts",
+            3.175708274997305
+          ]
+        ],
+        "buffered_latency_seconds": 15.541324899000756,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "view-turn-05",
+        "asr": "qwen3-asr-0.6b",
+        "source": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "status": "COMPLETE_PCM",
+        "stage_seconds": [
+          [
+            "asr",
+            13.846285441002692
+          ],
+          [
+            "llm",
+            0.3845701160025783
+          ],
+          [
+            "tts",
+            3.6259422860021004
+          ]
+        ],
+        "buffered_latency_seconds": 17.856878072001564,
+        "physical_first_audible": "UNVERIFIED"
+      },
+      {
+        "id": "view-turn-06",
+        "asr": "qwen3-asr-0.6b",
+        "source": "negative-1",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "error_class": "VoiceError",
+        "code": "no_speech"
+      },
+      {
+        "id": "view-turn-07",
+        "asr": "qwen3-asr-0.6b",
+        "source": "negative-3",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "error_class": "VoiceError",
+        "code": "no_speech"
+      }
+    ],
+    "guard_failures": [],
+    "baseline_preserved": true,
+    "wall_seconds": 67.06744971100125,
+    "ASR_TTS_workers": 8,
+    "VAD_workers": 8,
+    "owned_CORE_exit0_reaped": true
+  },
+  "total_current_VAD_observations": 684,
+  "total_current_VAD_workers": 33,
+  "post_run_ASR_artifacts_verified": 14,
+  "original_app_files": 750,
+  "original_protected_files": 210,
+  "existing_code_evidence_files_verified": 2847,
+  "critical_artifact_sha256": {
+    "data/backups/d74-detector-view-storage-corrected-first/execution-freeze.json": "a597e1dbac0ad8b94deb094146b17b7b42e61a0752f4c794bfe9b2f3d2426708",
+    "data/backups/d74-detector-view-storage-corrected-first/quality.json": "28cc2c20e7598cfb1e2c900e36d995c1e4fc24eba5e0b6e07fdad2d8c3346525",
+    "data/backups/d74-detector-view-storage-corrected-first/retirement.json": "5d0b94192910ef2008aece7eb74bac9115b1b55a09f50ec46da7e34517ecd6cf",
+    "data/backups/d74-detector-view-storage-corrected-first/software-verification.json": "030e405ccf391118f2591b39f133db99bc0dc958dba716105eb6591bf36b9c1f",
+    "data/backups/d74-detector-view-storage-corrected-first/source-snapshot.json": "04e0ffff25ea1f1396d65d2d1e8d9c1494d1d35018f0449fa1ff4beb3494db29",
+    "data/backups/d74-detector-peak-v2-first/execution-freeze.json": "d8120bec1eb21162756ccdd3d7591001a725a1700ae8f2201fb571419c13d80c",
+    "data/backups/d74-detector-peak-v2-first/quality.json": "a8ab556f75a2fb4f438688d6599b19741a089d66b6d64167c50934bcca89dc1c",
+    "data/backups/d74-detector-peak-v2-first/retirement.json": "55a702a5654b77fbb98fa824a43576b7784d6f396ab1e315bf150e1a42a5871d",
+    "data/backups/d74-detector-peak-v2-first/software-verification.json": "5b9266483b84b8d85dc6fda41d0a83dcded38aba45c083d1d69715178be74e86",
+    "data/backups/d74-detector-view-native-first/execution-freeze.json": "81a8800c037a708f49893fbb183a89d6f0cf0bf1505dae40557fde59e6b93aad",
+    "data/backups/d74-detector-view-native-first/result.json": "0b7b997340dc65454607cfba08502d05abe32f79d300e543898f4709fe932f37",
+    "data/backups/d74-detector-view-native-first/verification.json": "4aefc70c6d04fa7879347a53e101530fd3707fc1e26e98ba5dfa11515192b8de",
+    "data/backups/d74-detector-view-native-first/software-verification.json": "5bbc27b1bc60b0c42c27de79f63b01cbeb89c83b86edabbeabb52bbc423e54e6",
+    "data/backups/d74-detector-view-native-first/asr-checkpoint-post-run.json": "cab74cd8837a957e60b81a393d226fa3983c1afd07a3d658a322e708524d5c20",
+    "data/backups/d74-detector-view-native-first/source-archive.json": "fb33231849ecce85ca8ede8eaabb08f10ef50701636f95a909827420046b0da8",
+    "data/backups/d74-detector-view-native-first/artifact-audit.json": "1c735a2aad8d03487fc70e29f0bbecf79ce071b5b1477425ebae007b91fe039f",
+    "data/backups/d74-detector-view-native-first/full-code.zip": "02b3de3b14a2437b7b84aa08c9d1f4ad7b7c797dd012800ad2dc99db59a60cfb"
+  },
+  "full_code_archive": "data/backups/d74-detector-view-native-first/full-code.zip",
+  "limitations": [
+    "Local coarse whole-clip presence/integration gates, not D74product or release acceptance.",
+    "Quiet controls inherit presence labels, not independent audibility/word-boundary review.",
+    "Fresh20utterances are disjoint from fix-selection data but retained D68artifacts, not unknown pretraining inputs.",
+    "15negative rows repeat zero/DC/tone signals; distinct waveforms do not imply real-world recording coverage.",
+    "Detector comparison uses downstream sentinels; only the separate8turn run uses actual ASR/CORE/TTS.",
+    "Native8turn scope repeats2original-volume VI speech and2negative sources across2ASRs; no native quiet-ASR or semantic/acoustic scoring.",
+    "Original ADR16548turn failures and all prior model/voice feedback remain unchanged.",
+    "Native speech buffered11.211–17.857s misses max4seconds; real speaker first-audible remains unmeasured.",
+    "Shared headroom receipts retain evaluator12GiB metadata; actual VAD launch commands enforce original3GiB cap."
+  ],
+  "next_task": "VOICE-LATENCY-AC-001: separately scoped residency/stage profiling with unchanged models/guards before device acceptance."
+}

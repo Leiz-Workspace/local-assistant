@@ -1,0 +1,9 @@
+{
+  "description": "Actual D56 full module/function/class descriptions, Ruff/format and test collection checks; accepted D55 source/config unchanged.",
+  "python_files": 5,
+  "described_functions_classes": 51,
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "pytest_collected": 69,
+  "all503_accepted_D55_bytes_unchanged": true
+}

@@ -1,0 +1,33 @@
+{
+  "description": "Byte/phoneme/coverage and cleanup verification for the eight-candidate English input-policy follow-up; no subjective audio or product PASS.",
+  "status": "VERIFIED",
+  "recorded_at_utc": "2026-11-03T17:53:52.172754+00:00",
+  "native_outputs_verified": 8,
+  "retained_baselines_verified": 4,
+  "review_audio_elements": 12,
+  "review_forbidden_elements": 0,
+  "actual_native_english_references_present": true,
+  "unknown_token_count": 0,
+  "new_source_files": 2,
+  "preferred_source_files_unchanged": 10,
+  "older_operator_files_unchanged": 7,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_inventory_entries": 4295,
+  "old48clip_page_and_index_unchanged": true,
+  "old24clips_and_original_workflow_plan_unchanged": true,
+  "baseline_restored": true,
+  "final_scoped_software_passed": 236,
+  "first_scoped_decoder_failure_retained": true,
+  "intermittent_decoder_cause": "NOT_ESTABLISHED",
+  "owner_new_english_or_api_acceptance": null,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "result_sha256": "4a894899ea83950a951fb818c77d17a1cc37b7ee9d7143f49639d0e8b1dce1e3",
+  "code_archive_sha256": "954743c8e945890413e705d1b9dbe34a2183e7ed8bf8f334a9670ae2a137443b",
+  "new_markdown_links_verified": 18,
+  "parent_root_bytes": 1285699922
+}

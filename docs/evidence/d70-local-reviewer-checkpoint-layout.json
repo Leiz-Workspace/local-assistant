@@ -1,0 +1,21 @@
+{
+  "description": "Readonly original safetensors header layout; component tensor byte totals are not measured RAM, model-only RSS or a proven address-space requirement. Full shard mappings also contain unused Talker/token2wav.",
+  "component_tensor_bytes": {
+    "thinker": 9406928896,
+    "talker": 769209856,
+    "token2wav": 1796205184
+  },
+  "component_tensor_counts": {
+    "thinker": 1442,
+    "talker": 293,
+    "token2wav": 809
+  },
+  "dtype_tensor_bytes": {
+    "BF16": 10176138752,
+    "F32": 1796205184
+  },
+  "weight_shard_bytes": 11972663208,
+  "actual_load_first_status": "FAILED_MMAP_SECOND_SHARD_AT_12_GiB_ADDRESS_SPACE",
+  "suggested_address_space_trial_bytes": 17179869184,
+  "suggested_trial_approved": false
+}

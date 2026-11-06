@@ -1,0 +1,35 @@
+{
+  "description": "Verify bounded independent plan execution, durable signed recovery, explicit pause/resume and refusal to replay uncertain writes. No production store or action grant created.",
+  "status": "LOCAL_RECOVERY_VERIFIED_INDEPENDENT_PREPARATION",
+  "new_tests": 28,
+  "related_tests": {
+    "passed": 246,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 10.09
+  },
+  "source_sha256": {
+    "src/application/ports/plan_checkpoint.py": "3ea1560997c2675924a6ae435ecf8626af7fbaed0e15661a2f1521a76f793d64",
+    "src/application/services/run_planner.py": "08dd6cd261fb7cd6e7bd176bf8e00178dff20a0d7401941109862e71c68aa90e",
+    "src/infrastructure/plan_checkpoints.py": "c819a07c9c94a6ee5abe44c9e53a2675370dfa93befc8faa29509f7bbdbcdbd6",
+    "tests/test_plan_checkpoints.py": "5297632c9931c800caa64eb81907152ae46b758aa0c4fcba7e81d0eff53a739a",
+    "tests/test_plan_crash_recovery.py": "e80518ff9670a25cfc17d4f48f7440cb3fe7c8759c73d1b6b8ffce7eb7c629d3",
+    "tests/test_plan_failure_limits.py": "8bf3d2ace376b866ee45b055bcce2aa79a95a4c49e58b21e6cb45627af1e6638",
+    "tests/test_plan_pause.py": "863cb29612c9b71509fed0bb460681bcef0d00a7937a2cce04bf6567673ba249",
+    "tests/test_run_planner.py": "acd86d8721bcc7ee603082f1dae415011f337f1d262d369570f5593912ba45c3"
+  },
+  "log_sha256": {
+    "data/backups/d78-planner-crash-tests.log": "9a7a96f6a2aa433e74e3355a2a128f0c15665c0daf69a19488ecd8d1c6acf427",
+    "data/backups/d78-planner-first-tests.log": "3a8c2177f468799340f974f36939e5880379490a50c6de00d4fbec0f62681b76",
+    "data/backups/d78-planner-limits-tests.log": "ebb37d69965cd2e5abe55cc954d54b54563d8cf5319c4db934faf188cb61f0a4",
+    "data/backups/d78-planner-pause-tests.log": "9e815bcfb75bce0460da54fd7182e810b1e7f0f7c5033b95d1fac664a10fc8f7",
+    "data/backups/d78-related-completed-tests.log": "a150d7eab30beacdb4ccd92de8dbebcebddfc2771d83d85cea7596b24818c195",
+    "data/backups/d78-related-final-tests.log": "8afb0b12f3b0b584697e005d840fc68a41a554852b2557235f29a31e8cb3d829"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "actual_process_crash_exit": 17,
+  "automatic_write_retry": false,
+  "production_store_created": false,
+  "D74_product_gate_closed": false,
+  "next_independent_component": "D79 deterministic routing and existing action approvals"
+}

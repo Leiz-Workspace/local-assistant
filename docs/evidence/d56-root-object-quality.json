@@ -1,0 +1,9 @@
+{
+  "description": "Distinct D56 root-object prompt clarification quality; original69 controls and failed actual cohort preserved. Only SYSTEM text and one realistic strict-rejection test changed.",
+  "python_files": 5,
+  "described_functions_classes": 52,
+  "ruff_check": true,
+  "ruff_format_check": true,
+  "pytest_collected": 70,
+  "all503_accepted_D55_bytes_unchanged": true
+}

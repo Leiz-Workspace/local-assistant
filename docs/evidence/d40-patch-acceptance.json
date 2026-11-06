@@ -1,0 +1,155 @@
+{
+  "description": "D40 accepted local single-existing-file exact approved atomic patch gate after actual2172 full PASS/0SKIP/exit0 and clean audit; no production action or durable rollback claim.",
+  "status": "PASS_LOCAL_SINGLE_FILE_SCOPE",
+  "date": "2026-10-20",
+  "base_commit": "8b9c369",
+  "architecture": "docs/ADR/058-approved-single-file-atomic-patch.md",
+  "scope": {
+    "existing_files": 1,
+    "max_original_replacement_bytes": 8192,
+    "max_proposals": 16,
+    "proposal_seconds": 120,
+    "cooperative_native_seconds": 5,
+    "production_workspace_registered": false,
+    "production_feature_enabled": false,
+    "model_write_tools_added": false,
+    "code_or_shell_execution": false,
+    "durable_rollback": false
+  },
+  "criteria": [
+    {
+      "id": "D40-T01",
+      "gate": "Complete readonly proposal/full unified diff and exact review binding",
+      "status": "PASS"
+    },
+    {
+      "id": "D40-T02",
+      "gate": "Explicit approval plus native source/root/parent/path/metadata/version denial",
+      "status": "PASS"
+    },
+    {
+      "id": "D40-T03",
+      "gate": "Real atomic bytes/mode/group, commit/fault/cleanup/cancel semantics",
+      "status": "PASS"
+    },
+    {
+      "id": "D40-T04",
+      "gate": "Authenticated local HTTP/CLI explicit review/apply/status, lost response and ordered drain",
+      "status": "PASS"
+    },
+    {
+      "id": "D40-T05",
+      "gate": "Frozen full application regression with actual exit0 and0SKIP",
+      "status": "PASS",
+      "collected": 2172
+    },
+    {
+      "id": "D40-T06",
+      "gate": "Readonly database/Qdrant/ACL/model/config cleanup audit",
+      "status": "PASS"
+    }
+  ],
+  "related_regression": {
+    "description": "Actual D40 final patch/native/CLI/TCP/send/cancel/startup and D33-D39 related regression; synthetic owner approvals only.",
+    "targets": [
+      "tests/test_workspace_tools.py",
+      "tests/test_workspace_reader.py",
+      "tests/test_workspace_service.py",
+      "tests/test_workspace_startup.py",
+      "tests/integration/test_workspace_http.py",
+      "tests/test_workspace_policy.py",
+      "tests/test_readonly_workspace.py",
+      "tests/test_api_health.py",
+      "tests/test_conversation_auth.py",
+      "tests/test_conversation_api.py",
+      "tests/test_ingestion_startup.py",
+      "tests/test_retrieval_startup.py",
+      "tests/test_grounded_startup.py",
+      "tests/test_memory_api.py",
+      "tests/test_workspace_explanation.py",
+      "tests/test_workspace_explanation_service.py",
+      "tests/test_workspace_explanation_startup.py",
+      "tests/integration/test_workspace_explanation_http.py",
+      "tests/test_workspace_diagnosis.py",
+      "tests/test_workspace_diagnosis_service.py",
+      "tests/test_workspace_diagnosis_startup.py",
+      "tests/integration/test_workspace_diagnosis_http.py",
+      "tests/test_approvals.py",
+      "tests/test_review_approval_cli.py",
+      "tests/test_approval_startup.py",
+      "tests/integration/test_approval_http.py",
+      "tests/test_atomic_patch.py",
+      "tests/test_patch_service.py",
+      "tests/test_patch_startup.py",
+      "tests/integration/test_patch_http.py"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 8.73,
+    "summary": "621 passed in 8.32s",
+    "log_sha256": "0bee7ecf3105c01a19c8e9f54744fd81d8a3002bd5f0b78b393c5ddaef3dd89b",
+    "source_freeze_sha256": "67eae83216f512120d00fd286e93fdc7b10f3ade5ed9ec67ac8e47c334455451"
+  },
+  "verification": {
+    "new_unique_cases": 73,
+    "described_functions_classes": 94,
+    "evaluated_python_files": 12,
+    "full_source_files": 355,
+    "ruff_correctness_imports_format": "PASS",
+    "unchanged_baseline_and_protected_files": 343
+  },
+  "preserved": {
+    "first_d38_public_result_sha256": "32756ec034aa3cb3412b1e79784ec58cdc69e2f2a4d00caf8c8b00122995f737",
+    "first_model_repairs_passed": 4,
+    "first_model_repairs_failed": 2,
+    "later_trials_private_only": true,
+    "additional_full_regression_trial": {
+      "path": "data/backups/d38-latest-core-observations.json",
+      "sha256": "805554e5b95be5b6684b411169c99a182f1ec3cbf67492598046175fa8675998",
+      "artifact": "data/backups/d38-live-coding-b1280d926f83464591b26eb9f9c0dde3",
+      "attempted": 6,
+      "passed": 4,
+      "failed_task_ids": [
+        "unicode_palindrome",
+        "inclusive_clamp"
+      ],
+      "replaces_first_baseline": false
+    }
+  },
+  "limits": [
+    "Disposable synthetic owner approvals and files only, not production consent or a human-independent quality benchmark.",
+    "Faults/clocks controlled at real native stage boundaries; no uncontrolled crash recovery claim.",
+    "One-file atomic visibility under cooperating writers/final-fence limitations; not hostile same-UID CAS or multi-file transaction.",
+    "In-memory bounded history/grants; restart invalidates, no durable rollback before D41.",
+    "Native time bound cooperative; kernel I/O cannot be forcibly preempted."
+  ],
+  "full_regression": {
+    "description": "Actual D40 complete full application regression,2172 PASS/1543.21s,0SKIP/exit0 on frozen355-file map;621 related are a subset, not additive unique cases.",
+    "targets": [
+      "tests"
+    ],
+    "pytest_options": [
+      "-v",
+      "-rs",
+      "--tb=short"
+    ],
+    "status": "complete",
+    "started_at_utc": "2026-10-20T03:13:46.674228+00:00",
+    "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+    "wrapper_pid": 316801,
+    "source_freeze_sha256": "67118d0084b44a3bb1877a328f15c74af02eaa6f6d42ff3817e7673ed84e4372",
+    "pytest_pid": 316803,
+    "exit_code": 0,
+    "elapsed_seconds": 1543.99,
+    "completed_at_utc": "2026-10-20T03:39:30.668405+00:00",
+    "log_sha256": "8d4de6dd5c69e9975e1d3ef702583c93c41429f3f5e62fc031601fa010941a81",
+    "summary": "2172 passed in 1543.21s",
+    "passed": 2172,
+    "skipped": 0,
+    "pytest_seconds": 1543.21
+  },
+  "audit": {
+    "path": "docs/evidence/d40-final-post-audit.json",
+    "sha256": "f6c25afb5d5bec68babf914a3cdbf4b69914b21ccc242c0b069f5765f3b361eb",
+    "status": "PASS"
+  }
+}

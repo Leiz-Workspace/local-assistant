@@ -1,0 +1,18 @@
+{
+  "description": "Exact frozen final read-only audit,87 private audit controls and2 supplemental whole-source prefix security regressions; supplementary controls are separate from4265 application tests.",
+  "created_at_utc": "2026-10-22T05:00:59.010392+00:00",
+  "audit_controls_passed": 87,
+  "supplementary_prefix_controls_passed": 2,
+  "sha256": {
+    "data/backups/d62-full4265-readonly-audit.py": "0bfa80c8365777cb780696448da113d292a3875abcd87585c6f2fbd949bf0c4d",
+    "data/backups/test_d62_full4265_readonly_audit.py": "bf41ffd7ee9fd6b6337f02cc651b99f61b535e9f1b0e56bf530c55a0d2ea9257",
+    "data/backups/d62-final-audit-controls-first.log": "08ddf9fd29d480014282451ce0b985532c1e587d8eb4e07d71d9a773d25d62de",
+    "data/backups/test_d62_native_prefix_validation.py": "f008aac337ad53230df9a2edcb5ece806c2511053661f673d50d55efc5aec3de",
+    "data/backups/d62-native-prefix-validation-controls.log": "a19de940ee1161f7b864e19072a57cfe4e83c15e9f50ca486c06e286dff9165b",
+    "docs/evidence/d62-4265-full-freeze.json": "7321cc82d35cea3713ad880114b0e418f94d2b6749ddcb4b7456055b2b2c6f16",
+    "data/backups/d62-4265-full-regression.result.json": "23c6cda099313a64e1aa1659133a7fb5229a5d4e4fc5ce3cf76ee548f6033eb6",
+    "data/backups/d62-4265-full-regression.log": "c400531a8abc06849f00f5320797026d8729183df0d71b1e3b73a59f54bae3c4",
+    "data/backups/d62-native-core-quality-first/summary.json": "6c10c772949b92c142c4883b4c5fbad6fa0bca3634689cf457a4593d82cfc6b8",
+    "data/backups/d62-native-core-quality-repaired/summary.json": "1d1bfbcc99e3ac38fce50f7d7ce1d4f68ec0b029a59e380a7a94a4b146ea7291"
+  }
+}

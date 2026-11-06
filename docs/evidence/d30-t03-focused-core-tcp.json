@@ -1,0 +1,40 @@
+{
+  "description": "Actual existing CORE quote selection and source proof delivered over ephemeral loopback Uvicorn on fixture event loop; not load/separate-process certification.",
+  "actual_tcp": true,
+  "source": "I prefer concise replies.",
+  "identity": {
+    "conversation_id": "5b319000-4849-4988-9ca1-fccd8ae7f6b3",
+    "message_id": "dc4a7295-f070-4ff0-b95e-e988c9a97886"
+  },
+  "result": {
+    "status": "captured",
+    "record": {
+      "id": "9c9600e7-48fc-41b3-8a45-cacd0e39f3c9",
+      "owner_id": "5ddd6901-ec45-4a20-9829-b616c6643ce0",
+      "kind": "preference",
+      "scope_id": "5ddd6901-ec45-4a20-9829-b616c6643ce0",
+      "consent_id": "eac10d42-145a-43db-9f75-de6157f67b6e",
+      "text": "I prefer concise replies.",
+      "method": "extracted",
+      "model_id": "qwen3.5-9b-core",
+      "provenance": {
+        "quote": "I prefer concise replies.",
+        "start": 0,
+        "end": 25,
+        "kind": "conversation_message",
+        "conversation_id": "5b319000-4849-4988-9ca1-fccd8ae7f6b3",
+        "message_id": "dc4a7295-f070-4ff0-b95e-e988c9a97886",
+        "role": "user",
+        "content_sha256": "4c52859ba871d332cb3eb0e7ef5256aed3edded941ed0b86cc6e5ff55975da37"
+      },
+      "created_at": "2026-10-19T19:31:42.192979+07:00",
+      "updated_at": "2026-10-19T19:31:42.192979+07:00",
+      "expires_at": "2026-10-19T19:36:41.909445+07:00",
+      "version": 1,
+      "content_trust": "untrusted"
+    },
+    "content_trust": "untrusted"
+  },
+  "temporary_server_joined": true,
+  "request_ownership_joined": true
+}

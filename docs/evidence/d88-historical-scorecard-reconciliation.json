@@ -1,0 +1,52 @@
+{
+  "description": "Read-only historical D14 reconciliation:9/9runtime/provenance/API checks per profile and provisional small-smoke scorecard, not the complete weighted30\u201350case quality acceptance.",
+  "status": "HISTORICAL_RUNTIME_VERIFIED_WEIGHTED_QUALITY_OPEN",
+  "source_artifact_sha256": {
+    "benchmarks/results/release/day14-core-gate.json": "885744bfe099ba8f4c352744b075b5f4e56eaffb75e90cee0864d4b0ed5c991a",
+    "benchmarks/results/release/day14-unrestricted-gate.json": "f9b0940f072bd6389a9dd6e6c9a210d3a04aacd368a406054aaae5714fbe1fae",
+    "benchmarks/results/scorecards/day13-scorecard.json": "8b9dc3361bb54b5957d0423f83912a886313d372b9989d3e2348bc7d0027a6e1"
+  },
+  "runtime_gates": {
+    "core": {
+      "passed": 9,
+      "total": 9,
+      "checks": [
+        "RG01_yaml",
+        "RG01_core",
+        "RG02_core",
+        "RG01_unrestricted",
+        "RG02_unrestricted",
+        "RG03_runtime",
+        "RG04_artifacts",
+        "RG05_docker",
+        "RG06_api_core"
+      ]
+    },
+    "unrestricted": {
+      "passed": 9,
+      "total": 9,
+      "checks": [
+        "RG01_yaml",
+        "RG01_core",
+        "RG02_core",
+        "RG01_unrestricted",
+        "RG02_unrestricted",
+        "RG03_runtime",
+        "RG04_artifacts",
+        "RG05_docker",
+        "RG06_api_unrestricted"
+      ]
+    }
+  },
+  "scorecard_stage": "day13_provisional",
+  "scorecard_qualifications": [
+    "Scores use small smoke-test datasets.",
+    "Reasoning includes basic mathematics tests.",
+    "Performance, multimodal, VRAM/context and provenance are not numerically scored.",
+    "A passing prompt-injection test is not a security guarantee.",
+    "The provisional percentage is not an overall model capability score."
+  ],
+  "new_model_execution": false,
+  "old_results_modified": false,
+  "full_quality_gate_closed": false
+}

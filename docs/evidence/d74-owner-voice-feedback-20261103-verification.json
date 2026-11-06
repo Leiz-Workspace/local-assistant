@@ -1,0 +1,27 @@
+{
+  "description": "Documentation-only verification of owner group feedback, preserved listening artifacts/proposal/operator and original protected files. No new software tests, inference or quality PASS.",
+  "status": "VERIFIED",
+  "recorded_at_utc": "2026-11-03T16:51:41.936987+00:00",
+  "feedback_sha256": "6a8dce7db167c307d7cb109fde0f92afe02fbe71f18c994d51234d838a57831b",
+  "retained_source_hashes": {
+    "prior_wait_decision": "a0f9d0190ec37fd21ad44b6040ba15a70bea52710c242132a8327525651cf465",
+    "partial_campaign": "82f8e13b37df7497ddd2ae10f841a62c48844529315fe3b6d7cdd0d0f3af6112",
+    "recovery_plan": "9b1f1bc9ceb3f865d8a71bd753a92068aab7433c1c021a0be6453c03c91a44d5",
+    "listening_page": "90f1d718b81d6e063fb5e56d45d943926b8801d5a7baa3ffc813d5ab03efa7d3",
+    "listening_audio_index": "5f839a42e4a3255d54793b03623c52dac997c7c4b33f632e5826668f72343197"
+  },
+  "preserved_file_counts": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "unchanged_research_code_files": 7,
+  "new_markdown_links_verified": 15,
+  "model_calls": 0,
+  "provider_calls": 0,
+  "source_or_config_changes": 0,
+  "software_tests_run": false,
+  "prior_scoped_software_passed": 161,
+  "quality_acceptance": false,
+  "model_or_voice_selection": null,
+  "workflow_recovery_approved": false
+}

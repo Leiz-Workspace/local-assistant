@@ -1,0 +1,33 @@
+# D14 — Fresh structured-output quality gate protocol
+
+**Purpose:** Fix the observed native JSON-format integration gap and evaluate a fresh bounded functional quality gate without replacing models, encoding answers in grammar or rewriting previous D14 scores.
+
+Date:2026-10-26. Status:FROZEN BEFORE FIRST MODEL LOAD. Owner request: “Sửa đi update làm gate chất lượng đi”. PriorityP1known D14format findings; dependency exact existing twoGGUFs/projectors/runtime, original immutable D14evidence and additive opt-in decoder. Effort one scoped adapter/test/fresh matched-GPU measurement milestone. Risks structural success mistaken for factual truth, schema leaking gold values, overfitting observed cases, changed prompt clarity, small authored corpus, native unsupportedschema, incompleteSSE/cancellation and sampledresourceprotection. No model/default/tool/provider/data/config change or new download.
+
+## Fix and architectural boundary
+
+The existing plain native D14path relies on instructions to emit JSON. `StructuredProfileAdapter` adds an explicit host-owned structural schema using the pinned local llama.cpp server's documented `response_format={type:json_object,schema:...}` support. It is opt-in and unregistered; old text/vision/excerpt/gateway/API behaviors remain untouched. Existing profile-specific system templates/model aliases stay fixed. New case wording also explicitly asks the model to check arithmetic/Python semantics, so improvements cannot be attributed solely to grammar.
+
+The trusted schema permits only bounded object/array/string/integer/number/boolean shapes; object fields are exact, all required, no additionalProperties. It rejects enum/const/default/description/pattern/ranges/references/alternatives and thus cannot embed expected answers, source labels or semantic choices. Snapshot schema before any await. Answer values are free model output, strictly validated with no fence stripping, wrapper insertion, type coercion, content extraction, fallback or retry. Model-output tool/function calls are always rejected; changing profile grants no tools.
+
+Fixed loopback endpoints8080or the owned test18080, exact local alias/capability discovery before prompt/image disclosure; bounded response and SSE/media/encoding/identity/stop/usage validation. Single-use spent request before await; owned child HTTPcleanup joined across repeated cancellation and late-result rejection. Preserve exact first request/response before result validation; never log question/response/image/source contents. Unchanged-content hashes distinguish grammar enforcement from output repair.
+
+## Preregistered corpus and denominators
+
+42fresh questions/profile: reasoning8, coding-text8, source-policy8, Vietnamese6, freshimage5, near32Kretrieval4, streamedsequence3. Inputs/reference values differ from all earlier first corpora; preserve difficult families (fraction/linear equation, alias/slice/range/comprehension/defaultzero/shortcircuit, sourceauthority, chart/table/Vietnamese, 8K/16K/24K/30Kneedles). Reference math/Python is independently checked by trusted unit expressions. No model-generated code executes on host.
+
+Five new deterministic800x450PNGfixtures/sourcefont/hash/oracles are frozen before inference. Four document calibrations use tokenizer-only observations to place fresh codes in30,000–30,500user tokens; actual nativeprompt usage must be30,000–32,000within retained32K. The new streaming sequence is5through36; three planned replicates are not retries. Same complete strict JSON comparison as prior D14, with no posthoc reparsing or Unicode/value normalization. 84scored native generations maximum, plus2planned native cancel probes (same existing guarded lifecycle) and zero old-question generations.
+
+## Gate criteria, declared before fresh answers
+
+- Format gate:42/42complete schema-valid first replies **per profile**, with exact wiremodel/stop/usage/streamcompletion. Missing, truncated, malformed, wrongidentity, wrongschema and request failures scorezero in unchanged42denominators.
+- Functional gate:42/42whole-answer exact references **per profile**, in addition to format gate. A correctly shaped incorrect answer fails functional quality; the adapter does not know the references.
+- Local quality gate: both functional gates plus actual cancellation/slotretirement, exit0/reaped/noresourceguard failure,5/5localprovenancechecks/profile, and unchanged original native/container baseline. The command exitsnonzero unless this gate passes. A complete measurement is not itself PASS.
+
+These are a newly preregistered **bounded integration gate**, not a retroactive numeric threshold for historical overall D14scores or a universal capability percentage. Retain original D14composites66.5/52and every raw first failure. Do not turn format-only success, mock tests or controllerexit into a model/adoption/release decision. If any fresh functional case fails, retain it and keep the corresponding quality gate FAIL; do not regenerate it or weaken criteria.
+
+## Runtime, resources and tests
+
+Use existing profiles sequentially COREthenUNRESTRICTED under the unchanged ADR132ownedGPUlifecycle:32K/GPU99/projector/thread2/batch512/ubatch128/reasoningoff/offline/no-warmup, loopback18080. Initial no-native-process baseline remains required; never stop another model/process or recreate Docker. Preflight14GiBRAM/GPUfree; sampledRSS12GiB/VRAM14GiB/hostavailable4GiB/GPUfree512MiB, no false CUDAvirtualmemorycap. After actual owned retirement, wait up to30s for **resource release only** before the next load, without repeating a load or generation. Nativecancel is unweighted and intentionally partial; schemaadapter repeated-cancel cleanup is also tested directly. Nativewait4RAM and sampledVRAM remain separately labeled. Deadline60s/90scontext,2400scampaign; no new performanceSLO or productionpercentile from three samples.
+
+58preflightcontrols cover malicious/gold-bearing schemas, exact structure/type/error retention, schema mutation, real adapter over mock nativewire, wrong-model/no-DONE/extraevents, alias/capability disclosure gates, cancellation/repeatedcancel cleanup, independent corpusreferences and full84-dispatch two-profile mock-controller entries. The deliberate correctly-shaped-wrong-answer variant yields formatPASS/functionalFAIL/qualityFAIL. Ruffchecks pass; original728application files remain unchanged, two additive source/test files extend current application snapshot to730. The historical5674full remains a728-file result, not a new730-file full claim. Appropriate scoped regressions and actual fresh native gate evidence follow, then roadmap/devlog/ADR/backlog and cumulative full-file delivery.

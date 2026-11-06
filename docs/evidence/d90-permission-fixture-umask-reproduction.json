@@ -1,0 +1,20 @@
+{
+  "description": "Controlled execution-environment diagnosis: intended public fixture modes are masked to private under0077; original production checks and all source bytes unchanged.",
+  "caller_error": "First full was launched with child umask0077; use original0022 fixture environment while creating logs explicitly0600.",
+  "cases": [
+    {
+      "child_umask": "0077",
+      "exit_code": 1,
+      "expected": 1,
+      "log": "data/backups/d90-permission-umask-0077-reproduction.log"
+    },
+    {
+      "child_umask": "0022",
+      "exit_code": 0,
+      "expected": 0,
+      "log": "data/backups/d90-permission-umask-0022-reproduction.log"
+    }
+  ],
+  "production_permission_rules_changed": false,
+  "source_changes": 0
+}

@@ -1,0 +1,84 @@
+{
+  "description": "Observed D26 local opt-in ACL-filtered dense search and verified-source delivery acceptance; no production rollout or generalized quality score.",
+  "observed_date": "2026-10-19",
+  "milestone": "D26",
+  "status": "PASS_LOCAL_OPT_IN",
+  "base_commit": "e7fc697",
+  "next": "D27-T01 independent baseline/reranker evaluation planning",
+  "database_revision": "0004",
+  "tests": {
+    "new_total": 51,
+    "new_unit_policy_protocol_delivery": 40,
+    "new_actual_postgresql_qdrant_service_http": 11,
+    "focused_passed": 51,
+    "focused_seconds": 54.37,
+    "full_passed": 1030,
+    "full_seconds": 216.32,
+    "skipped": 0,
+    "exit_code": 0,
+    "command_description": "Existing Vault-backed uv run --no-sync python -m pytest tests/ -q -rs --tb=short with existing PostgreSQL/CORE/Qdrant credentials and explicit offline Qwen flags; no credential skips."
+  },
+  "gates": [
+    "server-owned owner/namespace/model/private/untrusted/active filter intersection with UUID-only optional narrowing",
+    "strict query/top-k/UUID/body validation and hostile ID/score/payload/vector/duplicate/reply bounds",
+    "exact approved Qwen query instruction plus original text; complete instructed token preflight/encoding identity; no truncation",
+    "actual two-principal source/SQL/Qdrant/CPU Qwen HTTP query and immutable replacement/delete",
+    "SQL active-generation/source-root/owner/hash plus deterministic point membership",
+    "exact source manifest/payload reconstruction; return trusted-source text and provenance only",
+    "retain verified source readers/admission through response; final single SQL snapshot after integrity I/O",
+    "real generation publication during final integrity I/O fenced before delivery",
+    "default-off/auth/Origin; busy search slot; cancel/shutdown/send failure cleanup"
+  ],
+  "fault_fixture_boundary": "Service fault tests explicitly inject unit query/document vectors against real SQL/Qdrant; separate HTTP tests run actual Qwen. Lifecycle counts are not quality metrics.",
+  "bounds": {
+    "query_utf8_bytes": 4096,
+    "top_k_max": 10,
+    "file_ids_max": 16,
+    "candidate_limit_max": 50,
+    "response_bytes": 1048576,
+    "search_admission": "one nonqueued response-lifetime slot",
+    "encoder_admission": "shared exact ingestion encoder; one model process",
+    "retained_source_readers_max": 10,
+    "token_cap_including_instruction_and_special_tokens": 512,
+    "candidate_underfill": "bounded candidates may produce fewer than top_k; no corpus-exhaustion claim"
+  },
+  "preserved": {
+    "approved_selection_sha256": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+    "registry_sha256": "0f5022f0a36186cf34ffe97b4e8461a586b36608c1a71effe1558393165fada9",
+    "e5_rollback_sha256": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+    "model_configs_runtime_locks_dependencies_and_schema_changed": false,
+    "existing_d25_worker_code_changed": false,
+    "production_collection_created": false,
+    "production_flags_enabled": false,
+    "selection_status": "selected_not_deployed"
+  },
+  "static_checks": {
+    "python_files": 11,
+    "documented_functions_and_classes": 68,
+    "ruff_correctness_imports_format": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "source_sha256": {
+    "src/infrastructure/qdrant_retrieval.py": "15c4c091b5d4f85fab40dd4164a3a9f5759400a04724d8af9b5b8837cc30bbc8",
+    "src/infrastructure/qwen_query.py": "4c1f8c17407a2856858c772faf8ff3570dc068f8d51d2ffca711f4d093d6affc",
+    "apps/api/services/retrieval.py": "f2737c0f7b29bd537549f4335f3e4ef777f9eadedd89e94d1b168472ae494e72",
+    "apps/api/routes/retrieval.py": "4daeba614adb4e9365a30fbbdf89df6ab8a5dd357a5591fa4cc86ea60be966b4",
+    "apps/api/storage/retrieval.py": "df1691c459f612dc6bb0129d467e03ac8e4ba7c0ea3bafddeaee44ef41167b39",
+    "apps/api/main.py": "0dca1348fb61f3ae5e87b22aec42315b975dae76e05ad2dd8bb657fff1b0d893",
+    "apps/api/storage/lifecycle.py": "9f2a63621eb7ea535a03498591d742982962c80b571c0a828f32789862abaf56",
+    "tests/test_retrieval_adapters.py": "94631bd4b4856e9471ea0f1820d35064236c3f0694fe561794cda4e5b766c07e",
+    "tests/test_retrieval_startup.py": "b071dc0000195442e8be075ad4dd312315b5bce630bf13c909afcfb689f2db64",
+    "tests/integration/test_retrieval.py": "661686eb03ff79c4ac28435abb4b6e78bc9d1946369074de8cfa9f92783851f4",
+    "tests/integration/test_retrieval_http.py": "7befc1b68e80bd97f2e03e76db07cb6f0326d9012f649e51169a1642ba12430d"
+  },
+  "private_full_log_sha256": "5096f7a25a49b08deeb606dff463c25f35eb9b1b395e863a044cfb484e1f3a59",
+  "post_audit": "docs/evidence/d26-post-audit.json",
+  "adr": "docs/ADR/037-acl-filtered-source-revalidated-retrieval.md",
+  "guide": "docs/RETRIEVAL.md",
+  "open_boundaries": [
+    "D27 original reranker candidate and independent corpus quality",
+    "production deployment/least privilege/multiworker/load",
+    "populated SQL/blob/vector/ownership disaster recovery",
+    "long-input quality, sustained storage and safe tombstone compaction"
+  ]
+}

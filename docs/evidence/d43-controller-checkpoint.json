@@ -1,0 +1,29 @@
+{
+  "description": "D43 controlled-inference/native/API/CLI checkpoint only; no actual D43 CORE inference or full milestone PASS yet.",
+  "status": "IN_PROGRESS",
+  "base_commit": "d01a8097192cc41fb4646ead5a821ef5667924df",
+  "combined_passed": 77,
+  "combined_pytest_seconds": 9.27,
+  "corrected_multibyte_boundary_focused_passed": 1,
+  "corrected_boundary_seconds": 0.59,
+  "focused_is_subset": true,
+  "skipped": 0,
+  "exit_code": 0,
+  "evaluated_python_files": 10,
+  "described_functions_classes": 85,
+  "sha256": {
+    "apps/api/main.py": "30d49634b68f289472e2172ad35a03749bf301a570588f66a9ac8a55e3c47a5a",
+    "apps/api/routes/coding_workflows.py": "44898a3a5caea945aebcd723c75b324b26cd994c8e475e21b2ed15708ea32963",
+    "apps/api/services/coding_workflows.py": "f359f2c7f4dad2457b894e935f260b205282f6fc63e4de71e9fe36d5bd5c20f7",
+    "apps/api/storage/coding_workflows.py": "3f1cc53f4bf1bf2b64256d4adca414972942fe494c322ab898f399db34688fbe",
+    "apps/api/storage/lifecycle.py": "9237eef107a238ae72b02f043ab78c960985c77836758d128678085f541ffc58",
+    "src/application/services/coding_workflow.py": "b91c50d610c0a2bf566ccb07b1d68425b8e8bce3be528d2436a5793e550cee46",
+    "tests/integration/test_coding_workflow_http.py": "ca8dd0932b8df27a675f23575415dc033b1cb548c5012bf6588a96db7f16219e",
+    "tests/test_coding_workflow.py": "ec3074a78b2853c0477694c2f3b69197cab8d66699230057733a144bdb75685d",
+    "tests/test_coding_workflow_service.py": "0329eddc7bb4b9ff61cd4c28613e1924201e2faa718bc14204238676ae037e7b",
+    "tests/test_coding_workflow_startup.py": "e6dbc37ebe90d373edff55726dd873550837b25f7d2bf1223c5dd1eb63e0c2bf"
+  },
+  "actual_CORE_D43_attempts": 0,
+  "model_choice_changed": false,
+  "production_action_approved": false
+}

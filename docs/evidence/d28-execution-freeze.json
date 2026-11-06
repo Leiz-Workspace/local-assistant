@@ -1,0 +1,61 @@
+{
+  "description": "Freeze default-off D28 source-held CORE generation/citation implementation and synthetic known-fact/absence/injection/lifecycle tests before actual model acceptance.",
+  "scope": "LOCAL_OPT_IN_GROUNDED_CITATION_ACCEPTANCE_NO_MODEL_CHANGE",
+  "base_commit": "b69172f",
+  "model_policy": {
+    "profile": "core",
+    "preset": "fast",
+    "temperature": 0,
+    "max_tokens": 512,
+    "model_timeout_seconds": 60,
+    "no_sources_no_generation": true
+  },
+  "source_policy": {
+    "top_k_max": 3,
+    "file_ids_max": 16,
+    "complete_prompt_bytes_max": 32768,
+    "raw_model_output_bytes_max": 16384,
+    "answer_bytes_max": 4096,
+    "quote_bytes_max": 2048,
+    "quote_count_max": 3,
+    "exact_unique_unicode_quote": true,
+    "source_fences_before_after_generation_and_before_headers": true,
+    "evidence_units_max": 64,
+    "exact_native_field_source_span": true,
+    "model_evidence_context": "Exact lexical text with server-rehydrated locator/field/quality; structured fields get opaque separate evidence IDs, no JSON scaffolding citations."
+  },
+  "actual_cases": [
+    "nativePDF_page",
+    "nativePDF_Unicode",
+    "owned_port_with_instruction_injection",
+    "other_owner_own_port",
+    "absent_identifier",
+    "immutable_source_replacement",
+    "foreign_narrowing_no_generation",
+    "deleted_narrowing_no_generation"
+  ],
+  "control_cases": [
+    "realSQL_delete_supersede_during_model_delay",
+    "cancel_shutdown_join",
+    "post_parse_real_source_deletion_final_delivery_fence",
+    "malformed_quote_HTTP_refusal"
+  ],
+  "human_or_universal_semantic_quality_claim": false,
+  "production_enablement": false,
+  "sha256": {
+    "src/application/services/grounded_answer.py": "9266d2fb747064414db8b1959233495651b53d3b2171468b837f51baa8cc9a0b",
+    "apps/api/services/grounded.py": "b90ce366b30e3a1adbbf68558512d4874f6139a08d065820e746e70d811819bd",
+    "apps/api/storage/grounded.py": "a61acd2145ecdbf0d12e9e11555c615f93b052e1e712a22058a7fa1feac89fdf",
+    "apps/api/routes/grounded.py": "d6e20473bdabab085e016b71a821ad3f22dbfad0b40a15af7e170bbfb7b503c0",
+    "apps/api/main.py": "6ace4377aa1e1fb7ff4f16cffdde5828e075d6ad9a2c0f5301b42f270f567ba1",
+    "apps/api/storage/lifecycle.py": "88776e92b4fb5a88d9466480c2505d26324e74bc1b6d5592b3c262308ec14904",
+    "tests/test_grounded_answer.py": "dc4aef8c9680908fe963d480dbc22a80e61ba76c8978c866b6a3551d5889aec0",
+    "tests/test_grounded_service.py": "e3b05017f3ac580d928ebdaf55cc9b415ff4c350482f733f2efa6e17446c552c",
+    "tests/test_grounded_startup.py": "b693293b311221b03d8302863d42787ffe41991d658a5f853c033fe0c27ec84d",
+    "tests/integration/test_grounded_http.py": "93ccaea5c63ce01960fc2901087fe56c62c10280209fd9f1a20f935c71fd5bff",
+    "docs/ADR/043-source-held-grounded-generation.md": "d76fbc733c35f7859db684eace244a8774ec90dff7c6f75ddaf56562ac02f64d",
+    "tests/fixtures/pdf/native-pages.pdf": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a"
+  },
+  "revision": 2,
+  "supersedes": "d28-execution-freeze.v1.json; retained actual71 PASS/1 FAIL before location-context correction"
+}

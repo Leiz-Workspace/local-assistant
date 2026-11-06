@@ -1,0 +1,23 @@
+{
+  "description": "D32 post-failure structured-only prompt repair freeze before final regression; original pre-inference evaluation plan and failed baseline retained.",
+  "base_commit": "f010abc",
+  "baseline_freeze": "docs/evidence/d31-final-regression-freeze.json",
+  "only_accepted_runtime_change": {
+    "src/application/services/grounded_answer.py": {
+      "before": "9266d2fb747064414db8b1959233495651b53d3b2171468b837f51baa8cc9a0b",
+      "after": "5cb8646b0940bd9780dd34543e12e58d227b5befb7d502d9b688ae84b8379696"
+    }
+  },
+  "all_other_accepted_files_and_protected_models_migrations_unchanged": true,
+  "function_class_descriptions": 14,
+  "sha256": {
+    "src/application/services/grounded_answer.py": "5cb8646b0940bd9780dd34543e12e58d227b5befb7d502d9b688ae84b8379696",
+    "tests/integration/test_knowledge_gate.py": "9fe2c634e2c2b5896f173622d4dd0381f5aaa3f67bff56ee233ef6d9e7c896eb",
+    "tests/test_grounded_source_groups.py": "065e6f7d1a4d1319875110a97618cd5b50180ef670a5ae64d2119245b62b1559",
+    "docs/D32_KNOWLEDGE_TEST_PLAN.md": "00e64864f4454e12c8cd260c401b36a6b2f96fae1dba9930bc9bea8ea87fa7ab",
+    "docs/evidence/d32-knowledge-plan.json": "6e8aa64be96454409d0ef6cd5899b3be3430f6718b868f1086ee20799150eb37",
+    "docs/ADR/050-structured-grounded-source-groups.md": "e1b110dc68dd4e23bb2ece8b58c8e1f49d3cade2290d5029ffdd996fe92e9267"
+  },
+  "initial_adr_proposal_sha256": "72acd4b06d632a142801934d9b7d2462b4640bbead85c123e36021418f8bf398",
+  "adr_status_amendment": "Design adopted after initial90 focused PASS; no source/test/plan change; transport/privacy regression still pending."
+}

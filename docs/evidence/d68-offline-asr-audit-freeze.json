@@ -1,0 +1,23 @@
+{
+  "description": "D68 auditor/control and both actual first observations sealed before readonly runtime/data/model verification; controls32 PASS/1.02s. Source/data evidence remains immutable, no model selection.",
+  "created_at_utc": "2026-10-22T08:09:07.404171+00:00",
+  "sha256": {
+    "data/backups/d68-offline-asr-readonly-audit.py": "ba1434fd4088753df49935844e1801c9551c05cfd7fe5162ea93670f42f981d1",
+    "data/backups/test_d68_offline_asr_audit.py": "f5d8001f565456f39d6757bc384f58a5d67be7e6ed5257a67ad90b3713dcbe12",
+    "data/backups/d68-audit-controls-first.log": "84a0aff0384b0c3c09edb0075ea9495f37c9517a037cc0327e876a8b3cf6ee11",
+    "docs/evidence/d68-offline-asr-qualified-freeze.json": "9184731711f4f2c60057958a469ca3e5c56cbb9397ea47745a6f175f7af15706",
+    "data/backups/d68-qwen-scored-first/result.json": "a3617f9430b4a164bfa69ec9fc63d3f69bf733d34a73512c62647053cb613810",
+    "data/backups/d68-qwen-scored-first/freeze.json": "0263ad8f44ec793584a77a1a6fa12067dfc9fb066748f2cf7b8ccdebab240b94",
+    "data/backups/d68-qwen-scored-first/core-before.json": "a54966da6f36cc8cfb546c94390d5fc5b2e195601d2ac0ec45caec602d64fc68",
+    "data/backups/d68-qwen-scored-first/worker.stdout.jsonl": "f9764737614050fd2cee8dcd790284e20a46e18421fcf06cce4b269c5ea80afc",
+    "data/backups/d68-qwen-scored-first/worker.stderr.log": "b3585c162120046f6de5bf05a6236f64d30bde8cbe9760a55423ed2de8305d44",
+    "data/backups/d68-whisper-scored-first/result.json": "20b36e8388984e89dc58ffbf575d310e092d25ce1dd2bc5f28a5d392cef52e46",
+    "data/backups/d68-whisper-scored-first/freeze.json": "97156f79fac24c833555da3bd3d564f08cb6b8d0b996f096237340d073ed9bd4",
+    "data/backups/d68-whisper-scored-first/core-before.json": "a54966da6f36cc8cfb546c94390d5fc5b2e195601d2ac0ec45caec602d64fc68",
+    "data/backups/d68-whisper-scored-first/worker.stdout.jsonl": "35639f1b2f45af8d7658440fd91ebf9118538c243b56fdbba49d9d5be7ddb4e4",
+    "data/backups/d68-whisper-scored-first/worker.stderr.log": "52f20dabfbe8bda289e1112472124e715b76fe4c6ca8ab5a05cc704381d41cb1"
+  },
+  "private_audit_controls": 32,
+  "private_audit_elapsed_seconds": 1.02,
+  "selection": null
+}

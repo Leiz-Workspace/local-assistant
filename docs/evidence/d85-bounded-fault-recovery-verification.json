@@ -1,0 +1,89 @@
+{
+  "description": "Actual small-cap process MemoryError/private-tmpfs ENOSPC and native100-read admission; no host OOM/disk fill/model throughput/SLO claim.",
+  "status": "LOCAL_BOUNDED_FAULT_RECOVERY_VERIFIED",
+  "new_tests": 4,
+  "related_tests": {
+    "passed": 75,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.82
+  },
+  "source_sha256": {
+    "tests/fixtures/runtime/fault_worker.py": "2de53a65cc1747fe2295f8936f19afc83e5f197d45652c71da33c7607a58ca9d",
+    "tests/runtime_fault_scenario.py": "9038739aeb6e29b341b1829ee944ea0bab34e327956128133b7aa910e61f78cd",
+    "tests/harness_load_scenario.py": "fc8fbcd934a63265d30b2f34471c5e35ea79a0c727073d10c9e01d1e560f9ccd",
+    "tests/test_runtime_fault_scenario.py": "8ade4fc08c0ce0fd8cf98890147815f99ee961119369e7e8098b8e0f112bc235",
+    "tests/test_harness_load_scenario.py": "7b3767f40e3f6b0148702acb73c1cac5e812805b49c4b1798f95a1ee0a948842"
+  },
+  "native": {
+    "description": "First retained small-cap native faults/load; no host OOM/disk fill or production model load.",
+    "core_before": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    },
+    "source_sha256": {
+      "tests/runtime_fault_scenario.py": "9038739aeb6e29b341b1829ee944ea0bab34e327956128133b7aa910e61f78cd",
+      "tests/harness_load_scenario.py": "fc8fbcd934a63265d30b2f34471c5e35ea79a0c727073d10c9e01d1e560f9ccd",
+      "tests/fixtures/runtime/fault_worker.py": "2de53a65cc1747fe2295f8936f19afc83e5f197d45652c71da33c7607a58ca9d"
+    },
+    "memory": {
+      "description": "Owned fixture exhaustion under256MiB address-space/64KiB tmpfs, not host OOM/disk-fill or a model runtime benchmark.",
+      "measurement": {
+        "mode": "memory",
+        "expected_failure": "MemoryError",
+        "recovery": "small_allocation_succeeded",
+        "address_space_cap_bytes": 268435456,
+        "peak_process_rss_kib": 15384,
+        "host_oom_triggered": false,
+        "host_disk_filled": false
+      },
+      "worker_sha256": "2de53a65cc1747fe2295f8936f19afc83e5f197d45652c71da33c7607a58ca9d",
+      "wall_seconds": 0.03930755000328645,
+      "exit_code": 0,
+      "child_reaped": true
+    },
+    "disk": {
+      "description": "Owned fixture exhaustion under256MiB address-space/64KiB tmpfs, not host OOM/disk-fill or a model runtime benchmark.",
+      "measurement": {
+        "mode": "disk",
+        "expected_failure": "ENOSPC",
+        "recovery": "private_file_recreated_after_cleanup",
+        "address_space_cap_bytes": 268435456,
+        "peak_process_rss_kib": 14524,
+        "host_oom_triggered": false,
+        "host_disk_filled": false
+      },
+      "worker_sha256": "2de53a65cc1747fe2295f8936f19afc83e5f197d45652c71da33c7607a58ca9d",
+      "wall_seconds": 0.039014323003357276,
+      "exit_code": 0,
+      "child_reaped": true
+    },
+    "load": {
+      "description": "Native disposable read admission, not model/HTTP/global throughput or production SLO.",
+      "attempts": 100,
+      "accepted": 1,
+      "rejected": {
+        "busy": 7,
+        "limit": 92
+      },
+      "elapsed_seconds": 0.01426277300924994,
+      "policy": "one nonqueued active operation and eight charged attempts per explicit run",
+      "explicit_fresh_run_after_cleanup_succeeded": true,
+      "workspace_bytes_unchanged": true,
+      "all_owned_operations_joined": true
+    },
+    "core_after": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    },
+    "status": "COMPLETE"
+  },
+  "artifact_sha256": {
+    "data/backups/d85-native-fault-first-tests.log": "3dda496087ef21e2a2cf70552e7962179ac5dbb2ea30ff9b654d99231ed1382d",
+    "data/backups/d85-fault-load-related-tests.log": "1881a7f62725af68f6913f029d8c097656edd5f28530183ee82ce9e91ca6239b",
+    "data/backups/d85-native-fault-load-first.log": "cf4338430d7e299d79866acc503d40dab127e6803760288470282dec4ea82346",
+    "data/backups/d85-native-fault-load-first/result.json": "56e069610206428c4476dfe80649258c897dc32666985d4a67b1c32ef2a44c11"
+  },
+  "host_oom_or_disk_exhaustion_attempted": false,
+  "production_capacity_or_model_oom_certified": false
+}

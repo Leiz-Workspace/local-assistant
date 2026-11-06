@@ -1,0 +1,26 @@
+{
+  "description": "D27-T02 concrete execution identity frozen before candidate scoring; original candidate evaluation only, no production/model-selection approval.",
+  "frozen_at": "2026-10-19T05:11:19.056804+00:00",
+  "base_commit": "5d225b6",
+  "scope": "EVALUATION_ONLY_NO_ADOPTION",
+  "authorization_basis": "Owner requested continuation after the concrete T02 original-candidate comparison plan; evaluation-only provisioning and inference, not adoption.",
+  "candidate": "Qwen/Qwen3-Reranker-0.6B",
+  "revision": 3,
+  "profile_directory": "models/embedding/qwen3-reranker-0.6b-bf16-cpu-eval",
+  "sha256": {
+    "scripts/qwen_reranker_runtime.py": "69c443d1a486bf180a93ee6517d44a766809bc827a3e3df47e35b64141cf654c",
+    "scripts/qwen_reranker_worker.py": "fda40d382e91d7526b2c3d294aa377cfb47ef0aa98c0623d898d6cfa854e6104",
+    "scripts/qwen_reranker_worker.py.lock": "92f386a6ac35df8c530d0d48b4465d6cf84ce204bd380fea5293eca061f27e6e",
+    "scripts/reranker_comparison.py": "fa72b9b54d53e93eb03ece0500fc0a40c0a5b0af83ec7e5a3e554b5c69232f76",
+    "configs/reranker-qwen-evaluation.json": "895b6f75129d472b7cc67a568b6e50953f610b90d5c880bef8df61736724ee09",
+    "tests/fixtures/retrieval/d27-corpus.json": "0bc96e6c5bebacb3ffbd3eedd4fed466c730f2f540eef556aeb4654949bd7ee8",
+    "tests/fixtures/retrieval/d27-plan.json": "4f39578e917b8a07175ea86946e21e76f577a0d7c6ffd5397ad1a6aaf6423048",
+    "docs/evidence/d27-retrieval-baseline.json": "cb4248e1dd2a16d43b0c861a2c17a358dfa405b9da981bb6db10af38154f74fd",
+    "configs/reranker-qwen-batch4-evaluation.json": "63aabb1c2e1a9c7fd64d526047ac1e5444fdbf66c00e8c3aa79aa941d30f3bbc"
+  },
+  "corpus_or_threshold_changes": false,
+  "production_changes_authorized": false,
+  "supersedes": "docs/evidence/d27-t02-execution-manifest-v2.json",
+  "implementation_change": "Separate CPU BF16 batch4 runtime variant; batch1 remains failed/incomplete, budgets/quality gates and frozen inputs unchanged.",
+  "runtime_variant": "cpu-bf16-batch4"
+}

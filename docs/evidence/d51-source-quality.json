@@ -1,0 +1,75 @@
+{
+  "description": "Pre-public D51 described code and isolated Ruff correctness/import/format plus actual collection. Collection is not a test result.",
+  "new_files": [
+    "src/application/ports/web_evidence.py",
+    "src/application/services/web_evidence.py",
+    "src/application/services/web_evidence_policy.py",
+    "src/infrastructure/evidence_metadata.py",
+    "src/infrastructure/web_evidence_source.py",
+    "tests/test_web_evidence.py",
+    "tests/test_web_evidence_policy.py",
+    "tests/test_web_evidence_source.py",
+    "tests/integration/test_web_evidence_native.py"
+  ],
+  "evaluated_python_files": 9,
+  "described_functions_classes": 97,
+  "new_pytest_cases": 128,
+  "related_expected": 2134,
+  "checks": [
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I",
+        "src/application/ports/web_evidence.py",
+        "src/application/services/web_evidence.py",
+        "src/application/services/web_evidence_policy.py",
+        "src/infrastructure/evidence_metadata.py",
+        "src/infrastructure/web_evidence_source.py",
+        "tests/test_web_evidence.py",
+        "tests/test_web_evidence_policy.py",
+        "tests/test_web_evidence_source.py",
+        "tests/integration/test_web_evidence_native.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+        "format",
+        "--isolated",
+        "--check",
+        "src/application/ports/web_evidence.py",
+        "src/application/services/web_evidence.py",
+        "src/application/services/web_evidence_policy.py",
+        "src/infrastructure/evidence_metadata.py",
+        "src/infrastructure/web_evidence_source.py",
+        "tests/test_web_evidence.py",
+        "tests/test_web_evidence_policy.py",
+        "tests/test_web_evidence_source.py",
+        "tests/integration/test_web_evidence_native.py"
+      ],
+      "exit_code": 0,
+      "output": "9 files already formatted\n"
+    },
+    {
+      "command": [
+        "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_web_evidence.py",
+        "tests/test_web_evidence_policy.py",
+        "tests/test_web_evidence_source.py",
+        "tests/integration/test_web_evidence_native.py",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "128 tests collected in 0.09s"
+    }
+  ],
+  "source_freeze_sha256": "c9781a98825e3695325f913fb6f0e4c1670eb1e46f4eb7343ede7efd8883f0ab"
+}

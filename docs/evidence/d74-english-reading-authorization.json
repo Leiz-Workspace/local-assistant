@@ -1,0 +1,15 @@
+{
+  "description": "Continuing the owner-authorized fix-and-new-clips task from “Làm đi”, with latest feedback requiring English pronunciation and reporting API buzz in both voices. One new input-policy panel on the same approved weights/presets; not ADR155 workflow recovery, new-model approval or a retry of the original48-call quality panel. Eight is the bounded engineering count, not a count explicitly specified by the owner.",
+  "authorized": true,
+  "recorded_at_utc": "2026-11-03T17:46:34.076145+00:00",
+  "scope": "Remove only Vietnamese lexicon substitutions, retain preferred clauses/date processing, model-free English/tokenizer inspection and eight new candidate clips with unchanged original baselines.",
+  "owner_feedback_sha256": "ba8632a7e08fec9d80e6e476b5595769e15fb1e9dae918255a887e309ebb5cdc",
+  "adr_sha256": "5239c52a72b1e22da77b5ca55755f0d8fcc3f1eeb7d98bfb3d8e1b4dffbd1cff",
+  "maximum_tts_calls": 8,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "retries": 0,
+  "new_weights_or_packages": 0,
+  "workflow_recovery_authorized": false,
+  "product_activation_authorized": false
+}

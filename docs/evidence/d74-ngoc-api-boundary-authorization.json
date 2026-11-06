@@ -1,0 +1,26 @@
+{
+  "description": "Continuation of the owner-requested minimal Ngoc Huyen API repair after exact heard forms were supplied; one native-dictionary boundary candidate only.",
+  "authorized": true,
+  "date": "2026-11-04",
+  "owner_verbatim": "Bị đọc là E - Pe-I, A - Pe - I",
+  "prior_owner_request": "Làm đi",
+  "voice": "Ngọc Huyền",
+  "tts_ceiling": 1,
+  "inner_chunks_ceiling": 1,
+  "retries": 0,
+  "wall_seconds": 60,
+  "baseline_reused": true,
+  "bindings": {
+    "docs/ADR/163-ngoc-huyen-api-dictionary-boundary-trial.md": "87ec330eacc2efdfa382821e0009eea32e43563ce08358cf943a9232e439eb24",
+    "docs/evidence/d74-ngoc-api-exact-owner-feedback.json": "388e1a9bcc8be7eaa994bd2c492c8f73a0845dd0b3cc34b4ff32dee840e6459b",
+    "docs/evidence/d74-ngoc-validation-result.json": "a1c55f39887c12fb24687af6f44769f98c8d104a66050b5b7648d799a1b53502",
+    "docs/evidence/d74-truc-validation-owner-acceptance.json": "19a797d00a75076574517ab3b294fe299580639cdf51950b956a6675d640c0c3"
+  },
+  "packet_sha256": "6993d82a7d6c8d96745f739a4d0712fb050abb189d4d31f99b359e629797cd65",
+  "probe_sha256": "2f216d04346516b44d260d363c2e2849b3c1c3ba99e5b002e0a99b06d63a15fd",
+  "new_models_or_reference_assets": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "product_activation": false,
+  "workflow_recovery_approved": false
+}

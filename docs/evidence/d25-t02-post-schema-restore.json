@@ -1,0 +1,9 @@
+{
+  "description": "Actual protected post-V004 nine-table restore drill including normalized schema/table/column ACL fingerprints; no shared restart.",
+  "revision": "0004",
+  "backup_directory": "data/backups/d25-t02-post-v004-20261018",
+  "restore_verified": true,
+  "column_acls_included": true,
+  "restart_performed": false,
+  "table_count": 9
+}

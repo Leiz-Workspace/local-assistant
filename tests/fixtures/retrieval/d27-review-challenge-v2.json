@@ -1,0 +1,72 @@
+{
+  "description": "Separately versioned agent-authored/agent-reviewed diagnostic after owner delegated review; q04 absent-case ambiguity corrected before inference, not independent human or production-held-out data.",
+  "version": "d27-review-challenge-v2-agent-reviewed",
+  "documents": [
+    {
+      "id": "doc-a",
+      "text": "Atlas release 2.4: restore requires snapshot generation G-17 and source hash 8af2. Release 2.5 instead requires G-18; do not mix restore sets."
+    },
+    {
+      "id": "doc-b",
+      "text": "Atlas release 2.4 upload quota is 128 MiB per file. Indexing leases last 45 seconds; these numbers do not describe the restore generation."
+    },
+    {
+      "id": "doc-c",
+      "text": "Bảng chi phí tháng 9: gói A 120000 đồng, gói B 210000 đồng. Tháng 10: gói A 135000 đồng, gói B 225000 đồng. Chưa gồm VAT."
+    },
+    {
+      "id": "doc-d",
+      "text": "Bảng chi phí tháng 9: gói A 120000 đồng, gói B 210000 đồng. Tổng dự toán quý chưa được phê duyệt; không dùng làm số liệu tháng 10."
+    },
+    {
+      "id": "doc-e",
+      "text": "OCR chưa duyệt: Mã lô AB-I07 hoặc AB-107; ảnh mờ không phân biệt được I và 1. Cần xem ảnh gốc trước khi chốt mã lô."
+    },
+    {
+      "id": "doc-f",
+      "text": "Biên bản đã đối chiếu ảnh gốc: mã lô AB-107, nhận ngày 12/09. Kết quả này chỉ áp dụng lô hiện tại, không xác nhận mã của lô trước."
+    },
+    {
+      "id": "doc-g",
+      "text": "Sheet Revenue cell C7 contains =SUM(C2:C6), cached value 900, cache date 2026-09-01. Formula execution is disabled and this cached total may be stale."
+    },
+    {
+      "id": "doc-h",
+      "text": "Rollback ranking: disable and drain the optional reranker, then use dense ordering. Retain embeddings, sources and vector IDs; no reindex is needed for this ranking rollback."
+    }
+  ],
+  "queries": [
+    {
+      "id": "review-q01",
+      "text": "For Atlas 2.4, which snapshot generation must be restored?"
+    },
+    {
+      "id": "review-q02",
+      "text": "Atlas 2.5 khôi phục bằng generation nào?"
+    },
+    {
+      "id": "review-q03",
+      "text": "Chi phí gói B tháng 10 chưa VAT là bao nhiêu?"
+    },
+    {
+      "id": "review-q04",
+      "text": "What is the physical backup disk serial number that stores snapshot generation G-17?"
+    },
+    {
+      "id": "review-q05",
+      "text": "Nguồn nào xác nhận chắc chắn mã lô hiện tại sau khi đối chiếu ảnh gốc?"
+    },
+    {
+      "id": "review-q06",
+      "text": "Does the OCR snippet alone resolve whether the lot code contains I or 1?"
+    },
+    {
+      "id": "review-q07",
+      "text": "Can the cached C7 value be treated as a newly recalculated current total?"
+    },
+    {
+      "id": "review-q08",
+      "text": "Khi rollback reranker thì có cần tạo lại embedding và vector ID không?"
+    }
+  ]
+}

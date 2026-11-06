@@ -1,0 +1,6 @@
+{
+  "description": "Pre-freeze controls237PASS/1FAIL: private evaluator retained dataclass audio tuple but compared to JSON array. Normalize only evaluator metadata audio to list before comparison/serialization. Exact decoded native video metadata/timestamps/pixels and application source unchanged. Original evaluator bytes and failing log retained; no actual cohort run yet.",
+  "status": "EVALUATOR_REPRESENTATION_ERROR_RETAINED",
+  "original_evaluator_sha256": "dbaa705bb57f5ce4c99e25d271f60997d8b5f4f3d4ef019e62cadc9209acda02",
+  "original_controls_log_sha256": "3633832fbcf2ccb2d60274857bc48a803f98e32db7ddeb242a5b57be34e30095"
+}

@@ -1,0 +1,124 @@
+{
+  "description": "First original CORE assessment over two authored signed sources/three predeclared claims. Citation integrity is exact source binding; statuses are unverified model assessments, not human-independent/general semantic evaluation or actual publisher fact-checking.",
+  "status": "PASS_FIRST_ACTUAL_CORE_THREE_AUTHORED_CLAIMS",
+  "source_freeze_sha256": "83c97e0b2cc373b0936cc7452472dab3f0cfd06f1cdd251be20ed6cd67f89afa",
+  "actual_public_or_private_source_HTTP": 0,
+  "provider_calls": 0,
+  "browser_runs": 0,
+  "automatic_retries": 0,
+  "model_replacement": false,
+  "human_independent": false,
+  "result": {
+    "owner_id": "ff2b16ec-cf96-4141-871b-eafa279fea9e",
+    "goal": "Check each claim against only the supplied Atlas release 2.4 excerpts; keep absent information insufficient.",
+    "evidence": [
+      {
+        "evidence_id": "E1",
+        "reference": {
+          "snapshot_id": "c69b85bd-104c-4840-ac91-564a275956d8",
+          "content_id": "35f653bed7d375fcef874c25da2936329fbe3c169850aae23d6a9e6cd66e2dc2",
+          "start": 0,
+          "end": 60,
+          "quote": "Atlas release 2.4 restore requires snapshot generation G-17.",
+          "quote_sha256": "8fc8ff3d2856b409ae4bc66196d3ad48c8716707710a75838aea3b0e86c8a81c",
+          "final_url": "https://example.org/d56-source-1",
+          "title": "Authored source",
+          "fetched_at": "2026-10-21 10:04:03.632561+00:00",
+          "date_claims": [],
+          "content_trust": "untrusted",
+          "semantic_validation": false
+        }
+      },
+      {
+        "evidence_id": "E2",
+        "reference": {
+          "snapshot_id": "92744110-ec0c-4994-a06d-5717230ad7f7",
+          "content_id": "ea69c71d8c00a17dfed15efd0b43c731087738c4cec4d83c60a6fb8b3beb3f4f",
+          "start": 0,
+          "end": 51,
+          "quote": "Atlas release 2.4 per-file upload quota is 128 MiB.",
+          "quote_sha256": "40960d7b87ccc9aad66d663e88d19e9ae3ec6e71201f5b7950da631fbb1d374b",
+          "final_url": "https://example.org/d56-source-2",
+          "title": "Authored source",
+          "fetched_at": "2026-10-21 10:04:03.633180+00:00",
+          "date_claims": [],
+          "content_trust": "untrusted",
+          "semantic_validation": false
+        }
+      }
+    ],
+    "claims": [
+      {
+        "claim_id": "C1",
+        "text": "Atlas release 2.4 restore requires snapshot generation G-17.",
+        "status": "supported",
+        "evidence_ids": [
+          "E1"
+        ],
+        "reason": "Quote in E1 directly states the restore requirement.",
+        "assessment_trust": "model_unverified"
+      },
+      {
+        "claim_id": "C2",
+        "text": "Atlas release 2.4 per-file upload quota is 256 MiB.",
+        "status": "contradicted",
+        "evidence_ids": [
+          "E2"
+        ],
+        "reason": "Quote in E2 states the quota is 128 MiB, contradicting 256 MiB.",
+        "assessment_trust": "model_unverified"
+      },
+      {
+        "claim_id": "C3",
+        "text": "The Atlas project launched in 2019.",
+        "status": "insufficient",
+        "evidence_ids": [],
+        "reason": "No evidence provided regarding the launch year.",
+        "assessment_trust": "model_unverified"
+      }
+    ],
+    "completed_at": "2026-10-21 10:04:05.658225+00:00",
+    "model_attempts": 1,
+    "citation_integrity": "owner_signed_exact_span",
+    "status": "assessed_unverified",
+    "content_trust": "untrusted",
+    "semantic_validation": false,
+    "verified_freshness": null
+  },
+  "observed_statuses": [
+    "supported",
+    "contradicted",
+    "insufficient"
+  ],
+  "expected_statuses": [
+    "supported",
+    "contradicted",
+    "insufficient"
+  ],
+  "functional_claims_correct": 3,
+  "shared_evidence_alive_after_validator_shutdown": true,
+  "core_port_attempts": 1,
+  "authored_source_reads": 2,
+  "charged_attempts": 1,
+  "model_completion": {
+    "content": "{\"claims\": [{\"claim_id\": \"C1\", \"status\": \"supported\", \"evidence_ids\": [\"E1\"], \"reason\": \"Quote in E1 directly states the restore requirement.\"}, {\"claim_id\": \"C2\", \"status\": \"contradicted\", \"evidence_ids\": [\"E2\"], \"reason\": \"Quote in E2 states the quota is 128 MiB, contradicting 256 MiB.\"}, {\"claim_id\": \"C3\", \"status\": \"insufficient\", \"evidence_ids\": [], \"reason\": \"No evidence provided regarding the launch year.\"}]}",
+    "model_id": "qwen3.5-9b-core",
+    "preset_selected": "fast",
+    "finish_reason": "stop",
+    "input_tokens": 680,
+    "output_tokens": 131,
+    "reasoning_tokens": null,
+    "latency_ms": 2022
+  },
+  "validator_closed": true,
+  "evidence_closed": true,
+  "operations_remaining": 0,
+  "admission_released": true,
+  "signing_key_revoked": true,
+  "cache_empty": true,
+  "elapsed_seconds": 2.026,
+  "artifact": {
+    "path": "data/backups/d56-root-object-core-claims/summary.json",
+    "sha256": "1a5058161520cba7fb7e8d68a14431777d651df49572054a3f83c0820776307d"
+  }
+}

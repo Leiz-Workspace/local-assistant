@@ -1,0 +1,16 @@
+{
+  "description": "Explicit owner approval of the concrete ADR-154 bounded campaign; approval does not select a product model or waive physical timing/listening gates. Frozen proposal inputs remain immutable.",
+  "approved": true,
+  "owner_response": "Duyệt",
+  "reviewed_commit": "5744f0d",
+  "recorded_at_utc": "2026-11-03T10:12:06.001923+00:00",
+  "reviewed_inputs_sha256": {
+    "docs/ADR/154-proposed-isolated-vietnamese-voice-feasibility-campaign.md": "9d39641824688d53a6e4680fa2c812f3f84c315c5f47ff3c92e817d04670edf1",
+    "docs/D74_VI_VOICE_BENCHMARK_PROTOCOL.md": "722c622667f965777bc1e707b903086278eed9ce2fd2f4d78146c57aa980ba1a",
+    "docs/evidence/d74-vi-turbo-proposed-artifacts-20261103.json": "c85f751b1d986a97eb4d3f0ad6898764fdac3b0454ef2375084892f2d481f36f",
+    "docs/evidence/d74-vi-voice-proposed-packet-20261103.json": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a"
+  },
+  "manifest_sha256": "c85f751b1d986a97eb4d3f0ad6898764fdac3b0454ef2375084892f2d481f36f",
+  "packet_sha256": "e6f771c3e12882e04f21096a4d5df202b0ce0d8c676bcd592bad3ece9bcf869a",
+  "scope": "Preparation, two qualification calls, conditional 24 standalone TTS calls and conditional 48 workflow slots; original ADR-154 caps; no retry, model/default change or deployment."
+}

@@ -1,0 +1,89 @@
+{
+  "description": "Four D44 patch/check acknowledgement fault cases reproduced missing controller uncertainty propagation before repair; both interrupted fulls are retained and never accepted.",
+  "status": "REPAIR_VERIFIED_FOCUSED_RELATED_FULL_AUDIT",
+  "initial_interrupted_full": {
+    "description": "Actual full application pytest run; durable redacted log, supervised PID, boot identity and observed final exit only.",
+    "targets": [
+      "tests"
+    ],
+    "pytest_options": [
+      "-v",
+      "-rs",
+      "--tb=short",
+      "-o",
+      "tmp_path_retention_policy=failed",
+      "-o",
+      "tmp_path_retention_count=1"
+    ],
+    "status": "complete",
+    "started_at_utc": "2026-10-20T13:35:02.686572+00:00",
+    "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+    "wrapper_pid": 1532610,
+    "source_freeze_sha256": "75431c28bace637f214a55fdeee68103f7c74709a4a263f06297d3c9a95083dc",
+    "pytest_pid": 1532628,
+    "exit_code": 2,
+    "elapsed_seconds": 330.58,
+    "completed_at_utc": "2026-10-20T13:40:33.264688+00:00",
+    "log_sha256": "94daf4bc98d43441f4b5911760ac89890aa591039248ecdb54cc23bb64fa26a9"
+  },
+  "retained_manifest": "data/backups/d44-before-uncertainty-repair/manifest.json",
+  "reproduction": {
+    "log": "data/backups/d44-prior-uncertainty-reproduction.log",
+    "sha256": "b4163fc80e42b73da86b3cea5e1f988c7d096a4d1a9b34ffccaa823ab70da1c0",
+    "failed": 2,
+    "deselected": 23,
+    "pytest_seconds": 1.0,
+    "exit_code": 1
+  },
+  "initial_controller_sha256": "36288096c224043d507d7b44fd57062c7f0dfe3fac80c72abfd727e648a3e7a1",
+  "repaired_controller_sha256": "1f78caff00b569bdacd939bb0015dab75139ca8693fe4f55d60fcd3ba1ae1851",
+  "repaired_focused": {
+    "passed": 74,
+    "skipped": 0,
+    "pytest_seconds": 17.45,
+    "exit_code": 0
+  },
+  "native_primitives_changed": false,
+  "models_configs_data_changed": false,
+  "initial_related1260_preserved": true,
+  "initial_full_is_pass": false,
+  "second_interrupted_full": {
+    "description": "Actual full application pytest run; durable redacted log, supervised PID, boot identity and observed final exit only.",
+    "targets": [
+      "tests"
+    ],
+    "pytest_options": [
+      "-v",
+      "-rs",
+      "--tb=short",
+      "-o",
+      "tmp_path_retention_policy=failed",
+      "-o",
+      "tmp_path_retention_count=1"
+    ],
+    "status": "complete",
+    "started_at_utc": "2026-10-20T13:44:39.685055+00:00",
+    "boot_id": "a21c9a6b-e330-4371-99fe-3e26671fdf49",
+    "wrapper_pid": 1557516,
+    "source_freeze_sha256": "f41067f288d892d156ba80084a045110c27a43cba794dd17d88b0cd88a80a398",
+    "pytest_pid": 1557547,
+    "exit_code": 2,
+    "elapsed_seconds": 62.84,
+    "completed_at_utc": "2026-10-20T13:45:42.526211+00:00",
+    "log_sha256": "20ac07885ee8c1c22364e090805dbfd2f676e23ccb42f3bf5e0e859bf4f120d3"
+  },
+  "second_retained_manifest": "data/backups/d44-before-check-uncertainty-repair/manifest.json",
+  "check_reproduction": {
+    "log": "data/backups/d44-check-uncertainty-reproduction.log",
+    "sha256": "a524f6fab72178813234793c0a2a1f189056fa5fc0a65889ab7e3d7a2a573589",
+    "failed": 2,
+    "deselected": 25,
+    "pytest_seconds": 1.12,
+    "exit_code": 1
+  },
+  "all_four_faults_reproduced_before_respective_repairs": true,
+  "native_check_primitives_changed": false,
+  "final_related": "docs/evidence/d44-related-regression.json",
+  "final_full": "docs/evidence/d44-full-regression.json",
+  "final_audit": "docs/evidence/d44-final-post-audit.json"
+}

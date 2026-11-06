@@ -1,0 +1,21 @@
+{
+  "description": "Actual D47 subprocess gate; no external search acceptance or fresh full-suite claim.",
+  "command": [
+    "/home/korosaki-ryukai/.cache/uv/archive-v0/fCE98ToRxliIVOxk8ZOZf/bin/ruff",
+    "format",
+    "--isolated",
+    "--check",
+    "src/application/ports/search.py",
+    "src/application/services/search_pipeline.py",
+    "src/infrastructure/brave_search.py",
+    "tests/test_search_pipeline.py",
+    "tests/test_brave_search.py",
+    "tests/integration/test_search_pipeline_core_live.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.01,
+  "summary": "6 files already formatted",
+  "log": "data/backups/d47-ruff-format.log",
+  "log_sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+  "completed_at_utc": "2026-10-21T00:59:05.837749+00:00"
+}

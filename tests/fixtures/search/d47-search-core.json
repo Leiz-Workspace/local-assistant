@@ -1,0 +1,33 @@
+{
+  "description": "One predeclared same-agent authored search-snippet fixture for the original CORE; not external provider or independent relevance evidence.",
+  "query": "Khôi phục Atlas phiên bản 2.4 cần snapshot generation nào?",
+  "response": {
+    "type": "search",
+    "web": {
+      "results": [
+        {
+          "title": "Atlas restore release 2.4",
+          "url": "https://example.org/atlas/2.4/restore",
+          "description": "Atlas release 2.4: restore requires snapshot generation G-17 and source hash 8af2. Release 2.5 instead requires G-18; do not mix restore sets."
+        },
+        {
+          "title": "Atlas release 2.5",
+          "url": "https://example.org/atlas/2.5/restore",
+          "description": "Atlas release 2.5 uses snapshot generation G-18. This generation is not valid for release 2.4."
+        }
+      ]
+    }
+  },
+  "oracle": {
+    "status": "answered",
+    "answer_contains": "G-17",
+    "citation_ids": ["S1"],
+    "citation_url": "https://example.org/atlas/2.4/restore"
+  },
+  "budget": {
+    "actual_core_port_attempts": 1,
+    "mock_provider_requests": 1,
+    "external_provider_requests": 0,
+    "automatic_retries": 0
+  }
+}

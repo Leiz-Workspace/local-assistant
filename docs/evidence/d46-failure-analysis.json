@@ -1,0 +1,113 @@
+{
+  "description": "Failure review of the immutable first D46 ten-case authored experiment; repair outcomes remain7 functional passes,2 functional native failures and1 schema-rejected proposal.",
+  "status": "FIRST_FAILURES_RETAINED_AND_CLASSIFIED",
+  "experiment_artifact": {
+    "path": "data/backups/d46-evaluation-ddadfe69-7197-44fd-b637-1aa8b678e4d9/summary.json",
+    "sha256": "594ffde1b8a37630e21571d28a333e60fe1079f6c04df142fc3746609fd45d03"
+  },
+  "model_attempts": 10,
+  "automatic_retries": 0,
+  "functional_passed": 7,
+  "functional_native_failed": 2,
+  "proposal_failed": 1,
+  "review_rejected": 0,
+  "failures": [
+    {
+      "case_id": "token-masking",
+      "category": "functional_visible_and_heldout_fail",
+      "evidence": {
+        "path": "data/backups/d46-coding-case-token-masking-cb86c201c80849c69a129fa96d99d205/summary.json",
+        "sha256": "f9a8e75dad5c7afa14d03bd6e2ad9b3c0414a0a8899d794f2d13df71e5d4b588"
+      },
+      "visible_exit": 1,
+      "heldout_exit": 1,
+      "observations": [
+        {
+          "input": [
+            "abcdef",
+            2
+          ],
+          "expected": "****ef",
+          "observed": "ef"
+        },
+        {
+          "input": [
+            "abcdef",
+            0
+          ],
+          "expected": "******",
+          "observed": "******abcdef"
+        },
+        {
+          "input": [
+            "abc",
+            5
+          ],
+          "expected": "***",
+          "observed": "abc"
+        }
+      ],
+      "finding": "The first candidate loses masked padding for a visible suffix and retains token bytes on fully masked paths. Only synthetic fixture values were involved; no production helper or secret was changed."
+    },
+    {
+      "case_id": "explicit-boolean-text",
+      "category": "response_contract_plan_count_rejected",
+      "evidence": {
+        "path": "data/backups/d46-coding-case-explicit-boolean-text-b15141ea071f44b79a2b9bf47328d24c/summary.json",
+        "sha256": "44288ba038fe89258a20ab8e0fcdaf692eb18a43d931f71cfca4970f41423aba"
+      },
+      "observed_plan_steps": 6,
+      "allowed_plan_steps": [
+        1,
+        5
+      ],
+      "error_code": "workflow_candidate_invalid",
+      "candidate_function_tested": false,
+      "fixture_approvals": 0,
+      "native_runs": 0,
+      "finding": "The complete response has six plan entries; accepted D43 schema allows one to five. Server rejects before patch/check publication. Do not trim the plan or label the unexecuted replacement correct."
+    },
+    {
+      "case_id": "capped-retry-arithmetic",
+      "category": "heldout_negative_boundary_fail",
+      "evidence": {
+        "path": "data/backups/d46-coding-case-capped-retry-arithmetic-437098341ada4e549c8dddec4407c5ba/summary.json",
+        "sha256": "5064c8d2ee3e5444f08d551445d2d07e8d222cddb9e15a24bbc7dca9fa21152c"
+      },
+      "visible_exit": 0,
+      "heldout_exit": 1,
+      "observation": {
+        "input": [
+          -1,
+          2,
+          30
+        ],
+        "expected": 2,
+        "observed": 1.0
+      },
+      "finding": "The first candidate handles the visible nonnegative attempts but computes 2**attempt for negative attempt, missing the declared base-delay boundary. This fixture does not enable production retry behavior."
+    }
+  ],
+  "protocol_cases_completed": 10,
+  "production_source_changes": [],
+  "model_changed": false,
+  "benchmark_rerun_for_selection": false,
+  "minimum_general_quality_not_inferred": true,
+  "followup": {
+    "id": "CODE-EVAL-002",
+    "priority": "P1 before broad/unattended coding or production quality promotion",
+    "dependencies": [
+      "Immutable first D46 data and D43 response contract",
+      "Explicit feedback/planner budget design before any after-action regeneration"
+    ],
+    "effort": "One separately frozen evaluation/remediation milestone plus any ADR/full regression for shared prompt/security changes.",
+    "risks": [
+      "Overfitting visible cases",
+      "Silently trimming/relaxing a response contract",
+      "Replacing original failed scores",
+      "Unapproved model/routing adoption"
+    ],
+    "required_acceptance": "Assess formatting and edge-case handling on fresh predeclared visible/held-out data, retain all first outcomes, preserve owner review and finite attempts; any agreed-model replacement still requires benchmark/resources/migration/rollback and owner approval.",
+    "state": "Assessed backlog; no model or production policy change scheduled or implemented"
+  }
+}

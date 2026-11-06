@@ -1,0 +1,15 @@
+{
+  "description": "Intentionally interrupted obsolete D34 full run after independently observed malformed-body HTTP errors; normal fixture cleanup, no completed tests/PASS claim.",
+  "targets": [
+    "tests"
+  ],
+  "status": "complete",
+  "source_freeze_sha256": "577a3246d538d4db6e219e15e1bc12394693518faac49ca28c9e6d40231c6355",
+  "exit_code": 2,
+  "elapsed_seconds": 415.0,
+  "log_sha256": "ede45793055796c057ec1430f1cb9842dd913a502067103651633158f0ca4724",
+  "reason": "Actual NaN/surrogate framework error serialization failures require new source and full rerun.",
+  "pytest_seconds": 414.48,
+  "completed_tests": 0,
+  "freeze": "docs/evidence/d34-full-regression-freeze.v1.json"
+}

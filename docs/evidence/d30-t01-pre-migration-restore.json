@@ -1,0 +1,39 @@
+{
+  "description": "Fresh private cluster backups and isolated app restore before D30 V005; no restart or source mutation retained.",
+  "backup_directory": "data/backups/d30-t01-pre-v005-20261019",
+  "restore_verified": true,
+  "restore_security_verified": true,
+  "restart_verified": false,
+  "source_table_count": 9,
+  "source_rows_sha256": "db5228bf4c1c19cbe5869785b9344e958d4cf37c1ffef83f81b63bc688b87783",
+  "source_security_sha256": "cda4d29eda55652afa27955d6a03a552a12b4a4daeba4bf4cfd099151afc6cdc",
+  "backup_checksums": [
+    {
+      "file": "database-0.dump",
+      "sha256": "3772f2a1f1c8cb1e15c89b01c6ffb780736c2e4c0815e5cb320d6e4e56fba3a9",
+      "bytes": 844
+    },
+    {
+      "file": "database-1.dump",
+      "sha256": "e317b9f53e4a0b2963eff6a65fff7315efded5951561409177615f489aab2403",
+      "bytes": 232548
+    },
+    {
+      "file": "database-2.dump",
+      "sha256": "2b9552fca009e9a45e0f4115c7a85a591340b84baf303079e46198555c7a7664",
+      "bytes": 42326
+    },
+    {
+      "file": "database-3.dump",
+      "sha256": "edc2e41da5b1b403a4fca8478eed97877cd53f0dafbece631cdd3a7f8c2aec7f",
+      "bytes": 1063
+    },
+    {
+      "file": "globals.sql",
+      "sha256": "b365993b4286e0b3e681eed8cff9959cf056b63a7614de8844838e8f6a896381",
+      "bytes": 1552
+    }
+  ],
+  "application_revision": "0004",
+  "migration_applied": false
+}

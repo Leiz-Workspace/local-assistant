@@ -1,0 +1,13 @@
+{
+  "description": "Actual D47 subprocess gate; no external search acceptance or fresh full-suite claim.",
+  "command": [
+    "/home/korosaki-ryukai/Workspace/Server/ai/.venv/bin/python3",
+    "data/backups/d47-parent-readonly-audit.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.86,
+  "summary": "}",
+  "log": "data/backups/d47-security-audit.log",
+  "log_sha256": "b28ffb0d0d539266622c39c0f36f692f7abd0317ecee9dc046ad04c2c59452b8",
+  "completed_at_utc": "2026-10-21T01:02:07.600352+00:00"
+}

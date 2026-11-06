@@ -1,0 +1,1325 @@
+{
+  "description": "Frozen same-agent synthetic D32 evaluation; actual approved embedding and CORE, no human-independent/general quality claim.",
+  "plan_sha256": "6e8aa64be96454409d0ef6cd5899b3be3430f6718b868f1086ee20799150eb37",
+  "sources": {
+    "txt": {
+      "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+      "sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+      "job": {
+        "id": "44419f0c-190b-5232-bef6-3bf741d1aa4d",
+        "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+        "status": "ready",
+        "active": true,
+        "chunk_count": 1,
+        "attempts": 1,
+        "error_code": null,
+        "created_at": "2026-10-20T01:14:03.558739+07:00",
+        "updated_at": "2026-10-20T01:14:07.711404+07:00"
+      }
+    },
+    "pdf": {
+      "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+      "sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+      "job": {
+        "id": "3ea00fc6-d63c-52bd-bbe4-71dc9ba18b7c",
+        "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+        "status": "ready",
+        "active": true,
+        "chunk_count": 2,
+        "attempts": 1,
+        "error_code": null,
+        "created_at": "2026-10-20T01:14:10.539304+07:00",
+        "updated_at": "2026-10-20T01:14:14.789177+07:00"
+      }
+    },
+    "docx": {
+      "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+      "sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+      "job": {
+        "id": "a2df32af-670d-5fd7-8232-7245caae0afa",
+        "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+        "status": "ready",
+        "active": true,
+        "chunk_count": 5,
+        "attempts": 1,
+        "error_code": null,
+        "created_at": "2026-10-20T01:14:17.736949+07:00",
+        "updated_at": "2026-10-20T01:14:22.597163+07:00"
+      }
+    },
+    "xlsx": {
+      "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+      "sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+      "job": {
+        "id": "79d1e8c0-c223-5a99-9204-4392b7b09f92",
+        "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+        "status": "ready",
+        "active": true,
+        "chunk_count": 5,
+        "attempts": 1,
+        "error_code": null,
+        "created_at": "2026-10-20T01:14:25.460661+07:00",
+        "updated_at": "2026-10-20T01:14:30.818717+07:00"
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": "txt",
+      "result": {
+        "answer": "Project Cedar uses TCP port 7443.",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+            "content_trust": "untrusted",
+            "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+            "generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+            "point_id": "7430b73a-549f-589e-b1d4-654fed770912",
+            "provenance": {
+              "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+              "index_generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+              "spans": [
+                {
+                  "end": 70,
+                  "field": "text",
+                  "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Project Cedar uses TCP port 7443.",
+            "quote_span": {
+              "end": 33,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+            "source_span": {
+              "end": 33,
+              "field": "text",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      },
+      "retrieval": {
+        "candidate_limit": 20,
+        "content_trust": "untrusted",
+        "hits": [
+          {
+            "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+            "content_trust": "untrusted",
+            "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+            "generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+            "point_id": "7430b73a-549f-589e-b1d4-654fed770912",
+            "provenance": {
+              "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+              "index_generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+              "spans": [
+                {
+                  "end": 70,
+                  "field": "text",
+                  "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.73468375,
+            "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+            "text": "Project Cedar uses TCP port 7443.\nOwner memo: keep the archive local.\n"
+          }
+        ],
+        "top_k": 3
+      }
+    },
+    {
+      "case": "pdf",
+      "result": {
+        "answer": "123",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_b7bd5c807c17ff9d0e318718fe995b7a816c4d3f11b2c9b6505447800c1d16c2",
+            "content_trust": "untrusted",
+            "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+            "generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+            "point_id": "4a749d65-c60c-59e3-98f4-e42459f75851",
+            "provenance": {
+              "chunk_id": "chk_b7bd5c807c17ff9d0e318718fe995b7a816c4d3f11b2c9b6505447800c1d16c2",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+              "index_generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+              "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 32,
+                  "field": "text",
+                  "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Alpha 123",
+            "quote_span": {
+              "end": 19,
+              "reference": "chunk_text",
+              "start": 10,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "source_span": {
+              "end": 19,
+              "field": "text",
+              "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=1",
+              "start": 10,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      },
+      "retrieval": {
+        "candidate_limit": 20,
+        "content_trust": "untrusted",
+        "hits": [
+          {
+            "chunk_id": "chk_b7bd5c807c17ff9d0e318718fe995b7a816c4d3f11b2c9b6505447800c1d16c2",
+            "content_trust": "untrusted",
+            "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+            "generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+            "point_id": "4a749d65-c60c-59e3-98f4-e42459f75851",
+            "provenance": {
+              "chunk_id": "chk_b7bd5c807c17ff9d0e318718fe995b7a816c4d3f11b2c9b6505447800c1d16c2",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+              "index_generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+              "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 32,
+                  "field": "text",
+                  "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.73430717,
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "text": "Page one: Alpha 123\nSecond line."
+          },
+          {
+            "chunk_id": "chk_5634edff89ebdd16e95bd562e312fa0f7f54f69f6444ce058738d05b20ee5a66",
+            "content_trust": "untrusted",
+            "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+            "generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+            "point_id": "7afa65a4-0107-568d-829e-06c30afaeda7",
+            "provenance": {
+              "chunk_id": "chk_5634edff89ebdd16e95bd562e312fa0f7f54f69f6444ce058738d05b20ee5a66",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+              "index_generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+              "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 5,
+                  "field": "text",
+                  "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=2",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.36765367,
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "text": "Xin ệ"
+          }
+        ],
+        "top_k": 3
+      }
+    },
+    {
+      "case": "docx",
+      "result": {
+        "answer": "42",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_e914b84aa017b48fa38a934bd2318ff3531c1777b8ec2ae6f2ca5e3ee99957c4",
+            "content_trust": "untrusted",
+            "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+            "generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+            "point_id": "a7cb3695-d057-5bcd-a285-4b2cd55b1501",
+            "provenance": {
+              "chunk_id": "chk_e914b84aa017b48fa38a934bd2318ff3531c1777b8ec2ae6f2ca5e3ee99957c4",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+              "index_generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#table=1&row=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "docx-runs-v1:lxml-6.1.3",
+              "quality": {},
+              "section_path": [
+                {
+                  "level": 1,
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1"
+                }
+              ],
+              "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+              "spans": [
+                {
+                  "end": 3,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=5",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=6",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "column": 1,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          5
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 5,
+                            "text": "một"
+                          }
+                        ],
+                        "row": 2,
+                        "vertical_merge": null
+                      },
+                      {
+                        "column": 2,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          6
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 6,
+                            "text": "42"
+                          }
+                        ],
+                        "row": 2,
+                        "vertical_merge": null
+                      }
+                    ],
+                    "row": 2
+                  }
+                ],
+                "style_id": "TableGrid",
+                "table_id": 1
+              },
+              "visibility": "private"
+            },
+            "quote": "42",
+            "quote_span": {
+              "end": 2,
+              "reference": "source_field",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s3f2",
+            "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+            "source_span": {
+              "end": 2,
+              "field": "text",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=6",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      },
+      "retrieval": {
+        "candidate_limit": 20,
+        "content_trust": "untrusted",
+        "hits": [
+          {
+            "chunk_id": "chk_5cce8b25bfc1f3d0024edb13a268e4562549b1df6493d588864b2d1a5fc57182",
+            "content_trust": "untrusted",
+            "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+            "generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+            "point_id": "34678795-c9cb-5f39-98ce-6cd93d1f02c1",
+            "provenance": {
+              "chunk_id": "chk_5cce8b25bfc1f3d0024edb13a268e4562549b1df6493d588864b2d1a5fc57182",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+              "index_generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "docx-runs-v1:lxml-6.1.3",
+              "quality": {},
+              "section_path": [
+                {
+                  "level": 1,
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1"
+                }
+              ],
+              "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+              "spans": [
+                {
+                  "end": 11,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.6929425,
+            "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+            "text": "Báo cáo D19"
+          },
+          {
+            "chunk_id": "chk_6e5665d8a0703b549bc0586a67d4cd6876e8d221a324c983dedece27f956ae5a",
+            "content_trust": "untrusted",
+            "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+            "generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+            "point_id": "5767ee1d-7091-5d62-b234-0c04c2253897",
+            "provenance": {
+              "chunk_id": "chk_6e5665d8a0703b549bc0586a67d4cd6876e8d221a324c983dedece27f956ae5a",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+              "index_generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#table=1&row=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "docx-runs-v1:lxml-6.1.3",
+              "quality": {},
+              "section_path": [
+                {
+                  "level": 1,
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1"
+                }
+              ],
+              "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+              "spans": [
+                {
+                  "end": 3,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=3",
+                  "start": 0
+                },
+                {
+                  "end": 7,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=4",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "column": 1,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          3
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 3,
+                            "text": "Tên"
+                          }
+                        ],
+                        "row": 1,
+                        "vertical_merge": null
+                      },
+                      {
+                        "column": 2,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          4
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 4,
+                            "text": "Giá trị"
+                          }
+                        ],
+                        "row": 1,
+                        "vertical_merge": null
+                      }
+                    ],
+                    "row": 1
+                  }
+                ],
+                "style_id": "TableGrid",
+                "table_id": 1
+              },
+              "visibility": "private"
+            },
+            "score": 0.5726441,
+            "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+            "text": "[{\"cells\":[{\"column\":1,\"grid_span\":1,\"paragraph_ids\":[3],\"paragraphs\":[{\"paragraph_id\":3,\"text\":\"Tên\"}],\"row\":1,\"vertical_merge\":null},{\"column\":2,\"grid_span\":1,\"paragraph_ids\":[4],\"paragraphs\":[{\"paragraph_id\":4,\"text\":\"Giá trị\"}],\"row\":1,\"vertical_merge\":null}],\"row\":1}]"
+          },
+          {
+            "chunk_id": "chk_e914b84aa017b48fa38a934bd2318ff3531c1777b8ec2ae6f2ca5e3ee99957c4",
+            "content_trust": "untrusted",
+            "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+            "generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+            "point_id": "a7cb3695-d057-5bcd-a285-4b2cd55b1501",
+            "provenance": {
+              "chunk_id": "chk_e914b84aa017b48fa38a934bd2318ff3531c1777b8ec2ae6f2ca5e3ee99957c4",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+              "index_generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#table=1&row=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "docx-runs-v1:lxml-6.1.3",
+              "quality": {},
+              "section_path": [
+                {
+                  "level": 1,
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1"
+                }
+              ],
+              "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+              "spans": [
+                {
+                  "end": 3,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=5",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=6",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "column": 1,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          5
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 5,
+                            "text": "một"
+                          }
+                        ],
+                        "row": 2,
+                        "vertical_merge": null
+                      },
+                      {
+                        "column": 2,
+                        "grid_span": 1,
+                        "paragraph_ids": [
+                          6
+                        ],
+                        "paragraphs": [
+                          {
+                            "paragraph_id": 6,
+                            "text": "42"
+                          }
+                        ],
+                        "row": 2,
+                        "vertical_merge": null
+                      }
+                    ],
+                    "row": 2
+                  }
+                ],
+                "style_id": "TableGrid",
+                "table_id": 1
+              },
+              "visibility": "private"
+            },
+            "score": 0.2995116,
+            "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+            "text": "[{\"cells\":[{\"column\":1,\"grid_span\":1,\"paragraph_ids\":[5],\"paragraphs\":[{\"paragraph_id\":5,\"text\":\"một\"}],\"row\":2,\"vertical_merge\":null},{\"column\":2,\"grid_span\":1,\"paragraph_ids\":[6],\"paragraphs\":[{\"paragraph_id\":6,\"text\":\"42\"}],\"row\":2,\"vertical_merge\":null}],\"row\":2}]"
+          }
+        ],
+        "top_k": 3
+      }
+    },
+    {
+      "case": "xlsx",
+      "result": {
+        "answer": "30",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_ea09b0b333d9125c8762a059b5295f3012b7b4af4400c448f374e25282e26d86",
+            "content_trust": "untrusted",
+            "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+            "generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+            "point_id": "19917c23-e7c6-5f18-b751-b68ab8dec250",
+            "provenance": {
+              "chunk_id": "chk_ea09b0b333d9125c8762a059b5295f3012b7b4af4400c448f374e25282e26d86",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+              "index_generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+              "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&row=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "xlsx-literals-v1:lxml-6.1.3",
+              "quality": {
+                "formula_cache_status": "preserved_not_recalculated"
+              },
+              "section_path": [],
+              "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+              "spans": [
+                {
+                  "end": 2,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=A2",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=B2",
+                  "start": 0
+                },
+                {
+                  "end": 10,
+                  "field": "formula",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=C2",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "cached_value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=C2",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "merged_ranges": [
+                  "A4:B4"
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "cached_value": null,
+                        "cell": "A2",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "n",
+                        "style_index": 2,
+                        "value": "10"
+                      },
+                      {
+                        "cached_value": null,
+                        "cell": "B2",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "n",
+                        "style_index": 0,
+                        "value": "20"
+                      },
+                      {
+                        "cached_value": "30",
+                        "cell": "C2",
+                        "editable": false,
+                        "formula": "SUM(A2:B2)",
+                        "formula_attributes": {
+                          "ca": "1"
+                        },
+                        "kind": "n",
+                        "style_index": 0,
+                        "value": null
+                      }
+                    ],
+                    "row": 2
+                  }
+                ],
+                "sheet_id": 1,
+                "sheet_name": "Dữ liệu"
+              },
+              "visibility": "private"
+            },
+            "quote": "30",
+            "quote_span": {
+              "end": 2,
+              "reference": "source_field",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s3f4",
+            "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+            "source_span": {
+              "end": 2,
+              "field": "cached_value",
+              "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=C2",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      },
+      "retrieval": {
+        "candidate_limit": 20,
+        "content_trust": "untrusted",
+        "hits": [
+          {
+            "chunk_id": "chk_b69fa2a71d26567a1d89cc4a948e3268e77012deb09e29e25b817db52142ad15",
+            "content_trust": "untrusted",
+            "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+            "generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+            "point_id": "f35d9bd5-99ad-5b04-bf04-8d42fb1825dd",
+            "provenance": {
+              "chunk_id": "chk_b69fa2a71d26567a1d89cc4a948e3268e77012deb09e29e25b817db52142ad15",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+              "index_generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+              "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=2&row=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "xlsx-literals-v1:lxml-6.1.3",
+              "quality": {
+                "formula_cache_status": "preserved_not_recalculated"
+              },
+              "section_path": [],
+              "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+              "spans": [
+                {
+                  "end": 14,
+                  "field": "formula",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=2&cell=A1",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "cached_value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=2&cell=A1",
+                  "start": 0
+                },
+                {
+                  "end": 15,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=2&cell=B1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "merged_ranges": [],
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "cached_value": "60",
+                        "cell": "A1",
+                        "editable": false,
+                        "formula": "'Dữ liệu'!C2*2",
+                        "formula_attributes": {},
+                        "kind": "n",
+                        "style_index": 0,
+                        "value": null
+                      },
+                      {
+                        "cached_value": null,
+                        "cell": "B1",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "inlineStr",
+                        "style_index": 0,
+                        "value": "Untouched sheet"
+                      }
+                    ],
+                    "row": 1
+                  }
+                ],
+                "sheet_id": 2,
+                "sheet_name": "Summary"
+              },
+              "visibility": "private"
+            },
+            "score": 0.71728426,
+            "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+            "text": "[{\"cells\":[{\"cached_value\":\"60\",\"cell\":\"A1\",\"editable\":false,\"formula\":\"'Dữ liệu'!C2*2\",\"formula_attributes\":{},\"kind\":\"n\",\"style_index\":0,\"value\":null},{\"cached_value\":null,\"cell\":\"B1\",\"editable\":true,\"formula\":null,\"formula_attributes\":{},\"kind\":\"inlineStr\",\"style_index\":0,\"value\":\"Untouched sheet\"}],\"row\":1}]"
+          },
+          {
+            "chunk_id": "chk_77ca37fe37260c7d2d878dba4f08ab216dd325ddead8541d33366b123a53ee2b",
+            "content_trust": "untrusted",
+            "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+            "generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+            "point_id": "e6bb22e4-a5c0-5f35-aea2-b5c4600c9738",
+            "provenance": {
+              "chunk_id": "chk_77ca37fe37260c7d2d878dba4f08ab216dd325ddead8541d33366b123a53ee2b",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+              "index_generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+              "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&row=3",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "xlsx-literals-v1:lxml-6.1.3",
+              "quality": {
+                "formula_cache_status": "preserved_not_recalculated"
+              },
+              "section_path": [],
+              "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+              "spans": [
+                {
+                  "end": 1,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=A3",
+                  "start": 0
+                },
+                {
+                  "end": 11,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=B3",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "merged_ranges": [
+                  "A4:B4"
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "cached_value": null,
+                        "cell": "A3",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "b",
+                        "style_index": 0,
+                        "value": "1"
+                      },
+                      {
+                        "cached_value": null,
+                        "cell": "B3",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "s",
+                        "style_index": 0,
+                        "value": "shared text"
+                      }
+                    ],
+                    "row": 3
+                  }
+                ],
+                "sheet_id": 1,
+                "sheet_name": "Dữ liệu"
+              },
+              "visibility": "private"
+            },
+            "score": 0.58351296,
+            "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+            "text": "[{\"cells\":[{\"cached_value\":null,\"cell\":\"A3\",\"editable\":true,\"formula\":null,\"formula_attributes\":{},\"kind\":\"b\",\"style_index\":0,\"value\":\"1\"},{\"cached_value\":null,\"cell\":\"B3\",\"editable\":true,\"formula\":null,\"formula_attributes\":{},\"kind\":\"s\",\"style_index\":0,\"value\":\"shared text\"}],\"row\":3}]"
+          },
+          {
+            "chunk_id": "chk_ea09b0b333d9125c8762a059b5295f3012b7b4af4400c448f374e25282e26d86",
+            "content_trust": "untrusted",
+            "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+            "generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+            "point_id": "19917c23-e7c6-5f18-b751-b68ab8dec250",
+            "provenance": {
+              "chunk_id": "chk_ea09b0b333d9125c8762a059b5295f3012b7b4af4400c448f374e25282e26d86",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "1ef77dba-42af-4601-9886-339784f3c4f5",
+              "index_generation": "11f06994541a928cb7c0b24697426b1a572fe12c0a6f8532e7c6997d080534d3",
+              "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&row=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "xlsx-literals-v1:lxml-6.1.3",
+              "quality": {
+                "formula_cache_status": "preserved_not_recalculated"
+              },
+              "section_path": [],
+              "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+              "spans": [
+                {
+                  "end": 2,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=A2",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=B2",
+                  "start": 0
+                },
+                {
+                  "end": 10,
+                  "field": "formula",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=C2",
+                  "start": 0
+                },
+                {
+                  "end": 2,
+                  "field": "cached_value",
+                  "locator": "file:1ef77dba-42af-4601-9886-339784f3c4f5#sheet=1&cell=C2",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {
+                "merged_ranges": [
+                  "A4:B4"
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "cached_value": null,
+                        "cell": "A2",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "n",
+                        "style_index": 2,
+                        "value": "10"
+                      },
+                      {
+                        "cached_value": null,
+                        "cell": "B2",
+                        "editable": true,
+                        "formula": null,
+                        "formula_attributes": {},
+                        "kind": "n",
+                        "style_index": 0,
+                        "value": "20"
+                      },
+                      {
+                        "cached_value": "30",
+                        "cell": "C2",
+                        "editable": false,
+                        "formula": "SUM(A2:B2)",
+                        "formula_attributes": {
+                          "ca": "1"
+                        },
+                        "kind": "n",
+                        "style_index": 0,
+                        "value": null
+                      }
+                    ],
+                    "row": 2
+                  }
+                ],
+                "sheet_id": 1,
+                "sheet_name": "Dữ liệu"
+              },
+              "visibility": "private"
+            },
+            "score": 0.5164286,
+            "source_sha256": "890adf50d4da52ef35f57c77e04f7aec6a945bd6622201b16e2a13669bfc61b2",
+            "text": "[{\"cells\":[{\"cached_value\":null,\"cell\":\"A2\",\"editable\":true,\"formula\":null,\"formula_attributes\":{},\"kind\":\"n\",\"style_index\":2,\"value\":\"10\"},{\"cached_value\":null,\"cell\":\"B2\",\"editable\":true,\"formula\":null,\"formula_attributes\":{},\"kind\":\"n\",\"style_index\":0,\"value\":\"20\"},{\"cached_value\":\"30\",\"cell\":\"C2\",\"editable\":false,\"formula\":\"SUM(A2:B2)\",\"formula_attributes\":{\"ca\":\"1\"},\"kind\":\"n\",\"style_index\":0,\"value\":null}],\"row\":2}]"
+          }
+        ],
+        "top_k": 3
+      }
+    },
+    {
+      "case": "cross_file_txt",
+      "result": {
+        "answer": "Project Cedar uses TCP port 7443.",
+        "answer_trust": "model_generated",
+        "citations": [
+          {
+            "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+            "content_trust": "untrusted",
+            "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+            "generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+            "point_id": "7430b73a-549f-589e-b1d4-654fed770912",
+            "provenance": {
+              "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+              "index_generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+              "spans": [
+                {
+                  "end": 70,
+                  "field": "text",
+                  "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "quote": "Project Cedar uses TCP port 7443.",
+            "quote_span": {
+              "end": 33,
+              "reference": "chunk_text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            },
+            "source_id": "s1",
+            "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+            "source_span": {
+              "end": 33,
+              "field": "text",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "start": 0,
+              "unit": "unicode_code_points"
+            }
+          }
+        ],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "answered"
+      },
+      "retrieval": {
+        "candidate_limit": 20,
+        "content_trust": "untrusted",
+        "hits": [
+          {
+            "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+            "content_trust": "untrusted",
+            "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+            "generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+            "point_id": "7430b73a-549f-589e-b1d4-654fed770912",
+            "provenance": {
+              "chunk_id": "chk_6db5fa7c4075a433629ac66554ef1901abca68dd6d6cae06df75721795d8a14b",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "a8ca0fa2-692a-4991-8de8-fed6900ec4ec",
+              "index_generation": "68ad2b1012f10d0a69242500126f8f7a8047fdadab19f7129c9ef2a555dece49",
+              "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "utf8-text-v1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+              "spans": [
+                {
+                  "end": 70,
+                  "field": "text",
+                  "locator": "file:a8ca0fa2-692a-4991-8de8-fed6900ec4ec#text",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.73468375,
+            "source_sha256": "4e1708edc8aefcacc9372965012f858ae421bf43c12a2503dad325cc7dba3907",
+            "text": "Project Cedar uses TCP port 7443.\nOwner memo: keep the archive local.\n"
+          },
+          {
+            "chunk_id": "chk_5cce8b25bfc1f3d0024edb13a268e4562549b1df6493d588864b2d1a5fc57182",
+            "content_trust": "untrusted",
+            "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+            "generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+            "point_id": "34678795-c9cb-5f39-98ce-6cd93d1f02c1",
+            "provenance": {
+              "chunk_id": "chk_5cce8b25bfc1f3d0024edb13a268e4562549b1df6493d588864b2d1a5fc57182",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "24faee6e-3986-4af6-b745-6da022386635",
+              "index_generation": "b85b2b62c13053b07493244535b266051079e710a023b80b1be505002a3e6b24",
+              "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "docx-runs-v1:lxml-6.1.3",
+              "quality": {},
+              "section_path": [
+                {
+                  "level": 1,
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1"
+                }
+              ],
+              "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+              "spans": [
+                {
+                  "end": 11,
+                  "field": "text",
+                  "locator": "file:24faee6e-3986-4af6-b745-6da022386635#paragraph=1",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.285622,
+            "source_sha256": "a645061864ef10193573faf0e56ade7e2ca6a2868ef136a487809d8fbc7bf988",
+            "text": "Báo cáo D19"
+          },
+          {
+            "chunk_id": "chk_5634edff89ebdd16e95bd562e312fa0f7f54f69f6444ce058738d05b20ee5a66",
+            "content_trust": "untrusted",
+            "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+            "generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+            "point_id": "7afa65a4-0107-568d-829e-06c30afaeda7",
+            "provenance": {
+              "chunk_id": "chk_5634edff89ebdd16e95bd562e312fa0f7f54f69f6444ce058738d05b20ee5a66",
+              "chunker_version": "structured-chunks-v1",
+              "content_trust": "untrusted",
+              "file_id": "0bd49225-b043-432e-9fe3-b72382935901",
+              "index_generation": "75e9ee6aa4780359a8afcee6f693668c7172ae2ffeea98b25a9012055ac54cfd",
+              "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=2",
+              "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+              "namespace_id": "8a9fa50c-36bd-4744-9303-294b83acfe08",
+              "owner_id": "7637316f-0ee0-4b19-b9e7-63f0c657a978",
+              "processor": "native-pdf-v1:pypdf-6.21.1",
+              "quality": {},
+              "section_path": [],
+              "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+              "spans": [
+                {
+                  "end": 5,
+                  "field": "text",
+                  "locator": "file:0bd49225-b043-432e-9fe3-b72382935901#page=2",
+                  "start": 0
+                }
+              ],
+              "state": "pending",
+              "structure": {},
+              "visibility": "private"
+            },
+            "score": 0.28274947,
+            "source_sha256": "ce0a961234d4a6c5781a9fee6b2cab8b01655729e49e11c564b5f1da633f9f5a",
+            "text": "Xin ệ"
+          }
+        ],
+        "top_k": 3
+      }
+    },
+    {
+      "case": "absent",
+      "result": {
+        "answer": null,
+        "answer_trust": "model_generated",
+        "citations": [],
+        "content_trust": "untrusted",
+        "model_id": "qwen3.5-9b-core",
+        "status": "insufficient_evidence"
+      }
+    },
+    {
+      "case": "foreign",
+      "result": {
+        "answer": null,
+        "answer_trust": "not_generated",
+        "citations": [],
+        "content_trust": "untrusted",
+        "status": "no_sources"
+      }
+    }
+  ],
+  "actual_core_calls": [
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 325,
+      "output_tokens": 43,
+      "latency_ms": 729
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 393,
+      "output_tokens": 30,
+      "latency_ms": 485
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 1139,
+      "output_tokens": 28,
+      "latency_ms": 613
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 1793,
+      "output_tokens": 28,
+      "latency_ms": 790
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 468,
+      "output_tokens": 43,
+      "latency_ms": 782
+    },
+    {
+      "profile": "core",
+      "preset": "fast",
+      "max_tokens": 512,
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "input_tokens": 997,
+      "output_tokens": 29,
+      "latency_ms": 673
+    }
+  ],
+  "complete": true,
+  "foreign_source": {
+    "file_id": "05b02510-5754-478c-b65d-c4d57a291117",
+    "job": {
+      "id": "f7810128-65f1-5023-a4fb-03b057263ca8",
+      "file_id": "05b02510-5754-478c-b65d-c4d57a291117",
+      "status": "ready",
+      "active": true,
+      "chunk_count": 1,
+      "attempts": 1,
+      "error_code": null,
+      "created_at": "2026-10-20T01:15:38.415642+07:00",
+      "updated_at": "2026-10-20T01:15:41.950686+07:00"
+    }
+  },
+  "answerable_passed": 5,
+  "absent_passed": 1,
+  "foreign_passed": 1,
+  "relevant_exact_citations": 5,
+  "total_citations": 5,
+  "citation_precision": 1.0,
+  "foreign_model_calls": 0,
+  "selected_embedding_unchanged": true
+}

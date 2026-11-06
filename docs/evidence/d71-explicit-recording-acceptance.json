@@ -1,0 +1,106 @@
+{
+  "description": "Accept D71 explicit local browser recording based on lifecycle tests and actual fake-device browser capture, preserving deferred D70 auditory review.",
+  "milestone": "D71",
+  "status": "PASS_LOCAL_BROWSER_RECORDING_SCOPE",
+  "owner_decision_ADR": "docs/ADR/111-owner-deferred-tts-listening-and-explicit-recording.md",
+  "related_tests": {
+    "passed": 271,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 15.46,
+    "node_suite_included_by_one_python_wrapper": true
+  },
+  "node_controls": {
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_browser": {
+    "description": "Actual native browser capture with fake device only; not a physical-microphone or subjective audio-quality test.",
+    "browser": "154.0.8037.58",
+    "stopped": {
+      "rate": 16000,
+      "bytes": 23852,
+      "tracks": [
+        "ended"
+      ]
+    },
+    "captures": 4,
+    "late_permission_cancel_verified": true,
+    "all_tracks_ended": true,
+    "page_errors": [],
+    "requests": [
+      {
+        "url": "http://127.0.0.1:8091/",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/page.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "http://127.0.0.1:8091/recorder.mjs",
+        "method": "GET"
+      },
+      {
+        "url": "blob:http://127.0.0.1:8091/76fc6269-b64c-42c5-8972-b919dfa838e9",
+        "method": "GET"
+      }
+    ],
+    "finite_lifecycle_events": [
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event ready",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event recording",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event page_hidden",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event requesting",
+      "explicit_recording_event capture_resources_released",
+      "explicit_recording_event user_cancelled",
+      "explicit_recording_event cancelled",
+      "explicit_recording_event capture_resources_released"
+    ],
+    "passed": true
+  },
+  "source_sha256": {
+    "apps/voice/__init__.py": "6dd4b3c443f90298cb30d7504e2e08e08939dc9106b1678bd17d3b8a3abf4543",
+    "apps/voice/main.py": "62e7cc1db1425eb7cbebf0f63ac74532cd2766d89c5fc909553862da0f5ee3e2",
+    "apps/voice/static/index.html": "ed1a9d2acbcf2ef7af5449be6ed83fbbd1d69a83421f2617c5b0129f7055aa88",
+    "apps/voice/static/recorder.mjs": "7098cb15d179ff1fef700146819eaebd9fd9e5a2195ff16a48710fd425093cee",
+    "apps/voice/static/page.mjs": "e5c304ddf6dba41fb5f9d6a1d566ea4c2487c689f74ebacb75bee9729128fe64",
+    "apps/voice/static/capture-worklet.js": "bbb3343a1619eb08ba90429269ba6aa15a2b8bd9b5153fc1edd842f7cc921e32",
+    "tests/test_recording_surface.py": "8cc5cd6553a035c953b5c4af49d1f8de7a7ae6ec9c5e91055ce22d238a0b35ee",
+    "tests/test_explicit_recording.mjs": "87907f0557f049e16852c1475503a519d0b6de030edafaecedce2b8d8353f397",
+    "tests/recording_browser_smoke.mjs": "64eb85bc82cb186dd104dcc143408f791224adb9d9e1b4d2b3e97610f8bdf554"
+  },
+  "log_sha256": {
+    "data/backups/d71-related-tests.log": "1be6abf48045cce15b0d6847938e9a861ee22efbbcc4916f225c9c296fff6834",
+    "data/backups/d71-node-controls-final.log": "c4a7d1976cd2c826707578909f971b4247e999b2c00206b92bb986e39986b4fe",
+    "data/backups/d71-native-browser-first.log": "6e9c01551bf2b459c2f4b6a838e0a74f1b6642ca223062b655ec5e2e6867990c",
+    "data/backups/d71-native-browser-qualified.log": "b723c44fbcd8c7e858db0871d6250af18d49bbb4cb7ba4607e1ab779b367f902",
+    "data/backups/d71-native-browser-final.log": "09f70b769823071f5f308076a81271dbeedd42893b8912a979555a9a1661d418",
+    "data/backups/d71-native-browser-final-qualified.log": "d5c49a79bf371830db95771e6a73720dd33a7009aa3aa292cd62d6afd60af989",
+    "data/backups/d71-ui-smoke-server.log": "c8a2897e92e24d4e49698abf65a0dff653b9a094f3fe08ca135bb719eaba691d"
+  },
+  "all661_prior_source_bytes_unchanged": true,
+  "protected_files_unchanged": 917,
+  "original_inputs_unchanged": 176,
+  "original24_D70_pending_labels_unchanged": true,
+  "physical_microphone_tested": false,
+  "user_audio_recorded": false,
+  "model_selected_or_deployed": false,
+  "temporary_browser_and_UI_server_stopped": true,
+  "D70_naturalness_passed": false,
+  "D70_listening": "DEFERRED_TO_OWNER_MANUAL_TEST",
+  "D72": "NEXT"
+}

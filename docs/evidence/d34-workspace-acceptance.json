@@ -1,0 +1,50 @@
+{
+  "description": "Actual completed D34 bounded authenticated workspace-read acceptance; source freeze and final read-only audit verified.",
+  "status": "PASS (defined local read-only scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "implementation_checkpoint": "64459f6",
+  "passed": 1785,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1509.95,
+  "runner_elapsed_seconds": 1510.6,
+  "new_unique_cases": 101,
+  "focused_passed": 164,
+  "focused_seconds": 1.1,
+  "focused_skipped": 0,
+  "full_invocation": "uv Python -m pytest tests -v -rs --tb=short with in-memory Vault credentials",
+  "full_log_sha256": "dccba1a107f50acc9bb70510158855bcbf80f5d947d4fe98cd707695c216bb01",
+  "source_freeze_sha256": "7fb70eac167191eb14836cd0830b145a7eb58ad80e54096bd26b7ad019c399c1",
+  "evaluated_files": 301,
+  "actual_cases": [
+    "Owner-scoped native source reads, inventory, literal search and lexical Python hints",
+    "Authenticated ASGI and real TCP, local Origin/bearer, strict bounded JSON rejection",
+    "Exact raw-byte hashes, LF lines, CRLF and final CR, Unicode match columns",
+    "Final root/source/marker mutation fences and bounded request/file/scan/response limits",
+    "Joined cancellation, shutdown, completed-result ownership race, cleanup/send/startup failures"
+  ],
+  "controlled_cases": [
+    "Injected monotonic deadline and native cleanup/transport failures",
+    "Cancellation ownership scheduling"
+  ],
+  "limitations": [
+    "Default off; no host workspace registered",
+    "Read-only kernel capability is not an arbitrary same-UID process sandbox",
+    "Cooperative deadlines cannot preempt uninterruptible kernel I/O",
+    "Lexical hints are not semantic resolution; no command/model/write execution",
+    "Final validation authorizes a snapshot, not an atomic multi-file transaction"
+  ],
+  "earlier_interrupted_runs_are_not_full_acceptance": true,
+  "production_flags_enabled": false,
+  "models_configs_dependencies_migrations_unchanged": true,
+  "next": "D35 strict deterministic read-tool schemas, dispatch and budgets",
+  "evidence_sha256": {
+    "docs/evidence/d34-full-regression-freeze.json": "7fb70eac167191eb14836cd0830b145a7eb58ad80e54096bd26b7ad019c399c1",
+    "docs/evidence/d34-final-post-audit.json": "80eaf89009b65ad18911a21141a47c6743b6109b830abafaba5e59d5be8b8947",
+    "docs/evidence/d34-invalid-json-baseline.json": "fcf48dc59f6c450114cb22cb487ec39b0a41f18f2050a0a4b5ab0bd6be7ef54b",
+    "docs/evidence/d34-interrupted-full.json": "49e467f03d73ebe26ef3f3fe9ce51af8e5aec342574207169b341633085bed58",
+    "docs/evidence/d34-reboot-interrupted-full.json": "c67762ed43d1b0442a779fbd803b8a55ce88408c702189e3dc0e3be7dc513840",
+    "docs/evidence/d34-reboot-empty-probe-cleanup.json": "c237a3e764c3b05b11302aa50652010fc9d896fbcb605f2ae7ab4ac60bfdc15f"
+  }
+}

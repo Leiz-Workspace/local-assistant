@@ -1,0 +1,78 @@
+{
+  "description": "Source-only assessment of same-voice bilingual requirement; no claim a new configuration fixes the owner-reported English accent.",
+  "model": "pnnbao-ump/VieNeu-TTS-v3-Turbo",
+  "pinned_model_revision": "61b85e3d937fbbacb387714180e8182823512523",
+  "pinned_sdk_revision": "04044e1b8f822f946bafb2c88b716459f4164152",
+  "sdk_file_sha256": "10757905d3f6454e17c834ec32c73d33b5b9d322d05397295c0bbeb5f3ffb3ad",
+  "infer_arguments": [
+    "self",
+    "text",
+    "ref_audio",
+    "voice",
+    "style",
+    "denoise",
+    "use_ref_codes",
+    "temperature",
+    "top_k",
+    "top_p",
+    "max_new_frames",
+    "repetition_penalty",
+    "repetition_window",
+    "max_chars",
+    "silence_p",
+    "crossfade_p",
+    "apply_watermark",
+    "batch_size"
+  ],
+  "explicit_accent_or_language_switch": false,
+  "style": "DEPRECATED_AND_IGNORED_ON_THIS_BACKEND",
+  "publisher_bilingual_claim": "Supports Vietnamese/English; not treated as evidence retained presets meet owner accent requirements",
+  "owner_english_quality": "NOT_ACCEPTABLE_VIETNAMESE_ACCENT",
+  "prior_tag_only_candidate": "SAME_PHONEMES_NOT_A_VALIDATED_FIX",
+  "prior_reference_ablation": "GROUP_PANEL_REJECTED_NO_PER_CONDITION_CAUSAL_SCORE",
+  "guaranteed_same_voice_accent_fix": null,
+  "proposed_task": {
+    "id": "VOICE-BILINGUAL-IDENTITY-001",
+    "priority": "P1",
+    "status": "ASSESSED_NOT_EXECUTED",
+    "dependencies": [
+      "Defined VI/EN/mixed corpus and separate identity/pronunciation listening rubric",
+      "Available rights-cleared same-speaker reference material or reviewed adaptation proposal",
+      "Resource and owner approval gates before new asset/training/model work"
+    ],
+    "effort": "One evaluation-design milestone; training/data/migration effort unestimated pending feasibility",
+    "risks": [
+      "Voice identity drift",
+      "Reference accent retention",
+      "Correct phones but incorrect acoustic realization",
+      "Extra latency/RAM and overfitting"
+    ],
+    "rollback": "Retain current voices, accepted API/date/clauses and all previous outcomes; disable only optional unaccepted research",
+    "next_bounded_step": "Design a same-text/same-voice US Python phoneme comparison retaining accepted API/date/clauses and original resources; no native extension scheduled in this XI scope."
+  },
+  "references": [
+    {
+      "url": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "scope": "Current publisher card lists Vietnamese/English and reference-defined reading character; not a new local benchmark"
+    },
+    {
+      "url": "https://github.com/pnnbao97/VieNeu-TTS/blob/04044e1b8f822f946bafb2c88b716459f4164152/src/vieneu/v3turbo.py",
+      "scope": "Exact retained SDK interface/style and reference behavior"
+    }
+  ],
+  "new_models_or_reference_assets": 0,
+  "new_training": 0,
+  "new_native_calls": 0,
+  "model_selection": null,
+  "owner_selected_english_target": "en-US",
+  "owner_accent_preference_sha256": "96891a1f116b02424a14558efa835d0a4e9f5b7feca94fbc2eabb9493ba59794",
+  "retained_publisher_card_sha256": "5d5bb2de661fabc0e073b3b844dc131696fac3dddd5ea882d10fd9a849108eb7",
+  "python_us_reference": {
+    "source": "https://dictionary.cambridge.org/pronunciation/english/python",
+    "publisher": "Cambridge University Press",
+    "source_us_ipa": "/ˈpaɪ.θɑːn/",
+    "retained_sdk_phones": "pˈaɪθən",
+    "finding": "Retained dictionary vowel sequence differs from this US pronunciation reference. This is a testable frontend target, not proof it causes all perceived Vietnamese accent or that a substitution will sound correct.",
+    "new_us_candidate_executed": false
+  }
+}

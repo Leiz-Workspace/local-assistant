@@ -1,0 +1,93 @@
+{
+  "description": "Content-free aggregate inference metrics and one actual existing CORE stream: client first-content TTFT and separately native self-reported decode rate. No token-boundary/client decode or SLO claim.",
+  "status": "LOCAL_OBSERVABILITY_VERIFIED",
+  "new_tests": 22,
+  "related_tests": {
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.94
+  },
+  "source_sha256": {
+    "src/application/services/inference_observability.py": "0ae586be12c66eb3ff7fa1430663d3f07b11524606c19ac19e9f09f4168899a4",
+    "scripts/streaming_timing_probe.py": "da4c91b8a293615d0df9eeafb27cc2ddbc272ae3dde2a9141dde3b8573fbef17",
+    "tests/test_inference_observability.py": "586f4da441855f16d8a5d7cb0a4f00fed612a57d3997c0e3156827ee3a27f116",
+    "tests/test_streaming_timing_probe.py": "d8e83470870ee2d759cc6524a013aea113253b479f98e5cc427b5f0880d11eed"
+  },
+  "artifact_sha256": {
+    "data/backups/d83-native-observed-inference.log": "3014573448aff24277a757eda6fa2852d2d52a0563180d1d52d36cd99c557fcb",
+    "data/backups/d83-native-stream-first.log": "0ccc84b58772fbdff6bd2e4aab5fffa7be61486cc6a266e615db7defcfdfec79",
+    "data/backups/d83-observability-completed-tests.log": "221dae395111959679fbef2b72a4b173364bad7cf5733c0538ac927210eaeb76",
+    "data/backups/d83-observability-first-tests.log": "3db1fcb4a9362fdc4776f3353f7441561472f461ea47a225a87f02ab5dbc5cc1",
+    "data/backups/d83-observability-stream-tests.log": "c243af36f332f1d9801e101b7318bc14f81a0b9657b57eb7def948ad0f5d3072",
+    "data/backups/d83-native-observed-inference.json": "9bc91ea10f4beb9b9c9b08fb22c5e7003ebe5ddf94cccf28f1fde5d87f9a94c1",
+    "data/backups/d83-native-stream-first.json": "b79513cb900b866e3c1273052139c47a48cf7ed5485ad61e14676ff634ef7cf9"
+  },
+  "native_stream": {
+    "description": "One original CORE stream probe, client first-content latency versus optional native self-reported decode rate.",
+    "source_sha256": "da4c91b8a293615d0df9eeafb27cc2ddbc272ae3dde2a9141dde3b8573fbef17",
+    "core_before": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    },
+    "measurement": {
+      "description": "Client observed first nonempty text content, not first SSE event. Buffered/chunked transport and network overhead included.",
+      "model_id": "qwen3.5-9b-core",
+      "finish_reason": "stop",
+      "content_sha256": "94e8141d6317504ce9d3a5edbb3f5920255385fc55743bee1eca941a942f3fd3",
+      "content_chunks": 6,
+      "input_tokens": 24,
+      "output_tokens": 7,
+      "client_ttft_ms": 169.45094699622132,
+      "client_total_ms": 248.69643099373206,
+      "client_end_to_end_tokens_per_second": 28.146765001932906,
+      "native_reported_decode_tokens_per_second": 73.67115651437202,
+      "native_rate_availability": "server_reported",
+      "client_decode_tokens_per_second": null,
+      "client_decode_availability": "token_boundaries_not_observed"
+    },
+    "status": "COMPLETE",
+    "core_after": {
+      "start": "63900",
+      "command_sha256": "ad2173d5dfaa29fdc1ad73c2dd5e837a49451570321a168c35893a83bbc4db50"
+    }
+  },
+  "native_nonstreaming_aggregate": {
+    "description": "Operator-only aggregate nonstreaming inference metrics; no request/user/model content.",
+    "profiles": {
+      "core": {
+        "started": 1,
+        "completed": 1,
+        "failed": 0,
+        "cancelled": 0,
+        "active": 0,
+        "peak_active": 1,
+        "latency_samples": 1,
+        "latency_ms_total": 188.21792700327933,
+        "input_tokens": 18,
+        "output_tokens": 3,
+        "usage_samples": 1,
+        "timing_unavailable": 0
+      },
+      "unrestricted": {
+        "started": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "active": 0,
+        "peak_active": 0,
+        "latency_samples": 0,
+        "latency_ms_total": 0.0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usage_samples": 0,
+        "timing_unavailable": 0
+      }
+    },
+    "ttft_ms": null,
+    "decode_tokens_per_second": null,
+    "timing_availability": "nonstreaming_no_token_timestamps"
+  },
+  "production_telemetry_endpoint_created": false,
+  "model_or_gateway_changed": false
+}

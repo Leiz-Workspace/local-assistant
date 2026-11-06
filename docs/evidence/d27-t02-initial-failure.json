@@ -1,0 +1,16 @@
+{
+  "description": "Initial unaccepted D27-T02 comparison failure retained before an execution implementation correction; no accepted quality metrics.",
+  "observed_date": "2026-10-19",
+  "tests_passed": 41,
+  "tests_failed": 1,
+  "seconds": 244.05,
+  "outcome": "INCOMPLETE_WORKER_FAILURE",
+  "accepted_candidate_metrics": null,
+  "last_observed_candidate_cpu_seconds": 413,
+  "last_observed_candidate_rss_kib": 1654616,
+  "reason": "Worker failed near the frozen480s CPU budget; exact exit signal was not logged, so CPU-limit cause is inferred, not confirmed.",
+  "log_sha256": "145816c1af3c3d53dac6362447c3b3f8e5880e6c151804b988b06e07e11b9978",
+  "source_archive": "data/backups/d27-t02-initial-source.zip",
+  "source_archive_sha256": "b015253246790d855dbb0a7488b0e480bcfd5f40f87189a79e6fe29917372d29",
+  "thresholds_corpus_model_precision_changed": false
+}

@@ -1,0 +1,38 @@
+{
+  "description": "D31-T01 final source-task checkpoint freeze; final D31 full regression remains pending.",
+  "python_files": 11,
+  "function_class_descriptions": 83,
+  "sha256": {
+    "apps/api/services/ingestion.py": "4b94f0e4250a59480f2add3d1cce23f65d800a3a3b27c5d02b1c839ff7ed6cc6",
+    "apps/api/storage/files.py": "b2d8af8d3cef42efd03b59ce613f4f46d4f89e59617d63fb8615d8ffce39b702",
+    "apps/api/storage/memory.py": "aa7edbb222223d75413a46b38b3b1fa14665e8b4649656742f12a82fee759573",
+    "dev_log/dev_log.md": "9f2a3532e83fa66b3992d1d3af569123ccb241b2656a0237c423166b193ffe71",
+    "docs/ADR/049-transactional-message-memory-invalidation.md": "0f7184910be5291ea2ae6064012c95306468fa232ae2bdaca096a3057e804be1",
+    "docs/D31_PRIVACY_AND_DELETION.md": "b8d351b6237e1f6842c597459c8fd0bbc4727b1be6a0f206ac2d6951463bd56f",
+    "docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md": "5c58e26d790644597dc01336915d6ffccf2b42ec355aae31241fbc911cfe8895",
+    "docs/evidence/d31-t01-source-baseline.json": "a5db49f2b4a58a3eca21c4aa1f4bced1f8d88a313a3a585a21ef25016ede5957",
+    "docs/evidence/d31-t01-v006-rollout.json": "5d18b364def139fa427b1131ae4a26f9c046aaa19bc8322ad7c28b82e5a7c94f",
+    "migrations/versions/0006_memory_source_invalidation.py": "2f21c16ade332a777d42b6c67cc69ae39ff36626673072e989ca5429e997e4b0",
+    "tests/integration/test_memory_journal_postgres.py": "408a59cf8f517bce39bad18729e6c41668e2dc8a2a7a07e496f99d8dc2847715",
+    "tests/integration/test_memory_source_ordering.py": "7e8a58dfe3555a971e7457ab291227145af785e3ee0f04e80da7beb6e6730f0b",
+    "tests/integration/test_memory_source_privacy.py": "5888dddd235d8dd4443828863cebffa13009fbd3a2a2f79b7234b6f1cc632a88",
+    "tests/integration/test_memory_source_trigger_proposal.py": "4be279a3fa7439e664e89db203475a2580dbdbf2a5fccad5c7f5c778145203bc",
+    "tests/test_file_schema_compatibility.py": "270e812d33cba5818ac5b9926df3f1603fa5003fa16f34825b3d0634f283c7ad",
+    "tests/test_ingestion_schema_compatibility.py": "f14b1ccc283265c5af9ccd02f3d57bd7c8400a28ce0fa2be7b00ccbe0859229b",
+    "tests/test_memory_api.py": "1f05127b022c2b5642c441a81a5f055d1b0ea9ef06dd82acbdca2089dc2be07d"
+  },
+  "protected_sha256": {
+    "docs/MODEL_REGISTRY.md": "0f5022f0a36186cf34ffe97b4e8461a586b36608c1a71effe1558393165fada9",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+    "configs/embedding-e5-rollback.json": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+    "uv.lock": "84ebcd30727cbb47bd8279f11ab79ca1e0c3271500734222c49e10fa93e00795",
+    "pyproject.toml": "51a08088e26106c72dfd6f3b5d7dbddc8cb0cffb28b05f67d3de49ee1dbee255",
+    "migrations/versions/0004_ingestion_column_grants.py": "fed1c51f519a754ee30462647ba4ec906d1a0dacf482c32e06142e2f724a505c",
+    "migrations/versions/0001_initial_conversation_schema.py": "063e8c98f288e8dfb2de1e14656766748d527c40e35c6bbacf0505e602d3520c",
+    "migrations/versions/0002_file_journal.py": "24a0913e3b15478f69d598098535d53b2a68c5c0c1fbc4d3b0b856fc08b93070",
+    "migrations/versions/0003_ingestion_journal.py": "a9bb5193c1d7b3906ec8f56015fd18cea80db9f93cd84a76610b9fa01e6b5a4f",
+    "migrations/versions/0005_memory_journal.py": "b228bf23acb034e8849b40f47a994044f703b10eb2df55c9500b05650008a652",
+    "migrations/versions/0006_memory_source_invalidation.py": "2f21c16ade332a777d42b6c67cc69ae39ff36626673072e989ca5429e997e4b0"
+  }
+}

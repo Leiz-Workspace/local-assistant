@@ -1,0 +1,26 @@
+{
+  "description": "D63 local authored chart/table/document screenshot functionality gate after original first4of4 and readonly closure; no production file/API/UI integration or general visual accuracy certification.",
+  "status": "PASS_LOCAL_AUTHORED_IMAGE_GOLDENS",
+  "new_controls": 24,
+  "related_passed": 160,
+  "related_elapsed_seconds": 5.59,
+  "private_evaluator_controls": 11,
+  "private_audit_controls": 115,
+  "actual_passed": 4,
+  "actual_total": 4,
+  "actual_elapsed_seconds": 4.513,
+  "text_after_images_passed": true,
+  "source_files": 569,
+  "all562_prior_source_bytes_unchanged": true,
+  "model_downloads": 0,
+  "model_replacements": 0,
+  "independent_human": false,
+  "semantic_validation": false,
+  "confidence": null,
+  "prior_full_application_baseline": {
+    "passed": 4265,
+    "source_files": 562,
+    "current_full_claim": false
+  },
+  "D64": "NEXT_TIMESTAMPED_REPRODUCIBLE_VIDEO_FRAMES"
+}

@@ -1,0 +1,136 @@
+{
+  "description": "Actual owner-requested ADR156 paired speech-quality experiment;48 complete new native TTS outputs, no ASR/CORE or workflow recovery. Software and native integrity pass; acoustic quality/voice adoption remain owner-review gates.",
+  "recorded_at_utc": "2026-11-03T17:19:08.741739+00:00",
+  "status": "NATIVE_PANEL_COMPLETE_QUALITY_UNVERIFIED",
+  "top_level_tts_calls": 48,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "automatic_retries": 0,
+  "unattempted": 0,
+  "inner_chunk_generations": 54,
+  "metrics": [
+    {
+      "profile": "raw",
+      "top_level_requests": 16,
+      "inner_chunk_generations": 16,
+      "minimum_tts_seconds": 0.361092066999845,
+      "maximum_tts_seconds": 1.9505359839995435,
+      "peak_sampled_rss_bytes": 1688432640,
+      "retirement_exit": 0,
+      "speech_render_seconds_max": 7.115300013538217e-05,
+      "full_native_generations_ended": true
+    },
+    {
+      "profile": "reading",
+      "top_level_requests": 16,
+      "inner_chunk_generations": 16,
+      "minimum_tts_seconds": 0.34617615999923146,
+      "maximum_tts_seconds": 1.9449488280006335,
+      "peak_sampled_rss_bytes": 1687568384,
+      "retirement_exit": 0,
+      "speech_render_seconds_max": 5.626500023936387e-05,
+      "full_native_generations_ended": true
+    },
+    {
+      "profile": "clauses",
+      "top_level_requests": 16,
+      "inner_chunk_generations": 22,
+      "minimum_tts_seconds": 0.3074516019996736,
+      "maximum_tts_seconds": 1.8372057189999396,
+      "peak_sampled_rss_bytes": 1682886656,
+      "retirement_exit": 0,
+      "speech_render_seconds_max": 7.10220001565176e-05,
+      "full_native_generations_ended": true
+    }
+  ],
+  "raw_vs_reading_identical_audio": [
+    {
+      "case": "reading-01",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-01",
+      "voice": "Ngọc Huyền"
+    },
+    {
+      "case": "reading-02",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-02",
+      "voice": "Ngọc Huyền"
+    },
+    {
+      "case": "reading-03",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-03",
+      "voice": "Ngọc Huyền"
+    },
+    {
+      "case": "reading-06",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-06",
+      "voice": "Ngọc Huyền"
+    },
+    {
+      "case": "reading-07",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-07",
+      "voice": "Ngọc Huyền"
+    },
+    {
+      "case": "reading-08",
+      "voice": "Trúc Ly"
+    },
+    {
+      "case": "reading-08",
+      "voice": "Ngọc Huyền"
+    }
+  ],
+  "raw_vs_reading_identical_count": 12,
+  "owner_ratings": null,
+  "voice_selection": null,
+  "physical_first_audible": "UNVERIFIED",
+  "workflow_recovery_approved": false,
+  "baseline_restored": true,
+  "old_files_preserved": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "retained_original_research_files": 7,
+  "new_code_and_test_files": 10,
+  "new_model_downloads": 0,
+  "new_packages": 0,
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/reading-quality-first",
+  "root_budget_bytes": 8589934592,
+  "parent_root_bytes": 1251022870,
+  "private_receipt_sha256": {
+    "software-verification.json": "87ee91d9b9ab2609933d6b76e50017ae958dd58dc2d93af868c56ea4b147abe3",
+    "execution-freeze.json": "a5808b3fe1c98e5e54a7bb60db8ab62ad32d98e7f6ed3b8add51e35a62de8918",
+    "campaign-result.json": "c4e599e13c6b17e6e83176548f8e828d2043953d47f9ca624520133395d29331",
+    "probe/native/normalizer-probe.json": "d0f8a921fae3697b81de601bc8601b70c2d2a1074aedaae248ca561627a4fa85",
+    "question-preserving-probe/native/normalizer-probe.json": "84f2de50c1bb19f03e8430d30ef8f1dec4ef0763b93a43de7e9098c9af18bd4b",
+    "sentence-preserving-probe/native/normalizer-probe.json": "357b958c287fa160fbbff4156b6fb97f78369ff9f619d7ed120a0202e74839d3",
+    "review/index.html": "a7718e4ab5dff7993c54060b06367900b12c91df06761491921dc4ecfa04e7dc",
+    "review/index.json": "11fd02961191471704c61c1a8d4e35337971dc1aa8183e1f9e23bd1e7e766fb4",
+    "review/full-code.zip": "0949471da239b0b62b9e63598f83461b5f88263c9b2e51731cadfd9f48177f10"
+  },
+  "software_passed": 221,
+  "software_failed": 0,
+  "software_errors": 0,
+  "software_skipped": 0,
+  "software_seconds": 4.37,
+  "lexicon_convention": "Experimental Vietnamese approximation pai thờn/ây pi ai; not independently established English pronunciation.",
+  "probe_findings": [
+    "Original SDK already expands original date/time example correctly.",
+    "Original SDK supplies English phonemes for Python/API; owner acoustic complaint is not explained as absent dictionary support.",
+    "Original short question loses question punctuation; final isolated phoneme path preserves it.",
+    "Initial64-character packing split a time unit and was rejected before native execution; final one-sentence packing keeps time/date phrases intact."
+  ]
+}

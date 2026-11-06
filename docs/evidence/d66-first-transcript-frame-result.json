@@ -1,0 +1,242 @@
+{
+  "description": "Complete first actual real public speech/explicit supplied unverified reference and original CORE sparse frame composition. No ASR or original-scene certification.",
+  "private_summary_sha256": "01b58256ab07753247b59a5ed73c10c28400fe087a6139e4b87d8ef2754611bb",
+  "actual": {
+    "description": "D66 first authored composite: real pinned public speech plus unrelated authored visuals. Explicit supplied same-agent reference, not recognized/independent transcript or original historic video. Exact sample/frame timeline and deterministic literal summary; no ASR/TTS/download/motion/word-alignment/general-accuracy claim.",
+    "status": "PASS_D66_PROVIDED_TRANSCRIPT_FRAME_TIMELINE",
+    "source_freeze_sha256": "219e90079e5a3d0d5b67676fe6a8db68aa56e19e259983ca591239d63394f630",
+    "ASR_attempts": 0,
+    "model_replacements": 0,
+    "automatic_retries": 0,
+    "raw_PCM_frames_or_prompts_retained": false,
+    "human_independent": false,
+    "text_CORE_attempts": 1,
+    "normalized_audio": {
+      "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+      "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+      "sample_count": 176000,
+      "source_codec": "pcm_s16le",
+      "source_sample_rate": 16000,
+      "source_channels": 1,
+      "source_sample_count": 176000,
+      "time_base_num": 1,
+      "time_base_den": 1000,
+      "first_pts": 0,
+      "sample_rate": 16000,
+      "channels": 1,
+      "processor": "native-pcm-v1",
+      "content_trust": "untrusted",
+      "persisted": false
+    },
+    "description_result": {
+      "owner_id": "905a221d-a7bb-4b3e-bfa2-12a3c65279b7",
+      "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+      "question_sha256": "7936ccbcf5e7cf4ef6055f7037fe88e04cb8ed536a271acf57dce94292293e16",
+      "metadata": {
+        "width": 960,
+        "height": 360,
+        "codec": "ffv1",
+        "time_base_num": 1,
+        "time_base_den": 1000,
+        "origin_pts": 0,
+        "duration_seconds": 11.0,
+        "frame_count": 11,
+        "audio": [
+          {
+            "index": 1,
+            "codec": "pcm_s16le",
+            "sample_rate": 16000,
+            "channels": 1,
+            "time_base_num": 1,
+            "time_base_den": 1000,
+            "start_pts": 0
+          }
+        ]
+      },
+      "frames": [
+        {
+          "requested_ms": 0,
+          "frame_index": 0,
+          "pts": 0,
+          "relative_time_num": 0,
+          "relative_time_den": 1,
+          "image_sha256": "a026967d04deef3b57f7753cc15b336a8de2eeb18e2d899c812a2f3ea0821810",
+          "answer": "READY",
+          "uncertainties": [],
+          "model_id": "qwen3.5-9b-core"
+        },
+        {
+          "requested_ms": 4000,
+          "frame_index": 4,
+          "pts": 4000,
+          "relative_time_num": 4,
+          "relative_time_den": 1,
+          "image_sha256": "f049dd9e23cbe2e95da51f0f576b17aa2c58770f4d6297d4aa96d844cc740fa5",
+          "answer": "MOVING",
+          "uncertainties": [],
+          "model_id": "qwen3.5-9b-core"
+        },
+        {
+          "requested_ms": 8000,
+          "frame_index": 8,
+          "pts": 8000,
+          "relative_time_num": 8,
+          "relative_time_den": 1,
+          "image_sha256": "8763bbce02e6d1296a548d59c7a896eece5662ac1ca8a773a7a5139ff4769d0f",
+          "answer": "DONE",
+          "uncertainties": [],
+          "model_id": "qwen3.5-9b-core"
+        }
+      ],
+      "received_at": "2026-10-22 05:54:31.555972+00:00",
+      "observed_frames_only": true,
+      "continuous_motion_verified": false,
+      "audio_transcribed": false,
+      "semantic_validation": false,
+      "confidence": null,
+      "persisted": false
+    },
+    "provided_transcript": {
+      "owner_id": "905a221d-a7bb-4b3e-bfa2-12a3c65279b7",
+      "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+      "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+      "segments": [
+        {
+          "start_sample": 0,
+          "end_sample": 176000,
+          "text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country."
+        }
+      ],
+      "language": "en",
+      "origin": "provided_reference"
+    },
+    "timeline": {
+      "owner_id": "905a221d-a7bb-4b3e-bfa2-12a3c65279b7",
+      "source_sha256": "0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b",
+      "pcm_sha256": "252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3",
+      "events": [
+        {
+          "kind": "provided_transcript",
+          "index": 0,
+          "start_num": 0,
+          "start_den": 1,
+          "end_num": 11,
+          "end_den": 1,
+          "text": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+          "uncertainties": []
+        },
+        {
+          "kind": "frame",
+          "index": 0,
+          "start_num": 0,
+          "start_den": 1,
+          "end_num": 0,
+          "end_den": 1,
+          "text": "READY",
+          "uncertainties": []
+        },
+        {
+          "kind": "frame",
+          "index": 4,
+          "start_num": 4,
+          "start_den": 1,
+          "end_num": 4,
+          "end_den": 1,
+          "text": "MOVING",
+          "uncertainties": []
+        },
+        {
+          "kind": "frame",
+          "index": 8,
+          "start_num": 8,
+          "start_den": 1,
+          "end_num": 8,
+          "end_den": 1,
+          "text": "DONE",
+          "uncertainties": []
+        }
+      ],
+      "summary_text": "Unverified provided-transcript and sampled-frame timeline.\nSpeech text is supplied; no ASR, word alignment or continuous-motion verification.\nSource SHA256: 0fa8360503e5c3e69834c6f3a6c6d9fbc0eb3b1916269b807d296662089afa8b\nNormalized PCM SHA256: 252fca5b7c2acd89dfd4c01b27c67e7e6a6f5ab7d9973e9963732f8307a744d3\n[0/1s..11/1s] provided_transcript 0: \"And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.\"; uncertainties=\\u005b\\u005d\n[0/1s] frame 0: \"READY\"; uncertainties=\\u005b\\u005d\n[4/1s] frame 4: \"MOVING\"; uncertainties=\\u005b\\u005d\n[8/1s] frame 8: \"DONE\"; uncertainties=\\u005b\\u005d\n",
+      "summary_sha256": "6f98c69b31a2d949cb88516b8bd751d52366622e068eb46e1ff7d58cc7fae3d0",
+      "transcript_origin": "provided_reference",
+      "audio_transcribed": false,
+      "word_alignment_verified": false,
+      "continuous_motion_verified": false,
+      "semantic_validation": false,
+      "confidence": null,
+      "persisted": false
+    },
+    "owner_matches": true,
+    "deterministic_join_repeat_identical": true,
+    "functional_gate_passed": true,
+    "ordinary_text_completion": {
+      "content": "VISION_TEXT_OK",
+      "model_id": "qwen3.5-9b-core",
+      "preset_selected": "fast",
+      "finish_reason": "stop",
+      "input_tokens": 24,
+      "output_tokens": 4,
+      "reasoning_tokens": null,
+      "latency_ms": 202
+    },
+    "ordinary_text_recovery_passed": true,
+    "native_audio_attempts": 1,
+    "native_video_attempts": 1,
+    "native_image_attempts": 3,
+    "image_CORE_attempts": 3,
+    "clip_quota_charged": 1,
+    "image_quota_charged": 3,
+    "clip_operations_remaining": 0,
+    "image_operations_remaining": 0,
+    "admissions_released": true,
+    "services_closed": true,
+    "model_transports": [
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      },
+      {
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "status": 200
+          },
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "status": 200
+          }
+        ],
+        "closed": true
+      }
+    ],
+    "elapsed_seconds": 2.994
+  }
+}

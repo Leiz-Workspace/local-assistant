@@ -1,0 +1,117 @@
+{
+  "description": "Observed local D27-T02 batch4 original-candidate comparison acceptance; batch1 remains failed/incomplete, no model adoption or full D27 PASS.",
+  "observed_date": "2026-10-19",
+  "milestone": "D27-T02",
+  "status": "PASS_LOCAL_BATCH4_MEASUREMENT",
+  "batch1_status": "FAILED_CPU_BUDGET_INCOMPLETE",
+  "day27_status": "IN_PROGRESS",
+  "next": "D27-T03 independent quality/resource/adoption review; no default routing change",
+  "base_commit": "5d225b6",
+  "tests": {
+    "new_unit": 37,
+    "new_actual_comparison_process_watchdog_tokenizer": 7,
+    "new_total": 44,
+    "focused_passed": 44,
+    "focused_seconds": 234.51,
+    "full_passed": 1096,
+    "full_seconds": 540.75,
+    "skipped": 0,
+    "exit_code": 0,
+    "initial_attempt_passed": 41,
+    "initial_attempt_failed": 1,
+    "v2_passed": 42,
+    "v2_failed": 1,
+    "command_description": "Existing Vault-backed uv run --no-sync python -m pytest tests/ -q -rs --tb=short with actual PostgreSQL/CORE/Qdrant and explicit offline model evaluation flag; no credential skips."
+  },
+  "quality": {
+    "baseline": {
+      "recall_at_3": 0.9722222222222222,
+      "recall_at_5": 0.9722222222222222,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.949074074074074,
+      "ndcg_at_10": 0.9616129637291926
+    },
+    "candidate": {
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 1.0
+    },
+    "delta": {
+      "recall_at_3": 0.02777777777777779,
+      "recall_at_5": 0.02777777777777779,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.05092592592592604,
+      "ndcg_at_10": 0.03838703627080742
+    },
+    "all_frozen_diagnostic_gates_met": true,
+    "rankings_stable": true,
+    "focused_full_quality_identical": true,
+    "independent_human_quality": "NOT_VALIDATED"
+  },
+  "resources": {
+    "peak_candidate_rss_mib": 1596.0546875,
+    "candidate_gpu_allocation_bytes": 0,
+    "fresh_session_load_seconds": 2.300224711001647,
+    "query_ms": {
+      "p50": 2120.524118499816,
+      "p95": 2238.9429616005145,
+      "max": 2292.3119269980816,
+      "samples": 108,
+      "definition": "Ten candidate pairs per query with model already loaded; excludes cold load, embedding, retrieval and HTTP."
+    },
+    "all_batch4_resource_gates_met": true,
+    "cpu_seconds": "480/481 hard limit enforced; total CPU time not separately instrumented",
+    "definitions": "Process peak RSS includes load/parity/scoring. Query timing is ten pairs with model loaded, excludes embedding/retrieval/HTTP; filesystem cache uncontrolled."
+  },
+  "actual_reference_parity": {
+    "exact": true,
+    "reference_logits": [
+      12.375,
+      21.25
+    ],
+    "optimized_logits": [
+      12.375,
+      21.25
+    ]
+  },
+  "static_checks": {
+    "python_files": 5,
+    "documented_functions_and_classes": 68,
+    "ruff_correctness_imports_format": "PASS",
+    "isolated_frozen_lock": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "preserved": {
+    "application_D25_D26_T01_sources_and_existing_models_schema_dependencies_unchanged": true,
+    "corpus_labels_candidates_prompt_thresholds_unchanged": true,
+    "original_batch1_profile_unchanged": true,
+    "embedding_selected_and_registry_and_exact_e5_rollback_unchanged": true,
+    "production_model_routing_or_collection_changed": false
+  },
+  "source_sha256": {
+    "scripts/qwen_reranker_runtime.py": "69c443d1a486bf180a93ee6517d44a766809bc827a3e3df47e35b64141cf654c",
+    "scripts/qwen_reranker_worker.py": "fda40d382e91d7526b2c3d294aa377cfb47ef0aa98c0623d898d6cfa854e6104",
+    "scripts/reranker_comparison.py": "fa72b9b54d53e93eb03ece0500fc0a40c0a5b0af83ec7e5a3e554b5c69232f76",
+    "tests/test_reranker_comparison.py": "88c8acced494f1502c655f835cc679faa4f90706d165b54b1c3ac18c364bd65d",
+    "tests/integration/test_reranker_live.py": "753066214dbf02485610b91dcf6ba7801944081580e9a0abe70f8f5c0976eb03",
+    "scripts/qwen_reranker_worker.py.lock": "92f386a6ac35df8c530d0d48b4465d6cf84ce204bd380fea5293eca061f27e6e",
+    "configs/reranker-qwen-evaluation.json": "895b6f75129d472b7cc67a568b6e50953f610b90d5c880bef8df61736724ee09",
+    "configs/reranker-qwen-batch4-evaluation.json": "63aabb1c2e1a9c7fd64d526047ac1e5444fdbf66c00e8c3aa79aa941d30f3bbc"
+  },
+  "execution_manifest_sha256": "bcef9c5ef85655ba5b0daa4b256b433ce7b9e7e4cee34ae76e3440f8b2340d69",
+  "full_private_log_sha256": "7dc3e7f91313d3b10ef2e97f3b63c2c44990de6515ab8ce68f7f7846619d6b49",
+  "comparison": "docs/evidence/d27-t02-reranker-comparison.json",
+  "post_audit": "docs/evidence/d27-t02-post-audit.json",
+  "retained_failures": [
+    "docs/evidence/d27-t02-initial-failure.json",
+    "docs/evidence/d27-t02-v2-failure.json"
+  ],
+  "adoption_authorized": false,
+  "open_gates": [
+    "Independent human-reviewed corpus and quality validation; descriptive gain CI includes0",
+    "Singleton end-to-end and sustained concurrent resource/latency validation",
+    "Owner-reviewed adoption/integration/migration/rollback decision; no D28 advancement"
+  ]
+}

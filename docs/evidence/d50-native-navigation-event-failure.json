@@ -1,0 +1,11 @@
+{
+  "description": "Retain127PASS/1FAIL40.97s and distinct30.27s native timeout diagnostic; no host write/private resource or public navigation occurred.",
+  "status": "FAILED_RETAINED",
+  "archive_sha256": "caf71a9af19311fd09b1e9aee306d6f36cddfadf3d4b7870d4d3290ca5db2d53",
+  "files": {
+    "src/infrastructure/readonly_browser.py": "a3c96ca4dc800b48d9c0a1d96176434adbb3432cb62e1d59614045580d22c5f6",
+    "tests/integration/test_browser_native.py": "4caaea83301732ed472094af3038a8be15b173c3afebd6e50089939370499ea6",
+    "data/backups/d50-expanded-repaired.log": "cf69738131a12895c20124e1a71bc47d95d61a02f20e6ce66be1a394f16b6849",
+    "data/backups/d50-csp-diagnostic.log": "b3e19f212fce24a6357d9c78b29e2e0c5bfa0a6a97291d3d02166ee905948fa2"
+  }
+}
