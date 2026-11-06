@@ -1,0 +1,42 @@
+{
+  "description": "Post-run source/asset/native-output/date-chunk/media/budget and cleanup verification for the four same-text API stress candidates. No Ei/buzz/naturalness acceptance inferred.",
+  "status": "VERIFIED_TECHNICAL_ONLY",
+  "recorded_at_utc": "2026-11-03T19:02:11.545927+00:00",
+  "same_text_pairs": 4,
+  "new_native_complete_outputs": 4,
+  "retained_original_outputs": 4,
+  "inner_chunks": 6,
+  "exact_old_date_chunks": 2,
+  "review_audio_elements": 8,
+  "forbidden_media_capabilities": 0,
+  "new_source_test_files": {
+    "benchmarks/scripts/vi_api_stress_worker.py": "57ebbcc00ae994486531c45e9e40d76ae7f62c708e449d11f4ca5ce6bf1ca061",
+    "benchmarks/scripts/vi_api_stress_trial.py": "46328a102da57f1e7ac2aeb8eeec93f9670edbdf6b25852ff02c3cbf979ed059",
+    "benchmarks/tests/test_vi_api_stress_worker.py": "7c7f71c19942cf7a40612a5bbea65be667d314616dd7c860502a2b653ab0d2b6",
+    "benchmarks/tests/test_vi_api_stress_trial.py": "904ad7aa7051ddb9268bab509149925e872ecdfcff901bfb3ee7ae85a74e4f6c"
+  },
+  "source_snapshot_and_archive_exact": true,
+  "old_research_files_unchanged": 25,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_inventory_entries": 4295,
+  "worker_results": 4,
+  "worker_exit": 0,
+  "baseline_restored": true,
+  "new_markdown_links_verified": 18,
+  "software_passed": 267,
+  "software_failed": 0,
+  "software_skipped": 0,
+  "software_seconds": 4.78,
+  "first_two_fixture_failures_retained": true,
+  "owner_new_quality_ratings": null,
+  "prior_carrier_quality": "OWNER_REPORTED_WORSE_NOT_ACCEPTED",
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "original_private_prefix_and_AGENTS_preserved": true,
+  "result_sha256": "045f6a108010eb1decacfc7862d32b745c1eb33384df23c21d8ca3a90452f827",
+  "parent_root_bytes": 1320579549
+}

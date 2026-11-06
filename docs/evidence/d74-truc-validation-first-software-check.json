@@ -1,0 +1,10 @@
+{
+  "description": "Initial new-study check:11new tests PASS0.34s, Ruff F401 on an unused hashlib import in the new controller. No probe/model execution before correction.",
+  "tests_passed": 11,
+  "tests_failed": 0,
+  "seconds": 0.34,
+  "lint_status": "FAIL",
+  "lint_error": "F401 unused hashlib in vi_truc_ly_validation.py",
+  "resolution": "Remove unused import in new source only; preserve all old sources/guards",
+  "native_calls": 0
+}

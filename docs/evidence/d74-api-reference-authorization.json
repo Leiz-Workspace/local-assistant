@@ -1,0 +1,17 @@
+{
+  "description": "Explicit latest owner instruction “Làm đi” authorizes investigating retained API acoustic failure using existing models. One paired phoneme/reference diagnostic; sixteen-call bound chosen by engineering. No model adoption, product activation or ADR155 workflow approval.",
+  "authorized": true,
+  "owner_response": "Làm đi",
+  "recorded_at_utc": "2026-11-03T18:19:58.153008+00:00",
+  "adr_sha256": "ade9272ff176ba24df831a96dc59364ebc04a85260583ba7ab8dee898d4d38e1",
+  "owner_failure_sha256": "b5fc5fa89eacbba50ca6b73be191aec00020f88584ab9b5b99f1f01829d30bc4",
+  "scope": "Four English minimal/context controls x two fixed voices x reference on/off; retain same speaker embedding, text tokens, sampling and weights.",
+  "tts_calls_ceiling": 16,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "retries": 0,
+  "new_downloads_or_packages": 0,
+  "product_activation": false,
+  "workflow_recovery_authorized": false,
+  "voice_selection": null
+}

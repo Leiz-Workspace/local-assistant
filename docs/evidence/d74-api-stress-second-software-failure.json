@@ -1,0 +1,9 @@
+{
+  "description": "Second software check:9PASS/1FAIL0.49s. Probe capability test incorrectly treated the HF_HUB_CACHE environment value as a mounted weights directory. Actual read-only mount inventory includes no model/hub weights.",
+  "passed": 9,
+  "failed": 1,
+  "seconds": 0.49,
+  "error": "AssertionError: string membership is not a mount-capability test",
+  "resolution": "Check read-only mount guest paths instead; original no-weights namespace unchanged.",
+  "native_calls": 0
+}

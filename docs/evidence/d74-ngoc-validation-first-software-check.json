@@ -1,0 +1,9 @@
+{
+  "description": "First focused check before any Ngoc Huyen preparation/load: one public fixture had non-private output permissions, correctly rejected by the original namespace guard.",
+  "passed": 10,
+  "failed": 1,
+  "seconds": 0.37,
+  "error": "ValueError: namespace_output",
+  "resolution": "Set the new test output directory to mode0700; keep the original privacy guard unchanged.",
+  "native_calls_before_fix": 0
+}

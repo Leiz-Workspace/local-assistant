@@ -1,0 +1,211 @@
+{
+  "description": "Working local-only browser voice trial: software, synthetic browser, unmocked browser session and actual six-input native HTTP evidence; not physical acceptance.",
+  "date": "2026-11-05",
+  "status": "LOCAL_UI_AND_NATIVE_HTTP_VERIFIED",
+  "URL": "http://127.0.0.1:8092",
+  "existing_models_and_voice_unchanged": true,
+  "production_or_default_activation": false,
+  "physical_first_audible": "UNVERIFIED",
+  "model_downloads": 0,
+  "software": {
+    "python_passed": 766,
+    "python_seconds": 9.29,
+    "JS_passed": 20,
+    "new_python_controls": 59,
+    "new_JS_controls": 7,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "historical_full5889_rerun": false
+  },
+  "browser": {
+    "description": "Actual headless Chromium/Brave UI lifecycle with synthetic microphone, muted output and mocked model API; not physical or native performance acceptance.",
+    "status": "PASS",
+    "real_microphone": false,
+    "hardware_audio_output": false,
+    "model_requests": 0,
+    "fake_submissions": 2,
+    "maximum_capture_samples": 320000,
+    "page_errors": [],
+    "storage": {
+      "local": 0,
+      "session": 0,
+      "databases": 0
+    },
+    "browser": "154.0.8037.58"
+  },
+  "real_browser_auth_origin": {
+    "description": "Real Brave headless page and unmocked cookie/Origin GET+POST verified; no microphone, model preparation or output playback.",
+    "status": {
+      "state": "idle",
+      "remaining": 18,
+      "preparations_remaining": 2
+    },
+    "status_code": 200,
+    "cancel_status": 200,
+    "cancel": {
+      "code": "cancelled"
+    },
+    "secure_context": true
+  },
+  "native_HTTP": {
+    "description": "Actual public-source HTTP preflight; no physical microphone/speaker acceptance or private owner media.",
+    "rows": [
+      {
+        "id": "heldout-vi_vn-0036",
+        "expected_no_answer": false,
+        "status": "EXACT_COMPLETE_PCM",
+        "client_roundtrip_seconds": 1.971841818998655,
+        "server_seconds": 1.9691672579992883,
+        "stages": {
+          "asr": 0.346260230999178,
+          "llm": 0.3167162270001427,
+          "tts": 1.2963818620009988
+        },
+        "playback_sha256": "12f41e1f942273485941379335e927071661ed14c242ffd22b00bb9c99490336"
+      },
+      {
+        "id": "heldout-vi_vn-0024",
+        "expected_no_answer": false,
+        "status": "EXACT_COMPLETE_PCM",
+        "client_roundtrip_seconds": 2.6881919400002516,
+        "server_seconds": 2.6850838709997333,
+        "stages": {
+          "asr": 0.6665409259985609,
+          "llm": 0.36791285700019216,
+          "tts": 1.6392818419990363
+        },
+        "playback_sha256": "2574fa4edd7d535cec2ff57f718c96e32cb4376ae4e399625dd285350fc11cc1"
+      },
+      {
+        "id": "heldout-vi_vn-0078",
+        "expected_no_answer": false,
+        "status": "EXACT_COMPLETE_PCM",
+        "client_roundtrip_seconds": 3.250093423999715,
+        "server_seconds": 3.2468643200008955,
+        "stages": {
+          "asr": 0.831849311998667,
+          "llm": 0.4815475660016091,
+          "tts": 1.921986300001663
+        },
+        "playback_sha256": "d9d0786932184bcabbf7f2dc2f2d70249a7bea513201cfbec8ede5451a8e9a87"
+      },
+      {
+        "id": "heldout-vi_vn-0040",
+        "expected_no_answer": false,
+        "status": "EXACT_COMPLETE_PCM",
+        "client_roundtrip_seconds": 3.114312344001519,
+        "server_seconds": 3.1115169179993245,
+        "stages": {
+          "asr": 1.092778135000117,
+          "llm": 0.36213799100005417,
+          "tts": 1.6439142439994612
+        },
+        "playback_sha256": "8cb60c762a7f5ed80f88a34fe500b86793d5329b69f8f5276557b1b09ea44e87"
+      },
+      {
+        "id": "negative-1",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "client_roundtrip_seconds": 0.022731365999788977
+      },
+      {
+        "id": "negative-3",
+        "expected_no_answer": true,
+        "status": "CORRECT_NO_SPEECH",
+        "client_roundtrip_seconds": 0.021925154000200564
+      }
+    ],
+    "retries": 0,
+    "physical_first_audible": "UNVERIFIED",
+    "status": "PASS",
+    "server_status_before_release": {
+      "state": "ready",
+      "remaining": 18,
+      "preparations_remaining": 2
+    },
+    "server_status_after_release": {
+      "state": "idle",
+      "remaining": 18,
+      "preparations_remaining": 2
+    }
+  },
+  "prepare_seconds": 43.843465,
+  "independent_audit": {
+    "description": "Post-HTTP readonly source/model/control/cleanup audit; zero new inference or private audio.",
+    "status": "PASS",
+    "source_files": 16,
+    "original_application_files": 750,
+    "protected_inputs": 210,
+    "ASR_artifacts": 14,
+    "previous_retained_files": 2959,
+    "baseline_preserved": true,
+    "native_models_left": 0,
+    "RAM_workspaces_left": 0,
+    "owned_worker_exits": [
+      0,
+      0,
+      0
+    ],
+    "core_reaped": true,
+    "calls": {
+      "vad": 6,
+      "asr": 4,
+      "core": 4,
+      "tts": 4
+    },
+    "readiness_ASR": 1,
+    "HTTP_result_sha256": "5fab400e1b1ddce84d8170c9dc6ef453b83fb70dba9fb72905336e3af3807fb0",
+    "software_sha256": "99a0d89a096d38223020edd75bf1e6ecbb78a768bd277ba32da5630050f72801",
+    "retained_previous_results_verified": 9,
+    "unchanged_CUDA_SDK_files": 15870,
+    "actual_browser_session_sha256": "c36b0db6ff4c16b2f23aa53055e0b6b43dc9ebd81857fbdff3b702643438eb00"
+  },
+  "known_first_issues": {
+    "model_free_browser": "Fixture attempted fetch(blob:) blocked by unchanged CSP; test now reads its authored fixture Blob. Zero real model calls.",
+    "software_fixture": "Retirement fixture lacked the audit directory; fixed before neural loading.",
+    "all_initial_logs_and_zero_model_sources_retained": true
+  },
+  "retention": {
+    "browser_seconds": 300,
+    "native_group_ready_seconds": 480,
+    "server_user_media": "RAM-files removed after joined turn; SDK/model transient buffers may remain until group shutdown; no secure erasure claim",
+    "cookie": "HttpOnly/SameSiteStrict/loopback-only; no URL credentials"
+  },
+  "service": {
+    "unit": "local-assistant-voice-trial.service",
+    "loopback_only": true,
+    "web_lifetime": "4hours from owned transient-unit start",
+    "per_app_submissions": 24,
+    "preparations": 3
+  },
+  "source_sha256": {
+    "apps/voice_trial/main.py": "423e126e7f260f22d49ba51310db9ff14b061f3c5688d42ea558be1a71f41e61",
+    "apps/voice_trial/audio.py": "8cb60141a862e6ab3262f4aa3ff3003cd4cab88bfe9404ab90e0fa3998bb9e24",
+    "apps/voice_trial/worker.py": "b2c9e263afd7baca99d45c3dc2d91c62a81239abb235bc1e5037f1382d8da7ac",
+    "apps/voice_trial/native.py": "a162dfd10d61b960265014b81f7f95555a5a71e99fbd55dbe7efe7ee1e1de74e",
+    "apps/voice_trial/__init__.py": "9bcbdfbe20f63e7044cab34ff3050146519743175e2cad5f0d3bd2f9353e47f5",
+    "apps/voice_trial/static/page.mjs": "71bd2afbe82f428666f875b20ef0a8e4a61f6a4dd4c36b3d03baccbdbbbe0936",
+    "apps/voice_trial/static/index.html": "ca504e735d09a761df5139b40e9fbb5a2f2c9d7f46e53ae396f1dbc157f6a2cf",
+    "apps/voice_trial/static/trial.mjs": "f8872278a87d2f86ffbc9e4f64ee5a3157f7c78041c61cd1dcbd73173f392cd1",
+    "tests/test_voice_trial_audio.py": "dded5136a47e89074142c414242a7f93dada80d4702ef53bcf82b783540c3f2b",
+    "tests/test_voice_trial_native.py": "375c61bfcc98a8c3aeaea7a058c01bf8847885805ccccbc8d177600604f8f09a",
+    "tests/test_voice_trial_surface.py": "575b965b2cf2eb37cc20612c1aac2ff3853194f3a7fd542285c1f6a25681227d",
+    "tests/test_voice_trial_client.mjs": "3244df625e86b7e3df049826dec2cbf9fa3ba5d7d4de01063cf433df336ffded",
+    "tests/voice_trial_browser_smoke.mjs": "a8fd14954998d15e5f53e0d07bee9a1dbbe4fb3eb602e6f977930a8fb03fa6f9",
+    "benchmarks/scripts/vi_voice_browser_check.py": "95a3b6507cbca69922b96d4b3315aec07b248356bb59b8e4f140e69e7a5b50b4",
+    "benchmarks/tests/test_vi_voice_browser_check.py": "5676e8f8fef4ced5f192df04c228e2c7c271de3d78a1a230abd404f85475ebb4",
+    "docs/ADR/173-loopback-voice-trial-and-playback-instrumentation.md": "5147e24ed8347835d50fcf304e6904a0ad6ad15c35dee09a90869a0502ccde34"
+  },
+  "private_root": "data/backups/d74-voice-browser-trial-first",
+  "full_code_archive": "data/backups/d74-voice-browser-trial-first/full-code.zip",
+  "hashes": {
+    "software-verification.json": "99a0d89a096d38223020edd75bf1e6ecbb78a768bd277ba32da5630050f72801",
+    "http-execution-freeze.json": "134bdc3329949e10a66b9d9994c3e5255d3b3f9558349046e103f0f8dd4d885b",
+    "http-native-first/result.json": "5fab400e1b1ddce84d8170c9dc6ef453b83fb70dba9fb72905336e3af3807fb0",
+    "browser-corrected-first/receipt.json": "f3d7b826283b21c914b88b5a8c8f9551670a9a60277e255e0ef4a56c5016d167",
+    "actual-browser-session.json": "c36b0db6ff4c16b2f23aa53055e0b6b43dc9ebd81857fbdff3b702643438eb00",
+    "independent-audit.json": "48b5d27e93b1a18478a804977bfcb7f4575ff8152b91728194d238af99e1b6aa",
+    "service-control-receipt.json": "1534daedf24a46abf3f9278400fa96ff7aa4abebe6ccc7ce256979034d1ff9e9"
+  }
+}

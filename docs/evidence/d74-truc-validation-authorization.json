@@ -1,0 +1,23 @@
+{
+  "description": "Owner continuation after Truc Ly US pronunciation acceptance, one broader-context validation using the retained policy.",
+  "authorized": true,
+  "owner_response": "Tiếp đi",
+  "date": "2026-11-04",
+  "bindings": {
+    "docs/ADR/161-truc-ly-broader-context-validation.md": "27c57a20a9560ecbd5fc725c1e04ad98b0967ca21d3417668e96b4393b71ad87",
+    "docs/evidence/d74-us-terms-owner-voice-assessment.json": "be352e80a33c961490a38ac2da5f4e44195fe31692bc7ec8e4a1d3779452dcc5",
+    "docs/evidence/d74-owner-en-us-preference.json": "96891a1f116b02424a14558efa835d0a4e9f5b7feca94fbc2eabb9493ba59794"
+  },
+  "frontend_sha256": "eccaa4873c21087a33a6874b98dce5c617c2672faaf96fd690a99e23f7c9a076",
+  "tts_ceiling": 10,
+  "inner_chunks_ceiling": 16,
+  "expected_inner_chunks": 12,
+  "retries": 0,
+  "wall_seconds": 120,
+  "voice": "Trúc Ly",
+  "accent": "en-US",
+  "new_models_or_references": 0,
+  "training": 0,
+  "product_activation": false,
+  "workflow_recovery_authorized": false
+}

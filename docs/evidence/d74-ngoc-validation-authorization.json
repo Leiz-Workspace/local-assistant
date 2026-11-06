@@ -1,0 +1,24 @@
+{
+  "description": "Owner says Làm đi to the separately pending Ngoc Huyen10-sentence matched evaluation. No model/reference/training/default or Truc Ly refinement.",
+  "authorized": true,
+  "date": "2026-11-04",
+  "owner_verbatim": "Làm đi",
+  "voice": "Ngọc Huyền",
+  "tts_ceiling": 10,
+  "inner_chunks_ceiling": 16,
+  "expected_inner_chunks": 12,
+  "retries": 0,
+  "wall_seconds": 120,
+  "bindings": {
+    "docs/ADR/162-ngoc-huyen-matched-context-validation.md": "e58d220983c3c0befa296e17c9bf1134b5e9c6989b23c3c52066e5a6a08b25ce",
+    "docs/evidence/d74-truc-validation-owner-acceptance.json": "19a797d00a75076574517ab3b294fe299580639cdf51950b956a6675d640c0c3",
+    "docs/evidence/d74-us-terms-owner-voice-assessment.json": "be352e80a33c961490a38ac2da5f4e44195fe31692bc7ec8e4a1d3779452dcc5",
+    "docs/evidence/d74-owner-en-us-preference.json": "96891a1f116b02424a14558efa835d0a4e9f5b7feca94fbc2eabb9493ba59794"
+  },
+  "packet_sha256": "b83f8e2e84614afcec85d9b518cf64cd5fc4efa6601be7d978f88d73271a3f52",
+  "asr_calls": 0,
+  "core_calls": 0,
+  "new_models_or_reference_assets": 0,
+  "product_activation": false,
+  "workflow_recovery_approved": false
+}

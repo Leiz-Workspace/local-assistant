@@ -1,0 +1,190 @@
+{
+  "description": "Eight completed input-only English-preserving candidates after scoped owner preference for date/prosody. Correct frontend/tokenizer and finite EOS waveforms do not prove pronunciation or absence of API buzz.",
+  "recorded_at_utc": "2026-11-03T17:50:12.776289+00:00",
+  "status": "ENGLISH_CANDIDATES_COMPLETE_QUALITY_UNVERIFIED",
+  "tts_calls": 8,
+  "inner_chunk_generations": 14,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "retries": 0,
+  "unattempted": 0,
+  "metrics": [
+    {
+      "id": "truc-ly-english-01",
+      "voice": "Trúc Ly",
+      "tts_seconds": 0.8553711120002845,
+      "native_samples": 119040,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.5970758199691772,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 1,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": true,
+      "phonemes": [
+        "bˈaː6n mˈuəɜn hˈɔ6k pˈaɪθən hˈaj zˈu2ŋ ˈeɪ pˈiː ˈaɪ kˌuə4 ˈyɜŋ zˈu6ŋ?"
+      ]
+    },
+    {
+      "id": "truc-ly-english-02",
+      "voice": "Trúc Ly",
+      "tts_seconds": 1.124932300999717,
+      "native_samples": 174240,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.7676715850830078,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "tʃˈi6 ɗˌaːŋ kˈiɛ4m tʃˈaː pˈaɪθən.",
+        "ˈeɪ pˈiː ˈaɪ sˌɛ5 sˈa5n sˈaː2ŋ sˈaw ˈiɜt̪ fˈuɜt̪."
+      ]
+    },
+    {
+      "id": "truc-ly-english-03",
+      "voice": "Trúc Ly",
+      "tts_seconds": 1.0389078440002777,
+      "native_samples": 157920,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.8006958961486816,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "pˈaɪθən zˈuɜp sˈy4 lˈiɜ zˈy5 lˈiɛ6w.",
+        "ˈeɪ pˈiː ˈaɪ kˈeɜt̪ nˈoɜj kˌaːɜc ˈyɜŋ zˈu6ŋ."
+      ]
+    },
+    {
+      "id": "truc-ly-english-04",
+      "voice": "Trúc Ly",
+      "tts_seconds": 1.632052386000396,
+      "native_samples": 250080,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.6075631380081177,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "tʃˈi6 sˌɛ5 ɲˈaɜc bˈaː6n lˌuɜc tʃˈiɜn zˈəː2 mˈyə2j lˈam fˈuɜt̪ ŋˈa2j mˈyə2j bˈoɜn tˈaːɜŋ mˈyə2j mˈo6t̪.",
+        "sˈaw ɗˈɔɜ kˈu2ŋ kˈiɛ4m tʃˈaː ˈeɪ pˈiː ˈaɪ."
+      ]
+    },
+    {
+      "id": "ngoc-huyen-english-01",
+      "voice": "Ngọc Huyền",
+      "tts_seconds": 1.015745916999549,
+      "native_samples": 138240,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.5084762573242188,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 1,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": true,
+      "phonemes": [
+        "bˈaː6n mˈuəɜn hˈɔ6k pˈaɪθən hˈaj zˈu2ŋ ˈeɪ pˈiː ˈaɪ kˌuə4 ˈyɜŋ zˈu6ŋ?"
+      ]
+    },
+    {
+      "id": "ngoc-huyen-english-02",
+      "voice": "Ngọc Huyền",
+      "tts_seconds": 1.251379383999847,
+      "native_samples": 187680,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.5392045974731445,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "tʃˈi6 ɗˌaːŋ kˈiɛ4m tʃˈaː pˈaɪθən.",
+        "ˈeɪ pˈiː ˈaɪ sˌɛ5 sˈa5n sˈaː2ŋ sˈaw ˈiɜt̪ fˈuɜt̪."
+      ]
+    },
+    {
+      "id": "ngoc-huyen-english-03",
+      "voice": "Ngọc Huyền",
+      "tts_seconds": 1.208063545999721,
+      "native_samples": 181920,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.5487875938415527,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "pˈaɪθən zˈuɜp sˈy4 lˈiɜ zˈy5 lˈiɛ6w.",
+        "ˈeɪ pˈiː ˈaɪ kˈeɜt̪ nˈoɜj kˌaːɜc ˈyɜŋ zˈu6ŋ."
+      ]
+    },
+    {
+      "id": "ngoc-huyen-english-04",
+      "voice": "Ngọc Huyền",
+      "tts_seconds": 1.8609716410001056,
+      "native_samples": 267360,
+      "native_sample_rate": 48000,
+      "peak_abs": 0.5428863763809204,
+      "samples_at_or_above_full_scale": 0,
+      "inner_chunks": 2,
+      "same_as_retained_preferred": false,
+      "same_as_retained_raw": false,
+      "phonemes": [
+        "tʃˈi6 sˌɛ5 ɲˈaɜc bˈaː6n lˌuɜc tʃˈiɜn zˈəː2 mˈyə2j lˈam fˈuɜt̪ ŋˈa2j mˈyə2j bˈoɜn tˈaːɜŋ mˈyə2j mˈo6t̪.",
+        "sˈaw ɗˈɔɜ kˈu2ŋ kˈiɛ4m tʃˈaː ˈeɪ pˈiː ˈaɪ."
+      ]
+    }
+  ],
+  "peak_sampled_rss_bytes": 1406148608,
+  "worker_exit": 0,
+  "baseline_restored": true,
+  "old_files_preserved": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "owner_accepted_prior_scope": {
+    "time_date": "CORRECT_ON_REVIEWED_PANEL",
+    "preferred_profile": "clauses",
+    "relative_naturalness": "BEST_AMONG_REVIEWED_VARIANTS"
+  },
+  "owner_new_candidate_ratings": null,
+  "english_quality": "UNVERIFIED",
+  "api_buzz": "UNVERIFIED_NOT_DECLARED_FIXED",
+  "physical_first_audible": "UNVERIFIED",
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "preferred_source_files_unchanged": 10,
+  "older_operator_files_unchanged": 7,
+  "new_code_files": 2,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "software_final": {
+    "passed": 236,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.22
+  },
+  "first_scoped_software_result": {
+    "passed": 235,
+    "failed": 1,
+    "seconds": 4.37,
+    "isolated_followup_passed": 1,
+    "isolated_seconds": 0.47,
+    "cause": "NOT_ESTABLISHED",
+    "old_source_or_limit_changes": 0
+  },
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/english-reading-first",
+  "private_sha256": {
+    "probe/native/frontend.json": "c43cc81027679de722bbae3c11eef6583b54197793af2635f88a036063561cb8",
+    "software-verification.json": "b7fce7272c98da71ffe1af6d88620023b3d61ca5eef5ffd114f94cb1fe991300",
+    "first-scoped-test-failure.json": "e555175ca5f7f5447265a8359d2d3afc0827679da43b2e8cbe6c026d9b118817",
+    "execution-freeze.json": "b3cab50f7096cb0fcfa946fe280789c5f0a47332d749e12c701fd96eefdfbe54",
+    "campaign-result.json": "cd083e356b414ace27fae8a90679ce7dfd26b0414b580db3c4b700fa86e93eac",
+    "review/index.html": "061091ef7f5ae5d9418a9bb71a4561a293302c96bf1b6271f25d8522366c6671",
+    "review/index.json": "075acc8146d3b6adb632371d6ba6444e0e4b955b314d0da3139838c51b3469dc",
+    "review/full-code.zip": "954743c8e945890413e705d1b9dbe34a2183e7ed8bf8f334a9670ae2a137443b"
+  },
+  "parent_root_bytes": 1285699922
+}

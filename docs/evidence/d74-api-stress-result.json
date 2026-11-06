@@ -1,0 +1,137 @@
+{
+  "description": "Actual four same-text/same-voice API stress candidates on the retained clause path; two first date chunks exact, native complete, acoustic Ei/buzz/naturalness awaits owner listening.",
+  "recorded_at_utc": "2026-11-03T18:59:26.915079+00:00",
+  "status": "STRESS_CANDIDATES_COMPLETE_QUALITY_UNVERIFIED",
+  "tts_attempts": 4,
+  "completed_inner_chunks": 6,
+  "unattempted": 0,
+  "retries": 0,
+  "asr_calls": 0,
+  "core_calls": 0,
+  "changes": "Only two API stress marks per request: primary to secondary; original spaces/vowels/consonants/punctuation/frame caps preserved",
+  "reference_codes": "ON_UNCHANGED",
+  "metrics": [
+    {
+      "id": "truc-ly-english-01",
+      "voice": "Trúc Ly",
+      "source_text": "Bạn muốn học Python hay dùng API của ứng dụng?",
+      "baseline_wav_sha256": "5c53a35df03459109ee3a20d80e39f04996124e16176b235d86670dd28cbbcea",
+      "candidate_wav_sha256": "2cca1a8a8f5af3f49e543f85dbe836fd42d2a32bea1d51895cbbfe82e2766245",
+      "whole_audio_identical": false,
+      "full_tts_seconds": 0.9165779209997709,
+      "duration_seconds": 2.56,
+      "chunks": [
+        {
+          "frames": 32,
+          "eos": true
+        }
+      ],
+      "date_chunk_identical_to_retained_baseline": null
+    },
+    {
+      "id": "truc-ly-english-04",
+      "voice": "Trúc Ly",
+      "source_text": "Chị sẽ nhắc bạn lúc 09:15 ngày 14/11; sau đó cùng kiểm tra API.",
+      "baseline_wav_sha256": "0332b2b2b5cb0877f2dad6de309f7d52aeece9136a6eff98b16fae48e0c9aed9",
+      "candidate_wav_sha256": "92e9df39962742497ce0cd779dc6f9d41fbc54ce29625a96ed7159eb7277f1c6",
+      "whole_audio_identical": false,
+      "full_tts_seconds": 1.7109962140002608,
+      "duration_seconds": 5.29,
+      "chunks": [
+        {
+          "frames": 39,
+          "eos": true
+        },
+        {
+          "frames": 24,
+          "eos": true
+        }
+      ],
+      "date_chunk_identical_to_retained_baseline": true
+    },
+    {
+      "id": "ngoc-huyen-english-01",
+      "voice": "Ngọc Huyền",
+      "source_text": "Bạn muốn học Python hay dùng API của ứng dụng?",
+      "baseline_wav_sha256": "f2b0133d2ab831daa66c835ea016af5995b8a7b19329a621504d92cee52a1176",
+      "candidate_wav_sha256": "8df30594dae603ff8e70d0c6f4801244b1d231e097f9cbc567e8dd2e5c375695",
+      "whole_audio_identical": false,
+      "full_tts_seconds": 0.9833345459992415,
+      "duration_seconds": 2.88,
+      "chunks": [
+        {
+          "frames": 36,
+          "eos": true
+        }
+      ],
+      "date_chunk_identical_to_retained_baseline": null
+    },
+    {
+      "id": "ngoc-huyen-english-04",
+      "voice": "Ngọc Huyền",
+      "source_text": "Chị sẽ nhắc bạn lúc 09:15 ngày 14/11; sau đó cùng kiểm tra API.",
+      "baseline_wav_sha256": "a60e2175bd3c9c4682407813d163c87af800bc479bb571e99810eaa246778095",
+      "candidate_wav_sha256": "4414cc5e924fcbd8f08fd5f9a2c8cb8e429ee781761871310327ea60faa0fd8f",
+      "whole_audio_identical": false,
+      "full_tts_seconds": 1.8210107630002312,
+      "duration_seconds": 5.49,
+      "chunks": [
+        {
+          "frames": 44,
+          "eos": true
+        },
+        {
+          "frames": 24,
+          "eos": true
+        }
+      ],
+      "date_chunk_identical_to_retained_baseline": true
+    }
+  ],
+  "retirement": {
+    "description": "Joined owned namespace; sampled RSS is not reserved RAM.",
+    "pid": 287441,
+    "returncode": 0,
+    "peak_sampled_rss_bytes": 1406427136,
+    "resource_samples": 259,
+    "wall_seconds": 7.394782489000136,
+    "failure": null,
+    "forced": false
+  },
+  "baseline_restored": true,
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "prior_research_files_preserved": 25,
+  "new_source_test_files": 4,
+  "sdk_inventory_entries_verified": 4295,
+  "new_downloads": 0,
+  "new_packages": 0,
+  "software": {
+    "passed": 267,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.78,
+    "first_two_fixture_failures_retained": true
+  },
+  "prior_rejected_reference_diagnostic": "STILL_OWNER_REPORTED_WORSE_NOT_ACCEPTED",
+  "owner_new_ratings": null,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "private_root": "data/backups/d74-vi-approved-campaign-20261103/api-stress-first",
+  "private_sha256": {
+    "execution-freeze.json": "eba3756d2d433d331876a64e82e9ab5e3e99767b3f892989c02868828b54985e",
+    "probe/native/frontend.json": "e8f978f875fe05ca240f7f4ea7631d6b0b61abf95b6d8b63846a60e918d33a56",
+    "software-verification.json": "7717a23b04ef98cb5cdc1446dc8c2eb507c7b9f405e3eeee523ec8307cd611fa",
+    "software-terminal.log": "923feadde61faffd26dbf7c5c7fd328422e492115e6c7ba120109b8d3c749466",
+    "campaign-result.json": "3ecd0b6ab0337cbf5cb5389cb3f05f72d86bc232623b2a082476513995534e7c",
+    "worker/retirement.json": "c3fe50a3999c00f3d3d01985285ba9c809eae11868fe19ad4a86adb5bb168488",
+    "review/index.html": "c023246e30ad6f577e2bb8d0be4b41f48cd690c28f0a7af41843d7a4afa2e6f2",
+    "review/index.json": "9aed5d2180dfd9594d7e01dafdd43f4d985ed5038dbcd3ed105121b6d3a8fae4",
+    "review/full-code.zip": "011215b5e0a8a4e148206d6b14f333f98e8aa9b61973577c39bc15feec62243b"
+  },
+  "parent_root_bytes": 1320579549
+}

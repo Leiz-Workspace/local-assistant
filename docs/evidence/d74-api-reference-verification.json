@@ -1,0 +1,84 @@
+{
+  "description": "Post-run code, model-asset, pair/native-media and cleanup verification; acoustic Ei/buzz/timbre awaits owner listening, not product or model acceptance.",
+  "status": "VERIFIED_WITH_RETAINED_FIRST_COHORT_FAILURE",
+  "recorded_at_utc": "2026-11-03T18:41:19.593686+00:00",
+  "originals": {
+    "application_sha256": 750,
+    "protected_sha256": 210
+  },
+  "sdk_inventory_entries": 4295,
+  "prior_research_files_unchanged": 19,
+  "new_source_test_files": {
+    "benchmarks/scripts/vi_api_reference_worker.py": "cbb11cd07681e52dc6c02fb8ce7ba299ca2494d9e702774152726185f7ef4013",
+    "benchmarks/scripts/vi_api_reference_trial.py": "3569c80f52f153085293e1c9d970887bb05a0aa75706c35f984e1e534011d086",
+    "benchmarks/tests/test_vi_api_reference_worker.py": "33e8f4dec5902834590dcd90bd2595e7c3f3fb1411f80b30e7d9681d8c5b709e",
+    "benchmarks/tests/test_vi_api_reference_trial.py": "494962d623030625de1da4d3250831737c0c85216ca2ff80953d37d5c5fa82b5",
+    "benchmarks/scripts/vi_api_context_followup.py": "5457af2198e1a4101d55278aff6685954bb146bd41aec0a77b2b926e6149826d",
+    "benchmarks/tests/test_vi_api_context_followup.py": "43a63910cf41ec1c6e9540bc625fd62b27b0162490cd997a2911bca23447b0b9"
+  },
+  "source_snapshots_and_full_archive_exact": true,
+  "complete_native_outputs_verified": 12,
+  "paired_carrier_controls_verified": 4,
+  "initial_cohort": {
+    "declared": 16,
+    "attempts": 5,
+    "complete": 4,
+    "failed": 1,
+    "unattempted": 11,
+    "error": "ValueError:native_generation_did_not_end",
+    "failed_id": "with_reference-ngoc-huyen-letter-a",
+    "failed_frames": [
+      {
+        "frames": 13,
+        "eos": false
+      }
+    ],
+    "failed_samples": 49920,
+    "failed_sample_rate": 48000,
+    "reference_off_attempted": false
+  },
+  "carrier_cohort": {
+    "declared": 8,
+    "attempts": 8,
+    "complete": 8,
+    "failed": 0,
+    "unattempted": 0,
+    "status": "CARRIER_PAIRS_COMPLETE_QUALITY_UNVERIFIED"
+  },
+  "combined_actual_requests": 13,
+  "request_ceiling": 16,
+  "retries": 0,
+  "review_pages": [
+    {
+      "cohort": "initial",
+      "audio_players": 4,
+      "sha256": "caf983a73bfb95f2ab063a7f046f4c1cb123d95012e8c876617debd5c4438f03"
+    },
+    {
+      "cohort": "carriers",
+      "audio_players": 8,
+      "sha256": "754d791f6202f23cc305fe5bb0d8c590fb2dbcb1911964296054c0638aac359e"
+    }
+  ],
+  "forbidden_media_capabilities": 0,
+  "new_markdown_links_verified": 18,
+  "old48_and_english8_pages_results_receipts_unchanged": true,
+  "original24_page_index_public_result_and_recovery_plan_unchanged": true,
+  "baseline_restored": true,
+  "private_owner_prefix_and_AGENTS_unchanged": true,
+  "software_passed": 257,
+  "software_seconds": 4.29,
+  "software_terminal_bound_to_execution": true,
+  "code_archive_sha256": "5447b04e2c4a15fe06601f38eef99780700c5b787098207dec436c2cb75249b2",
+  "result_sha256": "2ff290a8165d24a6d9901af7d44b6764a600d5753c3c143d4faba9061d20aea7",
+  "owner_Ei_buzz_timbre_acceptance": null,
+  "model_selection": null,
+  "workflow_recovery_approved": false,
+  "physical_first_audible": "UNVERIFIED",
+  "parent_root_bytes": 1299830488,
+  "verification_first_attempt": {
+    "error": "AssertionError: compared private raw campaign result with public partial-report digest",
+    "resolution": "Use the actual bound public d74-adr154-partial-result-20261103.json path; both artifacts left unchanged",
+    "native_calls": 0
+  }
+}
