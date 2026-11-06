@@ -29,12 +29,16 @@ from benchmarks.scripts.d14_completion import (
 from src.infrastructure.voice.audio import encode_wave
 from src.infrastructure.voice.core import process_identity
 from src.infrastructure.voice.manifest import PINS, file_sha
-from src.infrastructure.voice.resources import joined_io
+from src.infrastructure.voice.ipc import FOREIGN_VRAM_LIMIT, Monitor, foreign_compute
+from src.infrastructure.voice.resources import joined_io, process_tree, rss_bytes
 
 LOGGER = logging.getLogger(__name__)
 PROJECT = Path(__file__).resolve().parents[2]
 ROOT = PROJECT / "data/backups/d74-main-integration-first"
 URL = "http://127.0.0.1:18092"
+GIB = 1024**3
+# ADR176: CORE alone must leave room for the voice workers inside the unchanged 8 GiB cap.
+CORE_RSS_STOP = 6 * GIB
 
 
 def publish(path, value):
@@ -78,6 +82,7 @@ def source_snapshot():
             "configs/embedding-selected.json",
             "docs/ADR/174-proposed-opt-in-authenticated-voice-integration.md",
             "docs/ADR/175-optional-main-voice-composition-and-entrypoint-binding.md",
+            "docs/ADR/176-bounded-foreign-gpu-tolerance-and-b3-preflight.md",
         )
     )
     return {str(p.relative_to(PROJECT)): file_sha(p) for p in sorted(paths)}
@@ -203,6 +208,20 @@ def verify_answer(value, previous, client_seconds):
         raise ValueError("main_voice_exact_output_or_latency")
 
 
+def preflight(core_rss, rows, core_pids):
+    """Decide before any voice model loads whether the single panel may start (ADR176)."""
+    count, total = foreign_compute(rows, core_pids)
+    if type(core_rss) is not int or core_rss >= CORE_RSS_STOP:
+        raise ValueError("main_voice_preflight_core_rss")
+    if total > FOREIGN_VRAM_LIMIT:
+        raise ValueError("main_voice_preflight_foreign_gpu")
+    return dict(
+        core_rss_bytes=core_rss,
+        foreign_gpu_processes=count,
+        foreign_gpu_bytes=total,
+    )
+
+
 async def wait_status(client, expected):
     """Wait only for finite declared startup readiness without performing inference or retrying preparation."""
     deadline = time.monotonic() + 180
@@ -237,7 +256,7 @@ async def run(root=ROOT):
     publish(
         root / "campaign-started.json",
         dict(
-            description="One owner-approved ADR174/175 campaign, no retries.",
+            description="One owner-approved ADR174/175/176 campaign, no retries.",
             before=before,
             source_sha256=prepared["source_sha256"],
         ),
@@ -250,6 +269,7 @@ async def run(root=ROOT):
         retries=0,
         physical_first_audible="UNVERIFIED",
         production_activation=False,
+        panel_consumed=False,
     )
     core_dir = root / "owned-core"
     core_dir.mkdir(mode=0o700)
@@ -263,6 +283,21 @@ async def run(root=ROOT):
             await server.start()
             if core_command("core") != prepared["CORE_command"]:
                 raise ValueError("main_voice_core_command_changed")
+            # Let llama.cpp release load-time mappings, then check headroom before any voice model.
+            await asyncio.sleep(5)
+            core_pids = set(process_tree(server.process.pid))
+            paths = json.loads((root / "manifest-template.json").read_text())["paths"]
+            monitor = Monitor(paths["cuda_venv"])
+            try:
+                gpu_rows = monitor.module.nvmlDeviceGetComputeRunningProcesses_v3(
+                    monitor.device
+                )
+            finally:
+                monitor.close()
+            result["preflight"] = preflight(
+                sum(rss_bytes(pid) for pid in core_pids), gpu_rows, core_pids
+            )
+            publish(root / "preflight.json", result["preflight"])
             temporary = tempfile.TemporaryDirectory(
                 prefix="main-voice-eval-", dir="/dev/shm"
             )
@@ -362,6 +397,7 @@ async def run(root=ROOT):
                 paired.raise_for_status()
                 try:
                     start = time.monotonic()
+                    result["panel_consumed"] = True
                     response = await client.post("/ui/voice/prepare", headers=headers)
                     if response.status_code != 202:
                         raise ValueError("main_voice_prepare_denied")
@@ -461,7 +497,9 @@ async def run(root=ROOT):
                 raise ValueError("main_voice_borrowed_core_not_preserved")
             result["CORE_alive_after_application_shutdown"] = True
     except BaseException as error:
-        result["status"] = "NOT_PASS"
+        result["status"] = (
+            "NOT_PASS" if result["panel_consumed"] else "PREFLIGHT_STOPPED"
+        )
         result["failure_type"] = type(error).__name__
         if isinstance(error, ValueError) and re.fullmatch(
             r"[a-z_0-9]{1,80}", str(error)
@@ -501,13 +539,22 @@ def main():
     """Run explicit model-free preparation or the sole already-approved conditional native campaign."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("prepare", "run"))
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=ROOT,
+        help="evidence directory under data/backups (one campaign per directory)",
+    )
     args = parser.parse_args()
+    root = args.root.resolve()
+    if not root.is_relative_to(PROJECT / "data/backups") or not root.is_dir():
+        raise ValueError("main_voice_root_invalid")
     logging.basicConfig(level=logging.INFO)
     os.umask(0o077)
     if args.action == "prepare":
-        prepare()
+        prepare(root)
     else:
-        asyncio.run(run())
+        asyncio.run(run(root))
 
 
 if __name__ == "__main__":
