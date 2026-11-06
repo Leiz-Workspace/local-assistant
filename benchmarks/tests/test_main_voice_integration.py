@@ -4,7 +4,15 @@ import base64
 
 import pytest
 
-from benchmarks.scripts.main_voice_integration import review_rows, verify_answer
+from types import SimpleNamespace
+
+from benchmarks.scripts.main_voice_integration import (
+    CORE_RSS_STOP,
+    FOREIGN_VRAM_LIMIT,
+    preflight,
+    review_rows,
+    verify_answer,
+)
 
 
 def test_panel_preserves_six_exact_existing_inputs():
@@ -53,3 +61,40 @@ def test_actual_acceptance_refuses_wrong_output_or_clock(change):
         verify_answer(dict(actual, **change), old, 3.1)
     with pytest.raises(ValueError):
         verify_answer(actual, old, 4.001)
+
+
+def test_preflight_records_desktop_gpu_and_core_headroom():
+    """ADR176: proceed only with CORE headroom and small foreign GPU use, recording both."""
+    rows = [
+        SimpleNamespace(pid=10, usedGpuMemory=8 * 1024**3),
+        SimpleNamespace(pid=20, usedGpuMemory=213 * 1024**2),
+        SimpleNamespace(pid=21, usedGpuMemory=272 * 1024**2),
+    ]
+    assert preflight(2 * 1024**3, rows, {10}) == dict(
+        core_rss_bytes=2 * 1024**3,
+        foreign_gpu_processes=2,
+        foreign_gpu_bytes=485 * 1024**2,
+    )
+
+
+@pytest.mark.parametrize(
+    "core_rss, rows, code",
+    [
+        (CORE_RSS_STOP, [], "main_voice_preflight_core_rss"),
+        (None, [], "main_voice_preflight_core_rss"),
+        (
+            1024**3,
+            [SimpleNamespace(pid=30, usedGpuMemory=FOREIGN_VRAM_LIMIT + 1)],
+            "main_voice_preflight_foreign_gpu",
+        ),
+        (
+            1024**3,
+            [SimpleNamespace(pid=30, usedGpuMemory=None)],
+            "main_voice_preflight_foreign_gpu",
+        ),
+    ],
+)
+def test_preflight_stops_before_any_voice_model(core_rss, rows, code):
+    """Stop with a finite code instead of spending the single panel on a known-bad host state."""
+    with pytest.raises(ValueError, match=code):
+        preflight(core_rss, rows, {10})
