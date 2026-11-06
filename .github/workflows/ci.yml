@@ -28,7 +28,7 @@ env:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       python_files: ${{ steps.changed.outputs.python_files }}
     steps:
@@ -56,7 +56,7 @@ jobs:
   lint:
     needs: prepare
     if: needs.prepare.outputs.python_files != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -69,7 +69,7 @@ jobs:
 
   test-python:
     needs: prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +78,13 @@ jobs:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
       - name: Install locked dependencies
-        run: uv sync --locked --dev --python "$PYTHON_VERSION"
+        # Use Ubuntu's system CPython (same 3.12 build family as the Home Server).
+        # uv's standalone builds lack fcntl.F_SEAL_*, which check_seccomp.py requires.
+        env:
+          UV_PYTHON_PREFERENCE: only-system
+        run: |
+          /usr/bin/python3.12 -c "import fcntl, sys; fcntl.F_SEAL_SHRINK; print(sys.version)"
+          uv sync --locked --dev --python /usr/bin/python3.12
       - name: Pytest (model-free scope)
         # Initial scope: main voice integration unit tests. Widened once the
         # hosted-runner exclusion list for the full suite is in place.
@@ -86,7 +92,7 @@ jobs:
 
   test-js:
     needs: prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -98,7 +104,7 @@ jobs:
   ci-gate:
     if: always()
     needs: [prepare, lint, test-python, test-js]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Require every job to succeed or be skipped
         env:
@@ -115,7 +121,7 @@ jobs:
   package:
     needs: ci-gate
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       name: ${{ steps.bundle.outputs.name }}
     steps:
@@ -138,7 +144,7 @@ jobs:
   deploy-staging:
     needs: package
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: staging
     steps:
@@ -154,7 +160,7 @@ jobs:
   release:
     needs: package
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
     permissions:
