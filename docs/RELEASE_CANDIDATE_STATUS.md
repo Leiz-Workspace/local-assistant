@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current full: **5674 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1798.59s/exit0,728unchanged files; all723prior source hashes match. Includes31new feedback service controls and fresh corpus/oracle tests. Joined qualified read-only audit confirms original runtime/business data/security with the explicitly diagnosed quota timestamp-only delta. Separate valid-exact-grant denial1PASS1.16s. Earlier5596/5507PASS and original umask failure remain dated history. No model/manual/product/release approval, tag, push or deployment. [Current terminal/source/audit](evidence/ce003-full-acceptance.json).
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current732-file full **5759 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1870.65s/exit0, all732frozen files and728historical files unchanged. Joined current-boot audit confirms business data/security with explicit quota timestamp-only delta; same15containers and initial native=0 restored after owned CORE exit0. Existing Vault unseal after reboot is explicitly recorded. [Current result](D87_CURRENT_FULL_RESULT.md), [terminal/audit receipt](evidence/d87-current-20261027-full-acceptance.json). D14selected local semantic42/42/profile remains opt-in/default-off; historical scores/full5674 retained. Human/device/model/rights/product acceptance remains open; no tag, push or deployment.
 
 ## Completed local engineering evidence
 
@@ -25,10 +25,10 @@
 
 | Gate | Current evidence/status | Required next evidence / authority |
 |---|---|---|
-| D87full software snapshot | **COMPLETE5674PASS/0FAIL/0ERROR/0SKIP/exit0**,1798.59s/728files unchanged; all723previous files match | [Current terminal/qualified audit](evidence/ce003-full-acceptance.json); earlier5596/5507/initial umask failure remain separate snapshots, explicit timestamp-only delta retained |
+| D87 full software snapshot | **COMPLETE5759PASS/0FAIL/0ERROR/0SKIP/exit0**,1870.65s/732files unchanged; all728previous files match | [Current terminal/qualified audit](evidence/d87-current-20261027-full-acceptance.json); historical5674/5596/5507/initial umask failure remain separate. Explicit quota timestamp-only delta, owned CORE cleanup and recorded Vault unseal prerequisite |
 | D70actual listening |0/24owner-deferred; unchanged originals and verified24lossless WAVs ready | Owner actually listens and records per-output judgments/uncertainty; no JSON expertise required |
 | D74voice product | Offline explicit-candidate paths tested; defaults/activation not selected | Resolve ASR/VADno-speech/short-word policy, actual device behavior, voice/model/license/performance/migration/rollback proposal and explicit owner approval |
-| Original D14quality scorecard | Paired CORE23/30/52.5of70 and UNRESTRICTED20/30/45of70; remaining30points/generalquality/signoff still partial | [Actual pair/limits](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md); missing domains and model/product decisions require their own evidence, no normalized100point score |
+| Original D14 measurements / selected local path | Original weighted measurements complete; historical composite CORE66.5/UNRESTRICTED52 and all first failures retained. Later selected semantic gate passes fresh42/42 facts+format per profile | [Selected local evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md); opt-in/default-off qualification, not universal quality or approval of product/API integration, model adoption or release |
 | Broader coding/web promotion | D46first7/10repair result with3failures retained; current Brave requests accepted; original direct-result gate FAILED, separate linked-source/report/native/visual variant verified | CODE-EVAL-002 fresh measurement complete:baseline7/12/concise7/12,no hint adoption; broader coding/WEB-SEARCH-003promotion remains P1. Protocol/full-suite PASS is not a successful-repair or upstream recovery score |
 | D86release gate | UI controls verified; pending product/manual gates remain | Confirm the planned scope actually satisfies acceptance and no critical unresolved blocker is being waived silently |
 | D89owner/device acceptance | Prepared, not completed | Real microphone/browser/listening checks and owner review of scope/known limits |
@@ -62,3 +62,14 @@ Seven legacy D70research/acceptance report headers now explicitly point to ADR11
 
 
 Current authorized follow-up: [UNRESTRICTED20/30 versus retainedCORE23/30](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md), same thirty questions/strict weights, CPUsidecar retired/originalCOREunchanged; no broad quality/adoption claim. [Brave first observations and actual linked-source publication](WEB_SEARCH_003_CURRENT_CHECK.md) include every failure and three final visually reviewed PDFpages. All728appfiles remain the5674fullsnapshot. [Final audit](evidence/mq002-web-final-readonly-audit.json) PASSwith explicit timestamp-onlydelta; no originaldata/model/default/providerchange. [Concrete remaining-work ledger](OUTSTANDING_WORK_STATUS.md) records manual/rights/quality/integration/release dependencies instead of falsely marking the project complete.
+
+D14follow-up2026-10-26completes missing domains, historical reconciliation and bounded native lifecycle. [Full disposition](D14_COMPLETION_SCORECARD.md):26newnative dispatches/no rescoredoldcases/bothownedGPUserversretired/originalno-native bootbaseline restored. Application728files/full5674snapshot unchanged;271scoped controls and current artifact verification recorded separately. No claim the historicalCOREPIDsurvived the reboot, no newdatabase/Vaultaudit or releaseapproval.
+
+
+D14structuredfix2026-10-26: [formatintegrationverified,functionalqualitygateFAIL](D14_STRUCTURED_QUALITY_GATE_RESULT.md). Newcurrent730files=728oldunchanged+opt-inadapter/test;394scopedPASS/0SKIP/RuffPASSand89actualnativeattempts, no new730-file full claim. Correctedwireformat42/42each, exactfacts31/42CORE/30/42UNRESTRICTEDbelow thepreregistered42/42. Firstscores/compositesimmutable, no expectedvaluesingrammar/model/default/actionauthority/releasechange. This gate actively blocks promotion despite validJSON.
+
+
+2026-10-26 D14review follow-up: [three code-review defects fixed](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP. Shared fail-closed acceptance includes compatibility/provenance/runtime; full request reconstruction and prior-archive binding reject altered prompts despite updated self-hashes. Offline verification only, zero new model requests, unchanged730application files and historical scores. Functional quality remains FAIL; no model/default/service/data/release approval or manual-gate closure.
+
+
+D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is locally qualified on fresh42/42facts+format/profile, with independently reconstructedwire/context, nativecancel,5provenance/retirement/baselinePASS. [Full evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md). Earlier invalid researchcaller/fullCORE41/42andalloriginalscores preserved, four studies246firstgenerations/0automaticretry, no model/default/production activation.568scopedPASS/current732/all730oldexact is not a new732-file full run or release/manual/rights approval.

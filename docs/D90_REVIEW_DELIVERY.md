@@ -58,3 +58,44 @@ Allowlist mới chỉ lấy request/reply/native bytes/measurement đã định 
 Bộ kiểm thử riêng cuối192PASS/0FAIL/0SKIP/2.33s;104authorityrelatedPASS/1.27s là scope khác. Không cộng chúng vào5.674tests của snapshot728files không đổi. Ruff E9/F/I đạt với đúng hai I001import-order ngoại lệ cho hai operator đã freeze/chạy; log lint ban đầu được giữ, không sửa byte nguồn đã dùng chỉ để làm đẹp lint. Không có bỏ qua lỗi thực thi E9/F.
 
 [UNRESTRICTED20/30so với CORE23/30](MODEL_QUALITY_002_UNRESTRICTED_SCORECARD.md), [web variant và lỗi gốc](WEB_SEARCH_003_CURRENT_CHECK.md), [những gate còn lại](OUTSTANDING_WORK_STATUS.md). Gói review không phải bản release, thay model hoặc quyền deploy; D70nghe thực tế vẫn0/24.
+
+## Bản tích lũy hoàn tất đo D14 — 2026-10-26
+
+Gói mới `ai/data/backups/local-assistant-d14-20261026-v2-full-files.zip` và receipt `.receipt.json` được tạo sau commit kết quả. Giữ toàn bộ1.327artifact của gói UNRESTRICTED/web đã ghimSHA, mọi fileGit thay đổi đầy đủ từ7fa4756đếnHEAD và bằng chứng D14được chọn theo allowlist:5PNGtrung tính, request/nativebytes/measurement, cancel/ready/launch/resource log, frozenprotocol, kết quả đầu/controllerINCOMPLETEvà suffixUNRESTRICTEDchưa từng chạy, source/testoperatorđã thực thi và báo cáo kiểm chứng. Không chứa model weights/projector/cache/SDK/database dump/secret/checkpoint hoặc dữ liệu hội thoại.
+
+17deliverycontrolsPASS; build kiểm chứng từngGit/extra byte/CRC/SHA, giữ12pointerCE002bằng byte archivecũ và SHAworkspace riêng. Dòng IDEdo người dùng thêm ở đầu devlog được giữ nguyên trong worktree, không commit/đưa vào ZIP: allowlist chỉ chấp nhận đúng prefixSHAđã quan sát và phần còn lại phải khớp GitHEAD, mọi delta khác bị chặn. Không tự xóa/chỉnh dòng người dùng để làm Gitclean. Receipt ghi rõ ngoại lệ worktree này mà không ghi nội dung dòng đó.
+
+[D14scorecard](D14_COMPLETION_SCORECARD.md):42modelquestions+5provenancechecks/profile, originalweights đủ100, compositecục bộCORE66.5/UNRESTRICTED52; strictformatqualityvẫnNOTQUALIFIED. 26generationmới gồm2cancel, không chạy lạiCORE/câu đã chấm. 271scopedtestsPASS/0FAIL/0SKIP/1.23s, RuffPASS/76function-classdescriptions; snapshotứng dụng728files/full5674lịch sử không đổi, không cộng scopedcount vào full. Không triển khai, thay model hoặc phê duyệt release.
+
+Delivery correction: gói D14đầu đã cuốn cả builderlogđang ghi, nên sau dòng receipt thì logworkspacekhác snapshot trong ZIP. Giữ nguyên gói/receipt/source/log đầu; dùng bảnv2loại hai builder-outputlog khỏi allowlist, thêm2negativecontrols. Không thay kết quả model/code ứng dụng hoặc tái chạy inference. Bảnv2là gói cần dùng; chỉ phát khi đối chiếu byte hiện tại sau khi buildđã kết thúc đạt.
+
+## Bản tích lũy sửa JSON và quality gate — 2026-10-26
+
+Gói mới `ai/data/backups/local-assistant-d14-quality-gate-20261026-full-files.zip` và receipt `.receipt.json` được tạo sau commit kết quả. Giữ toàn bộ1.453artifact của gói D14v2đã ghimSHA, fullGitfileversions từ7fa4756đếnHEAD, adapter/test mới, bộ42câu/profile/schema cấu trúc,5PNGmới,84firstrequest/nativewire,2cancel,3freshstreamcompatibility, nguồn đã chạy/log lỗi/controllerpartial/suffix và replayreport. Source/test của helper/privateevidence được chọn rõ, không lấy cảstore hay thư mục riêng khác.
+
+11deliverycontrolsPASS: chặn traversal/unknownmetadata/secret/modeldump/activebuilderlog, kiểm tra đúng priorZIP/receipt. Build phải đối chiếu từngGit/extra byte/CRC/SHA;12CE002latestpointer giữ byte archivecũ. Không chứa weights/projector/cache/SDK/database dump/.env/checkpoint/signingkey. DòngIDEcủangườidùngởđầudevlog vẫn ngoàiGit/ZIP; kiểm tra exactprefixSHA vàcommittedbody, không tự xóa hoặc commit thay người dùng. Builderoutput đặt ngoài namespaceinput để không tự cuốn logđangghi; xác minh lại byte sau khi processkết thúc.
+
+[Actual gate](D14_STRUCTURED_QUALITY_GATE_RESULT.md): **formatfixVERIFIED, functionalqualityFAIL**. Giữ firstCORE39format/28functional; correctedwire42/31; UNRESTRICTEDfirst42/30;3freshCOREstream3/3. Không nâng điểm cũ hoặc đổi đápán/schemađể làmPASS.394scopedPASS/RuffPASS, không cộng vào5674full lịch sử. Current730files=728unchanged+2additive; không new730full/release/model/default/productionactivationclaim.
+
+
+## Bản sửa ba lỗi review D14 — 2026-10-26
+
+Gói mới `ai/data/backups/local-assistant-d14-review-fixes-20261026-full-files.zip` và receipt `.receipt.json` cùng thư mục chứa full file Git từ7fa4756đến commit ghi trong manifest, giữ1.769artifact của gói quality trước và evidence/operator/test mới được chọn rõ. Builder output nằm ngoài allowlist để tránh tự lấy log đang ghi. Đối chiếu lại Git/extra byte/CRC/SHA sau khi builder kết thúc; dòng IDE riêng của người dùng vẫn ngoài Git/ZIP.
+
+[Ba lỗi review đã sửa](D14_REVIEW_FIXES.md), 418scoped PASS/0SKIP, trong đó14deliverycontrols. Không có model call mới; original first report/freeze/scores giữ nguyên, quality vẫn FAIL. Verifier lịch sử cần giữ ZIP quality cũ có SHA1f2b7d9197a56488b7e7ae9ce1543a43b6817f54a57b4a0aafcd4471046ce463bên cạnh tại path gốc; ZIP mới không nhúng đệ quy ZIP cũ. Gói không chứa weights/secret/dump/SDK/cache, không chứng nhận full730 mới hoặc release.
+
+
+## Bản đầy đủ sau khắc phục semantic D14 — 2026-10-26
+
+Gói `ai/data/backups/local-assistant-d14-semantic-20261026-full-files.zip`, receipt `.receipt.json` cùng thư mục, được tạo từ GitHEAD sau commit kết quả. Giữ1.789extras trước đã pinSHAf48babaf43af5507ed717c8bc00ae46b2dc312590fe34c3e03d1f34e1ffda1ef, completeGitfileversions từ7fa4756 và toàn bộ firststudy artifacts/source snapshots/PNG/vocabulary recounts đã chọn rõ. Manifest tính246modelgenerations trên4study, kể cả invalidfirstcaller; không ẩn lỗi đầu. Builderoutput ngoàiallowlist, đối chiếu lại từngGit/extra byte/CRC/SHA sau khi process kết thúc. DòngIDEriêng đầu devlog vẫn ngoàiGit/ZIP.
+
+[Selected local path42/42/profile đã kiểm chứng](D14_SEMANTIC_REMEDIATION_RESULT.md).568scopedPASS/0SKIP gồm28newdeliverycontrols;732appfiles/all730oldexact, no newfull732claim. Không weights/SDK/cache/DBdump/secrets/checkpoints/defaultactivation/modelchange/release. CácZIPtrước giữ nguyên; chỉ dùng receipt/manifest để xác định chính xác commit/count/hash của gói mới.
+
+
+## Bản đầy đủ sau D87 current-source full — 2026-10-27
+
+Gói `ai/data/backups/local-assistant-d87-20261027-full-files.zip` và receipt `.receipt.json` cùng thư mục được tạo sau commit kết quả. Giữ nguyên 2.708 extras của gói semantic trước, pin SHA `2a7b9eaf8437421208fe9d14fa661f247d14a2b7ed30d19deee47bca1cdcb8e4`; thêm full phiên bản file Git, operator/test/log D87, snapshot trước/sau, source freeze và terminal metadata theo allowlist hữu hạn. Giữ byte archive của 12 CE002 và 6 CE003 latest pointers, ghi SHA workspace riêng; không sửa artifact cũ để vừa manifest.
+
+[Full mới 5.759 PASS/0FAIL/0ERROR/0SKIP](D87_CURRENT_FULL_RESULT.md), 1.870,65 giây/732 file giữ nguyên; full 5.674 cũ vẫn là snapshot lịch sử. Audit dữ liệu ghi rõ timestamp-only quota delta và trạng thái Vault unseal sau reboot. 43 final delivery controls PASS (32 controls ban đầu giữ riêng); builder kiểm tra từng Git/extra byte/CRC/SHA và phải kiểm tra độc lập lại sau khi kết thúc. Không lấy stdout đang ghi của builder, weights/SDK/cache/secrets/dumps/checkpoints. Root AGENTS.md untracked và exact IDE prefix đầu devlog được giữ ngoài commit/ZIP; không xóa hoặc tự commit để ép worktree sạch. Không phê duyệt nghe/model/product/release, push/tag/deploy.
+
+Lỗi builder đầu phát hiện sáu CE003 pointers mới sau full suite được giữ tại `data/backups/d87-20261027-delivery-first-failure.log`; chưa có ZIP nào được tạo ở lượt đó. Producer là native frozen-oracle tests, 0 model call; kiểm tra target summary/SHA/case/status trước khi áp ngoại lệ hữu hạn. Không sửa six original summaries hoặc thay score cũ. Final builder stdout dùng path khác ngoài allowlist; không ghi đè log đầu.
