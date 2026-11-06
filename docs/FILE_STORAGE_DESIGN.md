@@ -236,3 +236,93 @@ Startup/periodic recovery now scopes by root namespace, fences only expired work
 The retained operational drill at `data/backups/d17-paired-20261018` used the existing Vault API principal: authenticated upload, graceful process stop, seven-table row/owner/ACL restore, copied/restored namespace/blob/hash/identity proof, new Uvicorn process, same-key replay/download/delete. Manifest flags paired/database/security/identity verified; archive/blob hashes and 0700/0600 permissions independently checked. Both API workers stopped; canary/journal and DB probes removed; final global allocation zero; existing conversation/message/run rows/ACLs unchanged. No shared container restart or new service occurred.
 
 The file feature is operator opt-in, with [local runbook](FILE_STORAGE_LOCAL_RUNBOOK.md). Conservative verifier subsets, same-UID cooperation, stuck-kernel-I/O limits, retention/encryption/off-host DR and production multiworker/load remain explicit limits. Acceptance is not malware/semantic-trust or power-loss certification. **D18 native PDF extraction is next, not implemented in D17.**
+
+## 16. D18 native PDF extraction extension
+
+**Purpose:** Record how extraction consumes the accepted D17 foundation without changing its persistence contract.
+
+ADR-026 adds on-demand authenticated native PDF extraction with immutable file UUID/hash, extractor version and one-based page locators. It reuses the namespace-scoped journal, owned ready/hash admission, shared locked FD and isolated parser mounts. The reader now exposes a context-managed read-only duplicate specifically for bounded extraction; existing download/upload/quota/recovery behavior remains intact.
+
+No schema/migration/cache/index/model context is added. Worker text and stdout budgets, two-slot process-local admission, final integrity/ownership revalidation and cancellation/shutdown joins are specified in ADR-026 and the local runbook. Page text is explicitly untrusted. Golden multi-page/Unicode/blank fixtures and real owner/hash/state/delete/cancellation/namespace tests are required alongside the prior full regression before acceptance. OCR/VLM remains D21; durable extraction/chunk lifecycle belongs to later pipeline design.
+
+## 17. D19 structured DOCX read/write extension
+
+**Purpose:** Extend the file-consumer boundary with conservative OOXML round-trip preservation.
+
+ADR-027 adds main-body paragraph/run/table/style inspection and source-hash-conditioned text replacement in existing plain runs. Run/paragraph/table properties and all non-document.xml package-member bytes are retained. Unsupported complex paragraphs are reported non-editable and rejected for rewrite. File UUID/hash/version and paragraph/table locators identify the exact source; no rendered-page mapping is claimed.
+
+A bounded read-only anonymous request mount avoids putting edit content into process arguments/environment. Runtime lxml preserves namespace mappings with network/entity/DTD loading disabled after D17 verification. Dev-only python-docx and trusted LibreOffice golden conversion independently check that rewritten output opens and preserves sample formatting/content. Source/ready/hash revalidation and cancellation joins reuse D17's owned FD boundary.
+
+New two-slot DOCX admission is retained through complete response delivery to bound slow-client output retention. Generated output is ephemeral, at most 25 MiB, with source/output hashes; no journal/cache/migration or persistent-quota change. A caller must explicitly reserve/upload to retain it. PDF behavior remains unchanged. Limits, unsupported structures, direct-format semantics, response lifecycle and rollback are defined in ADR-027 and the local runbook.
+
+## 18. D20 XLSX structure and formula-preserving literal edits
+
+**Purpose:** Add conservative workbook consumption without formula execution or source mutation.
+
+ADR-028 defines native sheet/cell/formula/cache/style/merge inspection and source-hash-bound edits of existing literals. Runtime reuses lxml and D17 OOXML validation; dev-only openpyxl independently reopens golden output. Changed worksheet XML is serialized; formula XML/cache and every other package member remain unchanged. Cache status is always `preserved_not_recalculated`, because edited inputs may make old cache values stale.
+
+A separate XLSX router and bounded worker preserve accepted PDF/DOCX modules. FileService adds the same two-slot response-lifetime/source-FD ownership pattern, namespace/ready/hash rechecks and cancellation joins. Output is ephemeral and bounded with source/output hashes; persistent quota/schema/identity are unchanged. Strict coordinate/type/style/string/reference validation and conservative unsupported-edit rejection are specified in ADR-028/runbook. No formula/macro evaluation, implicit model context, remote fetch or arbitrary Excel layout certification is added.
+
+## 19. D21 page OCR and explicit local vision
+
+**Purpose:** Extend immutable file consumption to scanned/image/table sources with measurable uncertainty.
+
+ADR-029 adds per-page native/OCR/explicit VLM modes, source UUID/hash/page locators and normalized pixel-word provenance. Source verification/rendering remains in the private sandbox, including bounded Poppler/Tesseract children and all-metadata removal before normalized PNG leaves the sandbox. Only the explicit VLM mode calls existing loopback CORE; no credentials/private mounts, arbitrary URLs, tools, model context or indexing are introduced.
+
+One OCR operation/response slot is owned through CPU/model completion and delivery; cancellation joins CPU threads and the deadline-bounded async model request before source FD close. Namespace/ready/hash fences apply before CPU/model disclosure and after processing. Earlier PDF/DOCX/XLSX contracts remain unchanged; output is ephemeral, schema/quota/source identity unchanged.
+
+English-only OCR raw scores are not calibrated probabilities; VLM always requires review/no numeric confidence. Table rows are unverified model data. Clean/scanned transcription, blank/blur uncertainty and actual Vietnamese table row/cell accuracy have independent golden criteria; degraded OCR errors must be retained rather than relabeled as successful transcription. Runbook/quality script specify bounds, limitations, failure semantics and reproducible artifacts.
+
+## 20. D22 deterministic private document chunks
+
+**Purpose:** Define the source-consumer extension implemented by ADR-030.
+
+The on-demand chunk API consumes accepted native PDF, DOCX, XLSX, UTF-8 text and D21 OCR views without changing source bytes, quota, schema or persistence. Text boundaries remain within a page/paragraph; declared DOCX heading ancestry supplies section references. Table/sheet rows remain atomic canonical JSON with exact paragraph/cell field spans, merge metadata and unchanged formulas/cache. Nested/overlapping table membership and cyclic section ancestry fail closed.
+
+Source/hash/parser/chunker/byte policy and complete chunk fields participate in deterministic IDs together with private owner/namespace/file identity. Public private/principal/opaque-scope labels describe authorization already performed by the server; neither IDs nor labels confer retrieval authority. Chunk text remains untrusted. OCR/VLM uncertainty, always-review and spreadsheet stale-cache flags survive transformation. Locators address extracted Unicode code points, not original binary bytes or rendered DOCX pages.
+
+One response-lifetime chunk slot retains the independently verified outer source FD plus reused parser contexts. FileService task tracking counts nested contexts so inner completion cannot remove an outer resource owner from shutdown inventory. Joined thread/model work and post-transform hash/ready checks fence deletion/corruption/cancellation. Incremental response metadata accounting bounds repeated merge/quality fields before final serialization. No dependency, service, migration, embedding, index or durable chunk lifecycle is introduced; D23 evaluation and later ingestion remain separate acceptance gates.
+
+## 21. D23 mixed-document pipeline evaluation
+
+**Purpose:** Link the reproducible quality/error evidence for accepted file-consumer contracts.
+
+The [evaluation specification](DOCUMENT_PIPELINE_EVALUATION.md) and synthetic manifest exercise actual D17 verification, native PDF/DOCX/XLSX reads, fixed independently reopened rewrites, English OCR/explicit CORE VLM and D22 chunks. Independent content/structure and interval-coverage oracles detect incorrect output; expected rejections require exact stage/code/status. Retained [D23 evidence](evidence/d23-document-pipeline.json) keeps hashes/checks/counts/errors and observed resource timings while excluding content and credentials.
+
+Acceptance of an evaluation case does not erase transcription failure: blurred OCR remains a measured quality failure with review required; scanned native output can be empty; nested tables and atomic-row overflow remain intentional refusals. This milestone adds no production/API/schema/dependency change or silent repair. Follow-up candidates carry explicit priority/dependency/effort/risk assessments, and existing ADR-026–030 supported boundaries remain authoritative.
+
+## 22. D24 measured embedding choice and vector schema boundary
+
+**Purpose:** Link the measured model/collection design to source ownership without prematurely adding ingestion.
+
+[ADR-031](ADR/031-cpu-embedding-selection-and-vector-schema.md) and [selection specification](EMBEDDING_SELECTION.md) define the pinned CPU-int8 multilingual E5 comparison, tokenizer/overflow rules, model/runtime fingerprint and proposed private Qdrant schema. Independent20-source/40-query retrieval oracles select768-dimensional multilingual-e5-base over the smaller candidate's failed quality gates; actual empty schema/index probe uses existing Qdrant and is removed afterwards.
+
+D24 adds dev-only benchmark dependencies/scripts/config/evidence, no file/API/schema/source mutation or production vector collection. D22 byte chunks remain unchanged; D25 must preflight actual512-token prefixed inputs, build a durable idempotent generation/outbox lifecycle and enforce final source fences before publication. Future search must combine trusted owner/namespace/model/generation filters with PostgreSQL ready/hash checks; vector labels/IDs and shared Qdrant keys are not tenant authorization. Existing OCR/cache/unsupported-row/table limits remain explicit.
+
+## 23. D25 ingestion admission and identity boundary
+
+**Purpose:** Link source lifecycle to the implemented planner/tokenizer milestone without claiming durable indexing.
+
+After the separately approved Qwen selection, [D25 lifecycle](INGESTION_LIFECYCLE.md) and [ADR-033](ADR/033-incremental-ingestion-lifecycle.md) introduce a source-bound immutable planner and actual offline Qwen tokenizer preflight. The planner consumes trusted D22 output with existing source-reader/integrity checks, rechecks owner/namespace/ready/hash and chunk identities, and assigns deterministic generation/job/point IDs. Token counts include special tokens and reject overflow rather than truncating. Empty source generations and untrusted quality/provenance remain explicit. Existing FileService/source/parser endpoints are unchanged.
+
+This is T01 admission tooling only. T02 must persist/lease/fence admission and publication under real PostgreSQL locks; T03 must implement acknowledged Qwen/Qdrant upsert/delete/recovery. No ingestion journal/worker/collection/active pointer is enabled by T01. D25 remains IN PROGRESS; D26 retrieval remains later work. Selected Qwen/E5 rollback and all existing data are preserved.
+
+## 24. D25-T02 durable ingestion repository
+
+**Purpose:** Record additive indexing metadata without changing accepted file lifecycle or claiming vector writes.
+
+[ADR-034](ADR/034-durable-ingestion-journal.md) and [journal specification](INGESTION_JOURNAL.md) define V003 jobs/heads and V004 immutable-column grants. Source-locked admission/publication, desired-generation revision, bounded database-time lease/retry and terminal cleanup records persist without source text/vectors. Source FK retains metadata; source-ready/hash joins hide deleted/stale generations before reconciliation. Existing FileService/delete/root/quota code is unchanged; T03 must drive reconciliation and actual vector writes/cleanup.
+
+Fresh protected seven-table pre-migration restore and nine-table post-migration restore including column ACLs were verified without restarting shared PostgreSQL. Old source/model/owner/ACL state is preserved. No new service/credential or collection is introduced. Code rollback retains populated additive journals; D25 remains open pending T03/whole-Day acceptance.
+
+## D25 final local lifecycle — 2026-10-19
+
+**Purpose:** Record the accepted T03 integration and supersede earlier open-worker status without rewriting historical results.
+
+D25 local opt-in indexing now holds the existing FileService source-reader/integrity context through reconstruction, actual CPU Qwen encoding and owned Qdrant writes, then publishes only with a final SQL source/lease/generation fence. FileService upload/delete/root/quota logic is unchanged. Source replacement remains a new immutable file UUID/hash plus explicit admission/deletion; deleted sources are hidden immediately in SQL while repeated terminal sweeps repair physical vectors, including late writes after a cleanup acknowledgement. D26 must rehydrate/revalidate source provenance before delivery. Full979 PASS/0 SKIP; [operating guide](INCREMENTAL_INGESTION.md).
+
+## D26 local retrieval checkpoint — 2026-10-19
+
+**Purpose:** Record separately verified source-revalidated retrieval while preserving earlier model/indexing acceptance.
+
+D26 reconstructs indexed chunks under the existing FileService contract, retains separately verified source readers through response delivery and checks all active generations in one final SQL snapshot after integrity I/O. Sequential chunk extraction preserves the single chunk slot; retrieval tracks its complete lifetime in FileService and drains before ingestion/files. Source deletion/supersession fences delivery; stale vector hints cannot substitute source content. FileService/journal/source schema and quota contracts are unchanged. Full1030 PASS/0 SKIP; [ADR-037](ADR/037-acl-filtered-source-revalidated-retrieval.md).

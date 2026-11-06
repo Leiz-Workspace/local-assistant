@@ -1,0 +1,90 @@
+{
+  "description": "Synthetic local D21 OCR/VLM acceptance; scores are not calibrated probabilities or general accuracy claims.",
+  "measured_at": "2026-10-18T12:43:26.843075+00:00",
+  "processor": "page-ocr-v1:pypdf-6.21.1:pillow-12.3.0",
+  "engine_versions": {
+    "tesseract": "tesseract 5.5.0",
+    "poppler": "pdftoppm version 26.01.0"
+  },
+  "cases": [
+    {
+      "fixture": "clean.png",
+      "sha256": "b6c6c432b50ffd56737d1883aaee6a7226f443aced25993c7f350de95f9d2495",
+      "page": 1,
+      "method": "tesseract",
+      "engine": "tesseract 5.5.0:eng",
+      "character_error_rate": 0.0,
+      "word_error_rate": 0.0,
+      "criterion": "transcription_accuracy",
+      "engine_score": 95.634,
+      "review_required": false,
+      "passed": true
+    },
+    {
+      "fixture": "scanned.pdf",
+      "sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "page": 1,
+      "method": "tesseract",
+      "engine": "tesseract 5.5.0:eng",
+      "character_error_rate": 0.0,
+      "word_error_rate": 0.0,
+      "criterion": "transcription_accuracy",
+      "engine_score": 95.898,
+      "review_required": false,
+      "passed": true
+    },
+    {
+      "fixture": "blank.png",
+      "sha256": "43376ce08514b0af97854f51ca5dda6668ea49fe53f4e2ab7ecc73d4685294bd",
+      "page": 1,
+      "method": "tesseract",
+      "engine": "tesseract 5.5.0:eng",
+      "character_error_rate": 0.0,
+      "word_error_rate": 0.0,
+      "criterion": "transcription_accuracy",
+      "engine_score": null,
+      "review_required": true,
+      "passed": true
+    },
+    {
+      "fixture": "unclear.png",
+      "sha256": "1d98d3bb6dddcadae9b4fc891521edd449f6338c4fcd867950f5a458fb4b34ed",
+      "page": 1,
+      "method": "tesseract",
+      "engine": "tesseract 5.5.0:eng",
+      "character_error_rate": 1.0,
+      "word_error_rate": 1.0,
+      "criterion": "uncertainty_detection",
+      "engine_score": null,
+      "review_required": true,
+      "passed": true
+    },
+    {
+      "fixture": "scanned.pdf",
+      "sha256": "41f174cc885e07087971aa07d97ecedc820627c4623323044844ec01a1deb8a4",
+      "page": 2,
+      "method": "tesseract",
+      "engine": "tesseract 5.5.0:eng",
+      "character_error_rate": 0.0,
+      "word_error_rate": 0.0,
+      "criterion": "transcription_accuracy",
+      "engine_score": null,
+      "review_required": true,
+      "passed": true
+    }
+  ],
+  "native_pdf_has_no_text_on_scan": true,
+  "vision": {
+    "fixture": "table-vie.png",
+    "sha256": "b3c4b9fbe86c6f35ea68274b113eafb834983c3c41848048317cdee73669917f",
+    "engine": "qwen3.5-9b-core",
+    "expected_cells": 6,
+    "matched_cells": 6,
+    "cell_accuracy": 1.0,
+    "exact_rows_match": true,
+    "review_required": true,
+    "confidence_score": null,
+    "uncertain_regions_count": 0
+  },
+  "passed": true
+}

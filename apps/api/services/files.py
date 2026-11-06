@@ -2,28 +2,38 @@
 
 import asyncio
 import logging
+from contextlib import asynccontextmanager
 from functools import partial
 from uuid import UUID, uuid4
 
 from starlette.requests import ClientDisconnect
 
+from apps.api.services.vision_ocr import transcribe_image
+from src.application.services.docx_contract import DOCX_MEDIA, validate_plan
 from src.application.services.file_storage_policy import (
     DEFAULT_POLICY,
     FileReservationPlan,
     StoragePolicyError,
     plan_reservation,
 )
+from src.application.services.ocr_contract import validate_page
+from src.application.services.xlsx_contract import XLSX_MEDIA
+from src.application.services.xlsx_contract import validate_plan as validate_xlsx_plan
+from src.infrastructure.docx_processor import process_docx
 from src.infrastructure.file_verifier import verify_file
 from src.infrastructure.local_blob_storage import (
     BlobIdentity,
     BlobStorageError,
     LocalBlobStorage,
 )
+from src.infrastructure.page_ocr import prepare_page
+from src.infrastructure.pdf_extractor import EXTRACTOR_VERSION, extract_pdf
 from src.infrastructure.repositories.file_journal import (
     SAFE_ERRORS,
     PostgresFileJournal,
     policy_from_snapshot,
 )
+from src.infrastructure.xlsx_processor import process_xlsx
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +81,43 @@ def identity_for(row) -> BlobIdentity:
     return BlobIdentity(row["owner_id"], row["id"], row["lease_owner"] or UUID(int=0))
 
 
+def extract_reader(reader):
+    """Keep the borrowed FD alive until the isolated extraction process exits."""
+    with reader.extraction_reader() as source:
+        return extract_pdf(source)
+
+
+def process_docx_reader(reader, operation, plan):
+    """Retain the locked read-only source until DOCX subprocess I/O has completed."""
+    with reader.extraction_reader() as source:
+        return process_docx(source, operation, plan)
+
+
+def process_xlsx_reader(reader, operation, plan):
+    """Retain the locked read-only source until XLSX subprocess I/O has completed."""
+    with reader.extraction_reader() as source:
+        return process_xlsx(source, operation, plan)
+
+
+def prepare_ocr_reader(reader, suffix, number, mode):
+    """Retain the locked source throughout bounded rasterization/OCR subprocess work."""
+    with reader.extraction_reader() as source:
+        return prepare_page(source, suffix, number, mode)
+
+
+async def transcribe_owned_page(image_base64):
+    """Join the deadline-bounded local model request before releasing admission on cancellation."""
+    task = asyncio.create_task(transcribe_image(image_base64))
+    try:
+        return await asyncio.shield(task)
+    except asyncio.CancelledError:
+        try:
+            await finish_task(task)
+        except Exception:
+            logger.warning("vision_cancelled_operation_failed")
+        raise
+
+
 class FileService:
     """Own a single process's file operations, guarded I/O and bounded shutdown joins."""
 
@@ -87,9 +134,15 @@ class FileService:
         self.storage = storage
         self.policy = policy
         self.active = set()
+        self._active_depth = {}
         self.closing = False
         self._recovery_task = None
         self._ready_cursor = None
+        self._extractions = 0
+        self._docx_operations = 0
+        self._xlsx_operations = 0
+        self._ocr_operations = 0
+        self._chunk_operations = 0
 
     def track(self):
         """Register active uploads/download responses before they own any locked FD."""
@@ -97,11 +150,17 @@ class FileService:
             raise StoragePolicyError("file_storage_closing", 503)
         task = asyncio.current_task()
         self.active.add(task)
+        self._active_depth[task] = self._active_depth.get(task, 0) + 1
         return task
 
     def untrack(self, task):
         """Remove only completed resource-owning work from the shutdown inventory."""
-        self.active.discard(task)
+        depth = self._active_depth.get(task, 0)
+        if depth > 1:
+            self._active_depth[task] = depth - 1
+        else:
+            self._active_depth.pop(task, None)
+            self.active.discard(task)
 
     async def reserve(
         self, owner_id, *, filename, size_bytes, sha256, request_key=None
@@ -332,6 +391,208 @@ class FileService:
         except BaseException:
             await file_io(reader.close)
             raise
+
+    async def extract(self, owner_id, file_id):
+        """Extract owned ready PDF pages with bounded admission and final source revalidation."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if row["detected_media_type"] != "application/pdf":
+                raise StoragePolicyError("pdf_required", 415)
+            if self._extractions >= 2:
+                raise StoragePolicyError("extraction_busy", 429)
+            self._extractions += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            pages = await file_io(extract_reader, reader)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            result = {
+                "file_id": str(file_id),
+                "sha256": row["actual_sha256"],
+                "extractor": EXTRACTOR_VERSION,
+                "content_trust": "untrusted",
+                "pages": [
+                    dict(
+                        page,
+                        locator=f"file:{file_id}#page={page['page_number']}",
+                        status="native_text"
+                        if page["text"].strip()
+                        else "no_native_text",
+                    )
+                    for page in pages
+                ],
+            }
+            logger.info(
+                "file_extraction_served file_id=%s pages=%d", file_id, len(pages)
+            )
+            return result
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._extractions -= 1
+                self.untrack(task)
+
+    @asynccontextmanager
+    async def docx_operation(self, owner_id, file_id, *, operation="read", plan=None):
+        """Hold a bounded DOCX slot and source lock through processing and complete response delivery."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if row["detected_media_type"] != DOCX_MEDIA:
+                raise StoragePolicyError("docx_required", 415)
+            if operation == "rewrite":
+                plan = validate_plan(plan).model_dump()
+                if plan["source_sha256"] != row["actual_sha256"]:
+                    raise StoragePolicyError("docx_source_changed", 409)
+            if self._docx_operations >= 2:
+                raise StoragePolicyError("docx_processing_busy", 429)
+            self._docx_operations += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            result = await file_io(process_docx_reader, reader, operation, plan)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            logger.info(
+                "file_docx_processed file_id=%s operation=%s", file_id, operation
+            )
+            yield row, result
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._docx_operations -= 1
+                self.untrack(task)
+
+    @asynccontextmanager
+    async def xlsx_operation(self, owner_id, file_id, *, operation="read", plan=None):
+        """Hold a bounded XLSX slot and source lock through processing and complete response delivery."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if row["detected_media_type"] != XLSX_MEDIA:
+                raise StoragePolicyError("xlsx_required", 415)
+            if operation == "rewrite":
+                plan = validate_xlsx_plan(plan).model_dump()
+                if plan["source_sha256"] != row["actual_sha256"]:
+                    raise StoragePolicyError("xlsx_source_changed", 409)
+            if self._xlsx_operations >= 2:
+                raise StoragePolicyError("xlsx_processing_busy", 429)
+            self._xlsx_operations += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            result = await file_io(process_xlsx_reader, reader, operation, plan)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            logger.info(
+                "file_xlsx_processed file_id=%s operation=%s", file_id, operation
+            )
+            yield row, result
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._xlsx_operations -= 1
+                self.untrack(task)
+
+    @asynccontextmanager
+    async def ocr_operation(self, owner_id, file_id, *, number=1, mode="auto"):
+        """Own one page operation through source revalidation, optional local vision and response delivery."""
+        task = self.track()
+        reader = None
+        admitted = False
+        try:
+            row = await self.journal.get(owner_id, file_id)
+            if row["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            formats = {
+                "application/pdf": "pdf",
+                "image/png": "png",
+                "image/jpeg": "jpg",
+                "image/webp": "webp",
+            }
+            suffix = formats.get(row["detected_media_type"])
+            if suffix is None:
+                raise StoragePolicyError("ocr_source_required", 415)
+            if self._ocr_operations >= 1:
+                raise StoragePolicyError("ocr_processing_busy", 429)
+            self._ocr_operations += 1
+            admitted = True
+            row, reader = await self.open_download(owner_id, file_id)
+            page = await file_io(prepare_ocr_reader, reader, suffix, number, mode)
+            await file_io(
+                reader.verify_integrity, row["actual_size_bytes"], row["actual_sha256"]
+            )
+            current = await self.journal.get(owner_id, file_id)
+            if current["state"] != "ready":
+                raise StoragePolicyError("file_not_ready", 409)
+            if page["method"] == "vlm_pending":
+                vision = await transcribe_owned_page(page["image_base64"])
+                page.update(
+                    method="local_vlm",
+                    engine=vision["engine"],
+                    text=vision["text"],
+                    tables=vision["tables"],
+                    table_structure_status="unverified_vlm",
+                    uncertainties=page["uncertainties"] + vision["uncertain_regions"],
+                )
+                await file_io(
+                    reader.verify_integrity,
+                    row["actual_size_bytes"],
+                    row["actual_sha256"],
+                )
+                current = await self.journal.get(owner_id, file_id)
+                if current["state"] != "ready":
+                    raise StoragePolicyError("file_not_ready", 409)
+            page["image_base64"] = None
+            page = validate_page(page)
+            page.pop("image_base64")
+            logger.info(
+                "file_ocr_processed file_id=%s page=%d method=%s",
+                file_id,
+                number,
+                page["method"],
+            )
+            yield row, page
+        finally:
+            try:
+                if reader is not None:
+                    await file_io(reader.close)
+            finally:
+                if admitted:
+                    self._ocr_operations -= 1
+                self.untrack(task)
 
     async def shutdown(self):
         """Cancel and join resource owners before closing the root or disposing the DB pool."""

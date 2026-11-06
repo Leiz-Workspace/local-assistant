@@ -1,0 +1,7 @@
+{
+  "description": "Forward correction of existing default table UPDATE privileges on only V003 ingestion tables; applied via existing Vault migrator.",
+  "revision": "0004",
+  "previous_revision": "0003",
+  "offline_sql_sha256": "451e5a0b1e058c7cd41dd890d72bc4a67934223de19d14ca9e1fcf48ff7c4e62",
+  "old_tables_or_default_privileges_changed": false
+}

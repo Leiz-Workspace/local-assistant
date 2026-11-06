@@ -1,0 +1,18 @@
+{
+  "description": "Read-only protected model/dependency/schema identity checks during D28 acceptance; no runtime or data mutation.",
+  "base_commit": "b69172f",
+  "sha256": {
+    "docs/MODEL_REGISTRY.md": "0f5022f0a36186cf34ffe97b4e8461a586b36608c1a71effe1558393165fada9",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/embedding-selected.json": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+    "configs/embedding-e5-rollback.json": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+    "uv.lock": "84ebcd30727cbb47bd8279f11ab79ca1e0c3271500734222c49e10fa93e00795",
+    "pyproject.toml": "51a08088e26106c72dfd6f3b5d7dbddc8cb0cffb28b05f67d3de49ee1dbee255",
+    "migrations/env.py": "7d620409b659be7e6a71a608b2e3caf511b7125a71499dde1c7f9b4904dc0ea2",
+    "migrations/versions/0004_ingestion_column_grants.py": "fed1c51f519a754ee30462647ba4ec906d1a0dacf482c32e06142e2f724a505c",
+    "migrations/versions/0001_initial_conversation_schema.py": "063e8c98f288e8dfb2de1e14656766748d527c40e35c6bbacf0505e602d3520c",
+    "migrations/versions/0002_file_journal.py": "24a0913e3b15478f69d598098535d53b2a68c5c0c1fbc4d3b0b856fc08b93070",
+    "migrations/versions/0003_ingestion_journal.py": "a9bb5193c1d7b3906ec8f56015fd18cea80db9f93cd84a76610b9fa01e6b5a4f"
+  },
+  "exact_original_d24_e5_rollback": true
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Freeze separate actual loopback TCP grounded CORE/citation/joined delivery acceptance before execution; complements frozen ASGI/source tests without changing their sources.",
+  "test_sha256": "3effb0b2b1a8567a02f74c730f1772a52f345ced640c2df6a2c12432441ed8f0",
+  "transport": "ephemeral_Uvicorn_same_fixture_event_loop",
+  "request_timeout_seconds": 90,
+  "source": "The grounded TCP fixture uses port 6123.",
+  "expected_fact": "6123",
+  "model_or_production_config_change": false
+}

@@ -12,10 +12,11 @@ from src.infrastructure.local_blob_storage import LocalBlobStorage
 from src.infrastructure.repositories.file_journal import PostgresFileJournal
 
 logger = logging.getLogger(__name__)
+COMPATIBLE_FILE_REVISIONS = frozenset({"0002", "0003", "0004", "0005", "0006"})
 
 
 async def initialize_file_service(session_factory):
-    """Validate V002 and create a dedicated root only when ASSISTANT_FILES_ENABLED=1."""
+    """Validate reviewed V002-compatible schemas before opening an explicitly enabled file root."""
     if os.environ.get("ASSISTANT_FILES_ENABLED", "0") != "1":
         logger.info("file_storage_disabled")
         return None
@@ -23,8 +24,9 @@ async def initialize_file_service(session_factory):
         revision = await session.scalar(
             text("SELECT version_num FROM assistant.alembic_version")
         )
-        if revision != "0002":
-            raise RuntimeError("File storage requires reviewed V002 schema")
+        if revision not in COMPATIBLE_FILE_REVISIONS:
+            logger.error("file_storage_schema_incompatible")
+            raise RuntimeError("File storage requires reviewed V002-compatible schema")
     root = Path(
         os.environ.get(
             "ASSISTANT_FILES_ROOT",

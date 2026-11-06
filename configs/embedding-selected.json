@@ -1,0 +1,116 @@
+{
+  "description": "Owner-approved Qwen embedding selection after MODEL-EVAL-001; production ingestion/search are not deployed.",
+  "status": "selected_not_deployed",
+  "candidate": {
+    "description": "MODEL-EVAL-001 official pinned Qwen candidate for authorized offline comparison only; E5 selected configuration remains unchanged.",
+    "id": "qwen3-embedding-0.6b-bf16-cpu",
+    "repository": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+    "license": "apache-2.0",
+    "dimension": 1024,
+    "model_context_tokens": 32768,
+    "comparison_max_tokens": 512,
+    "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+    "passage_prefix": "",
+    "artifacts": [
+      {
+        "source": "model.safetensors",
+        "local": "model.safetensors",
+        "bytes": 1191586416,
+        "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+      },
+      {
+        "source": "tokenizer.json",
+        "local": "tokenizer.json",
+        "bytes": 11423705,
+        "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+      },
+      {
+        "source": "config.json",
+        "local": "config.json",
+        "bytes": 727,
+        "sha256": "b5bf1f51fc45be473a54718cef92448d90a1be001bf9b9a44b8c7f10a19feaa9"
+      },
+      {
+        "source": "tokenizer_config.json",
+        "local": "tokenizer_config.json",
+        "bytes": 9706,
+        "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+      }
+    ]
+  },
+  "runtime": {
+    "engine": "pytorch",
+    "device": "cpu",
+    "weight_dtype": "bfloat16",
+    "pooling": "last_attended_token_float32",
+    "fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+    "packages": {
+      "torch": "2.10.0+cpu",
+      "transformers": "4.57.6",
+      "numpy": "2.5.4",
+      "tokenizers": "0.22.2",
+      "safetensors": "0.8.0"
+    },
+    "max_tokens": 512,
+    "intra_op_threads": 2,
+    "inter_op_threads": 1,
+    "batch_size": 4,
+    "normalization": "l2",
+    "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+    "passage_prefix": "",
+    "use_cache": false,
+    "distance": "Cosine"
+  },
+  "collection": {
+    "description": "Owner-approved isolated Qwen vector design; collection creation and ingestion remain D25 implementation.",
+    "collection_name": "la_chunks_77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b_v1",
+    "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+    "create": {
+      "vectors": {
+        "dense": {
+          "size": 1024,
+          "distance": "Cosine",
+          "on_disk": true
+        }
+      },
+      "shard_number": 1,
+      "replication_factor": 1
+    },
+    "payload_indexes": {
+      "owner_id": {
+        "type": "uuid",
+        "is_tenant": true
+      },
+      "namespace_id": "uuid",
+      "file_id": "uuid",
+      "source_sha256": "keyword",
+      "chunk_id": "keyword",
+      "chunker_version": "keyword",
+      "processor": "keyword",
+      "model_fingerprint": "keyword",
+      "index_generation": "keyword",
+      "state": "keyword"
+    },
+    "required_scope": [
+      "owner_id",
+      "namespace_id",
+      "model_fingerprint",
+      "index_generation",
+      "state"
+    ],
+    "required_source": [
+      "file_id",
+      "source_sha256",
+      "chunk_id",
+      "chunker_version",
+      "processor"
+    ],
+    "content_trust": "untrusted",
+    "visibility": "private",
+    "source_text_in_payload": false
+  },
+  "acceptance_evidence": "docs/evidence/model-eval-001-qwen-e5-comparison.json",
+  "adr": "docs/ADR/032-qwen-e5-comparison-and-transition-review.md",
+  "approval_record": "docs/evidence/model-eval-001-selection-approval.json"
+}

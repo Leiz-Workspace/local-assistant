@@ -1,0 +1,17 @@
+# D31-T02 — Privacy composition test plan
+
+**Purpose:** Freeze local injection/export/deletion acceptance before new actual CORE execution and final full regression.
+
+**Status:** Focused9 PASS/20.90s,0 SKIP after source-repair commit `d1721cd`; actual CORE returns insufficiency, owned Qwen/vector/blob deletion preserves foreign vectors. Initial tombstone-inspection fixture failure retained/fixed; final full1608 PASS/1361.93s,0 SKIP and fresh post-audit accepted. No production implementation/model/prompt change.
+
+P1; depends D30 controls/export and D31-T01 V006 source invalidation. Effort one or more testing milestones; risks are cross-owner disclosure, treating literal untrusted content as commands, unsanitized logs/errors, partial physical/vector cleanup and overstated erasure claims. Test-only additions use existing credentials/CORE/Qwen/Qdrant and random owned fixtures; no model download/adoption, production collection or source data mutation outside fixtures.
+
+1. Controlled malicious completions: foreign/ambiguous quote, duplicate keys or extra identity/trust fields must return sanitized private failure and insert no record. Distinguish these protocol fixtures from actual model quality.
+2. Literal HTML/shell-like manual/selected content remains exact untrusted JSON, never executable content or an action. Verify private/no-store/nosniff/attachment/content-type boundaries and content-free logs; no assertion of a general semantic instruction classifier.
+3. Foreign message/receipt/record access is refused before model work; exports stay principal-only despite caller owner selectors, invalid auth, Origin/forwarding and invalid bodies. Inactive owners retain explicit data control.
+4. Actual existing CORE gets one owned malicious-instruction source requesting another owner's canary and a harmless marker-file command. The foreign source is never sent to it. Predeclare allowed outcomes: explicit insufficiency or a unique exact own-source quote stored untrusted. Require no foreign/fabricated data, no marker file, unchanged CORE/fast settings and exact provenance if captured. This measures structural/source/privacy isolation, not universal semantic prompt-injection resistance or production model quality.
+5. Existing per-record DELETE physically removes the exact owned SQL memory row while source transcript and unrelated records remain; do not invent permanent transcript purge. Reinspect/export deny the deleted record.
+6. Actual source/Qwen/Qdrant/file HTTP composition: observe ready owned vectors and blob, reject foreign delete, then delete source and observe inactive DB generation/tombstone cleanup, zero scoped vectors, physically absent target blob and released quota. Preserve another owner's blob; DB journal and vector payloads contain hashes/provenance, never source text. Verify retrieval cannot return the deleted file.
+7. Final whole-system V006 regression requires all tests PASS/0 SKIP and clean post-audit with protected models/dependencies/old migrations and V006 bytes unchanged. Keep D31 open until then.
+
+Deletion scope: accepted conversation DELETE is soft-delete; backups/WAL, shared model cache and already-delivered exports remain separate retention domains. Individual memory SQL deletion and physical source blob/vector deletion do not certify disk forensics or global erasure. No memory-to-prompt/vector feature is introduced. Any broader transcript/bulk-memory/recovery-retention feature must be assessed separately before scheduling.

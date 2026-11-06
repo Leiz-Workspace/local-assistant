@@ -1,0 +1,58 @@
+{
+  "description": "D30-T03 focused execution ledger; final full suite/audit pending, no independent human/general quality claim.",
+  "status": "IN_PROGRESS_FULL_REGRESSION_RUNNING",
+  "focused": {
+    "passed": 147,
+    "seconds": 6.91,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "actual_core_synthetic_calls_per_focused_run": 4,
+  "actual_core_profile": "core/fast",
+  "initial_failures": [
+    {
+      "scope": "JSONB provenance codec",
+      "passed": 108,
+      "failed": 1,
+      "seconds": 4.81,
+      "correction": "Decode only persisted tagged UUID fields; strict schema unchanged; five codec regression tests."
+    },
+    {
+      "scope": "Live initial environment/fixture setup",
+      "failed": 2,
+      "setup_errors": 10,
+      "seconds": 2.44,
+      "correction": "Wait for original CORE health200 after existing Vault unseal/runtime recovery; explicitly import upstream fixture."
+    },
+    {
+      "scope": "Export UTC test oracle",
+      "passed": 6,
+      "failed": 1,
+      "seconds": 0.73,
+      "correction": "Compare equivalent aware UTC instants instead of requiring one wire spelling."
+    }
+  ],
+  "artifacts": {
+    "data/backups/d30-t03-jsonb-uuid-failure.log": {
+      "sha256": "d1f4aa3883c6d038f3900fad66854c0a8338fdf8806d6d51b0588cc167d84ebd",
+      "bytes": 6533
+    },
+    "data/backups/d30-t03-live-initial.log": {
+      "sha256": "c229d62a6e5b40bf55acf4d1690e2b51c2a5c95a12dc87795aa50e3ffe5df239",
+      "bytes": 49752
+    },
+    "data/backups/d30-t03-export-initial.log": {
+      "sha256": "59957569eef805bab46df2fcc028543bc227b05cdfb5ae7ca1162e30e9abf8a9",
+      "bytes": 878
+    },
+    "data/backups/d30-t03-focused-export-final.log": {
+      "sha256": "af4cfcff2608cf278940767463e1fb66ce1ca5c63eeee9e424397f496ccfb205",
+      "bytes": 260
+    }
+  },
+  "limitations": [
+    "Same-agent synthetic selection cases, no human-independent relevance claim.",
+    "No automatic prompt use, file-to-memory adapter or memory-vector index.",
+    "Full system result and final post-audit not yet available."
+  ]
+}

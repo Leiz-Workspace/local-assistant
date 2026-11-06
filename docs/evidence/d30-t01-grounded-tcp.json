@@ -1,0 +1,66 @@
+{
+  "description": "Actual existing CORE/approved embedding/source authorization and exact native citation delivered over ephemeral localhost Uvicorn/TCP; original fixture event loop, no production flag/config/model change.",
+  "actual_tcp": true,
+  "result": {
+    "answer": "The grounded TCP fixture uses port 6123.",
+    "answer_trust": "model_generated",
+    "citations": [
+      {
+        "chunk_id": "chk_a87abae401d0aa6fcf1cbe6bc8ee496ad2f66d90f5a802506851dbb74bb8caa6",
+        "content_trust": "untrusted",
+        "file_id": "d5eed383-5d2e-4818-b12f-a37141346613",
+        "generation": "59cd431269fd5814cda373e0188e2c0e293069ac443f1ad5c8b93aa39b64eb17",
+        "point_id": "72fed547-39f8-5502-b00a-7e869b5852ed",
+        "provenance": {
+          "chunk_id": "chk_a87abae401d0aa6fcf1cbe6bc8ee496ad2f66d90f5a802506851dbb74bb8caa6",
+          "chunker_version": "structured-chunks-v1",
+          "content_trust": "untrusted",
+          "file_id": "d5eed383-5d2e-4818-b12f-a37141346613",
+          "index_generation": "59cd431269fd5814cda373e0188e2c0e293069ac443f1ad5c8b93aa39b64eb17",
+          "locator": "file:d5eed383-5d2e-4818-b12f-a37141346613#text",
+          "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+          "namespace_id": "9ac5345f-73d5-4880-9c70-8f35b616abbe",
+          "owner_id": "28b109e0-d5fc-4e65-9ff0-e34407042192",
+          "processor": "utf8-text-v1",
+          "quality": {},
+          "section_path": [],
+          "source_sha256": "9de2cac4f69f72fd08e4da236792f9f91d2d58d87ed22a86757504ed67612e39",
+          "spans": [
+            {
+              "end": 40,
+              "field": "text",
+              "locator": "file:d5eed383-5d2e-4818-b12f-a37141346613#text",
+              "start": 0
+            }
+          ],
+          "state": "pending",
+          "structure": {},
+          "visibility": "private"
+        },
+        "quote": "The grounded TCP fixture uses port 6123.",
+        "quote_span": {
+          "end": 40,
+          "reference": "chunk_text",
+          "start": 0,
+          "unit": "unicode_code_points"
+        },
+        "source_id": "s1",
+        "source_sha256": "9de2cac4f69f72fd08e4da236792f9f91d2d58d87ed22a86757504ed67612e39",
+        "source_span": {
+          "end": 40,
+          "field": "text",
+          "locator": "file:d5eed383-5d2e-4818-b12f-a37141346613#text",
+          "start": 0,
+          "unit": "unicode_code_points"
+        }
+      }
+    ],
+    "content_trust": "untrusted",
+    "model_id": "qwen3.5-9b-core",
+    "status": "answered"
+  },
+  "request_handlers_joined": true,
+  "source_and_model_admission_released": true,
+  "temporary_server_joined": true,
+  "source_sha256": "9de2cac4f69f72fd08e4da236792f9f91d2d58d87ed22a86757504ed67612e39"
+}

@@ -1,0 +1,369 @@
+{
+  "description": "Pending human relevance judgments; true means this source directly supports answering the query, false means it does not. No supporting source is allowed.",
+  "packet_sha256": "b1877fd0458f6268d0a7fd36513e1722f7a76e90e17e41018d5bc243bae8b554",
+  "reviewer": "",
+  "reviewed_at": "",
+  "attestation": "",
+  "queries": [
+    {
+      "id": "review-q01",
+      "documents": [
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q02",
+      "documents": [
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q03",
+      "documents": [
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q04",
+      "documents": [
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q05",
+      "documents": [
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q06",
+      "documents": [
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q07",
+      "documents": [
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "id": "review-q08",
+      "documents": [
+        {
+          "id": "doc-b",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-e",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-d",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-f",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-a",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-h",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-g",
+          "relevant": null,
+          "reason": ""
+        },
+        {
+          "id": "doc-c",
+          "relevant": null,
+          "reason": ""
+        }
+      ]
+    }
+  ]
+}

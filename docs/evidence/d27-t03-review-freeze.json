@@ -1,0 +1,18 @@
+{
+  "description": "Freeze unlabeled authored challenge and score-blind review tooling before inference; not human quality evidence or adoption approval.",
+  "status": "PENDING_INDEPENDENT_HUMAN_REVIEW",
+  "scope": "EVALUATION_REVIEW_PREPARATION_ONLY",
+  "documents": 8,
+  "queries": 8,
+  "pairs": 64,
+  "labels_supplied": 0,
+  "model_inference_executed": false,
+  "owner_adoption_approved": false,
+  "sha256": {
+    "tests/fixtures/retrieval/d27-review-challenge.json": "1150b9606c8dcd6e6471471b08f7497ce9a3ccf047320ef8e98ccea475816483",
+    "scripts/retrieval_relevance_review.py": "998bcf445344d8afa1db3d9f8b6b3cdac0aac1ec7d012fe1b540ac44487b8ba9",
+    "tests/test_retrieval_relevance_review.py": "223c45297d514050dd86bb6bc926f2603769a40b9bd0afae01d6bd1c7dc80827",
+    "docs/evidence/d27-t03-review-packet.json": "a2beb318d08812f4614cef5fb48f2a572f4ff70d4183d47990e7b58e1186352b",
+    "docs/evidence/d27-t03-review-response.pending.json": "c0b4c5957e842d89a6cd43d0dd6cc6459f7dbc653ae7938a1321b45133f5d5da"
+  }
+}

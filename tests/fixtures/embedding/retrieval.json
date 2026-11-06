@@ -1,0 +1,416 @@
+{
+  "description": "Handwritten independent synthetic D24 retrieval corpus with bilingual and cross-language query/source pairs plus related distractors; labels frozen before model scoring, separate from D23 reconstruction.",
+  "version": "local-retrieval-v1",
+  "documents": [
+    {
+      "id": "backup",
+      "text": "The database backup runs at 02:00 UTC every night. Restore requires verifying the archive checksum before loading data."
+    },
+    {
+      "id": "delete",
+      "text": "Xóa file sẽ ẩn nguồn ngay trong PostgreSQL. Việc dọn blob và trả quota phải chờ các reader đang giữ khóa đóng lại."
+    },
+    {
+      "id": "ocr",
+      "text": "Tesseract currently recognizes English. Blurred text may be unreadable; low confidence requires human review rather than automatic acceptance."
+    },
+    {
+      "id": "formula",
+      "text": "Spreadsheet formulas and cached values are preserved without recalculation. Editing a literal input can leave an old cached formula result stale."
+    },
+    {
+      "id": "namespace",
+      "text": "Mỗi storage root có namespace UUID bền vững. Journal chỉ cho phép đọc file trong namespace khớp với root; không tự nhận blob lạ."
+    },
+    {
+      "id": "api",
+      "text": "API chỉ phục vụ localhost với bearer token của principal. Yêu cầu không xác thực bị từ chối401, principal khác không nhìn thấy file và nhận404."
+    },
+    {
+      "id": "embedding",
+      "text": "Embedding retrieval uses query and passage prefixes, attention-mask mean pooling, L2 normalization and cosine distance. It does not generate answers."
+    },
+    {
+      "id": "tokens",
+      "text": "Giới hạn UTF-8 bytes không phải số token. Trước khi embedding phải đếm bằng tokenizer thật và từ chối input quá dài, không cắt âm thầm."
+    },
+    {
+      "id": "vision",
+      "text": "Local VLM transcription is explicitly requested. Its table output is unverified, confidence is null and human review is always required."
+    },
+    {
+      "id": "restore",
+      "text": "A paired restore must recover the database, blob hashes, storage namespace and authenticated principal bindings together. Database rows alone are insufficient."
+    },
+    {
+      "id": "chunk",
+      "text": "Một hàng bảng được giữ nguyên trong một chunk. Nếu structured row vượt byte cap thì trả413; không bỏ bớt cell hoặc cắt hàng."
+    },
+    {
+      "id": "nested",
+      "text": "Nested DOCX tables create overlapping paragraph membership and are rejected with422. Flat tables retain row, column and merged-cell provenance."
+    },
+    {
+      "id": "shutdown",
+      "text": "Shutdown cancels and joins active operations before closing the storage root and database pool. Nested contexts keep a reference count until all resources close."
+    },
+    {
+      "id": "qdrant",
+      "text": "One shared Qdrant instance hosts versioned collections. Different embedding dimensions require different vector schemas; tenant filters are server-derived."
+    },
+    {
+      "id": "health",
+      "text": "Health checks report service readiness. A running container alone does not demonstrate application quality, retrieval accuracy or successful restore."
+    },
+    {
+      "id": "unicode",
+      "text": "Source spans use Unicode code-point offsets, not UTF-8 byte offsets. Combining marks and non-BMP characters must remain unchanged without normalization."
+    },
+    {
+      "id": "retention",
+      "text": "Memory extraction is opt-in. Users must be able to inspect, edit, disable and delete stored preferences with provenance and retention rules."
+    },
+    {
+      "id": "cache",
+      "text": "HTTP responses containing private documents use Cache-Control private, no-store and nosniff. This does not imply persistent extraction caching."
+    },
+    {
+      "id": "invoice",
+      "text": "Hóa đơn thử nghiệm có tổng tiền42 USD và mã2048. Đây là fixture tổng hợp dùng đo OCR, không phải dữ liệu thanh toán của người dùng."
+    },
+    {
+      "id": "retry",
+      "text": "A failed vector cleanup is retried through a durable tombstone/outbox. Source authorization hides deleted files even while stale vector points remain."
+    }
+  ],
+  "queries": [
+    {
+      "id": "backup-vi",
+      "group": "cross",
+      "text": "Bản sao cơ sở dữ liệu chạy lúc nào?",
+      "relevant": [
+        "backup"
+      ]
+    },
+    {
+      "id": "backup-en",
+      "group": "en",
+      "text": "When should I check the backup archive checksum?",
+      "relevant": [
+        "backup"
+      ]
+    },
+    {
+      "id": "delete-vi",
+      "group": "vi",
+      "text": "Khi nào dung lượng được trả lại sau khi xóa?",
+      "relevant": [
+        "delete"
+      ]
+    },
+    {
+      "id": "delete-en",
+      "group": "cross",
+      "text": "Does deleting a file release storage while a reader is still open?",
+      "relevant": [
+        "delete"
+      ]
+    },
+    {
+      "id": "ocr-vi",
+      "group": "vi",
+      "text": "Ảnh mờ có nên được chấp nhận tự động không?",
+      "relevant": [
+        "ocr"
+      ]
+    },
+    {
+      "id": "ocr-en",
+      "group": "en",
+      "text": "What should happen when OCR cannot confidently read a blurred image?",
+      "relevant": [
+        "ocr"
+      ]
+    },
+    {
+      "id": "formula-vi",
+      "group": "cross",
+      "text": "Sửa ô đầu vào có tính lại công thức bảng tính không?",
+      "relevant": [
+        "formula"
+      ]
+    },
+    {
+      "id": "formula-en",
+      "group": "en",
+      "text": "Why might a spreadsheet result stay old after editing a number?",
+      "relevant": [
+        "formula"
+      ]
+    },
+    {
+      "id": "namespace-vi",
+      "group": "vi",
+      "text": "Namespace của thư mục lưu trữ dùng để làm gì?",
+      "relevant": [
+        "namespace"
+      ]
+    },
+    {
+      "id": "namespace-en",
+      "group": "cross",
+      "text": "Can the journal adopt files from a different storage root automatically?",
+      "relevant": [
+        "namespace"
+      ]
+    },
+    {
+      "id": "api-vi",
+      "group": "vi",
+      "text": "Người dùng khác truy cập file riêng tư sẽ nhận mã gì?",
+      "relevant": [
+        "api"
+      ]
+    },
+    {
+      "id": "api-en",
+      "group": "en",
+      "text": "What happens when another principal tries to access my private file?",
+      "relevant": [
+        "api"
+      ]
+    },
+    {
+      "id": "embedding-vi",
+      "group": "vi",
+      "text": "Vector tìm kiếm được chuẩn hóa bằng cách nào?",
+      "relevant": [
+        "embedding"
+      ]
+    },
+    {
+      "id": "embedding-en",
+      "group": "en",
+      "text": "Which pooling and similarity operations are used for retrieval vectors?",
+      "relevant": [
+        "embedding"
+      ]
+    },
+    {
+      "id": "tokens-vi",
+      "group": "vi",
+      "text": "Văn bản vượt giới hạn tokenizer được xử lý thế nào?",
+      "relevant": [
+        "tokens"
+      ]
+    },
+    {
+      "id": "tokens-en",
+      "group": "cross",
+      "text": "Can a byte limit guarantee that a text fits the embedding token window?",
+      "relevant": [
+        "tokens"
+      ]
+    },
+    {
+      "id": "vision-vi",
+      "group": "cross",
+      "text": "Kết quả bảng từ VLM có cần kiểm tra lại không?",
+      "relevant": [
+        "vision"
+      ]
+    },
+    {
+      "id": "vision-en",
+      "group": "en",
+      "text": "Does a local vision model provide a calibrated confidence score for tables?",
+      "relevant": [
+        "vision"
+      ]
+    },
+    {
+      "id": "restore-vi",
+      "group": "cross",
+      "text": "Khôi phục hệ thống file cần những thành phần nào đi cùng database?",
+      "relevant": [
+        "restore"
+      ]
+    },
+    {
+      "id": "restore-en",
+      "group": "en",
+      "text": "Is restoring just database rows enough to recover private stored files?",
+      "relevant": [
+        "restore"
+      ]
+    },
+    {
+      "id": "chunk-vi",
+      "group": "vi",
+      "text": "Hàng bảng quá lớn sẽ bị cắt hay báo lỗi?",
+      "relevant": [
+        "chunk"
+      ]
+    },
+    {
+      "id": "chunk-en",
+      "group": "cross",
+      "text": "What happens when an atomic table row exceeds the chunk size budget?",
+      "relevant": [
+        "chunk"
+      ]
+    },
+    {
+      "id": "nested-vi",
+      "group": "vi",
+      "text": "Bảng lồng trong DOCX được hỗ trợ chưa?",
+      "relevant": [
+        "nested"
+      ]
+    },
+    {
+      "id": "nested-en",
+      "group": "en",
+      "text": "Why are nested document tables rejected rather than flattened?",
+      "relevant": [
+        "nested"
+      ]
+    },
+    {
+      "id": "shutdown-vi",
+      "group": "vi",
+      "text": "Shutdown phải chờ công việc nào trước khi đóng tài nguyên?",
+      "relevant": [
+        "shutdown"
+      ]
+    },
+    {
+      "id": "shutdown-en",
+      "group": "en",
+      "text": "How are nested operations tracked during graceful shutdown?",
+      "relevant": [
+        "shutdown"
+      ]
+    },
+    {
+      "id": "qdrant-vi",
+      "group": "vi",
+      "text": "Đổi số chiều embedding có thể dùng nguyên schema cũ không?",
+      "relevant": [
+        "qdrant"
+      ]
+    },
+    {
+      "id": "qdrant-en",
+      "group": "en",
+      "text": "Can embeddings with different dimensions share an unchanged vector schema?",
+      "relevant": [
+        "qdrant"
+      ]
+    },
+    {
+      "id": "health-vi",
+      "group": "vi",
+      "text": "Container đang chạy có đủ chứng minh chất lượng ứng dụng không?",
+      "relevant": [
+        "health"
+      ]
+    },
+    {
+      "id": "health-en",
+      "group": "en",
+      "text": "Does a running container prove retrieval or restore quality?",
+      "relevant": [
+        "health"
+      ]
+    },
+    {
+      "id": "unicode-vi",
+      "group": "vi",
+      "text": "Span nguồn tính theo byte hay ký tự Unicode?",
+      "relevant": [
+        "unicode"
+      ]
+    },
+    {
+      "id": "unicode-en",
+      "group": "en",
+      "text": "How should combining marks be preserved when mapping document source spans?",
+      "relevant": [
+        "unicode"
+      ]
+    },
+    {
+      "id": "retention-vi",
+      "group": "vi",
+      "text": "Người dùng có thể tắt việc ghi nhớ sở thích không?",
+      "relevant": [
+        "retention"
+      ]
+    },
+    {
+      "id": "retention-en",
+      "group": "en",
+      "text": "Is preference memory collected automatically without consent?",
+      "relevant": [
+        "retention"
+      ]
+    },
+    {
+      "id": "cache-vi",
+      "group": "vi",
+      "text": "Response tài liệu riêng tư dùng chính sách cache nào?",
+      "relevant": [
+        "cache"
+      ]
+    },
+    {
+      "id": "cache-en",
+      "group": "en",
+      "text": "Should a private document response be stored by an intermediary cache?",
+      "relevant": [
+        "cache"
+      ]
+    },
+    {
+      "id": "invoice-vi",
+      "group": "vi",
+      "text": "Tổng tiền hóa đơn thử nghiệm là bao nhiêu?",
+      "relevant": [
+        "invoice"
+      ]
+    },
+    {
+      "id": "invoice-en",
+      "group": "en",
+      "text": "What is the total amount on synthetic invoice 2048?",
+      "relevant": [
+        "invoice"
+      ]
+    },
+    {
+      "id": "retry-vi",
+      "group": "vi",
+      "text": "Xóa vector lỗi có làm file đã xóa hiện lại không?",
+      "relevant": [
+        "retry"
+      ]
+    },
+    {
+      "id": "retry-en",
+      "group": "en",
+      "text": "How should failed vector deletion be retried without exposing deleted sources?",
+      "relevant": [
+        "retry"
+      ]
+    }
+  ],
+  "gates": {
+    "recall_at_3": 0.9,
+    "mrr_at_10": 0.8,
+    "group_recall_at_3": 0.8,
+    "peak_rss_mib": 2048,
+    "warm_query_p95_ms": 500
+  },
+  "selection_mrr_tolerance": 0.05
+}

@@ -29,6 +29,7 @@ from scripts.postgres_recovery_acceptance import (
     PROBE_PREFIX,
     RecoveryAcceptance,
     identifier,
+    literal,
 )
 from src.infrastructure.database.connection import (
     create_database_engine,
@@ -85,9 +86,14 @@ def isolated_pair_db(tmp_path, monkeypatch):
             ],
             input_data=schema,
         )
+        source_revision = operator.sql(
+            "local_assistant", "SELECT version_num FROM assistant.alembic_version;"
+        )
         operator.sql(
             probe,
-            "INSERT INTO assistant.alembic_version(version_num) VALUES ('0002'); INSERT INTO assistant.file_global_usage(singleton) VALUES(1);",
+            "INSERT INTO assistant.alembic_version(version_num) VALUES ("
+            + literal(source_revision)
+            + "); INSERT INTO assistant.file_global_usage(singleton) VALUES(1);",
         )
         url = make_url(os.environ["DATABASE_URL"]).set(database=probe)
         monkeypatch.setenv("DATABASE_URL", url.render_as_string(hide_password=False))

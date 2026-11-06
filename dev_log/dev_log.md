@@ -2050,3 +2050,829 @@ Artifacts riêng tư giữ ngoài Git/source archive: `data/backups/d17-paired-2
 - [x] Full443/443, zero SKIP; ADR-019–025/design/runbook/roadmap/dev log phản ánh evidence; source-only full-file artifact tách khỏi secrets/backups.
 
 **D17 hoàn tất đúng local acceptance. Bước kế tiếp D18:** P1 native PDF extraction có file UUID/content hash/page locators/extractor version, owner/namespace/ready/hash recheck và isolated resource bounds. Review ADR trước thay đổi kiến trúc/persistence; golden multi-page/Unicode/blank/error/page mapping và full regression phải PASS trước khi chốt D18. OCR/VLM thuộc D21, không auto-ingest hoặc coi file content là instruction.
+
+---
+
+# Ngày 18 — Native PDF extraction có provenance từng trang (2026-10-18)
+
+**Mục đích:** Ghi lại triển khai, quyết định kiến trúc và kết quả kiểm thử thực tế của D18 sau D17 PASS.
+
+**Kết quả:** **D18 PASS trong phạm vi localhost/one worker**. Full regression **476 passed in34.23s**, exit0, **0 SKIP**, không exclude test. D19 DOCX read/write là task tiếp theo; chưa đánh dấu PASS hay triển khai D19. Ngày trong roadmap là milestone, không phải hạn buộc phải nhảy task.
+
+## Đánh giá phạm vi và ADR
+
+P1, phụ thuộc owned ready files/namespace/FD/sandbox đã PASS của D17. Rủi ro: font/text ordering, page mapping, malformed streams, resource exhaustion, concurrent delete và hostile document instructions. ADR-026 chốt trích xuất native PDF **theo yêu cầu, không lưu cache/persist extraction**; không cần migration hoặc dependency mới. Không auto-ingest/attach/model call. OCR/VLM vẫn D21. Không đổi schema, config hay hành vi Day15 đã PASS; chỉ bổ sung reader FD API cần cho extraction và service/router liên quan của D17.
+
+## Code đầy đủ trong checkout
+
+- `src/infrastructure/pdf_extractor.py`: parent sandbox invocation, wall/output bounds, exact protocol/version/page numbering/UTF-8 validation, safe errors và audit counts/version.
+- `src/infrastructure/pdf_extractor_worker.py`: kernel limits trước import parser, D17 PDF structure/active-content validation, plain native text từng trang, reject overflow thay vì truncate.
+- `src/infrastructure/local_blob_storage.py`: `BlobReader.extraction_reader()` giữ read-only borrowed FD trên shared locked inode; không reopen user pathname.
+- `apps/api/services/files.py`: tối đa2 extraction đồng thời, không queue; track/join request và thread trước close; owner/namespace/ready/hash trước parsing và integrity/ready sau parsing. Delete có thể hide/202 khi reader còn giữ lock; không trả stale extracted text.
+- `apps/api/routes/files.py`: authenticated `POST /api/v1/files/{id}/extract`, private/no-store và nosniff; response UUID/SHA/extractor/version, `content_trust=untrusted`, pages với one-based number/text/locator/status. Không có native text trả `no_native_text`, không khẳng định visual page blank.
+- Tests/golden/ADR/design/runbook/roadmap cập nhật đồng bộ. Source archive cuối chứa full versions của các file thay đổi, không phải patch; không kèm key/data/backup.
+
+## Giới hạn thực thi
+
+Reuse Bubblewrap read-only runtime/code, isolated network/PID/user/IPC, cleared environment, không mount home/data/auth/Vault.512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;8 MiB regular stdout. Tối đa1000 pages,128 KiB UTF-8/page,1 MiB UTF-8/document. Parser errors không lộ exception text. Logs chỉ UUID/count/version/error code, không page text. Đây là native/plain extraction có golden coverage cụ thể; chưa chứng nhận arbitrary font/layout/table fidelity.
+
+## Kiểm thử đã quan sát
+
+1. **25 parser/protocol/resource cases PASS**: independent hand-assembled3-page PDF có2 dòng, explicit Unicode CMap U+1EC7, trang không text; exact page/text oracle. Actual malformed/encrypted/active/1003-page/per-page text/document text limits. Wrong schemas/numbering/version/surrogate/oversized replies, sanitized process failures/source rewind. Actual kernel-limit entrypoint, real stalled sandbox timeout không còn worker và log privacy. Golden README ghi rõ coverage và limitations.
+2. **8 real PostgreSQL HTTP/service cases PASS**: auth401, foreign owner404, reserved409, non-PDF415, source tamper503; exact UUID/hash/version/page locators/status, private headers, repeat determinism/source download/quota unchanged; concurrent delete, cancellation, shutdown, tamper **sau parser hoàn thành** giữ lock/join và final revalidation;2-slot admission/429/release; foreign storage namespace từ chối trước parser.
+3. **Full regression:476 passed in34.23s**,0 skip, real PostgreSQL + CORE.443 baseline +25 parser +8 HTTP/service. Credential đọc từ Vault bằng TLS helper, parent chỉ cấp app DATABASE_URL/live flag cho pytest; strip VAULT env, redact secrets trước output. Không hardcode/print key.
+4. Ruff selected correctness/import rules (`E4,E7,E9,F,I`, fixture re-export exceptionF811), format7 files, AST descriptions112 definitions, uv lock check và git diff check PASS. Không tuyên bố toàn bộ repository lint sạch; các policy lint legacy không thuộc thay đổi này.
+5. Sau regression: global file usage `(0,0,0)`, restore probes0; shared containers vẫn running/healthy, không restart/new service. Tests dùng UUID/root riêng và cleanup đúng owner; production namespace/auth/paired backup không bị thay thế.
+
+Lượt thử đầu phát hiện oversized-PDF fixture thiếu font nên không sinh native text; đã sửa fixture dùng font thật từ golden rồi cả per-page/document caps được kiểm chứng bằng actual sandbox. Một fixture tamper dùng reservation chưa có lease đã được sửa bằng ready identity từ journal; một lượt lint loại fixture imports đã được phục hồi bằng explicit re-export. Chỉ kết quả full476 sau các sửa này được dùng chốt PASS.
+
+**Tiếp theo D19:** review supported DOCX paragraphs/tables/styles/read-write/round-trip semantics; đánh giá dependency/effort/security/output ownership-quota; ADR trước persistence/API mới. Giữ476 baseline và chỉ chuyển milestone sau Acceptance Criteria có kết quả thực tế.
+
+---
+
+# Ngày 19 — DOCX read/write, tables, styles và round-trip (2026-10-18)
+
+**Mục đích:** Ghi quyết định phạm vi, triển khai và acceptance thực tế cho D19 sau D18 PASS.
+
+**Kết quả:** **D19 PASS trong phạm vi localhost/one worker và plain direct-run editing**. Final full regression **529 passed in 43.90s**, exit0, **0 SKIP**, không exclusions; PostgreSQL/CORE thật, credential từ Vault. D20 XLSX là task NEXT, chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox và conventions provenance/lifecycle D18. Rủi ro: ZIP/XML expansion, external relationships, mất formatting hoặc package parts, ambiguous edit targets, source thay đổi/xóa trong lúc parse và slow-client giữ output. ADR-027 được viết trước API/persistence changes; chọn đọc cấu trúc và sửa text **trong existing plain direct runs**, giữ run/paragraph/table/style properties, serialize riêng `word/document.xml`, giữ mọi member khác nguyên bytes sau decompression. Không hứa arbitrary Word layout/pagination hoặc tính toán inherited formatting.
+
+Output là bounded ephemeral attachment; không cache/journal/migration hay charge persistent quota mới. Caller muốn lưu phải reserve/upload như file bình thường. Không sửa source, không model/ingestion, không thay đổi Day15/PDF code đã PASS. Chỉ mở rộng service/router cần cho D19. D19 được hoàn thành trong một milestone sau acceptance; roadmap không ép một milestone tương ứng một ngày lịch.
+
+Dependencies thêm bằng uv: runtime `lxml>=6,<7` khóa6.1.3 để giữ namespace khi sửa XML; dev-only `python-docx>=1.2,<2` khóa1.2.0 làm independent reopen oracle/golden generator. Dùng LibreOffice có sẵn để mở/render trusted test fixture, không đưa LibreOffice vào runtime untrusted parsing và không tạo service/container mới. Lockfile purpose header được giữ lại sau uv update.
+
+## Code và contract
+
+- `src/application/services/docx_contract.py`: strict plans/views, source SHA precondition, unique one-based paragraph/run targets, XML-valid Unicode/tab/newline, numbering/reference/text/count bounds và versioned processor ID.
+- `src/infrastructure/docx_content.py`: đọc ordered main-body paragraphs/runs/tables/cells/merges/style references; direct bold/italic/underline dùng tri-state để không nhầm inherited formatting. Rewrite chỉ selected text/tab/line-break nodes, giữ rPr và các phần không sửa. Unsupported fields/drawings/hyperlinks/bookmarks/tracked changes/page-column breaks không được edit; signed packages bị từ chối rewrite.
+- `src/infrastructure/docx_processor.py` và `docx_worker.py`: borrowed read-only source FD vào stdin; bounded anonymous request FD được bwrap mount read-only tại `/request.json`, không nhét edit text vào argv/env. D17 OOXML preflight trước lxml (`resolve_entities/load_dtd/huge_tree=False`, `no_network=True`); reverify generated DOCX trước release. Parent bounded output/schema, safe allowlisted errors; không log parser diagnostics/text.
+- `FileService.docx_operation()` giữ tối đa2 DOCX slots, active task và shared source lock **đến khi gửi xong response hoặc cancel**, tránh tích tụ output25 MiB do client chậm. Recheck owner/namespace/ready/size/hash trước parsing và hash/ready sau parsing. Cancellation/shutdown join thread rồi mới close FD. PDF giữ gate riêng như cũ.
+- Authenticated `POST /api/v1/files/{id}/docx/read`: file UUID/hash, processor version, untrusted label, paragraphs/runs/tables/styles và source locators.
+- Authenticated `POST /api/v1/files/{id}/docx/rewrite`: strict JSON tối đa64 KiB,1–100 unique edits, source hash; trả DOCX attachment private/no-store/nosniff với source/output SHA và processor headers. Không đổi nguồn/quota. Chỉ có native source indices, không tự tạo page citations cho Word.
+
+## Giới hạn
+
+512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;25 MiB output/stdout. Read JSON8 MiB; native text1 MiB; run64 KiB; main XML2 MiB;10000 paragraphs/cells;20000 runs;1000 styles. Mọi overflow reject, không truncate. D17 archive/DTD/macro/external/nested-package bounds vẫn áp dụng. Các phần không sửa giữ nguyên, không phải chứng nhận mọi nội dung Word là an toàn hay mọi visual layout giống nhau.
+
+## Kết quả kiểm thử đã quan sát
+
+1. **37 processor/contract/resource/opening cases PASS**: genuine styled Unicode golden,3 differently formatted runs, custom paragraph style, table cells/gridSpan merge, source main-body order; source hash/unique targets/invalid XML chars/strict types; exact run edits và no-op/empty/multiple runs. Independent python-docx reopen chứng minh bold/italic/underline/style/table/header/footer còn đúng; mọi non-document.xml member bytes giống nguồn. Actual LibreOffice mở trusted rewritten DOCX và convert PDF; pypdf xác minh edited text/table values. Không coi extract-only smoke là đủ.
+2. Actual hostile variants: malformed/external relationship/DTD/macro/nested package; XML/paragraph/run/document text limits; unsupported field/signature/missing target/stale hash. Assert **exact safe code/status**, không chấp nhận broad infrastructure503 cho negative input. Resource XML dùng ZIP_STORED để chứng minh native budgets thay vì vô tình chạm ZIP ratio trước.
+3. Kernel limit probe ở production worker parser entrypoint; read-only metadata mount, host/private paths absent, credential-free environment; real stalled sandbox timeout không còn worker. Parent timeout/OS/crash/malformed/oversized/error-type replies và log privacy fail closed. Oversized serialized edit plan bị chặn trước scheduling worker.
+4. **16 real PostgreSQL HTTP/service cases PASS**: owned read/rewrite/reopen/provenance/headers, auth401/foreign404/reserved409/deleted404/non-DOCX415, immutable source và chỉ1 original blob/quota unchanged. Stale hash/unknown fields/duplicate targets/duplicate JSON keys/oversize/media/tamper safe errors. Concurrent delete/cancel/shutdown/tamper sau parse không trả stale content và join/release đúng. Hai actual slow rewrite responses giữ cả2 slots, request3 trả429, delete giữ allocation, cancellation đóng FD rồi cleanup về0. Wrong namespace và response-construction failure không leak operation. JSON response budget được kiểm tra sau khi thêm provenance; exceeded413 giải phóng slot và giữ nguyên nguồn.
+5. **Final full:529 passed in 43.90s**,0 skip, no exclusions;476 baseline +37 processor +16 integration. Intermediate528/43.32s và528/43.41s giữ làm lịch sử; final529 chạy sau khi bổ sung cap8 MiB cho HTTP JSON kể cả source locators và test cleanup, cùng kiểm tra independent LibreOffice subprocess cũng dùng credential-free environment (`PATH/LANG/XDG_CACHE_HOME` only). Runtime sandbox từ đầu không nhận DB/Vault/API env. Vault TLS helper chỉ giao app DATABASE_URL/live flag cho pytest; strip VAULT env và redact trước output, không print/hardcode key.
+6. Ruff selected correctness/import rules `E4,E7,E9,F,I` (explicit fixture re-export exceptionF811), format8 files, AST descriptions102 definitions, uv lock và diff checks PASS. Không tuyên bố toàn repository lint sạch ngoài phạm vi.
+7. Post-test audit: global file allocation `(0,0,0)`, restore probes0; existing shared services vẫn running/healthy, không restart/new instance. D19 không đụng production schema/root/auth/retained paired backup; tests dùng root/UUID riêng và cleanup đúng owner.
+
+Roadmap v3.12, ADR-027, design/runbook và golden README được cập nhật theo final evidence; full-file source archive tại `/tmp` không chứa key/data/backup. **Next D20:** P1 XLSX sheets/cells/styles/formula-source preservation; đánh giá dependency/effort/risk và ADR trước API mới, không execute formula/macro hay tự recalculation; golden workbook round-trip và full regression bắt buộc trước PASS.
+
+---
+
+# Ngày 20 — XLSX read/write, sheets, formula preservation và security (2026-10-18)
+
+**Mục đích:** Ghi lại phạm vi, triển khai và bằng chứng acceptance của D20 sau D19 PASS.
+
+**Kết quả:** **D20 PASS trong phạm vi localhost/one worker, existing literal-cell edits và D17 conservative OOXML subset**. Final full regression **587 passed in52.87s**, exit0, **0 SKIP**, không exclusions; PostgreSQL/CORE thật với credential từ Vault.529 baseline +42 processor/contract/sandbox +16 HTTP/service =587. D21 OCR/VLM là NEXT, chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox và D19 bounded response lifecycle. ADR-028 viết trước code/API; đánh giá rủi ro ZIP/XML expansion, formula execution/cache corruption, mất styles/package parts, ambiguous sheet/cell identity và slow/cancelled response. Chọn native XML read và sửa **existing literals**, giữ nguyên source, formula source/attributes/cache và các phần không sửa. Không thực thi formula/macro, không remote fetch, không model/ingestion. Cache không được tính lại; output báo `preserved_not_recalculated` kể cả khi sửa input khiến cache cũ có thể stale. Không coi cache preservation là correctness của kết quả tính toán.
+
+Reuse runtime lxml6.1.3 và existing bwrap/verifier; chỉ thêm **dev-only openpyxl3.1.5 + et-xmlfile2.0.0** bằng uv để independent reopen và tạo golden. Không thêm runtime dependency, schema/migration/service/container. Không sửa parser/PDF/DOCX endpoints đã PASS; FileService bổ sung XLSX operation riêng và main đăng ký router mới. Output ephemeral attachment, caller muốn persist phải dùng normal reserve/upload; source/persistent quota không đổi.
+
+## Triển khai và liên kết hệ thống
+
+- `src/application/services/xlsx_contract.py`: strict source-hash plans,1–100 unique native sheet/A1 targets; explicit string/number/boolean kinds. Number nhận lexical string, reject NaN/overflow/underflow/coercion; XML-valid Unicode/tab/newline và UTF-8/UTF-16 bounds. Read schema kiểm numbering/identity/style refs, formulas/cache, counts/text budget.
+- `src/infrastructure/xlsx_content.py`: resolve unique workbook-sheet relationships, inline/shared/rich strings, lexical native values, formula attributes/cache, style indices và merged ranges. Reject ambiguous rows/cells/shared/style references; không expand full cell grid. Rewrite literal hiện hữu, giữ cell style/row/column/workbook properties; serialize changed sheet XML mà thôi, byte-identical các member khác và formula XML trong sheet đã sửa. Formula/merged/rich/metadata cells, signed package hoặc target thiếu bị từ chối.
+- `xlsx_processor.py`/`xlsx_worker.py`: credential-free isolated source FD + bounded anonymous read-only `/request.json`; edit/cell/formula text không vào argv/env/log. D17 preflight trước strict lxml, output reverified trước release; parent schema/output limits và safe errors. Không import openpyxl runtime.
+- `FileService.xlsx_operation()` giữ2-slot admission/active task/SH FD đến hết response hoặc cancellation; owner/namespace/ready/size/hash recheck trước và hash/ready sau parse; join thread trước close. Existing PDF/DOCX gates giữ nguyên.
+- `apps/api/routes/xlsx.py` và main: authenticated `/api/v1/files/{id}/xlsx/read` + `/xlsx/rewrite`, UUID/hash/version/untrusted label/native sheet-cell locators. Attachment có source/output hashes và cache-status header; private/no-store/nosniff. JSON cap bao gồm locators; response construction failure/cancel đóng operation đúng.
+
+## Bounds và phạm vi hỗ trợ
+
+512 MiB RAM;5/6s CPU;10s parent wall;32FD;zero core;25 MiB output. Read JSON8 MiB kể cả provenance; lexical text1 MiB; cell64 KiB UTF-8/32767 UTF-16 units;100 sheets;50000 cells;100000 shared strings;10000 styles; existing2 MiB/XML part/archive limits. Reject thay vì truncate. Canonical addresses trong A1–XFD1048576. Chỉ edit ô đã tồn tại, không thêm sheet/cell/formula/style. String bắt đầu `=` luôn ghi inlineStr để không biến thành formula. Workbook application bên ngoài có calculation policy riêng khi mở file.
+
+D17 absolute package-root relationships/external/macro/DTD/nested-package restrictions giữ nguyên. Golden độc lập chuẩn hóa OPC relationship targets sang relative để nằm trong supported subset; runtime **không tự repair/adopt** package user. Mọi cached result giữ nguyên, không chứng nhận calculation freshness/visual fidelity của mọi workbook. Đây là limitation được ghi rõ trong ADR/runbook/golden README, không sửa bừa thành phần PASS để mở rộng phạm vi.
+
+## Kiểm thử thực tế
+
+1. **42 processor/contract/sandbox cases PASS**: trusted multi-sheet Unicode/numeric/boolean/shared-string/styled/merged golden, cross-sheet formulas, explicit caches30/60 và native formula attribute `ca=1`. Independent openpyxl reopen cả `data_only=False/True`: edited literals đúng, number format/bold/color/fill/freeze pane/column width/merged ranges giữ đúng; formula/cache giữ nguyên mặc dù input đổi. Toàn bộ member ngoài changed sheet byte-identical; formula XML trong changed sheet byte-identical. Chuỗi `=SUM(1,2)` mở lại là text, không formula.
+2. Actual malformed/external/DTD/macro/nested/oversized XML/cell-count/text-budget/bad shared-style refs/duplicate cells; formula/merged/signed/missing/stale edits đều assert exact safe code/status. Native resource variants dùng stored XML; cell-count fixture dùng nhiều cells mỗi row để không vô tình chạm XML-size bound trước. Strict plan từ chối duplicate/coercion/invalid coordinates/XML/number types.
+3. Parent process failure/malformed/oversized reply/error-type probes; log privacy. Production worker kernel budgets, read-only metadata mount/private host paths absent/cleared env; actual stalled sandbox timeout không còn worker. Không chạy spreadsheet calculation engine để kiểm chứng parser.
+4. **16 real PostgreSQL HTTP/service cases PASS**: auth/owner/namespace/ready/hash, native locators/headers/cache uncertainty, immutable download/quota/one original blob. Stale/extra/duplicate/oversize/media/tamper errors, concurrent delete/cancel/shutdown/post-parser tamper; hai slow rewrite responses giữ slots, request3 trả429, delete pending giữ allocation rồi cancellation release/cleanup. Construction failure và JSON limit sau provenance không leak source/slot.
+5. **Final full:587 passed in52.87s**,0 skip, no exclusions; real PostgreSQL + CORE. Focused42/4.30s và16/4.97s PASS trước final full; final thêm explicit formula-attribute golden assertion. Vault TLS helper chỉ cấp app DATABASE_URL/live flag cho pytest, strip VAULT env và redact output. Production worker nhận env rỗng; không hardcode/print key.
+6. Ruff selected correctness/import rules `E4,E7,E9,F,I` với fixture re-export exceptionF811; format9 files; AST descriptions82 definitions; uv lock/diff checks PASS. Lockfile purpose header giữ lại. Không tuyên bố toàn repo lint sạch ngoài phạm vi.
+7. Post-test audit global file usage `(0,0,0)`, restore probes0; CORE/shared containers vẫn running/healthy, không restart hay new instance. Production DB schema/root/auth/retained paired backup không bị thay thế; tests dùng root/UUID riêng và cleanup đúng owner.
+
+Một lượt integration đầu còn tên `DocxResponse` trong XLSX construction-failure test; đã sửa thành `XlsxResponse`, rerun focused16 và full587 PASS. Chỉ final full sau sửa và golden refinement được dùng chốt milestone. Roadmap v3.13, ADR-028, design/runbook/golden README cập nhật cùng evidence; source-only full-file archive tại `/tmp` không chứa key/data/backup.
+
+**Next D21:** đánh giá P1 OCR/VLM fallback cho scans/images/tables, existing CORE vision/mmproj, bounded rasterization/model/VRAM budgets và uncertainty measurement. ADR trước backend/API mới; golden scanned/native comparisons, page/source mapping và full regression bắt buộc trước PASS. Có thể tách nhiều milestone nếu Acceptance Criteria chưa đạt; không tự nhảy D22.
+
+---
+
+# Ngày 21 — Per-page OCR/VLM fallback, confidence và uncertainty (2026-10-18)
+
+**Mục đích:** Ghi lại triển khai D21, ranh giới renderer/model và bằng chứng chất lượng thực tế sau D20 PASS.
+
+**Kết quả:** **D21 PASS trong phạm vi localhost/one worker: native PDF, English OCR và explicit local CORE VLM fallback**. Final full regression **641 passed in66.51s**, exit0, **0 SKIP**, không exclusions, real PostgreSQL/CORE;587 baseline +28 page/parser/kernel +10 vision protocol +12 HTTP/lifecycle +4 metric/live =641. D22 chunking là NEXT; chưa triển khai hoặc đánh dấu PASS.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned ready/namespace/hash/FD/sandbox, D18 native page provenance và D19 response-lifetime ownership. ADR-029 được ghi trước code; rủi ro renderer hostile input, CPU/pixels/GPU budgets, hallucination/document instructions, uncertainty và delete/cancel races. Chọn xử lý **một trang mỗi request**; native-first `auto`, forced `ocr`, explicit `vlm`. Không tự model-call khi upload hoặc khi OCR confidence thấp. Không tools/history/context/indexing/remote URLs; source và quota/schema giữ nguyên.
+
+Máy có sẵn Tesseract5.5.0 (eng/osd, chưa có Vietnamese traineddata), Poppler26.01.0 và CORE alias qwen3.5-9b-core. Existing CORE thực sự đọc được image/table trong live drill; không restart/thêm inference container. Reuse Pillow/pypdf/bwrap hiện có, không thêm runtime/dev dependency hay migration. Scope tiếng Anh của OCR và unverified/always-review VLM được ghi rõ, không coi đây là chứng nhận arbitrary-language/layout accuracy.
+
+## Code và source/model boundary
+
+- `src/application/services/ocr_contract.py`: strict bounded page/word/box/table/model schemas, version/provenance, confidence/review invariants và safe validation. OCR score là character-weighted engine score, **không phải calibrated correctness probability**; VLM confidence luôn null, review luôn true.
+- `src/infrastructure/page_ocr.py`/`ocr_worker.py`: D17 verify source trước parse; PDF native text hoặc selected-page Poppler render; EXIF orientation/RGB/thumbnail và **xóa mọi metadata gồm ICC** trước PNG; Tesseract TSV nhận sanitized pixels, trả text/word boxes trong rendered pixel space. Read-only private sandbox, no private host paths/network/credentials. Child output dùng inherited anonymous bounded stdout, không writable scratch directory.
+- `apps/api/services/vision_ocr.py`: configured loopback CORE alias verified; no environment proxies/redirects; strict JSON Schema, fixed transcription-only prompt, no tools/history,1024 output tokens/temperature0/thinking off,45s total/64 KiB response. Finish reason/incomplete/schema failures fail closed, không trả model exception/text trong error/log. Chỉ sanitized raster vào explicit vision mode.
+- `FileService.ocr_operation()` giữ1 slot/active task/SH FD đến xong model/response hoặc cancellation. Owner/namespace/ready/size/hash trước CPU, hash/ready trước model disclosure và sau model. CPU thread được join; model async request bị client cancel cũng được join tới bounded completion trước release, tránh submit lặp do cancel. Không khẳng định server-side inference chắc chắn aborted sau network timeout; không restart shared server để xử lý cancel.
+- `apps/api/routes/ocr.py` + main: authenticated `POST /api/v1/files/{id}/ocr?page=1&mode=auto|ocr|vlm`. File UUID/hash/page locator/untrusted label, normalized boxes, engine/version, uncertainty/table status; không lộ raster/base64/path; private/no-store/nosniff. JSON cap sau provenance, construction failure/slow send/cancel đều đóng operation.
+- `scripts/ocr_acceptance.py`, golden README và tracked `docs/evidence/d21-ocr-acceptance.json`: reproducible synthetic-only quality drill. Metric artifact chỉ giữ version/hash/numeric evidence, không source/model text/image/keys. Default benchmark output vẫn ignored theo repository; retained evidence dùng explicit `--output docs/evidence/...`, không force-add private benchmark directories.
+
+## Resource và product limits
+
+Input image20M-pixel D17 bound; selected page normalized side≤2000/≤4M pixels, PNG≤4 MiB. Worker512 MiB RAM,8/9s per-process CPU,25s parent wall,32FD,zero core,8 MiB stdout; renderer/OCR child deadlines8/10s. Native/OCR/model lexical text64 KiB;5000 words;20 tables/100 rows/20 cells;public JSON1 MiB kể cả locator. Reject thay vì truncate; parent timeout test chứng minh namespace worker và nested child không giữ FD sau kill. One operation/response, no queue, excess429.
+
+`auto` chỉ dùng native PDF text nếu có; mixed pages có thể thiếu text trong image và được báo limitation, caller phải force OCR/VLM. OCR không infer table grid; điểm<85 hoặc không text cần review, English-only/order/table limitations luôn hiện. Empty output không chứng minh trang visual blank. VLM tables là unverified model data; source instructions không có quyền trở thành tools/actions. Calibrated confidence, arbitrary language/layout, load SLO và model server cancellation guarantees vẫn ngoài scope.
+
+## Chất lượng được đo, không che lỗi
+
+Retained metric artifact đã chạy lại bằng actual production parser/client:
+
+- clean.png và scanned.pdf/page1: **CER0/WER0** trên exact known English text; engine scores lần lượt95.634/95.898, không được diễn giải thành xác suất đúng. Source page1/2 và normalized word boxes đúng.
+- blank.png và scanned.pdf/page2: empty output, no numeric score, review required; không khẳng định mọi trang blank sẽ luôn được phân loại đúng.
+- unclear.png chứa ground truth `uncertain 7381`, bị blur mạnh: OCR không đọc được, **CER1.0/WER1.0 (100% error)**. Gate riêng là `uncertainty_detection`: review required và score absent/low. Không đổi ground truth thành empty để tạo accuracy giả, không gộp case này thành transcription success.
+- table-vie.png: actual CORE trả đúng **6/6 cells và exact row order** của table tiếng Việt. Đây là một clean golden, không general Vietnamese OCR benchmark; confidence vẫn null và review required. D18 native extraction trên scanned.pdf thật sự không có text, xác nhận cần fallback.
+
+## Tests và operational evidence
+
+1. **28 page/parser/kernel cases**: actual image/scan/native/blank/degraded/selected-page/error mapping, measured text/box quality, orientation/metadata stripping, forged page/box/nonfinite confidence/review/text/model-schema negatives; worker protocol failures, combined text/word/separator cap, actual kernel/private mount/env bounds và real nested-child timeout/reaping. Logs không lộ recognized text.
+2. **10 vision protocol cases**: actual request has strict schema/no tools/history/fixed token/thinking limits; alias/status/redirect/timeout/truncated/malformed/schema/oversized/choice failures safe. Prompt alone không được coi là security certificate.
+3. **12 real PostgreSQL HTTP/lifecycle cases**: auth/owner/namespace/ready/hash/source/page/provenance/private headers, no raster exposure, immutable source/quota; wrong type/corrupt/reply cap; delete/cancel/shutdown/post-parser tamper fenced **trước model disclosure**; pending model cancellation join giữ slot/FD, slow response giữ single slot và deletion quota; namespace/construction cleanup đúng.
+4. **4 metric/live-quality cases**: known character/word edit-distance oracles và actual CORE/Tesseract/Poppler golden evaluation, retained temp metric artifact không chứa source image/text. Full live flag được cấp qua existing Vault wrapper nên không skip model/DB acceptance.
+5. **Final:641 passed in66.51s**,0 skip/no exclusions. Intermediate641/66.34s và641/67.59s chỉ giữ lịch sử; final chạy sau sửa degraded-case oracle và ICC stripping. Focused37/5.42s +16/8.51s trước cuối; final thêm combined-separator budget case và expanded ICC metadata assertion. Operator `uv run python -m scripts.ocr_acceptance --output docs/evidence/d21-ocr-acceptance.json` exit0, retained5 cases +actual table6/6, degraded CER1.0, source SHA/engine versions verified.
+6. Ruff selected correctness/import `E4,E7,E9,F,I` (fixture re-export exceptionF811), format12 files, AST descriptions95 definitions, uv lock/diff checks PASS. Không tuyên bố full-repository policy lint ngoài phạm vi. Không dependency/lockfile/schema change.
+7. Post-test global file usage `(0,0,0)`, restore probes0; existing shared containers/CORE vẫn running/healthy, không restart/new instance. Private namespace/auth/paired backup không bị thay thế; tests dùng root/UUID riêng và cleanup đúng owner. Vault TLS helper chỉ giao app DATABASE_URL/live flag cho pytest, strip VAULT env/redact; parser/env không nhận keys.
+
+## Các phát hiện đã sửa trước PASS
+
+VLM JSON-object-only probe ban đầu sai schema và bị từ chối502; strict JSON Schema generation sửa được protocol, actual table6/6 PASS. Review scoring phát hiện blurred-case oracle không nên là empty: sửa thành actual source text và giữ CER100% với uncertainty gate riêng. Expanded JPEG test tái hiện Pillow giữ ICC profile dù đã re-encode PNG; assertion FAIL trước fix, `normalized.info.clear()` làm test PASS, rồi chạy lại full641. Chỉ final evidence sau tất cả sửa được dùng chốt D21.
+
+Roadmap v3.14, ADR-029, design/runbook/golden README và retained evidence cập nhật cùng tiến độ. Full-version source archive tại `/tmp` tách khỏi credentials/user data/backups. **Next D22:** P1 deterministic chunks theo page/paragraph/table/sheet, stable source/hash/version/span IDs và ACL labels; carry OCR/VLM review/uncertainty. ADR trước persistence/API mới; golden source mapping/size/idempotence/access tests +full regression phải PASS trước khi chuyển D23.
+
+---
+
+# Ngày 22 — Deterministic private chunks, provenance và access labels (2026-10-18)
+
+**Mục đích:** Ghi lại D22 triển khai/kiểm thử thực tế sau D21 PASS, cùng giới hạn identity/source/response và handoff D23.
+
+**Kết quả:** **D22 PASS trong phạm vi localhost/one worker**. Final full Vault-backed regression **700 passed in76.12s**, exit0, **0 SKIP**, không exclusions;641 baseline +30 mapping/identity/budget +29 real PostgreSQL HTTP/lifecycle. Existing CORE cũng được kiểm tra bởi live suite D21. D23 mixed-document evaluation/repair là NEXT, chưa PASS hoặc triển khai trong milestone này.
+
+## Ưu tiên, dependency, effort và ADR
+
+P1, phụ thuộc D17 owned namespace/ready/hash/SH FD, D18–D21 native/structured/OCR projections và response ownership. ADR-030 ghi trước code; effort một hoặc nhiều milestone tùy acceptance. Rủi ro chính: mất table structure/source spans, unstable IDs, lẫn owner/namespace, oversized row/metadata, mất uncertainty và delete/cancel/shutdown races. Reuse parser/worker/runtime hiện có; không thêm dependency, schema, index, service hay persistence. UTF-8 bytes là policy v1; tokenizer/embedding vẫn D24, không gọi byte budget là token budget.
+
+## Triển khai và kiểm tra liên quan
+
+- `document_chunks.py`: exact Unicode code-point spans; text split không normalize/trim/overlap, giữ ranh giới page/paragraph; empty fields có record riêng. Atomic rows dùng canonical sorted-key UTF-8 JSON; oversized row413 thay vì split/truncate. SHA-256 ID bind private owner/namespace/file, source SHA, parser/chunker version, byte policy và toàn bộ text/span/structure/section/quality. Access labels private/principal/opaque scope do server tạo, không lộ namespace và không cấp quyền truy cập.
+- `chunk_sources.py`: golden PDF page mapping; DOCX declared Heading1–9/basedOn section refs, paragraphs/table rows với row/column/gridSpan/vertical merge; XLSX sheet/row/address/type/style/formula attributes/cache/merge metadata. Source field spans giữ exact lexical values/formulas/caches, không evaluate. Nested/overlapping table paragraph membership và cyclic heading ancestry422. Input ordering của DOCX paragraphs/styles/cells và XLSX sheets/cells không làm đổi deterministic result.
+- OCR narrative/table là hai projections có nhãn riêng; quality/review/confidence basis/uncertainties/coordinates/dimensions đi theo từng chunk/empty field. VLM luôn review/null confidence; table chưa verified. Không nhân bản word arrays; D21 page endpoint vẫn cung cấp boxes. Nondeterministic model content thay đổi thì ID thay đổi đúng contract; không tuyên bố same source luôn cho cùng model transcription.
+- `apps/api/services/chunks.py` giữ1 slot/active task/outer verified SH FD qua joined parser/transform và response; reuse DOCX/XLSX/OCR contexts đến cuối delivery. Final independent source hash và owned ready fence sau construction. Plain UTF-8 reader bounded1 MiB+1; supported TXT/MD/CSV lexical, không infer CSV table. Source `auto` PDF native toàn bộ pages; explicit OCR một page, VLM chỉ khi caller yêu cầu.
+- `apps/api/routes/chunks.py` + main: authenticated `POST /api/v1/files/{id}/chunks?max_bytes=2048&source=auto&page=1&ocr_mode=auto`; UUID/hash/processor/chunker/policy/access/locators/spans/untrusted metadata, private/no-store/nosniff. Invalid/irrelevant options fail422, wrong OCR source415; owner/namespace404, not-ready409, integrity503. Response construction/send/cancel đều đóng context.
+- **Thay đổi cần thiết trên FileService đã PASS:** thêm counter cho chunk operation và reference count nested `track/untrack`, vẫn giữ active task set cho shutdown. Vì D22 giữ parser context lồng trong outer source context, inner exit trước đây có thể discard outer task khỏi shutdown inventory. Đếm depth bảo vệ outer source đến khi close; không đổi auth/schema/quota/parser/upload/download/recovery contracts. Có test trực tiếp inner-close và slow-response cho cả text/DOCX/XLSX/OCR; full baseline regression giữ PASS.
+
+## Resource/product limits
+
+Chunk text256–8192 UTF-8 bytes, default2048; table row là một chunk, chưa group nhiều rows. Projected lexical text/structured-row JSON tối đa1 MiB, combined chunks/empty records1000, complete reply8 MiB kể cả provenance. Metadata được tính tăng dần trước khi tích lũy complete reply, sau cùng và ở response đều kiểm cap; merged-range metadata chia sẻ trong bộ nhớ thay vì sort/copy lại mỗi row. Existing D18–D21 parser limits giữ nguyên. Không partial/truncated result.
+
+DOCX section dựa vào declared heading ancestry, không visual heading inference/rendered-page claim; D19 main-body scope không tự mở rộng header/footer. Nested/ambiguous table unsupported. CSV là lexical text. Row vượt byte cap fail413 kể cả khi text value ngắn nhưng structured metadata lớn. Byte policy chưa tối ưu cho tokenizer; access labels/IDs chỉ mô tả trusted server decision, future retrieval vẫn phải query source ownership. OCR English-only/raw-score/mixed-page/always-review limitations và formula stale-cache flag giữ nguyên. Chunking ephemeral; chưa embedding/index/cache/generated-output persistence hay model-context attachment.
+
+## Evidence kiểm thử và vận hành
+
+1. **30 mapping/identity/budget cases PASS:** exact source reconstruction gồm ASCII/Vietnamese/combining codepoints/emoji/whitespace/empty, UTF-8 byte caps, native PDF3page/blank; actual sandbox DOCX paragraph/section/table/merge và XLSX row/formula/cache/style/merge fixtures. Complete cell objects/source field spans giữ nguyên. Heading inheritance/subsection reset, cyclic/nested rejection; canonical digest tính độc lập; repeat/reordered input ổn định, changed owner/namespace/file/hash/processor/policy/content/section/quality/structure đổi ID. Count/source/atomic-row/metadata limits; overbudget iterator dừng trước next unit.
+2. **29 real DB HTTP/lifecycle cases PASS:** TXT/MD/CSV/PDF/DOCX/XLSX/image actual uploads/chunks, source UUID/hash/access locators/private headers và repeat IDs; anonymous/foreign/ready/deleted/query/media negatives. Native scanned-PDF empty projections và explicit selected-page OCR empty/review đúng. Controlled explicit VLM qua real sanitized raster giữ narrative/table/uncertainty flags; actual CORE call được giữ trong full suite hiện có, không coi controlled model test là live accuracy evidence.
+3. Source immutable download/allocation; pre/post transform corruption, final ready fence, joined cancellation/shutdown, delete pending giữ quota và release sau close. Slow response của cả text/DOCX/XLSX/OCR giữ chunk single-slot, parser nested depth và owner-first rejection; cancel đóng mọi reader/counter/task. Wrong namespace, response construction failure, reply/source limits đều cleanup đúng. Không reset global counters để làm test xanh.
+4. Focused trước refinements **56 passed in9.48s**; final sau incremental metadata cap/empty-count/explicit VLM integration **700 passed in76.12s**,0 skip/no exclusions. Một lệnh tạo test ban đầu dùng sai prefix thư mục nên không tạo file/no tests collected; đã sửa path, không tính là kiểm thử thành công. Initial shell edit gọi `python` không có binary cũng được chạy lại đúng bằng `uv run python`; không dùng kết quả failed commands làm acceptance.
+5. Ruff selected correctness/import `E4,E7,E9,F,I`, fixture re-export exceptionF811, format8 files; AST descriptions8 files/79 definitions; `uv lock --check` và diff checks PASS. Không dependency/lockfile change hay tuyên bố full-repository lint ngoài scope.
+6. Post-test Vault audit: global file usage **(0,0,0)**, restore probes **0**. Existing CORE/shared containers vẫn running/healthy, không restart/new instance. Private root/namespace/auth/paired backup không thay thế; tests dùng disposable UUID/root và owner cleanup. Vault helper TLS cấp app DB/live flag trong memory, strip VAULT env/redact output; không in key/source text hoặc đưa secret vào code/archive.
+
+Roadmap v3.15, ADR-030, file design và local runbook cập nhật cùng evidence. Full-version source-only archive `/tmp/local-assistant-d22-complete-full-files.zip` chứa toàn bộ file thay đổi, không credentials/runtime data/backup. **Next D23:** P1 mixed-document evaluation/error report với independent golden oracles, honest empty/degraded/unsupported outcomes, source-span coverage và measured stage evidence. Đánh giá priority/dependency/effort/risk trước phát sinh; repair chỉ khi có failure, ADR trước đổi architecture/API/persistence, full regression PASS trước chuyển D24.
+
+---
+
+# Ngày 23 — Mixed-document pipeline evaluation và error/quality report (2026-10-18)
+
+**Mục đích:** Ghi lại corpus độc lập, pipeline drill thực tế và bằng chứng D23; giữ riêng lỗi nhận dạng thật với acceptance của uncertainty/rejection contracts.
+
+**Kết quả:** **D23 PASS trong phạm vi local đã định nghĩa**. Final full Vault-backed PostgreSQL/CORE regression **748 passed in92.02s**, exit0, **0 SKIP**, không exclusions;700 baseline +30 scorer/failure/CLI +18 corpus/live. Corpus thực tế **18/18 case gates PASS**, **56/56 source fields** covered,32 chunks/7 empty records. D24 embedding selection/Qdrant collection design/ADR là NEXT; chưa triển khai/đánh dấu PASS.
+
+## Priority, dependency, effort và quyết định scope
+
+P1, phụ thuộc D17 verification, D18–D21 native/structured/OCR/read/write và D22 deterministic chunks. Effort một hoặc nhiều milestone tùy acceptance; rủi ro circular oracle, che OCR failure sau pass count, mất source spans/structure, expected rejection bị hiểu nhầm thành hỗ trợ mọi input, content/key leakage trong evidence. Đã kiểm tra code và các hợp đồng liên quan trước triển khai. Chỉ thêm scripts/fixtures/tests/docs/evidence; **không sửa code/config production, dependency, schema, root/auth/namespace hoặc service**. Không có thay đổi kiến trúc quan trọng/API/persistence nên không cần ADR mới; ADR-026–030 vẫn authoritative. Evaluation chưa tìm thấy supported-contract failure cần repair; không thay thành phần PASS chỉ để tạo thay đổi.
+
+## Corpus, evaluator và independent scoring
+
+- `tests/fixtures/pipeline/manifest.json` +README:18 case oracles viết từ source construction và existing independent golden docs, không serialize output production thành expected answer. Reuse native PDF3 pages, DOCX7 paragraphs/table/style, XLSX2 sheets/formula/cache, OCR clean/scan/blank/blur/Vietnamese table. Thêm synthetic TXT/Markdown/CSV có Unicode combining/non-BMP/CRLF/quoted newline, nested DOCX và malformed PDF có purpose rõ ràng. Fixtures không chứa user data/key/macros/external relationships.
+- `scripts/document_pipeline_acceptance.py`: CLI chỉ dùng packaged trusted synthetic corpus, không nhận arbitrary source path. Verify/parser thực tế qua borrowed **read-only FD**; stage wall/child CPU và cumulative child peak RSS giữ cả stage lỗi. Fixed DOCX run edit `Đã sửa` và XLSX A2 numeric99.5 dùng source hash; dev-only python-docx/openpyxl độc lập reopen, untouched ZIP members byte-identical, formula/cache/style/merge đúng; reparse/chunk output bằng output SHA và synthetic identity riêng.
+- `scripts/document_pipeline_oracles.py`: exact text/cells/styles/table/formula/cache so với handwritten manifest; independently assemble private identity/digest và exact page numbering. Source spans phải đúng field/range, không missing/gap/overlap/duplicate/foreign references; text slices reconstruct exact original extracted content, row text đúng canonical structured JSON. Table/sheet row objects, section refs và OCR/cache quality phải giữ nguyên. Repeat chỉ cùng parsed content, không giả định model transcription deterministic.
+- Expected rejection bắt buộc exact **stage/code/status**. Unexpected accept/reject/exception fail gate, error fixed/sanitized, các case sau vẫn chạy. CLI không bật `--include-vlm` thì vision case `not_run`, complete/pass false và exit1. Explicit flag dùng existing local CORE; không implicit model call khi OCR score thấp, không restart hoặc new service.
+- Retained `docs/evidence/d23-document-pipeline.json` chỉ có synthetic case/fixture names, hashes/versions/check flags/counts/CER/WER/table matches và timing/resource evidence. Không source text/model output/images/private exceptions/credentials. `failures` và `quality_failures` tách riêng; UTF-8 budget vẫn không phải embedding token budget.
+
+## Kết quả đo thực tế, giữ nguyên giới hạn
+
+Lệnh thực tế: `uv run python -m scripts.document_pipeline_acceptance --include-vlm --output docs/evidence/d23-document-pipeline.json`, exit0. Final retained run tổng sequential case wall **6401.331ms**,18 cases: **11 accepted**, **3 empty**, **1 degraded**, **3 expected_rejection**, gate failures0.56/56 lexical source fields covered,32 chunks/7 empty records; native/structured golden exact và independent rewritten outputs reopen đúng. Actual CORE trả exact **6/6 Vietnamese table cells/3 rows**, review required/confidence null; narrative không được chấm bằng invented ground truth.
+
+- Scanned PDF native mode trả hai empty projections, không giả vờ đã OCR; explicit OCR page1 exact known text, page2 empty/review đúng.
+- Blank image và scan page2 không có text/score, cần review; empty recognition không chứng minh visual page luôn blank.
+- Blurred fixture ground truth vẫn `uncertain 7381`, OCR hiện tại không đọc được: **CER1.0/WER1.0 =100% transcription error**, giữ `transcription_passed=false` và `quality_failures`. Case PASS vì required uncertainty detection hoạt động, **không phải accuracy PASS**.
+- Nested table422 `unsupported_chunk_structure` tại adapt; XLSX row vượt256-byte cap413 `chunk_row_too_large` tại chunk; malformed PDF415 `invalid_file_content` tại verify. Đây là đúng supported contract, không phải successful data extraction.
+- Child peak RSS là cumulative Linux KiB từ RUSAGE_CHILDREN, không per-case memory hoặc CORE GPU usage; child CPU không đo model-server CPU. Stage wall/CPU là local observations, không SLO/concurrency/production memory certification. Existing parser kernel/resource regression mới là evidence cho enforcement.
+
+## Tests và audit
+
+1. **30 scorer/failure/CLI cases PASS:** known exact split Unicode/empty coverage; deliberately dropped/duplicated/gapped/overlapping/foreign/out-of-range/noninteger spans, wrong text/page/owner/hash/digest/bytes/formula/cache quality phải fail gate đúng. Mutant production identity bỏ namespace vẫn bị independent oracle phát hiện. Native expected text không lấy từ parser. Degraded OCR metric giữ transcription failure dù uncertainty gate PASS.
+2. Explicit model default không call; unrun không PASS. Unexpected private exceptions sanitized; wrong rejection stage/status không được coi expected. Corpus tiếp tục sau một stage fail; aggregate report giữ failed check/stage. CLI exit chỉ0 khi complete+passed; fixture path escape refused, descriptor write attempt thật bị OSError.
+3. **18 integration/corpus cases:**17 actual non-VLM scenarios mỗi scenario riêng và1 complete actual CORE report drill. Full report phải18/18, table6/6, coverage100%, known blur quality failure còn nguyên; write/read report equality và content/key markers absent.
+4. Initial scorer24 PASS/0.16s; focused **46 PASS/17.09s** trước page/independent private-identity refinements. Final scorer **30 PASS/5.48s** và final full **748 PASS/92.02s**,0 skips/exclusions. Default initial corpus intentionally exit1 vì vision chưa opt-in; không dùng incomplete result đánh dấu PASS. Explicit full corpus được chạy lại sau final evaluator changes, retained18/18; final full chạy sau mọi code/test changes.
+5. Ruff selected correctness/import `E4,E7,E9,F,I` và format4 Python files PASS; AST descriptions4 files/40 definitions; `uv lock --check`, diff và fixture/report hashes/privacy PASS. Không tuyên bố full-repo lint hoặc model quality dựa trên pytest count. Không dependency/lockfile change.
+Staged diff ban đầu phát hiện trailing tab/CRLF có chủ đích trong Unicode golden. Giữ nguyên tested bytes và thêm fixture-local `.gitattributes` (`-text`, scoped whitespace rule) để checkout không normalize source; staged diff check sau đó PASS. Không sửa implementation/test data sau final regression, chỉ Git attributes và documentation.
+
+6. Post-test Vault audit global file usage **(0,0,0)**, restore probes **0**; existing CORE/shared containers vẫn running/healthy, không restart/new instance. Private source/root/auth/paired backup giữ nguyên; regression disposable owner/root được cleanup. Vault TLS helper chỉ cấp app DATABASE_URL/live flag trong memory, strip VAULT env/redact output; không in key hoặc đưa credentials vào artifact.
+
+## Handoff và feature assessment
+
+`docs/DOCUMENT_PIPELINE_EVALUATION.md` ghi priority/dependency/effort/risk trước xếp lịch cho các giới hạn có thể phát sinh feature: degraded/multilingual OCR P2/2–4 milestones phụ thuộc corpus/routing/model budgets, nested table P2/1–3 phụ thuộc hierarchy/locators, row splitting P2/1–2 phụ thuộc D24 tokenizer/versioned span contract. Chưa đưa vào current milestone; OCR/nested backlog sau D32 nếu không có blocker thực tế, row splitting đánh giá sau D24. Không auto-repair/embedding/indexing/context attachment.
+
+Roadmap v3.16, evaluation spec, corpus README, file design/runbook và retained report cập nhật cùng evidence. Full-version source-only archive `/tmp/local-assistant-d23-complete-full-files.zip` chứa toàn bộ file thay đổi, không runtime data/backup/keys. **Next D24:** P1 đo shortlist embedding bằng independent multilingual retrieval oracles, actual local accuracy/memory/latency/tokenizer constraints và ADR collection schema/ACL/model-version/distance/update-delete/rollback. Reuse existing Qdrant, không new container/replace user collections; D25 ingestion và D26 search vẫn các gate riêng. Chỉ chuyển sau Acceptance Criteria thực sự đạt.
+
+---
+
+# Ngày 24 — Measured CPU embeddings và private Qdrant collection design (2026-10-18)
+
+**Mục đích:** Ghi lại model shortlist/corpus độc lập, lựa chọn có số đo thực tế và ADR/schema/lifecycle trước khi triển khai ingestion.
+
+**Kết quả:** **D24 PASS cho local selection/design**, chọn **intfloat/multilingual-e5-base, official ONNX int8 AVX512-VNNI,768 dimensions**. Final full Vault-backed regression **783 passed in95.11s**, exit0, **0 SKIP**, không exclusions;748 baseline +33 unit/negative +2 real CPU/Qdrant. Existing PostgreSQL/CORE/Qdrant được kiểm tra thật. **D25 durable ingest/upsert/delete/worker là NEXT**; chưa worker/production collection/vector points/search API.
+
+## Priority, dependency, effort, inventory và ADR
+
+P1 phụ thuộc D17 owned journal/source FD, D22 chunks/hash/access labels và D23 independent corpus. Effort một hoặc nhiều milestone; rủi ro Vietnamese/cross-language quality, silent truncation, model/runtime drift, CORE GPU contention, stale vectors/cross-owner data và shared collection mutation. Đã đọc roadmap/devlog/code/config/infra/Qdrant/Vault helper. ADR-031 ghi trước dependency/model/probe changes; nguồn primary là official E5 cards, ONNX Runtime/tokenizers API và Qdrant collections/multitenancy docs, có links trong ADR/spec.
+
+Máy Ryzen7 7700/16 logical CPUs, AVX512-VNNI, khoảng30GiB RAM; RTX4070Ti SUPER16GiB còn khoảng5GiB VRAM tại inventory khi CORE chạy. Existing Qdrant1.18.2 dùng chung, không new container/restart. Chọn shortlist CPU-only2-thread ONNX int8 chính thức small384/base768, cả hai upstream MIT, pin repository commit và từng model/tokenizer SHA/size. Dev-only `onnxruntime1.31.0`, `tokenizers0.23.3`, transitives `flatbuffers25.12.19`/`protobuf7.36.2` qua uv; uv.lock purpose header giữ lại. Không Torch/CUDA stack/runtime service/app source/DB schema/auth/root/model CORE config change.
+
+## Corpus và ngưỡng cố định trước khi đo
+
+`tests/fixtures/embedding/retrieval.json` gồm20 related synthetic passages và40 handwritten Vietnamese/English/cross-language queries, relevance source ID độc lập. Có distractors gần nhau: backup/restore, OCR/VLM, chunks/tokens, delete/retry, health/quality. Không lấy D23 reconstruction làm retrieval accuracy oracle. Labels/gates không đổi sau khi thấy kết quả.
+
+Ngưỡng ADR/corpus: Recall@3≥0.90, MRR@10≥0.80, mỗi language group Recall@3≥0.80, peak child RSS≤2048MiB, warm single-query p95≤500ms. Trong eligible candidates, chọn RSS thấp nhất nếu cách best MRR≤0.05; không có eligible thì milestone không PASS. Exact ID tie-break/rank/fractional recall và reciprocal rank≤10 có independent unit oracles.
+
+## Kết quả thực đo và lựa chọn
+
+Retained `docs/evidence/d24-embedding-selection.json`, generated bằng actual isolated CPU sessions, không mock model:
+
+| Candidate | Recall@3 / MRR@10 | cross / en / vi Recall@3 | Peak child RSS | Warm query p50 / p95 | Cold load | Gate |
+|---|---|---|---|---|---|---|
+| multilingual-e5-small int8/384 |0.750 /0.655377 |0.500 /0.9375 /0.6875 |558.156MiB |2.051 /2.409ms |648.092ms | FAIL chất lượng |
+| multilingual-e5-base int8/768 |0.925 /0.874405 |0.875 /1.000 /0.875 |802.863MiB |6.321 /7.378ms |888.308ms | PASS, selected |
+
+Small nhẹ/nhanh hơn nhưng không đạt các ngưỡng quality; không hạ ngưỡng để làm xanh. Base là eligible duy nhất, vẫn top3 miss `delete-en` rank6, `ocr-vi` rank7, `embedding-vi` rank11; mọi query rank/top3 được giữ lại. Đây là20/40 synthetic short-query local selection, không phải general Vietnamese/MTEB accuracy hay global-best model. D26/D27 phải mở rộng independent retrieval/quality/reranking, giữ nguyên lịch sử miss.
+
+Selected repo revision `d128750597153bb5987e10b1c3493a34e5a4502a`, model SHA `2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503`, tokenizer SHA `62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626`. Base model+tokenizer295769071 bytes; small135429554. Fingerprint `e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc` bind toàn bộ pins/prefix/pooling/norm/token/runtime-format/package versions. `configs/embedding-selected.json` ghi **selected_not_deployed**, full-fingerprint collection name; không tự enable service.
+
+## Code, token/resource contracts và probe
+
+- `embedding_runtime.py`: explicit public pinned downloads atomic publish/hash/size, remove partial; missing/changed artifact reject, không implicit API startup/test downloads. Weights trong ignored models/embedding, không source archive. No remote Python code/private Hub key. Provision lần đầu có HTTP signed public-CDN redirect logs của public assets; CLI hiện giảm HTTP logger xuống WARNING, không liên quan user/Vault credential.
+- CPUExecutionProvider only,2 intra-op/1 inter-op/sequential, batch≤4. Thật sự disable tokenizer truncation/padding, thêm `query: `/`passage: ` kể cả tiếng Việt, mask mean pool/L2 normalize, finite/nonzero/exactdimension checks. Empty/over32768-byte text hoặc>512 total prefix/special tokens reject; không silenttruncate. Corpus max passage/query45/24 tokens; cả hai measured overflow rejected, repeat delta0, unit norm error≈5.96e-8. Đây không chứng nhận long-context performance.
+- `embedding_acceptance.py`: mỗi candidate là child process mới, env whitelist không keys/VAULT/Hub/proxy, fixed180s wall/120–121s CPU/4GiB virtual memory. RSS là per-child process, latency excludes download;20-passage encode60.812/167.112ms. Không claim load SLO/GPU/model-server CPU. Parent report không raw text/query/vector/private exception.
+- `qdrant_embedding_design.py`: plan named dense768/Cosine/on_disk,1 shard/replica,10 indexes owner UUID `is_tenant=true`, namespace/file UUID và hash/chunk/chunker/processor/model/generation/state keywords. Only fresh random la_d24_probe name, collision reject, cleanup chỉ khi create acknowledged; schema/index lỗi vẫn remove owned probe. Lost create acknowledgement cần scoped audit, không tự nhận/xóa collection khác.
+- Actual Vault `secret/server/qdrant/admin` chỉ đọc vào memory; existing loopback6333, no proxy/redirect, bounded reply/timeouts/error sanitation. Retained `docs/evidence/d24-qdrant-design.json`: actual1.18.2 schema/10 indexes/UUID tenant accepted, zero points, probe removed; existing collections0, before/after fingerprints identical. Không production collection/point/ingestion hoặc shared-data mutation.
+
+## Lifecycle/ACL design chưa bị nhầm thành implementation
+
+ADR-031 mô tả payload server-derived owner/namespace/file/source SHA/chunk/chunker/processor/model/index-generation, UUIDv5 point identity, pending→active publication sau complete upsert/final ready/hash fence, durable job/outbox/idempotency/retry/reconcile và tombstone cleanup. PostgreSQL/Qdrant không có distributed atomic transaction; delete phải ẩn PostgreSQL ngay và retrieval sau này luôn rehydrate/revalidate source, không tin vector alone hoặc caller access labels. Shared Qdrant admin key không phải user ACL.
+
+Đây là design cho **D25/D26**, chưa code production. D25 cần ADR/migration/journal/admission/worker thật, token preflight (D22 byte cap không đảm bảo512 tokens), source/hash/owner/namespace fencing, crash/retry/update/delete/generation consistency và rollback. Không chunk truncation, implicit embed/index/model-context attachment. Nguồn đã PASS, OCR blurred failure/stale formula cache/nested422/row413 giữ nguyên.
+
+## Tests, evidence và post-audit
+
+1. **33 unit/negative PASS:** independent known ties/multi-relevance/rank/recall/MRR và malformed/nonfinite/foreign/duplicate labels; frozen quality/group/memory/latency/overflow/repeat gates, quality-tolerance/RSS selection, masked mean hand vector và invalid mask/norm/dimension; prefix/special token512/513, actual full input retained; fingerprint invalidates revision/tokenizer/runtime; mock public download exactbytes/hash/oversize/partial cleanup và no Authorization.
+2. Probe tests giữ synthetic shared collection7 points, never mutate foreign names; index/schema/server errors cleanup acknowledged probe, creation conflict không delete, existing-name collision không mutating call, changed inventory không PASS, server bodies không lộ. **2 live**: actual two pinned CPU models và actual Vault-authenticated Qdrant empty schema/index/cleanup. Model report giữ smaller-candidate failure.
+3. Focused **35 PASS in3.03s**; final full **783 PASS in95.11s**,0 skip/no exclusions. Existing wrapper mở rộng đọc Qdrant key từ Vault vào pytest env và redact cùng DB/key/token; embedding children whitelist env, production parsers vẫn clear env. Không hardcode/in key; không dùng missing-key skip như acceptance.
+4. Ruff correctness/import `E4,E7,E9,F,I`/format6 files, AST descriptions6 files/44 definitions, `uv lock --check`, artifact/corpus/report/selected-config fingerprint/privacy và diff checks PASS. Không tuyên bố full-repo lint. Runtime dependencies không tăng, chỉ dev group.
+5. Post-test file global usage **(0,0,0)**, restore probes **0**, Qdrant collection count **0**, remaining D24 probes **0**. Existing CORE/shared containers running/healthy, không restart/new instance; private root/namespace/auth/paired backups giữ nguyên. Không đổi apps/src/source schema để phục vụ benchmark.
+
+Roadmap v3.17, ADR-031, selection spec/fixture README, file design/runbook và retained reports cập nhật cùng acceptance. Full-version source-only archive `/tmp/local-assistant-d24-complete-full-files.zip` chứa file thay đổi đầy đủ, không weights/runtime data/backup/credentials. **Next D25:** P1 durable incremental ingestion/worker; estimate nhiều milestones nếu cần, ADR trước persistence/API/schema, actual token/source/owner/generation/crash/retry/delete tests và full Vault-backed regression mới được đánh dấu PASS. D26 ACL search, D27 retrieval evaluation là gates riêng.
+
+# 2026-10-18 — MODEL-EVAL-001: actual Qwen/E5 comparison and transition proposal
+
+**Purpose:** Audit the owner-authorized offline evaluation separately from D24 and the unimplemented D25 ingestion work.
+
+## Authorization and preserved state
+
+Owner's latest “Làm đi” authorized the proposed Qwen download and benchmark. This supersedes the earlier no-download instruction only for evaluation; selected model/cutover still requires owner approval of measured tradeoffs and migration/rollback. The complete MODEL_REGISTRY lineup is preserved unchanged. D24/a88584b remains PASS for its historical E5-only local selection/design scope. D25 remains NEXT; this evaluation is not D25 implementation.
+
+Downloaded official Qwen3-Embedding-0.6B revision97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3 (Apache2.0), four artifacts1203020554 bytes, exact SHA256 verified in ignored local model storage. Used official BF16 CPU safetensors,1024 dimensions, upstream query instruction/plain documents/last-attended-token pooling/L2 normalization. Common512-token cap with truncation disabled; native32K context is not certified. Frozen20 passages/40 queries/chunks/labels unchanged. No third-party model conversion or replacement downloaded.
+
+ADR-032 preceded execution. Added evaluation-only profile, comparison/runtime/worker scripts and tests; production E5 adapter/application source remain unchanged. Qwen uses separately locked uv script environment, torch2.10.0+cpu/transformers4.57.6,2 intra-op/1 inter-op threads,batch4. An initial dependency sync failed because a typing-extensions4.16 wheel lacked package Name metadata; pinning4.15 resolved isolated environment provisioning. Project pyproject.toml/uv.lock were not modified. Workers receive no Vault/API/DB/Hub/proxy credentials, run offline with bounded wall/CPU/memory, GPU allocation0.
+
+## Actual measurements
+
+Six sequential fresh-process runs (three per candidate), stable ranks and identical input hashes; all frozen D24 reference gates met. Different precision/runtime must be considered: E5 int8/ONNX versus Qwen BF16/PyTorch. These results compare those feasible configurations, not model-only speed.
+
+| Measurement | E5-base | Qwen3-Embedding-0.6B |
+|---|---:|---:|
+| Recall@3 |0.925|0.975|
+| Recall@5 |0.925|1.000|
+| Recall@10 |0.975|1.000|
+| MRR@10 |0.874405|0.968750|
+| Peak RSS max, MiB |803.305|1318.086|
+| Warm query p95 max, ms |6.744|113.928|
+| Cold load range, ms |921.824–958.977|2189.158–2211.451|
+| Batch passage throughput range, per second |120.072–122.644|14.983–15.771|
+
+E5 top3 misses: delete-en rank6,ocr-vi rank7,embedding-vi rank11. Qwen only embedding-vi rank4. Per-group results, every relevant rank/top10 and all repetitions are retained in docs/evidence/model-eval-001-qwen-e5-comparison.json. Small synthetic corpus limits generalization; Qdrant ingestion throughput/disk, long-input quality and concurrent CORE impact remain NOT MEASURED. Flat-memory vector/index metrics are not Qdrant results.
+
+## Tests and review outcome
+
+- Scoped actual-model and unit regression: **58 PASS in11.34s,0 SKIP**. Includes instruction/pooling/overflow/independent rank metrics, credential-free workers, retained measurements, proposed-config guard and exact E5 rollback; existing embedding-selection/Qdrant-design unit tests included. No stateful live-service tests were invoked. Historical783 PASS/95.11s remains historical, not rerun.
+- Ruff correctness/import checks and format passed on five Python files. All functions/classes have English descriptions. Input/artifact/runtime hashes are retained. Selected E5 configuration, E5 shortlist/runtime/acceptance scripts, original D24 evidence, frozen corpus, project dependency files and MODEL_REGISTRY remain unchanged; no Docker/Vault/database/Qdrant operations or collection/data changes. HEAD stays a88584b.
+- Roadmap v3.19, backlog and append-only ADR-031 follow-up link ADR-032 and the new evidence. docs/QWEN_E5_COMPARISON_AND_TRANSITION.md explains tradeoffs and a concrete full reindex/cutover/rollback plan; docs/evidence/model-eval-001-transition-proposal.json contains proposed Qwen configuration and exact current E5 rollback, not active config changes.
+
+**Recommendation:** Propose Qwen as the original registry-aligned target, accepting measured latency/RAM costs, after owner approval and deployment gates. **MODEL-EVAL-001: offline comparison complete / broader task partial / OWNER_APPROVAL_PENDING.** D24 unchanged, D25 NEXT. Leave patch uncommitted for review; no automatic deployment, schema migration, collection creation, deletion or mixed vector spaces. Full source-only files archive: /tmp/local-assistant-model-eval-001-complete-full-files.zip; downloaded weights/credentials/runtime data excluded.
+
+# 2026-10-18 — Owner-approved Qwen selection applied
+
+**Purpose:** Audit the approved model/configuration change and retained E5 rollback separately from deployment acceptance.
+
+The owner replied “Làm đi” after the actual Qwen/E5 results, concrete migration/rollback review and clarification that Qwen's measured1.29GiB peak is system RAM, not VRAM. This approves the proposed Qwen selection. Applied `configs/embedding-selected.json` with official pinned Qwen3-Embedding-0.6B BF16 CPU,1024 dimensions, exact benchmark runtime/packages/fingerprint, official query instruction/plain documents/last-token L2,512-token cap and status **selected_not_deployed**. No production embedding worker or retrieval endpoint exists yet; changing selection does not claim a live service cutover.
+
+Before applying, verified the original selected file SHA256 against the reviewed proposal and exact rollback JSON. Saved its bytes unchanged in `configs/embedding-e5-rollback.json`, then atomically replaced selected config. `docs/evidence/model-eval-001-selection-approval.json` records owner authorization, before/after SHA256, model fingerprint, rollback path and explicit deployment/collection/data-migration=false. Original preapproval proposal and six-run measurements remain unchanged as historical evidence. E5 artifacts, original shortlist/corpus/runtime/dependencies, D24 evidence/commit, MODEL_REGISTRY and all existing data remain preserved; no Docker/Vault/database/Qdrant operation occurred.
+
+Updated roadmap v3.20, model backlog, embedding selection specification, transition review and append-only ADR-031/032 decision records. Current Qwen selection is distinguished from historical D24 E5 acceptance. D24 remains PASS; D25 remains NEXT, now targeting Qwen with production adapter/durable ingestion/token/ACL/generation/retry/delete/rollback gates still open. No automatic collection creation, reindex or routing switch.
+
+Validation: **59 PASS in11.44s,0 SKIP** using explicit actual-model offline flag and `uv run --no-sync pytest` over comparison tests, actual E5/Qwen integration, embedding-selection and Qdrant-design unit suites. New selection checks validate owner audit/hash, exact rollback, unchanged reviewed proposal, model-specific preprocessing/runtime identity and separate1024-dimensional space. Actual Qwen process identity/packages/fingerprint match selected config; both real models preserve config/evidence hashes during inference. Ruff correctness/import checks and formatting passed. Full DB/CORE/Qdrant783-test regression was not rerun; its prior D24 result stays historical. Full-file source-only archive: `/tmp/local-assistant-qwen-approved-selection-complete-full-files.zip`; no weights, credentials or runtime data.
+
+# 2026-10-18 — D25-T01: deterministic ingestion plans and actual Qwen token admission
+
+**Purpose:** Record the first D25 implementation milestone with observed tests while keeping durable ingest/update/delete acceptance open.
+
+## Scope and architecture
+
+Read the current roadmap, model registry/selection, D24 design/ADR-031/032, D22 chunk builder/service, file journal/source lifecycle, current migrations and related integration tests. Recorded **ADR-033 before implementation**. D25 split into T01 source/model/token admission, T02 durable PostgreSQL journal/migration and T03 bounded embedding/Qdrant upsert/delete/recovery; these are dependencies within existing D25 scope, not automatic Day advancement. P1, multiple milestones; reviewed distributed-commit, stale-source, ACL, truncation, lease, resource and rollback risks.
+
+Added immutable source-bound ingestion plans: trusted ready owner/file/namespace/hash checks, recomputed exact D22 chunk identities, duplicate/tamper/foreign rejection, bounded text/chunk/metadata, model contract fingerprint validation and deterministic SHA256 generation/UUIDv5 job/point identities. Retries preserve IDs; owner/root/file/hash/processor/byte policy/content/metadata/order changes create a different generation. Canonical private payloads retain provenance/quality/uncertainty with pending state, separate from raw embedding text. Exact Unicode, atomic row/formula/cache content and explicit empty generations remain intact. Descriptive D22 labels/digests are consistency checks, never caller authorization.
+
+Added `validate_source_fence` to reject stale/missing/deleted/nonready/foreign/changed-hash metadata before future admission/publication. It does not itself acquire DB locks; T02/T03 must call it inside short source-locked transactions and retain existing FileService integrity/source-reader checks. No endpoint accepts client-supplied chunks or access assertions.
+
+Added an isolated frozen uv Qwen tokenizer worker and host adapter. Same pinned official profile/runtime fingerprint as approved selection, local-only/remote code disabled, unprefixed complete passages, no embedding-model weight load/session and no GPU/network/download. Separate script lock/environment provisioned entirely from cached dependencies; project pyproject.toml/uv.lock and original benchmark lock/environment unchanged. One nonqueued process-local admission, busy429; stdin private JSON≤8MiB, text≤1MiB/1000 passages, reply≤16KiB,90s wall/60–61s child CPU/4GiB virtual-address cap. Parent kills/joins the owned process group on timeout/interruption before releasing admission. Credentials/proxies excluded; no raw source/private child diagnostics in logs. Token overflow422; unavailable/unexpected worker failure503; no partial admission.
+
+## Observed tests and correction
+
+Initial actual512-boundary fixture failed because repeating ` x`512 times produces513 total tokens after the official tokenizer's special token. The worker correctly refused it without truncation. Corrected the fixture to511 repetitions for exactly512 total tokens, verified by the real tokenizer;512 repetitions remain a513-token rejection. No tokenizer/model/corpus/threshold was modified to force a pass.
+
+- **58 new unit/negative PASS:** independent manifest/UUID reconstruction, replay identity/drift, exact Unicode/rows/cache/review payloads, empty generation, duplicate/foreign/tampered chunks, model/runtime/source fences, complete512/513 count validation, credential-free stdin protocol, malformed/partial/wrong-identity/oversized/failing replies, busy-slot release and process-group timeout kill/join.
+- **3 actual Qwen tokenizer cases PASS:** exact512 total tokens accepted,513 rejected422 without truncation, complete private Unicode batch counts with no content leakage. Approved selected config/E5 rollback and original D24/new comparison evidence hashes unchanged during inference.
+- Final focused comparison/chunks/admission suite **117 PASS in19.98s,0 SKIP**. Full existing Vault-backed regression with actual PostgreSQL/CORE/Qdrant and actual Qwen/tokenizer flags: **870 PASS in114.48s,0 SKIP**, exit0. Credentials loaded by the existing wrapper and redacted; none committed/printed. No credential-based skips used as acceptance.
+- Ruff correctness/import and format checks on five new Python files PASS; all module/function/class descriptions verified. Frozen preflight uv lock check PASS; protected original D24 config shortlist/corpus/runtime/evidence/project dependencies unchanged, selected Qwen approval hash unchanged, E5 rollback byte-for-byte original and MODEL_REGISTRY unchanged. Existing source/API code not modified. No D25 schema migration, ingestion collection creation or vector upsert/delete performed; full regression still runs its existing owned cleanup probes.
+
+[Retained T01 acceptance](../docs/evidence/d25-t01-ingestion-admission.json) records exact observed results/boundaries and source hashes. Roadmap v3.21, ADR-033, ingestion lifecycle and related file design/runbook updated. Full-version source-only archive: `/tmp/local-assistant-d25-t01-complete-full-files.zip`; weights/credentials/runtime data excluded. HEAD remains a88584b; no commit/push performed.
+
+**Status:** D24 remains historical PASS. **D25-T01 PASS for local planner/token admission; D25 IN PROGRESS, not PASS. NEXT D25-T02:** reviewed additive journal/schema, protected backup/restore verification, source-locked admission/replay, leases/generation/tombstones and real transaction/race tests. T03 embedding worker/upsert/delete/crash recovery and complete Day acceptance remain mandatory before D26. Qwen remains `selected_not_deployed`; no live indexing claim.
+
+# 2026-10-19 — D25-T02 durable ingestion journal verification
+
+**Purpose:** Record the implemented journal/migrations and actual verification progress before claiming acceptance.
+
+ADR-034 preceded persistence changes. V003 added ingestion jobs/desired-active heads; V004 restricted inherited table UPDATE grants to mutable columns on only those new tables. Existing seven-table rows/owners/ACLs were preserved at rollout; protected pre-migration seven-table and post-V004 nine-table restores (including column ACLs) passed without a shared restart. Evidence is retained under `docs/evidence/d25-t02-*`; private backups remain under `data/backups/d25-t02-*`.
+
+Journal admission binds namespace/owner/source hash/model/manifest/points/counts, resolves replay before capacity, fences superseded attempts and persists deterministic generation identity. Short transactions have5s lock and15s statement/idle limits. Claims use fresh server UUID, database time,120s renewable lease bounded by one hour, five attempts and2–30s backoff. Publication requires latest desired revision/live lease/current ready source and complete acknowledged IDs. Terminal cleanup/tombstones, paginated invalid-source discovery and source-ready/hash-filtered active reads are durable; no text/vector payload is stored.
+
+Observed corrections: pytest basename collision fixed by naming the PostgreSQL test module separately; NULL keyset cursor explicitly casts UUID; inherited default table UPDATE required forward V004; initial full regression831 PASS/71 errors/4 failures exposed file initializer's exact0002 guard. It now accepts only reviewed0002/0003/0004 with eight startup tests, preserving unknown-schema refusal and original upload/delete/root/quota logic. Related schema fixtures follow actual migration head/source revision. New journal scope36 PASS/2.56s; related journal/file HTTP/recovery/startup scope111 PASS/16.85s,0 SKIP.
+
+On2026-10-19 the previous transient regression process/log could not be recovered. A fresh final run was started after restoring the already initialized Vault from sealed state with existing bootstrap material; no Vault initialization, rotation or policy/configuration edit. DB schema remains0004. Final full regression and post-test audit are pending; D25-T02 is not marked PASS yet. Qwen/E5 rollback/model registry/T01 source and existing source data remain preserved. No D25 embedding worker, Qdrant upsert/delete, admission HTTP route or live index is implemented; D25 remains IN PROGRESS, D26 remains later work.
+
+## Final D25-T02 acceptance — 2026-10-19
+
+Fresh full regression initially stopped at collection because existing CORE was not running. Resumed the existing configured CORE profile with vision via `uv run --no-sync python scripts/start-model.py --profile core --vision`, health200, without editing configuration/model/projector or downloading weights. Vault unseal used existing material only. These environment failures were not counted as acceptance.
+
+Final full Vault-backed run **914 PASS in120.13s,0 SKIP**, exit0, actual PostgreSQL/CORE/Qdrant and actual offline Qwen/tokenizer.44 new cases:14 journal unit,22 actual PostgreSQL and8 startup compatibility; focused journal36 PASS/2.56s, related111 PASS/16.85s. Tests cover simultaneous replay/claim/capacity, stale lease recovery, bounded retry/deadline, generation replacement/old replay, complete point acknowledgements, delete/publication race, durable tombstone discovery/cleanup acknowledgement, owner/root/composite FK isolation, actual column grants, guarded downgrade and real transaction rollback after job-write faults. Sanitized full log retained privately in `data/backups/d25-t02-final-regression.log`.
+
+Readonly post-audit: schema0004; jobs0/heads0/files0, global quota `(0,0,0)`, restore probe databases0, Qdrant collections0; manifest UPDATE denied, state UPDATE allowed, TRUNCATE denied. Original schema/table owners/ACL fingerprint remains unchanged. No D25 vector writes/deletes or production worker deployment. Protected pre/post backup checksums and permissions verified, including actual nine-table/column-ACL restore. New artifact `docs/evidence/d25-t02-journal-acceptance.json` binds results to nine changed Python files; `d25-t02-post-audit.json` retains clean state. Ruff correctness/import/format and104 function/class descriptions PASS. Original V001/V002, file journal/FileService, dependencies, models config, selected Qwen hash, byte-exact E5 rollback, T01 source/lock hashes, registry and original D24 evidence remain unchanged. The only accepted application component change is the necessary file-startup revision guard; upload/delete/root/quota logic is preserved.
+
+Roadmap v3.22, ADR-033/034, journal/lifecycle specifications and related file design/runbook updated. **D25-T02 PASS for local repository/schema; D25 IN PROGRESS, not PASS. NEXT D25-T03:** bounded actual Qwen embedding worker, owned Qdrant generation/upsert/delete, admission integration, source/point/count/hash verification and retry/crash/shutdown acceptance. D26 stays later work. Current Qwen is still `selected_not_deployed`. No commit/push performed; full-version source-only archive `/tmp/local-assistant-d25-t02-complete-full-files.zip` excludes credentials, weights, backups and runtime logs.
+
+# 2026-10-19 — D25-T03-A adapter checkpoint
+
+**Purpose:** Record observed actual encoder/vector adapter acceptance before orchestration work.
+
+ADR-035 preceded changes. Added separately locked offline CPU Qwen encoding process with exact pinned model/pooling/prompt/fingerprint, batch4, input8MiB/text1MiB/1000 passages, reply32MiB, wall600s/CPU480–481s/8GiB virtual-address bounds. Parent validates complete finite1024-dimensional unit vectors/counts/fingerprint; one nonqueued slot, cancellation/timeout kill and join process group before release. No API credentials enter child environment/stdin/arguments; no model/dependency change to project or previous benchmark/preflight environments.
+
+Added owned Qdrant adapter with application/installation UUID/model collection metadata, collision refusal, exact approved dense1024/Cosine/on-disk schema and tenant indexes. Deterministic batch upsert wait/strong ordering, independent full stored ID/payload/vector verification, exact six-field owner/namespace/file/hash/model/generation delete+zero-count verification. No collection-deletion method in production adapter. Minimal payload hashes source/provenance instead of copying D22 structure rows (which can contain private text); quality presence/untrusted status remain explicit and full source metadata is rehydration work for D26.
+
+**36 new unit+2 actual tests PASS; focused38 PASS in4.16s. Final full952 PASS in117.24s,0 SKIP**, actual PostgreSQL/CORE/Qdrant/Qwen. Actual10-vector multi-batch/multi-page generation retry did not duplicate; delete preserved20 points in newer/foreign scopes before their explicit cleanup. Actual cancellation reaped child/no live process-group members. Shared Qdrant inventory fingerprint and selected configuration unchanged; owned probe removed. No production collection/point or journal publication. T03-A PASS only; continuing B source/journal/lease/recovery and C explicit admission/lifecycle before any Day PASS. Sanitized logs moved under ignored protected `data/backups/`.
+
+# 2026-10-19 — D25-T03 and final local lifecycle acceptance
+
+**Purpose:** Record complete adapter/worker/HTTP implementation, observed verification and the exact D25 acceptance boundary.
+
+ADR-035 preceded adapters; ADR-036 preceded orchestration/API and records hard-parent-death supervision. T03 now implements a separately frozen offline pinned CPU Qwen encoder, strict complete1024-vector/count/fingerprint validation, owned Qdrant schema/metadata and deterministic generation upsert/independent verification/activation/delete. Vector payload is an explicit identity/digest allowlist: copying D22 structured rows would expose source text, so full provenance is rehydrated from trusted source in D26. No approved model, precision, artifact, registry role or selected configuration changed.
+
+The source-held worker reconstructs immutable plan/counts under existing FileService integrity/read lifetime, heartbeats DB-time leases, fences latest generation/source and publishes only after complete stored-vector verification. Dedicated committed PostgreSQL advisory session excludes duplicate namespace/model workers without a long transaction; shielded control checks survive cancellation. Lost vector acknowledgement retries the same IDs, lost SQL publication acknowledgement reads durable ready state. Source deletion hides active status through the existing SQL ready/hash join. Repeated bounded terminal sweeps include previously acknowledged cleanup, repairing late writes after restart instead of treating an earlier zero count as permanent proof. Busy source429 defers without model-attempt charge/deadline extension. Shutdown joins admissions/source/model/network before closing vector/lock/file resources; exact parent PID/start/pidfd supervision kills an encoder after hard API-parent death.
+
+Added authenticated loopback file-index admission and owner-scoped job status, explicitly off by default. Index `max_bytes=256` is a declared source-preserving policy; unchanged `/chunks` default2048 and actual512-token limit are not silently modified. Immutable content replacement uploads a new file UUID/hash, explicitly indexes it and deletes the obsolete source. Private operator credential/ownership file is validated before startup; no Vault root/bootstrap access inside API. No production credential file or collection was created. Existing selected artifact remains `selected_not_deployed`.
+
+Related-file review: API main/lifespan only wires the new default-off router/resource with ingestion drained before file shutdown. T02 journal gains only `reject`, `terminal_candidates`, `defer`; all pre-existing methods are AST-identical to the accepted T02 ZIP. FileService/file journal/root/quota/delete contracts, V001/V002, schema0004/grants, original T01 hashes/locks, project dependencies, original D24 evidence, approved selected-file hash, byte-exact E5 rollback and unchanged MODEL_REGISTRY were checked. No Docker/config/Vault-policy or shared database schema changes in T03.
+
+## Observed verification
+
+- Final full existing Vault-backed regression: **979 PASS in162.02s (2:42),0 SKIP**, exit0; actual PostgreSQL/CORE/Qdrant/offline Qwen.65 new T03 cases:36 adapter unit,3 actual encoder/vector/process,14 startup/HTTP policy unit,10 actual worker integration and2 actual opt-in HTTP integration. Historical T03-A952 PASS/117.24s remains its earlier checkpoint.
+- Actual10-vector multi-batch/multi-page verification/retry/delete preserves20 newer/foreign-scope points until their own explicit cleanup. Real authenticated upload/index/status/replay/replacement/delete passed. Actual worker SIGKILL after Qdrant upsert before publication recovered the same IDs under a fresh lease/process. Actual model-parent SIGKILL during initialization left no live owned encoder group. Source-delete heartbeat, shutdown, duplicate-worker, cancelled-check exclusion, reconstruction drift, overflow and acknowledged-cleanup/late-write/restart repair passed.
+- Fault-only worker fixtures explicitly inject deterministic unit vectors for acknowledgements/lease/cancellation controls; they are not model-quality results. Separate live adapter/HTTP/worker cases execute actual Qwen. Intermediate fixture/correction failures were resolved before the final run, including busy-source deferral and replacing an invalid crash-test plan fixture with a valid200-chunk plan. No corpus, relevance label, model or acceptance threshold was altered to force a pass.
+- Focused B/C/encoder14 PASS/48.53s preceded two final boundary tests; final startup/adapter50 PASS/0.52s. Ruff correctness/import and format checks on all15 T03 Python files PASS;178 function/class descriptions and module purposes verified. Initial project `uv run ruff` was unavailable; the cached isolated `uvx --offline ruff` ran successfully without project dependency changes.
+- After the final regression, one synthetic10-point drill measured encoder3.014031s, schema/index0.303696s, upsert plus complete verification0.123681s (80.853points/s), delete/zero verification0.047804s. Apparent directory353055814 bytes includes WAL/preallocation, not allocated filesystem bytes or steady-state index storage; flat float32 vectors40960 bytes. This is not a large-corpus/long-context/concurrent-load benchmark. Owned probe removed; inventory hash unchanged.
+- Final read-only post-audit: revision0004; jobs0/heads0/files0/quota(0,0,0), restore probe DBs0, Qdrant collections0, live encoders0, worker advisory locks0. Immutable manifest UPDATE denied, mutable state UPDATE allowed, TRUNCATE denied; original table owners/ACL fingerprint unchanged. Sanitized logs retained privately under ignored `data/backups/`; no credential output/archive inclusion.
+
+[Final acceptance](../docs/evidence/d25-ingestion-acceptance.json), [post-audit](../docs/evidence/d25-post-audit.json) and [small index drill](../docs/evidence/d25-qwen-index-probe.json) retain exact results. Roadmap v3.23, ADR-035/036, lifecycle/journal, embedding-selection/backlog and related file design/runbook updated; [operating guide](../docs/INCREMENTAL_INGESTION.md) covers enablement/drain/rollback. Extended quality/load/long-input, populated SQL/blob/vector/ownership disaster recovery and tombstone compaction are separately evaluated backlog, not claimed PASS.
+
+**Status:** **D25 PASS for local opt-in lifecycle; D26 ACL-filtered retrieval NEXT.** Production rollout/search/reranking remain open. Preserve approved Qwen and exact E5 rollback; future agreed-model changes require benchmark/resource/migration/rollback review and owner approval. HEAD remains a88584b; no commit/push performed. Full-version source-only archive `/tmp/local-assistant-d25-complete-full-files.zip` contains complete pending changed files; unchanged user registry, weights, credentials, backups and runtime logs excluded.
+
+## Commit handoff — 2026-10-19
+
+**Purpose:** Record the owner's explicit request to commit the verified work through D25.
+
+Commit scope includes the owner-approved Qwen comparison/selection and exact E5 rollback, original unchanged MODEL_REGISTRY needed by roadmap links, D25 T01–T03 implementation/tests/migrations, ADR-031 follow-up and ADR-032–036, retained evidence, roadmap and this dev log. The complete67-file review archive matched current bytes before this documentation entry; the registry hash also matches the preserved owner file. Functional verification remains979 PASS/0 SKIP; no code changed after that run. Private credentials, model weights, backups and runtime logs are excluded. D25 PASS local opt-in; D26 NEXT. Local commit only; no push or production enablement. Earlier “no commit” entries describe their historical checkpoints.
+
+# 2026-10-19 — D26 private source-revalidated retrieval acceptance
+
+**Purpose:** Record implemented ACL-filtered search, actual verification, preserved baseline and the next milestone.
+
+ADR-037 preceded implementation. D26 adds a read-only owned dense Qdrant query adapter and strict authenticated loopback `POST /api/v1/retrieval/search`: exact query text, top_k1–10 and optional1–16 unique file UUIDs only. Server derives conjunctive owner/namespace/model/private/untrusted/active predicates; caller ACL/filter/model/generation/vector fields are forbidden. Bounded20–50 candidates, no returned vectors, malformed/foreign/duplicate/nonfinite input/reply refusal. Optional file IDs narrow scope without granting access. Results may underfill within that explicit budget; no corpus-exhaustion or quality threshold claim.
+
+Query uses the unchanged approved profile instruction plus original bytes through the existing empty-prefix passage worker. Actual full instructed/special token counts must match preflight and encoding; overflow422 without truncation. The exact ingestion encoder instance/admission is shared, preventing a second model process during indexing. No model, runtime, precision, weight, lockfile or project dependency changes/downloads. Approved Qwen CPU/1024 and exact E5 rollback remain intact.
+
+Candidates are hints only: owner/root/source-ready/hash-filtered SQL active job, exact generation/UUID membership, deterministic source projection/manifest and complete allowlisted payload must agree. Text/provenance/quality comes only from verified source reconstruction. Rehydrate files sequentially under existing chunk admission, retain separate verified readers through response, and track the complete operation in FileService. Final integrity I/O is followed by one SQL snapshot checking all retained generations before headers. Source deletion/publication during preparation fences delivery; changes after the final authorization point are ordered after authorization, with no distributed SQL/Qdrant/HTTP atomicity claim. Similarity is not confidence; retrieved content stays untrusted and is not automatically added to chat context.
+
+One nonqueued search admission is retained through delivery, with response bytes≤1MiB and query≤4096 UTF-8 bytes. Startup remains explicitly off by default (`ASSISTANT_RETRIEVAL_ENABLED=0`), requires enabled approved ingestion/files and an existing owned collection, and performs no retrieval vector mutations/new credential reads. Lifespan drains retrieval before ingestion/files/pool. Existing FileService, file/ingestion repositories, workers, model selection, schema0004/grants, Docker and Vault remain unchanged; among established code only API router and resource registration/order changed.
+
+## Observed verification and corrections
+
+- **Final full1030 PASS in216.32s (3:36),0 SKIP**, exit0; actual existing PostgreSQL/CORE/Qdrant and offline Qwen via the existing Vault-backed wrapper.51 new cases:40 unit/policy/protocol/delivery and11 actual SQL/Qdrant/service/HTTP. Final focused51 PASS in54.37s. No credential skips accepted.
+- Actual HTTP uses Qwen query/document encoding, owned vector storage, private source upload/index/retrieval and SQL publication: two principals, exact source/provenance, optional foreign file narrowing, immutable new UUID/hash replacement, old-source delete hiding and query-token overflow. No reranker/quality improvement is inferred from these tests.
+- Actual service faults cover wrong owner/root/file scope, deleted and superseded generations despite stale points, forged content/provenance payload, reconstruction drift, retained-reader delete fencing, busy response lifetime, query cancellation and joined shutdown. A legitimate new generation published during final integrity I/O is caught by the final single SQL snapshot. Fault cases inject explicit unit vectors against real SQL/Qdrant; separate HTTP tests run actual Qwen.
+- Earlier unit fixture failures (4) omitted ASGI `type=http`. The first integration run7 PASS/3 failures exposed two assertions referring to a nonexistent FileService tracking attribute and strict UUID element parsing rejecting JSON narrowing; corrected to existing `active` inventory and explicit UUID parsing without relaxing top-k/extra-field validation. All fixes preceded final focused/full runs; no labels, chunks, model, threshold or source contract changed to force success.
+- Ruff correctness/import/format PASS on all11 changed Python files;68 function/class descriptions plus module purposes verified. Protected D25 acceptance source hashes remain unchanged except the necessary main/lifespan wiring. Selected Qwen/configs/model profile/registry/E5 rollback, dependencies, runtime locks, all migrations/schema and existing source/repository/worker code were checked unchanged against e7fc697. No functional code changed after the final full run.
+- Readonly post-audit: schema0004; jobs0/heads0/files0/quota(0,0,0), restore probe DBs0, Qdrant collections0, live encoders0 and worker advisory locks0. Immutable manifest UPDATE denied/state UPDATE allowed/TRUNCATE denied; old owners/ACL fingerprint unchanged. Only owned removable acceptance probes were used; no production collection/configuration enabled. Protected redacted logs are ignored under `data/backups/d26-*.log`; credentials/weights/backups/logs excluded from commit/archive.
+
+[Acceptance](../docs/evidence/d26-retrieval-acceptance.json), [post-audit](../docs/evidence/d26-post-audit.json), [guide](../docs/RETRIEVAL.md), ADR-037, roadmap v3.24, embedding/model backlog and related file design/runbook updated. Full-version changed-file archive: `/tmp/local-assistant-d26-complete-full-files.zip`. This verified milestone is prepared for a local commit including this dev log; no push or production enablement.
+
+**Status:** **D26 PASS for local opt-in retrieval; D27-T01 baseline/reranker evaluation planning NEXT.** Freeze an independent corpus/labels/thresholds and no-reranker baseline before candidate execution. Preserve original Qwen3-Reranker-0.6B nomination; no reranker has been downloaded/evaluated/deployed here. Future agreed-model changes still require benchmark, performance/resources, compatibility, migration/rollback and owner approval. Production multiworker/load/DR, independent quality/long-input and safe tombstone compaction remain open.
+
+# 2026-10-19 — D27-T01 frozen baseline verification in progress
+
+**Purpose:** Record the next milestone's actual scope and focused results before final regression acceptance.
+
+ADR-038 precedes evaluation code. Froze a new agent-authored synthetic24-document/36-query corpus (12 each vi/en/cross-language) and exact binary labels/near-topic negatives before inference. Corpus SHA256 `0bc96e6c5bebacb3ffbd3eedd4fed466c730f2f540eef556aeb4654949bd7ee8`; plan SHA256 `4f39578e917b8a07175ea86946e21e76f577a0d7c6ffd5397ad1a6aaf6423048`. This is separate diagnostic data, not human-blinded/production-held-out evidence. New scorer independently verifies duplicate/unknown/missing/nonfinite/unsorted inputs, multiple-relevance binary nDCG/recall and deterministic descriptive bootstrap; no post-score relabeling or threshold changes.
+
+Harness encodes60 real complete CPU inputs once through unchanged pinned Qwen worker (24 passages+36 instructed queries, existing batches4), then explicitly replays those actual vectors in isolated source/SQL/Qdrant/D26 retrieval. It preserves full token counts/fingerprint/source hashes, one256-byte chunk/source, actual source admission/publication, exact reconstruction/final checks and two complete query rounds. A foreign owner has an identical-content source, testing ACL exclusion under equal semantic content. Cached query timing excludes per-request tokenizer/model startup/HTTP; batch/padding numeric differences from singleton production queries are disclosed. Child RAM/VRAM not instrumented and remain null. Application/model/schema/dependencies and original D24–D26 evidence unchanged.
+
+Focused21 unit+1 actual integration **22 PASS/89.34s**. Initial frozen baseline R@3/R@5=.972222, R@10=1, MRR@10=.949074, nDCG@10=.961613; both replay orders stable and identical-text foreign source excluded. Retain misses: query-q2 rank6, owner-q1 rank2, vision-q1 rank2; no corpus/label/threshold repair. Proposed diagnostic warning gates met but do not authorize model adoption. Replay cached p95≈113ms is not API/model p95; actual60-input encoder wall≈6.698s and tokenizer≈2.519s in this focused run.
+
+Read only official public reranker metadata/config: original Qwen3-Reranker-0.6B revision e61197ed45024b0ed8a2d74b80b4d909f1255473, license and artifact LFS/Git identities retained. Card advertises32K while config declares40960 positions; proposed complete-pair budget512 tokens has no long-input claim. No reranker weights/tokenizer assets downloaded, executed, selected or routed. T02 candidate resources/format/quality/fixed-top10/rollback proposal is documented for separate execution scope; runtime/provisioning/adoption remain open.
+
+Full existing Vault-backed regression is running; **D27-T01 acceptance pending full result, D27 IN PROGRESS, D28 not started**. No commit of this milestone yet; final status/evidence will follow actual verification.
+
+## Final D27-T01 acceptance — 2026-10-19
+
+**Purpose:** Supersede the pending checkpoint with actual regression/audit results, preserving incomplete D27 gates.
+
+Final complete existing Vault-backed regression **1052 PASS in306.02s (5:06),0 SKIP**, exit0.22 new cases (21 unit/oracle/freeze/replay protocol,1 actual CPU/source/SQL/Qdrant baseline); focused22 PASS/89.34s. Both focused/full measured the same quality: R@3/R@5=.972222, R@10=1, MRR@10=.949074, nDCG@10=.961613. Cross-language R@3=.916667/MRR=.847222/nDCG=.884839; vi/en each1 on this authored diagnostic set. Retain query-q2 rank6, owner-q1 rank2 and vision-q1 rank2. Two rounds stable; identical-content foreign source excluded. No corpus/labels/threshold changes after first inference.
+
+Final actual60-input tokenizer wall2.583498s and encoder batch wall6.695255s; cached-query retrieval p50110.445787ms/p95116.019685ms over72 observations. Timing excludes per-request model/tokenizer startup and HTTP/serialization; batch4 query vectors need not equal singleton request numerics. Child RAM/VRAM remain null, not copied from old benchmarks or inferred from parent RSS. Descriptive seeded query-bootstrap intervals acknowledge36 correlated queries sharing12 authored intents; not human/production-independent confidence.
+
+Full evidence retains both query replay candidate orders/scores, immutable source/point/hash bindings, complete actual token counts and all misses. Independent post-run audit matched every source and candidate hash to frozen corpus bytes. Post-audit: schema0004; jobs/heads/files/quota0, restore probe DBs0, Qdrant collections0, encoder processes0, worker advisory locks0; immutable-column UPDATE denied/state allowed/TRUNCATE denied and original owners/ACL fingerprint unchanged. Only owned removable probes and synthetic source principals were used. No shared service restart, model provisioning, application/source/repository change or production flag/configuration enablement.
+
+All three new Python files pass Ruff correctness/import/format,22 function/class descriptions and module purposes verified; D26 acceptance source hashes and selected Qwen/model registry/E5 rollback, dependencies/runtime locks/migrations/configs unchanged. Evaluation-only replay records contain actual CPU vectors, with no synthetic fallback; production D25/D26 code untouched. No functional code changed after the final full run. The new raw replay retention assertion was included in that full run; the earlier focused run predates that report-detail addition. Private redacted logs and raw operator artifacts stay ignored under data/backups; committed evidence contains public synthetic data and metadata only.
+
+Roadmap v3.25, ADR-038, D27 evaluation/candidate execution proposal, model backlog, retrieval guide, embedding-selection note and retained baseline/acceptance/post-audit updated. Full-version source-only archive: `/tmp/local-assistant-d27-t01-complete-full-files.zip`. This milestone is prepared for a local commit with this dev log; no push. Earlier pending/no-commit statements describe historical checkpoints.
+
+**Status:** **D27-T01 PASS for local frozen diagnostic measurement; D27 IN PROGRESS, T02 original Qwen3-Reranker-0.6B offline comparison NEXT, D28 not started.** Candidate weights/tokenizer not provisioned, inference/scores/RAM/VRAM not measured, selection/routing not changed. Keep the exact frozen corpus/candidate/labels for paired comparison; independent human judgments, full paired quality/latency/resources and owner-reviewed adoption/migration/rollback remain required. No benchmark score alone authorizes model changes.
+
+# 2026-10-19 — D27-T02 original-candidate comparison in progress
+
+**Purpose:** Record authorized evaluation-only provisioning/execution before any candidate result or adoption claim.
+
+The owner's continuation followed the concrete T02 plan. ADR-039 records this interpretation: execute the original Qwen3-Reranker-0.6B comparison in isolation, with no selection/deployment/model replacement. Pinned official revision e61197ed45024b0ed8a2d74b80b4d909f1255473; four required artifacts verified by exact size/SHA256 against T01 Git/LFS metadata, stored only in a new ignored cache ID. A new evaluation profile and separately frozen CPU uv script environment reuse reviewed package pins; project/embedding locks/configuration remain unchanged. Actual tokenizer no/yes IDs2152/9693 were verified and pinned before scoring. Execution manifest binds runtime/worker/comparison/lock/profile/corpus/plan/baseline hashes; source drift fails before launch. No original corpus/labels/candidate list/threshold change.
+
+New evaluation runtime uses official complete pair/chat formatting, no embedding pooling, CPU BF16 SDPA/batch1/two threads/no KV cache, final-position finite float32 no/yes softmax. Full prefix/pair/suffix counts<=512 with no truncation. Three repetitions score the same36-query ten-candidate sets; source hashes/point bindings are verified before inference and relevance labels are not sent to the model. Raw class logits, probabilities, token counts, query wall times and all ranks/gates are retained when complete. Loaded-model timing is separate from cold artifact/model load and D26 cached retrieval latency; no singleton HTTP SLO claim.
+
+Resources are supervised:4GiB actual RSS watchdog,8GiB virtual-address ceiling (distinct from RAM),60s per-query hard timer,600s parent wall/480–481s child CPU; CPU-only runtime/device verified. Exact parent PID/start/pidfd supervision and shielded launch/kill/join preserve cleanup across cancel/timeout/death; one nonqueued evaluation admission, credential/proxy-free environment and bounded stdin/reply. No application source, API, DB/Vault/Docker/service/collection mutation for candidate scoring. Existing T01 baseline/evidence remains immutable.
+
+35 unit/protocol tests PASS/0.35s. Initial fake tokenizer fixture incorrectly requested one total token despite its declared22 prefix/suffix tokens; corrected fixture to23 before actual scoring, with no token-limit/code-policy change. Actual comparison and cancel/timeout/parent-death/watchdog/tokenizer tests are running. **T02 acceptance and quality/resource outcome pending; D27 remains IN PROGRESS, D28 not started.** Any failed gate will be retained; model adoption still requires independent judgments, full review and owner decision.
+
+## T02 initial failure and execution v2 amendment
+
+**Purpose:** Preserve the unsuccessful measurement and document an equivalent-computation correction before accepting results.
+
+First focused run **41 PASS/1 FAIL in244.05s**; actual comparison did not return an accepted reply. Last observed candidate CPU413s/RSS1654616KiB; failure occurred near the frozen480s CPU budget, but exact exit code was not logged, so CPU-limit cause remains inferred. No accepted candidate quality metric exists from that attempt. Initial log/source archive and manifest v1 hashes are retained in d27-t02-initial-failure.json and protected data/backups; do not relabel the failure as a benchmark pass.
+
+Reviewed installed pinned Transformers4.57.6 Qwen3 forward: `logits_to_keep=1` applies the vocabulary head only at the required final hidden position. Execution v2 avoids unused earlier-position vocabulary heads; same full input, model/weights/dtype/attention/no-cache semantics and scoring. Before scoring rounds it must prove exact actual no/yes logits against the original full-head computation on the first frozen pair, and records that parity/changed contract. Numeric process exit/completed-round diagnostics added. Corpus/labels/prompt/candidate list, token/RSS/query/CPU/wall budgets and quality thresholds are unchanged. Manifest v2 refrozen before candidate execution.36 unit/protocol tests PASS/0.35s, including parity-tamper refusal; actual v2 evaluation is in progress. D27/T02 not yet accepted, no adoption/production changes.
+
+## T02 batch1 CPU failure confirmed; distinct batch4 experiment
+
+**Purpose:** Preserve failed runtime contracts and assess a separately declared evaluation variant.
+
+V2 focused42 PASS/1 FAIL in242.76s; safe diagnostics logged launcher exit152 (128+SIGXCPU24) and two completed rounds. Original batch1/480s CPU contract is FAILED/INCOMPLETE; no complete candidate quality results accepted. Manifest v2/source/log archive hashes retained. No quality/resource threshold is raised to mark batch1 PASS.
+
+ADR-040 precedes a separate batch4 CPU BF16 profile using identical cached weights/tokenizer, full frozen inputs/prompt/labels/candidates and unchanged budgets/gates. Ten candidates process4+4+2 with left padding/masks; exact token counts/source alignment and finite class logits remain required. Padding/matmul shape can change numeric results versus singleton; this is explicitly a distinct runtime, not a claim of bit-identical batch1 scores. New independent golden-array test verifies token order/masks/row outputs;37 unit cases PASS/0.34s. Manifest v3 frozen before candidate scoring. Actual three-round v3 measurement is running; adoption remains unauthorized and D27 open.
+
+## T02 batch4 focused comparison completed
+
+**Purpose:** Record actual successful runtime-variant measurement while full regression is still pending.
+
+Focused **44 PASS in234.51s**,0 SKIP:37 unit/protocol/padding cases and7 actual comparison/tokenizer/process/watchdog cases. Batch4 completed all3 real repetitions; rankings stable. R@3/R@5/R@10/MRR@10/nDCG@10 all1.0 on the unchanged36 authored judgments; baseline .972222/.972222/1/.949074/.961613. Delta R@3+.027778, MRR+.050926, nDCG+.038387; each group nonregression and all frozen quality/resource gates met. Real singleton reference/final-head no/yes logits exactly[12.375,21.25]. No labels/candidates/prompt/threshold changes; batch1 failures remain retained, not promoted to PASS.
+
+Measured peak candidate process RSS1594.512MiB RAM, CPU-only GPU allocation0, cold artifact/model load2.276442s, loaded-model ten-pair query p50≈2120.184ms/p95≈2232.294ms/max≈2298.982ms (108 samples). These timings exclude embedding/retrieval/HTTP and model cold load; RAM includes parity probe and scoring. They are not host GPU/total application memory or an end-to-end API SLO. No human-independent/general quality claim or model adoption.
+
+A full existing Vault-backed regression is running. T02 is not formally accepted until full result/post-audit; D27 IN PROGRESS, T03 decision/human review remains later, D28 not started. No application/selection/configuration/schema/dependency/service mutation.
+
+## Final D27-T02 batch4 measurement acceptance — 2026-10-19
+
+**Purpose:** Record actual complete comparison/regression, retain failed runtimes and define the remaining review boundary.
+
+Final full existing Vault-backed regression **1096 PASS in540.75s (9:00),0 SKIP**, exit0, actual PostgreSQL/CORE/Qdrant/offline model gates.44 new tests:37 unit/protocol/manifest/golden-padding and7 actual comparison/tokenizer/process/watchdog cases. Final focused44 PASS/234.51s. Batch4 performs3 actual rounds/108 ten-candidate queries/1080 measured pairs; ranks stable, full/focused quality identical. R@3/R@5/R@10/MRR@10/nDCG@10 all1.0 on unchanged36 authored judgments; baseline .972222/.972222/1/.949074/.961613. Deltas R@3+.027778, MRR+.050926, nDCG+.038387; all frozen diagnostic group/resource gates met. Three old rank6/rank2 misses become rank1. Descriptive paired nDCG-gain95% interval[0,.094657] includes0; correlated small agent-authored data is not independent human/production quality.
+
+Final peak candidate process RSS **1596.055MiB RAM**, GPU allocation0 by verified CPU-only Torch/parameter devices; fresh artifact/model-session initialization2.300225s with filesystem cache uncontrolled. Warm loaded-model ten-pair query p50≈2120.524ms/p95≈2238.943ms/max≈2292.312ms (108 samples), excludes initialization/embedding/retrieval/HTTP. Peak RSS includes load/reference-parity/scoring, not disk bytes or cumulative parent/child RAM; co-resident/persistent-service memory, real singleton end-to-end and sustained CORE contention remain unmeasured.480/481s CPU hard cap enforced; total CPU time is not separately instrumented. No fabricated end-to-end SLO or calibrated confidence.
+
+Actual singleton full-head/final-head no/yes logits exactly[12.375,21.25]. Batch4 padding is separately disclosed and not claimed numerically identical to batch1. Actual full512/513 token boundaries, source/candidate/hash completeness, wrong-identity/nonfinite/logit consistency, credential-free stdin, launch-gap cancellation, real timeout/cancel/parent SIGKILL and real OS RSS/query watchdog kills passed. Watchdog fault tests use tiny budgets/fake blocked computations, not a4GiB allocation or a model-quality sample. Relevance labels never enter model input. Frozen corpus/plan/prompt/top10/labels and every quality/resource threshold remained unchanged.
+
+Original batch1 v1/v2 remain **FAILED/INCOMPLETE**, not qualified by batch4 success: v1 unaccepted worker failure41 PASS/1 FAIL/244.05s near CPU cap (cause inferred), v2 exit152/SIGXCPU after2/3 rounds42 PASS/1 FAIL/242.76s (confirmed). Initial logs/source archive hashes/manifests retained; no complete quality metrics invented for either. Exact last-head optimization and a separately declared batch4 runtime are documented in ADR-039/040 before their respective executions; budgets were not raised. All three attempts are visible in comparison/review evidence.
+
+Readonly post-audit: revision0004; jobs/heads/files/quota0, restore probe DBs0, Qdrant collections0, live encoder/reranker workers0 and worker advisory locks0. Immutable-column UPDATE denied/state allowed/TRUNCATE denied; old owners/ACL fingerprint unchanged. Candidate scoring itself has no DB/Vault/source/vector/service writes; full regression uses only its normal owned removable probes. Existing D25/D26/T01 source hashes, registry, approved selected embedding/profile/precision, exact E5 rollback, project/runtime locks and migrations remain unchanged. Five new Python files/68 function-class descriptions pass Ruff/import/format; frozen isolated worker lock and manifest checks pass. No functional code changed after the final full run.
+
+[Complete comparison](../docs/evidence/d27-t02-reranker-comparison.json), [acceptance](../docs/evidence/d27-t02-acceptance.json), [post-audit](../docs/evidence/d27-t02-post-audit.json), provisioning and all execution/failure artifacts retained. Roadmap v3.26, ADR-039/040, baseline/evaluation/embedding/retrieval/backlog documents updated; [T03 review proposal](../docs/D27_RERANKER_ADOPTION_REVIEW.md) includes concrete benefit/cost, independent quality gates, optional integration scope and nondestructive disable/drain rollback. No adoption approval, default routing, application/API/schema/Docker/Vault change or production collection enablement. New weights/cache and raw private logs remain ignored, excluded from commit/source archive.
+
+**Status:** **D27-T02 PASS for local batch4 measurement; D27 IN PROGRESS, T03 independent quality/resource/adoption review NEXT, D28 not started.** Keep original model lineup and approved embedding. No diagnostic score alone authorizes model/routing changes. This verified milestone is prepared for a local commit including dev log; no push. Full-version source-only archive `/tmp/local-assistant-d27-t02-complete-full-files.zip`; earlier pending/no-commit notes are historical checkpoints.
+
+
+# 2026-10-19 — D27-T03 review preparation and bounded request-cost probe
+
+**Purpose:** Continue authorized work autonomously while keeping missing human judgments, model decisions and real HTTP/concurrent-service gates explicit.
+
+New score-blind review preparation is frozen before any new challenge inference: eight authored unlabeled queries/eight source snippets/64 complete pending pairs, numeric/month/release-generation, unresolved identifiers/OCR, stale formula-cache, rollback and potentially absent-answer coverage. Agent-authored input is not independently authored/human-reviewed/production-held-out. No human labels supplied. Deterministic content-hash ordering hides model ranking/order and old role/target labels. Original D27 corpus/plan/top10/labels/thresholds/baseline/T02 comparison/failed experiments remain unchanged. The structural validator binds exact corpus/packet/review identities, all query/source pairs, strict booleans, reasons, reviewer metadata/timezone timestamp and explicit attestation; rejects duplicate keys/nonfinite values/partial or foreign data and never overwrites existing artifacts. Private0600 outputs and count/hash-only logs preserve auditability. Structural acceptance cannot authenticate a human, certify independence or approve a model. All-negative labels are supported without inventing a relevant target; a later paired plan needs explicit absent-answer metrics because the old scorer intentionally rejects empty relevance. Test-only synthetic labels are not committed as human judgments.
+
+A separate resource-only worker uses the first original frozen query and ten exact source/hash-bound candidates, unchanged pinned CPU BF16 batch4 weights/prompt/runtime (4+4+2), plus meaningless repeated-token stress input. It never reads the new challenge. Own frozen manifest/uv script lock, secret-free offline environment, exact parent supervision, joined cancel/launch-gap/timeout, actual RSS4GiB watchdog,8GiB virtual ceiling,120/121s CPU,150s child wall and180s parent wall; these are separate probe limits and do not alter any T02 budget/profile. Actual full512-token forward and513 rejection are measured; resource stress is not long-document relevance validation.
+
+Initial probe focused **60 PASS/1 FAIL in0.91s** before any accepted measurement. Importing the comparison helper pulled application dependencies into the model-only environment; a separate diagnostic confirmed `ModuleNotFoundError: No module named 'starlette'`. Failure/source/log/original freeze hashes retained. Revision2 replaces only worker-side manifest/request loading with standard-library reads and exact existing hashes. No input/model/scoring/limit changes. Pre-execution revision2 frozen. Final focused **61 PASS in15.65s,0 SKIP**:60 protocol/control cases including real owned-process cancellation/launch-gap/timeout and one actual model-resource probe. Current source purposes/docstrings (48 functions/classes) and Ruff correctness/import/format pass.
+
+Focused actual measurements: worker-start-to-first-query6.987930s, model-init4.721388s, warm ten-pair queries2.149916/2.197008/2.187672s; complete512-token forward1.117899s,513 rejected. Peak worker RSS1565.941MiB RAM, worker user+system CPU24.614314s, verified CPU-only allocation0. Parent total15.103750s includes all four queries and boundary probes, not a first-query SLO. Child first-request time starts before model imports, excludes interpreter/uv launch/IPC, and includes artifact verification/import/model load/first score. Cache state is uncontrolled. No p95/SLO derived from three warm samples; no HTTP/embedding/source retrieval, sustained concurrent CORE or persistent co-residency measurement claim.
+
+Full existing Vault-backed regression is running. No T03/day PASS until the corresponding gates are actually met. Review protocol, roadmap v3.27, backlog and adoption-review follow-up updated. Human review requested asynchronously while independent verification continues. No architecture/application/source/API/model selection/profile/DB/schema/ACL/Vault/Docker/production service change; existing ADR-039/040 runtime reused, no new application ADR required for evaluation-only tooling. New dependencies/weights are not downloaded; isolated probe lock reuses existing cached pins. D27 remains IN PROGRESS, D28 NOT STARTED.
+
+Owner response during verification: **the owner will perform the human relevance review**. This identifies the reviewer only; no labels, attestation or adoption approval have been supplied. Readable score-free form and a private0600 pending working copy at `data/backups/d27-t03-human-review.json` are prepared; committed pending evidence is preserved. Independent work/regression continues.
+
+
+## Verified D27-T03 preparation/resource checkpoint — 2026-10-19
+
+**Purpose:** Record completed regression and post-audit without falsely closing independent review or D27.
+
+Full existing Vault-backed regression **1157 PASS in553.32s (9:13),0 SKIP, exit0**; original1096 plus61 new cases. Final focused61 PASS/15.65s. No code changed after the final full run. Actual final isolated worker first-request4.451425s, model-init2.236234s; warm ten-pair requests2.234218/2.211714/2.220581s; full512 forward1.113713s and513 rejected. Peak1549.250MiB process RAM,22.222974s user+system CPU, verified CPU-only GPU allocation0. Parent12.639595s includes four requests and boundary probes. Focused/full raw results both retained; cache-dependent initialization differs, no p95/HTTP/load SLO inferred. Original T02 comparisons/failures and every old profile/input/threshold remain immutable. Initial resource import failure remains retained, not rewritten as a successful attempt.
+
+Readonly post-audit: revision0004, jobs/heads/files/quota0, owned restore DBs0, Qdrant collections0, encoder/reranker/resource-probe workers0, advisory worker locks0; original owners/ACL fingerprint unchanged, immutable-column UPDATE denied/state allowed/TRUNCATE denied. Latest accepted source hashes38 match; historical D25 main/lifecycle hashes were legitimately superseded in D26, so old evidence is preserved rather than compared as if it described the newer checkpoint. All preexisting application files are byte-identical to base2a663e6; original registry, selected/rollback model profiles, models.yaml, dependencies/locks and old frozen evidence unchanged.
+
+Review tooling/strict unlabeled challenge, readable review form, owner assignment, resource-only script/lock, raw final/focused results, freezes/failure, preparation acceptance and post-audit added. Four new Python files/48 function-class descriptions pass module-purpose, Ruff correctness/import/format checks. Roadmap v3.27, adoption review, model backlog and review protocol updated. No new application architecture/model/routing decision made; reuse ADR-039/040, later integration still requires its own ADR and owner decision. Full-version source-only archive `/tmp/local-assistant-d27-t03-preparation-full-files.zip` will contain every changed file and hashes, excluding keys/weights/private logs/review response/backups. Local commit includes this dev log; no push.
+
+**Status:** **D27-T03 preparation and isolated request-resource probe VERIFIED; D27 IN PROGRESS; D28 NOT STARTED.** Owner volunteered to review, but actual independent labels/attestation remain0/64. Separate paired plan (including absent answers), actual HTTP/source/delivery and concurrent CORE resources plus explicit owner adoption remain open. No task/day marked PASS solely from code, automated tests or reviewer assignment.
+
+
+# 2026-10-19 — D27-T03 isolated HTTP/core trial and owner-delegated AI relevance
+
+**Purpose:** Continue independently rather than stopping at a manual-label request, preserve actual review provenance and finish the remaining local evaluation with measured evidence.
+
+ADR-041 precedes the test-only composition: unchanged D26 route/source/SQL/Qdrant/current owner/root/hash/generation fences, ten rehydrated candidates, actual original pinned Qwen reranker CPU BF16 batch4, exact chunk-text hashes, complete finite source-bound scores, shared actual ingestion encoder admission, post-model/final-response checks and held readers through delivery. Isolated supervised worker has120/121s CPU,4GiB actual RSS,8GiB virtual address,80s child/90s parent wall and512 complete-token cap, secret-free offline env and joined launch-gap/cancel/shutdown. No new production flag, application source, routing/configuration/schema/ACL or embedding change.41 new protocol/control cases plus5 live cases focused46 PASS/213.98s. Live cases include actual authenticated full ASGI path, two real source delete/supersede-delay fences and actual model-worker cancel/shutdown. Existing only owned acceptance fixtures reused and cleaned.
+
+Focused measured dense ASGI mean5.615784s (n3), reranker idle mean11.592842s (n3), concurrent CORE mean10.935013s (n6); descriptive p95 values5.624668/13.094273/10.997904s.101 real bounded CORE requests overlap, with each of six retrieval requests overlapping traffic. CORE before n3 mean.191839s vs concurrent n101 mean.155182s is not a causal speedup claim: tiny baseline/reused short prompt/cache state/order uncontrolled. ASGI response completion includes real approved query/SQL/Qdrant/source/ranking/final-fence/serialization, not socket/network or production server scheduling. Fresh model children and all per-request RAM/CPU/logits/counts retained; persistent co-residency/load certification not measured.
+
+Additional paired scorer/driver preparation focused31 PASS/.93s:30 unit/control cases and one pending-review gate. Explicit absent support metrics remain null; answerable macro means never count absent cases perfect. Complete point/file/source hash/generation pairing, three actual repetitions and exact input/scoring freezes prepared. That gate returned PENDING_HUMAN_REVIEW with no inference; its test PASS does not establish human relevance or benchmark success. Combined1234-case regression is running on this implementation checkpoint.
+
+The owner then explicitly said they are unavailable and delegated this review and similar tasks to the assistant autonomously from now on. ADR-042 records the amended local criterion. No further mandatory manual-label task is assigned; never fabricate a human attestation or call same-agent review independent. Historical human packet/template/scorer/assignment preserved. Separate AI review v1 finds query04 can be answered negatively by doc-d (quarter budget not approved), so the frozen original minimum-one-absent coverage FAILS before model inference (8 answerable/0 absent). Do not force an irrelevant label to pass coverage. Separate v2 changes only q04 to physical backup disk serial for G-17, which no source provides; source bytes/other seven queries and thresholds unchanged.7 answerable/1 absent AI judgments, plan and code/test hashes frozen before any new-challenge model inference.15 AI-provenance/metric/source-lifecycle unit cases PASS/.18s. Actual v2 three-round execution waits for the current shared-service regression to finish; no parallel DB tests, no invented result.
+
+Current recommendation is retain approved dense routing and defer production reranker adoption given observed fresh-worker cost and limited quality scope; final local evaluation decision still needs actual v2 results. Original registry nomination remains. No original model replacement/selection, default routing or deployment is authorized by AI review. Completing a measured evaluation can conclude to defer adoption; it does not promote the candidate or erase failed quality/resource gates. D27 stays IN PROGRESS; D28 NOT STARTED until actual amended evaluation/decision acceptance.
+
+HTTP/scoring preparation full checkpoint completed: **1234 PASS/787.47s,0 SKIP, exit0**. Readonly post-audit schema0004, rows/quota/probe DBs/collections/live model workers/advisory locks0; original owners/ACL unchanged. Full raw ASGI/Core evidence and acceptance retained. This run collected before new15-unit/one-actual AI-v2 test and one TCP test were added; do not call it a1251-test full invocation. Actual AI-v2 focused trial is running separately after the shared-service audit; no parallel DB/CORE acceptance runs. Temporary TCP trial is frozen and waits for that run.
+
+
+## Final D27 local evaluation / retain-dense acceptance — 2026-10-19
+
+**Purpose:** Close the actually tested amended local evaluation and continue D28 without claiming human quality or adopting a model.
+
+Actual AI v2 focused **16 PASS/448.97s,0 SKIP**:15 protocol/provenance/source-pair cases plus one three-real-round source/HTTP/model trial.7 answerable/1 absent; dense and candidate R@3/R@5/R@10/MRR/nDCG all1 across all three stable rounds; new gain0, descriptive nDCG-delta interval[0,0]. Absent metrics stay null, no abstention calibration/general quality inferred. Same-agent authorship/review explicitly owner-delegated, not human-independent. Original v1 negative-answer/absent coverage FAIL, T02 positive36-query evidence, batch1 CPU failures and every old input/profile/threshold remain intact. New candidate worker peak1542.746MiB RAM, CPU-only allocation0; no CORE/host VRAM or persistent whole-service memory claim.
+
+Actual ephemeral Uvicorn/TCP **1 PASS/40.93s,0 SKIP**: private auth/Origin/foreign-owner fences, same exact source/point IDs, dense5.606043s→two-candidate rerank8.896878s→dense-after-disable5.634908s, temporary server joined. Same original fixture event loop/lifespan resources; genuine loopback TCP, not separate-process/multiworker/load certification. Existing ASGI/CORE101-overlap drill passed earlier, all raw timing/logit/token/source identities retained.
+
+Verification is **1234-test full regression PASS/787.47s**, plus the **16 new AI-focused** and **1 TCP** cases above, all0 SKIP/exit0:1251 unique tests across frozen checkpoints. **No single1251-test full invocation**; earlier46/31 focused cases are subsets of1234, not counted twice. Full1234 ran before the additional17 test cases were collected, all preexisting application/helper/profile bytes remained unchanged and all new isolated cases ran afterward. Do not invent a combined wall time/full-run result.13 new Python modules/105 function-class descriptions and frozen worker lock pass purpose/Ruff correctness/import/format checks.
+
+Final read-only audit: schema0004; jobs/heads/files/quota0, owned restore DBs0, Qdrant collections0, live encoder/reranker/request-trial workers0 and advisory locks0; old owners/ACL unchanged, immutable-column UPDATE denied/state allowed/TRUNCATE denied. No user source/collection adoption, production config/routing, schema/grant/Vault/Docker or original model change. Existing registry/model roles, approved Qwen selection, exact a88584b E5 rollback, project locks/dependencies and protected evidence remain byte-identical. All live writes were owned removable acceptance fixtures.
+
+**Decision:** retain approved dense path, defer production reranker adoption. New limited diagnostic has no additional gain and observed fresh-child request cost increases; general quality/persistent optimization remains unproven. Original Qwen reranker nomination preserved; no candidate adopted, selected/deployed or silently substituted. Keeping agreed state is an autonomous evaluation decision under ADR-042, not an owner approval for future model/routing replacement. [Final acceptance](../docs/evidence/d27-local-evaluation-acceptance.json), [decision](../docs/D27_RERANKER_EVALUATION_DECISION.md), raw ASGI/AI/TCP evidence and final post-audit retained; roadmap v3.29 and related guides/backlog updated. Full-version source-only archive `/tmp/local-assistant-d27-complete-evaluation-full-files.zip`; local commit includes dev log, no push.
+
+**Status:** **D27 PASS for local evaluation/retain-dense decision; D28 NEXT.** Independent-human/production-general quality, persistent runtime/co-residency, deployment SLO/load/multiworker/off-host DR remain unvalidated future work, not claimed PASS. The owner does not need to perform manual labeling. Continue D28 with an ADR before code, default-off authenticated source-held CORE generation, exact citation spans and post-model/final delivery/source lifecycle tests. No new model download or reranker adoption implied.
+
+
+# 2026-10-19 — D28 source-held grounded generation, acceptance running
+
+**Purpose:** Implement the next milestone after committed D27 local evaluation, retain actual failures and distinguish focused evidence from pending full acceptance.
+
+ADR-043 precedes new default-off authenticated `POST /api/v1/grounded/answer`: unchanged approved dense source/embedding path and existing CORE/fast, temperature0/output512/model60s; no model download/replacement, DB/schema/collection or conversation persistence change. Strict bounded input/output, unique exact Unicode quotes and server-derived file/page/paragraph/cell/hash/generation provenance. Native structured fields are lexical evidence units, not JSON scaffolding. Source readers/admission remain held through generation/delivery with pre/post-model and final fences; client task cancellation/shutdown is joined before source release. Shared CORE is not restarted and backend memory erasure is not claimed. Only existing main/router/lifespan wiring changes are necessary in previously accepted application files.
+
+Initial focused71 PASS/1 FAIL/52.60s: page-two copying returned insufficient_evidence because native page locator was omitted from model input. Original freeze/source/log failure retained. Pre-acceptance ADR amendment adds locator/field/quality and exact structured-field mapping; original questions/source/model/limits unchanged. Revised frozen focused **82 PASS/94.72s,0 SKIP**:75 unit/contracts/startup and7 live cases. Main live case performs6 actual CORE completions: PDF known fact, page-two Unicode, limited hostile-source instruction, foreign-owner fact isolation, absent identifier and immutable replacement. Other source race/cancel/shutdown/final-delivery cases intentionally use controlled model ports with real SQL/Qdrant/source resources. No universal factuality/injection-resistance claim.
+
+Separate real loopback Uvicorn/TCP/approved embedding/CORE test **1 PASS/14.31s,0 SKIP**; fixture event loop, not separate-process/load certification. Full **1334-case Vault-backed regression RUNNING** on frozen source. No D28 PASS or D29 advancement until actual regression and post-audit. [API/limits guide](../docs/D28_GROUNDED_GENERATION.md), ADR/freezes/failure and focused private raw outputs retained; source archive and final local commit pending. Owner-delegated AI review remains in force; no manual-label task.
+
+
+## Final D28 local grounded acceptance — 2026-10-19
+
+**Purpose:** Close D28 only after actual full regression, native-field verification and clean read-only audit.
+
+Full Vault-backed regression **1334 PASS in1387.90s (23:07),0 SKIP, exit0**. Original1251 plus83 D28 cases; focused82 and TCP1 are subsets. Two native-field tests added after collection then **2 PASS/1.21s,0 SKIP**: all7 DOCX paragraph/table and11 XLSX value/formula/cache goldens resolve through actual retained source/SQL/native extraction, ingestion planning and production citation parsing. They do not run a model or claim embedding-token admission. **1336 unique tests across checkpoints, not one1336-case full invocation.** No production source changed after successful full regression. Twelve Python files/72 function-class descriptions and Ruff correctness/import/format pass.
+
+Full actual six CORE cases match focused status/known-fact outcomes; final/focused synthetic raw results retained separately. Actual loopback TCP citation passes. Lifecycle fault cases retain controlled-model disclosure; exact quote provenance is not general semantic factuality/injection resistance or calibrated confidence. Client-task/readers join does not certify shared CORE KV-cache erasure. The first page-location failure and v1 freeze/log/source hashes remain retained, not rewritten as success.
+
+Read-only post-audit: schema0004, jobs/heads/files/quota/probe DBs/Qdrant collections/live encoder/reranker workers/advisory locks0; original owners/ACLs unchanged, immutable-manifest UPDATE denied/state allowed/TRUNCATE denied. Model registry/profiles/approved embedding/exact original E5 rollback/dependencies/migrations unchanged. All writes were owned removable probes. No new model, production flag/collection, schema/Vault/Docker change or shared-service restart. Temporary py-spy diagnostic tool was installed through uvx outside project dependencies while checking the long run; ptrace denied, no target-process mutation, and regression finished normally.
+
+[Acceptance](../docs/evidence/d28-grounded-acceptance.json), [guide](../docs/D28_GROUNDED_GENERATION.md), native/TCP/execution freezes, protected-identity and clean post-audit retained. Roadmap v3.30/related runbooks/backlog updated. Full-version source-only archive `/tmp/local-assistant-d28-complete-full-files.zip`; local commit includes this dev log, no push. ADR-043 remains frozen pre-execution; actual acceptance is recorded here and in linked evidence.
+
+**Status: D28 PASS for local opt-in grounded generation; D29 NEXT.** Continue memory classes/consent/provenance contract before D30 APIs/migration/extraction; no manual relevance review required or agreed model replacement authorized.
+
+
+# 2026-10-19 — D29 four-class consent/provenance memory contract
+
+**Purpose:** Complete D29 schema/design before D30 APIs/storage/extraction, preserving previously accepted application and models.
+
+ADR-044 precedes strict frozen executable settings/consent/record/source schemas and a pure current-snapshot write/use authorizer. Session/episodic/preference/project scopes, independent default-off memory/extraction, consent epoch/revoke/expiry, mandatory bounded retention, manual text SHA and user-message/file lexical provenance with exact Unicode spans. Manual records have no model ID; extracted records require explicit permission/nonmanual source/verified producer. Source authenticity/fresh transactions are D30 obligations, not inferred from structurally valid IDs. Exported JSON schema and additive three-table SQL proposal remain outside migrations. No API imports, memory runtime, model inference, new dependency or model choice change.
+
+Initial40 PASS/6 FAIL: synthetic quote length counted5 rather than4 Unicode code points; only fixture offsets corrected. Initial46 PASS/15 setup errors: app intentionally lacks TEMP. Existing dedicated Vault migrator supplies an operator-only schema-probe URL; app privileges unchanged, no root credential in API/tests. Subsequent60 PASS/1 FAIL raw UUID JSONB fixture serialization and62 PASS/1 FAIL wrong `psycopg.CheckViolation` test namespace corrected. SQL null-kind provenance refusal added. Final **63 PASS/0.53s,0 SKIP, exit0**:47 pure consent/hash/Unicode/scope/time/budget/default/strictness/audit cases and16 actual connection-private temporary PostgreSQL cases. SQL tables/data roll back; no permanent relation/migration applied. Three Python files/42 function-class descriptions and Ruff correctness/import/format pass.
+
+All254 preexisting tracked code/tests/config/models/migrations/dependencies from D28 commit `a2cc9c0` byte-identical. D28 full1334 PASS/1387.90s plus2 additional native-field PASS remain unchanged baseline; D29 adds63 separately: **1399 unique tests across checkpoints, not a new1399-case full invocation**. New unused contract does not justify rerunning unchanged expensive model benchmarks. Read-only audit: schema0004, memory relations0, app TEMP false/migrator TEMP true, old owners/ACL unchanged; files/jobs/heads/quota/probe DBs/Qdrant collections/live workers/advisory locks0. No app grants/schema/Vault/Docker/service/model changes.
+
+[Design](../docs/MEMORY_DESIGN.md), [validation](../docs/evidence/d29-contract-validation.json), [post-audit](../docs/evidence/d29-final-post-audit.json), ADR-044 and proposed relational/JSON schemas retained. Roadmap v3.31 updated. Full-version source-only archive `/tmp/local-assistant-d29-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D29 PASS for design/contract only; D30 NEXT.** Memory persistence/APIs/extraction/retention cleanup and D31 privacy/propagation are not implemented or claimed PASS. Continue with implementation ADR, backup/restore/grants/startup review before additive D30 migration. No manual relevance task or model replacement is required.
+
+
+# 2026-10-19 — D30-T01 additive memory journal, rollout preparation
+
+**Purpose:** Continue after D29 commit `ab6cff9`; implement storage/controls first without claiming the whole D30 API/extraction milestone complete.
+
+ADR-045 precedes V005 additive memory schema/narrow grants/downgrade refusal and an unused owner-scoped repository for explicit settings epochs, receipts, manual capture/inspect/edit/delete and bounded expiry purge. Server hashes/UUIDs/time; compare-and-swap settings/record revisions, owner locks, receipt revoke/expiry/epoch checks and owner/global admission caps. No memory service/API/model prompt/extraction or feature flag enabled. Necessary existing file/ingestion schema guards accept reviewed0005 while retaining unknown-revision and immutable-ingestion-grant refusal; source/index behavior unchanged.
+
+Related unit/startup/contracts **91 PASS/0.55s,0 SKIP**. Actual PostgreSQL tests are prepared for four classes, foreign/unowned scope denial, immutable runtime grants, quota and concurrent disable/revoke/version fencing; not yet run. V005 offline SQL rendered/reviewed without connecting. Fresh protected cluster/app backup plus isolated app restore verifies all9 old tables and ownership/ACLs, source unchanged after canary cleanup; no shared restart. Backup paths/checksums in `docs/evidence/d30-t01-pre-migration-restore.json`. Pre-rollout source/DDL snapshot retained. Migration/repository acceptance and D30 remain IN PROGRESS; no PASS without actual rollout/tests.
+
+
+## Verified D30-T01 repository/schema checkpoint — 2026-10-19
+
+**Purpose:** Accept the additive journal/control task from actual rollout and tests while continuing open D30.
+
+Reviewed V005 applied through existing Vault migrator after fresh quiet pre-backup/isolated restore of9 original tables/security. Original8 data-table fingerprints and all old relation/schema owners/ACLs preserved; new12-table post-backup restores rows/security and removes its owned probe. No shared restart, old-table DDL, role/credential/Vault/model change. File/ingestion guards only add reviewed0005; unknown-schema and immutable-ingestion checks remain. Applied migration source hash unchanged after rollout.
+
+First focused121 PASS/2.85s; source-related113 PASS/218.66s,0 SKIP on0005: file journal/HTTP/crash/recovery, ingestion journal/worker/HTTP, dense retrieval and existing actual CORE grounded ASGI/TCP/native-field gates. Pre-API review found missing receipt inventory caps; add1000 owner/10000 global using existing global-before-owner admission, no schema change. Two actual full receipt inventory cases added. Final focused **123 PASS/3.21s,0 SKIP**; real app-role four-class CRUD, exact Unicode hashes, foreign/unowned/session refusal, immutable grants, version/epoch/revoke/expiry, rollback, actual record/receipt quotas and concurrent settings/disable/revoke ordering pass. Fixture quota seeding is actual constrained SQL, not10000 model/HTTP calls.
+
+T01 adds38 unique cases; prior D28 full1334 plus2 new native-field and D29 new63 remain baseline: **1437 unique tests across checkpoints, not a new1437 full invocation**. Final whole-system regression still required before D30 acceptance. Nine current Python files/72 descriptions and Ruff checks pass. New schema/repository/control scope acceptance only; no memory API, source extraction, prompt injection or background retention service enabled.
+
+Read-only final audit: revision0005, memory settings/receipts/records0; files/jobs/heads/quota/probe DBs/Qdrant collections/live workers/advisory locks0. Old owners/ACL unchanged; app TEMP false, memory owner/receipt expiry UPDATE denied/text allowed, ingestion immutable UPDATE denied/state allowed/TRUNCATE denied. Original registry/models/embedding/E5 rollback/locks/dependencies unchanged. [T01 guide](../docs/D30_MEMORY_JOURNAL.md), [acceptance](../docs/evidence/d30-t01-journal-acceptance.json), pre/post restore/rollout/source hashes/raw actual grounded evidence retained. Full-file archive `/tmp/local-assistant-d30-t01-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D30-T01 PASS local repository/schema; D30 IN PROGRESS, T02 authenticated default-off APIs NEXT, T03 source-verified opt-in extraction/retention later.** No day advancement or unavailable human review task. Continue T02 after this checkpoint.
+
+
+# 2026-10-19 — D30-T02 authenticated default-off memory management
+
+**Purpose:** Continue after T01 commit `89ceb18`; expose consented manual controls while retaining open extraction/retention/full-day gates.
+
+ADR-046 precedes new local bearer-authenticated `/api/v1/memory` settings/consent/manual record routes, default-off startup/schema/grant validation and a service owning joined SQL work. Strict bodies forbid caller owner/model/provenance/trust; private/no-store/nosniff responses and stable sanitized validation/auth/storage errors. Metadata-only bounded lists, explicit record inspection, expected settings/record revisions, active-consent capture/edit and owner inspect/delete while disabled. Necessary main/router/lifespan wiring only; memory shutdown precedes existing source/pool shutdown. No model inference, extra credential/migration/dependency or production flag.
+
+Initial37 focused PASS/1.63s and108 related PASS/9.19s. Additional repeated-parent-cancel test produced25 PASS/1 FAIL/.58s: inline awaited journal cleanup could be interrupted before it finished. Fixed using a shielded owned SQL child and accepted cancellation-resistant finish_task join before tracking release.26 unit PASS/.53s. Actual SQL test now observes owned backend `PgSleep` before shutdown cancellation, proves rollback/no settings row and pool checkout0. Final **109 PASS/9.11s,0 SKIP**, including all38 new cases (26 unit+12 actual HTTP/SQL/TCP) and71 existing file/conversation/startup cases. No final separate38-case run or1475-case full invocation claimed.
+
+Actual V005 two-principal HTTP proves four-class manual CRUD, disabled inspect/delete, foreign receipt/record denial, revoke/old-epoch refusal and atomic invalid UTF-8-byte/NUL/metadata capture. Real ephemeral Uvicorn/TCP passes auth/Origin/private manual controls and joins operations/server. Source fixture event loop, not separate-process/load/model-quality certification. Read-only audit schema0005 unchanged; memory/source/quota/restore probes/vector/model workers/advisory locks0, old owners/ACL unchanged. Model registry/profiles/Qwen selection/exact E5 rollback/migrations/dependencies unchanged. Seven Python files/51 function-class descriptions and Ruff checks pass.
+
+[T02 guide](../docs/MEMORY_API.md), [acceptance](../docs/evidence/d30-t02-api-acceptance.json), [post-audit](../docs/evidence/d30-t02-final-post-audit.json), actual TCP evidence retained; roadmap v3.33 updated. T02 adds38 unique tests: **1475 unique across checkpoints, not a new full-suite invocation**; D30 final full regression remains required after T03. Full-version source archive `/tmp/local-assistant-d30-t02-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D30-T02 PASS local management APIs; D30 IN PROGRESS, T03 explicit source-verified model selection and bounded retention NEXT.** No automatic memory use/extraction, source propagation or export claimed. Continue T03 under a source/lifecycle ADR before implementation; preserve agreed models.
+
+
+# 2026-10-19 — D30-T03 explicit source selection, acceptance in progress
+
+**Purpose:** Continue T03 after `701530c` without advancing D30 before actual model and full regression results.
+
+ADR-047 precedes explicit single-user-message CORE/fast quote selection, fresh owner/consent/source fences through delivery, joined cancellation and bounded expiry retention. Default off; no automatic learning, file-memory adapter, prompt memory injection, model replacement or migration. Future additions assessed in MEMORY_BACKLOG.md.
+
+Source/contracts and related SQL/API checks: **128 PASS/4.92s,0 SKIP**. Earlier108 PASS/1 FAIL exposed strict UUID decoding of extracted JSONB provenance; targeted tagged UUID decoder and five regression cases correct that boundary while preserving strict contract and applied V005. Original failure retained privately. Tests include controlled cancellation, exact Unicode/hash proof, actual SQL source/epoch/revoke/expiry and bounded cleanup. These results do not yet establish actual CORE selection quality.
+
+**Status: D30-T03 IN PROGRESS.** Freeze source and synthetic English/Vietnamese/greeting/TCP oracles before real existing CORE runs. Actual model, final whole-system regression and final audit pending; no D30 PASS or D31 advancement.
+
+T03 live first attempt: Vault HTTP503 after host/container restart; existing protected initializer unsealed existing Vault without rotation/config change. Existing CORE was absent; resumed original configured CORE with vision, no model download/configuration change. Initial live attempt while CORE still loading produced2 FAIL/10 fixture setup errors/2.44s; these are not acceptance results. Added explicit upstream fixture import so the new live module can run standalone; exact model oracles unchanged. Wait for health200 before retry. Failure log retained at `data/backups/d30-t03-live-initial.log`.
+
+Healthy retry:12 actual SQL/CORE/HTTP/TCP cases PASS/2.62s; combined source/control/API checkpoint **140 PASS/6.78s,0 SKIP**. Actual CORE made four source-literal calls (English project/Vietnamese preference/greeting insufficiency/TCP preference); no new model or human-independence claim. ADR-044 audit found missing owner-export obligation; ADR-048 adds bounded read-only consistent snapshot export before day acceptance. Initial export6 PASS/1 FAIL/.73s was a fixture comparison of equivalent UTC `Z` and `+00:00` spellings; compare actual aware instants, unchanged serialization. Actual SQL/HTTP export cases already passed. Final full regression still pending.
+
+
+## D30 final local acceptance — 2026-10-19
+
+**Purpose:** Close D30 only after real model, full regression and post-audit results; continue D31 afterward.
+
+ADR-047/048 implementation: explicit single-owned-user-message CORE/fast source-literal selection with fresh source/consent/version fences through delivery; joined model/SQL cancellation and owner-control drain; bounded rotating expiry/orphan worker; read-only repeatable-read principal-only export while disabled. No file-memory adapter, automatic learning, memory prompt/vector use, new dependency/model/schema in T03. Necessary tagged JSONB UUID decoder repairs only extracted record reads; original strict contract/manual behavior and applied V005 retained.
+
+Final focused **147 PASS/6.91s,0 SKIP**. Final whole-system **1570 PASS/1357.69s (22:37),0 SKIP, exit0**, including95 new T03 cases and every prior case in one actual invocation. Four real CORE calls per focused/full run establish literal English/Vietnamese facts, greeting insufficiency and TCP preference; synthetic same-agent evidence is not human-independent/general model quality. Controlled model ports remain explicitly distinguished from actual inference. All17 changed Python files/166 function-class descriptions, Ruff correctness/import/format and diff whitespace checks pass.
+
+Post-audit:0005, memory settings/consents/records0; files/jobs/heads/quota/probe DBs/Qdrant collections/model workers/advisory locks0; no active app transaction/pending inference. Original owners/ACLs and narrow app TEMP/identity/expiry/ingestion grants preserved. Model registry/profiles/approved Qwen embedding/exact E5 rollback/dependencies/all applied migrations unchanged. Existing Vault was unsealed and original CORE/vision resumed after external host restart; no rotation/model download/config change. Original JSONB/setup/UTC fixture failures and healthy retries retained in focused ledger.
+
+[Guide](../docs/D30_MESSAGE_MEMORY_SELECTION.md), [acceptance](../docs/evidence/d30-memory-acceptance.json), [post-audit](../docs/evidence/d30-final-post-audit.json), frozen source and actual CORE/HTTP/TCP evidence retained. Full-version source archive `/tmp/local-assistant-d30-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D30 PASS (local opt-in), D31 NEXT.** Continue privacy/injection/source deletion/export propagation from actual code; production flags off, no agreed-model replacement or manual relevance task.
+
+
+# 2026-10-19 — D31-T01 source privacy baseline
+
+**Purpose:** Continue after D30 commit `478bec0`, testing actual deletion/export propagation before changing accepted behavior.
+
+Three real SQL/HTTP tests with explicitly controlled inference **3 FAIL/.84s,0 SKIP**: conversation soft-delete, source message edit and source message delete all leave extracted text in owner export/inspection. These are honest D31 acceptance failures, not a D30 full-suite result change. Own manual independent records must survive. Failure evidence/log checksum retained. ADR-049 precedes proposed invoker-security V006 transactional source invalidation and related startup compatibility; rollout requires empty memory inventory, unchanged old data/security, fresh protected backup/restore and actual tests. V006 not applied yet; D31 IN PROGRESS, no day advancement.
+
+
+## D31-T01 reviewed source invalidation rollout — 2026-10-19
+
+Private PostgreSQL proposal14 PASS/.48s; pre-rollout contracts/compatibility **59 PASS/.86s,0 SKIP**. Reviewed offline SQL and ADR-049 precede fresh protected cluster/app backup and isolated12-table restore. V006 applied through existing migrator after quiet/empty-memory preconditions. All11 old data-table fingerprints and original schema/table/column ACLs unchanged; only Alembic version plus two functions/triggers and partial provenance indexes added. Post-V006 protected12-table restore verifies rows, normalized ACLs and exact function/trigger definitions; own restore DB removed. No shared restart, model/config/dependency/credential change; old migrations untouched.
+
+First post-rollout related **262 PASS/10.23s,0 SKIP**, including all memory/source contracts and actual CORE/HTTP/TCP. Source privacy extended beyond original3 failures: **25 PASS/1.83s,0 SKIP** across real SQL/HTTP owner-disabled, foreign/manual/session boundaries, transactional rollback, actual1000-row SQL-copy cleanup and capture→waiting-source ordering observed in pg_stat_activity `Lock`; two functions invoker-only/fixed search_path/no direct app EXECUTE.1000 copies are SQL fixture seeding, not1000 model/API calls. Original3 failing oracles retained, no weakened expectation.
+
+V006 source is now applied/immutable; checksum and restore evidence in `d31-t01-v006-rollout.json`. D31 remains IN PROGRESS; source task final related audit and injection/export/purge gates remain. Preserve D30 historical1570 full result; no new1598 full invocation claimed.
+
+
+## D31-T01 final source-task checkpoint — 2026-10-19
+
+**Purpose:** Accept the verified source repair task and continue open D31 privacy work.
+
+Final **271 related PASS/11.00s,0 SKIP** includes all memory contracts, new source/private proposal/concurrency/grant cases and actual existing CORE/HTTP/TCP. Existing conversation/file/ingestion/retrieval/grounded source-system **140 PASS/216.58s,0 SKIP** on0006. Added actual explicit PATCH-to-manual detachment test: independent preference survives source delete, unlike session scope. All11 changed Python files/83 descriptions and Ruff correctness/import/format pass; applied V006 checksum frozen. No changed model/runtime/dependency or old migration bytes.
+
+Readonly post-audit:0006, no app transaction/pending inference; memory/source/quota/probe DB/vector/model worker/advisory lock inventories0; original owners/ACLs and narrow runtime grants preserved. New source functions have fixed search_path/invoker security and app direct EXECUTE denied. Fresh pre/post12-table restore includes exact trigger/function definitions and column ACLs; original11 data tables unchanged across migration. No shared restart or production feature enabled. Initial3 source failures preserved unchanged;1000 deleted copies were SQL fixtures, not1000 model/API calls.
+
+[Source acceptance](../docs/evidence/d31-t01-source-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), rollout and post-audit retained. T01 adds29 unique cases:1599 across checkpoints, **not a new1599 full run**; D30 historical1570 full remains separate. Full-version source ZIP `/tmp/local-assistant-d31-t01-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D31-T01 PASS locally; D31 IN PROGRESS, T02 injection/export/DB-vector-blob deletion tests NEXT and final full regression pending.** No secure erasure of original soft-deleted history, protected backups, delivered exports or shared model cache is claimed. Continue T02 within current model choices.
+
+
+# 2026-10-19 — D31-T02 privacy composition testing
+
+**Purpose:** Continue after source repair commit `d1721cd` without changing production code or agreed models.
+
+Test plan freezes structural privacy gates before new actual CORE/source-vector checks. Actual HTTP controlled protocol/auth/export/log/physical-memory-deletion boundaries **7 PASS/1.01s,0 SKIP**. First actual CORE/vector run **1 PASS/1 FAIL/13.52s**: original CORE/fast malicious-source check returns explicit insufficient_evidence, no foreign canary/marker execution; file test incorrectly used the visible-only journal reader to inspect an intentionally hidden deleted tombstone. Keep failure/source checksum; inspect only the exact fixture owner/file through raw SQL instead. Strengthen the test to index/preserve the other principal's vector as well as its blob. Production file/journal/source code unchanged, privacy gates not weakened; D31 remains open for retry and full regression.
+
+
+## D31-T02 focused composition checkpoint — 2026-10-19
+
+**Purpose:** Continue actual privacy tests while keeping whole D31 open for final full regression.
+
+Final focused **9 PASS/20.90s,0 SKIP**: controlled adversarial protocol/error/log/privacy cases, actual foreign pre-model refusal, private owner export and physical per-record SQL deletion retain separate source/foreign data. Existing CORE/fast malicious-source case returns insufficient_evidence, no foreign canary or marker file; one synthetic case is not universal semantic injection resistance. Actual approved Qwen/Qdrant/file case proves exact source deletion gives inactive/tombstone DB generation/cleanup acknowledgement, zero scoped vectors, physically absent target blob, quota0 and preserved foreign blob/vector. Durable journal/vector payload contain no source marker.
+
+Initial1 PASS/1 FAIL/13.52s retained: visible-only file reader intentionally hides deleted tombstone; fixture now uses exact owner/file SQL, with stronger foreign-vector preservation. No production code, model prompt/runtime/profile, dependency or applied migration changed in T02. One unused test assignment removed with identical source-creation side effect before final freeze; original failure and retry manifests preserved. Broader transcript/bulk-memory purge assessed as unscheduled conditional backlog, not silently added to accepted semantics.
+
+Final V006 full regression and post-audit pending; no1608-case full result or D31 PASS claimed yet.
+
+
+# 2026-10-20 — D31 final privacy acceptance after preserved full result
+
+**Purpose:** Resume the completed full run after external environment restart, verify its source/current state and close D31 before D32.
+
+Preserved full log completed2026-10-19: **1608 PASS/1361.93s (22:41),0 SKIP**; no failure/exclusion. Process session/exit status was not retained across restart; the complete pytest summary/log SHA is retained. This entry does not claim a fresh full run after reboot. All252 frozen code/test/config files plus protected models/dependencies/applied V001–V006 match exactly. Existing Vault unsealed with protected existing material, no rotation/policy/config change; read-only current audit2026-10-20 verifies0006, no active app/pending inference, memory/source/quota/restore probes/vector collections/model workers/advisory locks0, original owners/ACLs/narrow grants and fixed invoker-only/no-direct-app-EXECUTE source functions.
+
+T02 focused9 PASS/20.90s and actual full-run artifacts confirm CORE malicious-source insufficiency/no foreign canary or marker file; actual approved Qwen/SQL/Qdrant/blob delete leaves inactive text-free tombstone/cleanup acknowledgement, zero scoped vectors/absent target blob/quota0, while foreign blob and one vector remain. Physical per-record memory deletion keeps its separate source. Earlier source3 FAIL and file-reader fixture failure remain recorded. T01 adds29 tests/T02 adds9:38 new D31 cases, all1608 tests now in one actual full invocation. No production source/prompt/model/migration change in T02.
+
+[Final acceptance](../docs/evidence/d31-privacy-acceptance.json), [guide](../docs/D31_PRIVACY_AND_DELETION.md), [current audit](../docs/evidence/d31-final-post-audit.json) and actual evidence retained. Full-version combined D31 source archive `/tmp/local-assistant-d31-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D31 PASS for documented local privacy gates; D32 NEXT.** Conversation soft-delete, independent manual decisions and protected recovery/export/cache retention domains remain explicit limits, not secure-erasure certification. Continue actual integrated RAG/citation/limitations gate, preserving agreed models and existing PASS code.
+
+
+# 2026-10-20 — D32 frozen native knowledge gate
+
+**Purpose:** Verify the composed native-format RAG path with the agreed existing models before advancing D33.
+
+Pre-inference [plan](../docs/evidence/d32-knowledge-plan.json) freezes TXT/PDF/DOCX/XLSX hashes, manual native field relevance, five answerable questions, absent and foreign-only refusal. Existing independent source fixtures, same-agent labels, no human-independent/general model-quality claim. All four actual Qwen publications succeed:1/2/5/5 chunks. First wrapper invocation1 setup ERROR/1.02s used asyncpg URL despite application's psycopg requirement; fixed private wrapper only, retained redacted log/exit metadata.
+
+Actual unchanged baseline gate **1 FAIL/70.32s,0 SKIP**: TXT/PDF answer correctly; DOCX returns insufficient_evidence despite top3 including table1 row2 (`một`→`42`). `build_messages` flattened fields without row/column relationships. [Original failure](../docs/evidence/d32-initial-native-failure.json) and initial source freeze retained; no query/golden/top3/model change. ADR-050 precedes necessary structured-only source-group prompt repair in one runtime file. Plain TXT/PDF prompt remains identical; strict native quote authority, deadlines and prompt/token budgets retained. Initial new unit86 PASS/1 FAIL/.79s: synthetic OCR second-group locator changed without corresponding native spans; fix only fixture consistency, unchanged runtime fences. Final combined actual model/regression and cleanup audit pending.
+
+**Status: D32 IN PROGRESS; D33 not started.** No new model/download/dependency/configuration/schema/vector generation rewrite.
+
+
+## D32 final local knowledge acceptance — 2026-10-20
+
+**Purpose:** Accept the frozen integrated gate only after actual inference, related regression and cleanup; continue D33.
+
+Necessary ADR-050 repair adds verified native structure/source-ID groups only to structured prompts, preserving exact lexical quote authority and unchanged plain TXT/PDF system/user JSON. No model/question/golden/relevance/top3/budget/source-fence change. Actual final **90 focused PASS/108.24s +9 HTTP/TCP/privacy PASS/105.51s,0 SKIP, both exit0**. Four actual Qwen publications1/2/5/5 chunks;6 unchanged CORE/fast calls yield5/5 answers and5/5 exact relevant native citations (precision1.0 on this limited frozen set), absent insufficiency and foreign no_sources with0 generation. Native DOCX42 and XLSX cached30 are source-verified; cache is not recomputed/current truth. Synthetic same-agent data is not human-independent/general quality.
+
+Initial70.32s native failure and unchanged original plan retained; corrected synthetic OCR locator fixture and private wrapper driver setup error remain disclosed. An accidental unscoped collect entered vendored llama.cpp tests and found2 missing optional upstream dependencies; proper application `pytest tests --collect-only` succeeds1621, no dependency/vendor change.13 new cases; historical D31 full1608 remains separate, **no fresh1621 full invocation claimed**. Three Python files/14 function-class descriptions, Ruff correctness/import/format and whitespace pass. Related D28 guide/ADR cross-reference updated without rewriting history.
+
+Readonly final audit:0006, files/jobs/heads/memory/quota/restore probes/Qdrant collections/model workers/advisory locks0, no app/pending work; original owners/ACLs/narrow grants/fixed invoker-only trigger functions retained. Only accepted runtime baseline delta is the grounded structured prompt; all other frozen bytes/protected models/E5 rollback/dependencies/applied migrations unchanged. No production flags or shared infrastructure changed.
+
+[Acceptance](../docs/evidence/d32-knowledge-acceptance.json), [demo/limits](../docs/D32_KNOWLEDGE_GATE.md), [actual native evidence](../docs/evidence/d32-native-knowledge-live.json), [audit](../docs/evidence/d32-final-post-audit.json). Full-version changed-file ZIP `/tmp/local-assistant-d32-complete-full-files.zip`; local commit includes dev log, no push.
+
+**Status: D32 PASS (defined local knowledge scope), D33 NEXT.** Next work is explicit repository/workspace scope isolation, not coding tools or a model replacement.

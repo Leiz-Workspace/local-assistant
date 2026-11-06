@@ -1,0 +1,17 @@
+{
+  "description": "Audit of owner-approved embedding selection change; no service deployment or data migration performed.",
+  "approved_at": "2026-10-18T15:12:18.261372+00:00",
+  "approval_status": "OWNER_APPROVED_SELECTION_APPLIED",
+  "approved_by": "repository owner",
+  "approval_basis": "Owner replied Làm đi after the measured Qwen recommendation, migration/rollback proposal and CPU RAM clarification.",
+  "scope": "Select pinned Qwen for D25; preserve exact E5 rollback and all existing data. Production adapter, collection creation, reindex and routing remain unimplemented D25/D26 work.",
+  "previous_configuration_sha256": "d4b4c1f58d9d8e65b5821f2a68d0ac371b1ab8c8b6c61d15c825baf2469f4658",
+  "selected_configuration_sha256": "b2267a5e7b9e6f4acdf1d53251fea09ace251e5aab3a8778b9c68a9b910ab280",
+  "rollback_configuration_path": "configs/embedding-e5-rollback.json",
+  "proposal": "docs/evidence/model-eval-001-transition-proposal.json",
+  "benchmark": "docs/evidence/model-eval-001-qwen-e5-comparison.json",
+  "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+  "deployed": false,
+  "collections_mutated": false,
+  "data_migrated": false
+}

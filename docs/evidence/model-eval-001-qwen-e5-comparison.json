@@ -1,0 +1,6406 @@
+{
+  "description": "MODEL-EVAL-001 authorized offline Qwen BF16/PyTorch versus preserved E5 int8/ONNX configuration comparison; no deployment approval or Qdrant throughput claim.",
+  "version": "qwen-e5-comparison-v1",
+  "measured_at": "2026-10-18T15:01:39.161009+00:00",
+  "complete": true,
+  "same_inputs": true,
+  "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+  "script_lock_sha256": "acdcdb702ac4f23ca6ba6d1bc7ec96d8585b74fc33e8ab2d009a090716dc7ad0",
+  "repetitions": 3,
+  "common_policy": {
+    "max_tokens": 512,
+    "threads": 2,
+    "inter_op_threads": 1,
+    "batch_size": 4,
+    "device": "cpu",
+    "distance": "Cosine",
+    "reranker": false,
+    "no_truncation": true
+  },
+  "candidates": [
+    {
+      "candidate": "e5",
+      "complete": true,
+      "rankings_stable": true,
+      "quality": {
+        "recall_at_3": {
+          "min": 0.925,
+          "max": 0.925
+        },
+        "recall_at_5": {
+          "min": 0.925,
+          "max": 0.925
+        },
+        "recall_at_10": {
+          "min": 0.975,
+          "max": 0.975
+        },
+        "mrr_at_10": {
+          "min": 0.874404761904762,
+          "max": 0.874404761904762
+        }
+      },
+      "peak_rss_mib_max": 803.305,
+      "warm_query_p95_ms_max": 6.744,
+      "all_d24_reference_gates_met": true,
+      "runs": [
+        {
+          "candidate": "e5",
+          "profile_id": "e5-base-int8",
+          "repository": "intfloat/multilingual-e5-base",
+          "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+          "dimension": 768,
+          "runtime": {
+            "engine": "onnxruntime",
+            "device": "cpu",
+            "weight_dtype": "int8",
+            "pooling": "attention_mask_mean",
+            "fingerprint": "e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc",
+            "packages": {
+              "onnxruntime": "1.31.0",
+              "tokenizers": "0.23.3",
+              "numpy": "2.5.4"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "onnx/model_qint8_avx512_vnni.onnx",
+              "local": "model.onnx",
+              "bytes": 278686411,
+              "sha256": "2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 17082660,
+              "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+            }
+          ],
+          "artifact_bytes": 295769071,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 45,
+          "max_query_tokens": 24,
+          "load_ms": 958.977,
+          "document_batch_ms": 163.604,
+          "document_batch_per_second": 122.247,
+          "warm_document_p50_ms": 11.535,
+          "warm_document_p95_ms": 13.358,
+          "warm_query_p50_ms": 6.015,
+          "warm_query_p95_ms": 6.744,
+          "peak_rss_mib": 802.688,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 5.960464477539063e-08,
+          "flat_index": {
+            "bytes": 61440,
+            "build_ms": 0.005991,
+            "query_all_ms": 0.034594,
+            "build_vectors_per_second": 3338339.913
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.925,
+          "recall_at_5": 0.925,
+          "recall_at_10": 0.975,
+          "mrr_at_10": 0.874404761904762,
+          "groups": {
+            "cross": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.8333333333333334
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.9583333333333333
+            },
+            "vi": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 0.9375,
+              "mrr_at_10": 0.8110119047619048
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "invoice",
+                "api",
+                "chunk",
+                "retry",
+                "namespace",
+                "health",
+                "tokens",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "retry",
+                "restore",
+                "health",
+                "retention",
+                "shutdown",
+                "vision",
+                "ocr",
+                "formula",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "chunk",
+                "retry",
+                "tokens",
+                "api",
+                "restore",
+                "namespace",
+                "invoice",
+                "formula",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 6,
+              "relevant_ranks": [
+                6
+              ],
+              "top10": [
+                "retry",
+                "retention",
+                "shutdown",
+                "formula",
+                "cache",
+                "delete",
+                "restore",
+                "vision",
+                "health",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.16666666666666666
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 7,
+              "relevant_ranks": [
+                7
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "namespace",
+                "chunk",
+                "invoice",
+                "delete",
+                "ocr",
+                "retry",
+                "retention",
+                "vision"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.14285714285714285
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retry",
+                "vision",
+                "unicode",
+                "restore",
+                "health",
+                "backup",
+                "nested",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "chunk",
+                "formula",
+                "delete",
+                "invoice",
+                "tokens",
+                "api",
+                "namespace",
+                "retry",
+                "restore",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "retry",
+                "unicode",
+                "nested",
+                "vision",
+                "retention",
+                "cache",
+                "health",
+                "chunk",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "chunk",
+                "tokens",
+                "cache",
+                "shutdown",
+                "invoice",
+                "api",
+                "retry",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retry",
+                "retention",
+                "qdrant",
+                "restore",
+                "cache",
+                "backup",
+                "shutdown",
+                "api",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "invoice",
+                "delete",
+                "tokens",
+                "namespace",
+                "chunk",
+                "retry",
+                "cache",
+                "unicode",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "retry",
+                "cache",
+                "api",
+                "restore",
+                "vision",
+                "retention",
+                "formula",
+                "shutdown",
+                "nested",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 11,
+              "relevant_ranks": [
+                11
+              ],
+              "top10": [
+                "retry",
+                "api",
+                "chunk",
+                "tokens",
+                "vision",
+                "namespace",
+                "qdrant",
+                "invoice",
+                "delete",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 0.0,
+              "mrr_at_10": 0
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "restore",
+                "retention",
+                "cache",
+                "shutdown",
+                "retry",
+                "nested",
+                "vision",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "chunk",
+                "retry",
+                "delete",
+                "invoice",
+                "namespace",
+                "vision",
+                "unicode",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "unicode",
+                "embedding",
+                "ocr",
+                "qdrant",
+                "chunk",
+                "retention",
+                "vision",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "invoice",
+                "chunk",
+                "delete",
+                "tokens",
+                "retry",
+                "health",
+                "api",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "ocr",
+                "nested",
+                "health",
+                "embedding",
+                "qdrant",
+                "restore",
+                "chunk",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "delete",
+                "chunk",
+                "api",
+                "namespace",
+                "backup",
+                "retry",
+                "invoice",
+                "tokens",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "cache",
+                "retry",
+                "backup",
+                "retention",
+                "embedding",
+                "shutdown",
+                "health",
+                "nested",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "delete",
+                "tokens",
+                "invoice",
+                "retry",
+                "api",
+                "nested",
+                "health",
+                "namespace",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "retry",
+                "nested",
+                "unicode",
+                "shutdown",
+                "vision",
+                "restore",
+                "formula",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "api",
+                "invoice",
+                "chunk",
+                "tokens",
+                "namespace",
+                "delete",
+                "qdrant",
+                "embedding",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "shutdown",
+                "retry",
+                "vision",
+                "formula",
+                "cache",
+                "embedding",
+                "restore",
+                "qdrant",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "delete",
+                "shutdown",
+                "chunk",
+                "api",
+                "retry",
+                "namespace",
+                "tokens",
+                "invoice",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "nested",
+                "cache",
+                "retention",
+                "formula",
+                "vision",
+                "health",
+                "backup",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "tokens",
+                "chunk",
+                "qdrant",
+                "invoice",
+                "embedding",
+                "namespace",
+                "delete",
+                "formula",
+                "retention",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "vision",
+                "embedding",
+                "retry",
+                "nested",
+                "unicode",
+                "chunk",
+                "ocr",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "invoice",
+                "tokens",
+                "chunk",
+                "namespace",
+                "api",
+                "delete",
+                "retry",
+                "qdrant",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "restore",
+                "retry",
+                "embedding",
+                "backup",
+                "qdrant",
+                "shutdown",
+                "cache",
+                "retention",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "invoice",
+                "namespace",
+                "delete",
+                "api",
+                "qdrant",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "restore",
+                "formula",
+                "retry",
+                "retention",
+                "cache",
+                "embedding",
+                "chunk",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "delete",
+                "retry",
+                "tokens",
+                "formula",
+                "shutdown",
+                "namespace",
+                "api",
+                "chunk",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "retry",
+                "cache",
+                "embedding",
+                "formula",
+                "shutdown",
+                "ocr",
+                "qdrant",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "api",
+                "chunk",
+                "namespace",
+                "invoice",
+                "delete",
+                "retry",
+                "tokens",
+                "restore",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "restore",
+                "retry",
+                "retention",
+                "formula",
+                "embedding",
+                "shutdown",
+                "qdrant",
+                "nested",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "tokens",
+                "api",
+                "chunk",
+                "health",
+                "delete",
+                "vision",
+                "retry",
+                "unicode",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "chunk",
+                "nested",
+                "vision",
+                "unicode",
+                "shutdown",
+                "retry",
+                "cache",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "chunk",
+                "namespace",
+                "api",
+                "tokens",
+                "invoice",
+                "cache",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "vision",
+                "retention",
+                "restore",
+                "formula",
+                "nested",
+                "qdrant",
+                "health",
+                "cache",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        },
+        {
+          "candidate": "e5",
+          "profile_id": "e5-base-int8",
+          "repository": "intfloat/multilingual-e5-base",
+          "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+          "dimension": 768,
+          "runtime": {
+            "engine": "onnxruntime",
+            "device": "cpu",
+            "weight_dtype": "int8",
+            "pooling": "attention_mask_mean",
+            "fingerprint": "e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc",
+            "packages": {
+              "onnxruntime": "1.31.0",
+              "tokenizers": "0.23.3",
+              "numpy": "2.5.4"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "onnx/model_qint8_avx512_vnni.onnx",
+              "local": "model.onnx",
+              "bytes": 278686411,
+              "sha256": "2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 17082660,
+              "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+            }
+          ],
+          "artifact_bytes": 295769071,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 45,
+          "max_query_tokens": 24,
+          "load_ms": 921.824,
+          "document_batch_ms": 163.073,
+          "document_batch_per_second": 122.644,
+          "warm_document_p50_ms": 9.338,
+          "warm_document_p95_ms": 10.406,
+          "warm_query_p50_ms": 5.87,
+          "warm_query_p95_ms": 6.379,
+          "peak_rss_mib": 803.031,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 5.960464477539063e-08,
+          "flat_index": {
+            "bytes": 61440,
+            "build_ms": 0.00501,
+            "query_all_ms": 0.036739,
+            "build_vectors_per_second": 3992016.878
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.925,
+          "recall_at_5": 0.925,
+          "recall_at_10": 0.975,
+          "mrr_at_10": 0.874404761904762,
+          "groups": {
+            "cross": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.8333333333333334
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.9583333333333333
+            },
+            "vi": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 0.9375,
+              "mrr_at_10": 0.8110119047619048
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "invoice",
+                "api",
+                "chunk",
+                "retry",
+                "namespace",
+                "health",
+                "tokens",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "retry",
+                "restore",
+                "health",
+                "retention",
+                "shutdown",
+                "vision",
+                "ocr",
+                "formula",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "chunk",
+                "retry",
+                "tokens",
+                "api",
+                "restore",
+                "namespace",
+                "invoice",
+                "formula",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 6,
+              "relevant_ranks": [
+                6
+              ],
+              "top10": [
+                "retry",
+                "retention",
+                "shutdown",
+                "formula",
+                "cache",
+                "delete",
+                "restore",
+                "vision",
+                "health",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.16666666666666666
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 7,
+              "relevant_ranks": [
+                7
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "namespace",
+                "chunk",
+                "invoice",
+                "delete",
+                "ocr",
+                "retry",
+                "retention",
+                "vision"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.14285714285714285
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retry",
+                "vision",
+                "unicode",
+                "restore",
+                "health",
+                "backup",
+                "nested",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "chunk",
+                "formula",
+                "delete",
+                "invoice",
+                "tokens",
+                "api",
+                "namespace",
+                "retry",
+                "restore",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "retry",
+                "unicode",
+                "nested",
+                "vision",
+                "retention",
+                "cache",
+                "health",
+                "chunk",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "chunk",
+                "tokens",
+                "cache",
+                "shutdown",
+                "invoice",
+                "api",
+                "retry",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retry",
+                "retention",
+                "qdrant",
+                "restore",
+                "cache",
+                "backup",
+                "shutdown",
+                "api",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "invoice",
+                "delete",
+                "tokens",
+                "namespace",
+                "chunk",
+                "retry",
+                "cache",
+                "unicode",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "retry",
+                "cache",
+                "api",
+                "restore",
+                "vision",
+                "retention",
+                "formula",
+                "shutdown",
+                "nested",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 11,
+              "relevant_ranks": [
+                11
+              ],
+              "top10": [
+                "retry",
+                "api",
+                "chunk",
+                "tokens",
+                "vision",
+                "namespace",
+                "qdrant",
+                "invoice",
+                "delete",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 0.0,
+              "mrr_at_10": 0
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "restore",
+                "retention",
+                "cache",
+                "shutdown",
+                "retry",
+                "nested",
+                "vision",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "chunk",
+                "retry",
+                "delete",
+                "invoice",
+                "namespace",
+                "vision",
+                "unicode",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "unicode",
+                "embedding",
+                "ocr",
+                "qdrant",
+                "chunk",
+                "retention",
+                "vision",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "invoice",
+                "chunk",
+                "delete",
+                "tokens",
+                "retry",
+                "health",
+                "api",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "ocr",
+                "nested",
+                "health",
+                "embedding",
+                "qdrant",
+                "restore",
+                "chunk",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "delete",
+                "chunk",
+                "api",
+                "namespace",
+                "backup",
+                "retry",
+                "invoice",
+                "tokens",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "cache",
+                "retry",
+                "backup",
+                "retention",
+                "embedding",
+                "shutdown",
+                "health",
+                "nested",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "delete",
+                "tokens",
+                "invoice",
+                "retry",
+                "api",
+                "nested",
+                "health",
+                "namespace",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "retry",
+                "nested",
+                "unicode",
+                "shutdown",
+                "vision",
+                "restore",
+                "formula",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "api",
+                "invoice",
+                "chunk",
+                "tokens",
+                "namespace",
+                "delete",
+                "qdrant",
+                "embedding",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "shutdown",
+                "retry",
+                "vision",
+                "formula",
+                "cache",
+                "embedding",
+                "restore",
+                "qdrant",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "delete",
+                "shutdown",
+                "chunk",
+                "api",
+                "retry",
+                "namespace",
+                "tokens",
+                "invoice",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "nested",
+                "cache",
+                "retention",
+                "formula",
+                "vision",
+                "health",
+                "backup",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "tokens",
+                "chunk",
+                "qdrant",
+                "invoice",
+                "embedding",
+                "namespace",
+                "delete",
+                "formula",
+                "retention",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "vision",
+                "embedding",
+                "retry",
+                "nested",
+                "unicode",
+                "chunk",
+                "ocr",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "invoice",
+                "tokens",
+                "chunk",
+                "namespace",
+                "api",
+                "delete",
+                "retry",
+                "qdrant",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "restore",
+                "retry",
+                "embedding",
+                "backup",
+                "qdrant",
+                "shutdown",
+                "cache",
+                "retention",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "invoice",
+                "namespace",
+                "delete",
+                "api",
+                "qdrant",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "restore",
+                "formula",
+                "retry",
+                "retention",
+                "cache",
+                "embedding",
+                "chunk",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "delete",
+                "retry",
+                "tokens",
+                "formula",
+                "shutdown",
+                "namespace",
+                "api",
+                "chunk",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "retry",
+                "cache",
+                "embedding",
+                "formula",
+                "shutdown",
+                "ocr",
+                "qdrant",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "api",
+                "chunk",
+                "namespace",
+                "invoice",
+                "delete",
+                "retry",
+                "tokens",
+                "restore",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "restore",
+                "retry",
+                "retention",
+                "formula",
+                "embedding",
+                "shutdown",
+                "qdrant",
+                "nested",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "tokens",
+                "api",
+                "chunk",
+                "health",
+                "delete",
+                "vision",
+                "retry",
+                "unicode",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "chunk",
+                "nested",
+                "vision",
+                "unicode",
+                "shutdown",
+                "retry",
+                "cache",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "chunk",
+                "namespace",
+                "api",
+                "tokens",
+                "invoice",
+                "cache",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "vision",
+                "retention",
+                "restore",
+                "formula",
+                "nested",
+                "qdrant",
+                "health",
+                "cache",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        },
+        {
+          "candidate": "e5",
+          "profile_id": "e5-base-int8",
+          "repository": "intfloat/multilingual-e5-base",
+          "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+          "dimension": 768,
+          "runtime": {
+            "engine": "onnxruntime",
+            "device": "cpu",
+            "weight_dtype": "int8",
+            "pooling": "attention_mask_mean",
+            "fingerprint": "e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc",
+            "packages": {
+              "onnxruntime": "1.31.0",
+              "tokenizers": "0.23.3",
+              "numpy": "2.5.4"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "onnx/model_qint8_avx512_vnni.onnx",
+              "local": "model.onnx",
+              "bytes": 278686411,
+              "sha256": "2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 17082660,
+              "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+            }
+          ],
+          "artifact_bytes": 295769071,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 45,
+          "max_query_tokens": 24,
+          "load_ms": 950.103,
+          "document_batch_ms": 166.567,
+          "document_batch_per_second": 120.072,
+          "warm_document_p50_ms": 9.958,
+          "warm_document_p95_ms": 11.544,
+          "warm_query_p50_ms": 5.865,
+          "warm_query_p95_ms": 6.29,
+          "peak_rss_mib": 803.305,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 5.960464477539063e-08,
+          "flat_index": {
+            "bytes": 61440,
+            "build_ms": 0.005299,
+            "query_all_ms": 0.036027,
+            "build_vectors_per_second": 3774297.112
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.925,
+          "recall_at_5": 0.925,
+          "recall_at_10": 0.975,
+          "mrr_at_10": 0.874404761904762,
+          "groups": {
+            "cross": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.8333333333333334
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.9583333333333333
+            },
+            "vi": {
+              "recall_at_3": 0.875,
+              "recall_at_5": 0.875,
+              "recall_at_10": 0.9375,
+              "mrr_at_10": 0.8110119047619048
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "invoice",
+                "api",
+                "chunk",
+                "retry",
+                "namespace",
+                "health",
+                "tokens",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "retry",
+                "restore",
+                "health",
+                "retention",
+                "shutdown",
+                "vision",
+                "ocr",
+                "formula",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "chunk",
+                "retry",
+                "tokens",
+                "api",
+                "restore",
+                "namespace",
+                "invoice",
+                "formula",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 6,
+              "relevant_ranks": [
+                6
+              ],
+              "top10": [
+                "retry",
+                "retention",
+                "shutdown",
+                "formula",
+                "cache",
+                "delete",
+                "restore",
+                "vision",
+                "health",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.16666666666666666
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 7,
+              "relevant_ranks": [
+                7
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "namespace",
+                "chunk",
+                "invoice",
+                "delete",
+                "ocr",
+                "retry",
+                "retention",
+                "vision"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.14285714285714285
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retry",
+                "vision",
+                "unicode",
+                "restore",
+                "health",
+                "backup",
+                "nested",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "chunk",
+                "formula",
+                "delete",
+                "invoice",
+                "tokens",
+                "api",
+                "namespace",
+                "retry",
+                "restore",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "retry",
+                "unicode",
+                "nested",
+                "vision",
+                "retention",
+                "cache",
+                "health",
+                "chunk",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "chunk",
+                "tokens",
+                "cache",
+                "shutdown",
+                "invoice",
+                "api",
+                "retry",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retry",
+                "retention",
+                "qdrant",
+                "restore",
+                "cache",
+                "backup",
+                "shutdown",
+                "api",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "invoice",
+                "delete",
+                "tokens",
+                "namespace",
+                "chunk",
+                "retry",
+                "cache",
+                "unicode",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "retry",
+                "cache",
+                "api",
+                "restore",
+                "vision",
+                "retention",
+                "formula",
+                "shutdown",
+                "nested",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 11,
+              "relevant_ranks": [
+                11
+              ],
+              "top10": [
+                "retry",
+                "api",
+                "chunk",
+                "tokens",
+                "vision",
+                "namespace",
+                "qdrant",
+                "invoice",
+                "delete",
+                "ocr"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 0.0,
+              "recall_at_10": 0.0,
+              "mrr_at_10": 0
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "restore",
+                "retention",
+                "cache",
+                "shutdown",
+                "retry",
+                "nested",
+                "vision",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "api",
+                "chunk",
+                "retry",
+                "delete",
+                "invoice",
+                "namespace",
+                "vision",
+                "unicode",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "unicode",
+                "embedding",
+                "ocr",
+                "qdrant",
+                "chunk",
+                "retention",
+                "vision",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "invoice",
+                "chunk",
+                "delete",
+                "tokens",
+                "retry",
+                "health",
+                "api",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "ocr",
+                "nested",
+                "health",
+                "embedding",
+                "qdrant",
+                "restore",
+                "chunk",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "delete",
+                "chunk",
+                "api",
+                "namespace",
+                "backup",
+                "retry",
+                "invoice",
+                "tokens",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "cache",
+                "retry",
+                "backup",
+                "retention",
+                "embedding",
+                "shutdown",
+                "health",
+                "nested",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "delete",
+                "tokens",
+                "invoice",
+                "retry",
+                "api",
+                "nested",
+                "health",
+                "namespace",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "retry",
+                "nested",
+                "unicode",
+                "shutdown",
+                "vision",
+                "restore",
+                "formula",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "api",
+                "invoice",
+                "chunk",
+                "tokens",
+                "namespace",
+                "delete",
+                "qdrant",
+                "embedding",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "shutdown",
+                "retry",
+                "vision",
+                "formula",
+                "cache",
+                "embedding",
+                "restore",
+                "qdrant",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "delete",
+                "shutdown",
+                "chunk",
+                "api",
+                "retry",
+                "namespace",
+                "tokens",
+                "invoice",
+                "health",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "nested",
+                "cache",
+                "retention",
+                "formula",
+                "vision",
+                "health",
+                "backup",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 3,
+              "relevant_ranks": [
+                3
+              ],
+              "top10": [
+                "tokens",
+                "chunk",
+                "qdrant",
+                "invoice",
+                "embedding",
+                "namespace",
+                "delete",
+                "formula",
+                "retention",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.3333333333333333
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "vision",
+                "embedding",
+                "retry",
+                "nested",
+                "unicode",
+                "chunk",
+                "ocr",
+                "retention",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "invoice",
+                "tokens",
+                "chunk",
+                "namespace",
+                "api",
+                "delete",
+                "retry",
+                "qdrant",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "restore",
+                "retry",
+                "embedding",
+                "backup",
+                "qdrant",
+                "shutdown",
+                "cache",
+                "retention",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "invoice",
+                "namespace",
+                "delete",
+                "api",
+                "qdrant",
+                "retry",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "restore",
+                "formula",
+                "retry",
+                "retention",
+                "cache",
+                "embedding",
+                "chunk",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "delete",
+                "retry",
+                "tokens",
+                "formula",
+                "shutdown",
+                "namespace",
+                "api",
+                "chunk",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "retry",
+                "cache",
+                "embedding",
+                "formula",
+                "shutdown",
+                "ocr",
+                "qdrant",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "api",
+                "chunk",
+                "namespace",
+                "invoice",
+                "delete",
+                "retry",
+                "tokens",
+                "restore",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "restore",
+                "retry",
+                "retention",
+                "formula",
+                "embedding",
+                "shutdown",
+                "qdrant",
+                "nested",
+                "backup"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "tokens",
+                "api",
+                "chunk",
+                "health",
+                "delete",
+                "vision",
+                "retry",
+                "unicode",
+                "namespace"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "chunk",
+                "nested",
+                "vision",
+                "unicode",
+                "shutdown",
+                "retry",
+                "cache",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "chunk",
+                "namespace",
+                "api",
+                "tokens",
+                "invoice",
+                "cache",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "vision",
+                "retention",
+                "restore",
+                "formula",
+                "nested",
+                "qdrant",
+                "health",
+                "cache",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        }
+      ]
+    },
+    {
+      "candidate": "qwen",
+      "complete": true,
+      "rankings_stable": true,
+      "quality": {
+        "recall_at_3": {
+          "min": 0.975,
+          "max": 0.975
+        },
+        "recall_at_5": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "recall_at_10": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "mrr_at_10": {
+          "min": 0.96875,
+          "max": 0.96875
+        }
+      },
+      "peak_rss_mib_max": 1318.086,
+      "warm_query_p95_ms_max": 113.928,
+      "all_d24_reference_gates_met": true,
+      "runs": [
+        {
+          "candidate": "qwen",
+          "profile_id": "qwen3-embedding-0.6b-bf16-cpu",
+          "repository": "Qwen/Qwen3-Embedding-0.6B",
+          "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+          "dimension": 1024,
+          "runtime": {
+            "engine": "pytorch",
+            "device": "cpu",
+            "weight_dtype": "bfloat16",
+            "pooling": "last_attended_token_float32",
+            "fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+            "packages": {
+              "torch": "2.10.0+cpu",
+              "transformers": "4.57.6",
+              "numpy": "2.5.4",
+              "tokenizers": "0.22.2",
+              "safetensors": "0.8.0"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "model.safetensors",
+              "local": "model.safetensors",
+              "bytes": 1191586416,
+              "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 11423705,
+              "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+            },
+            {
+              "source": "config.json",
+              "local": "config.json",
+              "bytes": 727,
+              "sha256": "b5bf1f51fc45be473a54718cef92448d90a1be001bf9b9a44b8c7f10a19feaa9"
+            },
+            {
+              "source": "tokenizer_config.json",
+              "local": "tokenizer_config.json",
+              "bytes": 9706,
+              "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+            }
+          ],
+          "artifact_bytes": 1203020554,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 39,
+          "max_query_tokens": 35,
+          "load_ms": 2189.158,
+          "document_batch_ms": 1268.16,
+          "document_batch_per_second": 15.771,
+          "warm_document_p50_ms": 84.38,
+          "warm_document_p95_ms": 99.289,
+          "warm_query_p50_ms": 90.771,
+          "warm_query_p95_ms": 102.313,
+          "peak_rss_mib": 1317.852,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 1.1920928955078125e-07,
+          "flat_index": {
+            "bytes": 81920,
+            "build_ms": 0.005971,
+            "query_all_ms": 0.043721,
+            "build_vectors_per_second": 3349522.657
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.975,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr_at_10": 0.96875,
+          "groups": {
+            "cross": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "vi": {
+              "recall_at_3": 0.9375,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.921875
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "vision",
+                "qdrant",
+                "retention",
+                "retry",
+                "nested",
+                "health",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "health",
+                "retry",
+                "restore",
+                "retention",
+                "namespace",
+                "delete",
+                "unicode",
+                "vision",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "chunk",
+                "formula",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "shutdown",
+                "namespace",
+                "chunk",
+                "cache",
+                "formula",
+                "nested",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retention",
+                "vision",
+                "health",
+                "retry",
+                "delete",
+                "tokens",
+                "nested",
+                "chunk",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "vision",
+                "nested",
+                "retry",
+                "invoice",
+                "unicode",
+                "delete",
+                "embedding",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "nested",
+                "chunk",
+                "invoice",
+                "restore",
+                "unicode",
+                "vision",
+                "retention",
+                "ocr",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "chunk",
+                "nested",
+                "retry",
+                "retention",
+                "delete",
+                "unicode",
+                "backup",
+                "invoice",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retention",
+                "qdrant",
+                "retry",
+                "delete",
+                "cache",
+                "shutdown",
+                "backup",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "retention",
+                "retry",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "api",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "retention",
+                "api",
+                "cache",
+                "delete",
+                "invoice",
+                "namespace",
+                "qdrant",
+                "retry",
+                "vision",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "retention",
+                "delete",
+                "cache",
+                "retry",
+                "restore",
+                "namespace",
+                "qdrant",
+                "nested",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 4,
+              "relevant_ranks": [
+                4
+              ],
+              "top10": [
+                "retry",
+                "qdrant",
+                "unicode",
+                "embedding",
+                "vision",
+                "ocr",
+                "nested",
+                "tokens",
+                "invoice",
+                "chunk"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.25
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "retry",
+                "vision",
+                "retention",
+                "ocr",
+                "restore",
+                "formula",
+                "nested",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "ocr",
+                "vision",
+                "nested",
+                "chunk",
+                "unicode",
+                "api",
+                "embedding",
+                "qdrant",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "embedding",
+                "chunk",
+                "ocr",
+                "unicode",
+                "qdrant",
+                "vision",
+                "api",
+                "nested",
+                "delete"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "nested",
+                "formula",
+                "chunk",
+                "health",
+                "invoice",
+                "qdrant",
+                "ocr",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "nested",
+                "ocr",
+                "qdrant",
+                "health",
+                "embedding",
+                "invoice",
+                "retention",
+                "formula",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "nested",
+                "retention",
+                "qdrant",
+                "health",
+                "namespace",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "retention",
+                "nested",
+                "chunk",
+                "namespace",
+                "cache",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "tokens",
+                "nested",
+                "delete",
+                "formula",
+                "retry",
+                "ocr",
+                "invoice",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "nested",
+                "delete",
+                "tokens",
+                "qdrant",
+                "retry",
+                "formula",
+                "shutdown",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "ocr",
+                "unicode",
+                "embedding",
+                "retention",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "chunk",
+                "qdrant",
+                "formula",
+                "cache",
+                "namespace",
+                "embedding",
+                "retry",
+                "tokens",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "delete",
+                "retry",
+                "formula",
+                "health",
+                "retention",
+                "nested",
+                "vision",
+                "chunk",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "delete",
+                "health",
+                "formula",
+                "retention",
+                "qdrant",
+                "chunk",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "nested",
+                "chunk",
+                "unicode",
+                "tokens",
+                "embedding",
+                "restore",
+                "formula",
+                "vision",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "embedding",
+                "tokens",
+                "retry",
+                "vision",
+                "nested",
+                "unicode",
+                "chunk",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "qdrant",
+                "retry",
+                "api",
+                "vision",
+                "ocr",
+                "invoice",
+                "backup",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "restore",
+                "retry",
+                "embedding",
+                "qdrant",
+                "backup",
+                "vision",
+                "namespace",
+                "cache"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "ocr",
+                "embedding",
+                "vision",
+                "nested",
+                "formula",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "formula",
+                "retry",
+                "vision",
+                "embedding",
+                "chunk",
+                "retention",
+                "restore",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "formula",
+                "cache",
+                "delete",
+                "vision",
+                "embedding",
+                "retry",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "embedding",
+                "cache",
+                "qdrant",
+                "formula",
+                "retry",
+                "restore",
+                "nested",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "api",
+                "qdrant",
+                "embedding",
+                "namespace",
+                "nested",
+                "delete",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "namespace",
+                "retry",
+                "embedding",
+                "qdrant",
+                "restore",
+                "delete",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "vision",
+                "nested",
+                "health",
+                "formula",
+                "ocr",
+                "qdrant",
+                "api",
+                "retry",
+                "tokens"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "tokens",
+                "ocr",
+                "qdrant",
+                "embedding",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "formula",
+                "chunk",
+                "restore",
+                "nested",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "qdrant",
+                "unicode",
+                "restore",
+                "health",
+                "vision",
+                "formula",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        },
+        {
+          "candidate": "qwen",
+          "profile_id": "qwen3-embedding-0.6b-bf16-cpu",
+          "repository": "Qwen/Qwen3-Embedding-0.6B",
+          "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+          "dimension": 1024,
+          "runtime": {
+            "engine": "pytorch",
+            "device": "cpu",
+            "weight_dtype": "bfloat16",
+            "pooling": "last_attended_token_float32",
+            "fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+            "packages": {
+              "torch": "2.10.0+cpu",
+              "transformers": "4.57.6",
+              "numpy": "2.5.4",
+              "tokenizers": "0.22.2",
+              "safetensors": "0.8.0"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "model.safetensors",
+              "local": "model.safetensors",
+              "bytes": 1191586416,
+              "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 11423705,
+              "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+            },
+            {
+              "source": "config.json",
+              "local": "config.json",
+              "bytes": 727,
+              "sha256": "b5bf1f51fc45be473a54718cef92448d90a1be001bf9b9a44b8c7f10a19feaa9"
+            },
+            {
+              "source": "tokenizer_config.json",
+              "local": "tokenizer_config.json",
+              "bytes": 9706,
+              "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+            }
+          ],
+          "artifact_bytes": 1203020554,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 39,
+          "max_query_tokens": 35,
+          "load_ms": 2210.559,
+          "document_batch_ms": 1334.81,
+          "document_batch_per_second": 14.983,
+          "warm_document_p50_ms": 83.398,
+          "warm_document_p95_ms": 98.027,
+          "warm_query_p50_ms": 101.962,
+          "warm_query_p95_ms": 113.928,
+          "peak_rss_mib": 1317.816,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 1.1920928955078125e-07,
+          "flat_index": {
+            "bytes": 81920,
+            "build_ms": 0.006543,
+            "query_all_ms": 0.046797,
+            "build_vectors_per_second": 3056702.065
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.975,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr_at_10": 0.96875,
+          "groups": {
+            "cross": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "vi": {
+              "recall_at_3": 0.9375,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.921875
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "vision",
+                "qdrant",
+                "retention",
+                "retry",
+                "nested",
+                "health",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "health",
+                "retry",
+                "restore",
+                "retention",
+                "namespace",
+                "delete",
+                "unicode",
+                "vision",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "chunk",
+                "formula",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "shutdown",
+                "namespace",
+                "chunk",
+                "cache",
+                "formula",
+                "nested",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retention",
+                "vision",
+                "health",
+                "retry",
+                "delete",
+                "tokens",
+                "nested",
+                "chunk",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "vision",
+                "nested",
+                "retry",
+                "invoice",
+                "unicode",
+                "delete",
+                "embedding",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "nested",
+                "chunk",
+                "invoice",
+                "restore",
+                "unicode",
+                "vision",
+                "retention",
+                "ocr",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "chunk",
+                "nested",
+                "retry",
+                "retention",
+                "delete",
+                "unicode",
+                "backup",
+                "invoice",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retention",
+                "qdrant",
+                "retry",
+                "delete",
+                "cache",
+                "shutdown",
+                "backup",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "retention",
+                "retry",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "api",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "retention",
+                "api",
+                "cache",
+                "delete",
+                "invoice",
+                "namespace",
+                "qdrant",
+                "retry",
+                "vision",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "retention",
+                "delete",
+                "cache",
+                "retry",
+                "restore",
+                "namespace",
+                "qdrant",
+                "nested",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 4,
+              "relevant_ranks": [
+                4
+              ],
+              "top10": [
+                "retry",
+                "qdrant",
+                "unicode",
+                "embedding",
+                "vision",
+                "ocr",
+                "nested",
+                "tokens",
+                "invoice",
+                "chunk"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.25
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "retry",
+                "vision",
+                "retention",
+                "ocr",
+                "restore",
+                "formula",
+                "nested",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "ocr",
+                "vision",
+                "nested",
+                "chunk",
+                "unicode",
+                "api",
+                "embedding",
+                "qdrant",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "embedding",
+                "chunk",
+                "ocr",
+                "unicode",
+                "qdrant",
+                "vision",
+                "api",
+                "nested",
+                "delete"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "nested",
+                "formula",
+                "chunk",
+                "health",
+                "invoice",
+                "qdrant",
+                "ocr",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "nested",
+                "ocr",
+                "qdrant",
+                "health",
+                "embedding",
+                "invoice",
+                "retention",
+                "formula",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "nested",
+                "retention",
+                "qdrant",
+                "health",
+                "namespace",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "retention",
+                "nested",
+                "chunk",
+                "namespace",
+                "cache",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "tokens",
+                "nested",
+                "delete",
+                "formula",
+                "retry",
+                "ocr",
+                "invoice",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "nested",
+                "delete",
+                "tokens",
+                "qdrant",
+                "retry",
+                "formula",
+                "shutdown",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "ocr",
+                "unicode",
+                "embedding",
+                "retention",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "chunk",
+                "qdrant",
+                "formula",
+                "cache",
+                "namespace",
+                "embedding",
+                "retry",
+                "tokens",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "delete",
+                "retry",
+                "formula",
+                "health",
+                "retention",
+                "nested",
+                "vision",
+                "chunk",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "delete",
+                "health",
+                "formula",
+                "retention",
+                "qdrant",
+                "chunk",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "nested",
+                "chunk",
+                "unicode",
+                "tokens",
+                "embedding",
+                "restore",
+                "formula",
+                "vision",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "embedding",
+                "tokens",
+                "retry",
+                "vision",
+                "nested",
+                "unicode",
+                "chunk",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "qdrant",
+                "retry",
+                "api",
+                "vision",
+                "ocr",
+                "invoice",
+                "backup",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "restore",
+                "retry",
+                "embedding",
+                "qdrant",
+                "backup",
+                "vision",
+                "namespace",
+                "cache"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "ocr",
+                "embedding",
+                "vision",
+                "nested",
+                "formula",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "formula",
+                "retry",
+                "vision",
+                "embedding",
+                "chunk",
+                "retention",
+                "restore",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "formula",
+                "cache",
+                "delete",
+                "vision",
+                "embedding",
+                "retry",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "embedding",
+                "cache",
+                "qdrant",
+                "formula",
+                "retry",
+                "restore",
+                "nested",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "api",
+                "qdrant",
+                "embedding",
+                "namespace",
+                "nested",
+                "delete",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "namespace",
+                "retry",
+                "embedding",
+                "qdrant",
+                "restore",
+                "delete",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "vision",
+                "nested",
+                "health",
+                "formula",
+                "ocr",
+                "qdrant",
+                "api",
+                "retry",
+                "tokens"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "tokens",
+                "ocr",
+                "qdrant",
+                "embedding",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "formula",
+                "chunk",
+                "restore",
+                "nested",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "qdrant",
+                "unicode",
+                "restore",
+                "health",
+                "vision",
+                "formula",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        },
+        {
+          "candidate": "qwen",
+          "profile_id": "qwen3-embedding-0.6b-bf16-cpu",
+          "repository": "Qwen/Qwen3-Embedding-0.6B",
+          "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+          "dimension": 1024,
+          "runtime": {
+            "engine": "pytorch",
+            "device": "cpu",
+            "weight_dtype": "bfloat16",
+            "pooling": "last_attended_token_float32",
+            "fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+            "packages": {
+              "torch": "2.10.0+cpu",
+              "transformers": "4.57.6",
+              "numpy": "2.5.4",
+              "tokenizers": "0.22.2",
+              "safetensors": "0.8.0"
+            }
+          },
+          "artifacts": [
+            {
+              "source": "model.safetensors",
+              "local": "model.safetensors",
+              "bytes": 1191586416,
+              "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+            },
+            {
+              "source": "tokenizer.json",
+              "local": "tokenizer.json",
+              "bytes": 11423705,
+              "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+            },
+            {
+              "source": "config.json",
+              "local": "config.json",
+              "bytes": 727,
+              "sha256": "b5bf1f51fc45be473a54718cef92448d90a1be001bf9b9a44b8c7f10a19feaa9"
+            },
+            {
+              "source": "tokenizer_config.json",
+              "local": "tokenizer_config.json",
+              "bytes": 9706,
+              "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+            }
+          ],
+          "artifact_bytes": 1203020554,
+          "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+          "input_manifest_sha256": "d4a8a55e50a75f80395f4e6d695cc5b75217b0f01b1f14bd1bd52f5a0a36dc0b",
+          "documents": 20,
+          "query_count": 40,
+          "max_passage_tokens": 39,
+          "max_query_tokens": 35,
+          "load_ms": 2211.451,
+          "document_batch_ms": 1319.999,
+          "document_batch_per_second": 15.152,
+          "warm_document_p50_ms": 83.483,
+          "warm_document_p95_ms": 100.061,
+          "warm_query_p50_ms": 89.993,
+          "warm_query_p95_ms": 97.222,
+          "peak_rss_mib": 1318.086,
+          "gpu_allocation_bytes": 0,
+          "overflow_rejected": true,
+          "repeat_max_absolute_delta": 0.0,
+          "unit_norm_max_error": 1.1920928955078125e-07,
+          "flat_index": {
+            "bytes": 81920,
+            "build_ms": 0.007354,
+            "query_all_ms": 0.04856,
+            "build_vectors_per_second": 2719608.548
+          },
+          "qdrant_ingest_throughput": null,
+          "qdrant_disk_index_bytes": null,
+          "recall_at_3": 0.975,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0,
+          "mrr_at_10": 0.96875,
+          "groups": {
+            "cross": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "en": {
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            "vi": {
+              "recall_at_3": 0.9375,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.921875
+            }
+          },
+          "queries": [
+            {
+              "query_id": "backup-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "delete",
+                "vision",
+                "qdrant",
+                "retention",
+                "retry",
+                "nested",
+                "health",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "backup-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "backup",
+                "health",
+                "retry",
+                "restore",
+                "retention",
+                "namespace",
+                "delete",
+                "unicode",
+                "vision",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "chunk",
+                "formula",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "delete-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "delete",
+                "retry",
+                "retention",
+                "shutdown",
+                "namespace",
+                "chunk",
+                "cache",
+                "formula",
+                "nested",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "retention",
+                "vision",
+                "health",
+                "retry",
+                "delete",
+                "tokens",
+                "nested",
+                "chunk",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "ocr-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "ocr",
+                "vision",
+                "nested",
+                "retry",
+                "invoice",
+                "unicode",
+                "delete",
+                "embedding",
+                "formula",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "nested",
+                "chunk",
+                "invoice",
+                "restore",
+                "unicode",
+                "vision",
+                "retention",
+                "ocr",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "formula-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "formula",
+                "chunk",
+                "nested",
+                "retry",
+                "retention",
+                "delete",
+                "unicode",
+                "backup",
+                "invoice",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "retention",
+                "qdrant",
+                "retry",
+                "delete",
+                "cache",
+                "shutdown",
+                "backup",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "namespace-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "namespace",
+                "delete",
+                "retention",
+                "retry",
+                "restore",
+                "qdrant",
+                "shutdown",
+                "nested",
+                "api",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "api-vi",
+              "group": "vi",
+              "first_relevant_rank": 2,
+              "relevant_ranks": [
+                2
+              ],
+              "top10": [
+                "retention",
+                "api",
+                "cache",
+                "delete",
+                "invoice",
+                "namespace",
+                "qdrant",
+                "retry",
+                "vision",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.5
+            },
+            {
+              "query_id": "api-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "api",
+                "retention",
+                "delete",
+                "cache",
+                "retry",
+                "restore",
+                "namespace",
+                "qdrant",
+                "nested",
+                "vision"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "embedding-vi",
+              "group": "vi",
+              "first_relevant_rank": 4,
+              "relevant_ranks": [
+                4
+              ],
+              "top10": [
+                "retry",
+                "qdrant",
+                "unicode",
+                "embedding",
+                "vision",
+                "ocr",
+                "nested",
+                "tokens",
+                "invoice",
+                "chunk"
+              ],
+              "recall_at_3": 0.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 0.25
+            },
+            {
+              "query_id": "embedding-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "embedding",
+                "qdrant",
+                "retry",
+                "vision",
+                "retention",
+                "ocr",
+                "restore",
+                "formula",
+                "nested",
+                "shutdown"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "ocr",
+                "vision",
+                "nested",
+                "chunk",
+                "unicode",
+                "api",
+                "embedding",
+                "qdrant",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "tokens-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "tokens",
+                "embedding",
+                "chunk",
+                "ocr",
+                "unicode",
+                "qdrant",
+                "vision",
+                "api",
+                "nested",
+                "delete"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "retry",
+                "nested",
+                "formula",
+                "chunk",
+                "health",
+                "invoice",
+                "qdrant",
+                "ocr",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "vision-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "vision",
+                "nested",
+                "ocr",
+                "qdrant",
+                "health",
+                "embedding",
+                "invoice",
+                "retention",
+                "formula",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-vi",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "nested",
+                "retention",
+                "qdrant",
+                "health",
+                "namespace",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "restore-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "restore",
+                "backup",
+                "delete",
+                "retry",
+                "retention",
+                "nested",
+                "chunk",
+                "namespace",
+                "cache",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "tokens",
+                "nested",
+                "delete",
+                "formula",
+                "retry",
+                "ocr",
+                "invoice",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "chunk-en",
+              "group": "cross",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "chunk",
+                "nested",
+                "delete",
+                "tokens",
+                "qdrant",
+                "retry",
+                "formula",
+                "shutdown",
+                "unicode",
+                "retention"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "ocr",
+                "unicode",
+                "embedding",
+                "retention",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "nested-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "nested",
+                "chunk",
+                "qdrant",
+                "formula",
+                "cache",
+                "namespace",
+                "embedding",
+                "retry",
+                "tokens",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "delete",
+                "retry",
+                "formula",
+                "health",
+                "retention",
+                "nested",
+                "vision",
+                "chunk",
+                "embedding"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "shutdown-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "shutdown",
+                "retry",
+                "delete",
+                "health",
+                "formula",
+                "retention",
+                "qdrant",
+                "chunk",
+                "namespace",
+                "restore"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "nested",
+                "chunk",
+                "unicode",
+                "tokens",
+                "embedding",
+                "restore",
+                "formula",
+                "vision",
+                "retry"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "qdrant-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "qdrant",
+                "embedding",
+                "tokens",
+                "retry",
+                "vision",
+                "nested",
+                "unicode",
+                "chunk",
+                "restore",
+                "formula"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "qdrant",
+                "retry",
+                "api",
+                "vision",
+                "ocr",
+                "invoice",
+                "backup",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "health-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "health",
+                "retention",
+                "restore",
+                "retry",
+                "embedding",
+                "qdrant",
+                "backup",
+                "vision",
+                "namespace",
+                "cache"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "tokens",
+                "chunk",
+                "ocr",
+                "embedding",
+                "vision",
+                "nested",
+                "formula",
+                "qdrant",
+                "invoice"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "unicode-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "unicode",
+                "nested",
+                "formula",
+                "retry",
+                "vision",
+                "embedding",
+                "chunk",
+                "retention",
+                "restore",
+                "qdrant"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "formula",
+                "cache",
+                "delete",
+                "vision",
+                "embedding",
+                "retry",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retention-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retention",
+                "vision",
+                "embedding",
+                "cache",
+                "qdrant",
+                "formula",
+                "retry",
+                "restore",
+                "nested",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "api",
+                "qdrant",
+                "embedding",
+                "namespace",
+                "nested",
+                "delete",
+                "chunk"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "cache-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "cache",
+                "retention",
+                "formula",
+                "namespace",
+                "retry",
+                "embedding",
+                "qdrant",
+                "restore",
+                "delete",
+                "api"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "vision",
+                "nested",
+                "health",
+                "formula",
+                "ocr",
+                "qdrant",
+                "api",
+                "retry",
+                "tokens"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "invoice-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "invoice",
+                "nested",
+                "vision",
+                "formula",
+                "chunk",
+                "tokens",
+                "ocr",
+                "qdrant",
+                "embedding",
+                "unicode"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-vi",
+              "group": "vi",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "formula",
+                "chunk",
+                "restore",
+                "nested",
+                "qdrant",
+                "shutdown",
+                "ocr"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            },
+            {
+              "query_id": "retry-en",
+              "group": "en",
+              "first_relevant_rank": 1,
+              "relevant_ranks": [
+                1
+              ],
+              "top10": [
+                "retry",
+                "delete",
+                "retention",
+                "qdrant",
+                "unicode",
+                "restore",
+                "health",
+                "vision",
+                "formula",
+                "nested"
+              ],
+              "recall_at_3": 1.0,
+              "recall_at_5": 1.0,
+              "recall_at_10": 1.0,
+              "mrr_at_10": 1.0
+            }
+          ],
+          "meets_d24_reference_gates": true
+        }
+      ]
+    }
+  ],
+  "configuration_precision_difference": "Qwen official BF16 weights with FP32 pooling/normalization versus E5 official int8 ONNX; not a controlled same-precision model-only ablation.",
+  "qdrant_measurement_status": "NOT MEASURED: no stateful service calls authorized; flat-index metrics are memory copies/matrix products only.",
+  "cutover_status": "OWNER_APPROVAL_PENDING",
+  "passed": true
+}

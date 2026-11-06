@@ -1,0 +1,1088 @@
+{
+  "description": "D24 trusted synthetic local CPU embedding tradeoffs; not a general retrieval, tenant-security or load certification.",
+  "version": "embedding-selection-v1",
+  "measured_at": "2026-10-18T13:40:33.112679+00:00",
+  "corpus_version": "local-retrieval-v1",
+  "corpus_sha256": "035640ea8a3497202212d4c1cf85a2953e967cd3495ae08d7c4fa66e01a562df",
+  "documents": 20,
+  "queries": 40,
+  "runtime": {
+    "onnxruntime": "1.31.0",
+    "tokenizers": "0.23.3",
+    "numpy": "2.5.4",
+    "provider": "CPUExecutionProvider",
+    "intra_op_threads": 2,
+    "inter_op_threads": 1,
+    "max_tokens": 512,
+    "batch_size": 4,
+    "pooling": "attention_mask_mean",
+    "normalization": "l2",
+    "distance": "Cosine",
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: "
+  },
+  "gates": {
+    "recall_at_3": 0.9,
+    "mrr_at_10": 0.8,
+    "group_recall_at_3": 0.8,
+    "peak_rss_mib": 2048,
+    "warm_query_p95_ms": 500
+  },
+  "selection_mrr_tolerance": 0.05,
+  "candidates": [
+    {
+      "recall_at_3": 0.75,
+      "mrr_at_10": 0.6553769841269841,
+      "group_recall_at_3": {
+        "cross": 0.5,
+        "en": 0.9375,
+        "vi": 0.6875
+      },
+      "queries": [
+        {
+          "query_id": "backup-vi",
+          "group": "cross",
+          "first_relevant_rank": 7,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.14285714285714285,
+          "top3": [
+            "delete",
+            "chunk",
+            "invoice"
+          ]
+        },
+        {
+          "query_id": "backup-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "backup",
+            "retry",
+            "health"
+          ]
+        },
+        {
+          "query_id": "delete-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "delete",
+            "chunk",
+            "invoice"
+          ]
+        },
+        {
+          "query_id": "delete-en",
+          "group": "cross",
+          "first_relevant_rank": 13,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0,
+          "top3": [
+            "retry",
+            "retention",
+            "cache"
+          ]
+        },
+        {
+          "query_id": "ocr-vi",
+          "group": "vi",
+          "first_relevant_rank": 8,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.125,
+          "top3": [
+            "api",
+            "namespace",
+            "delete"
+          ]
+        },
+        {
+          "query_id": "ocr-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "ocr",
+            "retry",
+            "unicode"
+          ]
+        },
+        {
+          "query_id": "formula-vi",
+          "group": "cross",
+          "first_relevant_rank": 9,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.1111111111111111,
+          "top3": [
+            "chunk",
+            "delete",
+            "api"
+          ]
+        },
+        {
+          "query_id": "formula-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "formula",
+            "retry",
+            "unicode"
+          ]
+        },
+        {
+          "query_id": "namespace-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "namespace",
+            "delete",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "namespace-en",
+          "group": "cross",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "retry",
+            "restore",
+            "namespace"
+          ]
+        },
+        {
+          "query_id": "api-vi",
+          "group": "vi",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "delete",
+            "invoice",
+            "api"
+          ]
+        },
+        {
+          "query_id": "api-en",
+          "group": "en",
+          "first_relevant_rank": 10,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.1,
+          "top3": [
+            "cache",
+            "retry",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "embedding-vi",
+          "group": "vi",
+          "first_relevant_rank": 9,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.1111111111111111,
+          "top3": [
+            "delete",
+            "chunk",
+            "api"
+          ]
+        },
+        {
+          "query_id": "embedding-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "embedding",
+            "qdrant",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "tokens-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "tokens",
+            "api",
+            "invoice"
+          ]
+        },
+        {
+          "query_id": "tokens-en",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "tokens",
+            "unicode",
+            "embedding"
+          ]
+        },
+        {
+          "query_id": "vision-vi",
+          "group": "cross",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "chunk",
+            "delete",
+            "vision"
+          ]
+        },
+        {
+          "query_id": "vision-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "vision",
+            "embedding",
+            "ocr"
+          ]
+        },
+        {
+          "query_id": "restore-vi",
+          "group": "cross",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "delete",
+            "namespace",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "restore-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "restore",
+            "cache",
+            "backup"
+          ]
+        },
+        {
+          "query_id": "chunk-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "chunk",
+            "delete",
+            "tokens"
+          ]
+        },
+        {
+          "query_id": "chunk-en",
+          "group": "cross",
+          "first_relevant_rank": 6,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.16666666666666666,
+          "top3": [
+            "retry",
+            "shutdown",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "nested-vi",
+          "group": "vi",
+          "first_relevant_rank": 4,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.25,
+          "top3": [
+            "delete",
+            "chunk",
+            "api"
+          ]
+        },
+        {
+          "query_id": "nested-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "nested",
+            "retry",
+            "vision"
+          ]
+        },
+        {
+          "query_id": "shutdown-vi",
+          "group": "vi",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "delete",
+            "chunk",
+            "shutdown"
+          ]
+        },
+        {
+          "query_id": "shutdown-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "shutdown",
+            "retry",
+            "qdrant"
+          ]
+        },
+        {
+          "query_id": "qdrant-vi",
+          "group": "vi",
+          "first_relevant_rank": 8,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.125,
+          "top3": [
+            "tokens",
+            "chunk",
+            "api"
+          ]
+        },
+        {
+          "query_id": "qdrant-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "qdrant",
+            "retry",
+            "unicode"
+          ]
+        },
+        {
+          "query_id": "health-vi",
+          "group": "vi",
+          "first_relevant_rank": 2,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.5,
+          "top3": [
+            "delete",
+            "health",
+            "api"
+          ]
+        },
+        {
+          "query_id": "health-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "health",
+            "restore",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "unicode-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "unicode",
+            "namespace",
+            "tokens"
+          ]
+        },
+        {
+          "query_id": "unicode-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "unicode",
+            "retry",
+            "formula"
+          ]
+        },
+        {
+          "query_id": "retention-vi",
+          "group": "vi",
+          "first_relevant_rank": 4,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.25,
+          "top3": [
+            "delete",
+            "tokens",
+            "api"
+          ]
+        },
+        {
+          "query_id": "retention-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retention",
+            "cache",
+            "embedding"
+          ]
+        },
+        {
+          "query_id": "cache-vi",
+          "group": "vi",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "delete",
+            "api",
+            "cache"
+          ]
+        },
+        {
+          "query_id": "cache-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "cache",
+            "restore",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "invoice-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "invoice",
+            "api",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "invoice-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "invoice",
+            "retry",
+            "vision"
+          ]
+        },
+        {
+          "query_id": "retry-vi",
+          "group": "vi",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "delete",
+            "api",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "retry-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retry",
+            "retention",
+            "formula"
+          ]
+        }
+      ],
+      "candidate": "e5-small-int8",
+      "model_fingerprint": "c1888b5c329def35244d8cd91c35e75f435f50fc1cdc6c05aef17600434a9a3a",
+      "repository": "intfloat/multilingual-e5-small",
+      "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+      "dimension": 384,
+      "license": "mit",
+      "artifact_bytes": 135429554,
+      "artifacts": [
+        {
+          "source": "onnx/model_qint8_avx512_vnni.onnx",
+          "local": "model.onnx",
+          "bytes": 118346824,
+          "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+        },
+        {
+          "source": "tokenizer.json",
+          "local": "tokenizer.json",
+          "bytes": 17082730,
+          "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+        }
+      ],
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "load_ms": 648.092,
+      "passage_encode_ms": 60.812,
+      "warm_query_p50_ms": 2.051,
+      "warm_query_p95_ms": 2.409,
+      "peak_rss_mib": 558.156,
+      "max_passage_tokens": 45,
+      "max_query_tokens": 24,
+      "overflow_rejected": true,
+      "repeat_max_absolute_delta": 0.0,
+      "unit_norm_max_error": 5.960464477539063e-08,
+      "eligible": false
+    },
+    {
+      "recall_at_3": 0.925,
+      "mrr_at_10": 0.874404761904762,
+      "group_recall_at_3": {
+        "cross": 0.875,
+        "en": 1.0,
+        "vi": 0.875
+      },
+      "queries": [
+        {
+          "query_id": "backup-vi",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "backup",
+            "delete",
+            "invoice"
+          ]
+        },
+        {
+          "query_id": "backup-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "backup",
+            "retry",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "delete-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "delete",
+            "chunk",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "delete-en",
+          "group": "cross",
+          "first_relevant_rank": 6,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.16666666666666666,
+          "top3": [
+            "retry",
+            "retention",
+            "shutdown"
+          ]
+        },
+        {
+          "query_id": "ocr-vi",
+          "group": "vi",
+          "first_relevant_rank": 7,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0.14285714285714285,
+          "top3": [
+            "tokens",
+            "api",
+            "namespace"
+          ]
+        },
+        {
+          "query_id": "ocr-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "ocr",
+            "retry",
+            "vision"
+          ]
+        },
+        {
+          "query_id": "formula-vi",
+          "group": "cross",
+          "first_relevant_rank": 2,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.5,
+          "top3": [
+            "chunk",
+            "formula",
+            "delete"
+          ]
+        },
+        {
+          "query_id": "formula-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "formula",
+            "retry",
+            "unicode"
+          ]
+        },
+        {
+          "query_id": "namespace-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "namespace",
+            "delete",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "namespace-en",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "namespace",
+            "retry",
+            "retention"
+          ]
+        },
+        {
+          "query_id": "api-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "api",
+            "invoice",
+            "delete"
+          ]
+        },
+        {
+          "query_id": "api-en",
+          "group": "en",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "retry",
+            "cache",
+            "api"
+          ]
+        },
+        {
+          "query_id": "embedding-vi",
+          "group": "vi",
+          "first_relevant_rank": 11,
+          "recall_at_3": 0.0,
+          "reciprocal_rank_at_10": 0,
+          "top3": [
+            "retry",
+            "api",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "embedding-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "embedding",
+            "qdrant",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "tokens-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "tokens",
+            "api",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "tokens-en",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "tokens",
+            "unicode",
+            "embedding"
+          ]
+        },
+        {
+          "query_id": "vision-vi",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "vision",
+            "invoice",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "vision-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "vision",
+            "retry",
+            "ocr"
+          ]
+        },
+        {
+          "query_id": "restore-vi",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "restore",
+            "delete",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "restore-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "restore",
+            "cache",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "chunk-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "chunk",
+            "delete",
+            "tokens"
+          ]
+        },
+        {
+          "query_id": "chunk-en",
+          "group": "cross",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "chunk",
+            "retry",
+            "nested"
+          ]
+        },
+        {
+          "query_id": "nested-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "nested",
+            "api",
+            "invoice"
+          ]
+        },
+        {
+          "query_id": "nested-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "nested",
+            "shutdown",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "shutdown-vi",
+          "group": "vi",
+          "first_relevant_rank": 2,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.5,
+          "top3": [
+            "delete",
+            "shutdown",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "shutdown-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "shutdown",
+            "retry",
+            "nested"
+          ]
+        },
+        {
+          "query_id": "qdrant-vi",
+          "group": "vi",
+          "first_relevant_rank": 3,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 0.3333333333333333,
+          "top3": [
+            "tokens",
+            "chunk",
+            "qdrant"
+          ]
+        },
+        {
+          "query_id": "qdrant-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "qdrant",
+            "vision",
+            "embedding"
+          ]
+        },
+        {
+          "query_id": "health-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "health",
+            "invoice",
+            "tokens"
+          ]
+        },
+        {
+          "query_id": "health-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "health",
+            "restore",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "unicode-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "unicode",
+            "tokens",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "unicode-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "unicode",
+            "nested",
+            "restore"
+          ]
+        },
+        {
+          "query_id": "retention-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retention",
+            "delete",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "retention-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retention",
+            "vision",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "cache-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "cache",
+            "api",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "cache-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "cache",
+            "restore",
+            "retry"
+          ]
+        },
+        {
+          "query_id": "invoice-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "invoice",
+            "tokens",
+            "api"
+          ]
+        },
+        {
+          "query_id": "invoice-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "invoice",
+            "chunk",
+            "nested"
+          ]
+        },
+        {
+          "query_id": "retry-vi",
+          "group": "vi",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retry",
+            "delete",
+            "chunk"
+          ]
+        },
+        {
+          "query_id": "retry-en",
+          "group": "en",
+          "first_relevant_rank": 1,
+          "recall_at_3": 1.0,
+          "reciprocal_rank_at_10": 1.0,
+          "top3": [
+            "retry",
+            "vision",
+            "retention"
+          ]
+        }
+      ],
+      "candidate": "e5-base-int8",
+      "model_fingerprint": "e8e395bc1b54979c09466eab46e949c197b99abe2518793612bb0cdc582b02dc",
+      "repository": "intfloat/multilingual-e5-base",
+      "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+      "dimension": 768,
+      "license": "mit",
+      "artifact_bytes": 295769071,
+      "artifacts": [
+        {
+          "source": "onnx/model_qint8_avx512_vnni.onnx",
+          "local": "model.onnx",
+          "bytes": 278686411,
+          "sha256": "2523551878658b305550d8759443822dbfda9ed9c8012ef2c354ba2c5b9de503"
+        },
+        {
+          "source": "tokenizer.json",
+          "local": "tokenizer.json",
+          "bytes": 17082660,
+          "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+        }
+      ],
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "load_ms": 888.308,
+      "passage_encode_ms": 167.112,
+      "warm_query_p50_ms": 6.321,
+      "warm_query_p95_ms": 7.378,
+      "peak_rss_mib": 802.863,
+      "max_passage_tokens": 45,
+      "max_query_tokens": 24,
+      "overflow_rejected": true,
+      "repeat_max_absolute_delta": 0.0,
+      "unit_norm_max_error": 5.960464477539063e-08,
+      "eligible": true
+    }
+  ],
+  "selected_candidate": "e5-base-int8",
+  "passed": true
+}

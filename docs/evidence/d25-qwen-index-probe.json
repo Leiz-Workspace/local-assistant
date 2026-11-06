@@ -1,0 +1,19 @@
+{
+  "description": "Observed single synthetic10-point CPU Qwen/Qdrant drill after final regression; not a production throughput, HNSW or long-context benchmark.",
+  "observed_date": "2026-10-19",
+  "sample_points": 10,
+  "dimension": 1024,
+  "encoder_seconds": 3.014031,
+  "schema_and_indexes_seconds": 0.303696,
+  "upsert_and_complete_verification_seconds": 0.123681,
+  "upsert_and_verification_points_per_second": 80.853,
+  "delete_and_zero_count_verification_seconds": 0.047804,
+  "collection_apparent_directory_bytes": 353055814,
+  "disk_definition": "du -sb apparent collection directory bytes including WAL/preallocation at sample time; not allocated filesystem bytes or steady-state large-index storage",
+  "flat_float32_vector_bytes": 40960,
+  "model_fingerprint": "77a5716028f187821f9e6aa198b5c5774b5d69b54d95093701a7f2dfaaa0bc9b",
+  "before_inventory_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "after_inventory_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "owned_probe_removed": true,
+  "production_collection_created": false
+}

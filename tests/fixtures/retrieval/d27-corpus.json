@@ -1,0 +1,536 @@
+{
+  "description": "New agent-authored synthetic diagnostic judgments frozen before D27 scoring; not human-blinded or production-held-out.",
+  "version": "d27-retrieval-v1",
+  "documents": [
+    {
+      "id": "restore-target",
+      "language": "vi",
+      "text": "Khôi phục kho vector: nạp bản sao Qdrant cùng database và blob có cùng generation; kiểm tra owner và hash trước khi mở đọc.",
+      "topic": "restore",
+      "role": "relevant_target"
+    },
+    {
+      "id": "restore-near",
+      "language": "vi",
+      "text": "Sao lưu kho vector: tạo snapshot Qdrant khi ghi dữ liệu; lưu dung lượng và thời gian tạo bản sao.",
+      "topic": "restore",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "lease-target",
+      "language": "en",
+      "text": "An expired indexing lease is reclaimed with a fresh attempt token. The old worker cannot publish or renew using its previous token.",
+      "topic": "lease",
+      "role": "relevant_target"
+    },
+    {
+      "id": "lease-near",
+      "language": "en",
+      "text": "A login session token expires after inactivity. The browser must authenticate again before viewing the conversation.",
+      "topic": "lease",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "source-target",
+      "language": "vi",
+      "text": "Thay nội dung tệp: tải lên UUID mới với hash mới, index tệp mới rồi xóa nguồn cũ. Không sửa byte của nguồn đã lưu.",
+      "topic": "source",
+      "role": "relevant_target"
+    },
+    {
+      "id": "source-near",
+      "language": "vi",
+      "text": "Đổi tên tệp hiển thị chỉ đổi nhãn giao diện; tên không phải quyền truy cập và không thay nội dung nguồn.",
+      "topic": "source",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "formula-target",
+      "language": "en",
+      "text": "Spreadsheet formulas are preserved with their cached values. Cached values may be stale; the reader does not calculate formulas and marks uncertainty.",
+      "topic": "formula",
+      "role": "relevant_target"
+    },
+    {
+      "id": "formula-near",
+      "language": "en",
+      "text": "Spreadsheet literal cell edits preserve the other workbook entries. Numeric literals are written without changing cell style.",
+      "topic": "formula",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "ocr-target",
+      "language": "vi",
+      "text": "OCR ảnh mờ phải giữ cờ cần duyệt khi độ chính xác thấp. Văn bản nhận diện không tự trở thành nguồn đáng tin hoặc điểm tin cậy đã hiệu chuẩn.",
+      "topic": "ocr",
+      "role": "relevant_target"
+    },
+    {
+      "id": "ocr-near",
+      "language": "vi",
+      "text": "PDF có lớp văn bản được đọc bằng parser native theo trang; chỉ chọn OCR rõ ràng khi cần xử lý trang quét.",
+      "topic": "ocr",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "delete-target",
+      "language": "en",
+      "text": "Deleting a source hides its generation in SQL immediately. Repeated terminal sweeps remove late vector writes, including after cleanup was acknowledged.",
+      "topic": "delete",
+      "role": "relevant_target"
+    },
+    {
+      "id": "delete-near",
+      "language": "en",
+      "text": "Deleting a conversation hides its messages from conversation listing. It does not define vector indexing cleanup or source generation publication.",
+      "topic": "delete",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "query-target",
+      "language": "vi",
+      "text": "Query embedding thêm instruction của đúng model trước câu hỏi; tính toàn bộ token kể cả instruction và special tokens. Quá giới hạn thì từ chối, không cắt ngầm.",
+      "topic": "query",
+      "role": "relevant_target"
+    },
+    {
+      "id": "query-near",
+      "language": "vi",
+      "text": "Document embedding giữ passage không thêm query instruction. Vector phải đúng fingerprint, số chiều và chuẩn L2.",
+      "topic": "query",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "owner-target",
+      "language": "en",
+      "text": "Retrieval derives owner and namespace from authentication and storage. Caller file IDs only narrow that scope and cannot grant access to another principal.",
+      "topic": "owner",
+      "role": "relevant_target"
+    },
+    {
+      "id": "owner-near",
+      "language": "en",
+      "text": "An installation ownership UUID binds collection metadata. It identifies the operator installation, not the authenticated user of each source.",
+      "topic": "owner",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "shutdown-target",
+      "language": "vi",
+      "text": "Shutdown dừng nhận search mới, hủy và join response đang giữ reader, rồi mới đóng ingestion, file storage và database pool.",
+      "topic": "shutdown",
+      "role": "relevant_target"
+    },
+    {
+      "id": "shutdown-near",
+      "language": "vi",
+      "text": "Khởi động kiểm tra schema và cấu hình đã duyệt trước khi nhận request; thiếu tài nguyên phải từ chối thay vì tự chuyển model.",
+      "topic": "shutdown",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "ranking-target",
+      "language": "en",
+      "text": "Similarity scores rank dense candidates; they are not calibrated confidence. A bounded candidate budget can return fewer than top-k without proving corpus exhaustion.",
+      "topic": "ranking",
+      "role": "relevant_target"
+    },
+    {
+      "id": "ranking-near",
+      "language": "en",
+      "text": "A reranker reorders a fixed candidate set. It cannot recover a relevant source absent from that set; its model must be evaluated separately.",
+      "topic": "ranking",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "rollback-target",
+      "language": "vi",
+      "text": "Rollback retrieval bằng cách tắt và drain tính năng; giữ source, journal, ownership và collection để sửa tiến. Không drop trạng thái có dữ liệu.",
+      "topic": "rollback",
+      "role": "relevant_target"
+    },
+    {
+      "id": "rollback-near",
+      "language": "vi",
+      "text": "Đổi lựa chọn model cần benchmark, tài nguyên, migration, rollback và phê duyệt. Điểm benchmark tốt hơn không tự cho phép thay model.",
+      "topic": "rollback",
+      "role": "near_topic_negative"
+    },
+    {
+      "id": "vision-target",
+      "language": "en",
+      "text": "Native PDF text extraction preserves page provenance. Vision transcription is an explicit fallback with review required; it is not an automatic trust upgrade.",
+      "topic": "vision",
+      "role": "relevant_target"
+    },
+    {
+      "id": "vision-near",
+      "language": "en",
+      "text": "CORE vision uses the existing projector profile. A separate vision model is only an optional candidate after a measured capability gap.",
+      "topic": "vision",
+      "role": "near_topic_negative"
+    }
+  ],
+  "queries": [
+    {
+      "id": "restore-q1",
+      "text": "Khôi phục kho vector cần ghép những dữ liệu nào?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "restore-target"
+      ],
+      "intent": "restore"
+    },
+    {
+      "id": "restore-q2",
+      "text": "Which backups must match when restoring the vector store?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "restore-target"
+      ],
+      "intent": "restore"
+    },
+    {
+      "id": "restore-q3",
+      "text": "Làm sao kiểm tra trước khi mở đọc dữ liệu Qdrant sau phục hồi?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "restore-target"
+      ],
+      "intent": "restore"
+    },
+    {
+      "id": "lease-q1",
+      "text": "Indexing worker hết lease được cấp token như thế nào?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "lease-target"
+      ],
+      "intent": "lease"
+    },
+    {
+      "id": "lease-q2",
+      "text": "Can an old indexing attempt publish after its lease is reclaimed?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "lease-target"
+      ],
+      "intent": "lease"
+    },
+    {
+      "id": "lease-q3",
+      "text": "What changes when an expired ingestion lease is recovered?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "lease-target"
+      ],
+      "intent": "lease"
+    },
+    {
+      "id": "source-q1",
+      "text": "Thay nội dung tệp đã index phải làm theo thứ tự nào?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "source-target"
+      ],
+      "intent": "source"
+    },
+    {
+      "id": "source-q2",
+      "text": "How do I replace the contents of an indexed immutable file?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "source-target"
+      ],
+      "intent": "source"
+    },
+    {
+      "id": "source-q3",
+      "text": "Có được sửa byte của tệp nguồn đã lưu không?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "source-target"
+      ],
+      "intent": "source"
+    },
+    {
+      "id": "formula-q1",
+      "text": "Ứng dụng có tính lại công thức khi đọc bảng tính không?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "formula-target"
+      ],
+      "intent": "formula"
+    },
+    {
+      "id": "formula-q2",
+      "text": "Are spreadsheet cached formula values guaranteed fresh?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "formula-target"
+      ],
+      "intent": "formula"
+    },
+    {
+      "id": "formula-q3",
+      "text": "How is uncertainty handled for cached spreadsheet formulas?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "formula-target"
+      ],
+      "intent": "formula"
+    },
+    {
+      "id": "ocr-q1",
+      "text": "Xử lý kết quả OCR ảnh mờ cần giữ thông tin gì?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "ocr-target"
+      ],
+      "intent": "ocr"
+    },
+    {
+      "id": "ocr-q2",
+      "text": "Should blurry OCR output be treated as calibrated confidence?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "ocr-target"
+      ],
+      "intent": "ocr"
+    },
+    {
+      "id": "ocr-q3",
+      "text": "Văn bản nhận diện chất lượng thấp có cần người duyệt không?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "ocr-target"
+      ],
+      "intent": "ocr"
+    },
+    {
+      "id": "delete-q1",
+      "text": "Xóa nguồn thì vector ghi muộn sau cleanup được xử lý ra sao?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "delete-target"
+      ],
+      "intent": "delete"
+    },
+    {
+      "id": "delete-q2",
+      "text": "What repairs late vector writes after a source was deleted?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "delete-target"
+      ],
+      "intent": "delete"
+    },
+    {
+      "id": "delete-q3",
+      "text": "When does source deletion hide a vector generation from retrieval?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "delete-target"
+      ],
+      "intent": "delete"
+    },
+    {
+      "id": "query-q1",
+      "text": "Giới hạn token query có tính instruction và special tokens không?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "query-target"
+      ],
+      "intent": "query"
+    },
+    {
+      "id": "query-q2",
+      "text": "Does query overflow silently truncate the question?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "query-target"
+      ],
+      "intent": "query"
+    },
+    {
+      "id": "query-q3",
+      "text": "Embedding câu hỏi thêm instruction rồi kiểm tra token ra sao?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "query-target"
+      ],
+      "intent": "query"
+    },
+    {
+      "id": "owner-q1",
+      "text": "Client truyền file UUID của người khác có được cấp quyền không?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "owner-target"
+      ],
+      "intent": "owner"
+    },
+    {
+      "id": "owner-q2",
+      "text": "Where do retrieval owner and namespace filters come from?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "owner-target"
+      ],
+      "intent": "owner"
+    },
+    {
+      "id": "owner-q3",
+      "text": "Can client-supplied file IDs grant cross-user search access?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "owner-target"
+      ],
+      "intent": "owner"
+    },
+    {
+      "id": "shutdown-q1",
+      "text": "Shutdown phải đóng retrieval và file storage theo thứ tự nào?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "shutdown-target"
+      ],
+      "intent": "shutdown"
+    },
+    {
+      "id": "shutdown-q2",
+      "text": "What must drain before closing ingestion and the database pool?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "shutdown-target"
+      ],
+      "intent": "shutdown"
+    },
+    {
+      "id": "shutdown-q3",
+      "text": "Response đang giữ source reader được xử lý thế nào khi dừng API?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "shutdown-target"
+      ],
+      "intent": "shutdown"
+    },
+    {
+      "id": "ranking-q1",
+      "text": "Trả ít hơn top-k có nghĩa đã tìm hết corpus chưa?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "ranking-target"
+      ],
+      "intent": "ranking"
+    },
+    {
+      "id": "ranking-q2",
+      "text": "Are cosine similarity scores calibrated confidence?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "ranking-target"
+      ],
+      "intent": "ranking"
+    },
+    {
+      "id": "ranking-q3",
+      "text": "What does an underfilled bounded dense search result imply?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "ranking-target"
+      ],
+      "intent": "ranking"
+    },
+    {
+      "id": "rollback-q1",
+      "text": "Rollback retrieval có cần xóa collection đang có dữ liệu không?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "rollback-target"
+      ],
+      "intent": "rollback"
+    },
+    {
+      "id": "rollback-q2",
+      "text": "Which persistent state must be retained when disabling retrieval?",
+      "language": "en",
+      "group": "cross_language",
+      "relevant": [
+        "rollback-target"
+      ],
+      "intent": "rollback"
+    },
+    {
+      "id": "rollback-q3",
+      "text": "Dừng retrieval để rollback phải giữ những tài nguyên nào?",
+      "language": "vi",
+      "group": "vi",
+      "relevant": [
+        "rollback-target"
+      ],
+      "intent": "rollback"
+    },
+    {
+      "id": "vision-q1",
+      "text": "Dùng vision đọc tài liệu có tự làm nguồn đáng tin hơn không?",
+      "language": "vi",
+      "group": "cross_language",
+      "relevant": [
+        "vision-target"
+      ],
+      "intent": "vision"
+    },
+    {
+      "id": "vision-q2",
+      "text": "Is vision transcription automatically trusted after PDF extraction fails?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "vision-target"
+      ],
+      "intent": "vision"
+    },
+    {
+      "id": "vision-q3",
+      "text": "How is review handled for explicit vision transcription fallback?",
+      "language": "en",
+      "group": "en",
+      "relevant": [
+        "vision-target"
+      ],
+      "intent": "vision"
+    }
+  ]
+}

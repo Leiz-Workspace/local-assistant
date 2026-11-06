@@ -1,0 +1,23 @@
+{
+  "description": "Readonly D27-T03 HTTP/paired preparation post-regression source/journal/grant and shared-service inventory audit; no credentials or payload retained.",
+  "observed_date": "2026-10-19",
+  "revision": "0004",
+  "jobs": 0,
+  "heads": 0,
+  "file_count": 0,
+  "usage": [
+    0,
+    0,
+    0
+  ],
+  "immutable_manifest_update": false,
+  "mutable_state_update": true,
+  "truncate": false,
+  "old_schema_owners_acls_unchanged": true,
+  "restore_probe_databases": 0,
+  "qdrant_collection_count": 0,
+  "regression_owned_probe_operations_performed": true,
+  "live_model_worker_processes": 0,
+  "worker_advisory_locks": 0,
+  "vector_scope": "Only owned removable regression source/vector/HTTP acceptance probes; no production collection, source adoption or schema/grant change."
+}

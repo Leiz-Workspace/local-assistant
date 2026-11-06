@@ -1,0 +1,16 @@
+{
+  "description": "Actual D31 pre-fix source privacy audit using declared controlled inference, real SQL/HTTP and owned random fixtures; no model-quality claim.",
+  "status": "FAIL_REPRODUCED",
+  "base_commit": "478bec0",
+  "failed": 3,
+  "seconds": 0.84,
+  "skipped": 0,
+  "failures": [
+    "conversation soft-delete retains extracted quote in export",
+    "message edit retains old extracted quote in export",
+    "message deletion retains extracted quote in export"
+  ],
+  "log_sha256": "8fa411c532fb212eb6ccfee5634a4b09ed06024a4a05d5401e956b945dcb9b38",
+  "source_model_or_schema_changed": false,
+  "baseline_test_sha256": "e2a1146a60d1f9fa681bb49804c6415685d130b88719136d004bb671e839259a"
+}

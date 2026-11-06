@@ -1,0 +1,13 @@
+# D32 frozen knowledge acceptance plan
+
+**Purpose:** Define integrated local knowledge-phase gates before actual model evaluation, preserving D16–D31 and agreed models.
+
+Priority P1, dependencies D16–D31, estimated effort one evaluation task plus evidence review. Risks: atomic structured rows exceeding byte/token bounds, retrieval omission, semantically irrelevant but text-exact citations, stale spreadsheet caches, synthetic sample size. Runtime changes require demonstrated failure and a separate architecture decision if architecture changes. No new model, deployment, schema or dependency is proposed.
+
+The machine-readable [plan](evidence/d32-knowledge-plan.json) freezes source hashes, manual native-field goldens, questions, relevance and answer-bearing fields before live execution. Existing independently constructed D19/D20 fixtures and D28 native PDF goldens are the source oracles. Labels are assigned by this assistant before outputs; they are not human-independent review. Five answerable cases cover TXT/PDF/DOCX/XLSX plus cross-file search; a missing fact and a foreign-only filter must refuse. No tuning or dropping failed cases after seeing outputs.
+
+All four files must upload, pass complete-chunk token admission, index through approved Qwen and Qdrant, retrieve and generate through original CORE/fast. Indexing uses a predeclared 2048-byte ceiling for every file; actual 512-token admission remains authoritative and no truncation is allowed. Document-scoped questions use explicit file filters; the extra TXT query searches across all four owned files.
+
+Require 5/5 expected answers, at least one expected answer-bearing native citation per answer, and every citation both exact and within its frozen relevant-field list. Citation precision is relevant exact citations / all citations, threshold 1.0 on this small frozen set. Verify owner, immutable source hash, native Unicode span, generation, chunk ID and untrusted status. XLSX cached30 is preserved, never recomputed or certified current. Missing fact must return insufficient_evidence, no answer/citations; foreign-only filter must return no_sources before any CORE call.
+
+Retain incremental live results even on failure. Run with existing protected Vault credentials in process memory and isolated removable test UUIDs/collection. Verify cleanup, immutable baseline/model/migration hashes and local opt-in flags after testing. D31 full1608 is a historical baseline; report new D32 tests separately unless an actual new full invocation runs. Do not advance D33 until every D32 gate, limits documentation and post-audit passes.

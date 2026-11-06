@@ -1,6 +1,7 @@
 """Expose authenticated loopback file reservation, raw streaming and owner-only download contracts."""
 
 import asyncio
+import hashlib
 import json
 import logging
 from datetime import datetime
@@ -18,6 +19,13 @@ from starlette.requests import ClientDisconnect
 from apps.api.core.conversation_auth import authenticate_principal
 from apps.api.routes.conversations import require_local_client
 from apps.api.services.files import FileService, file_io
+from src.application.services.docx_contract import (
+    DOCX_MEDIA,
+    DOCX_VERSION,
+    MAX_PLAN_BYTES,
+    MAX_READ_BYTES,
+    validate_plan,
+)
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.infrastructure.local_blob_storage import BlobStorageError
 
@@ -226,3 +234,122 @@ async def delete_file(file_id: UUID, principal: Principal, service: Service):
     return JSONResponse(
         status_code=202, content={"id": str(file_id), "state": "purging"}
     )
+
+
+@router.post("/{file_id}/extract")
+async def extract_file(file_id: UUID, principal: Principal, service: Service):
+    """Return untrusted native PDF pages with stable source provenance and private cache policy."""
+    result = await service.extract(principal, file_id)
+    return JSONResponse(
+        result,
+        headers={
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+class DocxResponse(Response):
+    """Retain the DOCX slot and locked source until response delivery ends or is cancelled."""
+
+    def __init__(self, context, row, result, operation):
+        """Build a private structured inspection or bounded rewritten attachment."""
+        self.context = context
+        headers = {
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        }
+        if operation == "read":
+            payload = dict(
+                result,
+                file_id=str(row["id"]),
+                sha256=row["actual_sha256"],
+                content_trust="untrusted",
+            )
+            for paragraph in payload["paragraphs"]:
+                paragraph["locator"] = (
+                    f"file:{row['id']}#paragraph={paragraph['paragraph_id']}"
+                )
+            for table in payload["tables"]:
+                table["locator"] = f"file:{row['id']}#table={table['table_id']}"
+            content = json.dumps(
+                payload, ensure_ascii=False, separators=(",", ":")
+            ).encode("utf-8")
+            if len(content) > MAX_READ_BYTES:
+                raise StoragePolicyError("docx_limits_exceeded", 413)
+            media = "application/json"
+        else:
+            content = result
+            media = DOCX_MEDIA
+            headers.update(
+                {
+                    "Content-Disposition": f'attachment; filename="edited-{row["id"]}.docx"',
+                    "X-Source-File-ID": str(row["id"]),
+                    "X-Source-SHA256": row["actual_sha256"],
+                    "X-Docx-Processor": DOCX_VERSION,
+                    "X-Content-SHA256": hashlib.sha256(content).hexdigest(),
+                }
+            )
+        super().__init__(content, media_type=media, headers=headers)
+
+    async def __call__(self, scope, receive, send):
+        """Close the async operation even if a client disconnects during a large reply."""
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            await self.context.__aexit__(None, None, None)
+            logger.info("file_docx_response_closed")
+
+
+async def docx_response(service, principal, file_id, operation, plan=None):
+    """Transfer the admitted operation to its response while closing it on construction failure."""
+    context = service.docx_operation(principal, file_id, operation=operation, plan=plan)
+    row, result = await context.__aenter__()
+    try:
+        return DocxResponse(context, row, result, operation)
+    except BaseException:
+        await context.__aexit__(None, None, None)
+        raise
+
+
+async def docx_rewrite_body(request, policy):
+    """Bound and validate a strict edit plan before accepting any XML or source mutation."""
+    media = request.headers.getlist("content-type")
+    if (
+        len(media) != 1
+        or media[0].partition(";")[0].strip().lower() != "application/json"
+    ):
+        raise StoragePolicyError("json_metadata_required", 415)
+    length = content_length(request)
+    if length is not None and length > MAX_PLAN_BYTES:
+        raise StoragePolicyError("docx_edits_too_large", 413)
+    data = bytearray()
+    try:
+        async with asyncio.timeout(policy.idle_seconds):
+            async for chunk in request.stream():
+                if len(data) + len(chunk) > MAX_PLAN_BYTES:
+                    raise StoragePolicyError("docx_edits_too_large", 413)
+                data.extend(chunk)
+    except TimeoutError:
+        raise StoragePolicyError("docx_request_timeout", 408) from None
+    try:
+        return validate_plan(
+            json.loads(data.decode("utf-8"), object_pairs_hook=unique_fields)
+        ).model_dump()
+    except (ValueError, UnicodeError, RecursionError):
+        raise StoragePolicyError("invalid_docx_edits", 422) from None
+
+
+@router.post("/{file_id}/docx/read")
+async def read_docx(file_id: UUID, principal: Principal, service: Service):
+    """Inspect an owned ready DOCX with paragraph/table/style provenance."""
+    return await docx_response(service, principal, file_id, "read")
+
+
+@router.post("/{file_id}/docx/rewrite")
+async def rewrite_docx(
+    file_id: UUID, request: Request, principal: Principal, service: Service
+):
+    """Download a verified run-preserving rewrite without mutating or persisting the source."""
+    plan = await docx_rewrite_body(request, service.policy)
+    return await docx_response(service, principal, file_id, "rewrite", plan)
