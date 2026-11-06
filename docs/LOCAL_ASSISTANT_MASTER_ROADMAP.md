@@ -1,17 +1,17 @@
 # LOCAL ASSISTANT — MASTER ROADMAP & EXECUTION TRACKER
 
-> **Version:** 3.0 · **Updated:** 2026-10-16 (Asia/Ho_Chi_Minh)  
+> **Version:** 3.10 · **Updated:** 2026-10-18 (Asia/Ho_Chi_Minh)
 > **Workspace:** `~/Workspace/Server/ai`  
 > **Target:** Local-first personal AI platform; 90 **development-day milestones** (not calendar-day commitments).  
-> **CURRENT POSITION:** **DAY 15 — D15-T04 PASSED; NEXT = D15-T05 (Conversation REST API), THEN D15-T06 (Hardening/E2E).**  
-> **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results confirmed in conversation through 2026-10-16.  
+> **CURRENT POSITION:** **D17 PASS — authenticated bounded file persistence/upload/download, recovery and paired restore accepted for localhost/one worker. NEXT = D18 native PDF extraction with page provenance.**
+> **Scope source:** original `PERSONAL-AI-LOCAL-ROADMAP-UPDATED-2026-10-11.md`, `dev_log/dev_log.md` (D1–D10), source tree and terminal results, including the 2026-10-18 authenticated local release and recovery checkpoint.
 > **Operator note:** Task checkboxes reflect *observed verification*, not whether someone suggested or pasted code. Where evidence is incomplete, status = PARTIAL / VERIFY / TODO.
 
 ---
 
 ## 0. How to use with VS Code + Codex
 
-1. Put this file at `docs/MASTER_ROADMAP.md` (or root `ROADMAP.md`). Keep the existing `dev_log/dev_log.md` as the factual chronological record; do **not** overwrite it.
+1. The tracked roadmap is `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`; `docs/MASTER_ROADMAP.md` is not present in this checkout. Keep the existing `dev_log/dev_log.md` as the factual chronological record; do **not** overwrite it.
 2. At the start of a Codex work session, ask it to read this roadmap, the active day's tests/code, and applicable `docs/ADR/` before changing anything.
 3. Work on **one task ID at a time**. After implementing, run the listed acceptance tests, paste/summarize the actual result and update status. Do not mark PASS without evidence.
 4. Keep an append-only entry in `dev_log/dev_log.md`: timestamp, task ID, code changes, commands/tests, actual output summary, decisions, known issues, next action.
@@ -22,17 +22,17 @@
 
 **Codex briefing (paste into a Codex prompt):**
 
-> Read `docs/MASTER_ROADMAP.md`, `dev_log/dev_log.md`, `docs/conversation_schema_design.md`, existing `docs/ADR/`, and the affected source files. Identify the next unchecked task and prerequisites. Preserve currently working code, all containers and shared home-server infrastructure. Never create another PostgreSQL/Vault/Qdrant/MinIO/RabbitMQ/Keycloak/MongoDB service. Make the smallest reviewable change; provide full-file contents when explicitly requested; run specific tests and record evidence. Do not mark PASS for skipped tests. Do not invent endpoints, secret values or model metrics. Observe Vault least-privilege and approval gates.
+> Read `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`, `dev_log/dev_log.md`, `docs/conversation_schema_design.md`, existing `docs/ADR/`, and the affected source files. Identify the next unchecked task and prerequisites. Preserve currently working code, all containers and shared home-server infrastructure. Never create another PostgreSQL/Vault/Qdrant/MinIO/RabbitMQ/Keycloak/MongoDB service. Make the smallest reviewable change; provide full-file contents when explicitly requested; run specific tests and record evidence. Do not mark PASS for skipped tests. Do not invent endpoints, secret values or model metrics. Observe Vault least-privilege and approval gates.
 
 ---
 
-## 1. Executive status (as of 2026-10-16)
+## 1. Executive status (as of 2026-10-18)
 
 | Stage | Development days | Status | Evidence / next work |
 |---|---:|---|---|
 | P1 — Machine, inference, two-profile baseline | D1–D14 | **PARTIAL / substantially implemented** | D1–D10 documented in dev log; later 32K, vision, MTP and runtime presets exercised. Full original D14 model quality/safety release gate not evidenced. |
-| P2a — Conversation persistence foundation | **D15** | **IN PROGRESS (4/6 tasks PASS)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. REST API and hardening remain. |
-| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | TODO | Originally scheduled D15–D28, shifted by persistence prerequisite. |
+| P2a — Conversation persistence foundation | **D15** | **PASS (6/6 local tasks)** | PostgreSQL + Vault, Alembic V001, repositories, Conversation Manager tested. Authenticated owner-scoped API, PostgreSQL/CORE/restart, leases/context and real pool export verified. Backup restore checked rows/owner/ACL before shared restart; Keycloak recovered. 151/151 regression PASS. |
+| P2b — Files, ingestion, RAG, memory | D16–D32 (re-baselined) | **IN PROGRESS (D16/D17 PASS)** | File foundation, authenticated raw HTTP, scoped recovery and paired restore accepted; full 443 PASS/0 SKIP. D18 native PDF extraction NEXT. |
 | P3 — Coding agent | D33–D46 | TODO | Scoped reads, patch approval, isolated tests. |
 | P4 — Web research | D47–D60 | TODO | Citation provenance, research tool controls and artifacts. |
 | P5 — Multimodal + voice | D61–D74 | PARTIAL foundations / TODO products | CORE vision smoke done earlier; full image, video and speech workflows unbuilt. |
@@ -41,18 +41,20 @@
 
 **Scheduling semantics:** these are **sequenced milestones**, not promises to finish each task in 24 hours. D15 has six subtasks. If D15 remains open tomorrow, do not relabel unfinished tasks as D16 merely because calendar time passed. The original document had D15 = file upload; **v3 explicitly changes that decision** and shifts file ingestion later. Later days are a planning baseline, subject to recorded re-estimation, not fake completion.
 
-### Progress of current day
+### Verified milestones and current task
 
 | ID | Task | Status | Acceptance evidence |
 |---|---|---|---|
 | D15-T01 | Shared PostgreSQL instance, dedicated `local_assistant` DB + app credential in Vault | **PASS** | TCP login as `local_assistant_app` using Vault secret; current DB/user returned correctly. |
-| D15-T02 | Alembic V001; `assistant` schema + tables; runtime grants | **PASS** | `0001 (head)`, four relations, DML privileges true and TRUNCATE false. |
+| D15-T02 | Alembic V001; `assistant` schema + tables; runtime grants | **PASS** | V001 verified at D15 (then head); four original relations/grants remain valid. D17 adds reviewed V002 without rewriting V001. |
 | D15-T03 | Domain, repository ports, SQLAlchemy models, PostgreSQL repositories | **PASS** | Real PostgreSQL lifecycle integration test passed. |
-| D15-T04 | Conversation Manager, inference port + adapter, replay/failure persistence | **PASS for defined tests** | 2 integration tests passed; 42 API/runtime regression tests passed. Concurrency/crash/context boundary **not** proven. |
-| **D15-T05** | **Persistent Conversation REST API** | **NEXT / TODO** | Endpoints with valid responses, errors, credentials and access controls; preserve stateless API. |
-| D15-T06 | Concurrency, crash recovery, context trimming, actual LLM E2E, regressions | TODO | Independent tests including failure injection and restart. |
+| D15-T04 | Conversation Manager, inference port + adapter, replay/failure persistence | **PASS for defined tests** | 2 integration tests passed; 42 API/runtime regression tests passed. T06 subsequently verified defined race/crash/context cases; production multiworker remains unaccepted. |
+| **D15-T05** | **Persistent Conversation REST API** | **PASS (localhost)** | Vault-backed app credential; 4/4 integration PASS including CORE; full suite 94 PASS, zero SKIP; history/list/replay verified across two Uvicorn processes. |
+| D15-T06 | Concurrency, crash recovery, context, auth and recovery | **PASS (authenticated localhost)** | Full suite 151/151 PASS, zero SKIP; two-principal negative access, real pool export/reconnect, owner/ACL/data restore, shared PostgreSQL restart, Keycloak recovery and authenticated API process restart accepted. |
+| **D16** | **Bounded file metadata/storage design and policy** | **PASS (design/policy)** | Spec + ADR-019 reviewed; 86 policy cases PASS; full suite 237/237 PASS; V001 unchanged. No migration, blob adapter or upload API introduced in D16. |
+| **D17** | **Bounded authenticated file storage/HTTP/recovery** | **PASS (localhost, one worker; T01–T05)** | Full 443/443 PASS, zero SKIP; V002, owner/quota/replay, private FDs, isolated format verification, cancellation/deadlines, real crash/HTTP races, paired DB/blob/identity restore and two-process API restart; ADR-019–025. |
 
-**Currently demonstrated:** `IMPORTS PASS`; 2/2 focused integration; 42/42 focused regression. **Not demonstrated:** full-project green suite, real-model persisted-chat end-to-end, multiworker safety, user identity authorization, production Vault bootstrap, pending-run lease recovery.
+**Currently demonstrated:** 2026-10-18 **443 passed in 30.14s**, zero skipped/no exclusions with real PostgreSQL/CORE. D17-T01–T05 local gates accepted: 77 FS + 24 journal + 62 verifier + 31 HTTP/service + 12 recovery cases, alongside 237 prior tests. V002 is applied; previous conversation/message/run rows and owner/ACL fingerprints match. Retained paired backup `data/backups/d17-paired-20261018` verifies seven tables, one 53-byte fixture, namespace/principal bindings and blob/archive hashes/permissions. Actual authenticated upload/replay/download/delete survives API process restart; owned workers/canary/probes are cleaned and allocation is zero. File feature remains operator opt-in; no public/multiworker/off-host certification is implied. D18 extraction is NEXT and unimplemented. Two authenticated principals are isolated across all conversation operations and manager locks; unowned legacy records remain hidden. Structured pool metrics export under actual Uvicorn; a stale owned backend reconnects. Protected backups of four databases and globals retained; Local Assistant restore matches rows plus owners/ACLs, and shared restart preserves data and Keycloak readiness. Actual authenticated API process restart/replay also passed. **Local acceptance scope:** direct localhost, one API worker, operator-delivered DB credential and private auth file. OIDC, production scoped Vault bootstrap, multiworker certification, off-host disaster recovery and load SLOs remain future deployment work. Pytest is not a model-quality scorecard.
 
 ---
 
@@ -206,48 +208,52 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 - [x] `src/application/services/conversation_manager.py` with two-transaction flow.
 - [x] Fake-inference test for persistence, replay, differing-key conflict and failure.
 - [x] Focused regression: 42 tests PASS plus 2 integration tests PASS.
-- [ ] Token-aware, whole-turn history trimming (currently message-count limit).
+- [x] Token-aware whole-turn trimming implemented in T06; keep system/current input, use actual gateway template/tokenizer, reject irreducible overflow.
 - [ ] Full dependency inversion/Unit of Work and finish-state retry semantics.
-- [ ] Timeout/cancellation/race/process-crash recovery.
+- [x] Defined T06 timeout mapping/cancellation/cross-backend races/leased disposable-process crash tests passed; broader operations/identity gates remain open.
 
-### **D15-T05 — Conversation REST API — NEXT**
+### **D15-T05 — Conversation REST API — PASS for localhost (2026-10-17)**
 
 **Deliverables** (`apps/api/` remains HTTP adapter):
 
-- [ ] Resolve runtime credential delivery without embedding Vault root token or passwords in Git. For early local tests, temporarily inject `DATABASE_URL` from Vault; production mechanism requires scoped credentials/AppRole or secret agent/injector.
-- [ ] Add FastAPI app lifespan for async DB engine and session factory; close pools on shutdown.
-- [ ] Add composition root/dependency wiring for `ConversationManager` and `LlamaInferenceAdapter`.
-- [ ] `POST /api/v1/conversations` — create profile/preset/title.
-- [ ] `GET /api/v1/conversations` — paginated listing with archive policy.
-- [ ] `GET /api/v1/conversations/{id}` — detail.
-- [ ] `PATCH /api/v1/conversations/{id}` — update title/preset.
-- [ ] `GET /api/v1/conversations/{id}/messages` — sequence pagination.
-- [ ] `POST /api/v1/conversations/{id}/messages` — persistent chat; optional idempotency key.
-- [ ] `POST /api/v1/conversations/{id}/archive` — archive.
-- [ ] `DELETE /api/v1/conversations/{id}` — soft-delete.
-- [ ] Preserve `POST /api/v1/chat/completions` exactly; do not replace its stateless behavior.
-- [ ] Consistent error mapping (404, 409, 422, 502/503/504), validation and response schemas.
-- [ ] Before external exposure: authN/authZ with owner boundary; localhost-only development until implemented.
+- [x] Local acceptance credential delivery: operator retrieved the existing app credential from Vault and injected DATABASE_URL into test/API child processes only. No Vault token was delivered to FastAPI/tests and no password was printed or committed. Production scoped AppRole/secret-agent delivery remains open.
+- [x] Add FastAPI app lifespan for async DB engine and session factory; close pools on shutdown.
+- [x] Add composition root/dependency wiring for `ConversationManager` and `LlamaInferenceAdapter`.
+- [x] `POST /api/v1/conversations` — create profile/preset/title.
+- [x] `GET /api/v1/conversations` — paginated listing with archive policy.
+- [x] `GET /api/v1/conversations/{id}` — detail.
+- [x] `PATCH /api/v1/conversations/{id}` — update title/preset.
+- [x] `GET /api/v1/conversations/{id}/messages` — sequence pagination.
+- [x] `POST /api/v1/conversations/{id}/messages` — persistent chat; optional idempotency key.
+- [x] `POST /api/v1/conversations/{id}/archive` — archive.
+- [x] `DELETE /api/v1/conversations/{id}` — soft-delete.
+- [x] Preserve `POST /api/v1/chat/completions` exactly; do not replace its stateless behavior.
+- [x] Consistent error mapping (404, 409, 422, 502/503/504), validation and response schemas.
+- [x] Localhost-only development boundary: direct peer guard, Origin/proxy rejection and error redaction tested. External exposure remains prohibited until authN/authZ with owner boundary exists; this local PASS does not certify authentication.
 
 **Exit criteria:** local HTTP request → DB conversation → gateway → assistant response; list/history survive FastAPI restart; no regression of existing stateless endpoint; no credentials in logs or repo; no anonymous external history access.
 
-### D15-T06 — Hardening, E2E & resilience
+**Initial acceptance evidence (2026-10-17):** `pytest tests/integration/ -q -rs --tb=short`: **4 passed in 1.18s** with LIVE_E2E enabled. Full `pytest tests/ -q -rs --tb=short`: **94 passed in 6.48s**, no exclusions/SKIPs. Separate HTTP check created a CORE response in process A, terminated A, launched process B and verified exact stored history, list visibility and cached replay with unchanged assistant ID. Temporary processes and test rows were cleaned up. This original T05 checkpoint is retained; T06 and Day 15 local acceptance were completed on 2026-10-18 below. See the append-only dev-log follow-up, ADR-016 and the local runbook.
 
-- [ ] Concurrent same-key requests: exactly one inference and deterministic replay/conflict (test across connections).
-- [ ] Concurrent different-key requests same conversation: no duplicate sequence and at most one pending.
-- [ ] Failure injection between reservation / inference / finalization; ensure consistent rollback/error codes.
-- [ ] No incomplete `finish_reason=length` answer committed; verify model mismatch and context overflow.
-- [ ] Pending-orphan policy: lease/heartbeat/expiry, no unsafe restart replay; explicit interrupted state.
-- [ ] Do not hold transaction while waiting on LLM; instrument pool saturation.
-- [ ] Whole-turn history trimming and 32K actual tokenizer budgeting, including system context.
-- [ ] Prevent archive/delete during pending inference from causing a logically inconsistent committed answer.
-- [ ] Real CORE model E2E; model-not-loaded and gateway timeout paths.
-- [ ] Persistence test across API restart and, with backup/recovery precautions, DB restart.
-- [ ] Full `uv run python -m pytest` regression; record exact counts and skipped cases.
-- [ ] Security test: no user-to-user history access; no default external/public API exposure.
-- [ ] Dev log + ADR update + definition-of-done review.
+### D15-T06 — Hardening, E2E & resilience — PASS for authenticated localhost (2026-10-18)
 
-**Important open risks in T04 implementation:** provisional `balanced` value stored while Auto still deciding; duplicate-key behavior for a previously failed run is conflict rather than auto-retry; last-N-messages can split user/assistant turns; crash may leave `pending`; current schema has no ownership identity. Do not declare production-ready before explicit mitigation/testing.
+- [x] Concurrent same-key requests: exactly one inference and deterministic replay/conflict (test across connections).
+- [x] Concurrent different-key requests same conversation: no duplicate sequence and at most one pending.
+- [x] Failure injection between reservation / inference / finalization; ensure consistent rollback/error codes.
+- [x] No incomplete `finish_reason=length` answer committed; verify model mismatch and context overflow.
+- [x] Pending-orphan policy: owner/120s lease/30s heartbeat using DB time; lazy expiry recovery and explicit interrupted state. SIGKILLed test worker recovered; legacy unowned pending records require manual ownership review.
+- [x] No transaction/session held while waiting on LLM; 12 blocked inferences show checked_out=0. Runtime checkout/checkin/invalidation/timeout/peak gauges export through periodic structured logs; real saturation, stale-backend reconnect and Uvicorn export tested. Load SLOs are future work.
+- [x] Whole-turn history trimming and 32K actual tokenizer budgeting, including system context.
+- [x] Prevent archive/delete during pending inference from causing a logically inconsistent committed answer.
+- [x] Real CORE model E2E; model-not-loaded and gateway timeout paths.
+- [x] Authenticated API process restart/replay verified. ADR-018 plan executed: protected backups, isolated restore with matching data/owner/ACL, quiet gate, shared PostgreSQL restart, unchanged source data, Keycloak discovery recovery and cleanup passed.
+- [x] Full `uv run python -m pytest` regression; record exact counts and skipped cases.
+- [x] Bearer UUID principals, private reloadable digest file and server-assigned JSONB owner scope. Two-principal real DB tests deny cross-owner detail/history/update/send/replay/archive/delete and independently fence manager reservation; legacy unowned history stays quarantined. Direct-localhost guard remains enforced.
+- [x] ADR-018, dev log and runbook record implementation, rollback/recovery, actual acceptance and local deployment limits. Definition-of-done review below accepted; no skipped test is counted as PASS.
+
+**Day 15 definition-of-done review (2026-10-18):** V001 and app identity remain valid; persistence/multi-turn/idempotency and failure integrity pass; exact tokenizer budgeting retains current/system input; API and DB restarts preserve history; owner isolation and safe metrics export pass; full regression is 151/151. **D15-T06 and Day 15 PASS for authenticated localhost.** No D16 code has been started in this checkpoint.
+
+**Retained limits/debt:** pending Auto has a provisional balanced schema field; recovery is lazy and unowned legacy pending runs need operator review; historical conversations without owner are not silently adopted. JSONB owner filtering is application-enforced (no PostgreSQL RLS). Runtime API tokens are static high-entropy credentials managed in the app Vault namespace; scoped production Vault identity/OIDC remain deployment work. Full Unit of Work inversion, production multiworker/load certification and off-host/full-cluster recovery remain tracked debt. Existing shared services were reused; only uniquely named restore databases and test canaries were removed. See ADR-018 and protected recovery manifests; backup payloads and auth files are ignored by Git.
 
 ---
 
@@ -255,13 +261,40 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 
 > The **original** 2026-10-11 plan allocated D15–D28 entirely to files/RAG/memory. Because D15 actually delivered persistent conversation foundations, the remaining work below is re-sequenced. Day numbering describes *milestones*, not guaranteed time-to-complete. At a weekly review, change estimates in this file rather than silently dropping features or declaring them finished.
 
+### D16 — File storage design/policy — PASS (2026-10-18)
+
+- [x] Ownership/provenance and additive V002 metadata/usage proposal reviewed against Day 15 principals; no migration executed.
+- [x] Private local root and UUID-only object keys; labels never used as paths; descriptor/no-follow/no-replace and file-lock cleanup contract specified.
+- [x] Versioned 25 MiB/file, 1 GiB/owner, 10 GiB global quotas, count/concurrency/free-space/deadline/archive bounds and deterministic same-key semantics specified and pure policy cases executed.
+- [x] Global -> owner -> file transaction ordering, no SQL transaction over streaming/fsync, cross-resource journal/crash matrix and exactly-once allocation release reviewed.
+- [x] Rollout/rollback and paired DB/blob backup/identity restoration plan reviewed; D17 failure/race/MIME/FS/HTTP acceptance matrix explicit.
+- [x] `tests/test_file_storage_policy.py`: 86 PASS; full Vault-backed PostgreSQL/CORE regression 237 PASS, zero SKIP. Read-only DB check: V001/four tables unchanged.
+
+Artifacts: `docs/FILE_STORAGE_DESIGN.md`, `docs/ADR/019-bounded-local-file-storage.md`, `src/application/services/file_storage_policy.py`, `tests/test_file_storage_policy.py`.
+
+**Scope boundary:** snapshot helpers do not implement atomic quota reservation, MIME sniffing, FD-safe blob I/O, durable publication or recovery. Those remain D17 acceptance. Existing Day 15 source/dependencies/services were preserved. No MinIO credential/policy, new service, file route, migration or payload directory was introduced in D16.
+
+### D17 — File persistence/upload/download — PASS (2026-10-18, local acceptance)
+
+All T01–T05 local acceptance gates below have observed evidence. FS was implemented first to prove absent-inode locking before schema mutation; subsequent tasks were accepted only after real tests. D18 is next; production scope remains separately tracked.
+
+| ID | Scope | Status / dependency |
+|---|---|---|
+| D17-T01 | Private descriptor-based local adapter, bounded writes/hash, durable no-replace publication, reader/writer/resource locks and physical purge | **PASS**; 77 current FS cases, real process locks/8 SIGKILL FS boundaries, injected I/O failures, namespace/inventory/integrity; integrated by T04/T05. |
+| D17-T02 | Reviewed V002, app grants and owner/global atomic quota/replay/journal repositories | **PASS (repository scope)**; verified fresh backup/restore, V002 applied by existing migrator, 24 real journal cases and full 327 PASS; retain guard through post-lock DB claim |
+| D17-T03 | Bounded MIME/container verification for every allowed format | **PASS (verifier scope)**; 62 cases, actual Bubblewrap namespaces/resource bounds; 389 full-suite PASS/0 SKIP |
+| D17-T04 | Authenticated owner-scoped reserve/raw PUT/list/detail/download/delete HTTP, deadlines and cancellation | **PASS (local HTTP scope)**; 31 HTTP/service cases, root identity binding; full 428 PASS/0 SKIP; default feature disabled |
+| D17-T05 | DB/FS restart reconciliation, quota/HTTP races, paired metadata/blob restore and full regression | **PASS (local)**; 12 recovery/race/paired cases, protected retained paired restore, real uploader kills and two actual API processes; full443 PASS/0 SKIP |
+
+T01 introduced no production runtime change. T02 applied reviewed V002 after verified backup/restore; T04/T05 integrated opt-in file resources and completed local acceptance. The actual process drill initialized private `data/files`, retained its namespace/control directories and removed its sample payload/journal; default flag remains off. No new infrastructure service or credential/policy was introduced. Auth/backups/models are outside blob cleanup. Retention/production deployment remain separately reviewed.
+
 ### Phase 2b — Documents, retrieval and memory (D16–D32)
 
 | Day | Concrete task | Acceptance gate |
 |---|---|---|
-| D16 | Complete D15-T05/T06 spillover if needed; implement bounded file metadata/storage design | All D15 gates resolved or tracked as blockers; safe upload design |
-| D17 | File upload/download APIs, MIME sniff, size caps, checksum, ACL | Invalid/malicious inputs rejected; no arbitrary path writes |
-| D18 | PDF native text extraction with page provenance | Page and source mapping works on golden PDFs |
+| D16 | **PASS — design/policy:** owner-typed metadata, private local blobs, quotas, provenance, journal and rollback | ADR-019/spec review complete; 86 policy tests, full 237/237 PASS; no runtime file feature claimed |
+| D17 | **PASS (local):** V002/quota/private FS/isolated verification, authenticated raw HTTP, bounded recovery and paired restore | 443 full-suite PASS/0 SKIP; retained paired/process-restart evidence and ADR-019–025; owner/path/quota/FD/crash gates accepted |
+| D18 | **NEXT / TODO:** PDF native text extraction with page provenance | Page/source mapping on golden PDFs; owner+namespace+ready/hash recheck and bounded isolated parsing |
 | D19 | DOCX read/write, tables, styles and round-trip tests | Valid output opens; sample content preserved |
 | D20 | XLSX read/write, sheets, formula preservation and security | No macro execution; sample workbook round trip |
 | D21 | OCR/VLM fallback for scans, images and tables | Confidence/uncertainty reporting, measurable examples |
@@ -372,7 +405,7 @@ Source of record for D1–D10 is `dev_log/dev_log.md` (compiled through 2026-10-
 
 ```mermaid
 flowchart LR
-  P1["D01–D14\nInference + Models\nPARTIAL"] --> P2["D15\nConversation Foundation\n4/6 PASS"]
+  P1["D01–D14\nInference + Models\nPARTIAL"] --> P2["D15\nConversation Foundation\n6/6 PASS"]
   P2 --> F["D16–D32\nDocuments / RAG / Memory"]
   F --> C["D33–D46\nCoding Agent"]
   C --> W["D47–D60\nWeb Research"]
@@ -407,7 +440,7 @@ sequenceDiagram
   participant CM as Conversation Manager
   participant PG as PostgreSQL
   participant LLM as Llama Gateway
-  UI->>API: POST persistent message (planned T05)
+  UI->>API: POST persistent message (T05 accepted locally)
   API->>CM: send_message()
   CM->>PG: BEGIN, lock & check idempotency
   CM->>PG: insert user message + pending run
@@ -431,15 +464,16 @@ sequenceDiagram
 
 | Priority | Risk / debt | Mitigation / owner task |
 |---|---|---|
-| P0 | V001 has no user/tenant ownership; UUID alone does not constitute authorization | D15-T05 local-only; D15-T06/D82 owner identity + access policy + schema migration |
-| P0 | Orphan `pending` inference after crash | D15-T06 lease/heartbeat/reconciliation; concurrency tests |
-| P0 | Conversation Manager currently trims last N messages, not whole turns or tokenizer-budgeted | D15-T06 correct truncation and context 32K tests |
+| P1 | V1 ownership uses application-enforced JSONB scopes; legacy unowned records stay hidden | Tested bearer principals and repository/manager filters; review adoption mapping or typed owner migration/RLS before broader deployment |
+| P1 | Legacy unowned pending runs; old/new writer overlap during rollback | T06 leased runs now recover after expiry; manually verify legacy ownership and drain active runs before rollback (ADR-017) |
+| P1 | Persistent adapter depends on gateway private context/Auto helpers | Whole-turn/tokenizer budgeting now tested; extract a public planning port during planned dependency inversion |
 | P0 | Production Vault auth for FastAPI not yet configured | Scoped AppRole or Vault Agent/injector; never root in runtime |
-| P0 | User-provided files and web pages may contain hostile instructions | D17 onward sanitization/provenance; approval gate D33/D75 |
+| P0 | File upload can cross DB/FS crash, quota, open-inode or MIME boundaries | D17 local gates accepted by real journal/FD-lock/quota/container/HTTP/restore tests; retain opt-in localhost scope and production/retention follow-up |
+| P0 | User-provided files and web pages may contain hostile instructions | D17 onward verification/provenance; content remains untrusted, tool approval gate D33/D75 |
 | P0 | UNRESTRICTED profile could get side-effecting tools if policy accidentally shared | Enforce policy server-side with negative tests |
 | P1 | App Service imports concrete PostgreSQL repositories | Refactor to Unit of Work/factory injected at composition root |
 | P1 | Existing API stateless and conversation API separate | Preserve old behavior and versioned contracts |
-| P1 | Migration rollback / backup drill not yet complete | Before schema V002/production, actual restore and forward-only strategy |
+| P1 | Off-host/full-cluster disaster recovery not certified | Local Assistant data/owner/ACL restore and shared DB restart verified; preserve protected archives and validate off-host recovery before production |
 | P1 | Old D1–D14 release/quality scorecard needs reconciliation | Historical cleanup and phase-gate evidence |
 | P1 | `src/` is a generic top-level package name | Consider named package during planned packaging work, not urgent refactor |
 | P2 | `apps/api/storage/__init__.py` empty; `.bak` files, `__pycache__` | Inventory and safe cleanup after green tests; ignore artifacts in Git |
@@ -508,13 +542,13 @@ uv run python -m pytest \
 
 ## 10. Next-session execution order (Codex handoff)
 
-1. **D15-T05:** inspect current FastAPI code and security boundary, implement persistent conversation routes with minimal changes. Design `DATABASE_URL` bootstrap from Vault without root token and avoid accidental external exposure.
-2. Run persistence integration + HTTP tests with a fake model adapter, then a verified CORE real-model E2E; keep the old stateless chat endpoint working.
-3. **D15-T06:** repair/extend the architecture for whole-turn context trimming, token cap, concurrent request safety and pending recovery; test the failure cases explicitly.
-4. Record the results, commit reviewed changes, write an ADR for identity/permissions and credential provisioning.
-5. Advance to D16+ documents only after the D15 release gate is clearly accepted or unfinished issues are intentionally deferred with risk ownership.
+1. **D17 is PASS for authenticated localhost/one worker; D18 is NEXT.** Read FILE_STORAGE_DESIGN, FILE_STORAGE_LOCAL_RUNBOOK and ADR-019–025. Preserve 443/443 regression evidence and existing Day 15 behavior.
+2. D18 priority P1, dependent on D17 verified owned files and sealed FD isolation; estimate one or more milestones. Design bounded native-PDF text extraction with file UUID/content hash, page locators and extractor version; record architectural decisions before persistence/API changes. Risks include font/text ordering, malformed streams, resource use and hostile source instructions.
+3. Reuse the isolated parser boundary; source content remains untrusted. Recheck owner/namespace/ready/hash and keep FD locks correctly. Native extraction only; OCR/VLM fallback belongs to D21 and no implicit model context/ingestion is added.
+4. Validate page/source mapping against golden multi-page PDFs, Unicode/blank/error cases, limits and cross-owner negatives; run full Vault-backed PostgreSQL/CORE regression before D18 PASS. Do not substitute a blank-PDF smoke test for extraction quality evidence.
+5. Keep direct localhost/one worker and no new infrastructure instances; preserve namespace/principal identity and paired rollback. Roadmap days remain sequenced milestones, extend/re-estimate when acceptance needs more work.
 
-**Current formal checkpoint:** `D15-T04 = PASS (focused tests)`, **`D15-T05 = NEXT`**, `D15-T06 = TODO`, **Day 15 remains ACTIVE**.
+**Current formal checkpoint:** `D15-T01..T06 = PASS (defined local scope)`, **`D16 = PASS (design/policy)`**, **`D17 = PASS (T01–T05 local gates)`**, **`D18 = NEXT/TODO`**. Native extraction is not implemented.
 
 ---
 
@@ -524,4 +558,13 @@ uv run python -m pytest \
 |---|---|---|
 | v2.0 | 2026-10-11 | Original two-model, 90-development-day plan (initial state was planning-only). |
 | **v3.0** | **2026-10-16** | Reconciled original roadmap with terminal/dev-log evidence, recorded real D15 PostgreSQL/Vault/Alembic/Repository/Conversation Manager progress, moved file ingestion, and re-baselined remaining 90-day execution plan with codex-readable gates. |
-
+| **v3.1** | **2026-10-17** | Implemented T05 HTTP contracts, pool lifespan, safe local access and tests; 90 passed / 4 skipped with legacy live script excluded. T05 remains PARTIAL; no advance to T06/D16. Added ADR-016 and local runbook. |
+| **v3.2** | **2026-10-17** | Read existing app credential from Vault after operator unseal; corrected live test max_tokens to the existing 512-token minimum; 4/4 integration and 94/94 full suite PASS; verified actual API process restart and replay. T05 PASS for localhost; T06 NEXT. |
+| **v3.3** | **2026-10-17** | Committed T05 as 18f3175. Implemented T06 leases/heartbeat/fencing, cancellation, recent whole-turn context and tokenizer budgeting; 127/127 PASS, zero SKIP. ADR-017 records limits; owner isolation and shared DB restore/restart keep T06 PARTIAL. |
+| **v3.4** | **2026-10-18** | Closed T06 local gates: bearer principal/owner isolation, periodic pool export, protected data/owner/ACL restore and shared DB restart with Keycloak recovery. Authenticated CORE process restart/replay accepted; 151/151 PASS, zero SKIP. Day 15 local gate PASS; D16 design NEXT. |
+| **v3.5** | **2026-10-18** | D16 schema/storage/rollback design and isolated policy accepted: ADR-019/spec, 86 policy cases and full 237/237 PASS; V001 unchanged. D17 actual file journal/FS/upload/download NEXT; no runtime file feature declared PASS. |
+| **v3.6** | **2026-10-18** | D17-T01 private FS adapter and stable resource locks accepted; 66 real FS tests, full 303/303 PASS, zero SKIP. ADR-020 covers creation/purge race and unknown-stage quarantine. D17-T02 DB journal/quota NEXT; D17 remains IN PROGRESS, D18 not started. |
+| **v3.7** | **2026-10-18** | D17-T02 additive V002/journal/quota accepted after verified backup/restore and unchanged prior rows/ACLs; 24 real journal cases, full 327 PASS/0 SKIP. MIME T03 NEXT; HTTP and paired blob restore remain unaccepted. |
+| **v3.8** | **2026-10-18** | D17-T03 isolated bounded MIME/container verifier accepted; 62 cases, full 389 PASS/0 SKIP; ADR-022 and uv-locked parser dependencies. T04 HTTP NEXT; D17 remains open pending service/recovery/paired restore. |
+| **v3.9** | **2026-10-18** | D17-T04 HTTP/cancellation/root namespace binding accepted; 31 HTTP/service + 8 additional FS cases, full 428 PASS/0 SKIP. ADR-023/024; T05 recovery/paired restore NEXT, feature default disabled. |
+| **v3.10** | **2026-10-18** | D17 T01–T05 accepted for localhost/one worker: namespace-scoped fair recovery, actual uploader/FS crash cases, HTTP quota/delete races, paired DB/blob/identity restore and actual API process restart. Full443 PASS/0 SKIP; ADR-025/runbook, protected artifacts/canary cleanup. D18 native PDF extraction NEXT. |

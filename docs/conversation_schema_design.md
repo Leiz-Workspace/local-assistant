@@ -7,6 +7,8 @@
 **Status:** APPROVED FOR IMPLEMENTATION — Thiết kế đã chốt, chưa nghiệm thu triển khai  
 **Project Root:** `~/Workspace/Server/ai`
 
+> **Implementation checkpoint 2026-10-17:** This document preserves the original design baseline. T01–T04 have historical focused PASS evidence; T05 passed localhost acceptance: 4/4 real PostgreSQL integrations including CORE, full suite 94/94 and actual API process restart/history/replay. T06 passed authenticated-localhost acceptance on 2026-10-18 (151/151 tests): owner UUID stored in existing JSONB metadata, bearer principal filters at service/repository/manager locks, periodic pool metrics, protected restore of rows/owners/ACLs and shared DB restart. Unowned legacy records remain quarantined; no DDL or silent backfill. See ADR-018; older design status below is historical. The current roadmap is `docs/LOCAL_ASSISTANT_MASTER_ROADMAP.md`. ADR-016 specifies POST archive (superseding the PATCH row below), PATCH title/preset, environment credential injection and the direct localhost access boundary. Older “chưa triển khai” statements below describe the original baseline, not current progress.
+
 ---
 
 ## 1. Mục tiêu
