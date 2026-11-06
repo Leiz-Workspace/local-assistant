@@ -1,17 +1,23 @@
-"""Exclude tests that need private local resources when running on GitHub-hosted runners."""
+"""Scope the suite for GitHub-hosted runners: exclude tests needing private local resources and quarantine known-intermittent ones."""
 
 import logging
+import os
 from pathlib import Path
 
 import pytest
 
 LOGGER = logging.getLogger(__name__)
-LIST = Path(__file__).with_name("hosted-runner-exclusions.txt")
+HERE = Path(__file__).parent
+EXCLUSIONS = HERE / "hosted-runner-exclusions.txt"
+QUARANTINE = HERE / "hosted-runner-quarantine.txt"
+MODE_VARIABLE = "HOSTED_TEST_MODE"
 
 
 def load_entries(path):
     """Parse `<path or node id>  # <reason>` lines, rejecting entries without a stated reason."""
     entries = {}
+    if not path.exists():
+        return entries
     for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -26,17 +32,34 @@ def load_entries(path):
     return entries
 
 
-class HostedExclusions:
-    """Ignore whole files at collection and deselect individual node ids, reporting unmatched entries."""
+def split(entries):
+    """Separate whole-file paths from node ids."""
+    return {k for k in entries if "::" not in k}, {k for k in entries if "::" in k}
+
+
+def matches(nodeid, files, nodes):
+    """Return the entry matching a collected item, by node id, base node id or file."""
+    base = nodeid.split("[", 1)[0]
+    for candidate in (nodeid, base):
+        if candidate in nodes:
+            return candidate
+    path = nodeid.split("::", 1)[0]
+    return path if path in files else None
+
+
+class HostedScope:
+    """Exclusions are never run here; quarantined tests run only in the dedicated non-blocking job."""
 
     def __init__(self, config):
-        """Split entries into file-level and node-level targets relative to the root directory."""
+        """Load both lists and the requested mode (`main` by default, or `quarantine`)."""
         self.root = config.rootpath
-        entries = load_entries(LIST)
-        self.files = {k for k in entries if "::" not in k}
-        self.nodes = {k for k in entries if "::" in k}
+        self.mode = os.environ.get(MODE_VARIABLE, "main")
+        if self.mode not in {"main", "quarantine"}:
+            raise pytest.UsageError(f"{MODE_VARIABLE} must be 'main' or 'quarantine'")
+        self.excluded_files, self.excluded_nodes = split(load_entries(EXCLUSIONS))
+        self.quarantine_files, self.quarantine_nodes = split(load_entries(QUARANTINE))
         self.used = set()
-        self.deselected = 0
+        self.counts = {"excluded": 0, "quarantined": 0, "outside quarantine": 0}
 
     def pytest_ignore_collect(self, collection_path, config):
         """Skip importing excluded files, since some contact local services at import time."""
@@ -44,51 +67,73 @@ class HostedExclusions:
             relative = collection_path.relative_to(self.root).as_posix()
         except ValueError:
             return None
-        if relative in self.files:
+        if relative in self.excluded_files:
             self.used.add(relative)
             return True
         return None
 
     def pytest_collection_modifyitems(self, config, items):
-        """Deselect excluded node ids, including every parametrization of an excluded test."""
+        """Deselect exclusions always, and quarantined tests in main mode (or everything else in quarantine mode)."""
         kept, dropped = [], []
         for item in items:
-            base = item.nodeid.split("[", 1)[0]
-            match = item.nodeid if item.nodeid in self.nodes else base
-            if match in self.nodes:
-                self.used.add(match)
+            # Files are normally ignored at collection; explicit path arguments bypass that hook.
+            excluded = matches(item.nodeid, self.excluded_files, self.excluded_nodes)
+            quarantined = matches(
+                item.nodeid, self.quarantine_files, self.quarantine_nodes
+            )
+            for entry in (excluded, quarantined):
+                if entry:
+                    self.used.add(entry)
+            if excluded:
+                self.counts["excluded"] += 1
+                dropped.append(item)
+            elif (self.mode == "main") == bool(quarantined):
+                self.counts["quarantined" if quarantined else "outside quarantine"] += 1
                 dropped.append(item)
             else:
                 kept.append(item)
         if dropped:
             config.hook.pytest_deselected(items=dropped)
             items[:] = kept
-        self.deselected = len(dropped)
 
-    def unmatched(self):
-        """Entries whose file exists in this checkout but matched nothing (absent files are expected on older revisions)."""
-        return sorted(
-            entry
-            for entry in (self.files | self.nodes) - self.used
-            if (self.root / entry.split("::", 1)[0]).exists()
+    def unmatched(self, args):
+        """Entries inside the requested paths whose file exists but matched nothing (absent files are expected on older revisions)."""
+        entries = (
+            self.excluded_files
+            | self.excluded_nodes
+            | self.quarantine_files
+            | self.quarantine_nodes
         )
+        scopes = [(self.root / arg.split("::", 1)[0]).resolve() for arg in args] or [
+            self.root
+        ]
+        stale = []
+        for entry in entries - self.used:
+            path = (self.root / entry.split("::", 1)[0]).resolve()
+            if path.exists() and any(path.is_relative_to(scope) for scope in scopes):
+                stale.append(entry)
+        return sorted(stale)
 
     def pytest_terminal_summary(self, terminalreporter):
-        """Report exactly how much was excluded instead of implying full coverage."""
+        """Report exactly what was left out instead of implying full coverage."""
+        ignored = len(self.used & self.excluded_files)
         terminalreporter.write_line(
-            f"hosted-runner exclusions: {len(self.used & self.files)} files ignored, "
-            f"{self.deselected} tests deselected (see .github/ci/{LIST.name})"
+            f"hosted-runner scope ({self.mode}): {ignored} files ignored, "
+            + ", ".join(
+                f"{count} {name}" for name, count in self.counts.items() if count
+            )
+            + " (see .github/ci/)"
         )
-        stale = self.unmatched()
+        stale = self.unmatched(terminalreporter.config.args)
         if stale:
             terminalreporter.write_line(
-                f"hosted-runner exclusions: {len(stale)} entries matched nothing: "
+                f"hosted-runner scope: {len(stale)} entries matched nothing: "
                 + ", ".join(stale),
                 yellow=True,
             )
 
 
 def pytest_configure(config):
-    """Register the exclusion plugin for this run."""
-    config.pluginmanager.register(HostedExclusions(config), "hosted-exclusions")
-    LOGGER.info("hosted_runner_exclusions_enabled")
+    """Register the hosted-runner scope plugin for this run."""
+    config.pluginmanager.register(HostedScope(config), "hosted-scope")
+    LOGGER.info("hosted_runner_scope_enabled")
