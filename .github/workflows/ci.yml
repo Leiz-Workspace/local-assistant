@@ -1,0 +1,170 @@
+# Continuous integration and packaging for Local Assistant on GitHub-hosted runners.
+#
+# Hosted runners have no GPU, models, PostgreSQL, Vault, Qdrant or private data/,
+# so only model-free checks run here. Native/model/service tests stay local.
+# Nothing in this workflow contacts or deploys to the Home Server.
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, staging, production]
+  push:
+    branches: [develop, staging, production]
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+  UV_VERSION: "0.9.13"
+  RUFF_VERSION: "0.17.1"
+  NODE_VERSION: "24"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      python_files: ${{ steps.changed.outputs.python_files }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: changed
+        name: List changed Python files
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            base="$BASE_SHA"
+          elif [ -n "$BEFORE_SHA" ] && ! [[ "$BEFORE_SHA" =~ ^0+$ ]] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            base="$BEFORE_SHA"
+          else
+            base="$(git rev-parse HEAD~1 2>/dev/null || git hash-object -t tree /dev/null)"
+          fi
+          files="$(git diff --name-only --diff-filter=ACMR "$base" HEAD -- '*.py' | tr '\n' ' ')"
+          echo "Changed Python files: ${files:-none}"
+          echo "python_files=$files" >> "$GITHUB_OUTPUT"
+
+  lint:
+    needs: prepare
+    if: needs.prepare.outputs.python_files != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+      - name: Ruff check (changed files)
+        run: uv tool run "ruff@${RUFF_VERSION}" check --isolated --select E4,E7,E9,F ${{ needs.prepare.outputs.python_files }}
+      - name: Ruff format check (changed files)
+        run: uv tool run "ruff@${RUFF_VERSION}" format --check ${{ needs.prepare.outputs.python_files }}
+
+  test-python:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync --locked --dev --python "$PYTHON_VERSION"
+      - name: Pytest (model-free scope)
+        # Initial scope: main voice integration unit tests. Widened once the
+        # hosted-runner exclusion list for the full suite is in place.
+        run: uv run --no-sync python -m pytest tests/test_main_voice_*.py -q -p no:cacheprovider
+
+  test-js:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: node --test
+        run: node --test tests/test_main_voice_client.mjs tests/test_voice_trial_client.mjs tests/test_explicit_recording.mjs
+
+  ci-gate:
+    if: always()
+    needs: [prepare, lint, test-python, test-js]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every job to succeed or be skipped
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            case "$result" in
+              success|skipped) ;;
+              *) echo "::error::CI gate failed ($result)"; exit 1 ;;
+            esac
+          done
+
+  package:
+    needs: ci-gate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.bundle.outputs.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: bundle
+        name: Build source bundle from tracked files
+        run: |
+          name="local-assistant-${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}"
+          mkdir dist
+          git archive --format=tar.gz --prefix="$name/" -o "dist/$name.tar.gz" HEAD
+          (cd dist && sha256sum "$name.tar.gz" > SHA256SUMS)
+          cat dist/SHA256SUMS
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.bundle.outputs.name }}
+          path: dist/
+          retention-days: 30
+
+  deploy-staging:
+    needs: package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    steps:
+      - name: Record staging deployment
+        run: |
+          {
+            echo "### Staging deployment"
+            echo "- Bundle: \`${{ needs.package.outputs.name }}\` (workflow artifact)"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Scope: packaged build only; nothing is deployed to the Home Server."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: package
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.package.outputs.name }}
+          path: dist
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
