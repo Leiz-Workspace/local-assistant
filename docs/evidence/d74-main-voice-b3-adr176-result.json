@@ -1,0 +1,151 @@
+{
+  "description": "Public receipt of the single ADR176 replacement B3 campaign; no transcripts, answers, audio, credentials or owner recordings.",
+  "date": "2026-11-06",
+  "ADRs": [
+    174,
+    175,
+    176
+  ],
+  "status": "NOT_PASS",
+  "failure_code": "main_voice_call_budget_or_cleanup",
+  "failure_cause": "Runner required web exit code 0; uvicorn 0.54.0 re-raises the captured SIGTERM after graceful shutdown (exit -15). Application log shows the complete lifespan shutdown.",
+  "not_evaluated": [
+    "borrowed CORE alive after application shutdown (check ordered after the failed condition)"
+  ],
+  "retries": 0,
+  "panel_consumed": true,
+  "physical_first_audible": "UNVERIFIED",
+  "production_activation": false,
+  "software_gate": {
+    "python_passed": 1070,
+    "JS_passed": 27,
+    "model_calls": 0,
+    "git_commit": "eeabbe8",
+    "source_files": 306
+  },
+  "preflight": {
+    "core_rss_bytes": 1031987200,
+    "foreign_gpu_processes": 2,
+    "foreign_gpu_bytes": 272539648
+  },
+  "prepare_seconds": 56.78389309899649,
+  "rows": [
+    {
+      "id": "heldout-vi_vn-0036",
+      "expected_no_answer": false,
+      "status": "EXACT_COMPLETE_PCM",
+      "client_seconds": 2.249948436001432,
+      "server_seconds": 2.2471666339988587,
+      "stages": {
+        "asr": 0.3461403170003905,
+        "llm": 0.5112631709998823,
+        "tts": 1.379910983996524
+      },
+      "playback_sha256": "12f41e1f942273485941379335e927071661ed14c242ffd22b00bb9c99490336",
+      "pcm_sha256": "0b6b73538e00b377e493b0361aa2d4dcc80d7a8be0207837a5cdac420648becf"
+    },
+    {
+      "id": "heldout-vi_vn-0024",
+      "expected_no_answer": false,
+      "status": "EXACT_COMPLETE_PCM",
+      "client_seconds": 2.7389180900063366,
+      "server_seconds": 2.735922792002384,
+      "stages": {
+        "asr": 0.652468421998492,
+        "llm": 0.3611951310012955,
+        "tts": 1.713489560999733
+      },
+      "playback_sha256": "2574fa4edd7d535cec2ff57f718c96e32cb4376ae4e399625dd285350fc11cc1",
+      "pcm_sha256": "b0df8ca292a7329ef7dd15e36ca327d6e568f1c89351610f5d79eb24fedeaceb"
+    },
+    {
+      "id": "heldout-vi_vn-0078",
+      "expected_no_answer": false,
+      "status": "EXACT_COMPLETE_PCM",
+      "client_seconds": 3.2439175859981333,
+      "server_seconds": 3.2405542510023224,
+      "stages": {
+        "asr": 0.7792035109960125,
+        "llm": 0.45820753099542344,
+        "tts": 1.9942306669981917
+      },
+      "playback_sha256": "d9d0786932184bcabbf7f2dc2f2d70249a7bea513201cfbec8ede5451a8e9a87",
+      "pcm_sha256": "ed7596e9311a308f1f429dbcf6f9cfd70b1890bdb124fd396166f7e10be563d2"
+    },
+    {
+      "id": "heldout-vi_vn-0040",
+      "expected_no_answer": false,
+      "status": "EXACT_COMPLETE_PCM",
+      "client_seconds": 3.1806352580024395,
+      "server_seconds": 3.1776730500059784,
+      "stages": {
+        "asr": 1.0550804840022465,
+        "llm": 0.36016524199658306,
+        "tts": 1.7521167579980101
+      },
+      "playback_sha256": "8cb60c762a7f5ed80f88a34fe500b86793d5329b69f8f5276557b1b09ea44e87",
+      "pcm_sha256": "6800ece72c3fb520d77952b4d32dbf3423242b8a843a86ba883291a79e9113de"
+    },
+    {
+      "id": "negative-1",
+      "expected_no_answer": true,
+      "status": "CORRECT_NO_SPEECH",
+      "client_seconds": 0.01714686099876417,
+      "server_seconds": null,
+      "stages": null,
+      "playback_sha256": null,
+      "pcm_sha256": "b3866de454bf853fd4a1e6d475ba503a8c01fa07feb2c30c47321c1685896cb8"
+    },
+    {
+      "id": "negative-3",
+      "expected_no_answer": true,
+      "status": "CORRECT_NO_SPEECH",
+      "client_seconds": 0.01617200399778085,
+      "server_seconds": null,
+      "stages": null,
+      "playback_sha256": null,
+      "pcm_sha256": "4b5ea5a19f3818b91da52a0f8ceea23f45c7eaf5627090a7e4d394f8ba3bef0a"
+    }
+  ],
+  "stage_counts": {
+    "vad": 6,
+    "asr": 4,
+    "core": 4,
+    "tts": 4
+  },
+  "expected_stage_counts": {
+    "vad": 6,
+    "asr": 4,
+    "core": 4,
+    "tts": 4
+  },
+  "readiness": 1,
+  "workers_joined": 3,
+  "web_exit": -15,
+  "release_HTTP_status": 200,
+  "owned_CORE": {
+    "exit_code": 0,
+    "reaped": true,
+    "sampled_peak_RSS_KiB": 6820632,
+    "sampled_peak_VRAM_MiB": 8792,
+    "sampled_min_GPU_free_MiB": 2486,
+    "sampled_min_MemAvailable_KiB": 18350904,
+    "guard_failure": null
+  },
+  "native_pids_after": [],
+  "sources_unchanged": true,
+  "private_artifact_sha256": {
+    "result.json": "c5c42116bdc512d607f80304e0a8b8b0e16e0d711182bb5b69c1530bdecc15b9",
+    "preparation.json": "8eb658034888ca03ff6a92c553eefde45461aabd5685fddb4de56aef77476b48",
+    "software-verification.json": "e3f04ddb067828ce64e533dac86996df245b2e4a3f71d48921ab116a66ca3ea7",
+    "preflight.json": "fe6c94bd1208c7d0e8f1044087527963141cad776e949f02fc7a4cfaaea0e425",
+    "app-audit.log": "f0b8a075b11ad03f73b76e8e6befa2677b8561a8187bb19b621357b9afa97592"
+  },
+  "first_campaign": {
+    "date": "2026-11-05",
+    "status": "NOT_PASS",
+    "failure_code": "main_voice_prepare_fault",
+    "rows_unattempted": 6,
+    "retries": 0
+  }
+}
