@@ -1,6 +1,7 @@
 # Local Assistant — Engineering candidate status
 
 
+**Current release disposition — 2026-11-06:** NOT RELEASED, no tag. Code is on `production` (#24) of the private repository with CI and packaging only. The D90 choice is prepared in the [decision dossier](D90_RELEASE_DECISION_DOSSIER.md); D87 needs the owner's fresh full run ([runbook](D87_FULL_REGRESSION_20261106_RUNBOOK.md)); D74 replacement B3 is NOT_PASS on the runner exit-code criterion with all rows met ([result](D74_MAIN_VOICE_B3_RESULT.md)).
 **Current release disposition — 2026-11-05:** [Exact-artifact rights review](D74_VOICE_RIGHTS_REVIEW.md) and [default-off integration proposal](D74_VOICE_INTEGRATION_REVIEW.md) are READY FOR OWNER REVIEW. No production activation, release, model/default adoption or physical speaker acceptance follows. ADR174 implementation/conditional panel are proposed only; prior results remain historical.
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
