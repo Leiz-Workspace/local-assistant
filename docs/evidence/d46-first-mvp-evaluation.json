@@ -1,0 +1,328 @@
+{
+  "description": "First actual ten-case authored bounded CORE coding repair evaluation. Ten protocol cases measured; functional repair score reported separately with all failures retained. No general quality/model-adoption or production action claim.",
+  "status": "TEN_CASE_EVALUATION_COMPLETE",
+  "run_id": "ddadfe69-7197-44fd-b637-1aa8b678e4d9",
+  "actual_pytest_protocol_passed": 10,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 46.41,
+  "source_freeze_sha256": "81afed398e21e0ac6e0714d45ec2dd29335995d14636e2ceac6601a137af360f",
+  "corpus_sha256": "63e0a05b2b6f1a9d3d85210b09931d74d015ce6f53dfeb27f66c2936b74849d4",
+  "log": "data/backups/d46-evaluation-ddadfe69-7197-44fd-b637-1aa8b678e4d9/pytest.log",
+  "log_sha256": "5626be56a69a602c9382d1e797c474006dac11fb75c60818099775029350f3fd",
+  "model_attempts": 10,
+  "automatic_retries": 0,
+  "functional_passed": 7,
+  "functional_failed": 3,
+  "fixture_approvals": 27,
+  "native_runs": 18,
+  "cases": [
+    {
+      "case_id": "timeout-units",
+      "case_sha256": "eaeb2bf3cb22ca088d0399ae53385d122adf64167444514a8338efb3c2d07264",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-timeout-units-7dfff62b084a4f59a4deaf320b718c9a/summary.json",
+        "sha256": "587aaa8844f8c3a5b393043f907aaa79b03e066cc385c5b82538bc3a4deb2fea"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.728564,
+      "raw_model_sha256": "73eaa71d397760d7404ee0d83080a2f24f9ca3ecc3903d256632bef8acfb91de",
+      "raw_model_bytes": 1005,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-timeout-units-7dfff62b084a4f59a4deaf320b718c9a/candidate.py",
+        "sha256": "30dfea9f370d1b4efc2ca5bd157ed4c0aee84fc95806b6dc11610f89ff1fd502"
+      }
+    },
+    {
+      "case_id": "token-masking",
+      "case_sha256": "2fa45f09c2f50e02443b5bb21c6b15b73c67780c26add7c23464a642efb2cbbd",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-token-masking-cb86c201c80849c69a129fa96d99d205/summary.json",
+        "sha256": "f9a8e75dad5c7afa14d03bd6e2ad9b3c0414a0a8899d794f2d13df71e5d4b588"
+      },
+      "repair_outcome": "FUNCTIONAL_FAIL",
+      "functional_pass": false,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.549499,
+      "raw_model_sha256": "fd4116de5d18a7288d8e69000eff4bee16f20f7d411e10a05114000610603ae6",
+      "raw_model_bytes": 1010,
+      "visible_exit_code": 1,
+      "heldout_exit_code": 1,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-token-masking-cb86c201c80849c69a129fa96d99d205/candidate.py",
+        "sha256": "c44982587c99c7b6a1bd1a1b3ae5e406332f420b59a9917bb375bca3aabbce19"
+      }
+    },
+    {
+      "case_id": "api-path-join",
+      "case_sha256": "e1ea43f88dbe6c355d7d043134c5caaed3eb62278faca526d44b8b685e11c98d",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-api-path-join-9663b679d7df417ea5dcefba9767b495/summary.json",
+        "sha256": "8c61a7357c9cf7d58b2125c7847fb6d004dfaf867bb3b87cc9c9bf0a402f289f"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.021945,
+      "raw_model_sha256": "9fdf19bbf7b8396fb412e7a3d1846717efa22c336046fc48ebf90fa05b20027c",
+      "raw_model_bytes": 907,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-api-path-join-9663b679d7df417ea5dcefba9767b495/candidate.py",
+        "sha256": "40f2b779a1736aa5f0ad87791b44a639688054136d1c92227ac91e87babd207f"
+      }
+    },
+    {
+      "case_id": "stable-id-order",
+      "case_sha256": "6c778e69ea36019cbcb078fd1b8e60ef663966335b38f580cd79ef482a05e160",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-stable-id-order-1f6cb3308ed1461b9dcc0f7440acd7b9/summary.json",
+        "sha256": "fa67e65331488df5c727a74dc254c322fca8ccf7d51f3f163d768717c2b833d0"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.091136,
+      "raw_model_sha256": "883d55cd95f24d1de3551dfcf2c633b9e309c429850f257941ebee749a57ea97",
+      "raw_model_bytes": 965,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-stable-id-order-1f6cb3308ed1461b9dcc0f7440acd7b9/candidate.py",
+        "sha256": "86bfed1be77fed6d0b536215daee433740eef9109f634cb5c598896671c37232"
+      }
+    },
+    {
+      "case_id": "partial-batch-tail",
+      "case_sha256": "5882d06d91a52cef42f4d720e4b813916b5ed68a203f5904763099440ba15d45",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-partial-batch-tail-060a74124f4549ceb4b534151bf4dc8b/summary.json",
+        "sha256": "f008e0bc3be45f1f46930fbfc2a16167e24b9564bb930a98cfa80d7e1fdc617c"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.070553,
+      "raw_model_sha256": "29b0bf1fc194730eb333f0f3ed3a4df7a857434c50bf03266d5eea7a36050ac1",
+      "raw_model_bytes": 924,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-partial-batch-tail-060a74124f4549ceb4b534151bf4dc8b/candidate.py",
+        "sha256": "398b78dda8f2a3f32b5302fcb7699a254aa9e6e075f6b2ac8c8d8398d8107ebd"
+      }
+    },
+    {
+      "case_id": "fractional-quota-percent",
+      "case_sha256": "238c0624364f12bc29bbd2531e4541ec54cac7ea8ed9a8cfb1eb4c0ebe9af95b",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-fractional-quota-percent-a57813049f854edcb7895369e06339e8/summary.json",
+        "sha256": "d921f2b98aeeb557992a5d3ad90be5bbe2e4d290ae94bdda240c361c57ad96ec"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.152092,
+      "raw_model_sha256": "dd7e15853d01be8e2024f7a4e7fbba49eeece48478e114935db25b748cc2921f",
+      "raw_model_bytes": 935,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-fractional-quota-percent-a57813049f854edcb7895369e06339e8/candidate.py",
+        "sha256": "9226bc2b505f04adc34fabf099034a65b80dcac85d570ad27cba3fd0c4794621"
+      }
+    },
+    {
+      "case_id": "header-redaction-case",
+      "case_sha256": "9012b469c27b414c9c4cf92abe8330c869370bd68c67cbbb95b0236ce3db5358",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-header-redaction-case-3dd75e6432dd490aa395bb48d01aad36/summary.json",
+        "sha256": "f915c26c89eefd540d04616db9a23d486eff9b9eafd1dc947ca76ec9c3cbcff6"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.135528,
+      "raw_model_sha256": "482fbb80b224a451a5c0a535fd278c1574fb9e50313314f13d0312d8e280ec13",
+      "raw_model_bytes": 940,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-header-redaction-case-3dd75e6432dd490aa395bb48d01aad36/candidate.py",
+        "sha256": "cd0a85d369e145cd8b2b11faf8329ec8f39ec1b0d22afbe3d8af2d07aca9dfcd"
+      }
+    },
+    {
+      "case_id": "explicit-boolean-text",
+      "case_sha256": "8d6dc263974bb00aa8c5318cfb8316d9716fa233129a148df1b570d5e16899cd",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-explicit-boolean-text-b15141ea071f44b79a2b9bf47328d24c/summary.json",
+        "sha256": "44288ba038fe89258a20ab8e0fcdaf692eb18a43d931f71cfca4970f41423aba"
+      },
+      "repair_outcome": "PROPOSAL_FAILED",
+      "functional_pass": false,
+      "review_rejection": null,
+      "error_code": "workflow_candidate_invalid",
+      "model_attempts": 1,
+      "model_call_seconds": 4.694445,
+      "raw_model_sha256": "cdb9a8f4ed707088b99fa9d8f37d982fdd9122522dcd3fe18b4d6f69f0f3b77d",
+      "raw_model_bytes": 1336,
+      "visible_exit_code": null,
+      "heldout_exit_code": null,
+      "fixture_approvals": 0,
+      "native_runs": 0,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": null
+    },
+    {
+      "case_id": "capped-retry-arithmetic",
+      "case_sha256": "2c1acf0c81937946b62965360778d0e754b550d2fe4d8bf5d92660ece7faa7b2",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-capped-retry-arithmetic-437098341ada4e549c8dddec4407c5ba/summary.json",
+        "sha256": "5064c8d2ee3e5444f08d551445d2d07e8d222cddb9e15a24bbc7dca9fa21152c"
+      },
+      "repair_outcome": "FUNCTIONAL_FAIL",
+      "functional_pass": false,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.099363,
+      "raw_model_sha256": "2aba43380c7a8f8c0e0040474bf5d389a58756655780605973b54edcca660222",
+      "raw_model_bytes": 825,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 1,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-capped-retry-arithmetic-437098341ada4e549c8dddec4407c5ba/candidate.py",
+        "sha256": "69460f1e6f1fba382e70e8950f505b2adbc0b3538ea039bbe73e270eb24505f0"
+      }
+    },
+    {
+      "case_id": "owner-live-filter",
+      "case_sha256": "1dd56166456f2084ca264cff8d3745daca3f98b83cae57f556e7dc88d41844b4",
+      "artifact": {
+        "path": "data/backups/d46-coding-case-owner-live-filter-c3e06c6f128b4e2ca69d6980b868c7a8/summary.json",
+        "sha256": "c0e8d3ac118b690ec36c95f8604a817c41ef0f1128e37f5897cc85f02348238f"
+      },
+      "repair_outcome": "FUNCTIONAL_PASS",
+      "functional_pass": true,
+      "review_rejection": null,
+      "error_code": null,
+      "model_attempts": 1,
+      "model_call_seconds": 3.216447,
+      "raw_model_sha256": "01a792e1d0238002070c5b7bd13e700b9722e9967d38f5d57a0576e98af510f2",
+      "raw_model_bytes": 928,
+      "visible_exit_code": 0,
+      "heldout_exit_code": 0,
+      "fixture_approvals": 3,
+      "native_runs": 2,
+      "selected_tests_unchanged": true,
+      "host_canary_unchanged": true,
+      "heldout_source_supplied_to_model": false,
+      "candidate": {
+        "description": "Complete exact first generated candidate retained as untrusted data; never imported or executed on host.",
+        "path": "data/backups/d46-coding-case-owner-live-filter-c3e06c6f128b4e2ca69d6980b868c7a8/candidate.py",
+        "sha256": "ff2982b4029266d6883c60529c8a11a1489d6b67bd74ffc6e574fa5f8318283a"
+      }
+    }
+  ],
+  "latency_seconds": {
+    "description": "Descriptive measured application-port wall durations on ten authored cases; not TTFT/TPS/SLO or statistical superiority.",
+    "count": 10,
+    "minimum": 3.021945,
+    "median": 3.14381,
+    "maximum": 4.694445
+  },
+  "resource_config": {
+    "profile": "core",
+    "preset": "fast",
+    "temperature": 0,
+    "max_tokens": 2048,
+    "generation_wall_limit_seconds": 60,
+    "native_profiles": [
+      "python_unittest"
+    ],
+    "native_policy": "Unchanged accepted D42 fixed capsule limits and approvals.",
+    "peak_rss_measured": false,
+    "peak_vram_measured": false,
+    "token_usage_measured": false
+  },
+  "human_independent": false,
+  "heldout_source_supplied_to_model": false,
+  "general_quality_evaluated": false,
+  "model_changed": false,
+  "production_action_approved": false,
+  "production_source_changes": [],
+  "artifact": {
+    "path": "data/backups/d46-evaluation-ddadfe69-7197-44fd-b637-1aa8b678e4d9/summary.json",
+    "sha256": "594ffde1b8a37630e21571d28a333e60fe1079f6c04df142fc3746609fd45d03"
+  }
+}

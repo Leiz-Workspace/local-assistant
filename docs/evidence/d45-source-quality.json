@@ -1,0 +1,33 @@
+{
+  "description": "Actual isolated correctness/import/format checks for five new D45 test/helper modules; accepted production code unchanged.",
+  "evaluated_files": [
+    "tests/coding_injection_cases.py",
+    "tests/integration/test_coding_injection_http.py",
+    "tests/integration/test_coding_injection_live.py",
+    "tests/test_coding_injection_authority.py",
+    "tests/test_readme_injection_authority.py"
+  ],
+  "described_functions_classes": 13,
+  "checks": [
+    {
+      "options": [
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F,I"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "options": [
+        "format",
+        "--isolated",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "5 files already formatted\n"
+    }
+  ],
+  "pre_inference_source_freeze_sha256": "fc46aea27435e46766ae525ba2f3c5bf9828eb7979f956812252e3234a6b5458"
+}

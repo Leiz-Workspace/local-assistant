@@ -1,0 +1,25 @@
+{
+  "description": "D37 synthetic source/bug/manual reproduction oracles fixed before actual CORE; generated steps never executed.",
+  "source": "\"\"\"Arithmetic fixture.\"\"\"\ndef double(value):\n    return value + 1\n",
+  "source_sha256": "8d52c85afda5a39b0ec36dd6e938beb2488a2fd1f963f5a5023b997bbf551751",
+  "cases": [
+    {
+      "id": "increment_instead_of_double",
+      "symptom": "The supplied function double(3) returns4 but must return6. Identify the source cause and give a concrete manual reproduction plan.",
+      "expected_status": "diagnosed",
+      "path": "calc.py",
+      "line_number": 3,
+      "quote": "return value + 1",
+      "input_contains": "3",
+      "expected_contains": "6"
+    },
+    {
+      "id": "absent_retry",
+      "symptom": "Why does the configured retry interval sleep2 seconds instead of1?",
+      "expected_status": "insufficient_evidence"
+    }
+  ],
+  "profile": "core",
+  "preset": "fast",
+  "max_tokens": 768
+}

@@ -1,4 +1,4 @@
-"""Own optional conversation, source, retrieval, grounded and memory resources with ordered joined shutdown."""
+"""Own optional local resources and reviewed coding workflows with dependency-ordered joined shutdown."""
 
 import asyncio
 import logging
@@ -8,11 +8,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from apps.api.services.conversations import ConversationService
+from apps.api.storage.approvals import initialize_approval_store
+from apps.api.storage.checks import initialize_check_service
+from apps.api.storage.coding_workflows import initialize_coding_workflow_service
 from apps.api.storage.files import initialize_file_service
 from apps.api.storage.grounded import initialize_grounded_service
 from apps.api.storage.ingestion import initialize_ingestion_service
 from apps.api.storage.memory import initialize_memory_service
+from apps.api.storage.patches import initialize_patch_service
 from apps.api.storage.retrieval import initialize_retrieval_service
+from apps.api.storage.workspace_diagnoses import initialize_workspace_diagnoses
+from apps.api.storage.workspace_explanations import initialize_workspace_explanations
+from apps.api.storage.workspaces import initialize_workspace_service
 from src.infrastructure.database.connection import (
     create_database_engine,
     create_session_factory,
@@ -35,7 +42,38 @@ async def conversation_lifespan(app: FastAPI):
     app.state.retrieval_service = None
     app.state.grounded_service = None
     app.state.memory_service = None
+    app.state.workspace_service = None
+    app.state.workspace_explanation_service = None
+    app.state.workspace_diagnosis_service = None
+    app.state.approval_store = None
+    app.state.patch_service = None
+    app.state.check_service = None
+    app.state.coding_workflow_service = None
     try:
+        app.state.workspace_service = await initialize_workspace_service()
+        app.state.workspace_explanation_service = (
+            await initialize_workspace_explanations(app.state.workspace_service)
+        )
+        app.state.workspace_diagnosis_service = await initialize_workspace_diagnoses(
+            app.state.workspace_service
+        )
+        app.state.approval_store = await initialize_approval_store(
+            app.state.workspace_service
+        )
+        app.state.patch_service = await initialize_patch_service(
+            app.state.workspace_service, app.state.approval_store
+        )
+        app.state.check_service = await initialize_check_service(
+            app.state.workspace_service,
+            app.state.approval_store,
+            app.state.patch_service,
+        )
+        app.state.coding_workflow_service = await initialize_coding_workflow_service(
+            app.state.workspace_service,
+            app.state.approval_store,
+            app.state.patch_service,
+            app.state.check_service,
+        )
         if os.environ.get("DATABASE_URL"):
             try:
                 engine = create_database_engine()
@@ -70,6 +108,27 @@ async def conversation_lifespan(app: FastAPI):
             logger.warning("conversation_storage_disabled reason=missing_database_url")
         yield
     finally:
+        if app.state.coding_workflow_service is not None:
+            await app.state.coding_workflow_service.shutdown()
+            app.state.coding_workflow_service = None
+        if app.state.check_service is not None:
+            await app.state.check_service.shutdown()
+            app.state.check_service = None
+        if app.state.patch_service is not None:
+            await app.state.patch_service.shutdown()
+            app.state.patch_service = None
+        if app.state.approval_store is not None:
+            app.state.approval_store.close()
+            app.state.approval_store = None
+        if app.state.workspace_diagnosis_service is not None:
+            await app.state.workspace_diagnosis_service.shutdown()
+            app.state.workspace_diagnosis_service = None
+        if app.state.workspace_explanation_service is not None:
+            await app.state.workspace_explanation_service.shutdown()
+            app.state.workspace_explanation_service = None
+        if app.state.workspace_service is not None:
+            await app.state.workspace_service.shutdown()
+            app.state.workspace_service = None
         if app.state.memory_service is not None:
             await app.state.memory_service.shutdown()
             app.state.memory_service = None

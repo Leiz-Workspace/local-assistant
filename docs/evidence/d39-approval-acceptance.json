@@ -1,0 +1,47 @@
+{
+  "description": "D39 completed local explicit scoped expiring approval/event and CLI-review foundation; all actual decisions are disposable synthetic owner fixtures, no production action approved/executed.",
+  "status": "PASS (defined process-local approval contract/CLI scope)",
+  "validated_on": "2026-10-20",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "base_commit": "825966c",
+  "passed": 548,
+  "pytest_seconds": 7.7,
+  "skipped": 0,
+  "exit_code": 0,
+  "new_unique_cases": 71,
+  "application_tests_collected": 2099,
+  "fresh_full_application_run": false,
+  "historical_d34_full_passed": 1785,
+  "limits": {
+    "lifetime_monotonic_seconds": 120,
+    "records": 64,
+    "events": 256,
+    "artifact_utf8_bytes": 32768,
+    "request_bytes": 16384
+  },
+  "actual_loopback_tcp_cli_explicit_review": true,
+  "actual_competing_thread_one_shot_consumption": true,
+  "controlled_clock_and_transport_failures_disclosed": true,
+  "production_action_approved": false,
+  "application_action_executed": false,
+  "public_create_or_consume_endpoint": false,
+  "durable_or_cross_worker_approval": false,
+  "first_core_coding_baseline_preserved": {
+    "tasks_passed": 4,
+    "tasks_failed": 2,
+    "retried_for_better_score": false
+  },
+  "prior_runtime_changes": [
+    "apps/api/main.py optional review router",
+    "apps/api/storage/lifecycle.py default-off init/dependency-ordered invalidation"
+  ],
+  "all_other_accepted_models_configs_dependencies_migrations_unchanged": true,
+  "production_workspace_registration": false,
+  "production_flags_enabled": false,
+  "next": "D40 concrete full proposal/unified diff/path/source-version validation and approved atomic source edits",
+  "evidence_sha256": {
+    "docs/evidence/d39-approval-freeze.json": "88fb172e40050a3d85c2563737d1944b76abe6ac99966ae2468597c7d457e68b",
+    "docs/evidence/d39-related-regression.json": "4d7a835a57b88cca58f73d37eaafcaabd51c96ecb8aa53a12af8f551099cac11",
+    "docs/evidence/d39-final-post-audit.json": "af1b8f6c1b6e236e80a9fdb0edc9a2572f6108e931ebcd117c8da94b31c4db62"
+  }
+}
