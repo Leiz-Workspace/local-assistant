@@ -1,0 +1,43 @@
+# Tests excluded on GitHub-hosted runners, one per line: <path or node id>  # <reason>
+# Measured on ubuntu-24.04 against the current suite; every entry fails there for the stated reason.
+# Absent paths are ignored (older revisions). Tests that skip themselves are not listed.
+
+benchmarks/tests/test_main_voice_integration.py::test_panel_preserves_six_exact_existing_inputs  # needs private git-ignored data/backups artifacts from local evaluation runs
+benchmarks/tests/test_vi_voice_resident_check.py::test_resident_start_binds_readiness_and_joins_failed_load  # needs >=14 GiB available RAM and local voice model artifacts for the resident preflight
+tests/integration/test_browser_native.py  # needs the Brave browser and Docker-managed CDP runtime installed on the Home Server
+tests/integration/test_coding_baseline_live.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/integration/test_coding_injection_live.py  # needs a running CORE model (explicit live evaluation)
+tests/integration/test_coding_mvp_live.py  # needs a running CORE model (explicit live evaluation)
+tests/integration/test_coding_mvp_trial.py::test_evaluator_distinguishes_model_repair_score_from_completed_measurement  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/integration/test_coding_workflow_live.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/integration/test_report_export_native.py::test_hostile_markdown_html_field_like_text_and_vietnamese_remain_literal_native_document_text  # native LibreOffice DOCX/PDF export fails on the runner (export_native_failed); passes on the Home Server, root cause not isolated
+tests/integration/test_report_export_native.py::test_real_native_namespace_exports_both_formats_with_all_original_blocks_and_no_network  # native LibreOffice DOCX/PDF export fails on the runner (export_native_failed); passes on the Home Server, root cause not isolated
+tests/integration/test_search_pipeline_core_live.py  # needs a running CORE model (explicit live evaluation)
+tests/integration/test_web_evidence_native.py  # needs the Brave browser and Docker-managed CDP runtime installed on the Home Server
+tests/integration/test_web_redteam_native.py  # needs the Brave browser and Docker-managed CDP runtime installed on the Home Server
+tests/integration/test_workspace_diagnosis_http.py::test_actual_existing_core_frozen_diagnostic_plan  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/integration/test_workspace_explanation_http.py::test_actual_existing_core_frozen_source_explanations  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_coding_feedback_oracles.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_coding_mvp_oracles.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_coding_quality_oracles.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_coding_reasoning_oracles.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_coding_reasoning_v2_oracles.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_core_acceptance.py  # calls the running CORE server (localhost:8080) at import time
+tests/test_page_ocr.py::test_golden_ocr_quality_and_pixel_mapping  # asserts the Home Server Tesseract 5.5.0 engine string; Ubuntu 24.04 runner ships 5.3.4
+tests/test_searxng_deployment.py  # needs ../infras/searxng-server from the Server monorepo, not in this repository
+tests/test_tts_local_review_assets.py::test_original_approved_model_pins_exclude_unused_pickle  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_local_review_diagnostic_namespace.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_local_review_pread.py::test_genuine_sdk_fixture_under_sealed_12g_bound  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_local_review_quality_namespace.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_speechjudge_meta.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_attention_diagnostic.py::test_permission_denied_before_access  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_attention_diagnostic.py::test_real_native_pairing_on_authored_synthetic_input  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_auditory.py::test_actual_auditory_namespace_denied_before_request  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_auditory.py::test_native_synthetic_processor_in_sealed_sdk  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_auditory.py::test_native_tiny_audio_SDPA_and_decoder  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_auditory.py::test_real_prepared_controls_are_blind_and_balanced  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_load.py::test_tiny_native_pread_load_in_sealed_sdk  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_load.py::test_worker_denied_inside_actual_namespace  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_meta.py  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_preparation.py::test_actual_resolved_lock  # needs private git-ignored data/backups artifacts from local evaluation runs
+tests/test_tts_voxtral_synthetic_diagnostics.py::test_native_synthetic_diagnostic  # needs private git-ignored data/backups artifacts from local evaluation runs
