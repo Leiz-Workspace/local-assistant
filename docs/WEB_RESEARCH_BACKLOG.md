@@ -2,6 +2,8 @@
 
 **Purpose:** Assess web research prerequisites before scheduling or activating new capabilities.
 
+**Current disposition — 2026-11-03:** Newowner-requested post-idle fixed panel3valid/1rate-limit/4not-run with180-secondstarts;8/8stillOPEN, all older first scores retained. [Actual resumed result](D60_BRAVE_RESUMED_RESULT.md). Private cooldown prototype27cases/83relatedPASS is unregistered preparation, not a provider-recovery promise. Source750/full5889/fresh preservation remain VERIFIED;4calls/0retries/0models. Keep selected website route/default/model; officialAPIproposal ADR153remains unactivated.
+
 ## WEB-ONBOARD-001 — Actual search provider/account
 
 | Field | Assessment |
@@ -157,3 +159,36 @@ The owner's new request authorizes bounded current verification; Brave remains s
 ADR131separately assesses P1observed-publisher-link follow-up: acknowledged actual discovery/owner/run/hash→fresh officiallanding→actually observedhref→fresh twoevidence documents→oneCOREassessment→nativeDOCX/PDF→archive reopen afterproofrevocation→all3pagesvisualPASS. Zero additional search/plannerrequests, originalclaim/status/quoteoraclesunchanged. First128KiBparser-size failure retained; isolated corrected1MiBparser uses the unchanged original transport ceiling,46parser/archivecontrolsPASS. Complete optional research operator/tests delivered, not registered in production/API. Effort one bounded compatibility/evidence milestone, complete. No model/provider/default/config/data changes.
 
 Broad WEB-SEARCH-003 remains P1before promotion: direct-result contract stillfails for this genuine publisher-landing case; handling integration, coverage/freshness/reliability/browser/security/retention/rights need scoped product evidence. Existing source guards prohibit inventing a direct hit; production integration must preserve explicit lineage/freshproofs/deadlines and get ADR impact/test review. Risks external markup drift/extra latency/SSRForigin confusion/archive-as-liveproof/overfitting. No further provider trial or integration campaign automatically scheduled.
+
+
+## WEB-SEARCH-004 first failure and bounded correction
+
+2026-11-02: exactly one current Brave request accepted, no reliability claim/retry. First product-component publication failed before model/export because938808-byte RFC landing violates strict full-DOM HTML parsing. A private source-manifest variable was then shadowed by a ResearchSource locator; final audit raised regression_source_changed although all742application hashes were unchanged. Interrupted discovery-only store and logs remain retained; no first native report existed.
+
+P1 correction depends on retained first records and [parent diagnostic](evidence/web004-parent-parser-diagnostic.json). [ADR139](ADR/139-follow-up-coding-reasoning-and-web-audit-correction.md)/[protocol](D46_D60_FOLLOWUP_PROTOCOL.md): explicit anchor-only parent extraction/opt-in issuer, unchanged child/other-source parser and public transport guards, distinct manifest identity and durable failure result. Effort one corrected workflow/native/visual/full/audit milestone; risks provenance ambiguity, parser drift, SSRF and source expiration. Prepared, not yet qualified; no additional current search or direct-hit score replacement.
+
+
+2026-11-02 actual optional resolver/native/visual gates VERIFIED: corrected original3claim/evidence expectations,oneCORE,oneDOCX/PDFbatch,revoked-proof archive reopening,zero pending operations and all3pages visually reviewed. One current Brave observation accepted; first malformed-parent/operator-shadow failures remain. Final software/audit pending: first final full5836/1FAIL from an earlier interrupted test fixture, now independently recovered under ADR142. A new clean-baseline full is running; no source/report/provider retry, direct-hit relabeling or broad reliability/adoption claim.
+
+
+2026-11-02 current software status: both later complete745-source fulls retain5836PASS/1FAIL/0ERROR/0SKIP; the remaining fault is original reranker CPU enforcement, including an inherited-original run2147.54s/exit152after2rounds. Owned runtime and original data/security/vector state independently preserved; no source/counter reset or timestamp restoration. [Resource diagnostics](D46_D60_RESOURCE_VERIFICATION.md) retain every rejected optimization; no450CPU/parity criterion relaxed or failed variant promoted. ADR150original-profile passive/inherited probe is running; only its actual PASS authorizes a same-environment current full. D46corrected-review12/12andD60native/all-page gates remain verified, original first failures retained, final software/audit acceptance pending.
+
+
+2026-11-02 terminal closure for the selected local remediation: D60selected optional publisher resolver/native/all-page integration VERIFIED3/3/oneCORE/oneexport/3pages. CurrentBraveone-queryobservationaccepted; originaldirect-hitfailure and broader coverage/freshness/reliability/browser/rights/production gates remain open. The dated earlier pending/full-failure checkpoints remain history. Actual final full5837PASS and preservation receipt supersede their pending software status; no failed first score is replaced, no candidate450CPU/parity rejection is reversed and no release is approved.
+
+
+## D60-FRESH-001 — New discovery and bounded coverage (2026-11-03)
+
+P1; dependency: original ResearchService, publisher/source/report/native/archive services and selected SearXNG-Brave. One optional composition/evaluation milestone, with risks of source substitution, archived authority, raw-provider retention, upstream refusal and score inflation; rollback omits the unregistered service. [ADR152](ADR/152-fresh-search-publisher-evidence-composition.md), [frozen protocol](D60_FRESH_DISCOVERY_PROTOCOL.md), [first results](D60_FRESH_DISCOVERY_RESULT.md).
+
+Fresh workflow VERIFIED3/3claims/oneCOREplanner+oneassessment/oneDOCX-PDF/archive-after-revocation/all3pages. Coverage FAILED/INCOMPLETE:4valid official-locator responses, one declared upstream failure,3not dispatched; original8-question denominator/6minimum/every-topic requirements unchanged. Keep Brave; no polling/retry/provider replacement or automatic new panel. Current750-source full5889PASS/0FAIL/ERROR/SKIP and independent preservation VERIFIED; historical745-source5837PASS remains historical. No production activation or model/default change.
+
+
+## WEB-BRAVE-RATE-001 — Confirmed anonymous frontend throttling
+
+P1before8/8availability/broad promotion. Dependencies: actual upstream recovery or owner-reviewed officialBraveAPIaccount/token/quota. Effort: diagnosis complete; one separately frozen APIcompatibility/sample milestone if chosen. Risks: repeated website bans, credential/cost/quota, altered result ordering and weak reliability claims. Original fixed criteria and both new failed recovery cohorts retained; no more automatic panel. [Actual4-call diagnosis](D60_BRAVE_RATE_LIMIT_RESULT.md), [concrete proposed ADR153](ADR/153-proposed-official-brave-api-after-frontend-rate-limiting.md). Waiting retains website configuration; rollback of optionalAPIevaluation leaves current route/model/data unchanged. APIchoice/credential is pending; no deployment or model decision.
+
+
+## WEB-COOLDOWN-LOCAL-001 — Production integration assessment
+
+P2conditional on selected-provider availability/owner interface decision. Dependencies: trusted provider injection, research45-second budget, API retry metadata, process/state ownership and authenticated quotas. Effort: one architecture/integration milestone with ADR before wiring. Risks: per-process RAM cooldown lost on restart, multiple workers dispatching separately, blocking fast request budgets and confusing a local retry lower bound with a real upstream reset. Private prototype now has27controlled cases,83relatedPASS; optional only, no production/default/API change. Scope of future work must settle state sharing/persistence/queue semantics and verify cancellation/restart/auth boundaries plus current-source full before activation. Rollback retains original unwrapped provider. [Actual outcome and limitations](D60_BRAVE_RESUMED_RESULT.md).

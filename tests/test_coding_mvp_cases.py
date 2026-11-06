@@ -132,3 +132,43 @@ def test_private_artifact_preserves_complete_bytes_and_refuses_overwrite_or_esca
     with pytest.raises(ValueError):
         save_artifact(directory, "../escape.json", dict(status="INVALID"))
     assert json.loads(path.read_text())["status"] == "OBSERVED"
+
+
+@pytest.mark.parametrize(
+    "mutation", [None, "import", "audit", "default", "dynamic", "dunder", "rebind"]
+)
+def test_pure_rfind_does_not_bypass_original_review_boundaries(mutation):
+    """Admit the concrete pure-method false negative while retaining exact imports, API, audit and static-call boundaries."""
+    case = CASES[0]
+    source = case["reference_source"].replace(
+        "        return int(text[:-2])",
+        "        position = text.rfind('ms')\n        return int(text[:position])",
+    )
+    assert ".rfind(" in source
+    if mutation == "import":
+        source = source.replace("import logging", "import logging\nimport os")
+    elif mutation == "audit":
+        source = source.replace(
+            'logger.info("d46_fixture_call case=timeout-units")',
+            'logger.info("changed")',
+        )
+    elif mutation == "default":
+        source = source.replace(
+            "def parse_timeout(text):", "def parse_timeout(text='1ms'):"
+        )
+    elif mutation == "dynamic":
+        source = source.replace("text.rfind('ms')", "eval(text)")
+    elif mutation == "dunder":
+        source = source.replace("text.rfind('ms')", "text.__class__")
+    elif mutation == "rebind":
+        source = source.replace(
+            "position = text.rfind('ms')",
+            "int = globals\n        position = text.rfind('ms')",
+        )
+    if mutation is None:
+        result = candidate_review(case, source)
+        assert result["candidate_sha256"] == hashlib.sha256(source.encode()).hexdigest()
+        assert result["approved_action"] is False
+    else:
+        with pytest.raises(FixtureReviewError):
+            candidate_review(case, source)

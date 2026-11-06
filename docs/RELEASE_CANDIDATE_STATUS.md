@@ -2,7 +2,7 @@
 
 **Purpose:** Give the owner one reviewable release decision record with actual evidence, deferred acceptance and no implied deployment.
 
-**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current732-file full **5759 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1870.65s/exit0, all732frozen files and728historical files unchanged. Joined current-boot audit confirms business data/security with explicit quota timestamp-only delta; same15containers and initial native=0 restored after owned CORE exit0. Existing Vault unseal after reboot is explicitly recorded. [Current result](D87_CURRENT_FULL_RESULT.md), [terminal/audit receipt](evidence/d87-current-20261027-full-acceptance.json). D14selected local semantic42/42/profile remains opt-in/default-off; historical scores/full5674 retained. Human/device/model/rights/product acceptance remains open; no tag, push or deployment.
+**Status:** ENGINEERING CANDIDATE / **NOT RELEASED**. Current750-file full **5889 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,2128.68s/exit0; all745prior application bytes and998execution inputs unchanged. Independent current-boot audit verifies business/security/schema0006, authenticated Qdrant0 before/after and same15containers/native0 after owned COREexit0/reaped/guardNone; only the zero-usage quota timestamp differs. [Current terminal receipt](evidence/d60-fresh-20261103-final-acceptance.json), [fresh D60 workflow and failed coverage panel](D60_FRESH_DISCOVERY_RESULT.md). Earlier5837/745and5759/732fulls remain history. D14selected local42/42/profile and D46exact-first-output12/12remain opt-in scopes; hearing0/24anddevice/model/rights/product acceptance remain open. No tag/push/deployment or model/provider/default change.
 
 ## Completed local engineering evidence
 
@@ -73,3 +73,9 @@ D14structuredfix2026-10-26: [formatintegrationverified,functionalqualitygateFAIL
 
 
 D14semantic follow-up2026-10-26: new explicit reasoning/boolean-contract path is locally qualified on fresh42/42facts+format/profile, with independently reconstructedwire/context, nativecancel,5provenance/retirement/baselinePASS. [Full evidence and costs](D14_SEMANTIC_REMEDIATION_RESULT.md). Earlier invalid researchcaller/fullCORE41/42andalloriginalscores preserved, four studies246firstgenerations/0automaticretry, no model/default/production activation.568scopedPASS/current732/all730oldexact is not a new732-file full run or release/manual/rights approval.
+
+
+2026-11-03 selected-provider diagnosis: [Brave frontend rate limiting now proven](D60_BRAVE_RATE_LIMIT_RESULT.md); new30-second and post-effective-cooldown recovery panels remainFAILED, original4/8preserved.4newprovidercalls/0retries/0models, source750andretained5889full unchanged; fresh preservation VERIFIED. OfficialAPI is only a concrete ADR153proposal, pending owner route/account/credential decision; no endpoint/default/model change, deployment or release.
+
+
+2026-11-03 resumed provider verification: [fixed panel3/8valid thenrate-limit](D60_BRAVE_RESUMED_RESULT.md),8/8stillOPEN and all oldscores retained. Private cooldown prototype is controlled preparation only. Source750/currentfull5889/fresh source-data-runtime audit remainVERIFIED;4newcalls/0retries/0models, no provider/model/default/production or releasechange.
