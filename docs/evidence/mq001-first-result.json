@@ -1,0 +1,726 @@
+{
+  "description": "Actual first thirty-case CORE-only authored text baseline under unchanged historical weights; no output repair, overall capability, model change or release approval.",
+  "status": "FIRST_MEASUREMENT_COMPLETE_QUALITY_GATE_STILL_PARTIAL",
+  "executed_commit": "be9e29d",
+  "recorded_at_utc": "2026-10-24T06:39:24.412242+00:00",
+  "passed": 23,
+  "total": 30,
+  "actual_model_requests": 30,
+  "complete_first_replies": 30,
+  "all_response_contracts_passed": true,
+  "automatic_retries": 0,
+  "categories": {
+    "agent": {
+      "earned_weight": 20.0,
+      "passed": 8,
+      "total": 8,
+      "weight": 20
+    },
+    "coding": {
+      "earned_weight": 7.5,
+      "passed": 3,
+      "total": 8,
+      "weight": 20
+    },
+    "reasoning": {
+      "earned_weight": 15.0,
+      "passed": 6,
+      "total": 8,
+      "weight": 20
+    },
+    "vietnamese": {
+      "earned_weight": 10.0,
+      "passed": 6,
+      "total": 6,
+      "weight": 10
+    }
+  },
+  "language_subsets": {
+    "vi": {
+      "passed": 14,
+      "total": 18
+    },
+    "en": {
+      "passed": 9,
+      "total": 12
+    }
+  },
+  "earned_weight": 52.5,
+  "covered_weight": 70,
+  "overall_100_point_score": null,
+  "unscored_categories": [
+    "multimodal",
+    "performance",
+    "memory_context",
+    "provenance"
+  ],
+  "unrestricted_measured": false,
+  "coding_scope": "Text reading only, not executable repairs.",
+  "agent_scope": "Policy text interpretation only, not tool execution or security certification.",
+  "same_agent_authored": true,
+  "independent_human_judgments": false,
+  "all728_application_source_files_unchanged": true,
+  "full5674_application_snapshot_unchanged": true,
+  "new_private_operator_controls": {
+    "passed": 59,
+    "seconds": 0.65,
+    "included_in_full5674": false
+  },
+  "private_audit_policy_controls": {
+    "passed": 19,
+    "seconds": 0.42,
+    "included_in_full5674": false
+  },
+  "private_delivery_policy_controls": {
+    "passed": 28,
+    "seconds": 0.31,
+    "included_in_full5674": false
+  },
+  "prior_failed_launch_actual_model_requests": 0,
+  "prior_failed_launch_preserved": true,
+  "output_repair": false,
+  "model_or_default_changes": 0,
+  "actual_listening_labels": 0,
+  "d14_gate_closed": false,
+  "release_approved": false,
+  "result_path": "data/backups/mq001-core-first-v2/result.json",
+  "result_sha256": "3c1bfede48a2c526cd2fce5dae58dd17c5a4308d8967568dad28aedb8e43a469",
+  "operator_sha256": "84d1a6c2f0796daeabb86d9576dea0e7d1936d8546c515b732921e108fd226ac",
+  "test_sha256": "a32bbbfa576e1617a815f893ed6fa1d00a2a606e9982854e10e4c6338d77a6cf",
+  "post_audit": {
+    "path": "docs/evidence/mq001-post-campaign-readonly-audit.json",
+    "sha256": "91a15e5bfd22417366e5462afad368c84a5a6bef7b2ee9a3a2b40a2b3a5e961f"
+  },
+  "measurements": [
+    {
+      "case_id": "mq001-agent-01",
+      "category": "agent",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-01/measurement.json",
+        "sha256": "83d4b774aa673f394145caa6f8a4af36bd50e94069728a80a3bbd0089f81c362"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-01/request.json",
+        "sha256": "161817bb5ebb566534e2109ddaa14b3af85d6fcb80f4c7759f9f3d50344fc9c1"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-01/first-reply.json",
+        "sha256": "5c69bc0c9325031b217a77c0b6254898ec99416c4d77d9a42ad7b2bdee30cf65"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-02",
+      "category": "agent",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-02/measurement.json",
+        "sha256": "39bad0ce71401300b9d5d1676987612d359b3495b1a60adce5c2135b6967231c"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-02/request.json",
+        "sha256": "ccba6299692de00729190707b526016f70e814f1e319a5ab45ea65fa4376585a"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-02/first-reply.json",
+        "sha256": "bde845e65f8894cac1ddd121ebe27ad86ec8796f194526bef3e6c3375582aeb8"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-03",
+      "category": "agent",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-03/measurement.json",
+        "sha256": "beb8f5cbb057db98f9e584e756fac4cb9c78595b70f323eb94f3beb9e100217c"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-03/request.json",
+        "sha256": "2ca617ff18dd283bd931d7b1b042346af7da861d7f728da8ef929160a23a46ae"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-03/first-reply.json",
+        "sha256": "0efbeed84ee77196731cde36f4517380b183f5dda92470b4eb09755ec25e0f7f"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-04",
+      "category": "agent",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-04/measurement.json",
+        "sha256": "e776e56e8f86e352cec97a55b580aa92d0cbd8d6257169840583ee1084effb71"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-04/request.json",
+        "sha256": "fcedea50bb8a90f713f30608ce2f6b31536727c308f54e4f4622988f61e43452"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-04/first-reply.json",
+        "sha256": "7a3f580cd381b743a8fc1d1bcdd3fc8e68f277ada6f807a9610a2913c0d5c11c"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-05",
+      "category": "agent",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-05/measurement.json",
+        "sha256": "0efee701bdabe022e99b08c306e6f221389f6d385247426c04236ef99956e1ba"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-05/request.json",
+        "sha256": "603f2e87485f19f43f95ae8b68e0eb629cac05d47c27b0463ab0b32f1401f81d"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-05/first-reply.json",
+        "sha256": "e774ca80d2be40ab98d84a14a170d534182512794ef0fb511377295ff91e7f16"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-06",
+      "category": "agent",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-06/measurement.json",
+        "sha256": "72c54bc4e5884fadad767cd044cc5f7ddca05185363507d30d4c9fd8b6e7c2d3"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-06/request.json",
+        "sha256": "4dfb95d246bf534c612e6b18c059438e656c66ee02b74db1ff0db99ec7bfdb78"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-06/first-reply.json",
+        "sha256": "c3977beb9e7f3f463bddbd6d3d686c1b65938c94a62bbe362dc5c0f42c0fe1ee"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-07",
+      "category": "agent",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-07/measurement.json",
+        "sha256": "540e50dc5ef3797b9a9a73836affe12e2a0078ae5916719f95351acfaea9b76b"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-07/request.json",
+        "sha256": "45816391e09920762726d7b9e237cbbdd027e1f22b0a5aeaf1518fea70ced6ce"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-07/first-reply.json",
+        "sha256": "5c9412caeaf21e9850a9c74cd5874b0816c832f20599a0cc33790214d8fe79f2"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-agent-08",
+      "category": "agent",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-08/measurement.json",
+        "sha256": "c88d33918ff1ff78d300449ed4868b9c71880704242d0170473de1ea12f96aa2"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-08/request.json",
+        "sha256": "21c9a05fdd1850c350a5aa2e1565aa51fe22937ba7f667af3064f3234bbe195d"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-agent-08/first-reply.json",
+        "sha256": "07f58aa71175233af598481d630ab7309287487604dbcb660d85e95e2e11457d"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-01",
+      "category": "coding",
+      "language": "vi",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-01/measurement.json",
+        "sha256": "aa2ca9dff6f7ab747d089adeb974a3b1734bf642360a744a9fe2420482102f30"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-01/request.json",
+        "sha256": "7f688cf1a5aa81563ac8866af9d6601912b22f832abb4579dc55aae7e97ecedd"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-01/first-reply.json",
+        "sha256": "d925ebfd5dd8c4c0b67066adc334cbe7744705a4be01c8afd93b9d6fbca81a38"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-02",
+      "category": "coding",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-02/measurement.json",
+        "sha256": "d1095d73614645e498ae813e79fc13a5eeecdab0d69b13fcf1c14f89f61632a1"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-02/request.json",
+        "sha256": "0699ee15f5a4ec408e0fe1e4bc76e23d4e24cf25724618866b5bb65e6e04df88"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-02/first-reply.json",
+        "sha256": "f0e1ce6b98679eba13ad590dd2769a1a120c5bbdebe5d5655f583f337701e773"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-03",
+      "category": "coding",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-03/measurement.json",
+        "sha256": "5842000335a0804883c2a8cfccdca84440fb421e2029e31b74534929bf9f4cf9"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-03/request.json",
+        "sha256": "a0fb29ba004af6cb39ddaabf22324740df9bf357aad3b6e0fc4554cd6d03c238"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-03/first-reply.json",
+        "sha256": "7ae5230404749c86bf9aa0df61bab4208ed8a283c4c01ba28ac7a70f16c7d7c6"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-04",
+      "category": "coding",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-04/measurement.json",
+        "sha256": "3b892cae68f4eeaac24ac5f06fa43732dce04884037bae03da54b7cb41eed36f"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-04/request.json",
+        "sha256": "477b4f7522b776e9f2cb3288e24bd035a5ea5cf49aa977573cdfada748eb2b36"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-04/first-reply.json",
+        "sha256": "8a9a9e9d8bb44e73536e0fd75fcfe2c75e21138eac23998ae4fd7abcd7ad736e"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-05",
+      "category": "coding",
+      "language": "vi",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-05/measurement.json",
+        "sha256": "a6beeb68b90d615810474694f34a1fe4abb94028e215ca9af8628ca79c22a6b7"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-05/request.json",
+        "sha256": "42ff31d84775cf7555004704736b4866785f077ee2905274c6d79bbf499be8a2"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-05/first-reply.json",
+        "sha256": "d8dd919ff3235f4b8644df28683b02376d3fcbc540748d665ebdf27b80b8baef"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-06",
+      "category": "coding",
+      "language": "en",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-06/measurement.json",
+        "sha256": "190d3c9d809e9568779174cac8c7811b50348a62cc032e4271c31e683269a134"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-06/request.json",
+        "sha256": "fd15a1632130e4f1cd7ab2c1cfa283963d5862a3e5880524679fe2d8c3058395"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-06/first-reply.json",
+        "sha256": "1bee38a04250b493aa86491a7d7604db5696aec1599fea14fd4ba0011c7a3950"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-07",
+      "category": "coding",
+      "language": "vi",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-07/measurement.json",
+        "sha256": "b900ac9d2e2b8002ad15ac2d8c5277ab52ab1d691b4fb1c9460ca6f18606662c"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-07/request.json",
+        "sha256": "885dc3f1828a361b0102e062911674cf03a183f663bf20ed61d718ecf777ee22"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-07/first-reply.json",
+        "sha256": "73534dc859435078ba2de9813babb62e4e0c403f57b3f241637e00332698dd61"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-coding-08",
+      "category": "coding",
+      "language": "en",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-08/measurement.json",
+        "sha256": "79ee4c729e3cf8647571f13a0213bf4120e32ce47c419bb3fe2b001fca50f7bb"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-08/request.json",
+        "sha256": "3ece2d1dc81c20b948eb16aeb5912c1c873c62d124576fabc2dfa436b9c225c2"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-coding-08/first-reply.json",
+        "sha256": "75f12169897a9e548eb8493d1da90452b8aa33b9a9efd3c88706caa6d02973ce"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-01",
+      "category": "reasoning",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-01/measurement.json",
+        "sha256": "2840dc7033aedbd957a2ec7fecbf81b1ef40dc82589f7ce2a5bbcd83a207549d"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-01/request.json",
+        "sha256": "3b2024533d3fa51609ca2a717e83e83d904b49bdd088486753c0668d51eac71b"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-01/first-reply.json",
+        "sha256": "8936c3bfcf05b7ed6a778789624d8f5a2a3d093fc8375e6f393692a2fef4ac4f"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-02",
+      "category": "reasoning",
+      "language": "en",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-02/measurement.json",
+        "sha256": "34e942cb3483d95d9b2bb0a93faf869fbb12a1d2978dee237fe813287f86fd63"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-02/request.json",
+        "sha256": "ba8da65c83ec9804c9792eaaf56f8e878deb346f76421d1de3cfd00addf1e427"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-02/first-reply.json",
+        "sha256": "acf0ee6eadd019f93c8ac1d198c6b5ac8e3575d4f3443d12abe986f9e02ed07d"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-03",
+      "category": "reasoning",
+      "language": "vi",
+      "passed": false,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-03/measurement.json",
+        "sha256": "7cd0e34af2d4de85be8876aecc2b89391f8b5d2f2be75c80b5ad9b422ba7ba54"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-03/request.json",
+        "sha256": "3005452006e30a43b63ce9d2f582e453dd7519a83371ede13782465569386c65"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-03/first-reply.json",
+        "sha256": "0668734e8c290b6684a0bdf06e53ae574741c75c243bb3bf1db6eb39da50ee58"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-04",
+      "category": "reasoning",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-04/measurement.json",
+        "sha256": "ea8116570efd270631c51261f5eba0d86ba8ad5a2a92f31be8e674fae49ba9f6"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-04/request.json",
+        "sha256": "0df26e5d094606d6bf5dca1f01e1a2e2497bd6cf8d614e3f20401b51070acc28"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-04/first-reply.json",
+        "sha256": "abb11f74324f43a15f2805e867f5ce872d58a18c9240a70160e1aad284a8ac96"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-05",
+      "category": "reasoning",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-05/measurement.json",
+        "sha256": "da16d1b44b54157c7e7f181a67a6d62141b4fa22b32c57287dfdda15fb03a6c2"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-05/request.json",
+        "sha256": "b51581a67083d3de506fce0cb41022372dd4c217dbfe504b5cc212d38dfa46aa"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-05/first-reply.json",
+        "sha256": "813ebfe8f796a15d631e053eb6e89d36a020d396d29a94b23c466cc49a9350d9"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-06",
+      "category": "reasoning",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-06/measurement.json",
+        "sha256": "89e5624ca515f6ebdbf52bd977ab1834afed0fdd44d8d4591030a32031471926"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-06/request.json",
+        "sha256": "b86ecd36fb11f42a626ca42c112aea48a0db650e621fa1d0c0cd7e61a43ed0d9"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-06/first-reply.json",
+        "sha256": "a6e1a069c8022b0faebafab503563ba3acc0e709aa5d0cb34439ee7f2f7be2d1"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-07",
+      "category": "reasoning",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-07/measurement.json",
+        "sha256": "d3c27b72008ddf2974475be96a19c2652cffd1fac7a52dca718bc002b1cdb1b0"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-07/request.json",
+        "sha256": "e32fef40dccef8574adb9eb587d80c6a700947ceff245a2847b9927d3f18b27d"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-07/first-reply.json",
+        "sha256": "d5e2664444d707b0f417fcb843e43cf2a06c35923d639af467bf4ded2bd43108"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-reasoning-08",
+      "category": "reasoning",
+      "language": "en",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-08/measurement.json",
+        "sha256": "bcbdcf424dea30f2b78516205ffbe5c51a4a01696c1eee989fd2d39796ebca86"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-08/request.json",
+        "sha256": "f3732a9722cb733f8cdfdc49ab95a15961673ebd32c565fc479667c514921d65"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-reasoning-08/first-reply.json",
+        "sha256": "ad132607b9337b0dd24fd87218b4895fb88de85fbefd178391e6d4eb22cceff1"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-01",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-01/measurement.json",
+        "sha256": "4b5ac762ecba7f07836f19600677ac6dafae1be2854a650f0b102f3c52acadfa"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-01/request.json",
+        "sha256": "c6e7864a77b5d04b3803b990fda3cc450b410379342365b628dfb4fa3464452c"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-01/first-reply.json",
+        "sha256": "2265f0c87083ff6134cb19661d4f2874cf80cb615d60fe4e1c93d262c1fe94d9"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-02",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-02/measurement.json",
+        "sha256": "02a0fca23f700b180fc871f0eeeb15082f1cd187ab933d7e7085e742e5ff2081"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-02/request.json",
+        "sha256": "da76381d62fec9e55485fff9ab84fd2cf0a9d277f0c6151b02836871d97f861e"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-02/first-reply.json",
+        "sha256": "2af9aeeaf56bbd27c39b0e5d97419c85bd74fe1ae1c2cbd19579306a4b8c606c"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-03",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-03/measurement.json",
+        "sha256": "36fe0d344e6c61b468a6de7d773e930b332b7101f678470dc3d3b77d30a0190f"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-03/request.json",
+        "sha256": "37aec1a177a442930b8eca4a9e1a55de14b4cbe1f4e93412bc1731a9a616ebc9"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-03/first-reply.json",
+        "sha256": "8e5d1b847de139258ffacfe95839afca7527f2b31f700b58d498cdceac0e0ae9"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-04",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-04/measurement.json",
+        "sha256": "4646e44de0100c28efb97135b25a4d99fc4bd8e616209775dcd7a46209486df6"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-04/request.json",
+        "sha256": "e48e2d0d6cf4244fc9985023465742b64e8b4ba9d8a6812148ef4ba37875f8cf"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-04/first-reply.json",
+        "sha256": "3850a55fe6b2111c95b2deac443cafbac140dc09438efb8cafd39899c0b7b56a"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-05",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-05/measurement.json",
+        "sha256": "4c0181eb931ed55fbdc12f284ae03886cdfdc9a0e11f37ff0ee5b1c0e9ba5ba2"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-05/request.json",
+        "sha256": "4e13c13a7a010d708322e1206528723f2d8867113404563cf8f1ec0b01a75dd1"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-05/first-reply.json",
+        "sha256": "f82d2045f581d822b06cd104d188bd1dd231ab51ef2d3df60dffdfbf69bfed46"
+      },
+      "finish_reason": "stop"
+    },
+    {
+      "case_id": "mq001-vietnamese-06",
+      "category": "vietnamese",
+      "language": "vi",
+      "passed": true,
+      "response_contract_passed": true,
+      "model_requests": 1,
+      "measurement": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-06/measurement.json",
+        "sha256": "313317b466ca7f09861fd15a1c7e1b70b32faa09a5057874453060fd5f0a20eb"
+      },
+      "request": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-06/request.json",
+        "sha256": "b0665e74098379a2a7185540c30489b7866a6a6a75326240b5730d81c5a203cf"
+      },
+      "first_reply": {
+        "path": "data/backups/mq001-core-first-v2/mq001-vietnamese-06/first-reply.json",
+        "sha256": "979351b9ac4be0f77b84152a3f6ac96ba6e50c0f697de66adbf398eeb2b6111d"
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "description": "Current complete model/projector/runtime hash snapshot and explicit backend UNRESTRICTED tool-denial evidence. Artifact/policy evidence is not weighted model-quality or release approval.",
+  "status": "ARTIFACT_AND_TOOL_POLICY_CLEANUP_VERIFIED",
+  "snapshot_sha256": "6abd5e185b2b0da37f52783f7d08856cf968b7b3a3401738094cdd24e029ff05",
+  "original_release_manifest_git_bytes_unchanged": true,
+  "current_configured_gguf_hashes_match": true,
+  "model_profiles_hashed": 2,
+  "projector_files_hashed": 2,
+  "loaded_core_runtime_files_hashed": 9,
+  "runtime_git_commit": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "snapshot_specific_policy_tests": 6,
+  "combined_private_operator_tests": {
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.48,
+    "included_in_full_5507": false
+  },
+  "current_unrestricted_model_runtime_tested": false,
+  "existing_core_only_tool_policy_evidence": [
+    "tests/test_harness_tools.py::test_profile_requires_explicit_host_core[unrestricted] PASSED [ 39%]",
+    "tests/test_tool_hooks.py::test_untrusted_scope_cannot_reach_policy_or_handler[profile-unrestricted] PASSED [ 71%]"
+  ],
+  "first_full_result_still_failed": true,
+  "release_approved": false,
+  "model_loads_requested": 0,
+  "model_downloads_requested": 0,
+  "artifact_sha256": {
+    "data/backups/d90-candidate-model-snapshot.py": "cbcd2ba457db4ed82f91c1f794a6323c0b57c415562fcb45cad2244060d37ecd",
+    "data/backups/test_d90_candidate_model_snapshot.py": "4093ab15ce869b0bd787f84289e7ea7bb45cd6880338d2d16c02ae922e0635e0",
+    "data/backups/d90-candidate-model-snapshot-first.log": "2edea5270526a462c704eee7ea92605951af2d030aa68c597f06c71586a673ac",
+    "data/backups/d90-followup-private-operator-corrected-tests.log": "c59e0ca8bb837a449b05340a7374b9425672998a840e15afd1507f5f5d366dfe",
+    "docs/evidence/d90-candidate-model-runtime-snapshot.json": "6abd5e185b2b0da37f52783f7d08856cf968b7b3a3401738094cdd24e029ff05",
+    "releases/v0.1/release-manifest.json": "631e885f07b0fa8bffc6ffc1ab2c59e49cbe3ca851799a50f2ceb00acefa792b"
+  }
+}

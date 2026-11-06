@@ -1,8 +1,10 @@
 # D70 auditory reviewer reliability assessment
 
-**Latest actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
+> **Trạng thái hiện tại — 2026-10-24:** D70 đã hoàn tất đo máy; nghe thực tế **0/24, chủ dự án để test sau**. [ADR-111](ADR/111-owner-deferred-tts-listening-and-explicit-recording.md) đã cho phép tiếp tục; D71–D73 đã kiểm chứng phạm vi local, D74 còn nghiệm thu sản phẩm. Các dòng “D71 NOT STARTED” ở lịch sử bên dưới mô tả thời điểm trước quyết định này. Các guard research vẫn đóng; xem phê duyệt và lượt chạy theo đúng ngày của từng thí nghiệm. Không mở lại evaluator campaign hoặc sửa điểm/nhãn cũ. Xem [trạng thái dự án hiện tại](RELEASE_CANDIDATE_STATUS.md), [hướng dẫn nghe](D70_MANUAL_LISTENING_TEST.md).
 
-**Latest checkpoint2026-10-23:** Approved ADR-109 completed; strict **4/12 FAIL**, no conditional24audio review. Guard closed/scope consumed; D70 naturalness OPEN/D71 NOT STARTED. [First campaign report](D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](evidence/d70-voxtral-auditory-first.json), [source-only triage](evidence/d70-voxtral-auditory-source-triage.json).
+**Historical actual checkpoint2026-10-23:** Approved ADR110 completed; eager/SDPA first answers unchanged on4historical presence cases, full-vector differences retained/audited. Scope consumed/guardFalse, no backend/model selection. D70 naturalness OPEN/D71 NOT STARTED. [Actual result](D70_VOXTRAL_ATTENTION_DIAGNOSTIC.md).
+
+**Historical checkpoint2026-10-23:** Approved ADR-109 completed; strict **4/12 FAIL**, no conditional24audio review. Guard closed/scope consumed; D70 naturalness OPEN/D71 NOT STARTED. [First campaign report](D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](evidence/d70-voxtral-auditory-first.json), [source-only triage](evidence/d70-voxtral-auditory-source-triage.json).
 
 **Purpose:** Record the completed investigation after ADR-104, separate measured local failures from external research and interface availability, and identify a concrete next evaluation route without changing project models or D70 acceptance.
 

@@ -1,0 +1,38 @@
+{
+  "description": "Three-domain owned fixture evidence with unchanged first native strict-format FAIL; separate retained exact-literal provenance replay passes. No live search/currentness claim.",
+  "status": "GROUNDING_VERIFIED_STRICT_QUOTE_FORMAT_OPEN",
+  "new_tests": 7,
+  "related_tests": {
+    "passed": 137,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 1.18
+  },
+  "source_sha256": {
+    "tests/cross_domain_scenario.py": "e3fe67befe39da4b1b5f6e9ab9237021d796b35d86890e0f7eb3e21d5b3b7d82",
+    "tests/test_cross_domain_scenario.py": "cb68a4d384cf46a10d7f9ba86a50d1024c7cb4172c3b0c9bf1974fb9e099e6cf",
+    "tests/test_cross_domain_retained_grounding.py": "a77dc350f43f81f2da00b77e6802cca077c1f9cca4a1bf0450ff990b9c8205b2",
+    "tests/fixtures/harness/d81-core-first-reply.json": "d55baf86c10b30c6a400651678a747a42333afe5caacf9751684e315b51a2a27"
+  },
+  "artifact_sha256": {
+    "data/backups/d81-cross-domain-corrected-tests.log": "f23e98f8302a59b633d143c7a7a84814d55de8b5d9b01c197e2ca8f4e6130e9e",
+    "data/backups/d81-cross-domain-first-tests.log": "b4a2968b2c7883268b09c7ae4b8f6fbd248f6fbeb07a22d157ab6d6e992d4a60",
+    "data/backups/d81-cross-domain-replay-tests.log": "8be5b2eaf47bc7c00a4645fdad4e6c5fa03153709a2d2891eac726eb2753da38",
+    "data/backups/d81-native-cross-domain-corrected.log": "22e05806721fd156cd7470f1d4e204f740aafe5f25ded65afe770f7bab4ec722",
+    "data/backups/d81-native-cross-domain-first.log": "3f1d7aa69c0b3e9907f50f3fe58be8d8fe6cd3fd6fd6c60a5323dd28550c6106",
+    "data/backups/d81-native-cross-domain-corrected.json": "32457ba141e0c5873cd926c65418ea409d0440630ed12af2c252bf9d91b87968",
+    "data/backups/d81-native-cross-domain-first.json": "6227cb62fb43568e7be246dd63e2b6af65294e54ddcc3964d698c9fef5c07bdb",
+    "data/backups/d81-cross-domain-corrected-executed-source.py": "e3fe67befe39da4b1b5f6e9ab9237021d796b35d86890e0f7eb3e21d5b3b7d82",
+    "data/backups/d81-cross-domain-first-executed-source.py": "15c4c31a5ab1fdabc671ad8fe36124eed211956da30d50d1c78afcf30f1c1755"
+  },
+  "first_host_admission_failure": "relative workspace root; no inference",
+  "corrected_native_status": "FAILED_STRICT_MINIMAL_FACT_QUOTES",
+  "corrected_native_seconds": 2.403327571984846,
+  "original_core_facts_correct": 3,
+  "original_literal_unique_citations": 3,
+  "original_minimal_fact_quotes": 1,
+  "neural_reruns_after_format_failure": 0,
+  "all661_prior_source_bytes_unchanged": true,
+  "remaining_issue": "D81-FMT-001: CORE quoted longer exact source paragraphs instead of requested fact-only excerpts; preserve first FAIL. P2, depends on prompt/protocol evaluation; one bounded template/validator test milestone; risk overfitting/fabricated quote rewriting. Unscheduled, no model change.",
+  "next_independent_component": "D82 threat-model/security negative tests"
+}

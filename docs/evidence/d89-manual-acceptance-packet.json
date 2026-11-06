@@ -1,0 +1,346 @@
+{
+  "description": "D89 manual acceptance preparation with24lossless original WAVs and independently verified browser metadata, not listening labels or product approval.",
+  "status": "MANUAL_PACKET_READY_ACTUAL_LISTENING_DEFERRED",
+  "manifest": {
+    "description": "Lossless offline24original-WAV player; independent HTML/data-URI hash verification, no synthesis/listening/quality labels.",
+    "status": "BYTE_INTEGRITY_VERIFIED_NOT_LISTENED",
+    "items": [
+      {
+        "id": "qwen3-tts-0_6b-en-01",
+        "language": "en",
+        "wav_sha256": "735680758f16a113a38d0c4ee540bf375460a870132508eb8b891cf8344fc405",
+        "waveform_sha256": "36c6b23310909d02b68f7db79f7bf96a2af3b76694fba729827375491f034e3d",
+        "duration_seconds": 3.68,
+        "wav_bytes": 353336
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-02",
+        "language": "en",
+        "wav_sha256": "7226c332cc025b8ab87249d68827cd309b36053b26b8aa1972b00dabcb9a73a3",
+        "waveform_sha256": "1dc3cc3b7e44380d8ebe0e726623b3d4c64e6610b1e7f2c390aa674d190c8a5f",
+        "duration_seconds": 2.48,
+        "wav_bytes": 238136
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-03",
+        "language": "en",
+        "wav_sha256": "4015189189c0aa18640f9d96d3d85c5725577afbb9f8b7abc00da9fc40211298",
+        "waveform_sha256": "5eb2fbc2c8d2c0bc692c4437fa85e1d15944524b15f451201512424057129045",
+        "duration_seconds": 3.6,
+        "wav_bytes": 345656
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-04",
+        "language": "en",
+        "wav_sha256": "50916afedb02d4194701e5097b4d510e8aa3105ca414f969aa02bd91c39cf711",
+        "waveform_sha256": "06521a1029aab8a79dcfc8f868696a1cd4ee570f29c37e3cef1ec70eca2f084b",
+        "duration_seconds": 3.2,
+        "wav_bytes": 307256
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-05",
+        "language": "en",
+        "wav_sha256": "02c7367f1830418747288ae01f8bbd9c9f1c5ef51b23cbe82b310a8703afa237",
+        "waveform_sha256": "03fc6910ee7172804434980e6562fda599919ad68475d5333b3134ab8f84b778",
+        "duration_seconds": 3.12,
+        "wav_bytes": 299576
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-06",
+        "language": "en",
+        "wav_sha256": "d7e8b936897dce6b32cdd49f25961747699a0da9b767541849668a1b43b865a2",
+        "waveform_sha256": "2a5f4a383f07400d485b9db39f50fcb1370c0a44d73599e74d34fd78f4bafd4b",
+        "duration_seconds": 5.04,
+        "wav_bytes": 483896
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-01-auto",
+        "language": "vi",
+        "wav_sha256": "a45964952525724a1edfca523362d90cbd178ad82917f284c40b1b704c581b4b",
+        "waveform_sha256": "5d03abfbc67f3c3770b06c5144b5e2cd803b885ba0281bd39b2dff7117f6b1b1",
+        "duration_seconds": 3.6,
+        "wav_bytes": 345656
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-02-auto",
+        "language": "vi",
+        "wav_sha256": "49c65682048d6325553d182d79632838c81755ce4d05422b5dc00aaf217cc42c",
+        "waveform_sha256": "49137be82dd70cfb9f62cbf1289c4129e601c53e7788750b4c373c8954f39b85",
+        "duration_seconds": 3.2,
+        "wav_bytes": 307256
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-03-auto",
+        "language": "vi",
+        "wav_sha256": "c6cba52d184c14182bfcce221d0cf40095e66109c3d49217d245466d4caea584",
+        "waveform_sha256": "10fc4bb4bcc5b58c8894959f94f7c1ef6f5c4838612b6dda13366749f3acdf2f",
+        "duration_seconds": 7.76,
+        "wav_bytes": 745016
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-04-auto",
+        "language": "vi",
+        "wav_sha256": "1deb8c5bb68e0dd0b37f7b2de8c23f657517e2428954c28713198bc0ec17d8a9",
+        "waveform_sha256": "1c8fcb8e13ae00e1180caf1d2ec53fb7469eaa678a6d7083704f563633780edf",
+        "duration_seconds": 2.8,
+        "wav_bytes": 268856
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-05-auto",
+        "language": "vi",
+        "wav_sha256": "c195c78a4cf911f4b3c9bbdf7f5b20deb1d505691b718e214a522f7fb9db6668",
+        "waveform_sha256": "fa0cfca6ac464b6259ec65937001d2bbb7043eb3ca07fdf592bae13d31e0d29d",
+        "duration_seconds": 2.88,
+        "wav_bytes": 276536
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-06-auto",
+        "language": "vi",
+        "wav_sha256": "0df718cf9857068b006232037ffbf6a6b86db14bedb6f3d2bf2d25c7146feacf",
+        "waveform_sha256": "2abfe0a11f53348ac7ce8d0b16e23d61582c51c6d605a065405e0a0da648ee67",
+        "duration_seconds": 6.16,
+        "wav_bytes": 591416
+      },
+      {
+        "id": "piper-en-en-01",
+        "language": "en",
+        "wav_sha256": "3eef3df944b9e8b32c798ab91e2e3f10390c0b720434de0965cab77cbb41cd2e",
+        "waveform_sha256": "42566756a3aa23fc9fe85dfc3a3a310cb1320bfd500bf1b43c457dbe19be55ec",
+        "duration_seconds": 2.10140589569161,
+        "wav_bytes": 185400
+      },
+      {
+        "id": "piper-en-en-02",
+        "language": "en",
+        "wav_sha256": "f114375cf9bd55195c4be14c976b36da907459ff0b4833bf530d8b3b04888f3f",
+        "waveform_sha256": "0cf964c26020ba8c8a2044d43390d66d4039d7e2ab0553c4a5939f0fa433c62f",
+        "duration_seconds": 1.9272562358276644,
+        "wav_bytes": 170040
+      },
+      {
+        "id": "piper-en-en-03",
+        "language": "en",
+        "wav_sha256": "b5aae6614cc67c56940f183b223fac638aa6c18a455427cbb9f20e70388b0379",
+        "waveform_sha256": "d4377dd752f09b1071fa0b0558eb66d1f2e399bac616480d070e86898ca18c35",
+        "duration_seconds": 2.066575963718821,
+        "wav_bytes": 182328
+      },
+      {
+        "id": "piper-en-en-04",
+        "language": "en",
+        "wav_sha256": "a9ccfb53434eb7367b7e444aed64c1a3090a58a7a8fab72abd99a031c7263833",
+        "waveform_sha256": "3d6788130ac90f03d0e03949d201c91e04d5bdd1480ab45a0b99487c343b3a36",
+        "duration_seconds": 2.2058956916099772,
+        "wav_bytes": 194616
+      },
+      {
+        "id": "piper-en-en-05",
+        "language": "en",
+        "wav_sha256": "1da770f46fc5ca49a65fbb851740f89bd91376a25ca58354bb70469db4704e04",
+        "waveform_sha256": "4e43873c259518283eaee3af4a31cd1e3554c1c51d03627b9a089dab29f0674a",
+        "duration_seconds": 2.2755555555555556,
+        "wav_bytes": 200760
+      },
+      {
+        "id": "piper-en-en-06",
+        "language": "en",
+        "wav_sha256": "24fa0001c298cae146c3cec86285a60a20e965d99d496e1652ad8851060bfcd6",
+        "waveform_sha256": "ebb6ace8c507c9e885485d111f66596da8a035bc2c51022280a1532811ff8227",
+        "duration_seconds": 4.249251700680272,
+        "wav_bytes": 374840
+      },
+      {
+        "id": "piper-vi-vi-01",
+        "language": "vi",
+        "wav_sha256": "321249733717eadde09a206b54e0a0f8bc86a4fab6f3ee6cb11130491db379ab",
+        "waveform_sha256": "caf2c37bd3005f2d4558a6aed93699532e30a230e26932fd5686b00d40ce7c9f",
+        "duration_seconds": 1.9504761904761905,
+        "wav_bytes": 172088
+      },
+      {
+        "id": "piper-vi-vi-02",
+        "language": "vi",
+        "wav_sha256": "553b558ac84276273ee3c52f4ca64cde9fd9cc02dfb5c62eb104742a16bc4d6e",
+        "waveform_sha256": "01ad53167d2c64900052b93ef191009a71672fefdf2eb522f249180319add1d8",
+        "duration_seconds": 1.7182766439909296,
+        "wav_bytes": 151608
+      },
+      {
+        "id": "piper-vi-vi-03",
+        "language": "vi",
+        "wav_sha256": "9b729caeac356a1be7023e78c32198c8afe6caecd28c51ddb3f120b6f0ec2f9d",
+        "waveform_sha256": "4190a5fe1da27efad673ca5a77f292fbeacd325f19ba9444275efa777f1c849c",
+        "duration_seconds": 1.6021768707482993,
+        "wav_bytes": 141368
+      },
+      {
+        "id": "piper-vi-vi-04",
+        "language": "vi",
+        "wav_sha256": "c57b0bc4c3e55a3462378e6b5e50a955c76267e6ba885528752a6c53d2b13d31",
+        "waveform_sha256": "b465aefe2f0a48efe7f23bbfe6c12258023ddf3eec8138fcaaebf710d1bb6289",
+        "duration_seconds": 1.8343764172335602,
+        "wav_bytes": 161848
+      },
+      {
+        "id": "piper-vi-vi-05",
+        "language": "vi",
+        "wav_sha256": "fbcaf93aff133f05444ac52ea742c1310dff45d47a17a94aab7c885a8a1468d6",
+        "waveform_sha256": "d53adb88799d9d0a867b86f3925739028d8141ac14b4b7d63d9e80c0c0d40739",
+        "duration_seconds": 2.0549659863945577,
+        "wav_bytes": 181304
+      },
+      {
+        "id": "piper-vi-vi-06",
+        "language": "vi",
+        "wav_sha256": "55cfb8ccb286885753c7d6d772709524cb6226bb110676cd8c34dc75caeb3abc",
+        "waveform_sha256": "ee720aab2a138b3339b3f849ddb2d6db55049d4fb05843f3e9c2b96add07a32a",
+        "duration_seconds": 3.4249433106575964,
+        "wav_bytes": 302136
+      }
+    ],
+    "page_sha256": "efa0e05430729d0b73251e8913069122d3a70026c1bd98e6b30671761e54c582",
+    "page_bytes": 9321290,
+    "original_pending_sha256": "14c9374dbb852e4f463121ecaa97a355421ef4879c9e99bf8dd35b09743276d6",
+    "original_pending_unchanged": true,
+    "actual_listening_completed": false
+  },
+  "browser_metadata_check": {
+    "description": "Actual browser container-metadata decoding only; no playback, actual listening, subjective labels or outside requests.",
+    "status": "METADATA_DECODE_VERIFIED_NOT_LISTENED",
+    "browser": "154.0.8037.58",
+    "results": [
+      {
+        "id": "qwen3-tts-0_6b-en-01",
+        "duration": 3.68,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-02",
+        "duration": 2.48,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-03",
+        "duration": 3.6,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-04",
+        "duration": 3.2,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-05",
+        "duration": 3.12,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-en-06",
+        "duration": 5.04,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-01-auto",
+        "duration": 3.6,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-02-auto",
+        "duration": 3.2,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-03-auto",
+        "duration": 7.76,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-04-auto",
+        "duration": 2.8,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-05-auto",
+        "duration": 2.88,
+        "paused": true
+      },
+      {
+        "id": "qwen3-tts-0_6b-vi-06-auto",
+        "duration": 6.16,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-01",
+        "duration": 2.101406,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-02",
+        "duration": 1.927256,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-03",
+        "duration": 2.066576,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-04",
+        "duration": 2.205896,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-05",
+        "duration": 2.275556,
+        "paused": true
+      },
+      {
+        "id": "piper-en-en-06",
+        "duration": 4.249252,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-01",
+        "duration": 1.950476,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-02",
+        "duration": 1.718277,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-03",
+        "duration": 1.602177,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-04",
+        "duration": 1.834376,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-05",
+        "duration": 2.054966,
+        "paused": true
+      },
+      {
+        "id": "piper-vi-vi-06",
+        "duration": 3.424943,
+        "paused": true
+      }
+    ],
+    "requests_outside": false,
+    "actual_listening_completed": false
+  },
+  "artifact_sha256": {
+    "data/backups/d89-native-tts-listening/index.html": "efa0e05430729d0b73251e8913069122d3a70026c1bd98e6b30671761e54c582",
+    "data/backups/d89-native-tts-listening/manifest.json": "0233134bf2ac2f7c960533c4bb837411053bec29b591c3cb26deebc49a8f004d",
+    "data/backups/d89-native-tts-listening/browser-check.json": "e036ff9ca626b288e330699af1610921912d24052fbcc9c8999c4a827390785f",
+    "data/backups/d89-native-tts-listening/first-page.png": "e69e29d96c8a6d5e5745a53dd076253e0a3616f5486eeb180677e5c2b650ceb1",
+    "data/backups/d89-native-wav-browser-check.log": "c1953e4ff60892c63c26345c0b7d8c566ccd0758e54fc1dc1b2183d65d34800c"
+  },
+  "actual_listening_labels": 0,
+  "owner_manual_acceptance": false,
+  "source_freeze_files_unchanged": 707
+}
