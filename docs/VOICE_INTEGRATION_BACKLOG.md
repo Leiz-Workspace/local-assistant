@@ -15,6 +15,8 @@
 
 This orders dependencies without advancing day labels. Owner review A covers B1/B2 and B3 conditionally; B4/product activation and redistribution are not silently approved. Detailed caps, unchanged settings, failure handling and rollback are in ADR174.
 
+**Status 2026-11-07:** VOICE-MAIN-B1/B2 are merged default-off. VOICE-MAIN-B3 is **PASS** on its single owner-approved panel under [ADR178](ADR/178-graceful-sigterm-exit-in-b3-acceptance.md): 4/4 speech exact at 2.608–3.747 s server, 2/2 negatives refused before ASR/CORE/TTS, exact budgets, clean worker joins and graceful shutdown, borrowed CORE alive, 0 retries ([result](D74_MAIN_VOICE_B3_RESULT.md), [public receipt](evidence/d74-main-voice-b3-adr178-result.json)). The 2026-11-05 first campaign and the 2026-11-06 ADR176 replacement remain NOT_PASS. Server time is processing plus loopback HTTP, not speaker playback. VOICE-MAIN-B4 remains open: physical first-audible ≤4 s, short/quiet/room speech and the owner's final model/voice/default/product decision; `/voice` stays default-off.
+
 ## Trang thử voice đã chạy — 2026-11-05
 
 **URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.
