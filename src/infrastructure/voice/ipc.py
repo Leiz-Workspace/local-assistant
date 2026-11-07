@@ -17,6 +17,26 @@ from src.infrastructure.voice.sandbox import command
 from src.infrastructure.voice.worker import LIMIT, MODELS, POLICIES
 
 LOGGER = logging.getLogger(__name__)
+# ADR176: desktop processes (remote desktop, file manager) hold small GPU contexts on the
+# Home Server. Allow them up to this total; unknown sizes count as over the limit.
+FOREIGN_VRAM_LIMIT = 1024**3
+NVML_UNKNOWN_FLOOR = 2**63
+
+
+def foreign_compute(rows, pids):
+    """Return the count and total VRAM bytes of compute processes outside the owned set."""
+    count = total = 0
+    for row in rows:
+        if row.pid in pids:
+            continue
+        used = getattr(row, "usedGpuMemory", None)
+        count += 1
+        total += (
+            FOREIGN_VRAM_LIMIT + 1
+            if type(used) is not int or not 0 <= used < NVML_UNKNOWN_FLOOR
+            else used
+        )
+    return count, total
 
 
 class Monitor:
@@ -51,10 +71,18 @@ class Monitor:
         LOGGER.info("voice_nvml_closed")
 
     def require_owned_compute(self, pids):
-        """Fail closed on unexpected GPU compute allocations without modifying any foreign process."""
+        """Tolerate small known-size foreign GPU allocations (ADR176) and fail closed otherwise, never touching them."""
         rows = self.module.nvmlDeviceGetComputeRunningProcesses_v3(self.device)
-        if any(row.pid not in pids for row in rows):
+        count, total = foreign_compute(rows, pids)
+        if total > FOREIGN_VRAM_LIMIT:
             raise VoiceError("dependency_failed")
+        if (count, total // 1024**2) != getattr(self, "foreign_seen", (0, 0)):
+            self.foreign_seen = (count, total // 1024**2)
+            LOGGER.info(
+                "voice_foreign_gpu_tolerated processes=%d mib=%d",
+                count,
+                total // 1024**2,
+            )
 
 
 class IPCWorker:
