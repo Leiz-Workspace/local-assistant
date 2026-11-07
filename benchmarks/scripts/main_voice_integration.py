@@ -39,6 +39,97 @@ URL = "http://127.0.0.1:18092"
 GIB = 1024**3
 # ADR176: CORE alone must leave room for the voice workers inside the unchanged 8 GiB cap.
 CORE_RSS_STOP = 6 * GIB
+# ADR178: the ordered voice lifespan events that prove a complete graceful application shutdown.
+SHUTDOWN_EVENTS = (
+    "voice_service_closed",
+    "voice_identity_closed",
+    "gpu_admission_unbound",
+    "voice_managed_gpu_paths_restored",
+    "voice_manifest_closed",
+)
+SHUTDOWN_FAILURE = re.compile(
+    r"voice_shutdown_quarantined|Traceback|^\S+ \S+ (?:ERROR|CRITICAL) |^(?:ERROR|CRITICAL):",
+    re.M,
+)
+
+
+def graceful_web_exit(returncode, audit):
+    """Accept exit 0 or uvicorn's re-raised SIGTERM only after the complete, ordered and error-free voice shutdown."""
+    if type(returncode) is not int or returncode not in (0, -signal.SIGTERM):
+        return False
+    if SHUTDOWN_FAILURE.search(audit):
+        return False
+    position = -1
+    for event in SHUTDOWN_EVENTS:
+        found = [
+            match.start()
+            for match in re.finditer(r"^\S+ \S+ INFO \S+ " + event + "$", audit, re.M)
+        ]
+        if len(found) != 1 or found[0] <= position:
+            return False
+        position = found[0]
+    return True
+
+
+WORKER_JOIN = re.compile(
+    r"^\S+ \S+ INFO \S+ voice_native_worker_joined role=(\S+) exit=(\S+) forced=(\S+)$",
+    re.M,
+)
+
+
+def clean_worker_joins(audit):
+    """Accept worker joins only when every distinct role closed by handshake and exited 0, never after a forced kill."""
+    joins = WORKER_JOIN.findall(audit)
+    return (
+        bool(joins)
+        and audit.count("voice_native_worker_joined") == len(joins)
+        and len({role for role, _, _ in joins}) == len(joins)
+        and all(code == "0" and forced == "False" for _, code, forced in joins)
+    )
+
+
+def audit_summary(audit, returncode):
+    """Derive the finite post-shutdown call, readiness, worker and exit evidence from the application audit."""
+    return dict(
+        counts={
+            kind: len(
+                re.findall("main_voice_stage_admitted stage=" + kind + " ", audit)
+            )
+            for kind in ("vad", "asr", "core", "tts")
+        },
+        readiness=audit.count("voice_readiness_verified model_calls=1"),
+        workers_joined=len(re.findall("voice_native_worker_joined role=", audit)),
+        workers_joined_clean=clean_worker_joins(audit),
+        web_exit=returncode,
+        web_shutdown_graceful=graceful_web_exit(returncode, audit),
+    )
+
+
+def verify_cleanup(result, server):
+    """Refuse an over-budget, unclean or non-graceful shutdown before proving the borrowed CORE survived it."""
+    after = result.get("status_after_release")
+    if (
+        result["counts"] != dict(vad=6, asr=4, core=4, tts=4)
+        or result["readiness"] != 1
+        or result["workers_joined"] != 3
+        or not result["workers_joined_clean"]
+        or not result["web_shutdown_graceful"]
+        or result.get("release_HTTP_status") != 200
+        or not isinstance(after, dict)
+        or after.get("state") != "idle"
+        or after.get("error") is not None
+    ):
+        raise ValueError("main_voice_call_budget_or_cleanup")
+    if server.reap() is not None or server.failure:
+        raise ValueError("main_voice_borrowed_core_not_preserved")
+
+
+def retain_audit(source, target, sensitive):
+    """Persist a raw application log only with every per-run credential value redacted."""
+    raw = source.read_bytes()
+    for value in sensitive:
+        raw = raw.replace(value.encode(), b"[REDACTED_CREDENTIAL]")
+    target.write_bytes(raw)
 
 
 def publish(path, value):
@@ -83,6 +174,7 @@ def source_snapshot():
             "docs/ADR/174-proposed-opt-in-authenticated-voice-integration.md",
             "docs/ADR/175-optional-main-voice-composition-and-entrypoint-binding.md",
             "docs/ADR/176-bounded-foreign-gpu-tolerance-and-b3-preflight.md",
+            "docs/ADR/178-graceful-sigterm-exit-in-b3-acceptance.md",
         )
     )
     return {str(p.relative_to(PROJECT)): file_sha(p) for p in sorted(paths)}
@@ -278,6 +370,7 @@ async def run(root=ROOT):
     log = None
     temporary = None
     ram = None
+    sensitive = []
     try:
         async with asyncio.timeout(600):
             await server.start()
@@ -317,6 +410,7 @@ async def run(root=ROOT):
             manifest.write_text(json.dumps(template))
             manifest.chmod(0o600)
             token = secrets.token_urlsafe(48)
+            sensitive.append(token)
             principal = str(uuid4())
             auth = ram / "auth.json"
             auth.write_text(
@@ -388,6 +482,7 @@ async def run(root=ROOT):
                     headers={"Authorization": "Bearer " + token},
                 )
                 grant.raise_for_status()
+                sensitive.append(grant.json()["code"])
                 headers = {"Origin": URL, "X-Voice-Submit": "1"}
                 paired = await client.post(
                     "/ui/voice/pair",
@@ -475,26 +570,8 @@ async def run(root=ROOT):
             if token in audit or grant.json()["code"] in audit:
                 raise ValueError("main_voice_credential_logged")
             (root / "app-audit.log").write_text(audit)
-            result["counts"] = {
-                kind: len(
-                    re.findall("main_voice_stage_admitted stage=" + kind + " ", audit)
-                )
-                for kind in ("vad", "asr", "core", "tts")
-            }
-            result["readiness"] = audit.count("voice_readiness_verified model_calls=1")
-            result["workers_joined"] = len(
-                re.findall("voice_native_worker_joined role=", audit)
-            )
-            result["web_exit"] = web.returncode
-            if (
-                result["counts"] != dict(vad=6, asr=4, core=4, tts=4)
-                or result["readiness"] != 1
-                or result["workers_joined"] != 3
-                or web.returncode != 0
-            ):
-                raise ValueError("main_voice_call_budget_or_cleanup")
-            if server.reap() is not None or server.failure:
-                raise ValueError("main_voice_borrowed_core_not_preserved")
+            result.update(audit_summary(audit, web.returncode))
+            verify_cleanup(result, server)
             result["CORE_alive_after_application_shutdown"] = True
     except BaseException as error:
         result["status"] = (
@@ -525,7 +602,7 @@ async def run(root=ROOT):
             and (ram / "app.log").exists()
             and not (root / "app-audit.log").exists()
         ):
-            (root / "app-audit.log").write_bytes((ram / "app.log").read_bytes())
+            retain_audit(ram / "app.log", root / "app-audit.log", sensitive)
         if temporary is not None:
             temporary.cleanup()
         await server.stop()
