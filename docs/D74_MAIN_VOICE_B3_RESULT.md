@@ -87,4 +87,4 @@ Panel duy nhất mà ADR178 cho phép đã được dùng (`panel_consumed` true
 - B4: đo vật lý từ lúc bấm Gửi đến lúc loa phát tiếng đầu tiên, do chủ dự án tự đo theo [checklist](D74_PHYSICAL_FIRST_AUDIBLE_CHECKLIST.md). Vì B3 đã PASS, checklist có thể lặp lại trên `/voice` theo gate B4 của ADR174. Physical first-audible ≤4 giây vẫn UNVERIFIED.
 - Câu ngắn, nói nhỏ và tiếng ồn phòng.
 - Quyết định bật dùng sản phẩm, model, giọng và default; D90. `ASSISTANT_VOICE_ENABLED` vẫn mặc định 0 và chỉ cho phép mục đích `integration_evaluation`.
-- Nhánh: develop có LICENSE, ADR176, ADR178 và kết quả này sau khi PR tài liệu được merge; staging (`a489f77`) và production (`2143bc3`) chưa có LICENSE, ADR176 và ADR178 cho tới khi có PR promotion.
+- Nhánh: kết quả này vào `develop` qua PR #29 (`d97119c`); cùng với LICENSE (PR #25), ADR176 (PR #26) và ADR178 (PR #28), nó lên `staging` qua PR #30 (`0ec664d`) và `production` qua PR #31 (`4dcf8db`) ngày 2026-11-07. Đây chỉ là promote nhánh: không có tag, GitHub Release hay deploy lên Home Server.

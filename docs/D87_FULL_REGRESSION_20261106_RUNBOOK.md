@@ -12,6 +12,14 @@
    cd ~/Workspace/Server/ai && git fetch origin && git switch develop && git merge --ff-only origin/develop && git log --oneline -1
    ```
 
+   Nếu `git merge` báo có thay đổi cục bộ trong `dev_log/dev_log.md` (dòng kết nối SQL của editor ở đầu file), chạy `git stash`, merge lại, rồi `git stash pop`.
+
+   D87 dùng cho D90 phải chạy trên đúng nội dung của commit sẽ tag trên `production` ([hồ sơ D90](D90_RELEASE_DECISION_DOSSIER.md), mục 6). Kiểm tra cây của `develop` trùng với `production`; nếu khác (ví dụ còn PR `docs:` chưa promote), promote trước rồi mới chạy:
+
+   ```bash
+   test "$(git rev-parse origin/develop^{tree})" = "$(git rev-parse origin/production^{tree})" && echo "develop trùng production" || echo "develop khác production: promote trước"
+   ```
+
 2. Cài đúng dependency đã khóa:
 
    ```bash
