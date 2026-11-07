@@ -1,0 +1,167 @@
+{
+ "description": "Public receipt of the single ADR178 B3 campaign; no transcripts, answers, audio, credentials or owner recordings.",
+ "date": "2026-11-07",
+ "ADRs": [
+  174,
+  175,
+  176,
+  178
+ ],
+ "status": "PASS",
+ "retries": 0,
+ "panel_consumed": true,
+ "physical_first_audible": "UNVERIFIED",
+ "production_activation": false,
+ "software_gate": {
+  "python_passed": 1122,
+  "JS_passed": 27,
+  "model_calls": 0,
+  "git_commit": "73cecdf",
+  "source_files": 307
+ },
+ "preflight": {
+  "core_rss_bytes": 1255170048,
+  "foreign_gpu_processes": 2,
+  "foreign_gpu_bytes": 235839488
+ },
+ "prepare_seconds": 51.4494842109998,
+ "rows": [
+  {
+   "id": "heldout-vi_vn-0036",
+   "expected_no_answer": false,
+   "status": "EXACT_COMPLETE_PCM",
+   "client_seconds": 3.447381198000585,
+   "server_seconds": 3.4115857190008683,
+   "stages": {
+    "asr": 0.6887951900007465,
+    "llm": 1.0824479379989498,
+    "tts": 1.5710555360001308
+   },
+   "playback_sha256": "12f41e1f942273485941379335e927071661ed14c242ffd22b00bb9c99490336",
+   "pcm_sha256": "0b6b73538e00b377e493b0361aa2d4dcc80d7a8be0207837a5cdac420648becf"
+  },
+  {
+   "id": "heldout-vi_vn-0024",
+   "expected_no_answer": false,
+   "status": "EXACT_COMPLETE_PCM",
+   "client_seconds": 2.6186037190000206,
+   "server_seconds": 2.607942392000041,
+   "stages": {
+    "asr": 0.6811265849992196,
+    "llm": 0.47578175499984354,
+    "tts": 1.43547824199959
+   },
+   "playback_sha256": "2574fa4edd7d535cec2ff57f718c96e32cb4376ae4e399625dd285350fc11cc1",
+   "pcm_sha256": "b0df8ca292a7329ef7dd15e36ca327d6e568f1c89351610f5d79eb24fedeaceb"
+  },
+  {
+   "id": "heldout-vi_vn-0078",
+   "expected_no_answer": false,
+   "status": "EXACT_COMPLETE_PCM",
+   "client_seconds": 3.752588768998976,
+   "server_seconds": 3.7466430910008057,
+   "stages": {
+    "asr": 0.912016317999587,
+    "llm": 0.6935772060005547,
+    "tts": 2.131377521000104
+   },
+   "playback_sha256": "d9d0786932184bcabbf7f2dc2f2d70249a7bea513201cfbec8ede5451a8e9a87",
+   "pcm_sha256": "ed7596e9311a308f1f429dbcf6f9cfd70b1890bdb124fd396166f7e10be563d2"
+  },
+  {
+   "id": "heldout-vi_vn-0040",
+   "expected_no_answer": false,
+   "status": "EXACT_COMPLETE_PCM",
+   "client_seconds": 3.187213025999881,
+   "server_seconds": 3.182047659998716,
+   "stages": {
+    "asr": 1.0769916150002246,
+    "llm": 0.4284030810013064,
+    "tts": 1.6645445069989364
+   },
+   "playback_sha256": "8cb60c762a7f5ed80f88a34fe500b86793d5329b69f8f5276557b1b09ea44e87",
+   "pcm_sha256": "6800ece72c3fb520d77952b4d32dbf3423242b8a843a86ba883291a79e9113de"
+  },
+  {
+   "id": "negative-1",
+   "expected_no_answer": true,
+   "status": "CORRECT_NO_SPEECH",
+   "client_seconds": 0.023611360000359127,
+   "server_seconds": null,
+   "stages": null,
+   "playback_sha256": null,
+   "pcm_sha256": "b3866de454bf853fd4a1e6d475ba503a8c01fa07feb2c30c47321c1685896cb8"
+  },
+  {
+   "id": "negative-3",
+   "expected_no_answer": true,
+   "status": "CORRECT_NO_SPEECH",
+   "client_seconds": 0.017275107000386924,
+   "server_seconds": null,
+   "stages": null,
+   "playback_sha256": null,
+   "pcm_sha256": "4b5ea5a19f3818b91da52a0f8ceea23f45c7eaf5627090a7e4d394f8ba3bef0a"
+  }
+ ],
+ "stage_counts": {
+  "vad": 6,
+  "asr": 4,
+  "core": 4,
+  "tts": 4
+ },
+ "expected_stage_counts": {
+  "vad": 6,
+  "asr": 4,
+  "core": 4,
+  "tts": 4
+ },
+ "readiness": 1,
+ "workers_joined": 3,
+ "workers_joined_clean": true,
+ "web_exit": -15,
+ "web_shutdown_graceful": true,
+ "release_HTTP_status": 200,
+ "status_after_release": {
+  "state": "idle",
+  "error": null
+ },
+ "CORE_alive_after_application_shutdown": true,
+ "owned_CORE": {
+  "exit_code": 0,
+  "reaped": true,
+  "sampled_peak_RSS_KiB": 8076844,
+  "sampled_peak_VRAM_MiB": 8792,
+  "sampled_min_GPU_free_MiB": 2251,
+  "sampled_min_MemAvailable_KiB": 17810108,
+  "guard_failure": null
+ },
+ "native_pids_after": [],
+ "sources_unchanged": true,
+ "same_outputs_as_ADR176_campaign": "all 6 rows: identical playback, PCM and WAV SHA-256",
+ "private_artifact_sha256": {
+  "result.json": "ce5820f89ef50d3de1e193559d66aad3c49de7916f1db8282dd1ec3005ff771c",
+  "preparation.json": "30ca1894829d60a8c43ed0404d1c5ca413f30aed380c64ceec780fe9181ef0fb",
+  "software-verification.json": "201976a97d70e4fc230d33682879c88ac52b57c9ec0b5565df95538105d1d478",
+  "preflight.json": "7e22ecc049ee1e826fc0f86c5f7c7a8012fb52ff5999722514f850017208a6b8",
+  "app-audit.log": "2e5b29534f5ab65294d41fcaec36252d01b8da6101fb338ab202f8a1b2d34167"
+ },
+ "earlier_campaigns": [
+  {
+   "date": "2026-11-05",
+   "ADR": 175,
+   "status": "NOT_PASS",
+   "failure_code": "main_voice_prepare_fault",
+   "rows_unattempted": 6,
+   "retries": 0
+  },
+  {
+   "date": "2026-11-06",
+   "ADR": 176,
+   "status": "NOT_PASS",
+   "failure_code": "main_voice_call_budget_or_cleanup",
+   "rows_meeting_criteria": 6,
+   "cause": "runner required web exit 0; uvicorn exit -15",
+   "retries": 0
+  }
+ ]
+}

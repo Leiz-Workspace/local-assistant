@@ -1,8 +1,8 @@
 # D87 — Full regression mới cho snapshot có voice (chủ dự án tự chạy)
 
-**Mục đích:** Chạy lại full regression có dịch vụ thật (PostgreSQL, Vault, Qdrant, CORE) trên snapshot hiện tại, gồm B1/B2 voice, ADR176, CI và LICENSE. Lượt gần nhất là 5.889 PASS trên snapshot 750 file ngày 2026-11-03, nay chỉ còn là lịch sử. Tài liệu này chuẩn bị lệnh; chủ dự án tự unseal Vault và tự chạy. Agent không đọc bootstrap material hay credential.
+**Mục đích:** Chạy lại full regression có dịch vụ thật (PostgreSQL, Vault, Qdrant, CORE) trên snapshot hiện tại, gồm B1/B2 voice, ADR176, ADR178, CI và LICENSE. Lượt gần nhất là 5.889 PASS trên snapshot 750 file ngày 2026-11-03, nay chỉ còn là lịch sử. Tài liệu này chuẩn bị lệnh; chủ dự án tự unseal Vault và tự chạy. Agent không đọc bootstrap material hay credential.
 
-**Khác với CI GitHub:** CI chạy khoảng 6.098 test, không có DB/CORE, có 39 mục loại trừ và một job cách ly. D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`.
+**Khác với CI GitHub:** CI chạy khoảng 6.150 test, không có DB/CORE, có 39 mục loại trừ và một job cách ly. D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`. `pytest tests` không chạy `benchmarks/tests` (gồm test runner B3 của ADR178); phần đó đã được CI và cổng phần mềm B3 kiểm.
 
 ## 1. Điều kiện trước khi chạy
 
