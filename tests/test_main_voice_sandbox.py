@@ -62,18 +62,68 @@ async def test_preload_memory_gate_prevents_any_worker_start(
     assert worker.process is None and not worker.directory.exists()
 
 
-def test_unknown_compute_is_refused_without_process_actions():
-    """Observe external GPU contention without resetting a GPU or signalling another process."""
+def monitor_with(rows):
+    """Build a monitor over fixed NVML rows that exposes no GPU reset or process-control calls."""
     monitor = ipc.Monitor.__new__(ipc.Monitor)
     monitor.device = 0
     monitor.module = SimpleNamespace(
-        nvmlDeviceGetComputeRunningProcesses_v3=lambda device: [
-            SimpleNamespace(pid=123)
-        ]
+        nvmlDeviceGetComputeRunningProcesses_v3=lambda device: list(rows)
     )
+    return monitor
+
+
+def test_unknown_compute_is_refused_without_process_actions():
+    """Observe external GPU contention without resetting a GPU or signalling another process."""
+    monitor = monitor_with([SimpleNamespace(pid=123, usedGpuMemory=None)])
     monitor.require_owned_compute({123})
     with pytest.raises(VoiceError):
         monitor.require_owned_compute({456})
+
+
+@pytest.mark.parametrize(
+    "sizes",
+    [
+        [223 * 1024**2],
+        [213 * 1024**2, 46 * 1024**2, 272 * 1024**2],
+        [ipc.FOREIGN_VRAM_LIMIT],
+    ],
+)
+def test_small_known_foreign_desktop_allocations_are_tolerated(sizes, caplog):
+    """ADR176: desktop GPU contexts up to 1 GiB in total do not block owned voice work."""
+    owned = SimpleNamespace(pid=1, usedGpuMemory=3 * 1024**3)
+    foreign = [
+        SimpleNamespace(pid=100 + i, usedGpuMemory=s) for i, s in enumerate(sizes)
+    ]
+    monitor = monitor_with([owned, *foreign])
+    with caplog.at_level("INFO"):
+        monitor.require_owned_compute({1})
+        monitor.require_owned_compute({1})
+    logged = [r.getMessage() for r in caplog.records if "foreign_gpu" in r.getMessage()]
+    assert logged == [
+        f"voice_foreign_gpu_tolerated processes={len(sizes)} mib={sum(sizes) // 1024**2}"
+    ]
+
+
+@pytest.mark.parametrize(
+    "rows",
+    [
+        [SimpleNamespace(pid=7, usedGpuMemory=ipc.FOREIGN_VRAM_LIMIT + 1)],
+        [
+            SimpleNamespace(pid=7, usedGpuMemory=ipc.FOREIGN_VRAM_LIMIT // 2 + 1),
+            SimpleNamespace(pid=8, usedGpuMemory=ipc.FOREIGN_VRAM_LIMIT // 2),
+        ],
+        [SimpleNamespace(pid=7, usedGpuMemory=None)],
+        [SimpleNamespace(pid=7)],
+        [SimpleNamespace(pid=7, usedGpuMemory=2**64 - 1)],
+        [SimpleNamespace(pid=7, usedGpuMemory=-1)],
+        [SimpleNamespace(pid=7, usedGpuMemory=True)],
+        [SimpleNamespace(pid=7, usedGpuMemory=1.0)],
+    ],
+)
+def test_large_or_unknown_foreign_allocations_still_fail_closed(rows):
+    """Over-limit totals and unknown sizes keep the original fail-closed behaviour."""
+    with pytest.raises(VoiceError):
+        monitor_with(rows).require_owned_compute({1})
 
 
 @pytest.mark.asyncio
