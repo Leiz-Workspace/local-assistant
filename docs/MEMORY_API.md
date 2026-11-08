@@ -6,7 +6,7 @@
 
 ## Enablement and trust
 
-`ASSISTANT_MEMORY_ENABLED` defaults0. Disabled initialization reads no credentials/schema or creates a worker. Explicitly enabled startup requires the existing app pool, V005 and immutable/mutable/TRUNCATE grant checks. The API never reads the operator temporary-schema probe URL or Vault root material. Existing loopback/bearer/Origin/forwarding rejection applies to every route.
+`ASSISTANT_MEMORY_ENABLED` defaults0. Disabled initialization reads no credentials/schema or creates a worker. Explicitly enabled startup requires the existing app pool, V006 (Alembic revision `0006`) and immutable/mutable/TRUNCATE grant checks. The API never reads the operator temporary-schema probe URL or Vault root material. Existing loopback/bearer/Origin/forwarding rejection applies to every route.
 
 The operator flag only exposes management capability. Every owner starts with memory/extraction false and management bootstrap revision0. PUT settings with expected_revision0 explicitly creates revision1; every later settings change advances the epoch, invalidating old receipts. Re-enable does not resurrect old consent. Owner inspection/deletion remains available while owner use is off or consent inactive. This milestone performs no extraction, automatic learning or memory-to-prompt injection; an extraction setting is policy consent, not proof that an extraction pipeline exists.
 

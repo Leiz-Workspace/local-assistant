@@ -8,6 +8,23 @@
 
 **Owner feedback2026-11-05:** “Ổn rồi” — [general positive trial feedback recorded](evidence/d74-voice-browser-owner-feedback-20261105.json). No numeric speaker timing or per-case/device acceptance supplied; physical4second gate remains UNVERIFIED. No new inference or runtime/model/default action.
 
+## Chạy thử MVP trên mã production — 2026-11-08
+
+Theo yêu cầu “Làm tiếp đầy đủ để xem bản MVP này đi” (rồi “Mở phần DB”, “Có, thử memory”, “Dừng và dọn”), một lượt chạy thử kỹ thuật đã chạy từ working tree `develop` `d850cfc`; giữa `production` `2e5e242` và `d850cfc` chỉ khác `docs/` và `dev_log/` (PR #38), nên mã ứng dụng được chạy là mã production. CORE `qwen3.5-9b-core` trên `127.0.0.1:8080`, API một worker trên `127.0.0.1:8000`, voice tắt. Lệnh, thời gian và số liệu: mục “MVP walkthrough” ngày 2026-11-08 trong [dev log](../dev_log/dev_log.md); cấu hình chạy và điều kiện DB/Vault: [runbook API](CONVERSATION_API_LOCAL_RUNBOOK.md).
+
+Kết quả: **cả hai tầng đều đạt trên mã production.** Tầng không DB (13:17–13:21): các guard xác thực/`Origin`/thiếu cấu hình trả đúng mã; chat fast/auto/balanced/deep, web search có citation và luồng coding explain → diagnose → patch → approve → apply → checkpoint trên workspace mẫu dùng một lần đều chạy đúng. Tầng DB (database `local_assistant`, schema `assistant`, revision `0006`): conversations (kể cả replay `cached: true` và soft-delete) và files (txt/PDF/DOCX/XLSX/OCR PNG) đạt; memory đạt trọn vòng consent/lưu/đọc/export/xoá/thu hồi với role `local_assistant_app` (credential lấy từ Vault), sau khi đã từ chối khởi động dưới superuser đúng như guard least-privilege. API và CORE đã dừng, token demo đã xoá; repo không bị lượt chạy thay đổi.
+
+Đây **không phải nghiệm thu D89 của chủ dự án**, không phải D87, không phải benchmark hay đo chất lượng model, và không đánh dấu ô D89/D90 nào. Trạng thái phát hành giữ nguyên: không tag, không GitHub Release, không deploy lên Home Server, `ASSISTANT_VOICE_ENABLED` vẫn 0.
+
+Việc theo sau phát hiện trong lượt chạy (không chặn):
+
+- Hạ tầng (repo infra cha, chưa sửa): healthcheck trong `infras/vault-server/vault-compose.yaml` coi `vault status` exit 2 (sealed) là healthy, nên Vault đang sealed vẫn hiện “healthy” trong `docker ps`.
+- Hạ tầng (repo infra cha, chưa sửa): `infras/vault-server/tls/ca.crt` thiếu extension `keyUsage`; Python 3.13+ (context SSL mặc định có `VERIFY_X509_STRICT`) từ chối CA này, nên các script đọc Vault (ví dụ `scripts/full_regression.py`) sẽ hỏng nếu venv dựng lại trên 3.13+. Trong lúc chờ cấp lại CA có `keyCertSign, cRLSign`, giữ venv trên Python 3.12.
+- Chẩn đoán ứng dụng: khi memory không khởi động được, log chỉ có `conversation_storage_initialization_failed` và `apps/api/storage/lifecycle.py` giấu nguyên nhân (`from None`), nên operator không thấy lý do là kiểm tra grant của memory.
+- Độ rõ của API: bản ghi memory hết hạn sau hạn consent (kể cả khi dùng lại đúng `seconds` của consent, vì bản ghi được tạo sau consent) chỉ nhận mã chung 422 `memory_record_invalid`.
+- Dữ liệu demo: `local_assistant` còn các dòng của principal demo đã xoá `8bf48160-a519-46d6-a100-2779e158efdf` (1 conversation đã soft-delete, 4 messages, 2 inference_runs, 5 files trạng thái `deleted`, 1 consent đã thu hồi, 1 memory_settings đã tắt, 0 memory), không principal HTTP nào thấy được. Chủ dự án quyết định có hard delete hay không; chưa làm.
+- Chủ dự án: đổi mật khẩu superuser PostgreSQL `home-server` vì đã bị dán vào một phiên chat; không ghi giá trị vào tài liệu.
+
 ## Trang thử voice đã chạy — 2026-11-05
 
 **URL trên cùng máy: [http://127.0.0.1:8092](http://127.0.0.1:8092)**. [Cách mở/ghi/dừng/gửi/nghe và kiểm chứng](D74_VOICE_BROWSER_TRIAL_GUIDE.md), [kết quả và receipt](D74_VOICE_BROWSER_TRIAL_RESULT.md). Thêm optional loopback research surface riêng; recorder cũ/750application baseline giữ nguyên, không chọn model/default sản phẩm. Prepare chủ động, không tự thu/nạp/gửi khi mở trang; đúng QwenCUDAFP32/CORE32KFast512/TrúcLyCPU8 đã qualified.
