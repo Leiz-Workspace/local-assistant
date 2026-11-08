@@ -2,7 +2,7 @@
 
 **Ngày:** 2026-11-05 (lượt đầu), 2026-11-06 (lượt thay thế theo ADR176) và 2026-11-07 (lượt theo ADR178). **Phạm vi:** [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md), [ADR175](ADR/175-optional-main-voice-composition-and-entrypoint-binding.md), [ADR176](ADR/176-bounded-foreign-gpu-tolerance-and-b3-preflight.md), [ADR178](ADR/178-graceful-sigterm-exit-in-b3-acceptance.md). **Receipt công khai:** [evidence/d74-main-voice-b3-adr178-result.json](evidence/d74-main-voice-b3-adr178-result.json) (lượt ADR178) và [evidence/d74-main-voice-b3-adr176-result.json](evidence/d74-main-voice-b3-adr176-result.json) (lượt ADR176).
 
-**Kết luận:** Lượt thứ ba, chạy theo ADR178 ngày 2026-11-07, **PASS** theo tiêu chí đã chốt trước khi chạy: 4/4 câu nói `EXACT_COMPLETE_PCM` với server 2,608–3,747 s, 2/2 negative bị chặn đúng, ngân sách gọi và dọn dẹp đúng, CORE mượn vẫn sống sau khi app tắt, đúng một panel và không retry. Hai lượt trước giữ nguyên **NOT_PASS** như đã ghi: lượt đầu fail ở bước chuẩn bị; ở lượt thay thế, cả 6 dòng đều đạt tiêu chí chấp nhận, nhưng bước kiểm tra sau panel fail vì runner khi đó đòi web process thoát với mã 0. Không đổi nhãn lượt nào. B3 PASS chỉ áp dụng cho đường `/voice` mặc định tắt, mục đích `integration_evaluation`. Đo vật lý (bấm Gửi đến lúc loa phát), câu ngắn, nói nhỏ, tiếng ồn phòng và quyết định sản phẩm/model/giọng/default vẫn mở.
+**Kết luận:** Lượt thứ ba, chạy theo ADR178 ngày 2026-11-07, **PASS** theo tiêu chí đã chốt trước khi chạy: 4/4 câu nói `EXACT_COMPLETE_PCM` với server 2,608–3,747 s, 2/2 negative bị chặn đúng, ngân sách gọi và dọn dẹp đúng, CORE mượn vẫn sống sau khi app tắt, đúng một panel và không retry. Hai lượt trước giữ nguyên **NOT_PASS** như đã ghi: lượt đầu fail ở bước chuẩn bị; ở lượt thay thế, cả 6 dòng đều đạt tiêu chí chấp nhận, nhưng bước kiểm tra sau panel fail vì runner khi đó đòi web process thoát với mã 0. Không đổi nhãn lượt nào. B3 PASS chỉ áp dụng cho đường `/voice` mặc định tắt, mục đích `integration_evaluation`. Đo vật lý (bấm Gửi đến lúc loa phát), câu ngắn, nói nhỏ, tiếng ồn phòng và quyết định sản phẩm/model/giọng/default vẫn mở. Bằng chứng PASS gắn với commit `73cecdf`, trước bản sửa lỗi decoder P2 (PR #33) vào `develop`; chủ dự án giữ PASS này kèm ghi chú *(owner 2026-11-07, operator record)*, xem mục [Sau PR #33](#sau-pr-33-2026-11-07).
 
 ## Lượt đầu — 2026-11-05
 
@@ -82,9 +82,26 @@ Cả 6 dòng cho ra playback, PCM và WAV có SHA-256 giống hệt lượt ADR1
 
 Panel duy nhất mà ADR178 cho phép đã được dùng (`panel_consumed` true). Receipt chi tiết nằm trong thư mục cục bộ ở trên; SHA-256 của các file riêng tư chính, gồm `result.json`, được ghi trong [receipt công khai](evidence/d74-main-voice-b3-adr178-result.json).
 
+## Sau PR #33 (2026-11-07)
+
+Bằng chứng PASS ở trên gắn với commit `73cecdf` và snapshot 307 file nguồn mà cổng phần mềm đã ghim hash. Cùng ngày, PR #33 được merge vào `develop` (merge `cebf9a0`) để sửa lỗi decoder P2 ([phân tích nguyên nhân](P2_MEDIA_DECODER_ROOT_CAUSE.md)). So snapshot đã ghi với `develop` tại `cebf9a0`: hai bên đều có 307 file, không thêm hay bớt file nào, và chỉ đúng một file khác là `src/infrastructure/ocr_worker.py` (13 dòng thêm, 5 dòng xóa). Thay đổi này chỉ thêm biến `MALLOC_ARENA_MAX=1` vào môi trường của tiến trình con do `child_output` khởi chạy; trần 512 MiB giữ nguyên và không thêm retry.
+
+Đường `/voice` có chạy qua launcher này. Bước TTS chuyển audio native sang playback (`src/infrastructure/voice/native.py`) gọi `NativeAudioNormalizer`, đi qua worker audio trong sandbox rồi `child_output` để chạy ffmpeg. Bước này nằm trong thời gian server mà B3 đo. Biến môi trường chỉ đổi số arena malloc của glibc, không đổi phép tính của FFmpeg, và loại bỏ kiểu lỗi ENOMEM ngẫu nhiên cũng có thể xảy ra ở bước chuyển playback này. Ảnh hưởng của nó tới thời gian B3 **chưa được đo**, trong khi biên chỉ khoảng 0,25 s (dòng chậm nhất 3,747 s so với trần 4 giây).
+
+Kết quả PASS ở trên là bằng chứng cho nguồn trước bản sửa. Chủ dự án được hỏi chọn một trong hai hướng:
+- chấp nhận B3 PASS hiện có cho release này, kèm ghi chú rằng khác biệt nguồn duy nhất là biến môi trường của PR #33; hoặc
+- duyệt đúng một panel B3 mới trên commit sau bản sửa (thư mục kết quả mới, cùng quy tắc ADR176/ADR178, cần chủ dự án duyệt rõ).
+
+**Quyết định** *(owner 2026-11-07, operator record)*: sau khi PR #34 được merge, chủ dự án trả lời "Giữ PASS kèm ghi chú", tức chọn hướng thứ nhất. B3 PASS theo ADR178 (commit `73cecdf`, snapshot 307 file) là bằng chứng B3 cho release này, kèm ghi chú sau:
+- Khác biệt nguồn duy nhất so với mã sau bản sửa là thay đổi của PR #33 trong `src/infrastructure/ocr_worker.py`: biến `MALLOC_ARENA_MAX=1` cho tiến trình con do `child_output` khởi chạy, trong đó có lượt ffmpeg chuyển audio TTS sang playback của `/voice`, nằm trong thời gian server mà B3 đo.
+- Trần 512 MiB giữ nguyên và không thêm retry; biến này chỉ đổi số arena malloc của glibc, không đổi phép tính của FFmpeg.
+- Ảnh hưởng tới thời gian B3 chưa được đo, với biên khoảng 0,25 s (dòng chậm nhất 3,747 s so với trần 4 giây). Rủi ro còn lại này được chấp nhận theo lựa chọn của chủ dự án.
+
+Panel B3 mới không được duyệt và sẽ không chạy. Quyết định cũng được ghi trong [hồ sơ D90](D90_RELEASE_DECISION_DOSSIER.md). Một phép đo vật lý B4 trên bản build có PR #33 sẽ bao gồm thay đổi này. Các kết quả B3 đã ghi không bị đổi nhãn.
+
 ## Còn mở
 
 - B4: đo vật lý từ lúc bấm Gửi đến lúc loa phát tiếng đầu tiên, do chủ dự án tự đo theo [checklist](D74_PHYSICAL_FIRST_AUDIBLE_CHECKLIST.md). Vì B3 đã PASS, checklist có thể lặp lại trên `/voice` theo gate B4 của ADR174. Physical first-audible ≤4 giây vẫn UNVERIFIED.
 - Câu ngắn, nói nhỏ và tiếng ồn phòng.
 - Quyết định bật dùng sản phẩm, model, giọng và default; D90. `ASSISTANT_VOICE_ENABLED` vẫn mặc định 0 và chỉ cho phép mục đích `integration_evaluation`.
-- Nhánh: develop có LICENSE, ADR176, ADR178 và kết quả này sau khi PR tài liệu được merge; staging (`a489f77`) và production (`2143bc3`) chưa có LICENSE, ADR176 và ADR178 cho tới khi có PR promotion.
+- Nhánh: kết quả này vào `develop` qua PR #29 (`d97119c`); cùng với LICENSE (PR #25), ADR176 (PR #26) và ADR178 (PR #28), nó lên `staging` qua PR #30 (`0ec664d`) và `production` qua PR #31 (`4dcf8db`) ngày 2026-11-07. Đây chỉ là promote nhánh: không có tag, GitHub Release hay deploy lên Home Server. Sau đó `develop` nhận thêm PR #32 (tài liệu), PR #33 (sửa mã P2, merge `cebf9a0`) và PR #34 (tài liệu, merge `8ecff62`); `staging` và `production` chưa đổi, nên lượt promote kế tiếp sẽ mang theo thay đổi mã của PR #33.
