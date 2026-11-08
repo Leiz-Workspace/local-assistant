@@ -4,7 +4,7 @@
 
 ## Runtime configuration
 
-Use the existing PostgreSQL database and CORE container. A trusted operator supplies DATABASE_URL for `local_assistant_app` in process environment; the URL uses `postgresql+psycopg://` with credential components encoded. API startup does not run migrations, load `.env`, read bootstrap/unseal files or receive an operator Vault token.
+Use the existing PostgreSQL database and CORE container. A trusted operator supplies DATABASE_URL for `local_assistant_app` in process environment; the URL uses `postgresql+psycopg://` with credential components encoded. API startup does not run migrations, load `.env`, read bootstrap/unseal files or receive an operator Vault token. Read [Database, role and Vault prerequisites](#database-role-and-vault-prerequisites-verified-2026-11-08) before the first DB-backed start.
 
 Conversation endpoints now require a bearer credential. The raw local API token and its principal UUID are stored in the existing Vault KV v2 path `secret/server/local-assistant/api` as `api_token` and `principal_id`. The operator prepared `data/auth/principals.json`, a private 0600 file in a 0700 directory, containing only UUID/token-digest bindings. Neither artifact belongs in Git. The raw token is not stored in the auth file and must not be printed, put in command arguments or pasted into shell history.
 
@@ -21,6 +21,24 @@ Missing/bad auth configuration returns 503 `auth_unavailable`. With valid config
 The authenticated principal exclusively assigns owner identity. Every conversation operation filters that owner, including manager reservation/recovery/finalization locks. Another principal sees 404 for guessed IDs and cannot replay cached answers. Metadata/owner fields in request bodies are rejected and arbitrary identity headers have no authority. Internal unscoped repositories are trusted maintenance interfaces, never exposed by the HTTP dependency.
 
 Legacy conversations with no owner are retained unchanged and hidden from all HTTP principals. Do not automatically adopt them. A later adoption requires an explicit identity-to-record mapping, backup and review; no owner was guessed or silently backfilled in this release. Ownership currently lives in JSONB and is enforced in the application, without PostgreSQL RLS or an owner-column migration.
+
+### Database, role and Vault prerequisites (verified 2026-11-08)
+
+Confirmed during the 2026-11-08 engineering walkthrough with read-only queries and the production application code. This is operator guidance, not owner acceptance.
+
+- **Database.** The app schema is database `local_assistant`, schema `assistant`, Alembic revision `0006`, on the shared PostgreSQL container `postgres` (host port 5433). Do not use `home-db`: it is only the `POSTGRES_DB` default of the infra Compose file and has no `assistant` schema.
+- **Roles.** Run the API as `local_assistant_app`. `local_assistant_migrator` is the migration role (schema changes and schema probes), not the API role. Never run the API as the `home-server` superuser (`POSTGRES_USER`), which reaches every database including `keycloak_db`. With `ASSISTANT_MEMORY_ENABLED=1`, `apps/api/storage/memory.py` requires `(version, UPDATE memories.owner_id, UPDATE memories.text, UPDATE memory_consents.settings_revision, UPDATE memory_consents.revoked_at, TRUNCATE memories)` to equal `('0006', False, True, False, True, False)`; the superuser yields `('0006', True, True, True, True, True)`, so startup aborts by design.
+- **Startup failure.** Storage initialization errors such as a wrong URL prefix or, with files or memory enabled, an unreachable database, a missing `assistant` schema or a refused grant check log only `conversation_storage_initialization_failed` and raise the generic "Conversation storage initialization failed; verify runtime configuration." because `apps/api/storage/lifecycle.py` suppresses the cause. When it appears, check the URL's role and database, then the grants above.
+- **URL format.** `DATABASE_URL` must start with `postgresql+psycopg://`; `src/infrastructure/database/connection.py` rejects any other prefix. Percent-encode the username and password components: `postgresql+psycopg://<username>:<password>@<host>:<port>/local_assistant`. `scripts/full_regression.py` builds the same URL in memory with `sqlalchemy.engine.URL.create`.
+- **Credential source.** Vault KV v2 `secret/server/local-assistant/postgresql`, fields `username`, `password`, `host`, `port`, `database` (the path `scripts/full_regression.py` reads). The migrator credential is `secret/server/local-assistant/postgresql-migrator`. Refuse a credential whose username is not `local_assistant_app`, and keep the URL out of command arguments, logs and files.
+- **Vault seal state.** Query `/v1/sys/seal-status` (or run `docker exec vault vault status`, which exits 2 while sealed) before reading and continue only when `sealed` is `false`; a sealed Vault answers secret reads with HTTP 503. `docker ps` cannot show this: the healthcheck in `infras/vault-server/vault-compose.yaml` counts `vault status` exit 2 (sealed) as healthy, `[ $status -eq 0 ] || [ $status -eq 2 ]`. The threshold is 3 of 5 key shares. The host has no `vault` CLI and the container presets `VAULT_ADDR` and `VAULT_CACERT`, so run the following three times with three different keys; a share Vault already holds does not advance progress:
+
+  ```sh
+  docker exec -it vault vault operator unseal
+  ```
+
+- **Python version for Vault reads.** `infras/vault-server/tls/ca.crt` has `basicConstraints CA:TRUE` but no `keyUsage`. Python 3.13+ sets `VERIFY_X509_STRICT` in `ssl.create_default_context()` and rejects it ("CA cert does not include key usage extension"). The repo venv runs Python 3.12.3, so Vault reads through `infras/scripts/vault_static_secret.py` (also used by `scripts/full_regression.py`) work today, but `pyproject.toml` allows any `>=3.11`. Keep the venv on 3.12 until the CA is reissued with keyUsage `keyCertSign, cRLSign` in the infra repository (out of scope here); do not disable chain or hostname verification instead.
+- **Memory record retention.** A manual record (`POST /api/v1/memory/records`) must not outlive its consent: if `seconds` puts its expiry after the consent expiry, the API returns 422 `memory_record_invalid` (`src/infrastructure/repositories/memory_journal.py` `_manual`). Reusing the consent's own `seconds` fails because the record is created after the consent; omit `seconds` to inherit the consent expiry or use a shorter value.
 
 ## HTTP contract
 
@@ -62,6 +80,8 @@ Tests create their own private auth configs/principals and isolated conversation
 Current full result: **151 passed in 9.45s**, zero skipped, no exclusions, against real PostgreSQL and CORE. A separate two-process Uvicorn check used the real Vault API credential to prove anonymous denial, CORE response persistence, history/replay after process restart and secret-free metric export. Both temporary API processes and their conversation were removed.
 
 The historical `tests/test_core_acceptance.py` calls CORE at import and prints its checks without pytest assertions. Ensure CORE is ready before the full suite; pytest green is not a model-quality scorecard. Missing DB/CORE/auth prerequisites must not be reported as accepted integration.
+
+2026-11-08 walkthrough (engineering only): the production application code (`develop` `d850cfc`, which differs from `production` `2e5e242` only under `docs/` and `dev_log/`) ran against `local_assistant`. As `home-server`, conversations and files started and their flows completed, but memory refused the grant check. As `local_assistant_app` from Vault, all three DB services initialized and the memory flow completed; the first manual record request (`seconds` equal to the consent's 3600) returned 422 `memory_record_invalid`, and a rerun with `seconds: 1800` returned 201. The walkthrough changed no repository file. Demo rows remain in `local_assistant` under a deleted demo principal; hard-deleting them needs separate owner approval. This is not D89 owner acceptance, not D87, and not a benchmark or model-quality measurement.
 
 ## Shared PostgreSQL recovery drill
 
