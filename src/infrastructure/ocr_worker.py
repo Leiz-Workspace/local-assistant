@@ -13,6 +13,18 @@ import sys
 from src.infrastructure.native_input import rewind_native_input
 
 logger = logging.getLogger(__name__)
+# Native children inherit the worker's 512 MiB RLIMIT_AS. Multi-threaded FFmpeg (one
+# thread per demuxer/decoder/filter/encoder/muxer) otherwise gives each thread its own
+# glibc malloc arena: a 64 MiB reservation, transiently 128 MiB while it is aligned.
+# Those reservations fill the address-space cap, and a thread-stack mmap that lands
+# during one fails, so pthread_create returns EAGAIN and FFmpeg exits 245 at random.
+# A single arena keeps the footprint deterministic without raising the cap.
+CHILD_ENV = {
+    "PATH": "/usr/bin:/bin",
+    "LANG": "C.UTF-8",
+    "OMP_THREAD_LIMIT": "1",
+    "MALLOC_ARENA_MAX": "1",
+}
 
 
 def child_output(command, *, source=None, data=None, timeout=8, limit=4 * 1024 * 1024):
@@ -33,11 +45,7 @@ def child_output(command, *, source=None, data=None, timeout=8, limit=4 * 1024 *
                 stderr=subprocess.DEVNULL,
                 timeout=timeout,
                 check=False,
-                env={
-                    "PATH": "/usr/bin:/bin",
-                    "LANG": "C.UTF-8",
-                    "OMP_THREAD_LIMIT": "1",
-                },
+                env=dict(CHILD_ENV),
             )
         except subprocess.TimeoutExpired:
             raise StoragePolicyError("ocr_processing_timeout", 413) from None
