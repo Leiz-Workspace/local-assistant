@@ -2,7 +2,7 @@
 
 **Mục đích:** Chạy lại full regression có dịch vụ thật (PostgreSQL, Vault, Qdrant, CORE) trên snapshot hiện tại, gồm B1/B2 voice, ADR176, ADR178, CI, LICENSE và bản sửa lỗi decoder P2 (PR #33). Lượt gần nhất là 5.889 PASS trên snapshot 750 file ngày 2026-11-03, nay chỉ còn là lịch sử. Tài liệu này chuẩn bị lệnh; chủ dự án tự unseal Vault và tự chạy. Agent không đọc bootstrap material hay credential.
 
-**Khác với CI GitHub:** CI không có DB/CORE, có 39 mục loại trừ và một job cách ly. Run gần nhất trên `develop` (run 42379106825, commit `cebf9a0`, ngày 2026-11-07) có job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly nay chỉ còn 1 test (`tests/test_page_ocr.py::test_timeout_reaps_worker_and_descendant`). D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`. `pytest tests` không chạy `benchmarks/tests` (gồm test runner B3 của ADR178); phần đó đã được CI và cổng phần mềm B3 kiểm.
+**Khác với CI GitHub:** CI không có DB/CORE, có 39 mục loại trừ và một job cách ly. Run trên `develop` (run 42379106825, commit `cebf9a0`, ngày 2026-11-07) có job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly nay chỉ còn 1 test (`tests/test_page_ocr.py::test_timeout_reaps_worker_and_descendant`). Run push lên `production` sau lượt promote ngày 2026-11-08 (run 42450698663, commit `2e5e242`) cho cùng con số: job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly 1 passed. D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`. `pytest tests` không chạy `benchmarks/tests` (gồm test runner B3 của ADR178); phần đó đã được CI và cổng phần mềm B3 kiểm.
 
 ## 1. Điều kiện trước khi chạy
 
@@ -16,7 +16,7 @@
 
    D87 dùng cho D90 phải chạy trên đúng nội dung của commit sẽ tag trên `production` ([hồ sơ D90](D90_RELEASE_DECISION_DOSSIER.md), mục 6). Kiểm tra cây của `develop` trùng với `production`; nếu khác (ví dụ còn PR `docs:` chưa promote), promote trước rồi mới chạy.
 
-   Từ ngày 2026-11-07, `develop` có thêm một thay đổi mã chưa promote: PR #33 (merge `cebf9a0`) sửa launcher `child_output` trong `src/infrastructure/ocr_worker.py`. `staging` (`0ec664d`) và `production` (`4dcf8db`) chưa có thay đổi này. Vì vậy bước promote trước D87 là bắt buộc, và lượt promote đó mang theo mã chứ không chỉ tài liệu. Sau khi promote, vẫn chạy lệnh kiểm tra dưới đây:
+   Ngày 2026-11-07, `develop` có thêm một thay đổi mã chưa promote: PR #33 (merge `cebf9a0`) sửa launcher `child_output` trong `src/infrastructure/ocr_worker.py`; khi đó `staging` (`0ec664d`) và `production` (`4dcf8db`) chưa có thay đổi này. Ngày 2026-11-08, thay đổi đó đã được promote lên `staging` qua PR #36 (`4c99408`) và lên `production` qua PR #37 (`2e5e242`); ngay sau lượt promote, cây của `production` trùng với cây của `develop` tại `dea1b55`. Đây chỉ là promote nhánh: không có tag, GitHub Release hay deploy lên Home Server. Mỗi PR `docs:` vào `develop` sau đó (ví dụ PR ghi lại lượt promote này, hoặc phiếu D90 đã điền theo mục 6 của hồ sơ D90) sẽ làm cây của `develop` lại khác `production` cho tới lượt promote kế tiếp. Vì vậy trước D87 vẫn chạy lệnh kiểm tra dưới đây:
 
    ```bash
    test "$(git rev-parse origin/develop^{tree})" = "$(git rev-parse origin/production^{tree})" && echo "develop trùng production" || echo "develop khác production: promote trước"
