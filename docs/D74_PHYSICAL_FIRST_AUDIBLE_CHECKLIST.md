@@ -2,7 +2,7 @@
 
 **Mục đích:** Giúp chủ dự án tự đo trên PC thật, bằng Brave và loa thật, khoảng thời gian từ lúc bấm **Gửi câu hỏi** đến lúc **nghe được tiếng đầu tiên của câu trả lời**. Checklist cũng kiểm tra câu ngắn, nói nhỏ, tiếng ồn phòng và các lượt không có lời nói. Mục tiêu tối đa là 4 giây theo [yêu cầu voice](VOICE_PRODUCT_REQUIREMENTS.md) và [xác nhận "4 giây đi"](evidence/d74-latency-target-4s-20261103.json).
 
-**Ngày:** 2026-11-06 (cập nhật tình trạng B3 của `/voice` ngày 2026-11-07 và tình trạng nhánh ngày 2026-11-08). **Trạng thái:** CHECKLIST SẴN SÀNG / CHƯA CÓ KẾT QUẢ. Physical first-audible ≤4 giây vẫn UNVERIFIED. Phản hồi "Ổn rồi" ([ghi nhận](evidence/d74-voice-browser-owner-feedback-20261105.json)) không phải số đo.
+**Ngày:** 2026-11-06 (cập nhật tình trạng B3 của `/voice` ngày 2026-11-07, tình trạng nhánh và buổi B4 trên `/voice` ngày 2026-11-08). **Trạng thái:** CHECKLIST SẴN SÀNG / CHƯA CÓ PHIẾU ĐO THEO CHECKLIST. Ngày 2026-11-08 chủ dự án chấp nhận phần first-audible của B4 kèm ghi chú sau một buổi trên `/voice` không quay video ([chấp nhận B4](D74_B4_OWNER_ACCEPTANCE.md), mục [Buổi B4 trên `/voice`](#buổi-b4-trên-voice--2026-11-08) bên dưới). Đây là chấp nhận của chủ dự án, không phải phép đo vật lý: physical first-audible ≤4 giây vẫn chưa được đo khách quan (UNVERIFIED). Phản hồi "Ổn rồi" ([ghi nhận](evidence/d74-voice-browser-owner-feedback-20261105.json)) không phải số đo.
 
 ## Đã có gì và còn thiếu gì
 
@@ -14,7 +14,7 @@
 | Trang | Dùng cho checklist này? |
 |---|---|
 | Trang thử `http://127.0.0.1:8092` ([hướng dẫn](D74_VOICE_BROWSER_TRIAL_GUIDE.md)) | **Có.** Đây là bề mặt đầu tiên có lượt model thật qua HTTP đạt PASS (6/6, gọi API trực tiếp, không qua trình duyệt); từ 2026-11-07 `/voice` cũng có B3 PASS (xem dưới). UI đã kiểm bằng Brave headless với microphone tổng hợp và model giả. Chưa có lượt trình duyệt → model → loa nào được agent kiểm chứng. Kết quả chỉ áp dụng cho lane nghiên cứu Qwen3-ASR CUDA FP32 + CORE 32K/Fast512 + Trúc Ly CPU8. |
-| Trang chính `/voice` ([UI](../apps/web/voice/page.mjs), [ADR175](ADR/175-optional-main-voice-composition-and-entrypoint-binding.md)) | **Có, cho gate B4.** Trang này vẫn mặc định tắt, chỉ bật cho mục đích `integration_evaluation` và cần mã ghép phiên. B3 đã PASS ngày 2026-11-07 theo [ADR178](ADR/178-graceful-sigterm-exit-in-b3-acceptance.md) (xem dưới), nên có thể lặp lại checklist này trên `/voice` theo gate B4 trong [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md). Ghi kết quả riêng cho `/voice`, không gộp với 8092. Các điều kiện 2–6 bên dưới viết theo mã của trang thử; `/voice` mượn CORE đã xác thực, nên khi đo trên `/voice` hãy ghi rõ trang đã dùng và mọi khác biệt so với các điều kiện đó. Checklist này chưa có hướng dẫn khởi chạy `/voice` (auth file, manifest operator, mã ghép phiên); cần chuẩn bị hướng dẫn đó trước khi đo B4 trên `/voice`. |
+| Trang chính `/voice` ([UI](../apps/web/voice/page.mjs), [ADR175](ADR/175-optional-main-voice-composition-and-entrypoint-binding.md)) | **Có, cho gate B4.** Trang này vẫn mặc định tắt, chỉ bật cho mục đích `integration_evaluation` và cần mã ghép phiên. B3 đã PASS ngày 2026-11-07 theo [ADR178](ADR/178-graceful-sigterm-exit-in-b3-acceptance.md) (xem dưới), nên có thể lặp lại checklist này trên `/voice` theo gate B4 trong [ADR174](ADR/174-proposed-opt-in-authenticated-voice-integration.md). Ghi kết quả riêng cho `/voice`, không gộp với 8092. Các điều kiện 2–6 bên dưới viết theo mã của trang thử; `/voice` mượn CORE đã xác thực, nên khi đo trên `/voice` hãy ghi rõ trang đã dùng và mọi khác biệt so với các điều kiện đó. Checklist này không tự chứa hướng dẫn khởi chạy `/voice` (auth file, manifest operator, mã ghép phiên). Từ 2026-11-08, quy trình khởi chạy đã dùng cho buổi B4 được ghi trong [chấp nhận B4](D74_B4_OWNER_ACCEPTANCE.md); hai script vận hành tạm của buổi đó nằm ngoài repository và không được commit, còn một launcher được commit sẽ cần PR riêng có test. |
 
 **Tình trạng B3 của `/voice`:**
 
@@ -27,6 +27,18 @@
 - Báo cáo đầy đủ: [kết quả B3](D74_MAIN_VOICE_B3_RESULT.md), receipt công khai [lượt ADR178](evidence/d74-main-voice-b3-adr178-result.json) và [lượt thay thế ADR176](evidence/d74-main-voice-b3-adr176-result.json); receipt chi tiết nằm ở thư mục cục bộ không đưa vào git (`data/backups/d74-main-integration-first/`, `data/backups/d74-main-integration-adr176/`, `data/backups/d74-main-integration-adr178/`).
 
 Kết quả trên 8092 không tự chuyển thành kết quả của `/voice`, vì `/voice` mượn CORE đã xác thực, có cơ chế cấp quyền dùng GPU và BFF riêng. ADR176 chỉ đổi mã của `/voice` và runner B3, ADR178 chỉ đổi runner B3; cả hai không đổi nguồn trang thử. Trang thử không từ chối tiến trình GPU lạ: bộ đo của nó chỉ cộng VRAM của tiến trình do chính nó tạo ([vi_voice_cuda_check.py](../benchmarks/scripts/vi_voice_cuda_check.py), `Monitor.sample`). Tuy vậy, VRAM của tiến trình lạ vẫn trừ vào các ngưỡng VRAM trống ở điều kiện 5.
+
+## Buổi B4 trên `/voice` — 2026-11-08
+
+Báo cáo đầy đủ, gồm quy trình khởi chạy: [chấp nhận B4](D74_B4_OWNER_ACCEPTANCE.md). Mục này chỉ tóm tắt; các điều kiện, cách đo và quy tắc bên dưới giữ nguyên.
+
+- Phạm vi: trang chính `/voice` (`apps.api.voice:create_app`, mục đích `integration_evaluation`), không phải trang thử 8092. Nguồn `develop` `fb5ee5d`, mã ứng dụng giống `production` `2e5e242` (đã có PR #33). Thiết bị: PC này, Brave, microphone chủ dự án dùng, đầu ra âm thanh mặc định là HDMI (`alsa_output.pci-0000_01_00.1.hdmi-stereo`); chủ dự án không báo model loa hay âm lượng.
+- Lần Chuẩn bị thứ nhất lỗi `dependency_failed` (log không ghi nguyên nhân); chủ dự án bấm Chuẩn bị lại khoảng 2 giây sau, trong khi điều kiện 5 yêu cầu dừng và báo trước. Lần thứ hai sẵn sàng sau 49,73 s tính phía server.
+- 14 lượt; cả 14 đều qua VAD, ASR, CORE và TTS, không lượt nào bị xếp là không có lời nói, nên chưa thử tình huống im lặng N1/N2. Khoảng thời gian phía server từ lúc nhận lượt đến lúc xóa dữ liệu RAM của lượt là 1,10–3,93 s; lượt chậm nhất (3,93 s) sát trần 4 giây. Đây không phải số trên trang và không gồm phát trên trình duyệt, hệ thống âm thanh hay độ trễ HDMI.
+- Không quay video hay bản ghi khách quan nào, nên cách đo khách quan và phiếu 16 hàng bên dưới chưa được thực hiện. Chủ dự án báo "Được rồi phần âm thanh nhận vào đã <4s ở các case khác nhau", tức số "Nhận audio" trên trang (mốc phần mềm), không báo số của từng lượt, mỗi lượt thuộc tình huống nào hay có lượt nào định để im lặng. Khi được hỏi chốt B4 thế nào, chủ dự án chọn "Chấp nhận kèm ghi chú".
+- Ý nghĩa: chủ dự án chấp nhận phần first-audible của B4 kèm các ghi chú trên. Physical first-audible ≤4 giây vẫn chưa được đo khách quan: không có video hay bản ghi khách quan nên độ trễ của loa/HDMI chưa được đo. Kết quả chỉ áp dụng cho PC, Brave, microphone, đầu ra HDMI và lane nghiên cứu trong manifest B3 (Qwen3-ASR + CORE + Trúc Ly/VieNeu TTS); không phải p95 hay SLO.
+- Vẫn mở: quyết định cuối về model, giọng, default và sản phẩm; vì không biết đã phủ tình huống nào và chưa thử im lặng, buổi này không cho kết luận riêng về nhận dạng câu ngắn, nói nhỏ hay có tiếng ồn; voice vẫn mặc định tắt; trạng thái release không đổi (không tag, GitHub Release hay deploy); D89/D90 không đổi.
+- Receipt chi tiết nằm ở thư mục cục bộ không đưa vào git (`data/backups/d74-b4-voice-physical-first/`).
 
 ## Điều kiện trước khi đo
 
