@@ -5505,4 +5505,6 @@ Owner replies exactly “Ổn rồi” after delivery of the working local voice
 
 **Unchanged:** Error codes and normal-path results of the seven callers. Sandboxes that do not use `file_verifier.sandbox_command` (the coding sandbox, the check runner, checkpoint git, MCP stdio, the voice sandbox). D81 stays OPEN; D89 and D90 stay open; D60 deferred. Voice stays default-off. No tag, no GitHub Release, nothing deployed to the Home Server. No model or default change.
 
-**Remaining:** The PR CI result for this branch (recorded after the run). Not covered by this change: a signal landing inside `Popen()` itself, and an outside SIGKILL of the launcher in the microseconds between clone and report. The latter is reported as unconfirmed, not as success.
+**CI:** PR #47 CI run 42582866883: lint passed (19 files), main pytest 6490 passed, 368 skipped, 30 deselected (strict timeout tests included, on the 2-vCPU hosted runner), quarantine job selected no test and passed.
+
+**Remaining:** Not covered by this change: a signal landing inside `Popen()` itself, and an outside SIGKILL of the launcher in the microseconds between clone and report. The latter is reported as unconfirmed, not as success.
