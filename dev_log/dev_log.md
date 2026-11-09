@@ -5508,3 +5508,35 @@ Owner replies exactly “Ổn rồi” after delivery of the working local voice
 **CI:** PR #47 CI run 42582866883: lint passed (19 files), main pytest 6490 passed, 368 skipped, 30 deselected (strict timeout tests included, on the 2-vCPU hosted runner), quarantine job selected no test and passed.
 
 **Remaining:** Not covered by this change: a signal landing inside `Popen()` itself, and an outside SIGKILL of the launcher in the microseconds between clone and report. The latter is reported as unconfirmed, not as success.
+
+## 2026-11-09 — Promotion of ADR179 to staging and production
+
+**Owner request:** After PR #47 was merged, the assistant asked "Promote develop lên staging và production?" (promote develop to staging and production?) and the owner answered "Promote luôn" (promote right away), 2026-11-09.
+
+**Change set:** the three PRs merged into `develop` since the last promotion (#43/#44): #45 (docs: D81 promotion and the D87 PASS), #46 (timeout reap tests, empty CI quarantine list) and #47 (code: [ADR179](../docs/ADR/179-retire-sandbox-namespace-before-timeout-returns.md) sandbox namespace retirement).
+
+**Steps and CI:**
+- **`develop` push** run 42585399105 at `0e2d6b7` (PR #47 merge): passed.
+- **PR #48** (`develop` → `staging`):
+  - CI run 42586567285. The first attempt failed only in test-python's `Install native tools` (apt) step. All three `apt-get update` attempts got HTTP 403 ("no longer signed") from packages.microsoft.com, while the Ubuntu mirrors answered normally. Pytest did not run in that job; test-js and the quarantine job ran and passed. A rerun of the failed jobs (test-python, ci-gate) passed: main pytest 6490 passed, 368 skipped, 30 deselected.
+  - Merged as `11b4020` at 08:45 UTC (15:45 +07).
+- **`staging` push** run 42588240817 at `11b4020`: passed on the first attempt.
+  - Main pytest: 6490 passed, 368 skipped, 30 deselected.
+  - `package` artifact: `local-assistant-staging-11b4020`, 14,080,106 bytes.
+  - `deploy-staging`: deployment 7650723456 to the environment `staging`, 08:59 UTC (15:59 +07).
+- **PR #49** (`staging` → `production`):
+  - CI run 42590054114 passed: 6490 passed, 368 skipped, 30 deselected.
+  - Merged as `dd7fac3` at 09:10 UTC (16:10 +07).
+- **`production` push** run 42591324567 at `dd7fac3`: passed on the first attempt.
+  - Main pytest: 6490 passed, 368 skipped, 30 deselected.
+  - `package` artifact: `local-assistant-production-dd7fac3`, 14,081,040 bytes.
+  - `deploy-staging` and `release` were skipped.
+- **Result:** after PR #49, `origin/develop`, `origin/staging` and `origin/production` had the identical tree `5f2653d`. Once this documentation update is merged, `develop` is ahead of `production` by documentation only (D87 source-freeze scope unchanged).
+
+**State:** Branch promotion only. No tag, no GitHub Release, nothing deployed to the Home Server. The `production` branch now contains the ADR179 code (with it, report export fails closed with `export_cleanup_uncertain` when teardown is not confirmed); nothing running on the Home Server changed.
+
+**D87 and evidence:** The 2026-11-09 D87 PASS (6200 passed) is software regression evidence for the previous `production` tree `0b67d95` only. #46 and #47 changed `tests/` and `src/`, which are inside the D87 source-freeze scope. D87 for a tag therefore has to run on the current tree, which is now the same on all three branches, or on the final tag tree after any later change, or the owner records a named exception in the D90 form. The B3/B4 voice evidence stays bound to its recorded source snapshot; a future `/voice` session recomputes the manifest.
+
+**Unchanged:** D81 stays OPEN (full-flow acceptance, native v4 not run). Still open: the voice model/voice/default/product decision and product activation (voice default-off), D88 (only if distributing), D89 and D90. D60 deferred. No model or default change.
+
+**Remaining:** D87 on the current tree before a tag (owner decision on timing). The owner deletes the merged remote branches, including `fix/sandbox-namespace-teardown` and this docs branch.
