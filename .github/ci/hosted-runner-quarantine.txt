@@ -1,5 +1,4 @@
 # Known-intermittent tests on GitHub-hosted runners: <path or node id>  # <reason>
 # They run in the non-blocking test-python-quarantine job, never silently dropped.
 # Remove an entry once the underlying intermittent failure is fixed.
-
-tests/test_page_ocr.py::test_timeout_reaps_worker_and_descendant  # descendant process still visible right after the timeout reap on a slow 2-vCPU runner (timing-dependent)
+# The list may be empty; the quarantine job then selects no test and reports success.

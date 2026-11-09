@@ -11,6 +11,7 @@ from uuid import uuid4
 
 import pytest
 from PIL import Image
+from process_probe import reap_survivors
 
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ocr_contract import validate_page, validate_vision
@@ -237,12 +238,9 @@ def test_timeout_reaps_worker_and_descendant(monkeypatch):
     monkeypatch.setattr(module, "OCR_WALL_SECONDS", 0.3)
     with pytest.raises(StoragePolicyError, match="ocr_processing_timeout"):
         recognize_file()
-    for process in Path("/proc").iterdir():
-        if process.name.isdecimal():
-            try:
-                assert marker.encode() not in (process / "cmdline").read_bytes()
-            except (FileNotFoundError, PermissionError, ProcessLookupError):
-                pass
+    # The call returns once bwrap is reaped; the PID namespace is torn down asynchronously,
+    # so allow a bounded window. Both stalled probes sleep 30 s, so a survivor is a real leak.
+    assert reap_survivors(marker) == []
 
 
 def test_ocr_logs_keep_source_text_private(caplog):
