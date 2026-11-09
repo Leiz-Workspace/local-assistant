@@ -117,6 +117,7 @@ Set flags in the environment of the uvicorn command. A flag is on only when set 
 | `ASSISTANT_INGESTION_ENABLED` (DB) | Indexing files into Qdrant | files; `ASSISTANT_INGESTION_CONFIG_FILE`. Creates a real Qdrant collection, so it needs owner approval first |
 | `ASSISTANT_RETRIEVAL_ENABLED` (DB) | Dense retrieval | ingestion and its owned collection |
 | `ASSISTANT_GROUNDED_ENABLED` (DB) | Grounded answers | retrieval |
+| `ASSISTANT_GROUNDED_EXTRACT_ENABLED` (DB) | `POST /api/v1/grounded/extract` (structured excerpt extraction) | files, ingestion, retrieval, grounded and `ASSISTANT_AUTH_FILE`; unlike other DB flags, startup aborts without `DATABASE_URL`; refuses voice. Read only by the separate entry point `apps.api.grounded_extract:create_app` (run uvicorn with `--factory`), never by `apps.api.main:app` |
 | `ASSISTANT_VOICE_ENABLED` | Voice composition | Keep `0`. Read only by the voice entry point `apps.api.voice:create_app` (with `ASSISTANT_VOICE_MANIFEST`, `ASSISTANT_VOICE_PURPOSE`), never by `apps.api.main:app` |
 
 ### 5. Database (optional)
@@ -158,6 +159,7 @@ Press Ctrl+C in the API terminal first (graceful shutdown closes the services an
 - [Workspace reads and config format](docs/D34_WORKSPACE_READS.md), [reviewed coding workflow](docs/D43_REVIEWED_CODING_WORKFLOW.md)
 - [Authenticated web search](docs/D48_AUTHENTICATED_SEARCH_API.md)
 - [Incremental ingestion](docs/INCREMENTAL_INGESTION.md), [retrieval](docs/RETRIEVAL.md)
+- [Grounded structured extraction (ADR177)](docs/ADR/177-proposed-d81-structured-excerpt-product-integration.md): default-off extract route, factory start and its limits
 - Example run: the dev log entry "2026-11-08 — MVP walkthrough on the production code (no-DB and DB tiers)" in [dev_log/dev_log.md](dev_log/dev_log.md)
 
 ## Safety rules
