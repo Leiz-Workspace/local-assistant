@@ -1,14 +1,18 @@
 """Verify native namespace command isolation and async supervisor ownership under controlled faults without actual Office claims."""
 
 import asyncio
+import errno
 import logging
 import threading
+from uuid import uuid4
 
 import pytest
+from process_probe import reap_survivors, surviving_processes, watch_teardown
 from test_report_export_policy import authored_payload
 
 from src.application.services.report_export_policy import ReportExportError
 from src.infrastructure import report_export as module
+from src.infrastructure import sandbox_process
 from src.infrastructure.file_verifier import sandbox_command
 from src.infrastructure.report_export import (
     NativeReportExporter,
@@ -64,6 +68,33 @@ async def test_native_process_launch_failure_is_finite_and_retains_no_owned_sele
     monkeypatch.setattr(module.subprocess, "Popen", fail)
     with pytest.raises(ReportExportError, match="export_unavailable"):
         await asyncio.to_thread(supervise, payload, threading.Event())
+
+
+@pytest.mark.asyncio
+async def test_real_timeout_retires_the_export_namespace_before_returning(monkeypatch):
+    """A stalled export namespace and its nested child are gone when the timeout reaches the caller."""
+    _, payload = await authored_payload()
+    marker = "export-timeout-" + uuid4().hex
+    original = module.sandbox_command
+
+    def stalled(arguments):
+        """Keep the export namespace policy around a finite deliberately stalled child tree."""
+        code = 'import subprocess,sys,time;subprocess.Popen([sys.executable,"-c","import time;time.sleep(30)",sys.argv[1]]);time.sleep(30)'
+        return original(["/venv/bin/python", "-c", code, marker])
+
+    monkeypatch.setattr(module, "sandbox_command", stalled)
+    monkeypatch.setattr(module, "NATIVE_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = await asyncio.to_thread(
+            watch_teardown, lambda: supervise(payload, threading.Event()), marker, 3
+        )
+        assert isinstance(report.error, ReportExportError)
+        assert report.error.code == "export_timeout"
+        assert report.held == 3 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
 
 
 @pytest.mark.asyncio
@@ -150,3 +181,34 @@ async def test_explicit_thread_cleanup_uncertainty_also_closes_native_admission(
     assert (
         exporter.closing and not exporter.operations and not exporter.admission.locked()
     )
+
+
+@pytest.mark.asyncio
+async def test_unconfirmed_namespace_retirement_closes_export_admission(monkeypatch):
+    """When teardown cannot be confirmed, supervision fails closed so the exporter stops admitting new exports."""
+    _, payload = await authored_payload()
+    marker = "export-unconfirmed-" + uuid4().hex
+    original = module.sandbox_command
+
+    def stalled(arguments):
+        """Keep the export namespace policy around a stalled worker."""
+        return original(
+            ["/venv/bin/python", "-c", "import time; time.sleep(30)", marker]
+        )
+
+    def exhausted(pid):
+        """Fail like a process that has run out of descriptors, so the init cannot be watched."""
+        raise OSError(errno.EMFILE, "Too many open files")
+
+    monkeypatch.setattr(module, "sandbox_command", stalled)
+    monkeypatch.setattr(module, "NATIVE_SECONDS", 1)
+    monkeypatch.setattr(sandbox_process.os, "pidfd_open", exhausted)
+    exporter = NativeReportExporter()
+    try:
+        with pytest.raises(ReportExportError, match="export_cleanup_uncertain"):
+            await exporter.render(payload)
+        assert exporter.closing is True
+    finally:
+        monkeypatch.undo()
+        # The namespace still dies through --die-with-parent; wait for it so no test leaks it.
+        assert surviving_processes(marker) == []

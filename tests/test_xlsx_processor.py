@@ -11,6 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from process_probe import reap_survivors, watch_teardown
 from lxml import etree
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
@@ -334,7 +335,7 @@ def test_parent_failure_protocol_is_sanitized(monkeypatch, mode):
         kwargs["stdout"].write(payload)
         return SimpleNamespace(returncode=1 if mode == "crash" else 0)
 
-    monkeypatch.setattr(module.subprocess, "run", worker)
+    monkeypatch.setattr(module, "run_sandbox", worker)
     with pytest.raises(StoragePolicyError) as error:
         process_bytes(GOLDEN.read_bytes())
     assert error.value.code in (
@@ -395,12 +396,13 @@ def test_real_timeout_does_not_leave_workers(monkeypatch):
         )
 
     monkeypatch.setattr(module, "sandbox_command", stalled)
-    monkeypatch.setattr(module, "XLSX_WALL_SECONDS", 0.2)
-    with pytest.raises(StoragePolicyError, match="xlsx_processing_timeout"):
-        process_bytes(GOLDEN.read_bytes())
-    for process in Path("/proc").iterdir():
-        if process.name.isdecimal():
-            try:
-                assert marker.encode() not in (process / "cmdline").read_bytes()
-            except (FileNotFoundError, ProcessLookupError, PermissionError):
-                pass
+    monkeypatch.setattr(module, "XLSX_WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(lambda: process_bytes(GOLDEN.read_bytes()), marker, 2)
+        assert isinstance(report.error, StoragePolicyError)
+        assert report.error.code == "xlsx_processing_timeout"
+        assert report.held == 2 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)

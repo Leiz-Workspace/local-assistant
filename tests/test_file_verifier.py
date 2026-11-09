@@ -9,17 +9,16 @@ import stat
 import struct
 import subprocess
 import tempfile
-import time
 import warnings
 import zipfile
 from dataclasses import asdict, replace
-from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
 from PIL import Image
 from pypdf import PdfWriter
+from process_probe import reap_survivors, watch_teardown
 from pypdf.generic import DictionaryObject, NameObject, TextStringObject
 
 from src.application.services.file_storage_policy import (
@@ -348,7 +347,7 @@ def test_failed_worker_never_falls_back_to_inprocess_parsing(monkeypatch, failur
         parameters["stdout"].write(output)
         return SimpleNamespace(returncode=1 if failure == "nonzero" else 0)
 
-    monkeypatch.setattr(subprocess, "run", broken_run)
+    monkeypatch.setattr(file_verifier, "run_sandbox", broken_run)
     with pytest.raises(StoragePolicyError) as error:
         verify_bytes(b"plain text")
     assert error.value.code in {"verification_timeout", "verification_unavailable"}
@@ -416,7 +415,7 @@ def test_worker_verdict_types_fail_closed(monkeypatch, verdict):
         parameters["stdout"].write(verdict)
         return SimpleNamespace(returncode=0)
 
-    monkeypatch.setattr(subprocess, "run", malformed_worker)
+    monkeypatch.setattr(file_verifier, "run_sandbox", malformed_worker)
     with pytest.raises(StoragePolicyError, match="verification_unavailable"):
         verify_bytes(b"text")
 
@@ -432,21 +431,13 @@ def test_real_timeout_leaves_no_worker_or_namespace_supervisor(monkeypatch):
         )
 
     monkeypatch.setattr(file_verifier, "sandbox_command", stalled_command)
-    monkeypatch.setattr(file_verifier, "VERIFIER_WALL_SECONDS", 0.2)
-    with pytest.raises(StoragePolicyError, match="verification_timeout"):
-        verify_bytes(b"text")
-    deadline = time.monotonic() + 2
-    while True:
-        remaining = []
-        for process in Path("/proc").iterdir():
-            if not process.name.isdecimal():
-                continue
-            try:
-                if marker.encode() in (process / "cmdline").read_bytes():
-                    remaining.append(process.name)
-            except OSError:
-                continue
-        if not remaining or time.monotonic() >= deadline:
-            break
-        time.sleep(0.02)
-    assert not remaining
+    monkeypatch.setattr(file_verifier, "VERIFIER_WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(lambda: verify_bytes(b"text"), marker, 2)
+        assert isinstance(report.error, StoragePolicyError)
+        assert report.error.code == "verification_timeout"
+        assert report.held == 2 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
