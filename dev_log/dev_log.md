@@ -5540,3 +5540,38 @@ Owner replies exactly “Ổn rồi” after delivery of the working local voice
 **Unchanged:** D81 stays OPEN (full-flow acceptance, native v4 not run). Still open: the voice model/voice/default/product decision and product activation (voice default-off), D88 (only if distributing), D89 and D90. D60 deferred. No model or default change.
 
 **Remaining:** D87 on the current tree before a tag (owner decision on timing). The owner deletes the merged remote branches, including `fix/sandbox-namespace-teardown` and this docs branch.
+
+## 2026-11-09 — D87 on production dd7fac3: run 2 NOT PASS, run 3 PASS on an idle host
+
+**Owner request:** After the ADR179 promotion, the assistant asked "Chạy D87 trên cây production mới 5f2653d?" (run D87 on the new production tree?) and the owner answered "Chạy D87" (run D87). After run 2 failed, the owner was offered two options: a CPU-pinning ADR for the reranker test, or a rerun on an idle host. The owner chose "Chạy lại khi máy rảnh" (rerun when the machine is idle).
+
+**Setup:** The runbook was followed, with one difference: the checkout was detached at `origin/production` `dd7fac3` (tree `5f2653d`) and restored to `develop` afterwards. `develop` (`fd1a2a5`) was ahead only by documentation (PR #50), and the D87 source-freeze scope was identical, so the runbook's develop-equals-production check would have failed only on docs. `uv sync --locked --dev` changed nothing, and the source scope was clean. Vault was already unsealed. CORE (`local-assistant-core-1`, `qwen3.5-9b-core`, health 200) was started before each run and stopped after it. PostgreSQL, Vault and Qdrant were not restarted.
+
+**Run 2 (NOT PASS, retained):** `data/backups/d87-20261109-full-2`, 09:48–10:20 UTC (16:48–17:20 +07).
+- 6232 passed, 1 failed, 0 errors, 0 skipped. Exit 1, pytest 1945.21 s, 821 source files unchanged.
+- Source freeze `c5c9ff586fe06cb266923ea8b1218b891448209d8ca62ba22c2c717d60ba08e7`; log `1f1f69f7da96baa2bcd7f6716387a224051d605c0fda137c4df46253989b8dfc`.
+- Failed test: `tests/integration/test_reranker_live.py::test_actual_pinned_reranker_paired_comparison`, with `reranker_worker_nonzero exit_code=152 completed_rounds=2`. Exit 152 is 128 + SIGXCPU: the worker reached its own 480 s / 481 s `RLIMIT_CPU` (`scripts/qwen_reranker_worker.py`) during round 3 of 3. Host load was not measured during this run.
+- Not related to ADR179: the reranker code is unchanged and does not use the sandbox code. It is the same failure mode as the 2026-11-02 full runs (ADR150/151 one-off environments).
+- **Analysis probe** (not a D87 run). The single test was run with CORE stopped, under `/usr/bin/time -v`, and also failed: 241.94 s wall, exit 152 after 2 rounds, 479.43 s user + 2.29 s system CPU, 198% CPU.
+  - Load average was 1.26 before and 3.15 after. Background load came from RustDesk, Claude desktop, k3s and GNOME Shell.
+  - The morning PASS on `0b67d95` had rounds of 79.39/79.13/79.19 s: about 475 s CPU for two threads, about 1% margin.
+  - The analysis did not overwrite `data/backups/d27-t02-latest-comparison.json`, because failing runs do not write it.
+
+**Run 3 (PASS):** `data/backups/d87-20261109-full-3`, 10:36–11:06 UTC (17:36–18:06 +07).
+- A background script waited until the host was idle: busy CPUs from `/proc/stat` below 0.5 for three consecutive 30 s samples, with a 6 h limit. That took 421 s (last samples 0.48/0.38/0.28). No owner application was closed.
+- **6233 passed, 0 failed, 0 errors, 0 skipped.** Exit 0, `accepted_full_software_regression: true`, pytest 1830.43 s, 821 source files unchanged.
+- Source freeze is the same as run 2. Log `720fe50632c17a71a23ede1235e1e2a7b5ab1939553be9fec8d4db1e9421039a`.
+- Reranker rounds were 78.19/77.26/77.00 s and all resource gates passed. Load during the run, including the suite itself, averaged 1.49 busy CPUs with a maximum of 2.65 (61 samples).
+- The successful reranker test rewrote `data/backups/d27-t02-latest-comparison.json`, as designed. The morning copy that backs the morning round times is kept, privately and git-ignored, at `data/backups/d27-t02-comparison-20261109-morning.json` (same SHA-256 prefix `73ffa8e2b1c63a12`).
+
+**Database:** checked read-only after each run as the runtime role. Business tables have 0 rows; `file_owner_usage` and `file_global_usage` have 1 row each; Alembic is at `0006`, unchanged.
+
+**Docs:**
+- New public receipt `docs/evidence/d87-20261109-production-dd7fac3-acceptance.json`.
+- `docs/D87_CURRENT_FULL_RESULT.md` now leads with the `dd7fac3` result; the morning `0b67d95` result moved to a history section, unchanged.
+- Runbook note, plus a new precondition: start on an idle host.
+- D90 dossier (engineering text only; the owner form is unchanged), ledger, release status, roadmap v5.18.5 and OPEN_DAYS.
+
+**State:** D87 now matches current `production` `dd7fac3`. Later docs-only commits do not change the source-freeze scope; accepting that, or rerunning on the final tag commit, is the owner's D90 decision. This is software regression evidence only: not model quality, device acceptance, D89 or a release decision. No tag, no GitHub Release, nothing deployed to the Home Server.
+
+**Remaining:** The reranker test uses an estimated 465–475 s of its 480 s CPU limit when it passes (about 1–3% margin), so future D87 runs should start on an idle host. A standing remedy, such as the ADR151 CPU partition as a regular test environment, would need its own ADR and owner approval; the 480 s limit, model, profile and algorithm are unchanged. Still open: D81, D89 and D90; D60 deferred; voice stays default-off.
