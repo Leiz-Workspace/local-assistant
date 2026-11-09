@@ -2,6 +2,8 @@
 
 **Purpose:** Define one reproducible complete software run while preserving original evidence and open product gates.
 
+**Current result, 2026-11-09:** PASS — **6200 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, 817 source files unchanged, on the source tree of `production` `0b67d95`, run by the assistant at the owner's request with the [2026-11-06 runbook](D87_FULL_REGRESSION_20261106_RUNBOOK.md) ([result](D87_CURRENT_FULL_RESULT.md), [public receipt](evidence/d87-20261109-full-acceptance.json)); software regression evidence only, not model quality, D89 or a release decision. The 2026-11-03 5889 PASS on 750 files and the 2026-10-27 refresh below are historical.
+
 **Current refresh, 2026-10-27:** VERIFIED — **5759 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,1870.65s/exit0; all732frozen files unchanged and all728historical files exact. Owned CORE retired/joined to native=0, same15containers/boot, qualified current-boot database/security audit complete with explicit quota timestamp-only delta. [Actual result and boundaries](D87_CURRENT_FULL_RESULT.md), [terminal/audit receipt](evidence/d87-current-20261027-full-acceptance.json). Earlier5674/5596/5507/5405snapshots and first invocation failures remain historical; product/manual/release gates stay open.
 
 **Subsequent source addition:** The separate [D81excerpt guard](D81_STRICT_EXCERPT_GUARD.md) adds a component and66tests after this freeze. Its227related tests PASS/0SKIP; all707original snapshot files still match. The5405result remains evidence for its frozen snapshot and does not include the new files. A later release-wide run must freeze/include them; do not add related counts to5405 and call the sum a full-suite execution.

@@ -1,8 +1,10 @@
 # D87 — Full regression mới cho snapshot có voice (chủ dự án tự chạy)
 
-**Mục đích:** Chạy lại full regression có dịch vụ thật (PostgreSQL, Vault, Qdrant, CORE) trên snapshot hiện tại, gồm B1/B2 voice, ADR176, ADR178, CI, LICENSE và bản sửa lỗi decoder P2 (PR #33). Lượt gần nhất là 5.889 PASS trên snapshot 750 file ngày 2026-11-03, nay chỉ còn là lịch sử. Tài liệu này chuẩn bị lệnh; chủ dự án tự unseal Vault và tự chạy. Agent không đọc bootstrap material hay credential.
+> **Ghi chú 2026-11-09:** Lượt D87 theo runbook này đã được assistant chạy ngày 2026-11-09 theo yêu cầu của chủ dự án ("Tiếp theo làm D81, D87 đi", thứ tự "Sau D81 + promote (Recommended)"), trên `develop` `3812e5c` có cây trùng `production` `0b67d95`. Kết quả **PASS: 6.200 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, 817 file source không đổi ([kết quả](D87_CURRENT_FULL_RESULT.md), [receipt](evidence/d87-20261109-full-acceptance.json)). Khác với cách mặc định dưới đây, lượt này Vault do assistant unseal từ bootstrap file theo ủy quyền của chủ dự án ngày 2026-11-08 (key share không in ra). Thư mục `data/backups/d87-20261109-full` đã dùng; lượt sau phải dùng một thư mục kết quả mới chưa tồn tại (lệnh ở mục 2 đặt tên theo ngày chạy) và vẫn làm đủ mục 1, gồm kiểm tra cây `develop` trùng `production` trên commit sẽ tag.
 
-**Khác với CI GitHub:** CI không có DB/CORE, có 39 mục loại trừ và một job cách ly. Run trên `develop` (run 42379106825, commit `cebf9a0`, ngày 2026-11-07) có job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly nay chỉ còn 1 test (`tests/test_page_ocr.py::test_timeout_reaps_worker_and_descendant`). Run push lên `production` sau lượt promote ngày 2026-11-08 (run 42450698663, commit `2e5e242`) cho cùng con số: job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly 1 passed. D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`. `pytest tests` không chạy `benchmarks/tests` (gồm test runner B3 của ADR178); phần đó đã được CI và cổng phần mềm B3 kiểm.
+**Mục đích:** Chạy lại full regression có dịch vụ thật (PostgreSQL, Vault, Qdrant, CORE) trên snapshot hiện tại, gồm B1/B2 voice, ADR176, ADR178, CI, LICENSE và bản sửa lỗi decoder P2 (PR #33). Lượt gần nhất là 6.200 PASS trên 817 file ngày 2026-11-09 (ghi chú trên); lượt 5.889 PASS trên snapshot 750 file ngày 2026-11-03 nay chỉ còn là lịch sử. Tài liệu này chuẩn bị lệnh; chủ dự án tự unseal Vault và tự chạy. Agent không đọc bootstrap material hay credential.
+
+**Khác với CI GitHub:** CI không có DB/CORE, có 39 mục loại trừ và một job cách ly. Run trên `develop` (run 42379106825, commit `cebf9a0`, ngày 2026-11-07) có job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly nay chỉ còn 1 test (`tests/test_page_ocr.py::test_timeout_reaps_worker_and_descendant`). Run push lên `production` sau lượt promote ngày 2026-11-08 (run 42450698663, commit `2e5e242`) cho cùng con số: job chính 6.287 passed, 368 skipped, 31 deselected; job cách ly 1 passed. Run push lên `production` sau lượt promote ngày 2026-11-09 (run 42556825440, commit `0b67d95`, có code D81 mặc định tắt): job chính 6.456 passed, 368 skipped, 31 deselected; job cách ly thành công. D87 chạy `pytest tests` trên máy thật, không loại trừ gì, với `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1` và `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`. `pytest tests` không chạy `benchmarks/tests` (gồm test runner B3 của ADR178); phần đó đã được CI và cổng phần mềm B3 kiểm.
 
 ## 1. Điều kiện trước khi chạy
 
@@ -39,13 +41,14 @@
 
 ## 2. Chạy
 
-Mỗi lượt dùng một thư mục kết quả **mới**; script từ chối thư mục đã tồn tại.
+Mỗi lượt dùng một thư mục kết quả **mới**; script từ chối thư mục đã tồn tại. `data/backups/d87-20261109-full` đã dùng cho lượt 2026-11-09. Lệnh dưới đặt tên thư mục theo ngày chạy; nếu chạy lại trong cùng ngày, thêm hậu tố (ví dụ `-2`). Giữ nguyên terminal này cho mục 3, vì lệnh ở đó dùng lại `D87_DIR`.
 
 ```bash
-uv run --no-sync python -m scripts.full_regression data/backups/d87-20261106-full
+D87_DIR=data/backups/d87-$(date +%Y%m%d)-full
+uv run --no-sync python -m scripts.full_regression "$D87_DIR"
 ```
 
-- Thời gian dự kiến khoảng 35–40 phút; lượt trước mất 2.128,68 giây.
+- Thời gian dự kiến khoảng 30–40 phút; lượt 2026-11-09 mất 1.869,85 giây (pytest), lượt 2026-11-03 mất 2.128,68 giây.
 - Log và `result.json` nằm trong thư mục kết quả, credential đã được ẩn. Không sửa hay xóa các file này.
 - Lệnh thoát `0` chỉ khi `accepted_full_software_regression` là `true`.
 
@@ -57,10 +60,10 @@ uv run --no-sync python -m scripts.full_regression data/backups/d87-20261106-ful
    docker compose --profile core stop
    ```
 
-2. Gửi lại cho agent nội dung tóm tắt (không gửi credential):
+2. Gửi lại cho agent nội dung tóm tắt (không gửi credential), trong cùng terminal đã đặt `D87_DIR` ở mục 2:
 
    ```bash
-   python3 -c "import json;d=json.load(open('data/backups/d87-20261106-full/result.json'));print({k:d.get(k) for k in ('status','passed','failed','errors','skipped','exit_code','pytest_seconds','source_files','accepted_full_software_regression','summary')})"
+   python3 -c "import json;d=json.load(open('$D87_DIR/result.json'));print({k:d.get(k) for k in ('status','passed','failed','errors','skipped','exit_code','pytest_seconds','source_files','accepted_full_software_regression','summary')})"
    ```
 
 ## 4. Cách đọc kết quả
