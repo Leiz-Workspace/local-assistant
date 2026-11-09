@@ -15,6 +15,7 @@ from src.application.services.video_contract import (
 from src.application.services.vision_chat_policy import strict_json
 from src.infrastructure.file_verifier import sandbox_command
 from src.infrastructure.native_input import rewind_native_input
+from src.infrastructure.sandbox_process import run_sandbox
 
 logger = logging.getLogger(__name__)
 WALL_SECONDS = 40
@@ -31,7 +32,7 @@ class NativeVideoSampler:
                 source.write(raw)
                 source.flush()
                 rewind_native_input(source)
-                result = subprocess.run(
+                result = run_sandbox(
                     sandbox_command(
                         [
                             "/venv/bin/python",
@@ -47,7 +48,6 @@ class NativeVideoSampler:
                     env={},
                     close_fds=True,
                     start_new_session=True,
-                    check=False,
                 )
                 output.seek(0)
                 data = output.read(MAX_OUTPUT + 1)

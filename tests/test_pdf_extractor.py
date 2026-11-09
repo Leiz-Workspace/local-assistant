@@ -8,7 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from process_probe import reap_survivors
+from process_probe import reap_survivors, watch_teardown
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import (
     DecodedStreamObject,
@@ -140,7 +140,7 @@ def test_worker_failures_sanitized_and_source_reset(monkeypatch, mode):
         kwargs["stdout"].write(payload)
         return SimpleNamespace(returncode=1 if mode == "crash" else 0)
 
-    monkeypatch.setattr(module.subprocess, "run", worker)
+    monkeypatch.setattr(module, "run_sandbox", worker)
     with tempfile.TemporaryFile() as source:
         source.write(b"abcdef")
         with pytest.raises(StoragePolicyError) as error:
@@ -208,12 +208,16 @@ def test_real_timeout_reaps_worker(monkeypatch):
         )
 
     monkeypatch.setattr(module, "sandbox_command", stalled)
-    monkeypatch.setattr(module, "EXTRACTION_WALL_SECONDS", 0.2)
-    with pytest.raises(StoragePolicyError, match="extraction_timeout"):
-        run_bytes(GOLDEN.read_bytes())
-    # The call returns once bwrap is reaped; the PID namespace is torn down asynchronously,
-    # so allow a bounded window. The stalled probe sleeps 30 s, so a survivor is a real leak.
-    assert reap_survivors(marker) == []
+    monkeypatch.setattr(module, "EXTRACTION_WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(lambda: run_bytes(GOLDEN.read_bytes()), marker, 2)
+        assert isinstance(report.error, StoragePolicyError)
+        assert report.error.code == "extraction_timeout"
+        assert report.held == 2 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
 
 
 def test_extraction_logs_keep_page_content_private(caplog):
