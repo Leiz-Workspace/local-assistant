@@ -8,6 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from process_probe import reap_survivors
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import (
     DecodedStreamObject,
@@ -210,12 +211,9 @@ def test_real_timeout_reaps_worker(monkeypatch):
     monkeypatch.setattr(module, "EXTRACTION_WALL_SECONDS", 0.2)
     with pytest.raises(StoragePolicyError, match="extraction_timeout"):
         run_bytes(GOLDEN.read_bytes())
-    for process in Path("/proc").iterdir():
-        if process.name.isdecimal():
-            try:
-                assert marker.encode() not in (process / "cmdline").read_bytes()
-            except (FileNotFoundError, ProcessLookupError, PermissionError):
-                pass
+    # The call returns once bwrap is reaped; the PID namespace is torn down asynchronously,
+    # so allow a bounded window. The stalled probe sleeps 30 s, so a survivor is a real leak.
+    assert reap_survivors(marker) == []
 
 
 def test_extraction_logs_keep_page_content_private(caplog):
