@@ -48,6 +48,8 @@ Cập nhật 2026-11-09 (sau promote): nhánh D81 đã được merge vào `deve
 
 Cập nhật 2026-11-09 (sửa test timeout): sau PR #45, theo lựa chọn "Làm cách 2 đi" của chủ dự án, nhánh `fix/timeout-reap-tests` (tách từ `develop` `2912f00`) sửa hai test timeout reap và bước quarantine của CI (ghi chú CI ở mục 3); code production không đổi. Thay đổi này nằm trong `tests/`, tức trong phạm vi source-freeze của D87, nên khi đã vào `develop` thì lượt promote kế tiếp mang theo thay đổi test, không chỉ tài liệu và phiếu, và lượt D87 ngày 2026-11-09 không còn khớp nội dung đó. D87 cho tag phải chạy trên cây cuối cùng của commit sẽ tag, hoặc chủ dự án ghi ngoại lệ có tên trong phiếu ở mục 5.
 
+Cập nhật 2026-11-09 (ADR179): theo câu trả lời “Làm luôn” của chủ dự án, nhánh `fix/sandbox-namespace-teardown` sửa code production để các chỗ gọi sandbox tài liệu và media chỉ trả quyền điều khiển sau khi PID namespace của sandbox đã được dọn ([ADR179](ADR/179-retire-sandbox-namespace-before-timeout-returns.md)); các test timeout nay kiểm tra chặt bằng pidfd ngay lúc lời gọi trả về. Thay đổi này nằm trong cả `src/` và `tests/`, tức trong phạm vi source freeze của D87, nên lượt PASS ngày 2026-11-09 chỉ là bằng chứng cho cây `production` `0b67d95`. D87 dùng cho tag phải chạy trên cây cuối cùng của commit sẽ tag, hoặc chủ dự án ghi ngoại lệ có tên trong phiếu D90. `src/**/*.py` cũng nằm trong snapshot nguồn của bằng chứng voice B3/B4; bằng chứng đó vẫn gắn với snapshot đã ghi.
+
 ### Phương án A — văn bản, tài liệu, RAG, coding, web đã kiểm chứng cục bộ; không gồm voice
 
 | Năng lực trong phạm vi | Bằng chứng | Giới hạn đã biết |

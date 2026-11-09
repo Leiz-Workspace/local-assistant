@@ -9,6 +9,7 @@ from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ocr_contract import MAX_WORKER_BYTES, validate_page
 from src.infrastructure.file_verifier import sandbox_command
 from src.infrastructure.native_input import rewind_native_input
+from src.infrastructure.sandbox_process import run_sandbox
 
 logger = logging.getLogger(__name__)
 OCR_WALL_SECONDS = 25
@@ -34,7 +35,7 @@ def prepare_page(source, suffix, number=1, mode="auto"):
     rewind_native_input(source)
     try:
         with tempfile.TemporaryFile() as output:
-            result = subprocess.run(
+            result = run_sandbox(
                 sandbox_command(
                     [
                         "/venv/bin/python",
@@ -52,7 +53,6 @@ def prepare_page(source, suffix, number=1, mode="auto"):
                 env={},
                 close_fds=True,
                 start_new_session=True,
-                check=False,
             )
             output.seek(0)
             data = output.read(MAX_WORKER_BYTES + 1)

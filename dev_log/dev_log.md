@@ -5455,3 +5455,56 @@ Owner replies exactly “Ổn rồi” after delivery of the working local voice
 **Unchanged:** The production code, including the extractor and OCR code and the three docstrings named under Change. The test guarantee, by contrast, did change: the two timeout tests now allow a 5 s teardown window after the call returns instead of requiring that no marked process exists when it returns, and production returns before the namespace teardown (see Change). The CI runs, the `staging` rerun and the D87 result recorded in the previous entry stay as recorded. This answers the PDF timeout test follow-up of the previous entry with the hardening option instead of a new quarantine entry. D81 stays OPEN; D89 and D90 stay open; D60 deferred. Voice stays default-off (`ASSISTANT_VOICE_ENABLED` 0). No tag, no GitHub Release, nothing deployed. The other remaining items of the previous entry are not changed by this update, except that the owner's D90 decision on the difference to the tag commit now also covers this `tests/` difference once it is merged (see Side effects).
 
 **Remaining:** Production follow-up candidate, not done and needing an owner decision: after `TimeoutExpired`, wait (bounded) for the namespace init to exit before raising, for example with the child PID from bwrap `--info-fd` and a pidfd poll, which would restore the immediate guarantee; or soften the three docstrings to the property the code has. Pre-existing gap noted by the review, not changed: neither timeout test checks that the stalled worker or descendant existed before the kill, so on a very slow machine the descendant half could pass without exercising anything. No GitHub Actions run of this branch is recorded yet.
+
+## 2026-11-09 — Sandbox namespace retirement before control returns (ADR179)
+
+**Owner request:** After PR #46 the assistant asked "Sửa code production để chờ sandbox dọn xong khi timeout?" (change the production code to wait until the sandbox is torn down on a timeout). The owner answered "Làm luôn" (do it now), 2026-11-09.
+
+**Background (measured on the Home Server):** The document and media workers run under `file_verifier.sandbox_command` (bwrap with `--unshare-all --die-with-parent`). The process tree is: outer launcher → namespace init (PID 1) → worker → descendants. The init holds dups of the caller's stdout and stderr. The worker holds the `/payload` copy and the same streams.
+- **Timeout path.** `subprocess.run` (seven callers) and `killpg` + `wait` (report export) returned once the launcher was reaped. The init then died asynchronously. With an 800 MiB worker and an 800 MiB child the call returned after 0.2 ms in 3/3 trials while the worker was still in state `S` with 3 open descriptors.
+- **Normal exit.** The launcher exits as soon as the sandboxed command exits, before the init: in 10/10 runs the init was still alive at that moment. Leftover descendants could therefore still write to the output file after the call returned.
+
+**Change:** Branch `fix/sandbox-namespace-teardown` from `develop` `9458054`; see [ADR179](../docs/ADR/179-retire-sandbox-namespace-before-timeout-returns.md).
+- **New module `src/infrastructure/sandbox_process.py`.**
+  - `Sandbox` launches bwrap with `--info-fd`. It reads the init PID and PID-namespace inode from the report, using `poll`. It opens a pidfd for the init after checking `/proc/<pid>/ns/pid` against the reported namespace.
+  - `Sandbox.retire(reason)` reads a still-pending report from the live launcher first. It then SIGKILLs the init through the pidfd, kills and reaps the launcher, and waits up to 5 s for the init pidfd to report exit. The kernel completes an init's exit only after every other process in the namespace has been reaped.
+  - `retire` returns whether teardown was confirmed, never raises for OS errors, and is idempotent. Its logs carry only the reason, state, signalled flag and elapsed milliseconds.
+  - `run_sandbox` replaces `subprocess.run` for the seven callers (file verification, PDF, OCR, DOCX, XLSX, audio, video). It waits for the launcher on a pidfd instead of 50 ms sleep-polling and retires on normal exit, timeout and interruption. It refuses `PIPE` and launchers that are not bwrap.
+  - **Unknown launcher states.** A report-less end of file counts as "no namespace" only if the launcher exited by itself. A killed launcher, a partial or malformed report, or a pidfd error is reported as unconfirmed, never as success.
+- **Report export.** `supervise` uses `Sandbox` and retires before closing its pipes. If teardown is not confirmed, it now raises `export_cleanup_uncertain`, which closes the exporter's admission.
+- **Unchanged.** Error codes and normal-path results of the seven callers.
+- **Tests.**
+  - `tests/test_sandbox_process.py` (26 tests).
+  - pidfd-based helpers in `tests/process_probe.py` (`namespace_processes`, `hold_namespace`, `all_exited`, `watch_teardown`). They hold pidfds on the sandboxed processes once the tree is up and check at the moment the call returns that all of them have exited; zombies count as exited.
+  - The eight processor timeout tests (PDF, OCR, file verifier, DOCX, XLSX, audio, video, report export) now use that check with a 2.5 s wall timeout, replacing PR #46's 5 s window.
+  - A new report export test checks that an unconfirmed teardown fails closed.
+  - Mocks of `subprocess.run` in the processor tests now patch `run_sandbox`.
+
+**Reviews:**
+- **First independent review.** It showed that the first version (SIGSTOP plus `/proc` children) counted an already exited launcher as proof of teardown, and that its tests also passed against the old behaviour. The design was replaced with the launch report and init pidfd above.
+- **Second review: a workflow with four lenses (kernel, callers, tests, security), each finding verified by a separate skeptic.** All of the following were fixed:
+  - `select()` failed at descriptor numbers ≥ 1024, while the API's soft limit is 524288.
+  - The pending path killed the launcher before reading its report (7/150 stranded namespaces in the reviewer's experiment).
+  - The report-less end of file was classified too loosely.
+  - Report export ignored an unconfirmed teardown.
+  - The interruption test could leave its SIGALRM handler installed.
+  - No test covered the pending path.
+
+**Validation (local, final code):**
+- Ruff check (E4, E7, E9, F) and format check are clean on every changed Python file.
+- Focused files (sandbox, probe, report export, PDF, OCR, file verifier, video, audio, DOCX, XLSX): all passed.
+- CI-scope suite (`hosted_exclusions`, main mode): 6490 passed, 368 skipped, 30 deselected (`develop` CI before: 6462 passed).
+- Stress: 10/10 rounds of 41 tests (the sandbox tests, the seven processor timeout tests and the report export tests) on 2 CPUs occupied by two busy loops.
+- **Regression emulations.** All 14 strict tests fail against both emulated regressions: the old kill-the-launcher-only behaviour, and killing the init without waiting for it.
+- **Exit-window measurement** (800 MiB worker and child):
+  - Old path: returned in 0.2 ms with the worker alive.
+  - New path: returned after 50–58 ms with at most the init left as a zombie, holding 0 descriptors.
+- These are software tests only, not model-quality measurements.
+
+**Side effects:** The change touches `src/` and `tests/`, which are inside the D87 source-freeze scope. The 2026-11-09 D87 PASS applies only to the `production` `0b67d95` tree. A tag needs D87 on the final tag tree, or the owner's named exception in the D90 form. `src/**/*.py` is also in the B3/B4 voice source snapshot. As with D81, that evidence stays bound to its recorded snapshot, and a future `/voice` session recomputes the manifest. On timeouts, calls now return after teardown (about 1 ms normally, bounded at 5 s). Normal calls lose up to 50 ms of polling delay.
+
+**Unchanged:** Error codes and normal-path results of the seven callers. Sandboxes that do not use `file_verifier.sandbox_command` (the coding sandbox, the check runner, checkpoint git, MCP stdio, the voice sandbox). D81 stays OPEN; D89 and D90 stay open; D60 deferred. Voice stays default-off. No tag, no GitHub Release, nothing deployed to the Home Server. No model or default change.
+
+**CI:** PR #47 CI run 42582866883: lint passed (19 files), main pytest 6490 passed, 368 skipped, 30 deselected (strict timeout tests included, on the 2-vCPU hosted runner), quarantine job selected no test and passed.
+
+**Remaining:** Not covered by this change: a signal landing inside `Popen()` itself, and an outside SIGKILL of the launcher in the microseconds between clone and report. The latter is reported as unconfirmed, not as success.

@@ -15,6 +15,7 @@ from src.application.services.xlsx_contract import (
 )
 from src.infrastructure.file_verifier import sandbox_command
 from src.infrastructure.native_input import rewind_native_input
+from src.infrastructure.sandbox_process import run_sandbox
 
 logger = logging.getLogger(__name__)
 XLSX_WALL_SECONDS = 10
@@ -52,7 +53,7 @@ def process_xlsx(source, operation="read", plan=None):
                 str(request.fileno()),
                 "/request.json",
             ]
-            result = subprocess.run(
+            result = run_sandbox(
                 command,
                 stdin=source,
                 stdout=output,
@@ -62,7 +63,6 @@ def process_xlsx(source, operation="read", plan=None):
                 close_fds=True,
                 pass_fds=(request.fileno(),),
                 start_new_session=True,
-                check=False,
             )
             output.seek(0)
             data = output.read(MAX_OUTPUT_BYTES + 1)

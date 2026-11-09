@@ -5,7 +5,6 @@ import hashlib
 import logging
 import os
 import selectors
-import signal
 import subprocess
 import threading
 import time
@@ -19,6 +18,7 @@ from src.application.services.report_export_policy import (
 )
 from src.application.services.web_fetch_tasks import finish_owned, spawn_owned
 from src.infrastructure.file_verifier import sandbox_command
+from src.infrastructure.sandbox_process import Sandbox
 
 logger = logging.getLogger(__name__)
 NATIVE_SECONDS = 20
@@ -71,14 +71,14 @@ def supervise(payload, stop):
     """Own one fixed batch's process/session/pipes/selector until actual namespace retirement, retaining only bounded output and finite failures."""
     parse_payload(payload)
     deadline = time.monotonic() + NATIVE_SECONDS
-    process = None
+    sandbox = None
     selector = selectors.DefaultSelector()
     stdout, stderr = bytearray(), bytearray()
     status = "export_native_failed"
     try:
         if stop.is_set():
             raise ReportExportError("export_timeout")
-        process = subprocess.Popen(
+        sandbox = Sandbox(
             export_command(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -87,6 +87,7 @@ def supervise(payload, stop):
             close_fds=True,
             start_new_session=True,
         )
+        process = sandbox.process
         for stream, event, label in [
             (process.stdin, selectors.EVENT_WRITE, "stdin"),
             (process.stdout, selectors.EVENT_READ, "stdout"),
@@ -136,23 +137,25 @@ def supervise(payload, stop):
     except (OSError, ValueError, RuntimeError):
         raise ReportExportError("export_unavailable") from None
     finally:
-        if process is not None:
-            if process.poll() is None:
-                try:
-                    os.killpg(process.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-            process.wait()
+        retired = True
+        if sandbox is not None:
+            retired = sandbox.retire("exit" if status == "completed" else "abort")
+            process = sandbox.process
             for stream in [process.stdin, process.stdout, process.stderr]:
                 if not stream.closed:
                     stream.close()
         selector.close()
+        if not retired:
+            status = "export_cleanup_uncertain"
         logger.info(
             "report_export_native_namespace_joined status=%s stderr_bytes=%d stderr_sha256=%s",
             status,
             len(stderr),
             hashlib.sha256(stderr).hexdigest(),
         )
+        if not retired:
+            # Fail closed: the exporter closes its admission on this code instead of starting another namespace.
+            raise ReportExportError("export_cleanup_uncertain") from None
     result = parse_native(bytes(stdout), payload, bytes(stderr))
     if stop.is_set() or time.monotonic() >= deadline:
         raise ReportExportError("export_timeout")
