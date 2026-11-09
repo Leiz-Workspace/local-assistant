@@ -127,10 +127,18 @@ jobs:
           # Older revisions have no benchmarks/tests; pass only directories that exist.
           dirs=()
           for d in tests benchmarks/tests; do [ -d "$d" ] && dirs+=("$d"); done
+          status=0
           uv run --no-sync python -m pytest "${dirs[@]}" \
             -p hosted_exclusions -p no:cacheprovider -q -rfE \
             -o tmp_path_retention_policy=failed \
-            --junitxml=pytest-junit.xml
+            --junitxml=pytest-junit.xml || status=$?
+          # Exit 5 means no test was selected. Accept it only when the list has no entries,
+          # so a stale or mistyped entry still fails this job.
+          if [ "$status" -eq 5 ] && ! grep -Eqv '^[[:space:]]*(#|$)' .github/ci/hosted-runner-quarantine.txt; then
+            echo "No quarantined tests selected."
+            exit 0
+          fi
+          exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

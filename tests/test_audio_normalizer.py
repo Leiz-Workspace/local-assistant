@@ -12,6 +12,7 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
+from process_probe import reap_survivors, watch_teardown
 
 import src.infrastructure.audio_normalizer as module
 from src.application.services.audio_contract import AudioError, resolve_audio
@@ -117,7 +118,7 @@ def test_bad_explicit_input_has_no_native_dispatch(raw, monkeypatch):
         """Fail immediately if invalid input reaches the native boundary."""
         pytest.fail("unexpected native dispatch")
 
-    monkeypatch.setattr(module.subprocess, "run", forbidden)
+    monkeypatch.setattr(module, "run_sandbox", forbidden)
     with pytest.raises(AudioError, match="audio_invalid_input"):
         NativeAudioNormalizer().normalize(raw)
 
@@ -201,7 +202,7 @@ def test_parent_native_failures_and_json_tail_are_sanitized(
         options["stdout"].write(raw)
         return SimpleNamespace(returncode=1 if fault == "crash" else 0)
 
-    monkeypatch.setattr(module.subprocess, "run", failed)
+    monkeypatch.setattr(module, "run_sandbox", failed)
     with pytest.raises(AudioError) as error:
         NativeAudioNormalizer().normalize(normalized[0])
     assert "PRIVATE-AUDIO-DETAIL" not in str(error.value)
@@ -218,14 +219,18 @@ def test_real_timeout_reaps_namespace_and_nested_audio_child(normalized, monkeyp
         return original(["/venv/bin/python", "-c", code, marker])
 
     monkeypatch.setattr(module, "sandbox_command", stalled)
-    monkeypatch.setattr(module, "WALL_SECONDS", 0.2)
-    with pytest.raises(AudioError, match="audio_processing_timeout"):
-        NativeAudioNormalizer().normalize(normalized[0])
-    for path in Path("/proc").glob("[0-9]*/cmdline"):
-        try:
-            assert marker.encode() not in path.read_bytes()
-        except (FileNotFoundError, ProcessLookupError, PermissionError):
-            pass
+    monkeypatch.setattr(module, "WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(
+            lambda: NativeAudioNormalizer().normalize(normalized[0]), marker, 3
+        )
+        assert isinstance(report.error, AudioError)
+        assert report.error.code == "audio_processing_timeout"
+        assert report.held == 3 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
 
 
 def test_official_fixture_provenance_hashes_and_original_license_are_preserved():

@@ -8,6 +8,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 import pytest
+from process_probe import reap_survivors, watch_teardown
 from PIL import Image
 
 from scripts.generate_video_golden import generate
@@ -140,7 +141,7 @@ def test_invalid_explicit_input_and_schedule_fail_before_native_dispatch(
         """Fail if native work starts for invalid application input."""
         pytest.fail("unexpected native dispatch")
 
-    monkeypatch.setattr(subprocess, "run", forbidden)
+    monkeypatch.setattr("src.infrastructure.video_sampler.run_sandbox", forbidden)
     with pytest.raises(VideoError, match="video_invalid_input"):
         NativeVideoSampler().sample(raw, targets)
 
@@ -248,14 +249,18 @@ def test_real_timeout_reaps_namespace_and_descendant(monkeypatch, golden):
         return original(["/venv/bin/python", "-c", code, marker])
 
     monkeypatch.setattr(module, "sandbox_command", stalled)
-    monkeypatch.setattr(module, "WALL_SECONDS", 0.2)
-    with pytest.raises(VideoError, match="video_processing_timeout"):
-        module.NativeVideoSampler().sample(golden[0])
-    for path in Path("/proc").glob("[0-9]*/cmdline"):
-        try:
-            assert marker.encode() not in path.read_bytes()
-        except (FileNotFoundError, ProcessLookupError, PermissionError):
-            pass
+    monkeypatch.setattr(module, "WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(
+            lambda: module.NativeVideoSampler().sample(golden[0]), marker, 3
+        )
+        assert isinstance(report.error, VideoError)
+        assert report.error.code == "video_processing_timeout"
+        assert report.held == 3 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
 
 
 def test_real_worker_limits_readonly_mounts_and_no_host_credentials(
@@ -340,7 +345,7 @@ def test_parent_subprocess_failures_and_complete_protocol_are_finite(
         options["stdout"].write(raw)
         return SimpleNamespace(returncode=1 if fault == "crash" else 0)
 
-    monkeypatch.setattr(module.subprocess, "run", failed)
+    monkeypatch.setattr(module, "run_sandbox", failed)
     with pytest.raises(VideoError) as error:
         module.NativeVideoSampler().sample(golden[0])
     assert "PRIVATE-ERROR-CANARY" not in str(error.value)

@@ -17,6 +17,7 @@ from src.application.services.file_storage_policy import (
     validate_detected_media,
 )
 from src.infrastructure.native_input import rewind_native_input
+from src.infrastructure.sandbox_process import run_sandbox
 
 logger = logging.getLogger(__name__)
 VERIFIER_WALL_SECONDS = 10
@@ -129,7 +130,7 @@ def verify_file(
     )
     try:
         with tempfile.TemporaryFile() as verdict:
-            result = subprocess.run(
+            result = run_sandbox(
                 command,
                 stdin=source,
                 stdout=verdict,

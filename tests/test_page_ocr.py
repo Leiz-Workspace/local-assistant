@@ -11,6 +11,7 @@ from uuid import uuid4
 
 import pytest
 from PIL import Image
+from process_probe import reap_survivors, watch_teardown
 
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ocr_contract import validate_page, validate_vision
@@ -182,7 +183,7 @@ def test_parent_worker_failures_sanitized(monkeypatch, mode):
         )
         return SimpleNamespace(returncode=1 if mode == "crash" else 0)
 
-    monkeypatch.setattr(module.subprocess, "run", failed)
+    monkeypatch.setattr(module, "run_sandbox", failed)
     with pytest.raises(StoragePolicyError) as error:
         recognize_file()
     assert error.value.code in ("ocr_processing_unavailable", "ocr_processing_timeout")
@@ -234,15 +235,16 @@ def test_timeout_reaps_worker_and_descendant(monkeypatch):
         return sandbox(["/venv/bin/python", "-c", code, marker])
 
     monkeypatch.setattr(module, "sandbox_command", stalled)
-    monkeypatch.setattr(module, "OCR_WALL_SECONDS", 0.3)
-    with pytest.raises(StoragePolicyError, match="ocr_processing_timeout"):
-        recognize_file()
-    for process in Path("/proc").iterdir():
-        if process.name.isdecimal():
-            try:
-                assert marker.encode() not in (process / "cmdline").read_bytes()
-            except (FileNotFoundError, PermissionError, ProcessLookupError):
-                pass
+    monkeypatch.setattr(module, "OCR_WALL_SECONDS", 2.5)
+    try:
+        # The namespace processes are seen alive before the timeout fires and must all
+        # have exited at the moment the call returns.
+        report = watch_teardown(lambda: recognize_file(), marker, 3)
+        assert isinstance(report.error, StoragePolicyError)
+        assert report.error.code == "ocr_processing_timeout"
+        assert report.held == 3 and report.exited_at_return is True
+    finally:
+        reap_survivors(marker, timeout=0)
 
 
 def test_ocr_logs_keep_source_text_private(caplog):
