@@ -1,0 +1,349 @@
+{
+  "description": "Public receipt of the owner's D74 B4 acceptance with notes on the main /voice page. Owner acceptance based on the page's software timing and server-side intervals, not an objective physical measurement; no transcripts, answers, audio, credentials, pairing codes or owner recordings.",
+  "date": "2026-11-08",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "ADRs": [
+    174,
+    175,
+    176,
+    178
+  ],
+  "status": "OWNER_ACCEPTED_WITH_NOTES",
+  "accepted_part": "ADR174 B4 real-device first-audible part",
+  "decision": {
+    "question": "Chốt B4 thế nào?",
+    "options": [
+      "Đo lại có video",
+      "Chấp nhận kèm ghi chú"
+    ],
+    "owner_verbatim": "Chấp nhận kèm ghi chú"
+  },
+  "owner_quotes": {
+    "start": "Vậy thì trước mắt là cùng làm B4",
+    "launch_choices": {
+      "physically_present_and_stops_sunshine_and_settings": "Có, tôi tắt ngay",
+      "temporary_operator_scripts_outside_repository": "Script tạm",
+      "manifest_B3_template_plus_current_source_map_with_receipts": "B3 + lưu receipt",
+      "owner_mints_pairing_code_in_own_terminal": "Tự chạy lệnh"
+    },
+    "observation_after_session": "Được rồi phần âm thanh nhận vào đã <4s ở các case khác nhau"
+  },
+  "owner_observation_basis": "page software timing (Nhận audio: Send gesture to validated response), not speaker audio",
+  "reported_per_turn_page_seconds": null,
+  "reported_case_per_turn": null,
+  "reported_intended_silence_turns": null,
+  "physical_first_audible": "UNVERIFIED",
+  "physical_first_audible_objectively_measured": false,
+  "objective_recording": false,
+  "checklist_video_method_done": false,
+  "checklist_16_row_sheet_done": false,
+  "product_activation": false,
+  "scope": {
+    "page": "/voice",
+    "application_factory": "apps.api.voice:create_app",
+    "purpose": "integration_evaluation",
+    "trial_page_8092": false,
+    "machine": "repository host PC",
+    "browser": "Brave",
+    "microphone": "owner-used microphone; model not reported",
+    "default_audio_output": "alsa_output.pci-0000_01_00.1.hdmi-stereo",
+    "speaker_model": null,
+    "volume": null,
+    "lane": "research lane in the B3 manifest: Qwen3-ASR + CORE + Trúc Ly/VieNeu TTS"
+  },
+  "source": {
+    "branch": "develop",
+    "git_commit": "fb5ee5d",
+    "application_code_identical_to": {
+      "branch": "production",
+      "git_commit": "2e5e242"
+    },
+    "develop_differs_from_production_only_in": [
+      "docs/",
+      "dev_log/",
+      "README.md"
+    ],
+    "includes_PR": 33,
+    "B3_source_scope_files": 307,
+    "B3_git_commit": "73cecdf",
+    "files_differing_from_B3_commit": [
+      "src/infrastructure/ocr_worker.py"
+    ]
+  },
+  "preparation": {
+    "stopped_before_session": {
+      "sunshine_GPU_MiB": 215,
+      "gnome_settings_background_service_GPU_MiB": 46,
+      "vs_code_closed_by_owner": true
+    },
+    "preflight_before_CORE": {
+      "GPU_free_MiB": 15204,
+      "GPU_free_go_threshold_MiB": 14940,
+      "MemAvailable_kB": 21718160,
+      "MemAvailable_recommended_kB": 19922944,
+      "foreign_GPU_MiB": 319,
+      "foreign_GPU_processes": {
+        "gnome-remote-desktop": 253,
+        "xdg-desktop-portal-gnome": 20,
+        "ptyxis": 46
+      },
+      "llama_server_running": false,
+      "ports_free": [
+        18080,
+        18092
+      ],
+      "voice_trial_service_active": false,
+      "source_scope_clean": true
+    },
+    "CORE": {
+      "profile": "benchmarks/scripts/d14_completion.py command(\"core\")",
+      "arguments_summary": "--host 127.0.0.1 --port 18080 --ctx-size 32768 --parallel 1 --reasoning off --slots --offline, with mmproj",
+      "launcher": "OwnedServer with preflight and monitor guards, via a scratchpad keeper script",
+      "launched": "19:11:13",
+      "ready": "19:11:17",
+      "PID": 1200691
+    },
+    "post_CORE_check": {
+      "CORE_RSS_KiB": 1236888,
+      "CORE_RSS_stop_GiB": 6,
+      "CORE_VRAM_MiB": 8764,
+      "foreign_GPU_MiB": 273,
+      "foreign_GPU_limit_GiB": 1,
+      "GPU_free_MiB": 6746,
+      "ASR_GPU_free_required_MiB": 6144,
+      "MemAvailable_kB": 24445584
+    },
+    "manifest": {
+      "base": "B3 ADR178 manifest-template.json, sha256 checked against manifest_template_sha256 in the B3 ADR178 preparation.json",
+      "CORE_command_matches_B3": true,
+      "replaced_fields": [
+        "source_sha256"
+      ],
+      "added_fields": [
+        "core"
+      ],
+      "source_files": 307,
+      "sha256": "b352a827ee9deea416fa2ee5052c291b11d964cae9e1ca9a239d2ec1a34e9731"
+    },
+    "dry_run": {
+      "checks": [
+        "VoiceManifest.verify",
+        "BorrowedCore.verify"
+      ],
+      "status": "PASS",
+      "seconds": 41,
+      "inference_calls": 0,
+      "prepares_spent": 0
+    },
+    "authentication": {
+      "principal_store": "RAM-only file in /dev/shm, mode 0600",
+      "bearer_credential": "0600 header file only, never printed",
+      "deleted_at_cleanup": true
+    },
+    "web": {
+      "command": "uvicorn apps.api.voice:create_app --factory --host 127.0.0.1 --port 18092 --no-proxy-headers",
+      "workers": 1,
+      "environment": {
+        "ASSISTANT_VOICE_ENABLED": "1 (this evaluation process only)",
+        "ASSISTANT_VOICE_PURPOSE": "integration_evaluation",
+        "ASSISTANT_AUTH_FILE": "RAM-only principal file in /dev/shm",
+        "ASSISTANT_VOICE_MANIFEST": "operator manifest above",
+        "TMPDIR": "/dev/shm",
+        "DATABASE_URL": "not set"
+      },
+      "started": "19:12:43",
+      "startup_events": [
+        "voice_manifest_loaded activation=False",
+        "main_voice_composed default_model_change=False",
+        "voice_managed_gpu_paths_bound count=11"
+      ],
+      "initial_status": {
+        "state": "idle",
+        "turns_remaining": 24,
+        "preparations_remaining": 3
+      }
+    }
+  },
+  "owner_session": {
+    "pairing": {
+      "minted_by": "owner in own terminal",
+      "issued": "19:16:26",
+      "redeemed": "19:17:10"
+    },
+    "prepares": [
+      {
+        "number": 1,
+        "admitted": "19:17:16",
+        "manifest_verified": "19:17:53",
+        "borrowed_CORE_verified": true,
+        "foreign_GPU_tolerated": {
+          "processes": 3,
+          "MiB": 319
+        },
+        "VAD_ready": "19:17:55",
+        "ASR_load_admitted": "19:17:55",
+        "failed": "19:18:04",
+        "ASR_worker_join": {
+          "exit_code": -15,
+          "forced": true
+        },
+        "failure_code": "dependency_failed",
+        "cause_logged": false,
+        "status": "FAILED"
+      },
+      {
+        "number": 2,
+        "admitted": "19:18:06",
+        "retried_about_seconds_after_failure": 2,
+        "checklist_condition_5_stop_and_report_followed": false,
+        "manifest_verified": "19:18:40",
+        "VAD_ready": "19:18:42",
+        "ASR_ready": "19:18:52",
+        "readiness_verified": true,
+        "TTS_ready": "19:18:56",
+        "TTS_backend": "turbo",
+        "group_ready": "19:18:56",
+        "group_lifetime_seconds": 480,
+        "server_prepare_seconds": 49.73,
+        "status": "READY"
+      }
+    ],
+    "turns": {
+      "count": 14,
+      "first": "19:19:29",
+      "last": "19:25:41",
+      "stage_counts": {
+        "vad": 14,
+        "asr": 14,
+        "core": 14,
+        "tts": 14
+      },
+      "no_speech_classified": 0,
+      "silence_cases_N1_N2_exercised": false,
+      "server_interval_definition": "app log voice_turn_admitted to main_voice_turn_RAM_erased; includes request body read over loopback, VAD, ASR, CORE, TTS, playback conversion and turn cleanup; excludes the interval from Send to server receipt, response delivery, browser decode and playback start, audio stack, HDMI and speaker; not the page numbers and not physical first-audible",
+      "server_interval_seconds": [
+        2.09,
+        1.1,
+        1.89,
+        3.17,
+        3.77,
+        1.5,
+        2.17,
+        2.13,
+        1.75,
+        1.19,
+        2.44,
+        3.17,
+        3.93,
+        3.21
+      ],
+      "server_interval_min_seconds": 1.1,
+      "server_interval_max_seconds": 3.93,
+      "slowest_turn": 13
+    },
+    "end_status": {
+      "checked": "19:28:44",
+      "state": "idle",
+      "error": null,
+      "group_expired_on_its_own": true,
+      "turns_remaining": 10,
+      "preparations_remaining": 1
+    }
+  },
+  "shutdown": {
+    "web_SIGTERM": "19:28:52",
+    "lifespan_events_in_order": [
+      "voice_service_closed",
+      "voice_identity_closed",
+      "gpu_admission_unbound",
+      "voice_managed_gpu_paths_restored",
+      "voice_manifest_closed"
+    ],
+    "failure_lines": 0,
+    "group_workers_joined": {
+      "roles": [
+        "turbo",
+        "qwen3-asr-0.6b",
+        "vad"
+      ],
+      "exit_code": 0,
+      "forced": false
+    },
+    "failed_prepare_workers_joined": {
+      "workers": [
+        "ASR",
+        "VAD"
+      ],
+      "exit_code": -15,
+      "forced": true
+    },
+    "group_calls": {
+      "vad": 14,
+      "asr": 14,
+      "core": 14,
+      "tts": 14
+    },
+    "token_in_log": false,
+    "background_launcher_exit": 144,
+    "graceful_shutdown_judged_from": "log events, as in ADR178"
+  },
+  "owned_CORE": {
+    "stopped_with": "SIGTERM",
+    "exit_code": 0,
+    "guard_failure": null,
+    "sampled_peak_VRAM_MiB": 8790,
+    "sampled_min_GPU_free_MiB": 2366,
+    "sampled_min_MemAvailable_KiB": 17825184,
+    "sampled_peak_RSS_KiB": 8084080
+  },
+  "cleanup": {
+    "llama_server_running": false,
+    "voice_workers_running": false,
+    "ports_free": [
+      18080,
+      18092
+    ],
+    "dev_shm_main_voice_left": false,
+    "RAM_credentials_deleted": true,
+    "GPU_free_after_MiB": 15219
+  },
+  "acceptance_notes": [
+    "No video or other objective recording; speaker/HDMI output latency not measured; physical first-audible <= 4 s remains objectively unmeasured.",
+    "Slowest server interval 3.93 s (turn 13), close to the 4 s ceiling.",
+    "No silence case (N1/N2) was exercised.",
+    "Which short, quiet or noise cases were covered was not reported.",
+    "The first Prepare failed with dependency_failed (cause not logged) and was retried at once instead of stopping to report.",
+    "Applies only to this PC, Brave, the microphone used, HDMI output and the research lane in the B3 manifest (Qwen3-ASR + CORE + Trúc Ly/VieNeu TTS); not p95 or an SLO."
+  ],
+  "still_open": {
+    "final_model_voice_default_product_decision": "OPEN",
+    "product_activation_decision": "OPEN",
+    "short_quiet_room_noise_speech": "OPEN (not separately accepted; covered cases not reported, no silence case exercised)",
+    "voice_default_enabled": false,
+    "ASSISTANT_VOICE_ENABLED_default_changed": false,
+    "open_D_items": [
+      "D81",
+      "D87",
+      "D88 (only if distributing)",
+      "D89",
+      "D90"
+    ],
+    "deferred_D_items": [
+      "D60"
+    ],
+    "D89_D90_boxes_or_D90_owner_form_changed": false,
+    "committed_voice_launcher": "requires a separate PR with tests"
+  },
+  "release_state": {
+    "tag": false,
+    "GitHub_release": false,
+    "deployed": false,
+    "changed": false
+  },
+  "operator_scripts": {
+    "count": 2,
+    "location": "session scratchpad",
+    "committed": false
+  },
+  "private_receipt_directory": "data/backups/d74-b4-voice-physical-first/"
+}

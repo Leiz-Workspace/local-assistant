@@ -2,7 +2,9 @@
 
 **Purpose:** Define one owner-reviewable path that moves the locally verified D81 structured-excerpt adapter from evaluation scripts into an authenticated, default-off product mode, without changing models, templates, defaults or any historical score.
 
-**Status:** PROPOSED — 2026-11-06. Prepared as the D81 item of step 2 in [OPEN_DAYS_20261105](../OPEN_DAYS_20261105.md) at the owner's request of 2026-11-06 for a concrete proposal to review before any code (owner 2026-11-06, operator record); no approval or decision is recorded yet. This document changes no source, configuration, route, model, service or data.
+**Status:** ACCEPTED (option A) — 2026-11-09. The owner wrote "Tiếp theo làm D81, D87 đi" and, asked "D81 theo ADR177 ... Bạn chọn phương án nào?", answered "A: code + test (Recommended)": implementation and software gates only, default-off, zero native calls. Option B (A plus the native v4 evaluation budget) was not chosen, and option C (defer) was not chosen. This acceptance does not activate the feature, select a model or default, authorize any native request, or close D81, D89 or D90. The implementation is recorded in [Implementation (option A, 2026-11-09)](#implementation-option-a-2026-11-09); the proposal sections before it keep their pre-decision text (written 2026-11-06, last revised 2026-11-07); only the chosen/not-chosen markers on the options and the decision line after them were added.
+
+Earlier status (history): PROPOSED — 2026-11-06. Prepared as the D81 item of step 2 in [OPEN_DAYS_20261105](../OPEN_DAYS_20261105.md) at the owner's request of 2026-11-06 for a concrete proposal to review before any code (owner 2026-11-06, operator record); no approval or decision is recorded yet. This document changes no source, configuration, route, model, service or data.
 
 ## Context and evidence
 
@@ -177,8 +179,85 @@ Sequencing follows step 2 of [open days](../OPEN_DAYS_20261105.md). The first tw
 
 **Owner decision pending:**
 
-- A: approve implementation and software gates only (default-off, zero native calls).
-- B: A plus the native budget above, run once after the software gates pass and never during a voice panel.
-- C: defer. The adapter stays evaluation-only and D81 product integration stays OPEN.
+- A: approve implementation and software gates only (default-off, zero native calls). **Chosen on 2026-11-09.**
+- B: A plus the native budget above, run once after the software gates pass and never during a voice panel. Not chosen.
+- C: defer. The adapter stays evaluation-only and D81 product integration stays OPEN. Not chosen.
 
 None of these options activates the feature, selects a model or default, or closes D81, D89 or D90.
+
+**Owner decision recorded (2026-11-09):** A, from the owner's answer "A: code + test (Recommended)". The option text above is kept as it was proposed on 2026-11-06; only the chosen/not-chosen markers were added. The native budget of option B stays unapproved; running it needs a separate owner decision.
+
+## Implementation (option A, 2026-11-09)
+
+Scope: option A only. Code and fixture-only software gates, default-off, zero native calls. Work branch `feat/d81-grounded-extract`, cut from `develop` `385f4c6`. The names marked **proposed** above are used unchanged.
+
+**Files:**
+
+- New `apps/api/routes/grounded_extract.py`: `POST /api/v1/grounded/extract` with its own error mapping, behind the existing `require_local_client` guard (loopback only, no Origin, no proxy headers) and bearer `Principal`.
+- New `apps/api/grounded_extract.py`: the factory `create_app()` (see below).
+- New `src/application/services/grounded_extract.py`: a pure protocol module holding the frozen `INSTRUCTION` (moved byte-identical), the protocol constant `d81-grounded-extract-v1`, field validation, one-hit-per-file source binding and publication of citations with `quote_span`/`source_span` through the existing `evidence_units` mapping.
+- Changed `apps/api/services/grounded.py`: additive methods only. `extraction` is an async context manager that shares `self.admission` with `/grounded/answer`, registers its task in `self.operations` and honours `closing`; `extract_sources` binds and fences the sources; `complete_extraction` awaits one new `StructuredExcerptAdapter` per request with shield/cancel/join under `model_timeout`. `operation`, `complete` and `shutdown` are unchanged.
+- Changed `scripts/structured_excerpt_evaluation.py`: imports `INSTRUCTION` from the protocol module instead of defining it.
+- New suites `tests/test_grounded_extract_contract.py`, `tests/test_grounded_extract_service.py`, `tests/test_grounded_extract_startup.py`, `tests/test_grounded_extract_gpu_admission.py`, plus the shared fixture helper `tests/grounded_extract_cases.py` (not a suite).
+- Unchanged, checked with `git diff` against `origin/develop`: `apps/api/main.py`, `apps/api/routes/grounded.py`, `apps/api/routes/retrieval.py`, `apps/api/voice.py`, `src/infrastructure/inference/structured_excerpt_adapter.py` and `src/application/services/gpu_admission.py`.
+- Audit events are the eight new events listed under **Audit events** above (codes and counts only); no-hit requests log `grounded_extract_source_refused code=no_sources`.
+
+**Running the factory:** `apps.api.main:app` never reads `ASSISTANT_GROUNDED_EXTRACT_ENABLED` and never serves the route. Only the separate entry point does, started like the main API with `DATABASE_URL` supplied through the environment:
+
+```bash
+ASSISTANT_GROUNDED_EXTRACT_ENABLED=1 \
+ASSISTANT_FILES_ENABLED=1 ASSISTANT_INGESTION_ENABLED=1 \
+ASSISTANT_RETRIEVAL_ENABLED=1 ASSISTANT_GROUNDED_ENABLED=1 \
+ASSISTANT_INGESTION_CONFIG_FILE=<ingestion config> ASSISTANT_AUTH_FILE=<principal file> \
+uv run --no-sync uvicorn apps.api.grounded_extract:create_app --factory \
+  --host 127.0.0.1 --port 8000 --workers 1 --no-proxy-headers
+```
+
+- Flag absent or `0`: logs `grounded_extract_disabled` and returns the exact `apps.api.main.app` object, so routes and OpenAPI are unchanged.
+- Flag `1`: `DATABASE_URL`, `ASSISTANT_INGESTION_CONFIG_FILE` and `ASSISTANT_AUTH_FILE` must be present, `ASSISTANT_FILES_ENABLED`, `ASSISTANT_INGESTION_ENABLED`, `ASSISTANT_RETRIEVAL_ENABLED` and `ASSISTANT_GROUNDED_ENABLED` must be `1`, and `ASSISTANT_VOICE_ENABLED` must be absent or `0`. The factory then builds a new app from the original routes plus the extract route (the pattern of `apps/api/voice.py`) and logs `grounded_extract_composed`.
+- Any other flag value, a missing prerequisite or voice enabled: startup `RuntimeError` (`grounded_extract_flag_invalid`, `grounded_extract_prerequisites_required`, `grounded_extract_voice_unsupported`).
+- The composed lifespan runs the unchanged base lifespan and then refuses to start (`grounded_extract_requires_grounded_retrieval`) unless live retrieval and grounded services exist and the grounded service is linked to that retrieval service.
+- Ingestion creates a real Qdrant collection and needs owner approval first ([README](../../README.md)). No production manifest, default enablement or UI was added.
+
+**Software validation (local, 2026-11-09):**
+
+- The four new suites: **169 passed, 0 failed, 0 skipped**, fixture-only with zero model calls.
+- The ten unchanged related suites listed in the validation plan: **206 passed, 0 failed, 0 skipped**. Total 375.
+- Ruff check (`E4,E7,E9,F`) and `ruff format --check` on the 10 changed or new `.py` files: clean.
+- Internal review with three lenses (contract, concurrency/lifecycle, security/test quality) found 5 low-severity items, all applied: the `no_sources` trust label set to the literal Response section, the quarantine forward guard, oversized and NaN test cases made meaningful, and the audit test scope.
+
+```bash
+uv run --no-sync python -m pytest -q tests/test_grounded_extract_contract.py \
+  tests/test_grounded_extract_service.py tests/test_grounded_extract_startup.py \
+  tests/test_grounded_extract_gpu_admission.py
+uv run --no-sync python -m pytest -q tests/test_structured_excerpt_adapter.py \
+  tests/test_structured_excerpt_evaluation.py tests/test_grounded_answer.py \
+  tests/test_grounded_service.py tests/test_grounded_source_groups.py \
+  tests/test_grounded_startup.py tests/test_main_voice_admission.py \
+  tests/test_profile_prompts.py tests/test_cross_domain_scenario.py \
+  tests/test_cross_domain_retained_grounding.py
+```
+
+A software PASS is not a model-quality measurement. The CI run belongs to the PR record.
+
+**Implementation decisions and interpretations:**
+
+- `no_sources` returns `answer_trust="model_generated"`, following the literal Response section above (every 200 response), although no model runs. `/grounded/answer` uses `not_generated` for its own no-sources answer. Changing this label needs an amendment of this ADR.
+- Two bounds that the adapter checks only after backend calls are enforced before inference: the canonical messages at most 16384 bytes and the native request frame at most 32768 bytes. Both refuse with 422 `extract_source_unsupported` and zero transport calls.
+- "No table or cell structure" is read strictly: any non-empty `provenance.structure` is refused as `extract_source_unsupported`. A plain chunk must also be non-blank, at most 4096 characters and at most 8192 UTF-8 bytes.
+- Corrupted span or text data inside `evidence_units` keeps the existing 503 codes `grounded_sources_invalid` and `grounded_source_span_invalid`.
+- The request body is parsed by hand (exactly one `application/json` content type, at most 16384 bytes), so duplicate keys and NaN get the exact 422 `extract_contract_invalid` and nothing is echoed. The OpenAPI request schema is still published.
+- Forward guard: when the adapter's inner guarded call fails while a bound `GPUAdmission` is quarantined, the service maps it to 409 `gpu_busy` by reading `src.application.services.gpu_admission._coordinator` (module unchanged). The first-scope extraction-only app binds no coordinator, so this path is test-only today.
+- Logs: the new extraction events carry no content. The shared bearer dependency still logs `conversation_principal_authenticated principal_id=…`, and the existing retrieval rehydration logs file identifiers (`blob_reader_opened file_id=…`, `ingestion_plan_prepared file_id=…`), as for every authenticated route. The rule "logs never contain … identifiers" above holds for the new extraction events, not for those shared pre-existing events.
+- Moving `INSTRUCTION` changes the file sha256 of `scripts/structured_excerpt_evaluation.py`. Historical freeze receipts recorded the old value (for example [d81-literal-source-first-verification.json](../evidence/d81-literal-source-first-verification.json)) and are not rewritten; the instruction text itself is byte-identical.
+- The shared fixture helper `tests/grounded_extract_cases.py` was added; it holds fixtures only and is not a suite.
+
+**Side effect on the B3/B4 voice evidence source scope:** `source_snapshot()` in `benchmarks/scripts/main_voice_integration.py` (`apps/**/*.py`, `src/**/*.py` and the other listed voice, test, configuration and ADR files) grows from 307 to 310 files with the three new modules, and `apps/api/services/grounded.py` changes. Voice code paths are unchanged, but `apps.api.voice:create_app` builds on `apps.api.main.app`, whose import chain now also loads the extraction modules. The B3 PASS and the [B4 owner acceptance](../D74_B4_OWNER_ACCEPTANCE.md) stay as recorded for their snapshots. A future `/voice` session needs a manifest with the recomputed source map: the B4 launch procedure's drift check, which expected only `src/infrastructure/ocr_worker.py` to differ, would now stop at `unexpected_source_drift`. This ADR file is not in that scope.
+
+**Still open after option A:**
+
+- Not activated: no default enablement, no production manifest and no UI. With the flag absent or `0`, the app and OpenAPI are identical to the original.
+- The native v4 evaluation of option B was not run, and its corpus `tests/fixtures/harness/d81-grounded-extract-v4.json` was not created. Extraction quality on owner chunks is unmeasured, and no quality claim is made.
+- D81 stays OPEN: the product integration code is implemented default-off, but full-flow acceptance for a chosen scope (and any native measurement) remains.
+- D87 follows the owner's answer "Sau D81 + promote (Recommended)": merge D81 into `develop`, promote `develop` → `staging` → `production` (no tag, no deploy), then run D87 on that commit. None of these steps is recorded as done here.
+- D89 and D90 stay OPEN, D60 stays deferred, voice stays default-off, and there is no tag, release or deployment. The release state is unchanged.
