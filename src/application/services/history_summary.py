@@ -16,7 +16,8 @@ from src.application.services.working_state import (
 PROMPT_VERSION = 2
 PACKET_VERSION = 2
 MAX_ITEMS = 6
-MAX_SLOTS = 5
+# Fixed by the native S-1 design check: 5 slots count 1,650 maximal output tokens, over MAX_TOKENS - OUTPUT_MARGIN.
+MAX_SLOTS = 4
 MAX_CLAIMS = 1
 MAX_UNCERTAIN = 2
 UNCERTAIN_PAIRS = 3
@@ -34,7 +35,8 @@ MAX_TOKENS = 1536
 OUTPUT_MARGIN = 64
 SUMMARY_TIMEOUT = 30.0
 ANSWER_ALLOWANCE = 60.0
-RESERVE_TOKENS = 1024
+# Native R of the maximal (MAX_SLOTS + MAX_CLAIMS)-row capsule (1,394 at S-1), rounded up to a multiple of 64.
+RESERVE_TOKENS = 1408
 NOTE_KINDS = ("fact", "constraint", "decision", "open")
 KINDS = NOTE_KINDS + ("assistant_claim",)
 MESSAGE_SCOPE_KINDS = ("decision", "open")

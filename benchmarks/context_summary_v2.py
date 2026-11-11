@@ -676,13 +676,17 @@ def maximal_output(user_pairs, assistant_pairs):
         ]
         for index, pair in enumerate(users)
     }
-    claims = [
-        dict(
-            pair=replies[-1],
-            quotes=[sized(size, 3)],
-            text=sized(history_summary.TEXT_MAX, 5),
-        )
-    ] * (min(history_summary.MAX_CLAIMS, 1) if replies else 0)
+    claims = (
+        [
+            dict(
+                pair=replies[-1],
+                quotes=[sized(size, 3)],
+                text=sized(history_summary.TEXT_MAX, 5),
+            )
+        ]
+        if replies
+        else []
+    )
     uncertain = [
         dict(
             text=sized(history_summary.UNCERTAIN_MAX, 11 + index),
@@ -1377,7 +1381,10 @@ def heldout_outcome(rows, summaries, cases, comparison):
         row["case_id"]
         for row in candidate
         if by_id[row["case_id"]].get("probe") == "allow_wording"
-        and (row["summary"] or {}).get("admitted_items")
+        and any(
+            by_id[row["case_id"]]["gold"]["pair"] in item.get("pairs", ())
+            for item in (row["summary"] or {}).get("admitted_items") or ()
+        )
     ]
     statuses = {
         (row.get("summary") or {}).get("status")

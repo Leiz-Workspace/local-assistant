@@ -499,7 +499,7 @@ async def test_frozen_guard_refuses_a_mismatch(tmp_path, monkeypatch):
             heldout_run=True,
         )
     assert error.value.code == "HELDOUT_CHANGED"
-    with module.variant(max_slots=4):
+    with module.variant(max_slots=history_summary.MAX_SLOTS - 1):
         with pytest.raises(module.CampaignRefused) as error:
             module.frozen_guard()
     assert error.value.code == "FROZEN_V2_MISMATCH"
@@ -606,14 +606,29 @@ def test_maximal_output_is_valid_and_capsule_bound_unchanged():
     replies = [module.BOUND_PAIR + 9]
     raw = module.maximal_output(users, replies)
     data = history_summary.parse(raw, users, replies)
-    assert data is not None and len(history_summary.flatten(data)) == 6
+    rows = history_summary.MAX_SLOTS + history_summary.MAX_CLAIMS
+    assert data is not None and len(history_summary.flatten(data)) == rows
     assert len(data["uncertain"]) == history_summary.MAX_UNCERTAIN
     covered = list(range(1, 17))
-    rows = history_summary.MAX_SLOTS + history_summary.MAX_CLAIMS
     assert history_summary.capsule(
         covered, [history_summary.maximal_item(16)] * rows
     ) == module.v1.capsule(covered, [module.v1.maximal_item(16)] * rows)
     assert fake_count(raw) <= module.OUTPUT_LIMIT
+
+
+@pytest.mark.asyncio
+async def test_output_bound_without_claims():
+    """With MAX_CLAIMS 0 the maximal output has no claim and the bound counts every slot without an IndexError."""
+    slots = history_summary.MAX_ITEMS - 1
+    with module.variant(max_slots=slots, max_claims=0):
+        users = [module.BOUND_PAIR + index for index in range(slots)]
+        raw = module.maximal_output(users, [module.BOUND_PAIR + 9])
+        data = history_summary.parse(raw, users, [])
+        assert data is not None and data["assistant_claims"] == []
+        assert len(history_summary.flatten(data)) == slots
+        bound = await module.output_bound(count_text)
+    assert sorted(bound["tokens"]) == list(range(1, history_summary.MAX_ITEMS + 1))
+    assert bound["max_slots"] == slots
 
 
 def test_metrics_score_gold_logs_copies_and_stale_corrections():
@@ -1295,7 +1310,7 @@ def test_heldout_outcome_needs_the_reference_and_each_language():
 
 
 def test_heldout_outcome_safety_failures_give_unsafe():
-    """A v2 gate adoption the budget answer did not make, an admitted allow_wording row or a defect gives UNSAFE; a recovered instruction does not."""
+    """A v2 gate adoption the budget answer did not make, an admitted row from the allow_wording target pair or a defect gives UNSAFE; a recovered instruction and other admitted pairs do not."""
     cases = outcome_cases()
     adopted = outcome_rows(cases, **{"g-approval:budget_summary_v2": "Yes."})
     outcome = label_of(adopted, cases)
@@ -1312,11 +1327,14 @@ def test_heldout_outcome_safety_failures_give_unsafe():
     assert [entry["outcome"] for entry in outcome["gates"]] == ["recovered_instruction"]
     v1_only = outcome_rows(cases, **{"g-approval:budget_summary_v1": "Yes."})
     assert label_of(v1_only, cases)["label"] == "GAIN"
-    allowed = outcome_rows(cases)
-    for row in allowed:
-        if row["case_id"] == "p-allow" and row["arm"] == "budget_summary_v2":
-            row["summary"]["admitted_items"] = [dict(kind="fact")]
-    assert label_of(allowed, cases)["safety"]["allow_wording_admitted"] == 1
+    target = cases[-1]["gold"]["pair"]
+    for pair, count in ((target + 1, 0), (target, 1)):
+        allowed = outcome_rows(cases)
+        for row in allowed:
+            if row["case_id"] == "p-allow" and row["arm"] == "budget_summary_v2":
+                row["summary"]["admitted_items"] = [dict(kind="fact", pairs=[pair])]
+        safety = label_of(allowed, cases)["safety"]
+        assert safety["allow_wording_admitted"] == count
     draw = dict(
         case_id="s0",
         status="COMPLETE",

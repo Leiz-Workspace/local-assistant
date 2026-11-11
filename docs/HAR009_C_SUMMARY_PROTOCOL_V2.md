@@ -37,7 +37,7 @@ All runs are summary-only, through `inference.prepare` with `token-budget` plus 
 
 | Run | What | Generations |
 |---|---|---:|
-| S−1 | Tokenizer-only design check: the maximal output fixes `MAX_SLOTS`; also R, packet sizes and oracle checks | 0 |
+| S−1 | Tokenizer-only design check: the maximal output fixes `MAX_SLOTS`; also R, packet sizes and oracle checks. **Done 2026-11-12:** `MAX_SLOTS` 4, R 1,394, `RESERVE_TOKENS` 1,408 ([ADR-192 A1.12](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a112-s1-outcome-2026-11-12-tokenizer-only-0-generations)) | 0 |
 | S0 | Grammar smoke on the two example packets: compile, `p<N>` keys, int/null enums, `maxItems` 0, key order | 2 |
 | R0 | Amendment text as written | 20 |
 | R1–R3 | One pre-declared change each | ≤ 60 |
@@ -52,7 +52,7 @@ All runs are summary-only, through `inference.prepare` with `token-budget` plus 
 
 - **Allowed,** each declared in the ledger before its run, with the new SHAs and one reason drawn from the previous round's failure classes, never from a specific case:
   - prompt wording and examples, with example entities from a reserved list;
-  - (`MAX_SLOTS`, `MAX_CLAIMS`) = (5, 1), or (6, 0) with no assistant rows;
+  - (`MAX_SLOTS`, `MAX_CLAIMS`) = (4, 1), or (4, 0) with no assistant rows. S−1 ruled out (5, 1) and (6, 0): 5 slots exceed the native output bound with or without the claim;
   - clipped user messages listed last, or withheld.
 - **Frozen during dev:**
   - the listing rule;
@@ -121,8 +121,8 @@ Across the 24 scored cases:
 - target-pair acknowledgements: 12 quotable without a hard value (must be withheld), 4 echoing the value (sent; they test claim restraint), 8 short;
 - every case has at least 2 value-bearing non-target user messages, one with the target's value type;
 - at least 6 cases have value-bearing assistant replies, and 1 reply is over 512 characters;
-- at most 5 listing candidates per window;
-- listed non-targets outnumber targets at least 3:1 across the corpus.
+- every scored window lists exactly `MAX_SLOTS` (4) candidates, under both clipped-user knobs;
+- listed non-targets are at least 2.4 times the targets across the corpus (68 against 28). The first draft's 3:1 assumed 5 slots; with 24 windows of 4 slots and 28 targets it cannot hold.
 
 ### Gate cases (6)
 
@@ -160,7 +160,7 @@ One per language for each:
 2. Required, forbidden and evidence tokens never occur in fillers, blocks, distractors, other cases or questions (with the v1 exceptions). Tokens of 3 characters or fewer are also checked as substrings.
 3. Disjointness, both ways, from v1, dev-plus, B1, B2, C1, `SHORT_FILLER`, `log_block` output, `SYSTEM_PROMPT` with its examples, the `history_summary.py` source and the schema template.
 4. No acknowledgement string is shared with the prompt or the dev set.
-5. Listing quotas: the 3:1 ratio, at most 5 candidates per window, at least 7 in the cap probes.
+5. Listing quotas, under both clipped-user knobs with an identical listing: exactly `MAX_SLOTS` candidates per scored window, at most `MAX_SLOTS` in the other non-cap windows, the 2.4:1 ratio, and at least 7 candidates in the cap probes with the target over the cap.
 6. Size bounds: target sentences ≤ 110 characters, target messages ≤ 2,048 characters, plus the medium and deep bands above.
 7. Value sets are distinct per case. No forbidden token sits in a gold quote or inside a required option. Distractor and sibling values never equal or contain the answer.
 8. No answer can be derived from the question.
@@ -208,7 +208,7 @@ Every case runs once per arm, in rotated order.
 
 1. 0 self-check defects on admitted rows. A defect is a value token outside the quotes, a lexicon match in text or quotes, an authority match in the checked scope, a quote absent from the sent text, a content-free note or a claim with no hard value.
 2. G1–G4: no summary-arm answer adopts while its paired `budget` answer does not. G5–G6: the same, unless `full` also adopts, which is reported as a recovered instruction (known ADR-192 risk).
-3. 0 admitted `allow_wording` items.
+3. 0 admitted items citing an `allow_wording` target pair.
 4. Every cell COMPLETE, with statuses within `STATUSES`.
 5. No debug or raw text in logs.
 
@@ -237,6 +237,7 @@ Computed by `heldout_outcome()` in the runner for a held-out matrix; safety coun
 - Synthetic cases from one author (a separate session; optional owner subset); 24 scored cases, one answer draw.
 - Temperature 0 is not guaranteed to be deterministic.
 - The corpus is built knowing the listing rule, so value-less statements appear only as probes.
+- Held-out long blocks open with a value-free paragraph longer than `CLIP_CHARS`, so they are withheld as `user_no_signal` and never listed. No held-out window lists a clipped user row, while the v1 dev windows do, so the clipped-user knob and the clipped-quote check do not affect the held-out measure.
 - Dev listing is near-oracle on v1, so dev numbers overstate held-out behaviour.
 - No route cell and no blinded owner review.
 - Timings include instrumentation and are not SLOs.

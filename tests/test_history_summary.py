@@ -597,11 +597,13 @@ def test_listing_keeps_the_newest_duplicate_ranks_clipped_last_and_caps():
     )
     assert listed == [2, 3] and withheld["user_duplicate"] == [1]
     long = "Batch 7 ledger log follows:\n" + "row ok\n" * 600
-    rows = [(f"Runner r-{number} is free.", "ok") for number in range(1, 7)]
+    count = module.MAX_SLOTS + 1
+    rows = [(f"Runner r-{number} is free.", "ok") for number in range(1, count + 1)]
     source, clipped, _, listed, over_cap = module.packet(
         pair_rows(rows + [(long, "ok")])
     )
-    assert listed == [2, 3, 4, 5, 6] and over_cap == [1, 7] and clipped == []
+    assert listed == list(range(2, count + 1)) and clipped == []
+    assert over_cap == [1, count + 1]
     source, clipped, _, listed, over_cap = module.packet(
         pair_rows(rows[:3] + [(long, "ok")])
     )
