@@ -1,8 +1,61 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `7fb5999` (cây `d5ed277`, sau khi merge HAR-009-B1/B2 ngày 2026-11-11): lệnh, source, dịch vụ, số liệu, kiểm tra database, phạm vi và ảnh hưởng tới promotion/D90. Lượt ngày 2026-11-09 trên `production` `dd7fac3`, lượt sáng 2026-11-09 trên `0b67d95` và kết quả ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `cdbcdd4` (cây `3038817`, sau khi merge HAR-009-C1 ngày 2026-11-11), cùng lượt trước đó bị gián đoạn do máy chủ khởi động lại. Các lượt trên `develop` `7fb5999`, `production` `dd7fac3`, `0b67d95` và ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `develop` `7fb5999` (cây `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-7fb5999-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `cdbcdd4` (cây `3038817580a6cf679dbe086e55b2903fbab0a6d1`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-cdbcdd4-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+
+| Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-3`) |
+|---|---|
+| Toàn bộ `pytest tests` | **6.508 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.839,05 giây** (summary "6508 passed, 1 warning in 1839.05s (0:30:39)"); wrapper 1.840,64 giây |
+| Source snapshot | **878 file** trong `src`, `apps`, `scripts`, `tests`, `configs`, `pyproject.toml`, `uv.lock`; `source_bytes_unchanged: true` |
+| Commit và cây | Checkout `develop` tại `cdbcdd4` (merge PR #56), cây `3038817580a6cf679dbe086e55b2903fbab0a6d1`, trùng cây của `origin/develop`; ngoài file source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` (không thuộc phạm vi source freeze) |
+| Source freeze SHA-256 | `3351564763ee7b3e1819a8717a98e120a61868c2b84a95d22a0ae84eaa076163` (giống lượt bị gián đoạn) |
+| Log SHA-256 | `63c69b1aa9d2dc41b8ebd69a7510f0ebc802c71156a0c29533261399fa560db7` |
+| Cảnh báo | 1 warning: `UserWarning: Duplicate name: 'piper/voice.py'` từ test archive TTS cố ý tạo tên trùng |
+| So với full trước | 6.479 PASS trên 876 file (`develop` `7fb5999`) nay là lịch sử; cây này thêm HAR-009-C1 (PR #56: 6 file source, 29 test working state). `develop` khác `production` ở 59 file source |
+
+Lượt chạy bắt đầu 19:27:43 (2026-11-11T12:27:43Z) và kết thúc 19:58:24 (12:58:24Z) theo Asia/Ho_Chi_Minh. Thư mục kết quả `data/backups/d87-20261111-full-3` là private, bị git bỏ qua; receipt chỉ ghi tên thư mục và các SHA-256.
+
+## Lượt bị gián đoạn: `d87-20261111-full-2` (không phải kết quả)
+
+- **Thời gian.** Lượt bắt đầu 18:56:43 (11:56:43Z) trên cùng cây, có cùng source freeze `3351564…`.
+- **Gián đoạn.** Container CORE dừng lúc 19:08:35 (exit 0) trong quá trình máy chủ tắt. Máy khởi động lại khoảng 19:18, `uptime` lúc 19:20 là 2 phút. Tiến trình pytest và wrapper bị dừng theo máy, nên `result.json` vẫn ở trạng thái `running`.
+- **Log riêng.** Log riêng (SHA-256 `bad9934d…`) dừng ở khoảng 4%: 277 PASSED, rồi `tests/integration/test_grounded_tcp.py::test_actual_grounded_core_tcp_citation_and_joined_delivery` FAILED và ERROR, đúng lúc CORE dừng.
+- **Không phải phán quyết về code.** Lượt này không phải kết quả hợp lệ và không được tính PASS hay FAIL. Test hỏng cần CORE qua TCP, và lượt `full-3` sau đó pass test này trên cùng cây.
+- **Dữ liệu dở do teardown chưa kịp chạy** (đã đọc read-only trước khi xử lý):
+  - collection Qdrant tạm `la_d25_probe_1f074c9f…` (0 point);
+  - cho principal test `09fc75e0…`: 1 dòng `files` (`worker.txt`, 40 byte, request key `grounded-tcp`), 1 `ingestion_jobs` ở trạng thái `running`, 1 `ingestion_heads` và 1 `file_owner_usage`;
+  - bộ đếm `file_global_usage` tăng thêm 1 file/40 byte.
+- **Dọn dẹp.** Chủ dự án chọn "Dọn rồi chạy D87". Assistant chạy lại đúng logic teardown của fixture: xóa ingestion rows của principal, gọi `cleanup_owners` từ `tests/integration/test_file_http.py`, rồi xóa collection probe sau khi kiểm lại tên và 0 point. Kết quả: 1 `ingestion_heads` và 1 `ingestion_jobs` bị xóa, `files` về 0, `file_global_usage` về 0 file/0 byte, Alembic `0006`. Blob tạm nằm trong `/tmp` đã mất khi khởi động lại.
+
+## Lệnh, source và dịch vụ (lượt `full-3`)
+
+1. Checkout `develop` `cdbcdd4`, cây trùng `origin/develop^{tree}`.
+2. Sau khi khởi động lại, Vault ở trạng thái seal. Assistant unseal bằng bootstrap file theo ủy quyền có sẵn của chủ dự án; key share được nộp trong process, không in ra. Các dịch vụ dùng chung (PostgreSQL, Vault, Qdrant…) đã được máy khởi động lại; assistant không restart dịch vụ nào.
+3. Điều kiện rảnh (CPU logic bận dưới 0,5 trong 3 lần đo 30 giây liên tiếp) đạt sau 210 giây: 0,41 / 0,29 / 0,30. Tải trong lúc chạy: 62 lần đo, trung bình 1,47, tối đa 2,31 CPU bận.
+4. CORE chạy bằng `docker compose --profile core up -d` (`local-assistant-core-1`, `local-assistant/llama-cuda:5c8854fd8`) và được dừng bằng `docker compose --profile core stop` sau lượt chạy.
+5. Lệnh: `uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full-3` (`pytest tests`, không loại trừ gì).
+6. Test reranker CPU (`test_actual_pinned_reranker_paired_comparison`) PASS.
+
+## Kiểm tra database và Qdrant (lượt `full-3`)
+
+- **Database.** Truy vấn read-only bằng runtime role (database `local_assistant`, schema `assistant`) trước và sau lượt chạy cho cùng kết quả:
+  - conversations, messages, inference_runs, files, memories, memory_consents, memory_settings, ingestion_jobs và ingestion_heads đều 0;
+  - file_owner_usage 1, file_global_usage 1;
+  - Alembic `0006`.
+- **Qdrant.** Trước và sau lượt chạy không có collection nào.
+
+## Phạm vi và ảnh hưởng (lượt `full-3`)
+
+- Đây là full software regression cho cây `3038817` của `develop` `cdbcdd4`. Nếu `develop` được promote mà không đổi source thêm, cây source của `production` sẽ trùng cây đã kiểm này.
+- Promotion vẫn chưa làm, vì GitHub Actions bị chặn do billing và promotion là quyết định của chủ dự án. Không tag, không release, không deploy. D81, D89 và D90 vẫn mở.
+
+## Lịch sử: lượt 2026-11-11 trên `develop` `7fb5999`
+
+**Mục đích (lượt này):** Ghi kết quả full suite trên cây source của `develop` `7fb5999` (cây `d5ed277`, sau khi merge HAR-009-B1/B2 ngày 2026-11-11): lệnh, source, dịch vụ, số liệu, kiểm tra database, phạm vi và ảnh hưởng tới promotion/D90. Lượt ngày 2026-11-09 trên `production` `dd7fac3`, lượt sáng 2026-11-09 trên `0b67d95` và kết quả ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `develop` `7fb5999` (cây `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-7fb5999-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế |
 |---|---|

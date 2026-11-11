@@ -5,6 +5,8 @@
 **Date:** 2026-10-19
 **Status:** Design/contract implementation in progress after D28 commit `a2cc9c0`; acceptance pending tests.
 
+**Status note — 2026-11-11:** this line is historical. D29 later passed as design/contract (roadmap row D29: 47 policy/schema and 16 actual temporary PostgreSQL cases PASS), and D30 implemented persistence. The original status is kept unchanged.
+
 ## Context and assessment
 
 The roadmap requires session, episodic, preference and project memory with consent/provenance in schema. Existing conversation history is not consent to long-term memory; legacy conversation ownership remains JSONB under ADR-018. Existing file/source/RAG and model choices are accepted separately. There is no implemented memory store, opt-in or memory injection today.
