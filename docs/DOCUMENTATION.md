@@ -2349,4 +2349,10 @@ Desktop dùng **GTK/WebKit nhúng trong process/cửa sổ riêng**, không mở
 
 **498 related PASS/0FAIL/0SKIP/5.14s**,41files,36tests mới; native WebKit thật đã load UI/brand và nhận synthetic stream/exit0,0model calls. Owned backend lifecycle kiểm riêng,23packaged files byte-match,18Python files lint/format/descriptions PASS. [Receipt](evidence/aevra-native-desktop-20261111.json), [native screenshot](evidence/aevra-native-desktop-20261111.png). Đây là Linux native implementation trên host hiện tại, chưa fully bundled AppImage/Windows/macOS hoặc release qualification. Model/config/provider/data và context/skill authorities giữ nguyên; context optimization B1 và các TODO trước còn mở.
 
+### 13.11. HAR-009-B1: đo khả năng giữ context
+
+[Protocol](HAR009_B1_RETENTION_PROTOCOL.md), [kết quả](HAR009_B1_RETENTION_RESULT.md), [receipt](evidence/context-retention-b1-20261111.json). Benchmark `benchmarks/context_retention.py`: 12 hội thoại tổng hợp 16 cặp (dữ kiện sớm, ràng buộc ở lượt 1, mâu thuẫn cũ–mới, việc dở kèm phiếu; mỗi loại một case tiếng Việt), 5 nhánh `full`/`legacy`/`window3`/`window3_pin1`/`compact3`, cùng CORE/preset `fast`/512 token, chấm câu trả lời đầu tiên theo token bắt buộc và token cũ bị cấm, kiểm riêng dữ kiện có trong context.
+
+Kết quả 60/60 lượt native, không retry: đúng nghiêm ngặt `full` 11/12, `legacy` 3/12, `window3` 1/12, `window3_pin1` 3/12, `compact3` 12/12. `full` và `compact3` đều giữ đủ dữ kiện (chênh 12/11 do luật chấm chữ số); trong các cửa sổ 3 lượt, `compact3` giữ được nhiều nhất nhưng dùng trung vị trên 1210 token input so với 564 của `full`. Corpus làm truy xuất từ khóa dễ, nên đây là cận trên. 15 test mới không gọi model. Đây là đo đạc trên dữ liệu tổng hợp, không đổi default/model/config.
+
 </details>
