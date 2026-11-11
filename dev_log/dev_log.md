@@ -5847,3 +5847,55 @@ Purpose: carry out the NEXT item of the HAR backlog under the owner's goal to fi
   - Output tokens and explicit recall were not measured.
   - An independent fact and method review (two agents) confirmed every number from the raw files and led to these wording corrections before commit.
   - No default, adoption, model, configuration, data or service change.
+
+## 2026-11-11 — HAR-009-B2: token-budget history policy implemented and measured
+
+Purpose: carry out the next item of the HAR backlog (B2) under the owner's goal to finish outstanding work. The task is to select recent history by a native token budget instead of a fixed pair count, give user-marked rules priority by an inspectable rule, and measure the result under real token pressure, without changing any default, model or configuration.
+
+- **Code (opt-in only).** `HistoryPolicy.mode` gains `"token-budget"` ([ADR-189](../docs/ADR/189-opt-in-token-budget-history-window.md)).
+  - If the whole history fits the soft target (`trigger_ratio` × input limit, default 0.8), everything is kept.
+  - Otherwise, in this order:
+    - systems, pins and the current task are mandatory (`context_overflow` above the hard limit);
+    - the newest pair that fits (at most 8 probed);
+    - a contiguous recent run within half of the remaining headroom;
+    - older pairs whose user message opens with a marker (`rule:`, `constraint:`, `important:`, `decision:`, `remember:`, `quy tắc:`, `quy ước:`, `ràng buộc:`, `quan trọng:`, `quyết định:`, `ghi nhớ:`; case, leading space and NFC/NFD ignored), at most 8 probed;
+    - the recent run extended to the soft target (binary searches).
+  - The receipt records one reason per pair (`pinned`, `recent`, `important`, `evicted_*`), the markers found, the window length and the token caps, with no dialogue text. `strict` refuses any loss.
+  - CLI: `--history-policy token-budget`, `--history-budget-ratio` (alias of `--compact-trigger`); `--history-window` is refused for this mode. The harness status lists the mode.
+  - `tests/test_context_token_budget.py`: 20 tests.
+- **Benchmark.** New `benchmarks/context_budget.py` and `benchmarks/tests/test_context_budget.py` (19 tests, no model calls).
+  - 12 synthetic dialogues. 8 long-turn cases have 16 pairs with 96-line synthetic logs (about 2,900 tokens per filler pair), so the history exceeds the hard limit. Kinds: early fact, marked rule, unmarked rule, and a marked decision later corrected without a marker. 4 short cases have 40 short pairs.
+  - Arms: `legacy`, `budget` and `compact`.
+  - A tokenizer-only design check (no completions) verifies window placements before the freeze.
+  - The [protocol](../docs/HAR009_B2_TOKEN_BUDGET_PROTOCOL.md) and `frozen-inputs.json` (including the composition plan) were written before the first completion. The calibration (92 and 96 log lines, no completions) is recorded in `data/evaluations/context-budget-b2-calibration-20261111`.
+- **Two campaigns.**
+  - Weights SHA-256 `073a9275…` and runtime pin `5c8854fd…` were verified before each start. CORE was started with the unchanged `scripts/start-core.py` (PIDs 936050 and 980039), then stopped with SIGINT each time; the launcher exited 0 and port 8080 was freed.
+  - Settings: preset `fast`, 512 tokens (hard input limit 32,000, soft target 25,600), temperature 0.7, native streaming.
+  - Campaign 1 (`data/evaluations/context-budget-b2-20261111`): 36/36 first outcomes in 151 s.
+  - An independent code review then found that marked pairs right behind the anchor used up the importance share and probes, so an older marked rule was dropped when recent pairs were also marked. The order was fixed (recent share, then marked pairs, then extension) and a regression test added.
+  - Campaign 2 (`…-run2`) reran the unchanged protocol on the fixed code: 36/36 in 152 s, no retries. The composition plan is identical to campaign 1, all 36 strict outcomes are the same (19/36 answer texts identical).
+- **Results (both campaigns; strict / stale / facts in context, each out of 12):**
+
+  | Arm | Strict | Stale | Facts in context |
+  |---|---|---|---|
+  | `legacy` | 3 | 0 | 2 |
+  | `budget` | 7 | 2 | 6 |
+  | `compact` | 11 | 0 | 12 |
+
+  - `budget` against `legacy`: 6 gains (Heron, Bồ Câu, Lynx, Họa Mi, Mantis, Puffin) and 2 regressions (Hydra, Đại Bàng). In both stale cases it kept the marked old decision, dropped the unmarked correction and answered with the old value, as the protocol predicted.
+  - `compact`: 8 gains, 0 regressions, 12/12 facts present; again an upper bound because the questions name unique projects.
+  - Long-history upper-median input: `legacy` 29,565, `budget` 23,711, `compact` 23,996 tokens. First text came about 1.2 s earlier for both new arms; preparation took about 0.1 s more.
+  - Campaign 2 sampled CORE peaks: RSS 10,195,752 KiB and GPU 8018 MiB (728 samples).
+- **Retained first outcomes:**
+  - Osprey: all arms answered in ISO form even without the rule, so it cannot show rule retention.
+  - Chim Sẻ: `compact` held the rule but wrote "MH-CS-315".
+  - `legacy` guessed in some short cases (ports 8080 and 443, "2.0", generic Mantis limits) and otherwise said it had no information.
+- **Independent check:** in campaign 2, 36 rows were rescored, presence was recomputed from the saved requests, and retained pairs were compared with the frozen plan, all with 0 mismatches. The frozen hash, the source hashes and the corpus identity were confirmed after the run. A separate fact review of the campaign-1 documents led to these corrections: calibration evidence saved, hypotheses reworded, per-regime maxima and totals added, and the token range and `legacy` guesses stated exactly.
+- **Validation:** related suites 176 passed; CI-scope suite 6853 passed, 368 skipped, 30 deselected; Ruff check and format on the 6 changed Python files and `uv lock --check --offline` pass.
+- **Docs:** [result](../docs/HAR009_B2_TOKEN_BUDGET_RESULT.md), [receipt](../docs/evidence/context-budget-b2-20261111.json). Also updated: the backlog (B2 IMPLEMENTED + MEASURED, C1 NEXT), the strategy guide (sections 1, 2, 3 and 7), Documentation 13.12, the CLI runbook section 12, roadmap v5.19.10 and the ledger status.
+- **Limits:**
+  - Synthetic dialogues by one author, with two draws per cell.
+  - The design deliberately places the correction outside `budget`'s window, so the stale result shows that the risk exists, not how often it occurs.
+  - No case marks a pair right behind the anchor, so the fixed bug is covered by software tests only.
+  - Output tokens and explicit recall were not measured.
+  - No default, adoption, model, configuration, data or service change. Before any default use, the marker rule needs a way for newer corrections to win, with its own ADR and a rerun.

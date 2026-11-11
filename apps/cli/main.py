@@ -43,6 +43,8 @@ def chat_policy(args):
         ):
             raise ClientError("history_policy_required", 2)
         return None
+    if args.history_policy == "token-budget" and args.history_window is not None:
+        raise ClientError("invalid_history_policy", 2)
     values = dict(
         mode=args.history_policy, pinned_turns=args.pin_turn, recall_ids=args.recall
     )
@@ -82,12 +84,18 @@ def parser():
     chat = sub.add_parser("chat")
     chat.add_argument("--message")
     chat.add_argument(
-        "--history-policy", choices=["sliding-window", "extractive-compact"]
+        "--history-policy",
+        choices=["sliding-window", "extractive-compact", "token-budget"],
     )
     chat.add_argument("--history-window", type=int)
     chat.add_argument("--pin-turn", action="append", type=int, default=[])
     chat.add_argument("--recall", action="append", type=UUID, default=[])
-    chat.add_argument("--compact-trigger", type=float)
+    chat.add_argument(
+        "--compact-trigger",
+        "--history-budget-ratio",
+        dest="compact_trigger",
+        type=float,
+    )
     chat.add_argument(
         "--context-strategy",
         choices=["evidence-first", "recent-turns", "strict"],
