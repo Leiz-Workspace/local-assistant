@@ -125,6 +125,16 @@ uv run --no-sync la skills remove INSTALLATION_UUID --workspace WORKSPACE_UUID
 
 Skill giúp chuẩn hóa quy trình; chưa có bằng chứng năng lực ngang model lớn. Live smoke bên dưới không thay [paired measurement HAR-008](HAR008_PAIRED_EVALUATION_RESULT.md), hiện đã hoàn tất với promotion NOT_QUALIFIED.
 
+### Duyệt approval một lần
+
+```bash
+uv run --no-sync la approvals show APPROVAL_UUID
+uv run --no-sync la approvals decide APPROVAL_UUID approve
+uv run --no-sync la approvals decide APPROVAL_UUID reject
+```
+
+Hai lệnh dùng API approval hiện có (`/api/v1/approvals`), chỉ owner của request đọc được. `show` in toàn bộ review nhưng bỏ `review_nonce`; ký tự không in được (C1, DEL, bidi) ra dưới dạng JSON escape, nên giá trị parse lại không đổi nhưng không điều khiển được terminal. Mọi output JSON của CLI dùng cùng cách escape này. `decide` chỉ chạy khi request còn `pending` (nếu không: exit 5 `approval_not_pending`) và stdin là terminal (nếu không, kể cả stdin đã đóng: exit 2 `approval_requires_terminal`). Lệnh in kind, workspace, hạn, scope digest và toàn bộ artifact ra stderr, với ký tự điều khiển/bidi đã escape (dấu `\` thật được nhân đôi, nên ký tự điều khiển thật và chuỗi escape gõ sẵn trong artifact trông khác nhau), bỏ phần đã gõ sẵn trước khi review hiện ra, rồi yêu cầu gõ 8 ký tự đầu của scope digest. Gõ sai: exit 2 `approval_confirmation_mismatch`, không gửi gì. Approve chỉ ghi quyết định; không chạy lệnh hay sửa source. Server cần workspace approval đã cấu hình, nếu không trả 503 `approval_unavailable`. Chưa có lệnh liệt kê approval đang chờ, vì API chưa có route list.
+
 ## 5. Image/video generation
 
 Đã có [request/port contract](../src/application/ports/media_generation.py), [job manager](../apps/harness/generation.py), typed API `/api/v1/harness/generations`, cancellation, scoped download và CLI:

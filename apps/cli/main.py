@@ -189,6 +189,11 @@ def parser():
         if kind == "video":
             media.add_argument("--seconds", type=int, required=True)
             media.add_argument("--fps", type=int, required=True)
+    approvals = sub.add_parser("approvals").add_subparsers(dest="action", required=True)
+    approvals.add_parser("show").add_argument("id", type=UUID)
+    decide = approvals.add_parser("decide")
+    decide.add_argument("id", type=UUID)
+    decide.add_argument("decision", choices=["approve", "reject"])
     jobs = sub.add_parser("jobs").add_subparsers(dest="action", required=True)
     jobs.add_parser("list")
     for action in ("show", "cancel", "remove"):
@@ -203,6 +208,83 @@ def read_text(path, limit):
     if len(value) > limit:
         raise ClientError("input_too_large", 2)
     return value.decode("utf-8")
+
+
+def approval_view(review):
+    """Return the owner-only review without its one-time nonce, so output cannot be replayed as a decision."""
+    return {key: value for key, value in review.items() if key != "review_nonce"}
+
+
+def escape_char(char):
+    """Return a fixed-width Python-style escape for one code point."""
+    code = ord(char)
+    return f"\\U{code:08x}" if code > 0xFFFF else f"\\u{code:04x}"
+
+
+def terminal_text(value, *, review=False):
+    """Escape non-printable characters so text cannot drive the terminal; review mode also doubles backslashes, so literal escapes stay distinguishable."""
+    return "".join(
+        "\\\\"
+        if review and char == "\\"
+        else char
+        if char in "\n\t" or char.isprintable()
+        else escape_char(char)
+        for char in str(value)
+    )
+
+
+def terminal_json(value, **options):
+    """Dump JSON with non-printable characters as JSON escapes; the parsed value is unchanged but cannot drive the terminal."""
+    text = json.dumps(value, ensure_ascii=False, **options)
+    return "".join(
+        char if char == "\n" or char.isprintable() else json.dumps(char)[1:-1]
+        for char in text
+    )
+
+
+def discard_typeahead(stdin):
+    """Drop input queued before the review was shown, so only a reply typed after it can confirm."""
+    try:
+        import termios
+    except ImportError:
+        return
+    try:
+        termios.tcflush(stdin.fileno(), termios.TCIFLUSH)
+    except (termios.error, AttributeError, OSError, ValueError):
+        return
+
+
+def decide_approval(client, identifier, decision, review, *, stdin=None):
+    """Send one explicit human decision only after the exact scope is shown and confirmed on a terminal."""
+    stdin = stdin or sys.stdin
+    if review.get("state") != "pending":
+        raise ClientError("approval_not_pending", 5)
+    if stdin is None or not stdin.isatty():
+        raise ClientError("approval_requires_terminal", 2)
+    digest = review["scope_digest"]
+    lines = [
+        f"Approval request {identifier}",
+        "Kind: " + terminal_text(review.get("kind"), review=True),
+        "Workspace: " + terminal_text(review.get("workspace_id"), review=True),
+        "Expires: " + terminal_text(review.get("expires_at"), review=True),
+        "Scope digest: " + terminal_text(digest, review=True),
+        "--- artifact ---",
+        terminal_text(review.get("artifact"), review=True),
+        "--- end ---",
+        f"Type the first 8 characters of the scope digest to {decision}: ",
+    ]
+    print("\n".join(lines), end="", file=sys.stderr, flush=True)
+    discard_typeahead(stdin)
+    if stdin.readline().strip() != digest[:8]:
+        raise ClientError("approval_confirmation_mismatch", 2)
+    LOGGER.info("cli_approval_decision_sent decision=%s", decision)
+    return client.request(
+        "POST",
+        f"/api/v1/approvals/{identifier}/decision",
+        dict(
+            decision=decision, scope_digest=digest, review_nonce=review["review_nonce"]
+        ),
+    )
 
 
 def open_ui(client, *, desktop=False, auth_file=DEFAULT_AUTH):
@@ -528,6 +610,15 @@ def execute(args):
         return client.request("GET", PREFIX + f"/runs/{args.id}").get(
             "context", {"available": False}
         )
+    if args.command == "approvals":
+        review = client.request("GET", f"/api/v1/approvals/{args.id}")
+        if not isinstance(review, dict) or not all(
+            isinstance(review.get(key), str) for key in ("state", "scope_digest")
+        ):
+            raise ClientError("invalid_server_response", 6)
+        if args.action == "show":
+            return approval_view(review)
+        return decide_approval(client, args.id, args.decision, review)
     if args.command == "runs":
         if args.action == "list":
             return client.request("GET", PREFIX + "/runs")
@@ -583,11 +674,9 @@ def main(argv=None):
     try:
         result = execute(args)
         if isinstance(result, str) and not args.json:
-            print(result)
+            print(terminal_text(result))
         else:
-            print(
-                json.dumps(result, ensure_ascii=False, indent=None if args.json else 2)
-            )
+            print(terminal_json(result, indent=None if args.json else 2))
         return 0
     except ClientError as error:
         LOGGER.warning("cli_command_failed code=%s", error.code)

@@ -283,7 +283,12 @@ def test_browser_pairing_cookie_acl_and_real_stream(product_client):
     assert settings["tokens"][0] not in response.text
     assert "worker-src 'none'" in response.headers["content-security-policy"]
     assert client.get("/props?autoload=false").status_code == 200
-    assert client.get("/props?escape=1").status_code == 403
+    escaped = client.get("/props?escape=1")
+    assert escaped.status_code == 403
+    assert escaped.json()["detail"]["code"] == "unsupported_query"
+    queried = client.get("/?next=/props")
+    assert queried.status_code == 403
+    assert queried.json()["detail"]["code"] == "unsupported_query"
     repeated = client.post(
         "/ui/pairings",
         headers={"Origin": "http://127.0.0.1:7090", "X-Harness-UI": "1"},

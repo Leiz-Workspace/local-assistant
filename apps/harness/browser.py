@@ -173,6 +173,8 @@ def register_browser(app, *, asset_root=ASSETS):
             return await call_next(request)
         try:
             boundary_request = request
+            if request.url.query and request.url.path != "/props":
+                raise HTTPException(403, detail={"code": "unsupported_query"})
             if request.url.path == "/props" and request.url.query:
                 if any(
                     key not in {"autoload", "model"} for key in request.query_params

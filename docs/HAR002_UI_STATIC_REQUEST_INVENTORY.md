@@ -12,8 +12,8 @@ Version `b11557`, source pin `5c8854fd88319125125dc4b836c98b1b215b0f23`, 70 file
 
 **Harness boundary.** `browser_boundary` (br:169-222) skips `/api/`, `/docs` and `/openapi`. Every other path goes through these checks in order:
 
-1. Query check: only `/props` may carry a query, with keys `autoload`/`model`. Other keys give 403 `unsupported_query`.
-2. `local_browser`: any other query, a non-loopback peer or a foreign Origin gives 403 `local_session_required`.
+1. Query check: only `/props` may carry a query, with keys `autoload`/`model`. Other keys, and any query on another path, give 403 `unsupported_query`. Before 2026-11-12, a query on another path fell through to `local_browser` and got the misleading `local_session_required`.
+2. `local_browser`: a non-loopback peer or a foreign Origin gives 403 `local_session_required`.
 3. CSRF check for methods other than GET/HEAD: 403 `ui_csrf_required`.
 4. Session check: 401 `ui_session_required`.
 5. SECURITY headers and the CSP (br:136-151): `connect-src 'self'`, `script-src 'self'` plus hashes, `style-src 'self' 'unsafe-inline'`, `img-src 'self' data: blob:`, `worker-src 'none'`, `frame-src 'none'`.
@@ -35,16 +35,16 @@ The served routes are GET-only (`fastapi/routing.py:1053-1054`), so a HEAD reque
 | `./props?autoload=false`, `./props?model=…`, `${rl}/props` | GET | startup, retry, API-key dialog | Served: fixed JSON (`role:"model"`, `cors_proxy_enabled:false`, `ui_settings`). Allowed query keys are ignored | None | `Tbe("./props",r,{authOnly:!0})`; br:176-181, 324-344 |
 | `/v1/models` | GET | model selector | Served: one CORE entry | None | `LIST:"/v1/models"`; br:310-322 |
 | `/models/load`, `/models/unload`, `/models` (download), `/models/sse` | POST, GET | router-mode manager (inactive) | 403 `unsupported_capability` | Blocked | `JV(JE.LOAD,n)`; br:451-457 |
-| `/models?model=<id>` | DELETE | delete from disk | 403 `local_session_required` (because of the query) | Blocked | `E6t(JE.DELETE` |
+| `/models?model=<id>` | DELETE | delete from disk | 403 `unsupported_query` (because of the query) | Blocked | `E6t(JE.DELETE` |
 | `/tools` | GET | tools panel | Served: `[]` | None | `HI={EXECUTE:"/tools",LIST:"/tools"}`; br:346-349 |
 | `/tools` (including streaming) | POST | server tools, file read | 403 `unsupported_capability` | Blocked | `G2(HI.EXECUTE,` |
 | `./v1/chat/completions` | POST | send, regenerate, continue, agentic, title, pre-encode | Served after translation (see *Chat contract*) | CORE stream only | `BV={COMPLETIONS:"./v1/chat/completions"`; br:367-429 |
 | `./v1/chat/completions/control` | POST | Skip reasoning | Has no query, so it passes the boundary, then gets 403 `unsupported_capability` in the route error shape | Blocked | `fetch(BV.CONTROL,` |
-| `./slots[?model=]` | GET | pre-encode (off by default) | 403 `unsupported_capability`; with a query, 403 `local_session_required`. The UI treats the error as idle | Blocked | `xye={LIST:"./slots"}` |
-| `./v1/stream?conv_id=…&from=N` | GET | resume, probe | 403 `local_session_required` | None | `` return`${Aye.BASE}?${n}${i}` `` |
-| `./v1/stream?conv_id=…` | DELETE | Stop | 403 `local_session_required`. Stop relies on the client abort (inferred) | None | `fetch(Un.buildStreamUrl(n),{headers:ov(),method:"DELETE"})` |
+| `./slots[?model=]` | GET | pre-encode (off by default) | 403 `unsupported_capability`; with a query, 403 `unsupported_query`. The UI treats the error as idle | Blocked | `xye={LIST:"./slots"}` |
+| `./v1/stream?conv_id=…&from=N` | GET | resume, probe | 403 `unsupported_query` | None | `` return`${Aye.BASE}?${n}${i}` `` |
+| `./v1/stream?conv_id=…` | DELETE | Stop | 403 `unsupported_query`. Stop relies on the client abort (inferred) | None | `fetch(Un.buildStreamUrl(n),{headers:ov(),method:"DELETE"})` |
 | `./v1/streams/lookup` | POST | on mount and on visibility change | Served `[]` while there are 64 conversations or fewer. Above that, 422 `invalid_stream_lookup` every time; the only effect is a console warning | None | `e=(await fn.getAllConversations()).map(s=>s.id)`, `syncRemoteRunningStreams lookup failed`; br:351-365 |
-| `/cors-proxy?url=…` | GET/POST | MCP proxy, favicons | 403 `local_session_required`. Not attempted, because `cors_proxy_enabled` is false | Blocked | `Ste="/cors-proxy"` |
+| `/cors-proxy?url=…` | GET/POST | MCP proxy, favicons | 403 `unsupported_query`. Not attempted, because `cors_proxy_enabled` is false | Blocked | `Ste="/cors-proxy"` |
 | MCP preset and user URLs, OAuth `.well-known/*` | HTTP/SSE/WS | `#/mcp-servers` | Blocked by the bridge and by CSP `connect-src`. A same-origin URL lands on the catch-all | Blocked in the client; no server route | `static createTransport(e,r,n)` |
 | `huggingface.co` API, avatars and search; `llama.app` catalog | GET, img | `useHuggingFaceHub` (off by default). Search and catalog have no call site | Blocked by the bridge and the CSP | None | `aF="https://huggingface.co"`, `g4t="https://llama.app/v1/catalog.json"` |
 | heic-to CDN; external favicons | `import()`, img | HEIC attachment; MCP and search cards | Blocked by `script-src` and `img-src` | None | `pVt="https://cdn.jsdelivr.net/npm/heic-to@1.5.2`, `uGt="/favicon.ico"` |
@@ -137,7 +137,7 @@ The live capture must confirm:
 Code follow-ups, for a separate authorised task:
 
 - Set `openapi_url=None` in `compose()`, or put `/openapi` under the boundary.
-- Replace the misleading `local_session_required` returned for URLs with a query string. `bridge.js` handles only 401.
+- **Done 2026-11-12:** URLs with a query string on any path other than `/props` now get 403 `unsupported_query` instead of the misleading `local_session_required`. `bridge.js` still handles only 401, so the visible UI behaviour is unchanged.
 - The native CORE on `127.0.0.1:8080` (`scripts/start-core.py`) runs without `--api-key`, so other local processes can reach it.
 
 ## Live capture results (2026-11-12)
