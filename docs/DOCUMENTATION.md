@@ -2395,4 +2395,26 @@ uv run --no-sync la chat --history-policy token-budget --working-state
 
 Có 29 test working state và 10 test benchmark mới, không gọi model. Không đổi default, model hay config.
 
+### 13.14. HAR-009-C: tóm tắt opt-in các lượt bị loại (ADR-192)
+
+[ADR-192](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md), [protocol v1](HAR009_C_SUMMARY_PROTOCOL_V1.md), [kết quả](HAR009_C_SUMMARY_RESULT.md), [receipt](evidence/context-summary-c-20261111.json). Cờ opt-in `history_policy.evicted_summary: true` (chỉ với `evidence-first`, không dùng chung với `extractive-compact`):
+
+```bash
+uv run --no-sync la chat --history-policy token-budget --evicted-summary
+```
+
+**Cách hoạt động.**
+- **Tóm tắt:** CORE đã duyệt tóm tắt các cặp bị loại (thinking tắt, temperature 0, tối đa 1.536 token, trong hạn 120 giây của request).
+- **Bộ kiểm tra tất định:** mỗi mục phải trích nguyên văn đúng ranh giới token. Mục bị loại khi giá trị không có trong câu trích, phủ định/điều kiện lệch, sai người nói, có từ approval, hoặc supersession sai.
+- **Capsule:** chỉ capsule đã qua kiểm tra được nối vào tin nhắn hiện tại như dữ liệu không tin cậy, và chỉ khi còn chỗ trong ngưỡng mềm.
+- **Không chặn câu trả lời:** mọi lỗi đều kết thúc bằng một trạng thái.
+- **Cache:** chỉ trong RAM, theo chủ sở hữu; xóa bằng `DELETE /context/summaries`.
+
+**Đo v1 (12 ca chấm điểm + 2 ca cổng an toàn).**
+- `full` đúng 11/12; `budget` 0/12; `budget_summary` 0/12.
+- Model chép lời xác nhận của assistant thay vì dữ kiện người dùng.
+- An toàn đạt: 0 lỗi tự kiểm, không approval nào lọt vào capsule.
+
+Có 47 test và 6 test benchmark mới, không gọi model. Không đổi default; `/status` ghi rõ `opt-in-experimental-v1-measured-no-gain`.
+
 </details>

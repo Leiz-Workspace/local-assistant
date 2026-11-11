@@ -11,6 +11,7 @@ from src.application.services.mcp_adapter import canonical
 from src.application.services.skill_contract import SkillError, SkillRegistry
 from src.infrastructure.harness_history import HistoryError
 from src.infrastructure.context_archive import ContextArchive
+from src.infrastructure.summary_cache import SummaryCache
 from src.application.services.source_output_contract import SourceContractError, digest
 
 LOGGER = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ class ProductHarness:
         self.review_bytes, self.runs, self.tasks = {}, {}, {}
         self.admission = asyncio.Lock()
         self.context_archive = ContextArchive()
+        self.summary_cache = SummaryCache()
         self.closed = False
         self.history, self.history_broken = history, False
         if history is not None:
@@ -338,4 +340,5 @@ class ProductHarness:
         self.skills.shutdown()
         self.review_bytes.clear()
         self.context_archive.close()
+        self.summary_cache.close()
         LOGGER.info("product_harness_closed")

@@ -41,6 +41,7 @@ def chat_policy(args):
             or args.recall
             or args.compact_trigger is not None
             or args.working_state
+            or args.evicted_summary
         ):
             raise ClientError("history_policy_required", 2)
         return None
@@ -55,11 +56,17 @@ def chat_policy(args):
         values["trigger_ratio"] = args.compact_trigger
     if args.working_state:
         values["working_state"] = True
+    if args.evicted_summary:
+        values["evicted_summary"] = True
     try:
         result = HistoryPolicy.model_validate(values).model_dump(mode="json")
         if not result["working_state"]:
-            for name in ("working_state", "carried_state", "history_offset"):
-                result.pop(name)
+            result.pop("working_state")
+            result.pop("carried_state")
+        if not result["evicted_summary"]:
+            result.pop("evicted_summary")
+        if not (args.working_state or args.evicted_summary):
+            result.pop("history_offset")
     except ValidationError:
         raise ClientError("invalid_history_policy", 2) from None
     LOGGER.info("cli_history_policy_selected mode=%s", result["mode"])
@@ -97,6 +104,7 @@ def parser():
     chat.add_argument("--pin-turn", action="append", type=int, default=[])
     chat.add_argument("--recall", action="append", type=UUID, default=[])
     chat.add_argument("--working-state", action="store_true")
+    chat.add_argument("--evicted-summary", action="store_true")
     chat.add_argument(
         "--compact-trigger",
         "--history-budget-ratio",
@@ -385,7 +393,8 @@ def execute(args):
             if text.strip() == "/exit":
                 return {"closed": True}
             if policy is not None and len(messages) >= 256:
-                if not policy.get("working_state") or policy["pinned_turns"]:
+                droppable = policy.get("working_state") or policy.get("evicted_summary")
+                if not droppable or policy["pinned_turns"]:
                     raise ClientError("client_history_capacity", 2)
                 messages, offset = messages[64:], offset + 32
                 LOGGER.info("cli_history_window_dropped pairs=32 offset=%d", offset)
@@ -411,6 +420,8 @@ def execute(args):
                         ],
                         history_offset=offset,
                     )
+                elif policy.get("evicted_summary"):
+                    body["history_policy"]["history_offset"] = offset
             result = client.request(
                 "POST",
                 PREFIX + "/chat",
