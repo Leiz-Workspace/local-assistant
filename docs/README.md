@@ -46,7 +46,7 @@ Integration tests need the configured services and credentials; without them som
 
 ## Run the MVP locally
 
-Everything binds to loopback. Use three terminals (CORE, API and a client) and set the same `AUTH_DIR` (step 2) in the API and client terminals.
+CORE, the API and SearXNG bind to loopback; PostgreSQL, Vault and Qdrant are shared services with their own bindings, defined in `../infras`. Use three terminals (CORE, API and a client) and set the same `AUTH_DIR` (step 2) in the API and client terminals.
 
 ### 1. Start CORE
 
@@ -54,11 +54,11 @@ Everything binds to loopback. Use three terminals (CORE, API and a client) and s
 uv run --no-sync python scripts/start-core.py
 ```
 
-The script reads `configs/models.yaml` and starts `runtimes/llama.cpp/build-cuda/bin/llama-server` with alias `qwen3.5-9b-core` on `127.0.0.1:8080` (context 32768, `--parallel 1`, `--n-gpu-layers 99`, no multimodal projector). It holds about 8.4 GiB of VRAM. Only one model serves port 8080, so the `unrestricted` chat profile answers 409 `inference_unavailable` while CORE is loaded.
+The script reads `configs/models.yaml` and starts `runtimes/llama.cpp/build-cuda/bin/llama-server` with alias `qwen3.5-9b-core` on `127.0.0.1:8080` (context 32768, `--parallel 1`, `--n-gpu-layers 99`, `--reasoning off` as the server default, no multimodal projector; presets turn thinking on per request). It holds about 8.4 GiB of VRAM. Only one model serves port 8080, so the `unrestricted` chat profile answers 409 `inference_unavailable` while CORE is loaded.
 
 ### 2. Create an auth file
 
-Every API route except health needs `Authorization: Bearer <token>`. `ASSISTANT_AUTH_FILE` points to a JSON file that stores only the SHA-256 of each token:
+Every `/api/v1` route except `/api/v1/health` needs `Authorization: Bearer <token>`. `ASSISTANT_AUTH_FILE` points to a JSON file that stores only the SHA-256 of each token:
 
 ```json
 {"principals": [{"id": "<principal-uuid>", "token_sha256": "<64 lowercase hex characters>"}]}
@@ -87,7 +87,7 @@ write_private("curl-auth-header", f"Authorization: Bearer {token}\n")
 EOF
 ```
 
-The operator's existing principal file and its Vault-held token are described in the [conversation runbook](progress/CONVERSATION_API_LOCAL_RUNBOOK.md). Database rows belong to the principal UUID: if a principal is later removed, its rows stay in the database but no HTTP client can reach them.
+If `ASSISTANT_AUTH_FILE` is unset or the file is refused, every protected route answers 503 `auth_unavailable` and the log shows `conversation_auth_configuration_unavailable`. With the real `local_assistant` database, use the existing principal instead of a new one; a new principal is for a no-DB run or a disposable database. The operator's existing principal file and its Vault-held token are described in the [conversation runbook](progress/CONVERSATION_API_LOCAL_RUNBOOK.md). Database rows belong to the principal UUID: if a principal is later removed, its rows stay in the database but no HTTP client can reach them.
 
 ### 3. Start the API
 
@@ -96,11 +96,11 @@ ASSISTANT_AUTH_FILE="$AUTH_DIR/principals.json" \
 uv run --no-sync uvicorn apps.api.main:app --host 127.0.0.1 --port 8000 --workers 1 --no-proxy-headers
 ```
 
-Without `DATABASE_URL` the API serves stateless chat and the no-DB features you enable. The log shows `conversation_storage_disabled reason=missing_database_url`, and conversations, files and memory answer 503 (`storage_unavailable`, `file_storage_unavailable`, `memory_unavailable`).
+Export `DATABASE_URL` (step 5) and set the feature flags (step 4) in this terminal before starting uvicorn; the API reads them only at startup. Without `DATABASE_URL` the API serves stateless chat and the no-DB features you enable. The log shows `conversation_storage_disabled reason=missing_database_url`, and conversations, files and memory answer 503 (`storage_unavailable`, `file_storage_unavailable`, `memory_unavailable`).
 
 ### 4. Enable features (optional)
 
-Set flags in the environment of the uvicorn command. A flag is on only when set to exactly `1`; every flag defaults to `0`. If an enabled feature lacks its configuration or a prerequisite feature, startup aborts instead of running without it. Flags marked DB take effect only when `DATABASE_URL` is set; without it they are ignored and their endpoints answer 503. Conversations need only `DATABASE_URL`.
+Set flags in the environment of the uvicorn command. A flag is on only when set to exactly `1`; every flag defaults to `0`. For most flags any other value (for example `true`) silently leaves the feature off; `ASSISTANT_GROUNDED_EXTRACT_ENABLED` and `ASSISTANT_VOICE_ENABLED` accept only `0` or `1` and abort startup on any other value. If an enabled feature lacks its configuration or a prerequisite feature, startup aborts instead of running without it. Flags marked DB take effect only when `DATABASE_URL` is set; without it they are ignored and their endpoints answer 503. Conversations need only `DATABASE_URL`.
 
 | Flag | Enables | Requires |
 |---|---|---|
@@ -148,7 +148,7 @@ curl -s http://127.0.0.1:8000/api/v1/chat/completions \
   -d '{"profile": "core", "preset": "fast", "messages": [{"role": "user", "content": "Xin chào"}]}'
 ```
 
-Presets (`apps/api/runtime/presets.py`): `fast` (thinking off), `auto` (routes to fast, balanced or deep, never unlimited), `balanced` (the default; thinking budget 4096), `deep` (budget 8192) and `unlimited` (thinking with no budget limit; output may use the remaining context). A request without a valid token gets 401 `authentication_required`. Every route except health answers 403 `local_access_required` to a request with an `Origin` or forwarding header. Browsers add `Origin` to POST and other state-changing requests, so the Swagger UI at `/docs` is read-only from a browser; send real requests with curl on the same machine.
+Presets (`apps/api/runtime/presets.py`): `fast` (thinking off; output up to 4096 tokens), `auto` (routes to fast, balanced or deep, never unlimited), `balanced` (the default; requests a thinking budget of 4096, output up to 8192), `deep` (requests 8192, output up to 16384) and `unlimited` (thinking with no budget limit; output may use the remaining context). Thinking budgets are request parameters sent to the backend, not caps the API verifies. A request without a valid token gets 401 `authentication_required`. Every `/api/v1` route except health answers 403 `local_access_required` to a request with an `Origin` or forwarding header. `/docs` and `/openapi.json` have no bearer or Origin check; only the loopback binding protects them. Browsers add `Origin` to POST and other state-changing requests, so the Swagger UI at `/docs` is read-only from a browser; send real requests with curl on the same machine.
 
 ### 7. Stop
 
@@ -176,7 +176,7 @@ Press Ctrl+C in the API terminal first (graceful shutdown closes the services an
 
 Changes go to `develop` by pull request; `develop` is promoted to `staging` and then to `production` by pull request. Commit messages use the `feat:`, `fix:`, `docs:` and `bench:` prefixes.
 
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on pull requests and on pushes to these branches: Ruff on changed Python files entering `develop`, the hosted-runner pytest scope (plus a non-blocking quarantine job), Node tests and a `ci-gate`. Pushes to `staging` and `production` build a source bundle artifact; the staging deployment job only records that bundle, and a GitHub Release is published only for a `v*` tag. Hosted runners have no GPU, models, PostgreSQL, Vault or Qdrant, and CI never contacts or deploys to the Home Server.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on pull requests, on pushes to these branches and to `v*` tags, and on manual dispatch: Ruff on changed Python files entering `develop`, the hosted-runner pytest scope (plus a non-blocking quarantine job), Node tests and a `ci-gate`. Pushes to `staging`, `production` and `v*` tags build a source bundle artifact; the staging deployment job only records that bundle, and a GitHub Release is published only for a `v*` tag. Hosted runners have no GPU, models, PostgreSQL, Vault or Qdrant, and CI never contacts or deploys to the Home Server.
 
 ## License
 
