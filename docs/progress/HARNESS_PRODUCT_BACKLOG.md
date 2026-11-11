@@ -33,7 +33,7 @@ Lượt software mới: 209 PASS trong 2.38 s; invocation riêng auth/stateless/
 
 **Follow-up v1.4 — 2026-11-11:** [L1 result](../HAR008_L1_REVIEW_PAIR_RESULT.md): explicit target/range/duplicate/const-pair enforcement, 72/72 bound replies mechanically valid across48+72first quality calls. First value-first baseline regressed versus generic; quote-first did not consistently improve the fresh six-arm cohort. All exact scores, false positives and first-source snapshot retained; no automatic adoption/default change.389 related PASS/4.63s. L1 implementation/measurement slice complete, semantic gate remains open; HAR-008-Q3 NEXT.
 
-**Follow-up v1.5 — 2026-11-11:** [Q3 result](../HAR008_Q3_SEMANTIC_RESULT.md):48native-only prototype calls, trusted finite registered probes,24 shared-candidate checks. Overall single6/12→checked5/12 baseline,5/12→6/12 skill, nhưng **0/5 complete defect proofs ở mọi nhóm**. Tự kiểm tra không qualified để activate; source-valid/type/category/title không thay phản ví dụ đúng.407 related PASS/4.50s; không production/model/default change. Q4 evidence-assisted design NEXT; giữ all first results và semantic gate mở.
+**Follow-up v1.5 — 2026-11-11:** [Q3 result](../HAR008_Q3_SEMANTIC_RESULT.md):48native-only prototype calls, trusted finite registered probes,24 shared-candidate checks. Overall single6/12→checked5/12 baseline,5/12→6/12 skill, nhưng **0/5 complete defect proofs ở mọi nhóm**. Tự kiểm tra không qualified để activate; source-valid/type/category/title không thay phản ví dụ đúng.407 related PASS/4.50s; không production/model/default change. Q4 evidence-assisted design NEXT; giữ all first results và semantic gate mở. *(Ghi chú 2026-11-11: Q4 sau đó được chuyển sang DEFERRED theo ưu tiên context của chủ dự án; xem dòng HAR-008-Q4.)*
 
 ## 1. Quy tắc xếp lịch
 
@@ -143,7 +143,7 @@ Owner ưu tiên xử lý context vượt ngân sách. [Guide](../CONTEXT_MANAGEM
 
 ## TODO: tối ưu context cho tác vụ dài — 2026-11-11
 
-**Yêu cầu owner:** ghi nhận hướng cải thiện sau khi đối chiếu với cơ chế công khai của OpenAI/Anthropic. Đây là việc cần làm, chưa phải kết quả benchmark hoặc quyết định bật mặc định. HAR-009 tổng vẫn PARTIAL; HAR-009-B là bước kế tiếp.
+**Yêu cầu owner:** ghi nhận hướng cải thiện sau khi đối chiếu với cơ chế công khai của OpenAI/Anthropic. Đây là việc cần làm, chưa phải kết quả benchmark hoặc quyết định bật mặc định. HAR-009 tổng vẫn PARTIAL; HAR-009-B là bước kế tiếp. *(Ghi chú 2026-11-11: B1, B2 và C1 slice 1 đã đo; theo thứ tự B1 → B2 → C1 → D1, bước kế tiếp là thiết kế D1 và phần còn lại của C.)*
 
 Mục tiêu: kết hợp **ràng buộc được ghim + recent context theo ngân sách token + trạng thái công việc có cấu trúc + bản gốc có thể truy xuất lại**. Không dùng số lượng lượt hội thoại làm tiêu chí chính duy nhất và không xem excerpt có mặt trong prompt là bằng chứng model trả lời đúng.
 
@@ -164,6 +164,6 @@ Tham khảo thiết kế công khai: [OpenAI compaction](https://developers.open
 
 Owner yêu cầu tên/logo Aevra và desktop độc lập. HAR-016 Linux implementation verified theo [guide](../AEVRA_DESKTOP.md), [ADR-188](../ADR/188-aevra-brand-and-native-webkit-desktop.md), [receipt](../evidence/aevra-native-desktop-20261111.json). Native GTK/WebKit dùng lại chat UI, không gọi Brave/Chromium, không fallback browser. Owned missing-backend start/stop và reused-backend protection đã kiểm; UI/context/model/tool authority không tự mở rộng. Launcher Aevra đã có trong menu Linux; còn phụ thuộc checkout/uv/OS libraries, chưa là AppImage/Windows/macOS installer.
 
-498 related PASS/0FAIL/0SKIP/5.14s,41files,36tests mới; actual native synthetic stream/exit0,0model calls;18Python files lint/format/descriptions và23packaged files byte-match. Original dragon SVG/PNG và70upstream UI files unchanged. Broader device/installer/full-regression/release gates pending. Context optimization B1 vẫn là NEXT sau yêu cầu branding/native hiện tại; không đóng các TODO B2/C1/D1 hoặc reset kết quả cũ.
+498 related PASS/0FAIL/0SKIP/5.14s,41files,36tests mới; actual native synthetic stream/exit0,0model calls;18Python files lint/format/descriptions và23packaged files byte-match. Original dragon SVG/PNG và70upstream UI files unchanged. Broader device/installer/full-regression/release gates pending. Context optimization B1 vẫn là NEXT sau yêu cầu branding/native hiện tại; không đóng các TODO B2/C1/D1 hoặc reset kết quả cũ. *(Ghi chú 2026-11-11: B1, B2 và C1 slice 1 đã đo sau đó; xem các dòng HAR-009-B1/B2/C1 bên dưới.)*
 
 **Owner icon acceptance — 2026-11-11:** ngoài Desktop đã đúng; Show Apps được xác nhận hết ô đen sau khi dùng PNG trong suốt và thay đăng ký canonical `io.aevra.Aevra`, đồng bộ native ID. TEST đã dọn, entry cũ lưu riêng;75related PASS/1.11s. Chỉ đóng lỗi hiển thị logo này, không đóng installer/device/context/semantic/release gates khác.

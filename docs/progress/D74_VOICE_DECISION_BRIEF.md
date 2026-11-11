@@ -1,7 +1,7 @@
 # D74 — Bảng quyết định voice để chủ dự án duyệt
 
 
-**Current decision — 2026-11-05:** [Owner review packet](D74_VOICE_INTEGRATION_REVIEW.md) proposes default-off personal-local integration, stable principal-bound UI sessions and shared GPU residency admission. [ADR174](../ADR/174-proposed-opt-in-authenticated-voice-integration.md) remains PROPOSED; B1/B2 implementation plus one conditional B3 panel await owner decision. Rights review is complete for this proposal, with distribution notices and final activation separately gated. No new code, inference or model/default approval.
+**Current decision — 2026-11-05:** [Owner review packet](D74_VOICE_INTEGRATION_REVIEW.md) proposes default-off personal-local integration, stable principal-bound UI sessions and shared GPU residency admission. [ADR174](../ADR/174-proposed-opt-in-authenticated-voice-integration.md) remains PROPOSED (status note 2026-11-11: ADR174 was ACCEPTED on 2026-11-05, the same day and after this packet, for B1/B2 and one conditional B3 campaign. B1/B2 were then implemented default-off, and B3 PASSED on 2026-11-07 under ADR178; see the D90 D74 row. The clauses below about awaiting the owner decision and "no new code" are historical. Product activation and the voice/model/default choice remain the owner's.); B1/B2 implementation plus one conditional B3 panel await owner decision. Rights review is complete for this proposal, with distribution notices and final activation separately gated. No new code, inference or model/default approval.
 **Mục đích:** Đối chiếu chất lượng nghe, độ trễ, RAM và quyền sử dụng của đúng các ứng viên đã đánh giá; đề xuất bước tiếp theo trước khi chọn giọng/model cho sản phẩm.
 
 ## Trang thử voice đã chạy — 2026-11-05

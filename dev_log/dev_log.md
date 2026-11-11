@@ -5984,3 +5984,34 @@ Purpose: carry out the next HAR-009 item (C1) under the owner's goal to finish o
   - Carried state is client data.
   - This source change lands after the D87 run on `7fb5999`, so D87 must be rerun.
   - No default, adoption, model, configuration, data or service change.
+
+## 2026-11-11 — D87 PASS on develop cdbcdd4 (after HAR-009-C1); interrupted attempt and residue cleanup
+
+Purpose: rerun D87 because HAR-009-C1 (PR #56) changed source after the D87 PASS on `7fb5999`.
+
+- **Interrupted attempt** (`data/backups/d87-20261111-full-2`, started 18:56:43):
+  - The host shut down and restarted. The CORE container stopped at 19:08:35 (exit 0), and `uptime` at 19:20 showed 2 minutes.
+  - The partial log reached about 4%: 277 passed, then `test_actual_grounded_core_tcp_citation_and_joined_delivery` FAILED and ERRORED as CORE stopped. `result.json` stayed `running`. This attempt is not counted.
+  - The restart also cleared `/tmp`, including the session scratch scripts, which were recreated.
+- **Residue** (read-only inspection first). The ingest fixture's teardown never ran. It left:
+  - a Qdrant probe collection `la_d25_probe_1f074c9f…` with 0 points;
+  - for test principal `09fc75e0…`: 1 `files` row (`worker.txt`, 40 bytes), 1 `ingestion_jobs` (`running`), 1 `ingestion_heads` and 1 `file_owner_usage`;
+  - `file_global_usage` +1 file / 40 bytes.
+- **Cleanup.** The owner was asked and chose "Dọn rồi chạy D87".
+  - The fixture's own teardown logic was replayed: the principal's ingestion rows were deleted (1 + 1), `cleanup_owners` from `tests/integration/test_file_http.py` was called, and the probe collection was deleted after re-checking its name and 0 points.
+  - Afterwards: `files` 0, `ingestion_*` 0, `file_global_usage` 0 files / 0 bytes, Alembic `0006`, no Qdrant collections.
+- **Valid run** (`data/backups/d87-20261111-full-3`):
+  - **Source:** `develop` `cdbcdd4`, tree `3038817580a6cf679dbe086e55b2903fbab0a6d1`, equal to `origin/develop`.
+  - **Vault:** it was sealed after the restart and was unsealed under the owner's standing authorization, without printing keys. The shared services had been restarted by the host, not by the assistant.
+  - **Idle host:** the criterion was met after 210 s (0.41 / 0.29 / 0.30).
+  - **CORE:** `docker compose --profile core up -d`, then `stop`.
+  - **Result: PASS.** **6508 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1839.05 s (19:27:43–19:58:24), 878 source files unchanged. Source freeze `33515647…` (the same as the interrupted attempt), log `63c69b1a…`. The reranker CPU test passed. 1 warning: the duplicate-name TTS archive test.
+  - **Load during the run:** 62 samples, mean 1.47, max 2.31 busy CPUs.
+  - **Database and Qdrant:** read-only checks gave the same values before and after: all conversation, memory and ingestion tables 0, usage rows 1 each, Alembic `0006`, no Qdrant collections.
+- **Docs.**
+  - [D87 result](../docs/progress/D87_CURRENT_FULL_RESULT.md): new current section, the interrupted attempt, and the `7fb5999` run kept as history.
+  - [Receipt](../docs/evidence/d87-20261111-develop-cdbcdd4-acceptance.json).
+  - The D90 dossier: a dated repository-state bullet and the newest D87 row. Section 5, the owner form, is untouched.
+  - Dated status notes on ADR-043, ADR-044 and the D74 brief, plus three stale next-step lines in the backlog.
+  - The ledger and roadmap v5.19.13.
+- **Scope.** This is software regression evidence for the tree to be promoted. `develop` differs from `production` in 59 source files. No promotion, tag, release or deploy. D81, D89 and D90 stay open.
