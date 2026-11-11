@@ -5,6 +5,7 @@ import io
 import json
 import logging
 import tarfile
+from pathlib import Path
 
 import httpx
 import pytest
@@ -95,3 +96,16 @@ def test_bad_checksum_never_publishes_assets(tmp_path):
             destination=tmp_path / "assets", transport=httpx.MockTransport(respond)
         )
     assert not (tmp_path / "assets").exists()
+
+
+def test_llama_cpp_license_is_vendored_from_the_pinned_runtime():
+    """The MIT notice ships inside the package, so `ui prepare` works without a local runtimes/llama.cpp checkout."""
+    path = assets_module.LLAMA_CPP_LICENSE
+    package = Path(assets_module.__file__).resolve().parent
+    assert path.resolve().is_relative_to(package) and "runtimes" not in path.parts
+    text = path.read_bytes()
+    assert text.startswith(b"MIT License")
+    assert (
+        hashlib.sha256(text).hexdigest()
+        == "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d"
+    )
