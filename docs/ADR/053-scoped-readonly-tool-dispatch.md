@@ -28,4 +28,4 @@ Remove/disable dispatcher composition without changing D34 source routes, source
 
 ## Implementation scope
 
-Internal request-owned `WorkspaceToolRun` only; no new public endpoint/session store or model call. Shared argument classes preserve D34 HTTP shapes through compatibility imports. Native fixed output limits and file-thread joins are exercised; synthetic clock/cap boundaries disclosed separately. [Guide](../D35_READ_TOOL_DISPATCH.md). Actual D34 full completed before implementation. D36 owns subsequent CORE/citation composition.
+Internal request-owned `WorkspaceToolRun` only; no new public endpoint/session store or model call. Shared argument classes preserve D34 HTTP shapes through compatibility imports. Native fixed output limits and file-thread joins are exercised; synthetic clock/cap boundaries disclosed separately. [Guide](../progress/D35_READ_TOOL_DISPATCH.md). Actual D34 full completed before implementation. D36 owns subsequent CORE/citation composition.
