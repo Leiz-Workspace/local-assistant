@@ -6051,3 +6051,51 @@ Purpose: continue the owner's goal to finish outstanding work after the host res
   - **Output and verification:** items carry pair citations and exact quotes. A deterministic verifier drops ungrounded, value-, negation-, condition- or speaker-mismatched items.
   - **Placement and failure:** the result is an untrusted capsule with a reserve inside the soft target and a RAM-only owner-bound cache. A failure never blocks the answer.
   - **Process:** produced by a read-only workflow: 3 readers, a draft, two critics (3 blockers, 18 major and 12 minor issues fixed), then a citation and governance check (31 fixes). Implementation follows review.
+
+## 2026-11-11 — HAR-009-C summary (ADR-192) implemented and measured: no gain
+
+Purpose: continue the owner's goal to finish outstanding work. The Stop hook asked for the remaining agent-doable items. ADR-192 was implemented as an opt-in and measured before any default discussion.
+
+- **Code (opt-in only):**
+  - `HistoryPolicy.evicted_summary` (strict). It is refused with `extractive-compact`, and `compose_context` refuses it outside `evidence-first`. `history_offset` is now allowed with it, while `carried_state` still needs `working_state`.
+  - `src/application/services/history_summary.py`:
+    - a fixed versioned prompt and JSON schema;
+    - the shared tokenizer, value tokens, and the negation, condition and authority lexicons;
+    - a deterministic verifier with every ADR-192 drop reason, where quotes must sit on token boundaries;
+    - coverage by binary search (12,288 tokens, at most 8 counts), clipping at 2,048 characters, and a `no_room` probe with a dense maximal row;
+    - a deadline of `min(30, deadline − now − 60)` s with its own timeout scope, so `CancelledError` propagates;
+    - admission of the newest items within the real soft target;
+    - statuses that never raise.
+  - `reduce_history`: the reserve (`min(1,024, soft // 10)`) and the restore of the full-soft selection on any failure; the receipt fields `summary` and `llm_summary`; a counts-only log.
+  - `apps/harness/summarizer.py`: thinking off, temperature 0, `max_tokens` 1,536, JSON schema, a 256 KiB cap.
+  - `src/infrastructure/summary_cache.py`: owner-bound RAM LRU, 64 entries, 1,800 s, applied outputs only.
+  - The route deadline and cache, `DELETE /context/summaries`, a `/status` field, and the CLI flag `--evicted-summary`.
+  - `tests/test_history_summary.py`: 47 tests.
+- **Independent review.** A workflow reviewed the code through three lenses and verified each finding adversarially: 11 confirmed, 4 refuted. All were fixed with regression tests.
+  - Quotes cut inside a token (`944` of `9446`, `staging-3` of `staging-31`, the `t` of `don't`).
+  - Exceptions escaping on a non-dict `usage` or deeply nested JSON.
+  - Failed outputs being cached.
+  - Value tokens without the contraction normalization.
+  - Supersession pairs taken from dropped items.
+  - An optimistic `no_room` probe.
+  - Weak reserve and purge tests.
+- **Benchmark.** `benchmarks/context_summary.py` plus 6 tests. The frozen [v1 protocol](../docs/HAR009_C_SUMMARY_PROTOCOL_V1.md) reduces the draft and lists why.
+  - Corpus: 14 dialogues, 12 scored cases (number, identifier, swap, correction, negation and condition in EN and VI) and 2 authority-gate cases.
+  - Arms: `full`, `legacy`, `budget`, `budget_state`, `budget_summary`, `budget_state_summary`.
+  - The oracle-summarizer design check passed. Corpus tests caught two leaks before the freeze, both fixed: log timestamps containing "03:30", and "no" matching "unknown".
+- **Run.**
+  - CORE: weights and runtime pin verified; the unchanged `scripts/start-core.py` as PID 498456, stopped afterwards.
+  - 84 answers and 28 summaries, no retries, 610.4 s; recorded in `data/evaluations/context-summary-c-20261111`.
+- **Result: no gain.**
+  - **Strict:** `full` 11/12 (the miss is Puffin answered "No" without punctuation, a scoring rule); `legacy`, `budget` and `budget_state` 0/12; both summary arms 0/12 (7 applied, 7 none_verified each).
+  - **Admitted content:** every one of the 26 admitted items was an `assistant_claim` copying a short assistant reply, and the gold value was admitted in 0 of 28 summary cells.
+  - **Drops:** `invalid_supersession` 18, `quote_not_in_source` 18, `speaker_mismatch` 16, `quote_too_short` 2.
+  - **Safety:** self-check defects 0, and no approval or consent wording admitted in the authority-gate cases.
+  - **Cost:** summaries took an upper median of 6.6 s and 432 output tokens. Sampled peaks: RSS 10,242,836 KiB and GPU 8018 MiB.
+  - **Independent recheck:** rescoring, presence and faithfulness all 0 mismatches.
+- **Records.**
+  - [Result](../docs/HAR009_C_SUMMARY_RESULT.md) and [receipt](../docs/evidence/context-summary-c-20261111.json).
+  - ADR-192 status (implemented, measured no gain).
+  - `/status` is now `opt-in-experimental-v1-measured-no-gain`.
+  - The backlog, the strategy guide, Documentation 13.14, roadmap v5.19.16 and the ledger.
+- **Next.** A prompt and contract revision (user statements first, no acknowledgements), with an ADR amendment and a held-out corpus. Tuning on this corpus would inflate the result. Source changed, so D87 is rerun. No default, model, configuration, data or service change.

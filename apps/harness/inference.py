@@ -14,7 +14,9 @@ from apps.api.runtime.presets import (
     get_preset,
 )
 from apps.api.services.llama_gateway import GatewayError, LlamaGateway
+from apps.harness.summarizer import GatewaySummarizer
 from src.application.services.context_composer import compose_context
+from src.application.services.context_reduction import HistoryPolicy
 from src.application.services import review_output_contract as review_contract
 from src.application.services.source_output_contract import (
     NAME,
@@ -49,6 +51,9 @@ class ProductInference:
         history_policy=None,
         archive=None,
         recall=None,
+        summary_deadline=None,
+        summary_cache=None,
+        summary_debug=False,
     ):
         """Verify the loaded CORE and fit actual templated input to one resolved preset."""
         config = get_model_profile("core")
@@ -70,6 +75,15 @@ class ProductInference:
                     client, candidate, thinking=get_preset(selected).thinking
                 )
 
+            summarizer = None
+            if (
+                history_policy is not None
+                and summary_deadline is not None
+                and HistoryPolicy.model_validate(history_policy).evicted_summary
+            ):
+                summarizer = GatewaySummarizer(
+                    gateway, client, deadline=summary_deadline, cache=summary_cache
+                )
             fitted, report = await compose_context(
                 messages,
                 count_tokens=count,
@@ -83,6 +97,8 @@ class ProductInference:
                 history_policy=history_policy,
                 archive=archive,
                 recall=recall,
+                summarizer=summarizer,
+                summary_debug=summary_debug,
             )
         report["preset_selected"] = selected.value
         report["model_id"] = config["model_id"]

@@ -15,6 +15,7 @@ from apps.harness.service import HarnessError
 from src.application.services.skill_contract import SkillError
 from src.application.services.context_reduction import ContextError, HistoryPolicy
 from src.application.ports.inference import InferenceFailure
+from src.infrastructure.summary_cache import BoundSummaryCache
 from src.application.services.review_output_contract import (
     NAME as REVIEW_NAME,
     validate_target,
@@ -170,6 +171,7 @@ async def status(request: Request):
         context_policies=["sliding-window", "extractive-compact", "token-budget"],
         context_archive="owner-private-process-memory-1800s",
         context_working_state="opt-in-user-marked-lines-client-carried",
+        context_evicted_summary="opt-in-experimental-v1-measured-no-gain",
         workspace_tools=service.workspace is not None,
         image_generation="image" in generation.backends,
         video_generation="video" in generation.backends,
@@ -203,6 +205,11 @@ async def chat(body: ChatInput, request: Request):
         options.update(
             history_policy=body.history_policy, archive=archive, recall=recall
         )
+        if body.history_policy.evicted_summary:
+            options.update(
+                summary_deadline=asyncio.get_running_loop().time() + 120,
+                summary_cache=BoundSummaryCache(service.summary_cache, owner),
+            )
     try:
         async with asyncio.timeout(120):
             async with service.admission:
@@ -255,6 +262,13 @@ async def forget_context(identifier: UUID, request: Request):
     """Delete only the owner's ephemeral cache copy without deleting authoritative conversation records."""
     owner, service = await owner_service(request)
     return service.context_archive.remove(owner, identifier)
+
+
+@router.delete("/context/summaries")
+async def purge_summaries(request: Request):
+    """Delete only the caller's cached summary outputs from process memory."""
+    owner, service = await owner_service(request)
+    return dict(purged=service.summary_cache.purge(owner))
 
 
 @router.get("/runs")

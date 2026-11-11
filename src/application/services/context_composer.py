@@ -11,6 +11,8 @@ from src.application.services.conversation_context import (
 from src.application.ports.inference import InferenceFailure
 from src.application.services.context_reduction import (
     COMPACTION_POLICY,
+    SUMMARY_POLICY,
+    ContextError,
     WORKING_STATE_POLICY,
     HistoryPolicy,
     mandatory_context,
@@ -50,6 +52,8 @@ async def compose_context(
     history_policy=None,
     archive=None,
     recall=None,
+    summarizer=None,
+    summary_debug=False,
 ):
     """Fit mandatory policy/task/skill and recent whole turns, omitting oversized evidence explicitly."""
     if not messages or len(messages) > 256:
@@ -89,6 +93,10 @@ async def compose_context(
             policy += "\n" + COMPACTION_POLICY
         if configuration.working_state:
             policy += "\n" + WORKING_STATE_POLICY
+        if configuration.evicted_summary:
+            if strategy != "evidence-first":
+                raise ContextError("summary_requires_evidence_first")
+            policy += "\n" + SUMMARY_POLICY
         return await compose_reduced_context(
             [{"role": "system", "content": policy}] + messages,
             policy=configuration,
@@ -100,6 +108,8 @@ async def compose_context(
             archive=archive,
             recall=recall,
             skill_sha256=skill.raw_sha256 if skill is not None else None,
+            summarizer=summarizer,
+            summary_debug=summary_debug,
         )
     original = [{"role": "system", "content": policy}] + messages
     selected = select_whole_turns(original, 24)
@@ -178,6 +188,8 @@ async def compose_reduced_context(
     archive,
     recall,
     skill_sha256,
+    summarizer=None,
+    summary_debug=False,
 ):
     """Combine explicit history reduction with source priority without ever trimming pinned pairs."""
     limit = input_limit(preset, max_tokens)
@@ -234,6 +246,8 @@ async def compose_reduced_context(
             archive=archive,
             recall=recall,
             query=query,
+            summarizer=summarizer,
+            summary_debug=summary_debug,
         )
     report = dict(
         schema_version=2,
@@ -246,7 +260,7 @@ async def compose_reduced_context(
         omitted_evidence=omitted,
         skill_sha256=skill_sha256,
         automatic_memory=False,
-        summarization=False,
+        summarization=bool(receipt and receipt.get("llm_summary")),
         history_policy=receipt,
     )
     receipt["soft_target_met"] = report["input_tokens"] <= receipt["soft_input_limit"]
