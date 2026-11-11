@@ -6099,3 +6099,19 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - `/status` is now `opt-in-experimental-v1-measured-no-gain`.
   - The backlog, the strategy guide, Documentation 13.14, roadmap v5.19.16 and the ledger.
 - **Next.** A prompt and contract revision (user statements first, no acknowledgements), with an ADR amendment and a held-out corpus. Tuning on this corpus would inflate the result. Source changed, so D87 is rerun. No default, model, configuration, data or service change.
+
+## 2026-11-12 — D87 PASS on develop 695a52e; HAR-002 static request inventory
+
+- **D87 after PR #60** (HAR-009-C summary):
+  - **Run:** `data/backups/d87-20261111-full-5` on `develop` `695a52e`, tree `e16fca4840bbd12cb0b8686ec2d98d637e44b0db`, equal to `origin/develop`. It started on an idle host (0.27 / 0.27 / 0.25). CORE ran via `docker compose --profile core` and was stopped afterwards. Vault was already unsealed, and no shared service was restarted.
+  - **Result: PASS.** **6556 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1853.25 s (23:36:24–00:07:19), 883 source files unchanged. Source freeze `b808c4bf…`, log `bb48ffe8…`. The reranker CPU test passed.
+  - **Load:** 62 samples, mean 1.57, max 2.48.
+  - **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+  - **Records:** [receipt](../docs/evidence/d87-20261112-develop-695a52e-acceptance.json); the D87 result doc (the `a657709` run moved to history); the D90 D87 row (owner form untouched). `develop` now differs from `production` in 64 source files.
+- **HAR-002 static request inventory:** [doc](../docs/HAR002_UI_STATIC_REQUEST_INVENTORY.md).
+  - **Method:** a read-only workflow while D87 ran. Two extractors read the pinned UI b11557 bundle (requests; settings, storage and PWA). A mapper read `apps/harness/browser.py`. An adversarial verifier made 12 corrections, and a writer produced the document.
+  - **Result:** no path reaches native llama.cpp authority.
+    - Blocked: tools POST, MCP, model management, slots, `cors-proxy`, the reasoning control, the service worker, external CDNs and Hugging Face.
+    - Served: `/props`, `/v1/models`, an empty `/tools`, translated chat and an empty stream lookup.
+  - **Open for a live browser capture:** first-load requests, the 64-conversation lookup limit (422 above it), PDF attachments (both pdf.js worker paths blocked by the CSP), sandboxed iframes, stream abort, error mapping, no service worker, and `customCss`/MCP.
+  - **Owner follow-ups:** `/openapi` exposure, a misleading `local_session_required` for query strings, and native CORE on 127.0.0.1:8080 without `--api-key`.

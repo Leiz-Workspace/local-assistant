@@ -1,8 +1,30 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `a657709` (cây `a53f51d`, sau PR #58: giấy phép llama.cpp được đưa vào package). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `695a52e` (cây `e16fca4`, sau PR #60: tóm tắt opt-in HAR-009-C). Các lượt trước được giữ ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `develop` `a657709` (cây `a53f51dfee821378680f498542c5f2354ab7b2b4`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-a657709-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `695a52e` (cây `e16fca4840bbd12cb0b8686ec2d98d637e44b0db`), lượt chạy kết thúc 00:07 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-695a52e-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+
+| Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-5`) |
+|---|---|
+| Toàn bộ `pytest tests` | **6.556 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.853,25 giây** (summary "6556 passed, 1 warning in 1853.25s (0:30:53)"); wrapper 1.854,85 giây |
+| Source snapshot | **883 file**, `source_bytes_unchanged: true`; source freeze `b808c4bf9556712d542e661be81f54d2e5085d55fddea0683b4977c8f739cb7b` |
+| Commit và cây | `develop` `695a52e` (merge PR #60), cây trùng `origin/develop`; ngoài source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` |
+| Log SHA-256 | `bb48ffe8abed5edbd5ea4e77c45eec7282d3b932a23cf83ceff5737ada969e80` |
+| So với full trước | 6.509 PASS trên 879 file (`a657709`) nay là lịch sử; thêm 47 test tóm tắt và 4 file source. `develop` khác `production` ở 64 file source |
+
+- **Thời gian.** Lượt chạy từ 23:36:24 ngày 2026-11-11 tới 00:07:19 ngày 2026-11-12 (16:36:24Z–17:07:19Z).
+- **Máy rảnh.** Điều kiện rảnh đạt sau 90 giây (0,27 / 0,27 / 0,25).
+- **Tải trong lúc chạy.** 62 lần đo: trung bình 1,57, trung vị 1,45, tối đa 2,48 CPU bận. Test reranker PASS.
+- **Dịch vụ.** Vault đã ở trạng thái unseal. CORE chạy bằng `docker compose --profile core` rồi được dừng sau lượt chạy. Dịch vụ dùng chung không bị restart.
+- **Database và Qdrant (read-only).** Kết quả trước và sau giống nhau: các bảng hội thoại, bộ nhớ và ingestion đều 0; usage 1 dòng mỗi bảng; Alembic `0006`; Qdrant không có collection nào.
+- **Phạm vi.** Chưa promote, chưa tag, chưa release, chưa deploy. D81, D89, D90 vẫn mở.
+
+## Lịch sử: lượt 2026-11-11 trên `develop` `a657709`
+
+**Mục đích (lượt này):** Ghi kết quả full suite trên cây source của `develop` `a657709` (cây `a53f51d`, sau PR #58: giấy phép llama.cpp được đưa vào package). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `develop` `a657709` (cây `a53f51dfee821378680f498542c5f2354ab7b2b4`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-a657709-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-4`) |
 |---|---|
