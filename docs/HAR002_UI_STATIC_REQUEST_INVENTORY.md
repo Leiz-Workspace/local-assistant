@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-- **Date:** 2026-11-11. **Status:** static analysis only (file reads and greps). A live browser capture follows and must confirm the items under *Gaps and follow-ups*.
+- **Date:** 2026-11-11. **Status:** static analysis (file reads and greps), followed by a live browser capture on 2026-11-12 that confirmed 4 of the 8 open points. See *Live capture results*.
 - **Purpose:** list every request the pinned UI can make, how the Aevra harness answers it, and whether any path reaches native llama.cpp authority. None does. The only upstream call is the CORE chat stream that the server builds.
 - **Notation:** `B` = `/home/korosaki-ryukai/Workspace/Server/ai/data/ui/b11557/_app/immutable/bundle.dxrg9fom.js`. Evidence patterns are `grep -oF` against `B` unless noted. `br` = `apps/harness/browser.py`.
 
@@ -139,3 +139,34 @@ Code follow-ups, for a separate authorised task:
 - Set `openapi_url=None` in `compose()`, or put `/openapi` under the boundary.
 - Replace the misleading `local_session_required` returned for URLs with a query string. `bridge.js` handles only 401.
 - The native CORE on `127.0.0.1:8080` (`scripts/start-core.py`) runs without `--api-key`, so other local processes can reach it.
+
+## Live capture results (2026-11-12)
+
+**Setup.**
+- **Backend:** an isolated Aevra backend, `aevra serve --port 7093`, using a **session-only test principal**. Its token was generated locally, never printed, and deleted afterwards.
+- **Model:** the approved CORE (weights and runtime pin verified), started with the unchanged `scripts/start-core.py`.
+- **Browser:** the in-app browser, paired through the normal one-time `/pair/#code` flow.
+- **Teardown:** both processes were stopped afterwards, and ports 7093 and 8080 were free. The shared desktop backend on 7090 was not touched.
+
+| # | Check | Result |
+|---|---|---|
+| 1 | First-load requests in a paired session | Confirmed. `/pair/`, `/ui/pairings`, `/`, brand assets, the bundle, `/tools` (GET 200), `/build.json`, `/props`, `/props?autoload=false`, `/props?model=…&autoload=false`, `/_app/version.json` and `/v1/models` all return 200. **New:** the UI also sends `POST /tools` at startup, which gets 403 as designed. |
+| 3 | PDF attachments | **Confirmed broken, and the failure is silent.** The console shows the pdf.js blob worker blocked by `worker-src 'none'`, the `blob:` module blocked by `script-src`, then "Error converting PDF to text: Setting up fake worker failed". The file chip is shown, but the message goes out without the PDF content (27 input tokens), and CORE replies that it cannot see any attachment. No error is shown in the chat. |
+| 5 | Stream abort | Confirmed. Stop aborts the fetch, and the backend logs `harness_ui_stream_cancelled`. The UI's `DELETE /v1/stream?conv_id=…` gets 403, as predicted, so Stop relies on the client abort alone. A follow-up message was answered normally, so admission was released. |
+| 7 | Service worker and cache | Confirmed: no registration (`sw.js` blocked by CSP), and Cache Storage is empty. |
+| — | Browser storage | Only `LlamaUi.*` and theme keys in `localStorage`, plus the `LlamaUi` IndexedDB. No token-like value; the session cookie is HttpOnly and not visible to JavaScript. |
+| — | Chat | Real CORE answers through the UI ("READY", "OK"). Every completion shows `net::ERR_ABORTED` in DevTools after the backend logs `product_stream_completed`: the UI closes the reader after `[DONE]`, which is benign. |
+
+**Not covered by the live capture:**
+- the 64-conversation lookup limit (checked by code only);
+- sandboxed iframes;
+- error mappings (`customJson` 422, long-chat 413, `stream_limit`);
+- `customCss`/MCP.
+
+The test conversation stays in the in-app browser's IndexedDB.
+
+**Owner decision.** PDF attachments fail silently. There are two fixes:
+- allow the pdf.js worker (for example `worker-src blob:` together with a `script-src` exception), a CSP relaxation that needs its own review;
+- hide or disable PDF attachments in the UI bridge.
+
+Either choice is the owner's.

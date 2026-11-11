@@ -6115,3 +6115,24 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
     - Served: `/props`, `/v1/models`, an empty `/tools`, translated chat and an empty stream lookup.
   - **Open for a live browser capture:** first-load requests, the 64-conversation lookup limit (422 above it), PDF attachments (both pdf.js worker paths blocked by the CSP), sandboxed iframes, stream abort, error mapping, no service worker, and `customCss`/MCP.
   - **Owner follow-ups:** `/openapi` exposure, a misleading `local_session_required` for query strings, and native CORE on 127.0.0.1:8080 without `--api-key`.
+
+## 2026-11-12 — HAR-002 live browser capture
+
+- **Setup.**
+  - An isolated backend, `uv run --no-sync aevra serve --port 7093`, used a session-only test principal: a random token generated locally, stored at mode 0600 under `~/.cache`, never printed, and deleted afterwards.
+  - The approved CORE was started with `scripts/start-core.py` (weights checked).
+  - The in-app browser was paired through `POST /api/v1/harness/ui-pairings` and the one-time `/pair/#code` URL.
+  - The shared desktop backend on 7090 was not touched.
+- **Confirmed.**
+  - **First-load requests:** pairing, brand assets, the bundle, `/tools`, `/props` (three variants), `/build.json`, `/_app/version.json` and `/v1/models`. The UI also sends `POST /tools` at startup, which gets 403 as designed.
+  - **Chat:** real CORE answers ("READY", "OK"). The completion requests show `ERR_ABORTED` only after the backend logged `product_stream_completed`.
+  - **Stop:** a client abort, logged as `harness_ui_stream_cancelled`. `DELETE /v1/stream?conv_id=…` gets 403, and the next message was answered, so admission was released.
+  - **No PWA state:** no service worker (blocked by the CSP) and an empty Cache Storage.
+  - **Storage:** only `LlamaUi.*` and theme keys, no token-like value, and an HttpOnly cookie.
+- **Defect found: PDF attachments fail silently.**
+  - A minimal PDF was attached through the file input with DataTransfer. The pdf.js blob worker was blocked by `worker-src 'none'` and the `blob:` module by `script-src`, giving "Error converting PDF to text".
+  - The message went out without the PDF text (27 tokens), and CORE answered that it cannot see attachments. No error is shown in the chat.
+  - The fix is the owner's choice: relax the CSP, or hide PDF attachments.
+- **Not covered:** the 64-conversation lookup, sandboxed iframes, the error mappings and `customCss`/MCP.
+- **Teardown.** The backend and CORE were stopped, and ports 7093 and 8080 were free. The test principal files were deleted.
+- **Docs:** the [HAR-002 inventory](../docs/HAR002_UI_STATIC_REQUEST_INVENTORY.md) now has a live section, plus the backlog, the ledger and roadmap v5.19.18. No code change.
