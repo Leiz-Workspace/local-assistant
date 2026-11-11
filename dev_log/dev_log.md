@@ -5800,3 +5800,8 @@ Purpose: carry out the owner's request to move the former root README into `docs
   - Run 42989786894 on `708c138` failed 1 test: `tests/test_product_assets.py::test_pinned_download_checks_digest_and_records_assets` (6798 passed). `apps/harness/assets.py` copied `runtimes/llama.cpp/LICENSE` from the git-ignored llama.cpp checkout, which hosted runners do not have; locally the file exists, so the test passed.
   - Fix: the license source is now the module constant `LLAMA_CPP_LICENSE`, so product behaviour is unchanged, and the test points it at a temporary fixture. A check with the module default pointing at a missing path still passes.
   - Also added a troubleshooting table, with every code checked in the source, to the API operator guide.
+- PR #52 CI run 42991364772 on `609e924`:
+  - test-python: 6799 passed, 368 skipped, 30 deselected.
+  - Lint passed on 67 files; test-js and the quarantine job also passed.
+  - `ci-gate` did not start, on the first attempt or on a rerun. GitHub's annotation: "The job was not started because recent account payments have failed or your spending limit needs to be increased." This is an account billing block, not a code result.
+  - Every job that `ci-gate` aggregates passed on `609e924`. Branch protection is not enabled, so the PR was merged with this run documented. The commit that records it changes this dev log only, and no new CI can start until the owner fixes Billing & plans. Later pushes, including the `develop` push run, are blocked the same way.
