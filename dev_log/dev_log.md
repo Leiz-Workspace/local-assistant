@@ -6015,3 +6015,24 @@ Purpose: rerun D87 because HAR-009-C1 (PR #56) changed source after the D87 PASS
   - Dated status notes on ADR-043, ADR-044 and the D74 brief, plus three stale next-step lines in the backlog.
   - The ledger and roadmap v5.19.13.
 - **Scope.** This is software regression evidence for the tree to be promoted. `develop` differs from `production` in 59 source files. No promotion, tag, release or deploy. D81, D89 and D90 stay open.
+
+## 2026-11-11 — Outstanding-work audit, proposed designs (HAR-009-D1, HAR-016-B) and fix R1
+
+Purpose: continue the owner's goal to finish outstanding work after the host restart. The owner said "Tiếp tục đi".
+
+- **Audit.** A read-only workflow (31 agents, no tests or services while D87 ran) extracted open items from the backlog, the ledger, the roadmap, the decision dossiers, the ADR statuses and the dev log. It merged them into 42 items:
+  - 13 were proposed as agent-doable. Adversarial verification confirmed 11 and refuted 2: the HAR-005 IndexedDB-to-PostgreSQL sync needs schema and migration approval under ADR-180, and tool-output compaction has no tool output in the chat path yet.
+  - 18 need an owner decision first: D1 implementation, RAG and memory, activation and defaults, HAR-001/004/007/008, Q4, image and video, D81 v4, D86, D88, the reranker margin ADR, and voice campaigns.
+  - 9 are owner-only: D90, D89, D81, voice, image/video model approval, promotion and tag, billing, branch deletion, Brave API.
+  - 2 are blocked on hardware or services: the SpeechJudge runtime, and Windows/macOS installers.
+- **ADR-191 (PROPOSED, design only)** for HAR-009-D1: [ADR](../docs/ADR/191-proposed-durable-context-originals-and-notes.md).
+  - It was produced by a workflow: 4 code readers, a draft, two critics (3 blockers, 22 major and 12 minor issues fixed), then condensation and a citation check (30 fixes).
+  - Design: durable threads created by the owner, holding exact pairs and C1 notes in new `assistant` tables through an additive migration `0007` (REVOKE ALL plus explicit grants, size CHECKs), with no Qdrant or embedding model, explicit recall, tombstones and quotas, and no restoration of approvals or consent.
+  - It lists 10 owner decisions, including migration approval, retention, quotas, data at rest, memory classification and the operations windows.
+- **Linux distribution design (PROPOSED)** for HAR-016-B: [design](../docs/AEVRA_LINUX_DISTRIBUTION_DESIGN.md). It was produced by a workflow (3 readers, a draft, 36 critique issues fixed). It recommends a uv venv plus desktop entry, and gives a dependency and license inventory, a clean-machine VM plan, blockers R1–R8 and 11 owner decisions.
+- **Fix R1.**
+  - The cause: `aevra ui prepare` copied `runtimes/llama.cpp/LICENSE`, which this session added in PR #52, but `runtimes/` is git-ignored. Every clean checkout or `git archive` tarball would fail.
+  - The fix: the upstream MIT text at the pinned commit `5c8854fd` is vendored as `apps/harness/third_party/LLAMA_CPP_LICENSE`, and `LLAMA_CPP_LICENSE` points there.
+  - A new test checks that the file sits inside the package, starts with "MIT License" and has SHA-256 `94f29bbe…`. Asset, browser, desktop and harness tests: 55 passed.
+- **B2 follow-up:** recorded as covered by ADR-190 freshness when working state is on. `token-budget` alone keeps its measured B2 behaviour.
+- **Next:** D87 rerun on the merged tree, because R1 changes source.

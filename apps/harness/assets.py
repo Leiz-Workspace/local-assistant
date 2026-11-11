@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PIN = "5c8854fd88319125125dc4b836c98b1b215b0f23"
 VERSION = "b11557"
 ASSETS = ROOT / "data/ui" / VERSION
-LLAMA_CPP_LICENSE = ROOT / "runtimes/llama.cpp/LICENSE"
+LLAMA_CPP_LICENSE = Path(__file__).with_name("third_party") / "LLAMA_CPP_LICENSE"
 BASE = f"https://huggingface.co/buckets/ggml-org/llama-ui/resolve/{VERSION}"
 
 
