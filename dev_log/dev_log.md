@@ -6150,3 +6150,11 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **HAR-002 follow-up:** a query string on any path other than `/props` now gets 403 `unsupported_query` before `local_browser`, instead of the misleading `local_session_required`. The UI bridge handles only 401, so visible behaviour is unchanged. `/openapi` outside the boundary and CORE without `--api-key` stay owner decisions.
 - **Tests:** 13 new CLI test functions, 22 cases with parameters (nonce never printed, terminal required, closed stdin, typeahead flushed, digest and nonce posted for approve and reject, wrong confirmation, settled states, UUID parsing, escaped review text, distinct real and literal escapes, escaped `show` output in both modes, malformed reviews, escaped bare-string results) and two status/code assertions in the browser pairing test.
 - **Docs:** the CLI runbook, the HAR-002 inventory and the backlog rows for HAR-002 and HAR-003.
+
+## 2026-11-12 — D87 PASS on develop d8ed1cb (after PR #63)
+
+- **Run:** `data/backups/d87-20261112-full` on `develop` `d8ed1cb`, tree `2eaf1914e952afd1cc36e974780a96e9c6b1b915`, equal to `origin/develop`. It started on an idle host (0.41 / 0.28 / 0.22). Vault was already unsealed. CORE ran via `docker compose --profile core` and was stopped afterwards; no shared service was restarted.
+- **Result: PASS.** **6578 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1831.98 s (00:47:45–01:18:18), 883 source files unchanged. Source freeze `b379f01f…`, log `74cdae83…`. The reranker CPU test passed. The 22 added tests are the approval CLI cases.
+- **Load:** 62 samples, mean 1.44, median 1.33, max 2.36, including a concurrent read-only design workflow (no tests, no model calls).
+- **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-d8ed1cb-acceptance.json); the D87 result doc (the `695a52e` run moved to history); the D90 D87 row (owner form untouched); the ledger; roadmap v5.19.20.
