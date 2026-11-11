@@ -1,4 +1,4 @@
-"""Verify the HAR-009-C summary v1 corpus, design check, faithfulness scoring and runner without model calls."""
+"""Verify the HAR-009-C summary v1 corpus, design check, faithfulness scoring and runner without model calls, against the measured v1 copy."""
 
 import asyncio
 import json
@@ -9,7 +9,19 @@ import pytest
 from apps.api.core.model_config import get_model_profile
 from apps.harness.inference import ProductInference
 from benchmarks import context_summary as module
+from benchmarks import history_summary_v1
+from src.application.services import context_reduction
 from src.application.services import history_summary
+from src.application.services.history_summary import SummaryUnavailable
+
+
+@pytest.fixture(autouse=True)
+def measured_v1(monkeypatch):
+    """Bind the measured v1 byte copy wherever the historical runner and these tests reach the summary module."""
+    monkeypatch.setattr(history_summary_v1, "SummaryUnavailable", SummaryUnavailable)
+    monkeypatch.setattr(context_reduction, "history_summary", history_summary_v1)
+    monkeypatch.setattr(module, "history_summary", history_summary_v1)
+    monkeypatch.setitem(globals(), "history_summary", history_summary_v1)
 
 
 class FixtureSampler:

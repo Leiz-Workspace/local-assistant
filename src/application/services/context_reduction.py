@@ -606,10 +606,15 @@ async def reduce_history(
     if summary_report is not None:
         report["summary"] = summary_report
         LOGGER.info(
-            "history_summary_applied status=%s covered=%d returned=%d admitted=%d dropped=%d cache_hit=%s",
+            "history_summary_applied status=%s covered=%d listed=%d withheld=%d returned=%d notes=%d claims=%d empty=%d admitted=%d dropped=%d cache_hit=%s",
             summary_report.get("status"),
             len(summary_report.get("covered_pairs", ())),
+            len(summary_report.get("listed_pairs", ())),
+            sum(len(pairs) for pairs in summary_report.get("withheld", {}).values()),
             summary_report.get("items_returned", 0),
+            summary_report.get("notes_returned", 0),
+            summary_report.get("claims_returned", 0),
+            summary_report.get("empty_slots", 0),
             summary_report.get("items_admitted", 0),
             sum(summary_report.get("dropped", {}).values()),
             summary_report.get("cache_hit", False),

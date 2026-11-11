@@ -171,7 +171,7 @@ async def status(request: Request):
         context_policies=["sliding-window", "extractive-compact", "token-budget"],
         context_archive="owner-private-process-memory-1800s",
         context_working_state="opt-in-user-marked-lines-client-carried",
-        context_evicted_summary="opt-in-experimental-v1-measured-no-gain",
+        context_evicted_summary="opt-in-experimental-v2-unmeasured",
         workspace_tools=service.workspace is not None,
         image_generation="image" in generation.backends,
         video_generation="video" in generation.backends,
