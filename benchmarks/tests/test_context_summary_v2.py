@@ -1118,3 +1118,72 @@ def test_each_semantic_defect_term_counts_once(case_id, row):
     item = {case["id"]: case for case in module.v1_cases()}[case_id]
     assert module.defects(row, item) == 1
     assert module.metrics(item, dict(admitted_items=[row]))["self_check_defects"] == 1
+
+
+def test_case_roles_oracles_and_scored_ids():
+    """v1 cases keep their roles by kind; explicit roles and oracles are validated and only scored cases enter the measure."""
+    cases = module.v1_cases()
+    assert len(module.scored_ids(cases)) == 12
+    assert {module.case_oracle(item) for item in cases} == {"admitted", "dropped"}
+    probe = json.loads(json.dumps(cases[0]))
+    probe.update(id="probe-copy", role="probe", oracle="unlisted")
+    gate = json.loads(json.dumps(cases[1]))
+    gate.update(id="gate-copy", role="gate")
+    assert module.scored_ids([probe, gate]) == set()
+    assert module.validate_cases([probe, gate]) == []
+    broken = json.loads(json.dumps(cases[2]))
+    broken.update(role="bonus", oracle="maybe")
+    assert module.validate_cases([broken]) == [
+        (broken["id"], "unknown_role"),
+        (broken["id"], "unknown_oracle"),
+    ]
+
+
+def test_unlisted_oracle_requires_a_withheld_target():
+    """An unlisted oracle passes only when the gold pair is not listed, and never asks for an admitted capsule."""
+    item = json.loads(json.dumps(module.v1_cases()[0]))
+    item.update(oracle="unlisted")
+    targets = sorted(item["target_turns"])
+    entry = dict(
+        retained_turns=[],
+        gold_admitted=False,
+        request_matches=True,
+        summary=dict(
+            status="none_verified",
+            covered_pairs=targets,
+            listed_pairs=[],
+            over_cap_pairs=[],
+            clipped_pairs=[],
+            dropped={},
+        ),
+    )
+    assert module.expectations(item, "budget_summary_v2", entry) == []
+    entry["summary"]["listed_pairs"] = [item["gold"]["pair"]]
+    assert module.expectations(item, "budget_summary_v2", entry) == ["target_listed"]
+
+
+def test_compare_and_aggregate_ignore_gate_and_probe_cases():
+    """Gate and probe rows never enter the strict counts or the paired comparison."""
+    scored, probe = module.v1_cases()[:2]
+    probe = dict(probe, id="probe-copy", role="probe")
+
+    def row(case, arm, strict):
+        """Return one complete answer row."""
+        return dict(
+            case_id=case["id"],
+            arm=arm,
+            language=case["language"],
+            status="COMPLETE",
+            score=dict(strict=strict, stale=[]),
+            first_text_seconds=1.0,
+        )
+
+    rows = [
+        row(scored, "budget", False),
+        row(scored, "budget_summary_v2", True),
+        row(probe, "budget", False),
+        row(probe, "budget_summary_v2", True),
+    ]
+    result = module.compare(rows, [scored, probe])
+    assert result["v2_vs_budget"]["gains"] == [scored["id"]]
+    assert result["by_arm"]["budget_summary_v2"]["cells"] == 1

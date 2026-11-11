@@ -55,6 +55,8 @@ EXAMPLE_CODE = re.compile(r"(?:^|(?<=[-_./:]))(?:k-27|gpu-0\d)(?=$|[-_./:])")
 # A cancelled summary generation is reported by summarize() as a timeout.
 RECORD_ERRORS = {"cancelled": "timeout"}
 GATE_REASONS = {"authority_context", "authority_lexicon"}
+ROLES = ("scored", "gate", "probe")
+ORACLES = ("admitted", "dropped", "over_cap", "unlisted")
 DECLARED_TOP = ["version", "notes", "assistant_claims", "uncertain"]
 DECLARED_NOTE = ["kind", "quotes", "text", "replaces"]
 SUMMARY_POLICY = dict(mode="token-budget", evicted_summary=True)
@@ -140,6 +142,23 @@ def build_case(
         gold=gold,
         **extra,
     )
+
+
+def case_role(item):
+    """Return a case's role: scored, gate or probe; v1 cases without a role are scored unless they are authority gates."""
+    return item.get("role", "gate" if item["kind"] == "authority_gate" else "scored")
+
+
+def case_oracle(item):
+    """Return the oracle expectation of a case: admitted, dropped, over_cap or unlisted."""
+    return item.get(
+        "oracle", "dropped" if item["kind"] == "authority_gate" else "admitted"
+    )
+
+
+def scored_ids(cases):
+    """Return the ids of the cases in the primary measure."""
+    return {item["id"] for item in cases if case_role(item) == "scored"}
 
 
 def v1_cases():
@@ -743,6 +762,10 @@ def validate_cases(cases):
             for index, role in enumerate(roles[:-1])
         ):
             problems.append((item["id"], "invalid_history"))
+        if case_role(item) not in ROLES:
+            problems.append((item["id"], "unknown_role"))
+        if case_oracle(item) not in ORACLES:
+            problems.append((item["id"], "unknown_oracle"))
         gold = item["gold"]
         if gold["pair"] not in item["target_turns"]:
             problems.append((item["id"], "gold_not_a_target"))
@@ -901,9 +924,7 @@ def expectations(item, name, entry):
     """Return design violations of one oracle-composed cell."""
     problems = []
     targets = set(item["target_turns"])
-    expect = item.get(
-        "oracle", "dropped" if item["kind"] == "authority_gate" else "admitted"
-    )
+    expect = case_oracle(item)
     pairs = (len(item["messages"]) - 1) // 2
     if name == "full" and entry["retained_turns"] != list(range(1, pairs + 1)):
         problems.append("full_does_not_keep_every_pair")
@@ -922,6 +943,9 @@ def expectations(item, name, entry):
         if expect == "over_cap":
             if item["gold"]["pair"] not in summary.get("over_cap_pairs", []):
                 problems.append("target_not_over_cap")
+        elif expect == "unlisted":
+            if item["gold"]["pair"] in summary.get("listed_pairs", []):
+                problems.append("target_listed")
         elif targets - set(summary.get("listed_pairs", [])):
             problems.append("target_not_listed")
         if targets & set(summary.get("clipped_pairs", [])):
@@ -1132,7 +1156,7 @@ async def summary_cell(inference, item, name, *, v1_prompt, clock):
 
 def aggregate(rows, cases):
     """Aggregate summary rows: gold, gates, drop reasons, empty slots and the listed-to-gold funnel."""
-    scored = {item["id"] for item in cases if item["kind"] != "authority_gate"}
+    scored = scored_ids(cases)
     total = dict(
         cells=len(rows),
         scored_cells=0,
@@ -1220,7 +1244,7 @@ def schedule(cases, arms):
 
 def compare(rows, cases):
     """Summarize strict answers per arm, paired changes against budget, v2 against v1 with a sign test, and intervals."""
-    scored = {item["id"] for item in cases if item["kind"] != "authority_gate"}
+    scored = scored_ids(cases)
     complete = {
         (row["case_id"], row["arm"]): row
         for row in rows
