@@ -6,7 +6,7 @@
 
 ## Problem and evidence
 
-The author-linked Space still reports RUNTIME_ERROR. The community Space still reports the same repository/deployed revision `e16fd85d230ac043091476eb78faa6c2e24c5c66`; RUNNING is frontend metadata, not recovered inference. The only approved actual request retains `GPU task aborted` and no quality score. Its cause remains unconfirmed; neither local VRAM headroom nor the complete-event envelope proves anything about remote memory or successful generation. [First outcome](../evidence/d70-specialist-campaign-first.json), [context/resource diagnostic](../D70_CONTEXT_RESOURCE_DIAGNOSTIC.md).
+The author-linked Space still reports RUNTIME_ERROR. The community Space still reports the same repository/deployed revision `e16fd85d230ac043091476eb78faa6c2e24c5c66`; RUNNING is frontend metadata, not recovered inference. The only approved actual request retains `GPU task aborted` and no quality score. Its cause remains unconfirmed; neither local VRAM headroom nor the complete-event envelope proves anything about remote memory or successful generation. [First outcome](../evidence/d70-specialist-campaign-first.json), [context/resource diagnostic](../progress/D70_CONTEXT_RESOURCE_DIAGNOSTIC.md).
 
 The [official ZeroGPU documentation](https://huggingface.co/docs/hub/spaces-zerogpu) recommends placing models on CUDA during module startup, outside the GPU-decorated request. The retained app instead moves the model inside a30-second request allocation and then permits up to1024generated tokens. The utility also downloads an unpinned repository revision. These are concrete lifecycle, budget and provenance issues that can be addressed in source; they are not established causes of the observed abort.
 

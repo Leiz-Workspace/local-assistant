@@ -1,0 +1,268 @@
+"""Exercise CLI credentials, loopback isolation, stable exits and desktop launch arguments."""
+
+import logging
+import stat
+
+import httpx
+import pytest
+
+from apps.cli import main as cli
+from apps.cli.client import (
+    ApiClient,
+    ClientError,
+    initialize_auth,
+    read_token,
+    save_token,
+)
+
+LOGGER = logging.getLogger(__name__)
+
+
+def test_isolated_auth_initialization_is_private_and_never_overwrites(tmp_path):
+    """Create a usable digest binding while preserving existing credentials on repeated setup."""
+    import json
+    import hashlib
+
+    token, auth = tmp_path / "token", tmp_path / "auth.json"
+    result = initialize_auth(token, auth)
+    content = auth.read_bytes()
+    assert stat.S_IMODE(auth.stat().st_mode) == 0o600
+    assert (
+        json.loads(content)["principals"][0]["token_sha256"]
+        == hashlib.sha256(read_token(token).encode()).hexdigest()
+    )
+    assert not result["existing_credentials_changed"]
+    with pytest.raises(ClientError):
+        initialize_auth(token, auth)
+    assert auth.read_bytes() == content
+
+
+def test_desktop_shortcut_is_explicit_and_has_no_credential(tmp_path, monkeypatch):
+    """Write one shortcut with quoted paths and no token contents or implicit OS installation."""
+    monkeypatch.setattr(cli.shutil, "which", lambda name: "/usr/bin/uv")
+    path = tmp_path / "Aevra.desktop"
+    result = cli.write_launcher(
+        path,
+        "http://127.0.0.1:7090",
+        tmp_path / "token",
+        icon_directory=tmp_path / "icons",
+    )
+    text = path.read_text()
+    assert "[Desktop Entry]" in text and '"desktop"' in text
+    assert result["backend_managed_when_missing"] and not result["external_browser"]
+    assert result["application_id"] == "io.aevra.Aevra"
+    assert (
+        "Name=Aevra" in text
+        and f"Icon={tmp_path / 'icons/512x512/apps'}/io.aevra.Desktop-transparent-"
+        in text
+    )
+    assert "Bearer" not in text
+    with pytest.raises(FileExistsError):
+        cli.write_launcher(
+            path,
+            "http://127.0.0.1:7090",
+            tmp_path / "token",
+            icon_directory=tmp_path / "icons",
+        )
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://127.0.0.1:7090",
+        "http://example.com",
+        "http://127.0.0.1:7090/private",
+        "http://token@127.0.0.1",
+        "http://127.0.0.1?secret=1",
+    ],
+)
+def test_client_rejects_credential_exfiltration_targets(url):
+    """Reject remote, credential-bearing and path-bearing backend URLs before transport use."""
+    with pytest.raises(ClientError):
+        ApiClient(url, "t" * 48)
+
+
+def test_private_credentials_are_exclusive_and_not_symlink_followed(tmp_path):
+    """Write one private token and refuse permissive, overwritten and linked files."""
+    path = tmp_path / "token"
+    save_token(path, "s" * 48)
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    assert read_token(path) == "s" * 48
+    with pytest.raises(ClientError):
+        save_token(path, "other" * 10)
+    path.chmod(0o644)
+    with pytest.raises(ClientError):
+        read_token(path)
+    linked = tmp_path / "linked"
+    linked.symlink_to(path)
+    with pytest.raises(ClientError):
+        read_token(linked)
+
+
+def test_http_redirect_and_error_bodies_never_leak(capsys):
+    """Map a redirect without following it or exposing server-supplied sensitive text."""
+
+    def redirect(request):
+        """Return a hostile redirect that must not receive a second request."""
+        assert request.headers["authorization"] == "Bearer " + "s" * 48
+        return httpx.Response(
+            302, headers={"location": "https://example.com"}, text="PRIVATE_RESPONSE"
+        )
+
+    with pytest.raises(ClientError, match="http_302"):
+        ApiClient(
+            "http://127.0.0.1:7090", "s" * 48, transport=httpx.MockTransport(redirect)
+        ).request("GET", "/status")
+    assert "PRIVATE_RESPONSE" not in capsys.readouterr().out
+
+
+def test_doctor_needs_no_credential_or_network(capsys, tmp_path):
+    """Permit read-only startup inspection without a running backend or model."""
+    assert cli.main(["--token-file", str(tmp_path / "absent"), "--json", "doctor"]) == 0
+    output = capsys.readouterr().out
+    assert '"services_started": false' in output
+    LOGGER.info("test_cli_offline_doctor_verified")
+
+
+def test_status_missing_credential_has_auth_exit(capsys, tmp_path):
+    """Report a stable authentication category without a raw filesystem traceback."""
+    assert cli.main(["--token-file", str(tmp_path / "absent"), "status"]) == 3
+    assert "private_token_file_required" in capsys.readouterr().err
+
+
+def test_logout_refuses_to_delete_noncredential_files(tmp_path, capsys):
+    """Prevent a mistaken token path from deleting unrelated repository or user files."""
+    path = tmp_path / "notes.md"
+    path.write_text("Keep this user document.")
+    assert cli.main(["--token-file", str(path), "auth", "logout"]) == 3
+    assert path.read_text() == "Keep this user document."
+
+
+def test_machine_readable_chat_requires_one_message(monkeypatch, capsys):
+    """Reject interactive prompts when machine-readable output was explicitly requested."""
+    monkeypatch.setattr(cli, "read_token", lambda path: "t" * 48)
+    assert cli.main(["--json", "chat"]) == 2
+    assert "json_chat_requires_message" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("contract", ["text", "source-value-quote-v1"])
+def test_run_cli_preserves_explicit_preset_and_context_policy(
+    tmp_path, monkeypatch, capsys, contract
+):
+    """Transmit the exact requested budget policy without selecting another model or invoking tools locally."""
+    from uuid import uuid4
+
+    calls = []
+    task = tmp_path / "task.md"
+    task.write_text("Review this synthetic task.")
+
+    class Client:
+        """Capture one finite API request without creating a backend or reading credentials."""
+
+        def __init__(self, url, token):
+            """Accept the CLI transport arguments without granting filesystem or network authority."""
+
+        def request(self, method, path, payload):
+            """Record the submitted task contract and return a queued run receipt."""
+            calls.append(payload)
+            return {"id": str(uuid4()), "state": "created"}
+
+    monkeypatch.setattr(cli, "read_token", lambda path: "t" * 48)
+    monkeypatch.setattr(cli, "ApiClient", Client)
+    assert (
+        cli.main(
+            [
+                "--json",
+                "run",
+                "--workspace",
+                str(uuid4()),
+                "--task-file",
+                str(task),
+                "--preset",
+                "balanced",
+                "--max-tokens",
+                "5000",
+                "--context-strategy",
+                "recent-turns",
+                "--output-contract",
+                contract,
+            ]
+        )
+        == 0
+    )
+    assert calls[0]["preset"] == "balanced" and calls[0]["max_tokens"] == 5000
+    assert calls[0]["context_strategy"] == "recent-turns"
+    if contract == "text":
+        assert "output_contract" not in calls[0]
+    else:
+        assert calls[0]["output_contract"] == contract
+
+
+def test_wait_exits_on_archived_interruption_without_replay(
+    tmp_path, monkeypatch, capsys
+):
+    """Report a restarted task as interrupted instead of polling indefinitely or resubmitting it."""
+    from uuid import uuid4
+
+    identifier = str(uuid4())
+    calls = []
+    task = tmp_path / "task.md"
+    task.write_text("Synthetic interrupted task.")
+
+    class Client:
+        """Emulate a process restart between task creation and its first status poll."""
+
+        def __init__(self, url, token):
+            """Accept fixture transport arguments without network or credential access."""
+
+        def request(self, method, path, payload=None):
+            """Return one creation and an archived interruption without executing a replacement task."""
+            calls.append(method)
+            return {
+                "id": identifier,
+                "state": "created" if method == "POST" else "interrupted",
+            }
+
+    monkeypatch.setattr(cli, "ApiClient", Client)
+    monkeypatch.setattr(cli, "read_token", lambda path: "t" * 48)
+    monkeypatch.setattr(cli.time, "sleep", lambda seconds: None)
+    assert (
+        cli.main(
+            [
+                "--json",
+                "run",
+                "--workspace",
+                str(uuid4()),
+                "--task-file",
+                str(task),
+                "--wait",
+            ]
+        )
+        == 1
+    )
+    assert calls == ["POST", "GET"] and "task_interrupted" in capsys.readouterr().err
+
+
+def test_desktop_dispatches_to_native_app_without_a_browser(monkeypatch):
+    """Delegate to the native lifecycle without invoking browser discovery or a default browser."""
+    from apps.desktop import launcher
+
+    calls = []
+    client = object()
+
+    def launch(value, **options):
+        """Capture the native dispatch without creating a graphical window."""
+        calls.append((value, options))
+        return {"desktop": True, "external_browser": False}
+
+    monkeypatch.setattr(launcher, "launch", launch)
+    result = cli.open_ui(client, desktop=True)
+    assert result["desktop"] and not result["external_browser"]
+    assert calls[0][0] is client
+
+
+def test_unavailable_desktop_does_not_consume_pairing(monkeypatch):
+    """Fail before minting a nonce when native launch prerequisites are missing."""
+    monkeypatch.setattr(cli.shutil, "which", lambda name: None)
+    with pytest.raises(ClientError, match="native_desktop_dependencies_required"):
+        cli.open_ui(None, desktop=True)

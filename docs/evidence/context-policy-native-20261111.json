@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "status": "PACKING_AS_EXPECTED",
+  "frozen_sha256": "d6dd9d02086b4fd0d96fa993d2a606f7eba1d963cc9b58bf533c2d7243b7e22e",
+  "source_sha256": {
+    "src/application/services/context_composer.py": "f4140e2d5e58ce36b1963d0c028d18bb7ce71a4a034af3746caa695760a87f6c",
+    "src/application/services/context_reduction.py": "bbe98bee0e87529d1d88025b5303ec672a7f268830fc336354a5ff88f58c2d82",
+    "src/infrastructure/context_archive.py": "ddf73cb12fcc00d222b651e402e5ee1e6d06c6efd34b94f08e74d25b2f466f11",
+    "apps/harness/inference.py": "4962cea83ab11f4b21e80e157eee1171867f400e3ec36301d5814b545011d72b",
+    "apps/harness/service.py": "ff7c899a7a80f3c9d78e1645fa5e014bf0910142bc6db3ba9012d7949ce06225",
+    "apps/harness/routes.py": "928e4ffd097f8c54c684203a56c970f4953655fe2814925733a38a149a42c16a",
+    "apps/harness/main.py": "80e7837a7db808250d10ab85ec1a524478968dfdd3a29063b0349dd190ccb60e",
+    "apps/cli/main.py": "75564656ae2b01bb88e7c6ed84ad25078f01a00999d5d0f61c35ce3197a68f10",
+    "benchmarks/context_policy_probe.py": "6ce394486a9ff94d5a44b07fdc8f1e33876f3040f869e28ff56b2f04a2c2698e",
+    "benchmarks/tests/test_context_policy_probe.py": "97c4d63da4f870a6db8a463676ab51ff16319deca2d37eeaedeeadfea44ca85f",
+    "tests/test_context_reduction.py": "d4bee696518dc3064693f37669a4d4f9e2686709d65b916693f2ddec492f954e",
+    "tests/test_context_archive.py": "c97077912d27c18609dad78b99d7283e2a0f5cb62780f9b90113c33109b268d9",
+    "tests/test_product_context_policy.py": "ab3859e996d0de0eabec792997dfa3e5e94afc006f9fe9f0ebb152d867989e86",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "apps/api/runtime/presets.py": "9c3e4836725c7f8d6b74b4d2e2b0da3ac1ed4f61fed9afacd09b3f66d87d8a69"
+  },
+  "results": [
+    {
+      "name": "legacy",
+      "report": {
+        "schema_version": 1,
+        "strategy": "whole-turn-evidence-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 343,
+        "retained_messages": 24,
+        "trimmed_messages": 6,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "4d90895030cc0ab0354f925eca6d15756780ac2be8c204f96f8d0f2a8129dc16",
+      "old_fact_present": false,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "sliding",
+      "report": {
+        "schema_version": 2,
+        "strategy": "explicit-history-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 173,
+        "retained_messages": 8,
+        "trimmed_messages": 22,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "history_policy": {
+          "mode": "sliding-window",
+          "window_turns": 3,
+          "pinned_turns": [],
+          "retained_turns": [
+            12,
+            13,
+            14
+          ],
+          "evicted_turns": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "archive": null,
+          "recalled": [],
+          "extracts": [],
+          "soft_input_limit": 25600,
+          "soft_target_met": true,
+          "archive_persistent": false,
+          "llm_summary": false,
+          "recall_automatic": false
+        },
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "bf12ee3fb1da335679e127e0787811500f993ad6f5e69b5ea9beb6486fce41a2",
+      "old_fact_present": false,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "pinned",
+      "report": {
+        "schema_version": 2,
+        "strategy": "explicit-history-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 215,
+        "retained_messages": 10,
+        "trimmed_messages": 20,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "history_policy": {
+          "mode": "sliding-window",
+          "window_turns": 3,
+          "pinned_turns": [
+            1
+          ],
+          "retained_turns": [
+            1,
+            12,
+            13,
+            14
+          ],
+          "evicted_turns": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "archive": null,
+          "recalled": [],
+          "extracts": [],
+          "soft_input_limit": 25600,
+          "soft_target_met": true,
+          "archive_persistent": false,
+          "llm_summary": false,
+          "recall_automatic": false
+        },
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "b3396c81911178f433cd97da21e74e61ec887d1e66486858253ad834bb18a746",
+      "old_fact_present": true,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "compact",
+      "report": {
+        "schema_version": 2,
+        "strategy": "explicit-history-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 460,
+        "retained_messages": 8,
+        "trimmed_messages": 22,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "history_policy": {
+          "mode": "extractive-compact",
+          "window_turns": 3,
+          "pinned_turns": [],
+          "retained_turns": [
+            12,
+            13,
+            14
+          ],
+          "evicted_turns": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "archive": {
+            "id": "be9cf5b3-d226-47ca-937a-00aad7d83ad0",
+            "sha256": "160a1af84f1236839ab426500b0b55829ed142d7733d6b8f4fa265fcf53acf02",
+            "bytes": 1642,
+            "expires_in_seconds": 1799,
+            "storage": "process-memory"
+          },
+          "recalled": [],
+          "extracts": [
+            {
+              "archive_sha256": "160a1af84f1236839ab426500b0b55829ed142d7733d6b8f4fa265fcf53acf02",
+              "turn": 1
+            }
+          ],
+          "soft_input_limit": 25600,
+          "soft_target_met": true,
+          "archive_persistent": false,
+          "llm_summary": false,
+          "recall_automatic": false
+        },
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "fb98a681429cf41f203a88c98c28bb88d0b03f9e685b68ad986cb01a280cfbcc",
+      "old_fact_present": true,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "recall",
+      "report": {
+        "schema_version": 2,
+        "strategy": "explicit-history-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 395,
+        "retained_messages": 2,
+        "trimmed_messages": 0,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "history_policy": {
+          "mode": "extractive-compact",
+          "window_turns": 11,
+          "pinned_turns": [],
+          "retained_turns": [],
+          "evicted_turns": [],
+          "archive": null,
+          "recalled": [
+            {
+              "id": "be9cf5b3-d226-47ca-937a-00aad7d83ad0",
+              "sha256": "160a1af84f1236839ab426500b0b55829ed142d7733d6b8f4fa265fcf53acf02"
+            }
+          ],
+          "extracts": [
+            {
+              "archive_sha256": "160a1af84f1236839ab426500b0b55829ed142d7733d6b8f4fa265fcf53acf02",
+              "turn": 1
+            }
+          ],
+          "soft_input_limit": 25600,
+          "soft_target_met": true,
+          "archive_persistent": false,
+          "llm_summary": false,
+          "recall_automatic": false
+        },
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "3a0ecef2e5a3f593d6128f25c8ecb1b5780e02a4efcfd36e19e04cb39ada5a4a",
+      "old_fact_present": true,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "pressure",
+      "report": {
+        "schema_version": 2,
+        "strategy": "explicit-history-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 20328,
+        "retained_messages": 6,
+        "trimmed_messages": 4,
+        "included_evidence": [],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "history_policy": {
+          "mode": "extractive-compact",
+          "window_turns": 11,
+          "pinned_turns": [
+            1
+          ],
+          "retained_turns": [
+            1,
+            4
+          ],
+          "evicted_turns": [
+            2,
+            3
+          ],
+          "archive": {
+            "id": "85fd4ad4-ff4a-4901-bdad-70e13c005bc5",
+            "sha256": "26f84e6b48c6cb024a402bb8cdcc517f2cf8eda166c7468ac3b4ff50e2698f64",
+            "bytes": 80236,
+            "expires_in_seconds": 1799,
+            "storage": "process-memory"
+          },
+          "recalled": [],
+          "extracts": [],
+          "soft_input_limit": 25600,
+          "soft_target_met": true,
+          "archive_persistent": false,
+          "llm_summary": false,
+          "recall_automatic": false
+        },
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "fitted_sha256": "caacc9adc5c31fd98801a9694c1d365d617f1c18a7c14dd1a38a0f790264a67a",
+      "old_fact_present": true,
+      "current_task_present": true,
+      "error": null
+    },
+    {
+      "name": "strict",
+      "error": "strict_context_would_trim",
+      "status": 422
+    },
+    {
+      "name": "mandatory-overflow",
+      "error": "context_overflow",
+      "status": 422
+    }
+  ],
+  "completion_calls": 0,
+  "semantic_quality_measured": false,
+  "peak_memory_measured": false
+}

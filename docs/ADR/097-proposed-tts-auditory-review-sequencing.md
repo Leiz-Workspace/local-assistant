@@ -18,7 +18,7 @@ D70 source `7ff5438` completed30first attempts,24native waveforms,24reference-bl
 
 ADR-096 and the current D70 gate require actual emitted-audio inspection for naturalness. The tool returned `audio content omitted because you do not support audio input` for an actual qualified smoke listening copy. The available tools cannot perform that inspection; ASR/acoustic proxies do not replace it. The owner instructed that the next milestone must not begin while current Acceptance Criteria are unmet. Continuing generic project work is not interpreted as permission to remove this criterion.
 
-The current [report](../D70_OFFLINE_TTS_COMPARISON.md), [measurement status](../evidence/d70-tts-measurement-status.json), [readonly audit](../evidence/d70-tts-readonly-measurement-audit.json), [complete playable packet](../../data/backups/d70-tts-listening-review/index.html) and pending JSON make the result and missing criterion concrete. Every listening judgement is still null; nobody is represented as having listened.
+The current [report](../progress/D70_OFFLINE_TTS_COMPARISON.md), [measurement status](../evidence/d70-tts-measurement-status.json), [readonly audit](../evidence/d70-tts-readonly-measurement-audit.json), [complete playable packet](../../data/backups/d70-tts-listening-review/index.html) and pending JSON make the result and missing criterion concrete. Every listening judgement is still null; nobody is represented as having listened.
 
 ## Exact proposed change, only if approved
 

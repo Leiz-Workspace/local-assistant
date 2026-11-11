@@ -1,0 +1,101 @@
+{
+  "status": "PACKING_AS_EXPECTED",
+  "results": [
+    {
+      "strategy": "evidence-first",
+      "report": {
+        "schema_version": 1,
+        "strategy": "whole-turn-evidence-v1",
+        "source_priority": "evidence-first",
+        "input_tokens": 10129,
+        "retained_messages": 2,
+        "trimmed_messages": 2,
+        "included_evidence": [
+          {
+            "index": 0,
+            "sha256": "0969b29b2eee81db2d4db6cdda79a81202e5a6d7bd74c551b3f9b03d070f3d86"
+          }
+        ],
+        "omitted_evidence": [],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "elapsed_seconds": 0.129,
+      "history_fact_present": false,
+      "source_fact_present": true,
+      "fitted_sha256": "f178b0625b39f5cb7fedc134adb29ca3b2fb65438fea3fd3488866c68463814d"
+    },
+    {
+      "strategy": "recent-turns",
+      "report": {
+        "schema_version": 1,
+        "strategy": "whole-turn-evidence-v1",
+        "source_priority": "recent-turns",
+        "input_tokens": 24131,
+        "retained_messages": 4,
+        "trimmed_messages": 0,
+        "included_evidence": [],
+        "omitted_evidence": [
+          {
+            "index": 0,
+            "sha256": "0969b29b2eee81db2d4db6cdda79a81202e5a6d7bd74c551b3f9b03d070f3d86",
+            "reason": "history_priority"
+          }
+        ],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "elapsed_seconds": 0.115,
+      "history_fact_present": true,
+      "source_fact_present": false,
+      "fitted_sha256": "630ce37fe78ef3ddb59a515d6ca6883f6c4e941ad252ac4f897d10e5d51e4fbf"
+    },
+    {
+      "strategy": "strict",
+      "report": {
+        "schema_version": 1,
+        "strategy": "whole-turn-evidence-v1",
+        "source_priority": "strict",
+        "input_tokens": 24131,
+        "retained_messages": 4,
+        "trimmed_messages": 0,
+        "included_evidence": [],
+        "omitted_evidence": [
+          {
+            "index": 0,
+            "sha256": "0969b29b2eee81db2d4db6cdda79a81202e5a6d7bd74c551b3f9b03d070f3d86",
+            "reason": "history_priority"
+          }
+        ],
+        "skill_sha256": null,
+        "automatic_memory": false,
+        "summarization": false,
+        "preset_selected": "fast",
+        "model_id": "qwen3.5-9b-core"
+      },
+      "elapsed_seconds": 0.119,
+      "history_fact_present": true,
+      "source_fact_present": false,
+      "fitted_sha256": "630ce37fe78ef3ddb59a515d6ca6883f6c4e941ad252ac4f897d10e5d51e4fbf"
+    }
+  ],
+  "completion_calls": 0,
+  "semantic_quality_measured": false,
+  "peak_memory_measured": false,
+  "description": "Fixed long-context token-packing probe with real CORE tokenizer; no generation, semantic oracle or peak-memory measurement.",
+  "date": "2026-11-10",
+  "frozen_inputs_sha256": "84a0de27ed3f5839086d49958eae6e9dc43c4ce358a910c1fe85393420563b0b",
+  "source_sha256": {
+    "benchmarks/context_priority_probe.py": "3a06698315c23e002954b96f84371818df9ef7645ee0f83cbbf7e0feb6b64138",
+    "apps/harness/inference.py": "80ac32866c2a1b26478cd8dd98a80ba67e58fb041a66a33d7ec6dd2581c87aeb",
+    "src/application/services/context_composer.py": "5570594f6e909da7c5812afbdcfda3302f8168d35d897d93bb52897cbc965d00",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3"
+  },
+  "source_hash_scope": "Recorded after the probe; these files were not edited during its execution."
+}
