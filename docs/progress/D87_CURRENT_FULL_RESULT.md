@@ -1,8 +1,30 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `695a52e` (cây `e16fca4`, sau PR #60: tóm tắt opt-in HAR-009-C). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `d8ed1cb` (cây `2eaf191`, sau PR #63: lệnh approval của CLI và mã 403 cho query của UI). Các lượt trước được giữ ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `develop` `695a52e` (cây `e16fca4840bbd12cb0b8686ec2d98d637e44b0db`), lượt chạy kết thúc 00:07 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-695a52e-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `d8ed1cb` (cây `2eaf1914e952afd1cc36e974780a96e9c6b1b915`), lượt chạy kết thúc 01:18 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-d8ed1cb-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+
+| Phạm vi | Kết quả thực tế (lượt `d87-20261112-full`) |
+|---|---|
+| Toàn bộ `pytest tests` | **6.578 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.831,98 giây** (summary "6578 passed, 1 warning in 1831.98s (0:30:31)"); wrapper 1.833,56 giây |
+| Source snapshot | **883 file**, `source_bytes_unchanged: true`; source freeze `b379f01f113b0fce294d108de81fc66792e24107a6ceece1c2a92178b9ce68c7` |
+| Commit và cây | `develop` `d8ed1cb` (merge PR #63), cây trùng `origin/develop`; ngoài source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` |
+| Log SHA-256 | `74cdae8300cd3aae1368dcdd11459c47dd08b6cc0f6a2f4e79c3cfd56f5dffca` |
+| So với full trước | 6.556 PASS trên 883 file (`695a52e`) nay là lịch sử; thêm 22 test case của CLI approval, không thêm file source. `develop` khác `production` ở 64 file source |
+
+- **Thời gian.** Lượt chạy từ 00:47:45 tới 01:18:18 ngày 2026-11-12 (17:47:45Z–18:18:18Z ngày 2026-11-11).
+- **Máy rảnh.** Điều kiện rảnh đạt sau 90 giây (0,41 / 0,28 / 0,22).
+- **Tải trong lúc chạy.** 62 lần đo: trung bình 1,44, trung vị 1,33, tối đa 2,36 CPU bận, gồm cả một workflow thiết kế chỉ đọc chạy song song (không chạy test, không gọi model). Test reranker PASS.
+- **Dịch vụ.** Vault đã ở trạng thái unseal. CORE chạy bằng `docker compose --profile core` rồi được dừng sau lượt chạy. Dịch vụ dùng chung không bị restart.
+- **Database và Qdrant (read-only).** Kết quả trước và sau giống nhau: các bảng hội thoại, bộ nhớ và ingestion đều 0; usage 1 dòng mỗi bảng; Alembic `0006`; Qdrant không có collection nào.
+- **Phạm vi.** Chưa promote, chưa tag, chưa release, chưa deploy. D81, D89, D90 vẫn mở.
+
+## Lịch sử: lượt 2026-11-12 trên `develop` `695a52e`
+
+**Mục đích (lượt này):** Ghi kết quả full suite trên cây source của `develop` `695a52e` (cây `e16fca4`, sau PR #60: tóm tắt opt-in HAR-009-C). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `develop` `695a52e` (cây `e16fca4840bbd12cb0b8686ec2d98d637e44b0db`), lượt chạy kết thúc 00:07 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-695a52e-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-5`) |
 |---|---|
