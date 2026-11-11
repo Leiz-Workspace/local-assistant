@@ -5899,3 +5899,37 @@ Purpose: carry out the next item of the HAR backlog (B2) under the owner's goal 
   - No case marks a pair right behind the anchor, so the fixed bug is covered by software tests only.
   - Output tokens and explicit recall were not measured.
   - No default, adoption, model, configuration, data or service change. Before any default use, the marker rule needs a way for newer corrections to win, with its own ADR and a rerun.
+
+## 2026-11-11 — D87 PASS on develop 7fb5999 (after HAR-009-B1/B2)
+
+Purpose: rerun D87 on the new tree under the owner's goal to finish outstanding work. The D87 PASS on `production` `dd7fac3` no longer matched `develop` after the HAR code merged.
+
+- **Source.**
+  - Checkout `develop` `7fb5999` (merge of PR #54), tree `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`, equal to `origin/develop`.
+  - The only local difference is the editor connection line at the top of this log, which is outside the source-freeze scope.
+  - `develop` differs from `production` in 57 source files.
+  - `uv sync --locked --dev` only reinstalled the project package.
+- **Services.**
+  - Vault was sealed (container up about 9 hours). It was unsealed from the bootstrap file under the owner's standing authorization; the key shares were submitted in process and never printed.
+  - CORE was started with `docker compose --profile core up -d` (`local-assistant-core-1`, image `local-assistant/llama-cuda:5c8854fd8`) and stopped afterwards with `docker compose --profile core stop`.
+  - PostgreSQL, Vault and Qdrant were not restarted. The B2 benchmark CORE launcher had been stopped before, and port 8080 was free.
+- **Idle host.**
+  - Criterion: busy CPUs below 0.5 for 3 consecutive 30 s samples. It was met after 390 s, and rechecked just before the run, met after 90 s (0.43 / 0.40 / 0.39).
+  - No owner application was closed.
+  - Load during the run, including the suite itself: 64 samples, mean 1.54, max 2.49 busy CPUs.
+- **Run.** `uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full`, 17:31:56–18:03:37.
+- **Result: PASS.**
+  - **6479 passed, 0 failed, 0 errors, 0 skipped**, exit 0, `accepted_full_software_regression: true`, pytest 1898.66 s.
+  - 876 source files unchanged.
+  - Source freeze `5ed6c60f…`, log `6025da45…`.
+  - The reranker CPU test passed.
+  - 1 warning: the duplicate-name TTS archive test.
+- **Database.** Read-only queries as the runtime role (schema `assistant`) gave the same counts before and after: all conversation and memory tables 0, `file_owner_usage` and `file_global_usage` 1, Alembic `0006`.
+- **Docs.**
+  - [D87 result](../docs/progress/D87_CURRENT_FULL_RESULT.md): new current section; the `dd7fac3` runs are kept as history.
+  - [Public receipt](../docs/evidence/d87-20261111-develop-7fb5999-acceptance.json).
+  - Ledger status and roadmap v5.19.11.
+- **Scope.**
+  - This is software regression evidence for the tree to be promoted, not for the current `production` commit.
+  - Promotion is the owner's decision, and GitHub Actions is blocked by billing.
+  - No tag, release or deploy. D81, D89 and D90 stay open.

@@ -1,8 +1,48 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `production` `dd7fac3` (cây `5f2653d`, sau đợt promote ADR179 ngày 2026-11-09): lệnh, source, dịch vụ, lượt chưa đạt trước đó, số liệu, kiểm tra database, so sánh với CI, phạm vi và ảnh hưởng tới D90. Lượt sáng ngày 2026-11-09 trên `production` `0b67d95` và kết quả ngày 2026-10-27 được giữ nguyên ở các mục lịch sử cuối trang.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `7fb5999` (cây `d5ed277`, sau khi merge HAR-009-B1/B2 ngày 2026-11-11): lệnh, source, dịch vụ, số liệu, kiểm tra database, phạm vi và ảnh hưởng tới promotion/D90. Lượt ngày 2026-11-09 trên `production` `dd7fac3`, lượt sáng 2026-11-09 trên `0b67d95` và kết quả ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `production` `dd7fac3` (cây `5f2653d`), lượt thứ ba trong ngày 2026-11-09.** Lượt thứ hai trên cùng cây chưa đạt (1 FAIL ở test reranker do chạm trần CPU) và được giữ nguyên bên dưới, không bị lượt thứ ba thay thế. [Receipt công khai](../evidence/d87-20261109-production-dd7fac3-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `7fb5999` (cây `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-7fb5999-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+
+| Phạm vi | Kết quả thực tế |
+|---|---|
+| Toàn bộ `pytest tests` | **6.479 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.898,66 giây** (summary "6479 passed, 1 warning in 1898.66s (0:31:38)"); wrapper 1.900,30 giây |
+| Source snapshot | **876 file** trong `src`, `apps`, `scripts`, `tests`, `configs`, `pyproject.toml`, `uv.lock`; `source_bytes_unchanged: true` |
+| Commit và cây | Checkout `develop` tại `7fb5999` (merge PR #54), cây `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`, trùng cây của `origin/develop`; ngoài file source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` (không thuộc phạm vi source freeze) |
+| Source freeze SHA-256 | `5ed6c60f4a3323763010b469f98c3c8a1b1afdb7b7871649ff47218fd663260f` |
+| Log SHA-256 | `6025da45ec6fa20be1bdd51a3a9173ed6cff63c8760aa1d77c44c9ec22903c53` |
+| Cảnh báo | 1 warning: `UserWarning: Duplicate name: 'piper/voice.py'` từ test archive TTS cố ý tạo tên trùng |
+| So với full trước | 6.233 PASS trên 821 file (cây `production` `dd7fac3`, 2026-11-09) nay là lịch sử; cây này thêm công việc HAR v1–v1.7/Aevra (PR #52), HAR-009-B1 (PR #53) và HAR-009-B2 (PR #54): 57 file source khác `production` |
+
+Lượt chạy bắt đầu 17:31:56 (2026-11-11T10:31:56Z) và kết thúc 18:03:37 (2026-11-11T11:03:37Z) theo Asia/Ho_Chi_Minh. Thư mục kết quả `data/backups/d87-20261111-full` (`result.json`, log, source freeze) là private, bị git bỏ qua; receipt chỉ ghi tên thư mục và các SHA-256.
+
+## Lệnh, source và dịch vụ (2026-11-11)
+
+Mục tiêu của chủ dự án là hoàn thành việc tồn đọng; ledger ghi rằng PASS D87 trên `dd7fac3` không còn khớp `develop` sau khi code HAR được merge. Assistant chạy theo [runbook](D87_FULL_REGRESSION_20261106_RUNBOOK.md):
+
+1. Checkout là `develop` `7fb5999`, cây trùng `origin/develop^{tree}`. `develop` khác `production` (57 file source), nên đây là bằng chứng cho cây sẽ được promote, chưa phải cho commit đang ở `production`. `uv sync --locked --dev` chỉ cài lại package dự án.
+2. Vault đang seal (container đã chạy khoảng 9 giờ). Assistant unseal bằng bootstrap file theo ủy quyền đã có của chủ dự án: ba key share được nộp trong process, không in ra. Script đọc credential trong bộ nhớ qua `../infras/scripts/vault_static_secret.py`.
+3. Điều kiện rảnh như lượt `d87-20261109-full-3`: CPU logic bận dưới 0,5 trong 3 lần đo 30 giây liên tiếp. Lần chờ đầu đạt sau 390 giây; vì đã trôi qua khoảng 10 phút, assistant đo lại ngay trước khi chạy và đạt sau 90 giây (0,43 / 0,40 / 0,39). Assistant không tắt ứng dụng nào của chủ dự án. Tải trong lúc chạy (64 lần đo, gồm cả chính bộ test): trung bình 1,54, tối đa 2,49 CPU bận.
+4. CORE khởi động bằng `docker compose --profile core up -d` (container `local-assistant-core-1`, image `local-assistant/llama-cuda:5c8854fd8`, health OK ở `127.0.0.1:8080`) và được dừng bằng `docker compose --profile core stop` sau lượt chạy. PostgreSQL, Vault và Qdrant không bị restart. Trước đó, CORE launcher dùng cho benchmark B2 đã được dừng và cổng 8080 trống.
+5. Lệnh: `uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full`. Script chạy `pytest tests` (không gồm `benchmarks/tests`, không loại trừ gì) và tự đặt `DATABASE_URL`, `LOCAL_ASSISTANT_LIVE_E2E=1`, `LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1`.
+6. Test reranker CPU (`tests/integration/test_reranker_live.py::test_actual_pinned_reranker_paired_comparison`) PASS; log không ghi thời gian từng vòng, nên lượt này không cập nhật ước tính dư địa 1–3% của nó.
+
+## Kiểm tra database (2026-11-11)
+
+Truy vấn read-only bằng runtime role trên database `local_assistant`, schema `assistant`, trước và sau lượt chạy cho cùng kết quả: conversations 0, messages 0, inference_runs 0, files 0, memories 0, memory_consents 0, memory_settings 0, ingestion_jobs 0, ingestion_heads 0, file_owner_usage 1, file_global_usage 1; Alembic revision `0006`. Đây là số dòng và revision, không phải so sánh từng dòng; không ghi inventory Qdrant.
+
+## Phạm vi và ảnh hưởng (2026-11-11)
+
+- Đây là full software regression cho cây `d5ed277` của `develop` `7fb5999`. Nếu `develop` được promote lên `staging` và `production` mà không thay đổi source thêm, cây source của `production` sẽ trùng cây đã kiểm này; mọi thay đổi source sau đó cần chạy lại D87.
+- Promotion vẫn chưa làm: GitHub Actions đang bị chặn do billing của tài khoản, và promotion là quyết định của chủ dự án. D90 vẫn yêu cầu D87 trên đúng commit sẽ tag; các commit chỉ có tài liệu (ví dụ PR ghi lại lượt này) không đổi phạm vi source freeze, việc chấp nhận khác biệt đó là quyết định của chủ dự án khi điền phiếu D90.
+- Không tag, không GitHub Release, không deploy. D81, D89, D90 vẫn mở; D60 hoãn.
+
+## Lịch sử: lượt 2026-11-09 trên `production` `dd7fac3`
+
+**Mục đích (lượt này):** Ghi kết quả full suite trên cây source của `production` `dd7fac3` (cây `5f2653d`, sau đợt promote ADR179 ngày 2026-11-09): lệnh, source, dịch vụ, lượt chưa đạt trước đó, số liệu, kiểm tra database, so sánh với CI, phạm vi và ảnh hưởng tới D90. Lượt sáng ngày 2026-11-09 trên `production` `0b67d95` và kết quả ngày 2026-10-27 được giữ nguyên ở các mục lịch sử cuối trang.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `production` `dd7fac3` (cây `5f2653d`), lượt thứ ba trong ngày 2026-11-09.** Lượt thứ hai trên cùng cây chưa đạt (1 FAIL ở test reranker do chạm trần CPU) và được giữ nguyên bên dưới, không bị lượt thứ ba thay thế. [Receipt công khai](../evidence/d87-20261109-production-dd7fac3-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế (lượt thứ ba) |
 |---|---|
