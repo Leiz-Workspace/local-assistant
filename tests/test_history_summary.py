@@ -272,6 +272,25 @@ def test_tokenizer_values_and_lexicons():
         ),
         (
             dict(
+                text="Migration on Atlas tonight", quotes=["migration on Atlas tonight"]
+            ),
+            "Do not start the 2.5 migration on Atlas tonight.",
+            "quote_context_dropped",
+        ),
+        (
+            dict(text="Trên máy Atlas tối nay", quotes=["trên máy Atlas tối nay"]),
+            "Không chạy bản 3.14 trên máy Atlas tối nay.",
+            "quote_context_dropped",
+        ),
+        (
+            dict(
+                text="Migration on Atlas tonight", quotes=["migration on Atlas tonight"]
+            ),
+            "Start the 2.5 migration on Atlas tonight.",
+            None,
+        ),
+        (
+            dict(
                 text="Lynx uses port 9446", quotes=["Lynx agent listens on port 9464"]
             ),
             "The Lynx agent listens on port 9464.",

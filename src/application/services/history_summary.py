@@ -112,6 +112,8 @@ SCHEMA = {
 }
 TOKEN = re.compile(r"[^\W_]+(?:[-_./:][^\W_]+)*")
 SENTENCE = re.compile(r"[^.!?;\n]+[.!?;]?")
+# A "." between two letters or digits (2.5, rel-2026.11) does not end a span sentence.
+SPAN_SENTENCE = re.compile(r"(?:[^.!?;\n]|(?<=[^\W_])\.(?=[^\W_]))+[.!?;]?")
 NEGATIONS = {
     "not",
     "no",
@@ -408,7 +410,7 @@ def context_dropped(message, quote):
     """Report whether the quote's sentence carries a negation or condition outside the quoted span."""
     start = locate(message, quote)
     end = start + len(quote)
-    for match in SENTENCE.finditer(message):
+    for match in SPAN_SENTENCE.finditer(message):
         if match.end() <= start or match.start() >= end:
             continue
         outside = (
