@@ -167,7 +167,7 @@ async def status(request: Request):
         readonly_runs=True,
         skills=True,
         context="whole-turn-evidence-v1",
-        context_policies=["sliding-window", "extractive-compact"],
+        context_policies=["sliding-window", "extractive-compact", "token-budget"],
         context_archive="owner-private-process-memory-1800s",
         workspace_tools=service.workspace is not None,
         image_generation="image" in generation.backends,

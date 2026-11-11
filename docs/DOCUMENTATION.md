@@ -2355,4 +2355,24 @@ Desktop dùng **GTK/WebKit nhúng trong process/cửa sổ riêng**, không mở
 
 Kết quả 60/60 lượt native, không retry: đúng nghiêm ngặt `full` 11/12, `legacy` 3/12, `window3` 1/12, `window3_pin1` 3/12, `compact3` 12/12. `full` và `compact3` đều giữ đủ dữ kiện (chênh 12/11 do luật chấm chữ số); trong các cửa sổ 3 lượt, `compact3` giữ được nhiều nhất nhưng dùng trung vị trên 1210 token input so với 564 của `full`. Corpus làm truy xuất từ khóa dễ, nên đây là cận trên. 15 test mới không gọi model. Đây là đo đạc trên dữ liệu tổng hợp, không đổi default/model/config.
 
+### 13.12. HAR-009-B2: lịch sử theo ngân sách token
+
+[ADR-189](ADR/189-opt-in-token-budget-history-window.md), [protocol](HAR009_B2_TOKEN_BUDGET_PROTOCOL.md), [kết quả](HAR009_B2_TOKEN_BUDGET_RESULT.md), [receipt](evidence/context-budget-b2-20261111.json). Chế độ opt-in mới `history_policy.mode = "token-budget"`:
+
+```bash
+uv run --no-sync la chat --history-policy token-budget --history-budget-ratio 0.8
+```
+
+- Lịch sử vừa ngưỡng mềm (mặc định 80% ngân sách input) thì giữ hết, không còn mốc cố định 11 cặp.
+- Khi thiếu chỗ:
+  - giữ system, pin và câu hỏi hiện tại;
+  - giữ cặp mới nhất còn vừa;
+  - giữ dãy cặp gần nhất liền mạch trong tối đa nửa phần còn trống;
+  - giữ các cặp cũ hơn có tin nhắn user mở đầu bằng marker (`Rule:`, `Decision:`, `Quy tắc:`, `Quyết định:`…), thử tối đa 8 cặp;
+  - nới dãy gần nhất tới hết ngưỡng.
+- Receipt ghi lý do từng cặp, không chứa nội dung. `--history-window` bị từ chối với chế độ này.
+- `context_overflow` khi phần bắt buộc vượt giới hạn cứng; `strict` từ chối mọi việc bỏ lượt.
+
+Benchmark `benchmarks/context_budget.py`: 12 hội thoại tổng hợp (8 case lượt dài chứa log khoảng 2.900 token/cặp, vượt giới hạn cứng; 4 case 40 lượt ngắn), 3 nhánh `legacy`/`budget`/`compact`, kiểm tra vị trí cửa sổ bằng tokenizer thật trước khi đóng băng. Chạy 2 lần × 36 lượt native, không retry (lần 2 trên code đã sửa lỗi thứ tự chọn lượt do review độc lập phát hiện; kết quả chấm giống hệt): đúng nghiêm ngặt `legacy` 3/12, `budget` 7/12, `compact` 11/12. `budget` thắng legacy ở 40 lượt ngắn (4/4 so với 0/4) và rule có marker (2/2 so với 0/2), nhưng trả lời giá trị cũ ở cả 2 case quyết định có marker bị đính chính sau không có marker (2 regression). Compact giữ đủ dữ kiện 12/12, 0 câu trả lời cũ. 20 test reduction/CLI và 19 test benchmark mới không gọi model. Đây là đo đạc trên dữ liệu tổng hợp, không đổi default/model/config.
+
 </details>

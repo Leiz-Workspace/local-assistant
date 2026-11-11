@@ -1,13 +1,13 @@
 # Chiến lược quản lý context
 
-**Mục đích:** Giải thích cách xử lý lịch sử vượt cửa sổ context, cách dùng phần đã triển khai và các gate còn mở. Cập nhật 2026-11-11; [ADR-187](ADR/187-opt-in-pinned-history-and-extractive-compaction.md), [backlog](progress/HARNESS_PRODUCT_BACKLOG.md).
+**Mục đích:** Giải thích cách xử lý lịch sử vượt cửa sổ context, cách dùng phần đã triển khai và các gate còn mở. Cập nhật 2026-11-11; [ADR-187](ADR/187-opt-in-pinned-history-and-extractive-compaction.md), [ADR-189](ADR/189-opt-in-token-budget-history-window.md), [backlog](progress/HARNESS_PRODUCT_BACKLOG.md).
 
 ## 1. Bảy phương pháp và trạng thái thực tế
 
 | Phương pháp | Cơ chế | Ưu điểm | Nhược điểm | Trong repository |
 |---|---|---|---|---|
 | Truncation | Bỏ nội dung cũ khi thiếu chỗ | Nhanh, không gọi thêm LLM | Có thể bỏ mất dữ kiện quan trọng | Đã có: bỏ **trọn cặp user/assistant**, không cắt giữa câu; policy và câu hỏi hiện tại giữ nguyên. |
-| Sliding window | Giữ N lượt gần nhất | Dễ dự đoán số lượt và chi phí | N lượt vẫn có thể vượt token budget; quên phần ngoài cửa sổ | Đã có opt-in `sliding-window`: N tùy chỉnh, ghim lượt quan trọng, kiểm tra token thật rồi bỏ thêm lượt tùy chọn nếu cần. |
+| Sliding window | Giữ N lượt gần nhất | Dễ dự đoán số lượt và chi phí | N lượt vẫn có thể vượt token budget; quên phần ngoài cửa sổ | Đã có opt-in `sliding-window`: N tùy chỉnh, ghim lượt quan trọng, kiểm tra token thật rồi bỏ thêm lượt tùy chọn nếu cần. Opt-in `token-budget` (HAR-009-B2): chọn lượt gần nhất theo ngân sách token thay vì số lượt cố định, ưu tiên lượt người dùng đánh dấu `Rule:`/`Quy tắc:`… |
 | Summarization | LLM viết tóm tắt lịch sử | Tiết kiệm token cho hội thoại dài | Thêm chi phí, dễ bỏ sót hoặc tạo thông tin sai | **PENDING**: chưa gọi CORE làm summary. Cần benchmark facts/constraints/citations/contradictions và lưu lineage trước adoption. |
 | Context compaction | Giữ thông tin cần thiết từ lịch sử, tool output và trạng thái công việc | Hợp tác vụ agent nhiều bước | Khó giữ đầy đủ chi tiết và trạng thái | **Experimental slice**: `extractive-compact` chọn nguyên văn cặp hội thoại liên quan, có hash nguồn. Chưa compact tool outputs, task state hoặc approval. |
 | RAG / retrieval | Tìm lại nguồn liên quan thay vì đưa tất cả vào prompt | Làm việc với dữ liệu lớn | Phụ thuộc tìm kiếm, phân quyền, freshness | File RAG hiện có giữ nguyên. Slice mới chỉ tìm từ khóa trong các bản lịch sử được chỉ định; **chưa tự nối file RAG vào CLI chat**. |
@@ -26,6 +26,8 @@ Các phương pháp bổ sung cho nhau. Ví dụ: recent window + pinned constra
 6. Phần trích được gắn trong JSON `untrusted_history_context` ở message user hiện tại, có hash/turn nguồn. Role bên trong JSON chỉ là dữ liệu, không tạo message system/assistant mới. Đối thoại mới và yêu cầu hiện tại được policy ưu tiên khi mâu thuẫn; đây không phải bảo đảm model luôn hiểu đúng.
 7. `evidence-first` ưu tiên nguồn sau nội dung bắt buộc; `recent-turns`/`strict` chỉ thêm nguồn nếu không làm mất lịch sử đã chọn. `strict` từ chối mọi việc bỏ lượt do cửa sổ hoặc áp lực token. Đây là lựa chọn độc lập với history policy.
 
+8. `token-budget` (ADR-189) không dùng N lượt. Nếu toàn bộ lịch sử vừa ngưỡng mềm (mặc định 80% ngân sách input) thì giữ hết. Nếu không: giữ phần bắt buộc; giữ cặp mới nhất còn vừa ngưỡng; giữ dãy cặp gần nhất liền mạch trong tối đa nửa phần còn trống; rồi giữ các cặp cũ hơn có **tin nhắn user mở đầu** bằng một marker (`rule:`, `constraint:`, `important:`, `decision:`, `remember:`, `quy tắc:`, `quy ước:`, `ràng buộc:`, `quan trọng:`, `quyết định:`, `ghi nhớ:`, không phân biệt hoa thường/NFC/NFD) trong ngưỡng, thử tối đa 8 cặp; cuối cùng nới dãy gần nhất tới hết ngưỡng. Receipt ghi lý do giữ/bỏ từng cặp, không chứa nội dung. Marker chỉ đổi thứ tự ưu tiên giữ lại, không cấp quyền gì. Rủi ro đã đo: quyết định cũ có marker được giữ trong khi lời đính chính mới hơn không có marker bị bỏ, model trả lời giá trị cũ.
+
 Với policy mới, Fast/Balanced/Deep giữ chỗ cho output ceiling của preset hoặc giới hạn output yêu cầu; reserve vẫn 256 token. Unlimited không có output ceiling cố định thì giữ tối thiểu 512 token cho câu trả lời, rồi dùng ngân sách động hiện có. Không truyền `history_policy` thì chạy đúng nhánh whole-turn cũ, không tự tạo archive.
 
 Compact có overhead JSON/hash/policy. Hội thoại ngắn có thể dùng **nhiều token hơn** cửa sổ đơn giản; đây không phải công cụ luôn nén nhỏ hơn hay tăng độ đúng của model.
@@ -38,6 +40,7 @@ Khởi động CORE và harness theo [runbook](HARNESS_CLI_DESKTOP_RUNBOOK.md). 
 uv run --no-sync la chat --history-policy sliding-window --history-window 8
 uv run --no-sync la chat --history-policy sliding-window --history-window 8 --pin-turn 1
 uv run --no-sync la chat --history-policy extractive-compact --history-window 8 --compact-trigger 0.8
+uv run --no-sync la chat --history-policy token-budget --history-budget-ratio 0.8
 uv run --no-sync la context archives
 uv run --no-sync la context recall ARCHIVE_UUID
 uv run --no-sync la context forget ARCHIVE_UUID
@@ -110,4 +113,6 @@ HAR-009-A đóng riêng mechanics thử nghiệm trên; **HAR-009 tổng vẫn P
 
 **HAR-009-B1 đã đo (2026-11-11)** theo [protocol](HAR009_B1_RETENTION_PROTOCOL.md) đóng băng trước inference, 60 lượt native đầu tiên, không retry ([kết quả](HAR009_B1_RETENTION_RESULT.md)): câu trả lời đúng nghiêm ngặt `full` 11/12, `legacy` 3/12, `window3` 1/12, `window3_pin1` 3/12, `compact3` 12/12 (`compact3` 0 câu trả lời giá trị cũ, 9 gain/0 regression so với legacy). `full` và `compact3` đều giữ đủ dữ kiện; chênh 12/11 chỉ do luật chấm chữ số. `compact3` dùng trung vị trên 1210 token input so với 564 của `full` trên hội thoại ngắn (~600 token) vì overhead JSON/provenance; corpus không tạo áp lực token và làm truy xuất từ khóa dễ (kết quả của `compact3` là cận trên). Đây là đo đạc, không quyết định default hay adoption.
 
-Tiếp theo ưu tiên HAR-009-B2 (cửa sổ theo token budget/mức quan trọng, đo dưới áp lực token thật), sau đó HAR-009-C: context layers/consented memory/RAG/tool-state; HAR-009-D: durable offload/invalidation và UI controls. Priority, dependency, effort và rủi ro nằm trong backlog; không tự chọn model mới hoặc phục hồi approval qua memory.
+**HAR-009-B2 đã triển khai và đo (2026-11-11)**: chế độ opt-in `token-budget` ([ADR-189](ADR/189-opt-in-token-budget-history-window.md)), [protocol](HAR009_B2_TOKEN_BUDGET_PROTOCOL.md) đóng băng trước completion, chạy 2 lần × 36 lượt native đầu tiên, không retry; lần 2 chạy trên code đã sửa lỗi thứ tự chọn lượt do review độc lập phát hiện, kết quả chấm giống hệt lần 1 ([kết quả](HAR009_B2_TOKEN_BUDGET_RESULT.md)). Đúng nghiêm ngặt: `legacy` 3/12, `token-budget` 7/12, `extractive-compact` 11/12. Với 40 lượt ngắn, `token-budget` giữ đủ 40 cặp và đúng 4/4 (legacy 0/4); dưới áp lực token, nó giữ rule có marker (2/2, legacy 0/2) nhưng **trả lời giá trị cũ ở cả 2 case quyết định có marker bị đính chính sau không có marker** (2 regression so với legacy, đúng rủi ro đã dự đoán). Compact giữ đủ dữ kiện 12/12, 0 câu trả lời cũ, 0 regression; corpus vẫn làm truy xuất từ khóa dễ nên đây là cận trên. Với lịch sử dài, hai nhánh mới có trung vị trên 23,7k (`token-budget`) và 24,0k (`extractive-compact`) token input so với 29,6k của legacy, chữ đầu tiên sớm hơn khoảng 1,2 s. Không đổi default; trước khi dùng mặc định, luật marker cần cho phép lời đính chính mới hơn thắng.
+
+Tiếp theo: HAR-009-C: context layers/consented memory/RAG/tool-state; HAR-009-D: durable offload/invalidation và UI controls. Priority, dependency, effort và rủi ro nằm trong backlog; không tự chọn model mới hoặc phục hồi approval qua memory.
