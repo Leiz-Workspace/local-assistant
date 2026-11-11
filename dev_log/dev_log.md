@@ -5805,3 +5805,45 @@ Purpose: carry out the owner's request to move the former root README into `docs
   - Lint passed on 67 files; test-js and the quarantine job also passed.
   - `ci-gate` did not start, on the first attempt or on a rerun. GitHub's annotation: "The job was not started because recent account payments have failed or your spending limit needs to be increased." This is an account billing block, not a code result.
   - Every job that `ci-gate` aggregates passed on `609e924`. Branch protection is not enabled, so the PR was merged with this run documented. The commit that records it changes this dev log only, and no new CI can start until the owner fixes Billing & plans. Later pushes, including the `develop` push run, are blocked the same way.
+
+
+## 2026-11-11 — HAR-009-B1: frozen paired context retention benchmark measured
+
+Purpose: carry out the NEXT item of the HAR backlog under the owner's goal to finish outstanding work. The task is to measure how the existing explicit history policies retain old facts, constraints, corrections and unfinished work, and at what cost, without changing any model, default or configuration.
+
+- **Benchmark only.** New `benchmarks/context_retention.py` and `benchmarks/tests/test_context_retention.py` (15 tests, no model calls).
+  - The corpus has 12 synthetic dialogues of 16 pairs each, three per type: early fact at pair 2, rule at pair 1 with detail at pair 15, old value at pair 3 corrected at pair 12, and unfinished work with a ticket at pair 4. Each type has one Vietnamese case.
+  - The tests check that no filler holds an answer, distractor or evidence token, and that the question never contains the answer.
+  - Five arms: `full` (window 16), `legacy`, `window3`, `window3_pin1` and `compact3` (extractive, owner-bound RAM archive). The arm order rotates per case.
+  - Scoring: strict means every required group appears and no stale or distractor token appears. Presence of the source facts in the composed input is checked separately.
+  - The [protocol](../docs/HAR009_B1_RETENTION_PROTOCOL.md) and `frozen-inputs.json` (corpus, arms, options, analysis plan, native PID and start ticks, source hashes) were written before inference.
+- **Run.**
+  - Weights SHA-256 `073a9275…` and runtime pin `5c8854fd…` were verified. CORE was started with the unchanged `scripts/start-core.py` as PID 881894 and stopped afterwards with exit 0, freeing port 8080.
+  - Settings: preset `fast`, 512 tokens, temperature 0.7, native streaming.
+  - 60/60 first outcomes in 36 s, no retries. Owner-private records are in `data/evaluations/context-retention-b1-20261111`.
+- **Results (strict / stale / facts in context, each out of 12):**
+
+  | Arm | Strict | Stale | Facts in context |
+  |---|---|---|---|
+  | `full` | 11 | 0 | 12 |
+  | `legacy` | 3 | 1 | 3 |
+  | `window3` | 1 | 1 | 0 |
+  | `window3_pin1` | 3 | 0 | 3 |
+  | `compact3` | 12 | 0 | 12 |
+
+  - Paired against `legacy`: `compact3` 9 gains and 0 regressions, `full` 8 and 0, `window3_pin1` 3 and 3, `window3` 1 and 3.
+  - Upper-median input tokens (7th of 12): `compact3` 1210, `full` 564, `legacy` 415, `window3_pin1` 233, `window3` 204. Upper-median first text: 0.22–0.37 s.
+  - `full` and `compact3` tie on retention (12/12 presence each); the strict 12/11 gap is the digit rule. Among 3-pair windows `compact3` retained the most, but the corpus made lexical retrieval easy (unique project names in question and target), so that is an upper bound. `constraint-saomai` cannot show rule retention because VND is the default.
+  - Sampled CORE peaks: RSS 10,023,732 KiB and GPU 8018 MiB (240 samples).
+- **Retained first outcomes:**
+  - `full`'s Vega answer, "one hundred fifty minutes", fails the pre-registered digit rule; no post-hoc credit.
+  - `window3`'s Sao Mai success came from a default "đồng", not from retention.
+  - `legacy` and `window3` answered Vega in hours (the retired form).
+- **Independent check:** 60 rows rescored and presence recomputed from the saved requests, with 0 mismatches. The frozen hash, the source hashes and the corpus identity were confirmed after the run.
+- **Docs:** [result](../docs/HAR009_B1_RETENTION_RESULT.md), [receipt](../docs/evidence/context-retention-b1-20261111.json). Also updated: the backlog (B1 MEASURED, B2 NEXT), the strategy guide section 7, Documentation 13.11, roadmap v5.19.9 and the ledger status.
+- **Limits:**
+  - Short dialogues by one author, with no token pressure, so compaction's prompt-size benefit is not measured.
+  - One draw per cell, and prompt caching may affect timings.
+  - Output tokens and explicit recall were not measured.
+  - An independent fact and method review (two agents) confirmed every number from the raw files and led to these wording corrections before commit.
+  - No default, adoption, model, configuration, data or service change.
