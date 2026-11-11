@@ -11,6 +11,7 @@ from src.application.services.conversation_context import (
 from src.application.ports.inference import InferenceFailure
 from src.application.services.context_reduction import (
     COMPACTION_POLICY,
+    WORKING_STATE_POLICY,
     HistoryPolicy,
     mandatory_context,
     reduce_history,
@@ -86,6 +87,8 @@ async def compose_context(
         configuration = HistoryPolicy.model_validate(history_policy)
         if configuration.mode == "extractive-compact":
             policy += "\n" + COMPACTION_POLICY
+        if configuration.working_state:
+            policy += "\n" + WORKING_STATE_POLICY
         return await compose_reduced_context(
             [{"role": "system", "content": policy}] + messages,
             policy=configuration,

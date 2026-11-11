@@ -5933,3 +5933,54 @@ Purpose: rerun D87 on the new tree under the owner's goal to finish outstanding 
   - This is software regression evidence for the tree to be promoted, not for the current `production` commit.
   - Promotion is the owner's decision, and GitHub Actions is blocked by billing.
   - No tag, release or deploy. D81, D89 and D90 stay open.
+
+## 2026-11-11 — HAR-009-C1 slice 1: opt-in source-bound working state
+
+Purpose: carry out the next HAR-009 item (C1) under the owner's goal to finish outstanding work. The task is a structured state with lineage and freshness that survives history reduction and client window drops, without an LLM summary, model, default, context-size or storage change. [ADR-190](../docs/ADR/190-opt-in-source-bound-working-state.md) was written before the implementation.
+
+- **Code (opt-in only).**
+  - `src/application/services/working_state.py` (new) builds a state from user lines that open with a marker, with an optional bullet and an optional key: `Goal:`, `Rule:`, `Decision[db-region]:`, `Todo[cert]:`, `Done[cert]:`, `Important:`, `Correction:`/`Update:` and the Vietnamese equivalents.
+  - **Items:** each keeps verbatim text, an absolute pair number (`history_offset` + local) and the SHA-256 of its source pair. Assistant text never becomes an item.
+  - **Supersession:** keyed items supersede earlier ones with the same key, and `Done[key]` closes `Todo[key]`; unkeyed items are never superseded automatically.
+  - **Freshness:** newer pairs that share at least 3 significant terms are listed in `newer_mentions`; in `token-budget` the newest is kept with reason `newer_related` (at most 8 probes, within the soft target).
+  - **Capsule:** untrusted JSON in the current user message, counted as mandatory content, including in the evidence-first estimate.
+  - **Limits:** above 64 active items or 32 KiB, the oldest notes and corrections, then the oldest items, are dropped and reported in `dropped_active`. Malformed, empty-key or overlong marked lines are reported in `skipped_lines`.
+  - **Receipt:** it returns the full state to the caller for carrying. Logs carry counts only; `working_state_summary` carries counts and pair numbers, never text.
+  - **`HistoryPolicy`:** gains `working_state`, `carried_state` (at most 64 validated items, keys folded) and `history_offset`; they cannot be combined with `extractive-compact`.
+  - **CLI `--working-state`:** carries the state and drops the oldest 32 pairs at the 256-message bound instead of stopping, unless pins are set. It prints evicted pairs as absolute numbers and reports dropped state items. Without the flag it does not send the new fields, so older servers keep working.
+  - **Harness status:** lists `context_working_state`.
+  - **Tests:** `tests/test_working_state.py`, 29 tests.
+- **Benchmark.** New `benchmarks/context_state.py` and `benchmarks/tests/test_context_state.py` (10 tests, no model calls).
+  - Part A re-runs the 12 B2 dialogues with `legacy`, `budget` and `budget_state`.
+  - Part B has 6 dialogues of 199 pairs plus a question. The runner replays the CLI rule (drops before requests 129, 161 and 193, final offset 96); the state arm takes its carried state from native compositions only. Arms: `legacy` (last 22 messages), `budget_drop` and `budget_state`.
+  - A tokenizer-only design check precedes the freeze ([protocol](../docs/HAR009_C1_WORKING_STATE_PROTOCOL.md)).
+- **Two campaigns** on the approved CORE (weights and runtime pin checked, unchanged launcher, stopped afterwards each time):
+  - Campaign 1 (`data/evaluations/context-state-c1-20261111`, PID 1142074, 164.7 s): 54/54.
+  - An independent code review then found:
+    - Turkish `İ`/`ı` crashing a request;
+    - unkeyed items that could never be retired, so failing closed could leave a CLI session unusable;
+    - malformed marker lines skipped silently;
+    - quadratic freshness work;
+    - CLI version skew.
+
+    All were fixed and tests were added.
+  - Campaign 2 (`…-run2`, PID 1184292, 165.8 s): 54/54 on the fixed code, same composition plan. A first rerun attempt passed the shell's PID; the preflight rejected it before any directory or call.
+- **Results:**
+  - Part A, campaign 1 then campaign 2:
+    - `budget_state` 9/12 then 7/12;
+    - `budget` 6/12 both times, with 3 stale answers;
+    - `legacy` 3/12 both times.
+  - The freshness rule kept the Hydra and Đại Bàng corrections in all 4 `budget_state` attempts. The model answered correctly in 3; in campaign 2, Đại Bàng named both values ("Đà Nẵng (đã được cập nhật từ Hà Nội…)") and is scored stale by the pre-registered rule. `budget` without state answered with the old value in all 4.
+  - Osprey flipped by sampling; the rule was not in context in any arm.
+  - Part B, both campaigns: `budget_state` 5/5 marked cases (keyed updates Warsaw and Đà Nẵng, INV-ACME-5521, the open TLS-certificate task, the Postgres 17 goal); `legacy` and `budget_drop` 0/5. The unmarked control failed in every arm.
+  - Cost: 78 tokens for the policy line, up to 181 with items and a related pair; capsule 185–267 bytes. Campaign 2 sampled CORE peaks: RSS 10,172,132 KiB and GPU 8018 MiB.
+- **Independent check (campaign 2):** 54 rows rescored, presence recomputed, plan compared, all with 0 mismatches; the frozen hash, the source hashes and both corpora were confirmed.
+- **Validation:** related suites 215 passed; CI-scope suite 6892 passed, 368 skipped, 30 deselected; Ruff check and format pass on the changed Python files.
+- **Docs:** [result](../docs/HAR009_C1_WORKING_STATE_RESULT.md), [receipt](../docs/evidence/context-state-c1-20261111.json). Also updated: the backlog (HAR-009-B MEASURED, C1 slice 1), the strategy guide (sections 1, 2, 3 and 7), Documentation 13.13, CLI runbook section 12, roadmap v5.19.12 and the ledger status.
+- **Limits:**
+  - Synthetic dialogues by one author, with one draw per cell per campaign.
+  - Part B is a mechanism check.
+  - Unmarked information is still lost once its pairs are dropped.
+  - Carried state is client data.
+  - This source change lands after the D87 run on `7fb5999`, so D87 must be rerun.
+  - No default, adoption, model, configuration, data or service change.

@@ -2375,4 +2375,24 @@ uv run --no-sync la chat --history-policy token-budget --history-budget-ratio 0.
 
 Benchmark `benchmarks/context_budget.py`: 12 hội thoại tổng hợp (8 case lượt dài chứa log khoảng 2.900 token/cặp, vượt giới hạn cứng; 4 case 40 lượt ngắn), 3 nhánh `legacy`/`budget`/`compact`, kiểm tra vị trí cửa sổ bằng tokenizer thật trước khi đóng băng. Chạy 2 lần × 36 lượt native, không retry (lần 2 trên code đã sửa lỗi thứ tự chọn lượt do review độc lập phát hiện; kết quả chấm giống hệt): đúng nghiêm ngặt `legacy` 3/12, `budget` 7/12, `compact` 11/12. `budget` thắng legacy ở 40 lượt ngắn (4/4 so với 0/4) và rule có marker (2/2 so với 0/2), nhưng trả lời giá trị cũ ở cả 2 case quyết định có marker bị đính chính sau không có marker (2 regression). Compact giữ đủ dữ kiện 12/12, 0 câu trả lời cũ. 20 test reduction/CLI và 19 test benchmark mới không gọi model. Đây là đo đạc trên dữ liệu tổng hợp, không đổi default/model/config.
 
+### 13.13. HAR-009-C1: working state mang qua các cửa sổ
+
+[ADR-190](ADR/190-opt-in-source-bound-working-state.md), [protocol](HAR009_C1_WORKING_STATE_PROTOCOL.md), [kết quả](HAR009_C1_WORKING_STATE_RESULT.md), [receipt](evidence/context-state-c1-20261111.json). Tùy chọn opt-in `history_policy.working_state: true` (với `sliding-window` hoặc `token-budget`):
+
+```bash
+uv run --no-sync la chat --history-policy token-budget --working-state
+```
+
+- **Mục state.** Mỗi dòng user mở đầu bằng marker (`Goal:`, `Rule:`, `Decision[db-region]:`, `Todo[cert]:`, `Done[cert]:`, `Correction:`, `Mục tiêu:`, `Quyết định:`…) thành một mục nguyên văn, có số cặp tuyệt đối và SHA-256 của cặp gốc.
+- **Khóa và đóng việc.** Mục sau cùng khóa thay thế mục trước; `Done[key]` đóng `Todo[key]`.
+- **Freshness.** Cặp mới hơn chia sẻ ít nhất 3 từ có nghĩa được ghi trong `newer_mentions`; với `token-budget`, cặp mới nhất như vậy của mỗi mục được giữ (`newer_related`, tối đa 8 lần thử, trong ngưỡng mềm). Với `sliding-window` chỉ ghi chú, không giữ thêm.
+- **Giới hạn.** State là JSON không tin cậy, tính vào phần bắt buộc; quá 64 mục đang hiệu lực hoặc 32 KiB thì bỏ mục cũ (`note`/`correction` trước) và báo trong `dropped_active`. Dòng marker sai cú pháp được báo trong `skipped_lines`. Lời assistant không bao giờ thành mục.
+- **CLI.** CLI mang state sang request sau và khi chạm 256 message thì bỏ 32 cặp cũ nhất thay vì dừng (khi có `--pin-turn` thì vẫn dừng như cũ).
+
+Đo 2 lần × 54 lượt native, không retry (lần 2 trên code đã sửa sau review độc lập, cùng kế hoạch context):
+- **Corpus B2:** `budget_state` đúng 9/12 rồi 7/12. Lời đính chính được giữ ở cả 4 lượt thuộc case cũ-mới; trả lời đúng 3/4, lượt còn lại nêu cả giá trị mới lẫn cũ nên bị tính là giá trị cũ. `budget` không state đúng 0/4; legacy vẫn giữ cặp 6 trong cửa sổ 11 cặp nên đúng 4/4.
+- **Hội thoại 200 lượt bỏ cửa sổ 3 lần:** 5/5 case có marker ở cả 2 lần, so với 0/5 khi không có state; control không marker hỏng ở mọi nhánh.
+
+Có 29 test working state và 10 test benchmark mới, không gọi model. Không đổi default, model hay config.
+
 </details>

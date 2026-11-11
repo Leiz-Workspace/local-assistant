@@ -40,6 +40,7 @@ def chat_policy(args):
             or args.pin_turn
             or args.recall
             or args.compact_trigger is not None
+            or args.working_state
         ):
             raise ClientError("history_policy_required", 2)
         return None
@@ -52,8 +53,13 @@ def chat_policy(args):
         values["window_turns"] = args.history_window
     if args.compact_trigger is not None:
         values["trigger_ratio"] = args.compact_trigger
+    if args.working_state:
+        values["working_state"] = True
     try:
         result = HistoryPolicy.model_validate(values).model_dump(mode="json")
+        if not result["working_state"]:
+            for name in ("working_state", "carried_state", "history_offset"):
+                result.pop(name)
     except ValidationError:
         raise ClientError("invalid_history_policy", 2) from None
     LOGGER.info("cli_history_policy_selected mode=%s", result["mode"])
@@ -90,6 +96,7 @@ def parser():
     chat.add_argument("--history-window", type=int)
     chat.add_argument("--pin-turn", action="append", type=int, default=[])
     chat.add_argument("--recall", action="append", type=UUID, default=[])
+    chat.add_argument("--working-state", action="store_true")
     chat.add_argument(
         "--compact-trigger",
         "--history-budget-ratio",
@@ -368,7 +375,7 @@ def execute(args):
             from apps.branding.identity import terminal_logo
 
             print(terminal_logo())
-        messages = []
+        messages, carried, offset = [], [], 0
         while True:
             text = (
                 args.message
@@ -378,7 +385,10 @@ def execute(args):
             if text.strip() == "/exit":
                 return {"closed": True}
             if policy is not None and len(messages) >= 256:
-                raise ClientError("client_history_capacity", 2)
+                if not policy.get("working_state") or policy["pinned_turns"]:
+                    raise ClientError("client_history_capacity", 2)
+                messages, offset = messages[64:], offset + 32
+                LOGGER.info("cli_history_window_dropped pairs=32 offset=%d", offset)
             messages.append(dict(role="user", content=text))
             body = dict(
                 messages=messages,
@@ -394,6 +404,13 @@ def execute(args):
                         if number <= (len(messages) - 1) // 2
                     ],
                 }
+                if policy.get("working_state"):
+                    body["history_policy"].update(
+                        carried_state=[
+                            item for item in carried if item["turn"] <= offset
+                        ],
+                        history_offset=offset,
+                    )
             result = client.request(
                 "POST",
                 PREFIX + "/chat",
@@ -405,10 +422,20 @@ def execute(args):
             print(answer)
             if policy is not None:
                 receipt = result.get("context", {}).get("history_policy", {})
+                if policy.get("working_state"):
+                    carried = receipt.get("working_state", {}).get("items", carried)
                 if receipt.get("evicted_turns"):
                     print(
                         "Context: đã đưa ra ngoài cửa sổ các lượt "
-                        + ", ".join(map(str, receipt["evicted_turns"])),
+                        + ", ".join(str(n + offset) for n in receipt["evicted_turns"]),
+                        file=sys.stderr,
+                    )
+                dropped = receipt.get("working_state_summary", {}).get("dropped_active")
+                if dropped:
+                    print(
+                        "Working state: đã bỏ các mục ở lượt "
+                        + ", ".join(map(str, dropped))
+                        + " vì vượt giới hạn 64 mục/32 KiB",
                         file=sys.stderr,
                     )
                 if receipt.get("archive"):
