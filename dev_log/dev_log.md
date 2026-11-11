@@ -6036,3 +6036,18 @@ Purpose: continue the owner's goal to finish outstanding work after the host res
   - A new test checks that the file sits inside the package, starts with "MIT License" and has SHA-256 `94f29bbe…`. Asset, browser, desktop and harness tests: 55 passed.
 - **B2 follow-up:** recorded as covered by ADR-190 freshness when working state is on. `token-budget` alone keeps its measured B2 behaviour.
 - **Next:** D87 rerun on the merged tree, because R1 changes source.
+
+## 2026-11-11 — D87 PASS on develop a657709; ADR-192 proposed (HAR-009-C LLM summary)
+
+- **D87 after PR #58** (vendored llama.cpp license):
+  - **Run:** `data/backups/d87-20261111-full-4` on `develop` `a657709`, tree `a53f51dfee821378680f498542c5f2354ab7b2b4`. It started on an idle host (0.35 / 0.33 / 0.33). CORE ran via `docker compose --profile core` and was stopped afterwards. Vault was already unsealed, and no shared service was restarted.
+  - **Result: PASS.** **6509 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1872.49 s (21:43:26–22:14:40), 879 source files unchanged. Source freeze `afe1bbc7…`, log `4f929189…`. The reranker CPU test passed.
+  - **Load:** 63 samples, mean 1.82, median 1.50. One short spike (4.80 / 10.69 / 4.48) came about 6.5–8 minutes in; its cause was not determined.
+  - **Database and Qdrant:** unchanged before and after, at the baseline counts with Alembic `0006` and no collections.
+  - **Records:** [receipt](../docs/evidence/d87-20261111-develop-a657709-acceptance.json); the D87 result doc (the `cdbcdd4` run moved to history); the D90 dossier D87 row; the ledger. `develop` now differs from `production` in 60 source files.
+- **Temporary-space incident.** Earlier, `/tmp` (tmpfs 16G) hit its quota. 11G of it was pytest `tmp_path` directories from today's D87 and CI-scope runs, and command output was lost (EDQUOT). With the owner's approval, only `/tmp/pytest-of-korosaki-ryukai` was deleted. Later CI-scope runs use `--basetemp` under `~/.cache`.
+- **ADR-192 (PROPOSED, design only)** for the HAR-009-C LLM summary slice: [ADR](../docs/ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md), [draft protocol](../docs/HAR009_C_SUMMARY_PROTOCOL_DRAFT.md).
+  - **Flag and model:** an opt-in `evicted_summary` (evidence-first only, refused with compaction). The approved CORE summarizes only the evicted pairs: thinking off, temperature 0, bounded tokens, within the existing 120 s deadline, one generation and no retry.
+  - **Output and verification:** items carry pair citations and exact quotes. A deterministic verifier drops ungrounded, value-, negation-, condition- or speaker-mismatched items.
+  - **Placement and failure:** the result is an untrusted capsule with a reserve inside the soft target and a RAM-only owner-bound cache. A failure never blocks the answer.
+  - **Process:** produced by a read-only workflow: 3 readers, a draft, two critics (3 blockers, 18 major and 12 minor issues fixed), then a citation and governance check (31 fixes). Implementation follows review.

@@ -1,0 +1,107 @@
+{
+ "description": "Public receipt of D87 full software regression on develop a657709 after the vendored llama.cpp license fix (2026-11-11). Private directory not published; names and hashes only.",
+ "date": "2026-11-11",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; PR #58 (fix R1) changed source after the D87 PASS on develop cdbcdd4.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at a657709 (merge of PR #58)",
+  "git_commit": "a657709d9644a85871b997e6d13be8836ab825a3",
+  "git_tree": "a53f51dfee821378680f498542c5f2354ab7b2b4",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "a657709"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "source_files_different_in_freeze_paths": 60
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 879,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "afe1bbc73a39533e68f6cfd74b0433470abe5a7364e23ebd51ca03a1e68ef13e"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full-4",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": "already unsealed (no restart since the earlier unseal)",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  },
+  "shared_services": "not restarted"
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 90,
+  "last_three_samples_busy_cores": [
+   0.35,
+   0.33,
+   0.33
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 63,
+  "mean_busy_cores": 1.82,
+  "median_busy_cores": 1.5,
+  "max_busy_cores": 10.69,
+  "note": "includes the regression suite itself; a short spike to 4.8 / 10.69 / 4.48 busy CPUs about 6.5-8 minutes into the run, cause not determined; the CPU-limited reranker test (at about 7% of pytest progress; the log has no per-test timings, so overlap with the spike is unknown) passed"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6509,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1872.49,
+  "wrapper_seconds": 1874.02,
+  "summary": "6509 passed, 1 warning in 1872.49s (0:31:12)",
+  "started_at_utc": "2026-11-11T14:43:26.882796+00:00",
+  "completed_at_utc": "2026-11-11T15:14:40.900688+00:00",
+  "log_sha256": "4f92918915005dac699cf807595ada3fa6a86ea3f295df8561762f66ec8614e6",
+  "result_json_sha256": "f76e455741c39087135dcf0cbaba1a563670df74341d68967ab1129fcd40d762",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6508 passed on 878 files, develop cdbcdd4 (tree 3038817), 2026-11-11; now history"
+ },
+ "scope": "Software regression evidence for the source tree a53f51d of develop a657709. Not model quality, device acceptance, D89 or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directory": "data/backups/d87-20261111-full-4/"
+}

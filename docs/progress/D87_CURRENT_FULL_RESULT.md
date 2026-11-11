@@ -1,8 +1,30 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `cdbcdd4` (cây `3038817`, sau khi merge HAR-009-C1 ngày 2026-11-11), cùng lượt trước đó bị gián đoạn do máy chủ khởi động lại. Các lượt trên `develop` `7fb5999`, `production` `dd7fac3`, `0b67d95` và ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `a657709` (cây `a53f51d`, sau PR #58: giấy phép llama.cpp được đưa vào package). Các lượt trước được giữ ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `develop` `cdbcdd4` (cây `3038817580a6cf679dbe086e55b2903fbab0a6d1`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-cdbcdd4-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `a657709` (cây `a53f51dfee821378680f498542c5f2354ab7b2b4`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-a657709-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+
+| Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-4`) |
+|---|---|
+| Toàn bộ `pytest tests` | **6.509 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.872,49 giây** (summary "6509 passed, 1 warning in 1872.49s (0:31:12)"); wrapper 1.874,02 giây |
+| Source snapshot | **879 file**, `source_bytes_unchanged: true`; source freeze `afe1bbc73a39533e68f6cfd74b0433470abe5a7364e23ebd51ca03a1e68ef13e` |
+| Commit và cây | `develop` `a657709` (merge PR #58), cây trùng `origin/develop`; ngoài source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` |
+| Log SHA-256 | `4f92918915005dac699cf807595ada3fa6a86ea3f295df8561762f66ec8614e6` |
+| So với full trước | 6.508 PASS trên 878 file (`cdbcdd4`) nay là lịch sử; thêm 1 test và file giấy phép trong package. `develop` khác `production` ở 60 file source |
+
+- **Thời gian.** Lượt chạy từ 21:43:26 tới 22:14:40 (14:43:26Z–15:14:40Z).
+- **Máy rảnh.** Điều kiện rảnh đạt sau 90 giây (0,35 / 0,33 / 0,33).
+- **Tải trong lúc chạy.** 63 lần đo: trung bình 1,82, trung vị 1,50 CPU bận. Có một đợt tăng ngắn (4,80 / 10,69 / 4,48) vào khoảng phút 6,5–8; chưa xác định được nguyên nhân. Test reranker giới hạn CPU vẫn PASS. Test này chạy ở khoảng 7% tiến độ pytest; log không ghi thời gian từng test nên không xác định được nó có trùng đợt tăng tải hay không.
+- **Dịch vụ.** Vault đã ở trạng thái unseal. CORE chạy bằng `docker compose --profile core up -d` rồi được dừng sau lượt chạy. Dịch vụ dùng chung không bị restart.
+- **Database và Qdrant (read-only).** Kết quả trước và sau giống nhau: các bảng hội thoại, bộ nhớ và ingestion đều 0; usage 1 dòng mỗi bảng; Alembic `0006`; Qdrant không có collection nào.
+- **Phạm vi.** Chưa promote, chưa tag, chưa release, chưa deploy. D81, D89, D90 vẫn mở.
+
+## Lịch sử: lượt 2026-11-11 trên `develop` `cdbcdd4`
+
+**Mục đích (lượt này):** Ghi kết quả full suite trên cây source của `develop` `cdbcdd4` (cây `3038817`, sau khi merge HAR-009-C1 ngày 2026-11-11), cùng lượt trước đó bị gián đoạn do máy chủ khởi động lại. Các lượt trên `develop` `7fb5999`, `production` `dd7fac3`, `0b67d95` và ngày 2026-10-27 được giữ nguyên ở các mục lịch sử bên dưới.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `develop` `cdbcdd4` (cây `3038817580a6cf679dbe086e55b2903fbab0a6d1`), ngày 2026-11-11.** [Receipt công khai](../evidence/d87-20261111-develop-cdbcdd4-acceptance.json). Đây là bằng chứng hồi quy phần mềm cho đúng cây source này, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế (lượt `d87-20261111-full-3`) |
 |---|---|
