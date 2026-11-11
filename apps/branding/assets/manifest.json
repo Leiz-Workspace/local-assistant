@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "product": "Aevra",
+  "source_files": {
+    "aevra-dragon-white.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436",
+    "aevra-dragon-white-1024.png": "c7e68f7cb5f58028268e15a88c2193082c7937f6d3c129d1a168b482fc8b5652"
+  },
+  "files": {
+    "favicon.ico": "0225011afce28e3f37c207101dfd4e12ee561669e5a807987c4bd0b9ccc55316",
+    "icon.png": "1356bdf20911dab2a07628e72723cd99dc3ac71de0789c91ac59be632ece35f5",
+    "icon.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436",
+    "logo.png": "c7e68f7cb5f58028268e15a88c2193082c7937f6d3c129d1a168b482fc8b5652",
+    "logo.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436"
+  },
+  "derivatives": "Transparent white dragon icons without added borders or backgrounds; source logo bytes unchanged."
+}

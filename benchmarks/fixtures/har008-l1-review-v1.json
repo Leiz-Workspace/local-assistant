@@ -1,0 +1,214 @@
+{
+  "description": "Fresh same-author controlled target/line/quote panel; no source execution, gold fields never enter model requests.",
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "review-capacity-equality",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-capacity-equality.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\n\n\ndef reserve_quota(used, incoming, capacity):\n    \"\"\"Admit only requests whose resulting usage does not exceed capacity.\"\"\"\n    proposed = used + incoming\n    return proposed < capacity\n"
+        }
+      ],
+      "target": "review-capacity-equality.py",
+      "read_start": 1,
+      "question": "Locate the check that rejects a request fitting the capacity exactly. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 7,
+      "quote": "return proposed < capacity"
+    },
+    {
+      "id": "review-ranged-display-name",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-ranged-display-name.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndef validate_display_name(name):\n    \"\"\"Reject an empty or whitespace-only string; accept every other string.\"\"\"\n    if not name:\n        return False\n    return True\n"
+        }
+      ],
+      "target": "review-ranged-display-name.py",
+      "read_start": 26,
+      "question": "The supplied range begins after the header. Locate the condition failing to reject whitespace-only input. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 30,
+      "quote": "if not name:"
+    },
+    {
+      "id": "review-inclusive-last",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-inclusive-last.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\ndef close_interval(first, last):\n    \"\"\"Return every integer from first through last, with first <= last.\"\"\"\n\n    result = []\n    for item in range(first, last):\n        result.append(item)\n    return result\n"
+        }
+      ],
+      "target": "review-inclusive-last.py",
+      "read_start": 1,
+      "question": "Locate the loop omitting the required final integer. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 6,
+      "quote": "for item in range(first, last):"
+    },
+    {
+      "id": "review-interruption-swallowed",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-interruption-swallowed.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\nimport asyncio\n\nasync def await_job(job):\n    \"\"\"Return job output while propagating cancellation and keyboard interruption.\"\"\"\n    try:\n        return await job\n    except BaseException:\n        return None\n"
+        }
+      ],
+      "target": "review-interruption-swallowed.py",
+      "read_start": 1,
+      "question": "Locate the handler that swallows cancellation and keyboard interruption. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 8,
+      "quote": "except BaseException:"
+    },
+    {
+      "id": "review-path-caller",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-path-caller.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\ndef is_relative(candidate):\n    \"\"\"Test caller-provided paths under the approved caller contract.\"\"\"\n    return not candidate.startswith(\"/\")\n"
+        },
+        {
+          "path": "review-path-caller-policy.md",
+          "text": "# Approved caller contract\nThe only caller passes pathlib.Path objects, not strings.\nThe caller does not coerce paths to text before calling is_relative.\n"
+        }
+      ],
+      "target": "review-path-caller.py",
+      "read_start": 1,
+      "question": "Use the caller type to find the incompatible path operation. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 4,
+      "quote": "return not candidate.startswith(\"/\")"
+    },
+    {
+      "id": "review-ranged-duration",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-ranged-duration.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfrom datetime import timedelta\n\ndef retry_delay(value):\n    \"\"\"Return a duration for the caller-supplied nonnegative retry delay.\"\"\"\n    return timedelta(seconds=value)\n"
+        },
+        {
+          "path": "review-ranged-duration-policy.md",
+          "text": "# Approved caller contract\nThe retry delay value is expressed in milliseconds.\nZero means a zero-length delay.\n"
+        }
+      ],
+      "target": "review-ranged-duration.py",
+      "read_start": 34,
+      "question": "Use the approved caller units to locate the wrong duration conversion. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 40,
+      "quote": "return timedelta(seconds=value)"
+    },
+    {
+      "id": "review-empty-label-caller",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-empty-label-caller.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\ndef canonical_label(label):\n    \"\"\"Preserve the caller sentinel and normalize supplied text labels.\"\"\"\n    return label.strip() if label else None\n"
+        },
+        {
+          "path": "review-empty-label-caller-policy.md",
+          "text": "# Approved caller contract\nLabels are either None or strings.\nNone must remain None; an empty string must remain an empty string.\n"
+        }
+      ],
+      "target": "review-empty-label-caller.py",
+      "read_start": 1,
+      "question": "Use the caller contract to locate the return that incorrectly collapses an empty string to None. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 4,
+      "quote": "return label.strip() if label else None"
+    },
+    {
+      "id": "review-bytes-caller",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-bytes-caller.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\ndef rewrite_separator(raw):\n    \"\"\"Replace colon separators while preserving the caller byte representation.\"\"\"\n    return raw.replace(\":\", \"-\")\n"
+        },
+        {
+          "path": "review-bytes-caller-policy.md",
+          "text": "# Approved caller contract\nThe only caller supplies bytes, never a str.\nThe function must return bytes.\n"
+        }
+      ],
+      "target": "review-bytes-caller.py",
+      "read_start": 1,
+      "question": "Use the caller representation to find the incompatible replacement arguments. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 4,
+      "quote": "return raw.replace(\":\", \"-\")"
+    },
+    {
+      "id": "review-safe-exception-scope",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-safe-exception-scope.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\nimport asyncio\n\nasync def observe_job(job):\n    \"\"\"Return job output, map ordinary exceptions to None and propagate cancellation.\"\"\"\n    try:\n        return await job\n    except Exception:\n        return None\n"
+        }
+      ],
+      "target": "review-safe-exception-scope.py",
+      "read_start": 1,
+      "question": "Under Python 3.11+, check whether this handler catches asyncio.CancelledError; do not invent an unsupported cancellation defect. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": null,
+      "quote": null
+    },
+    {
+      "id": "review-safe-explicit-none",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-safe-explicit-none.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\n\ndef choose_window(configured, fallback):\n    \"\"\"Use fallback only for None; preserve explicitly configured zero.\"\"\"\n    if configured is None:\n        return fallback\n    return configured\n"
+        }
+      ],
+      "target": "review-safe-explicit-none.py",
+      "read_start": 1,
+      "question": "Check the sentinel behavior without inventing a truthiness issue. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": null,
+      "quote": null
+    },
+    {
+      "id": "review-duplicate-false",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-duplicate-false.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\ndef can_publish(active, approved):\n    \"\"\"Return True only for active and approved requests.\"\"\"\n    if not active:\n        return False\n    if approved:\n        return False\n    return False\n"
+        }
+      ],
+      "target": "review-duplicate-false.py",
+      "read_start": 1,
+      "question": "Locate the specific return that rejects an active approved request. Identical return text occurs at other correct locations. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 7,
+      "quote": "return False"
+    },
+    {
+      "id": "review-ranged-duplicate-none",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-ranged-duplicate-none.py",
+          "text": "\"\"\"Provide fresh controlled line-localization evidence only; never execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndef resolved_value(mapping, key):\n    \"\"\"Return a present value unchanged, or None when absent.\"\"\"\n    if key not in mapping:\n        return None\n    if mapping[key] is not None:\n        return None\n    return None\n"
+        }
+      ],
+      "target": "review-ranged-duplicate-none.py",
+      "read_start": 43,
+      "question": "Locate the specific return discarding an existing nonnull value, distinguishing repeated identical lines. Review only $TARGET. Return its actual original one-based source line as integer value and the whole canonical line as quote, or null/null when no supported defect exists. Do not renumber a range.",
+      "value": 50,
+      "quote": "return None"
+    }
+  ]
+}

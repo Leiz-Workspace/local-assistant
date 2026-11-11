@@ -1,0 +1,214 @@
+{
+  "description": "Fresh controlled opaque-ID six-arm generic/value-first/quote-first review cohort; exact gold frozen before inference, no source execution.",
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "review-order-01",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-01.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\n\n\ndef next_offset(offset, page_size):\n    \"\"\"Advance offset by exactly page_size for a validated positive page size.\"\"\"\n    return offset + page_size - 1\n"
+        }
+      ],
+      "target": "review-order-01.py",
+      "read_start": 1,
+      "question": "Locate the return that overlaps consecutive pages. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 6,
+      "quote": "return offset + page_size - 1"
+    },
+    {
+      "id": "review-order-02",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-02.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\ndef may_consume(remaining):\n    \"\"\"Allow consumption only when the integer remaining count is strictly positive.\"\"\"\n    if remaining < 0:\n        return False\n    return True\n"
+        }
+      ],
+      "target": "review-order-02.py",
+      "read_start": 1,
+      "question": "Locate the conditional that admits an exhausted zero count. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 4,
+      "quote": "if remaining < 0:"
+    },
+    {
+      "id": "review-order-03",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-03.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndef end_marker(text, suffix):\n    \"\"\"Return True exactly when text ends with the nonempty suffix.\"\"\"\n    return text.startswith(suffix)\n"
+        }
+      ],
+      "target": "review-order-03.py",
+      "read_start": 24,
+      "question": "Locate the return checking the wrong end of the string. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 28,
+      "quote": "return text.startswith(suffix)"
+    },
+    {
+      "id": "review-order-04",
+      "category": "review-defect",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-04.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\nimport asyncio\n\nasync def cancel_aware(job):\n    \"\"\"Return job output and always propagate asyncio cancellation.\"\"\"\n    try:\n        return await job\n    except asyncio.CancelledError:\n        return None\n"
+        }
+      ],
+      "target": "review-order-04.py",
+      "read_start": 1,
+      "question": "Locate the handler body that suppresses cancellation instead of re-raising. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 9,
+      "quote": "return None"
+    },
+    {
+      "id": "review-order-05",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-05.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\ndef suffix_of(candidate):\n    \"\"\"Return a filename suffix for the approved caller representation.\"\"\"\n    return candidate.suffix\n"
+        },
+        {
+          "path": "review-order-05-caller.md",
+          "text": "# Approved caller\nThe caller supplies a Python str filename and never wraps it as pathlib.Path.\n"
+        }
+      ],
+      "target": "review-order-05.py",
+      "read_start": 1,
+      "question": "Use the caller representation to find the unavailable attribute. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 4,
+      "quote": "return candidate.suffix"
+    },
+    {
+      "id": "review-order-06",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-06.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndef bill_total(price, quantity):\n    \"\"\"Preserve exact decimal arithmetic for the validated caller inputs.\"\"\"\n    return float(price) * quantity\n"
+        },
+        {
+          "path": "review-order-06-caller.md",
+          "text": "# Approved caller\nprice is a decimal.Decimal requiring exact decimal billing, quantity is an integer.\nBinary floating-point conversion is prohibited by this contract.\n"
+        }
+      ],
+      "target": "review-order-06.py",
+      "read_start": 31,
+      "question": "Locate the conversion that violates the caller precision requirement. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 35,
+      "quote": "return float(price) * quantity"
+    },
+    {
+      "id": "review-order-07",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-07.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\nfrom datetime import datetime\n\ndef expired(deadline):\n    \"\"\"Compare the caller deadline to the present instant using compatible datetimes.\"\"\"\n    return deadline < datetime.now()\n"
+        },
+        {
+          "path": "review-order-07-caller.md",
+          "text": "# Approved caller\nEvery deadline is a timezone-aware UTC datetime.\nThe comparison must not mix aware and naive datetimes.\n"
+        }
+      ],
+      "target": "review-order-07.py",
+      "read_start": 1,
+      "question": "Use the caller timezone awareness to locate the incompatible comparison. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 6,
+      "quote": "return deadline < datetime.now()"
+    },
+    {
+      "id": "review-order-08",
+      "category": "review-caller",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-08.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\ndef first_entry(payload):\n    \"\"\"Return the first caller-provided entry, or None when empty.\"\"\"\n    return payload.get(0)\n"
+        },
+        {
+          "path": "review-order-08-caller.md",
+          "text": "# Approved caller\npayload is a list, never a dict or custom mapping.\n"
+        }
+      ],
+      "target": "review-order-08.py",
+      "read_start": 1,
+      "question": "Use the caller container type to find the nonexistent operation. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 4,
+      "quote": "return payload.get(0)"
+    },
+    {
+      "id": "review-order-09",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-09.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\ndef capped_page_size(requested, maximum):\n    \"\"\"Cap the validated positive requested size at the positive maximum.\"\"\"\n    return min(requested, maximum)\n"
+        }
+      ],
+      "target": "review-order-09.py",
+      "read_start": 1,
+      "question": "Check for a supported violation under the stated positive-input preconditions; exclude style preferences. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": null,
+      "quote": null
+    },
+    {
+      "id": "review-order-10",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-10.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\n\ndef supplied_or_default(supplied, fallback):\n    \"\"\"Use fallback only for None; preserve zero and empty strings.\"\"\"\n    return fallback if supplied is None else supplied\n"
+        }
+      ],
+      "target": "review-order-10.py",
+      "read_start": 1,
+      "question": "Check whether zero or an empty string is incorrectly replaced. Report no defect when the implementation follows the contract. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": null,
+      "quote": null
+    },
+    {
+      "id": "review-order-11",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-11.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\ndef access_allowed(active, authorized):\n    \"\"\"Return True exactly for active authorized users.\"\"\"\n    if not active:\n        return True\n    if authorized:\n        return True\n    return False\n"
+        }
+      ],
+      "target": "review-order-11.py",
+      "read_start": 1,
+      "question": "Locate the specific return permitting an inactive user, distinguishing identical True-return text. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 5,
+      "quote": "return True"
+    },
+    {
+      "id": "review-order-12",
+      "category": "review-control",
+      "skill": "repo-review",
+      "sources": [
+        {
+          "path": "review-order-12.py",
+          "text": "\"\"\"Provide new controlled review evidence only; do not execute this fixture.\"\"\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndef accept_count(count):\n    \"\"\"Reject None or negative integers; accept all nonnegative integer counts.\"\"\"\n    if count is None:\n        raise ValueError(\"invalid\")\n    if count > 0:\n        raise ValueError(\"invalid\")\n    return count\n"
+        }
+      ],
+      "target": "review-order-12.py",
+      "read_start": 41,
+      "question": "Locate the specific raise that rejects a permitted positive count; identical raise text exists on a valid rejection branch. Review only $TARGET. Return the actual one-based source line and its full canonical quote, or null/null if no definite violation is supported. Preserve original source numbering.",
+      "value": 48,
+      "quote": "raise ValueError(\"invalid\")"
+    }
+  ]
+}

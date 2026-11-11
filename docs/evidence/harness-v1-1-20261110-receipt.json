@@ -1,0 +1,70 @@
+{
+  "description": "HAR v1.1 metadata-history and controlled evaluation follow-up; not full regression, specialist qualification or release.",
+  "date": "2026-11-10",
+  "component_source_sha256": {
+    "apps/cli/__init__.py": "2ec7395a949aa6a6399b5fb342142b855f896124326e8b45c01c1724be06cd69",
+    "apps/cli/__main__.py": "b11666ef42fcd154febe263f76e38685d9268f463f5e623cfd1a6b2581bbb9dd",
+    "apps/cli/client.py": "5e55618b0c46743a249079539692105227389df4d6a8bdfc7fdcd3969f9260c3",
+    "apps/cli/main.py": "1257acd75b363838846c48b2be18343fae987e9f6a6a83173e5a6d1fc7996840",
+    "apps/harness/__init__.py": "68dbcf2fd5b15e5e3e1402e6d4e8d793a46f35c86041bce3db3cf10602f34a62",
+    "apps/harness/assets.py": "021b05b92b4e566078c047cff625e2b3eb9b7f5d2711a6a3b3dc78a9ff6a70a6",
+    "apps/harness/browser.py": "0a4d8640c927a9b95fbceda528ffa38a4e8941bb6f013035dc8aa025a7d9bb55",
+    "apps/harness/generation.py": "8d93a3b8ba8f704b25e64fe992592ce82b50e9057bfc2df4f9ad5035a05b82bd",
+    "apps/harness/inference.py": "80ac32866c2a1b26478cd8dd98a80ba67e58fb041a66a33d7ec6dd2581c87aeb",
+    "apps/harness/main.py": "1d4cba4a7cc61fb85c8d50722d724bf9ddedac10cf2121f1f49911aa882f446f",
+    "apps/harness/routes.py": "ae85fffef84cfd92851f5fcaef172c3f96e0e3ea550d9506021fbd3b4133bc24",
+    "apps/harness/service.py": "b801c1ee531ead5ad7e7ea7ee2d699acb58a1b01c74f2a58a52efbfdd8b0c568",
+    "benchmarks/context_priority_probe.py": "3a06698315c23e002954b96f84371818df9ef7645ee0f83cbbf7e0feb6b64138",
+    "benchmarks/fixtures/har008-source-review-v1.json": "8323cbc0f222ec7f66e66468a04ff3d1fa1e8418afb9c8723a7edffb40ff3022",
+    "benchmarks/har008.py": "b50f3557ba34684b6628a9edf87d511e2c2d624b673a922768e3e3fe08169139",
+    "benchmarks/tests/test_context_priority_probe.py": "f859f662bc41657b32b5cfe7403397367f98d12a8a8a88b66de03b3833b508a3",
+    "benchmarks/tests/test_har008.py": "93673a30c1f7a3d715f5581d702346aba2aa0f2d1c1e6960a4eb36c4e91a2a42",
+    "src/infrastructure/harness_history.py": "6a92bc3a2f6c55f5210dc0d2014d2db6d82158354ee9dfed9ca609c07ae37383",
+    "tests/test_harness_history.py": "a1594d73b17fe9b60c62305db5b0710432c5908eea28def98ff93881e40a8cb8",
+    "tests/test_product_cli.py": "545cb98d63fe39e5890cb43df30701be099dd377876900b08d0c5758c28b68b7"
+  },
+  "software_tests": {
+    "passed": 294,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 3.8,
+    "test_files": 24,
+    "model_calls_in_pytest": 0
+  },
+  "history_scope": {
+    "signed_metadata": true,
+    "raw_task_or_answer_saved": false,
+    "automatic_resume": false,
+    "skill_or_approval_recovery": false,
+    "actual_process_loss_test": true,
+    "post_rename_directory_fsync_fault_test": true,
+    "native_core_separate_process_roundtrip": "harness-history-native-restart-20261110.json"
+  },
+  "paired_skill_measurement": {
+    "receipt": "har008-paired-v1-20261110.json",
+    "native_attempts": 24,
+    "baseline_strict_successes": 5,
+    "skill_strict_successes": 6,
+    "promotion": "NOT_QUALIFIED",
+    "source_scope": "First v1 campaign before the metadata-store extension; its frozen source hashes remain historical."
+  },
+  "context_probe": {
+    "receipt": "context-priority-native-v1-20261110.json",
+    "final_input_tokens": [
+      10129,
+      24131,
+      24131
+    ],
+    "completion_calls": 0,
+    "semantic_or_peak_memory_benchmark": false
+  },
+  "primary_desktop_7090_restarted": false,
+  "new_model_weights_or_sdk_downloaded": false,
+  "existing_database_vault_qdrant_changes": false,
+  "full_regression": false,
+  "release": "NOT_RELEASED",
+  "packaging": {
+    "offline_wheel": "data/harness-local/dist-history/ai-0.1.0-py3-none-any.whl",
+    "status": "PASS"
+  }
+}
