@@ -5795,3 +5795,8 @@ Purpose: carry out the owner's request to move the former root README into `docs
   - The new root `README.md` covers what Aevra is, its components and their defaults, an architecture sketch, and prerequisites: the CI apt package list plus git, bubblewrap user namespaces through `bwrap-userns-restrict`, the desktop GTK3/WebKitGTK 4.1/PyGObject packages, and the pinned llama.cpp commit and weights.
   - It also has a quick start with the `aevra` CLI (each subcommand was checked against `aevra --help`), the two ways to start CORE, the test and lint commands, a documentation map, safety rules and CI.
 - **Unchanged:** models, configuration, data, services, Vault, Docker, database and Qdrant. All HAR results and gates, D81, D89 and D90, and all earlier receipts. The HAR changes touch `src/` and `tests/`, so the 2026-11-09 D87 PASS on `production` `dd7fac3` will not match the `develop` source tree once this lands. Nothing was promoted, tagged or deployed.
+- PR #52 CI:
+  - Run 42989603156 was cancelled when a follow-up commit was pushed. Lint had already passed on 67 files.
+  - Run 42989786894 on `708c138` failed 1 test: `tests/test_product_assets.py::test_pinned_download_checks_digest_and_records_assets` (6798 passed). `apps/harness/assets.py` copied `runtimes/llama.cpp/LICENSE` from the git-ignored llama.cpp checkout, which hosted runners do not have; locally the file exists, so the test passed.
+  - Fix: the license source is now the module constant `LLAMA_CPP_LICENSE`, so product behaviour is unchanged, and the test points it at a temporary fixture. A check with the module default pointing at a missing path still passes.
+  - Also added a troubleshooting table, with every code checked in the source, to the API operator guide.

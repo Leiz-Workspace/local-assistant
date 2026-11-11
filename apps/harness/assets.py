@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PIN = "5c8854fd88319125125dc4b836c98b1b215b0f23"
 VERSION = "b11557"
 ASSETS = ROOT / "data/ui" / VERSION
+LLAMA_CPP_LICENSE = ROOT / "runtimes/llama.cpp/LICENSE"
 BASE = f"https://huggingface.co/buckets/ggml-org/llama-ui/resolve/{VERSION}"
 
 
@@ -129,9 +130,7 @@ def prepare_assets(*, destination=ASSETS, transport=None):
         unpacked = staging / "assets"
         unpacked.mkdir()
         hashes = unpack_archive(archive, unpacked)
-        shutil.copyfile(
-            ROOT / "runtimes/llama.cpp/LICENSE", unpacked / "LLAMA_CPP_LICENSE"
-        )
+        shutil.copyfile(LLAMA_CPP_LICENSE, unpacked / "LLAMA_CPP_LICENSE")
         receipt = dict(
             schema_version=1,
             version=VERSION,

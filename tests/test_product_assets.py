@@ -9,6 +9,7 @@ import tarfile
 import httpx
 import pytest
 
+from apps.harness import assets as assets_module
 from apps.harness.assets import prepare_assets, unpack_archive
 
 LOGGER = logging.getLogger(__name__)
@@ -44,8 +45,12 @@ def test_archive_refuses_paths_and_links(tmp_path, name, link):
     assert not (tmp_path / "escape").exists()
 
 
-def test_pinned_download_checks_digest_and_records_assets(tmp_path):
+def test_pinned_download_checks_digest_and_records_assets(tmp_path, monkeypatch):
     """Provision only the configured version and verify it again on reuse."""
+    # The real license comes from the git-ignored llama.cpp checkout, which hosted runners lack.
+    license_file = tmp_path / "LICENSE"
+    license_file.write_text("llama.cpp license fixture\n")
+    monkeypatch.setattr(assets_module, "LLAMA_CPP_LICENSE", license_file)
     archive = archive_bytes()
     digest = hashlib.sha256(archive).hexdigest()
     seen = []

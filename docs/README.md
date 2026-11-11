@@ -154,6 +154,20 @@ Presets (`apps/api/runtime/presets.py`): `fast` (thinking off; output up to 4096
 
 Press Ctrl+C in the API terminal first (graceful shutdown closes the services and the database pool), then in the CORE terminal, and confirm with `nvidia-smi` that the VRAM is released. Close the shell that holds `DATABASE_URL`, and delete `$AUTH_DIR` when its token is no longer needed (the step 2 snippet refuses to overwrite existing files).
 
+### Troubleshooting
+
+| Symptom | Likely cause | Check |
+|---|---|---|
+| 401 `authentication_required` | Missing or wrong bearer token | Use the curl header file from step 2 |
+| 503 `auth_unavailable` | `ASSISTANT_AUTH_FILE` is unset or the file was refused (mode, owner, symlink, format) | Log `conversation_auth_configuration_unavailable`; `stat -c '%a %U' "$AUTH_DIR/principals.json"` |
+| 403 `local_access_required` | The request carries an `Origin` or forwarding header | Send it with curl from the same machine |
+| 503 `inference_unavailable` | CORE is not running on port 8080 | `curl -s 127.0.0.1:8080/health` |
+| 409 `inference_unavailable` | Another model alias is serving port 8080 | `curl -s 127.0.0.1:8080/v1/models` |
+| 504 `inference_unavailable` | CORE timed out | `nvidia-smi` (is the GPU busy?) |
+| 503 `storage_unavailable`, `file_storage_unavailable`, `memory_unavailable` | `DATABASE_URL` is missing, or a database-backed service failed to start | Startup log: `conversation_storage_disabled` or `conversation_storage_initialization_failed` |
+| 503 `verification_unavailable` on uploads | bubblewrap cannot run (package missing or user namespaces blocked) | `bwrap --unshare-all --ro-bind / / true` |
+| Reading the database credential fails | Vault is sealed (Docker still reports it healthy) | `docker exec vault vault status` (exit code 2 means sealed) |
+
 ### More detail
 
 - [Conversation API runbook](progress/CONVERSATION_API_LOCAL_RUNBOOK.md): auth, HTTP contract, leases, recovery
