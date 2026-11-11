@@ -6136,3 +6136,17 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Not covered:** the 64-conversation lookup, sandboxed iframes, the error mappings and `customCss`/MCP.
 - **Teardown.** The backend and CORE were stopped, and ports 7093 and 8080 were free. The test principal files were deleted.
 - **Docs:** the [HAR-002 inventory](../docs/HAR002_UI_STATIC_REQUEST_INVENTORY.md) now has a live section, plus the backlog, the ledger and roadmap v5.19.18. No code change.
+
+## 2026-11-12 — HAR-003 approval commands; HAR-002 query 403 fix
+
+- **`aevra approvals show|decide`** (alias `la`), on the existing approval API (`GET /api/v1/approvals/{id}`, `POST …/decision`):
+  - `show` prints the review without `review_nonce`. Every JSON output of the CLI now escapes non-printable characters (C1, DEL, bidi) as JSON escapes, so the parsed value is unchanged but cannot drive the terminal.
+  - `decide approve|reject` refuses a request that is not `pending` (exit 5 `approval_not_pending`) and a non-terminal stdin (exit 2 `approval_requires_terminal`). It prints kind, workspace, expiry, scope digest and the full artifact to stderr, with control and bidi characters escaped. It discards input typed before the review appeared (`tcflush`), then asks for the first 8 characters of the scope digest; a mismatch exits 2 `approval_confirmation_mismatch` and nothing is posted. Only then does it post the decision, the digest and the nonce.
+  - The audit log records only the decision, never the nonce or the artifact.
+  - An independent review (3 lenses, each finding verified) confirmed 2 defects, both fixed with tests: `show` printed C1/bidi characters raw, and a closed stdin crashed `decide` with a traceback instead of exit 2. Five other claims were refuted; typeahead flushing was added as hardening.
+  - A second verification (fuzzing every code point, real pseudo-terminals) found the typeahead flush and closed-stdin fix sound, and 3 more low defects, all fixed with tests: the review display rendered a real ESC and the literal text `\u001b` the same way (backslashes are now doubled, and non-BMP escapes use a fixed-width `\U…`); a server returning a bare JSON string was printed raw; and a non-object review crashed with a traceback (now exit 6 `invalid_server_response`).
+  - Known limit: JSON cannot keep two adjacent lone surrogates apart, so they parse back as one character. The approval API cannot produce them, because artifacts are strict UTF-8.
+  - Not covered: a run against a live approval store. There is no list command, because the API has no list route.
+- **HAR-002 follow-up:** a query string on any path other than `/props` now gets 403 `unsupported_query` before `local_browser`, instead of the misleading `local_session_required`. The UI bridge handles only 401, so visible behaviour is unchanged. `/openapi` outside the boundary and CORE without `--api-key` stay owner decisions.
+- **Tests:** 13 new CLI test functions, 22 cases with parameters (nonce never printed, terminal required, closed stdin, typeahead flushed, digest and nonce posted for approve and reject, wrong confirmation, settled states, UUID parsing, escaped review text, distinct real and literal escapes, escaped `show` output in both modes, malformed reviews, escaped bare-string results) and two status/code assertions in the browser pairing test.
+- **Docs:** the CLI runbook, the HAR-002 inventory and the backlog rows for HAR-002 and HAR-003.
