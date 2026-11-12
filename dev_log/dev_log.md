@@ -6292,3 +6292,24 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - the host `mongod` authorization;
   - optionally, sshd password logins;
   - the install itself (sudo).
+
+## 2026-11-13 — ADR-195 proposed: special-token literal neutralization (HAR-006 follow-up 1)
+
+- **Why.** CONTROL_TOKENS_PARSED is the highest-priority HAR-006 v2 follow-up, a security issue, and the backlog requires an ADR before any fix. The self-hosted runner install waits for the owner's sudo, so this was the outstanding work an agent could do. The proposal is design only.
+- **How it was produced.** Three read-only workflows:
+  1. Code map, three competing designs (escape every `<`, one chokepoint, transport hardening), a judge, and two adversarial verifiers. The verifiers confirmed 54 claims, refuted 6 and raised 11 blocking issues.
+  2. Three verifiers on the written ADR (code facts, consistency and measurement, security coverage), with 34 findings.
+  3. A final check, which found the earlier corrections applied (72 verified) and raised 8 further findings.
+
+  Everything found was corrected. One finding was that the first written version had lost every backslash-u003c escape, so the byte form read as `<` → `<` instead of `<` → `\u003c`. The escapes are now written with code-generated backslashes.
+- **Design** ([ADR-195](../docs/ADR/195-proposed-special-token-literal-neutralization.md), PROPOSED):
+  - **Neutralizer.** One pinned list of the 33 CORE special-token literals (27 CONTROL and 6 USER_DEFINED), derived offline from the GGUF and bound to the core and unrestricted model shas. Each literal's leading `<` becomes the escape `\u003c`.
+  - **Layer 1.** Composer evidence and the three history capsules, neutralized at their append sites so that every count sees the sent bytes.
+  - **Layer 2.** A payload seal on all ten outbound CORE request bodies. It covers top-level keys and `chat_template_kwargs`, keeps pre-seal digests where bindings need them, and is tested by per-builder capture tests and a route-table registry test.
+  - **Validation.** Software gates, plus a pre-registered measurement:
+    - T-RB v3 over all 33 ids;
+    - paired A/B windows through `ProductInference.complete`;
+    - arms E, P, S, U, L and L0, 232 cells per window;
+    - an exact discordance test on inputs and a merge mapping fixed in advance.
+- **Not done.** Nothing is implemented. The owner has 9 decisions: approval, the content form, the generic pattern, the model binding, the handling of v2, the corpus and statistics, CORE windows, quote contracts, and later ADRs.
+- **Records.** The HAR-006 backlog row, `HAR006_V2_RESULT.md` follow-up 1, the outstanding-work status, and roadmap v5.19.27.
