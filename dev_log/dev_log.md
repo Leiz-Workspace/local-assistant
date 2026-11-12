@@ -6277,3 +6277,18 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - The healthcheck change in `infras/mongo-server/mongo-compose.yaml` (no `--username`, `--password` or `--authenticationDatabase` for the `ping`) was committed as `71aa2c0` in the `Server` repository, the parent of `infras/`. That repository has no remote, so nothing was pushed. Only this file was committed; the other uncommitted entries in that repository were left as they were.
 - Checks: an unauthenticated `ping` in the running `mongo` container returned exit 0; `docker compose config` renders the healthcheck; `mongo-server/tests/test_create_database_template.py` passed (6 passed).
 - Not applied: applying it recreates the shared `mongo` container, which stays the owner's step before `scripts/ci-runner/install.sh --use`. ADR-194, the runner README and the outstanding-work status now say so.
+
+## 2026-11-13 — MongoDB healthcheck applied; owner chose authorization for the host mongod
+
+- **Owner decisions** (answers in this session): apply the MongoDB healthcheck now; enable authorization on the host `mongod` on 127.0.0.1:27017.
+- **Applied:** `docker compose --env-file mongo-server/mongo.env -f mongo-server/mongo-compose.yaml up -d --no-deps mongo` from `infras/`. A dry run first showed only `mongo` recreated. No `--remove-orphans`; `mongo-storage-monitor` was not touched.
+- **Checks after:**
+  - the container was healthy after about 9 s, with the same named volumes `home-server-mongo-data` and `home-server-mongo-config`;
+  - the healthcheck has no credentials;
+  - a 30-second scan of `/proc/*/cmdline` found no `mongosh` with `--password`;
+  - an unauthenticated `listDatabases` is still refused (`Unauthorized`).
+- **Host mongod (v8.2.12):** no `security` section and no users in `admin`. The steps are recorded in ADR-194 and the runner README: create an admin user with `passwordPrompt()`, add `security.authorization: enabled`, restart `mongod`, then give the clients of its four application databases their own credentials. This needs sudo and is the owner's step; it is not done yet.
+- **Still the owner's before `install.sh --use`:**
+  - the host `mongod` authorization;
+  - optionally, sshd password logins;
+  - the install itself (sudo).
