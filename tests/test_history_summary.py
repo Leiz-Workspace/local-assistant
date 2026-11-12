@@ -1565,7 +1565,7 @@ def test_status_and_purge_route(product_client):
     status = client.get(
         PREFIX + "/status", headers=harness_tests.bearer(settings)
     ).json()
-    assert status["context_evicted_summary"] == "opt-in-experimental-v2-unmeasured"
+    assert status["context_evicted_summary"] == "opt-in-experimental-v2-measured-gain"
     service = client.app.state.product_harness
     service.summary_cache.put("someone-else", "k", 1)
     response = client.delete(
