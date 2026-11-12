@@ -16,6 +16,7 @@ from apps.api.runtime.presets import (
 from apps.api.services.llama_gateway import GatewayError, LlamaGateway
 from apps.harness.summarizer import GatewaySummarizer
 from src.application.services.context_composer import compose_context
+from src.application.services.context_inspection import inspect_context
 from src.application.services.context_reduction import HistoryPolicy
 from src.application.services import review_output_contract as review_contract
 from src.application.services.source_output_contract import (
@@ -54,6 +55,7 @@ class ProductInference:
         summary_deadline=None,
         summary_cache=None,
         summary_debug=False,
+        inspect_layers=False,
     ):
         """Verify the loaded CORE and fit actual templated input to one resolved preset."""
         config = get_model_profile("core")
@@ -100,6 +102,18 @@ class ProductInference:
                 summarizer=summarizer,
                 summary_debug=summary_debug,
             )
+            if inspect_layers:
+                report["inspection"] = await inspect_context(
+                    messages,
+                    fitted,
+                    report,
+                    count_tokens=count,
+                    preset=selected,
+                    max_tokens=max_tokens,
+                    skill=skill,
+                    evidence=evidence,
+                    output_contract=output_contract,
+                )
         report["preset_selected"] = selected.value
         report["model_id"] = config["model_id"]
         return gateway, fitted, report
