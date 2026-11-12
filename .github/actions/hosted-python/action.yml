@@ -159,6 +159,40 @@ runs:
           echo "::error::/run/tailscale/tailscaled.sock is reachable from CI jobs (${err}); the runner unit must hide /run/tailscale"
           missing=1
         fi
+        # The unit's IPAddressDeny drops this unit's packets to the LAN, tailnet, Docker and k3s
+        # ranges. Connect to the host's own addresses in those ranges: inside the unit the connect
+        # fails with EPERM (or times out); outside it the closed port refuses or something answers.
+        # Like the checks above, this only reports a lost setting and controls nothing.
+        if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c '
+        import errno, ipaddress, socket, sys
+        denied = [ipaddress.ip_network(n) for n in ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "100.64.0.0/10", "fc00::/7")]
+        targets = [a for a in sys.argv[1:] if any(ipaddress.ip_address(a) in n for n in denied if n.version == ipaddress.ip_address(a).version)]
+        reachable = []
+        for address in targets:
+            s = socket.socket(socket.AF_INET6 if ":" in address else socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(2)
+            try:
+                s.connect((address, 9))
+                reachable.append(f"{address} connected")
+            except PermissionError:
+                pass
+            except TimeoutError:
+                pass
+            except OSError as error:
+                if error.errno in (errno.EPERM, errno.EACCES):
+                    continue
+                reachable.append(f"{address} {errno.errorcode.get(error.errno, error.errno)}")
+            finally:
+                s.close()
+        if reachable:
+            sys.exit("; ".join(reachable))
+        print(f"IPAddressDeny: {len(targets)} host addresses in denied ranges blocked")
+        ' $(hostname -I 2>/dev/null) 2>&1)"; then
+          echo "::error::denied address ranges are reachable from CI jobs (${err}); the runner unit must set IPAddressDeny"
+          missing=1
+        else
+          echo "$err"
+        fi
         [ "$missing" = 0 ]
         echo "Runner $(id -un) on $(uname -r): Home Server layout and sandbox verified."
 
