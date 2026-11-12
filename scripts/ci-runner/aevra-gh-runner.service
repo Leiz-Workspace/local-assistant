@@ -1,0 +1,134 @@
+# Self-hosted GitHub Actions runner for the Local Assistant repository (ADR-194).
+# Rendered by scripts/ci-runner/install.sh; @RUNNER_USER@ and @RUNNER_HOME@ are replaced there.
+[Unit]
+Description=GitHub Actions runner for Local Assistant CI (unprivileged, ADR-194)
+Wants=network-online.target
+# tailscaled: see the /run/tailscale mask below. After= starts the runner only once tailscaled has
+# created /run/tailscale (at boot too) and stops it before tailscaled stops. PartOf= passes a
+# tailscaled stop or restart on to the runner; after a stop the runner stays stopped.
+After=network-online.target tailscaled.service
+PartOf=tailscaled.service
+
+[Service]
+Type=simple
+# Runs as the unprivileged runner user. The runner's own root check (RUNNER_ALLOW_RUNASROOT) only
+# applies to an interactive config.sh/run.sh, so it is not set here; install.sh refuses uid 0.
+User=@RUNNER_USER@
+Group=@RUNNER_USER@
+# runsvc.sh resolves .path, ./externals and ./bin from the working directory. After a self-update,
+# bin is a symlink to bin.<version>, so each start runs the current wrapper with its own node.
+# bash runs it, so the exec bit does not matter.
+WorkingDirectory=@RUNNER_HOME@/runner
+ExecStart=/bin/bash @RUNNER_HOME@/runner/bin/runsvc.sh
+# SIGTERM goes only to runsvc.sh, which stops the listener gracefully. Once it has exited, systemd
+# SIGKILLs everything left in the cgroup, so a stop or a D87 pause leaves no process of the unit
+# behind (the upstream template uses KillMode=process). RemoveIPC below also removes the runner
+# user's IPC objects at stop. An SSH session as the runner user would run outside this cgroup;
+# sshd denies those logins (install.sh's DenyUsers drop-in, ADR-194).
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=5min
+Restart=on-failure
+RestartSec=30s
+
+Environment=HOME=@RUNNER_HOME@
+# Large pytest temporary trees go to disk, not to the host's small /tmp tmpfs.
+Environment=TMPDIR=@RUNNER_HOME@/tmp
+
+# Filesystem: no access to /home (owner files, Vault bootstrap, models, .env, data/) and a private
+# /tmp and /var/tmp. ProtectSystem=strict makes the host read-only except the runner's own home
+# and the kernel API trees /dev, /proc and /sys; /dev/shm and IPC are handled just below.
+ProtectHome=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=@RUNNER_HOME@
+UMask=0027
+# Shared memory and IPC. Otherwise jobs would share the host's world-writable /dev/shm, /dev/mqueue
+# and SysV IPC, and objects left there would outlive a stop and the unit's memory limit.
+# - PrivateIPC: the unit's own SysV IPC namespace and a fresh /dev/mqueue. It does not cover POSIX
+#   shared memory, which lives in /dev/shm.
+# - TemporaryFileSystem: a private, size-capped /dev/shm that disappears with the unit's mount
+#   namespace. It is not hidden, because multiprocessing locks need a writable /dev/shm.
+# - RemoveIPC: when the unit stops, including the D87 pause, PID 1 removes every SysV and POSIX IPC
+#   object the runner user still owns on the host.
+# None of these mounts anything under /proc (see below). Not yet validated on the installed unit:
+# the self-hosted preflight checks the bwrap sandbox shape and a multiprocessing lock (ADR-194).
+PrivateIPC=yes
+TemporaryFileSystem=/dev/shm:mode=1777,nosuid,nodev,size=2G
+RemoveIPC=yes
+
+# NoNewPrivileges: setuid/setgid binaries (crontab, su, pkexec, fusermount3, newuidmap) and file
+# capabilities cannot raise privileges for job code. systemd 259 does not imply it for a User=
+# unit without SystemCallFilter=, so it is set explicitly. bwrap still gets user namespaces under
+# kernel.apparmor_restrict_unprivileged_userns=1: AppArmor allows the exec from an unconfined task
+# into the bwrap profile under no_new_privs, and bwrap sets no_new_privs on its child anyway.
+NoNewPrivileges=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+LockPersonality=yes
+# Deliberately not set, because each one breaks the project sandboxes:
+# - Anything that mounts over a path under /proc: ProtectKernelTunables, ProtectKernelLogs,
+#   ProtectHostname (binds /proc/sys/kernel/hostname and domainname), ProtectProc, ProcSubset,
+#   and BindPaths/ReadOnlyPaths/InaccessiblePaths/TemporaryFileSystem entries under /proc.
+#   bwrap's user namespace locks such a mount, and the kernel then refuses the fresh procfs that
+#   every sandbox mounts with --proc /proc ("Can't mount proc"). The kernel log stays closed by
+#   kernel.dmesg_restrict=1, /proc/kmsg mode 0400 and DevicePolicy below; sysctls stay root-only.
+#   Other processes' command lines do not stay closed: jobs can read the argv of every host
+#   process in /proc/<pid>/cmdline (a residual risk, ADR-194).
+# - RestrictSUIDSGID: its seccomp filter makes openat2() fail with ENOSYS, and the workspace layer
+#   (readonly_workspace.open_beneath) requires openat2. NoNewPrivileges already stops setuid gain.
+
+# Devices: only the standard pseudo devices (null, zero, full, random, urandom, tty, ptmx, pts),
+# which is all that bwrap --dev binds, plus read-only /dev/rtc* (DeviceAllow=char-rtc r, implied by
+# ProtectClock=yes; the nodes are root:clock 0660 and the runner user is not in clock).
+# The GPU (/dev/nvidia*, mode 0666) and /dev/kmsg are refused.
+DevicePolicy=closed
+# System D-Bus: hidden from processes inside the unit, so job code cannot call logind
+# (enable-linger) or other bus services directly. sshd denies SSH logins as the runner user
+# (install.sh), so job code cannot reach the bus through such a session either. Not a complete
+# block: a restart of dbus.socket, which re-creates the socket file, detaches this mask until the
+# runner restarts.
+InaccessiblePaths=-/run/dbus/system_bus_socket
+# tailscaled's LocalAPI socket (mode 0666): its dial endpoint makes root tailscaled, outside this
+# unit's IPAddressDeny, connect to tailnet peers, and its status endpoint lists them. Every
+# tailscaled restart deletes and re-creates /run/tailscale (RuntimeDirectory=), which drops this
+# mask in the runner's namespace; PartOf= and After= above restart the runner with tailscaled so
+# the mask is set up again. The "-" skips the mask without a message when /run/tailscale does not
+# exist at start, so start tailscaled before the runner. /var/run is a symlink to /run. sshd
+# denies SSH logins as the runner user (install.sh), so no session as that user can forward to
+# the socket.
+# Not yet validated on the installed unit; the self-hosted preflight reports a reachable socket.
+InaccessiblePaths=-/run/tailscale
+# systemd-ssh-generator's local sshd socket (/run/ssh-unix-local/socket, mode 0666). Each
+# connection there is a fresh sshd -i, so sshd's PerSourcePenalties do not apply, and job code
+# could guess the passwords of other accounts, the owner included, slowed only by the socket's
+# poll limit and PAM's failure delay. Like the D-Bus mask, this holds while the directory
+# persists: re-creating /run/ssh-unix-local detaches it until the runner restarts. Loopback TCP
+# port 22 stays reachable (a residual risk, ADR-194).
+InaccessiblePaths=-/run/ssh-unix-local
+# Network: no direct connections to the LAN, tailnet, Docker or k3s networks, link-local,
+# multicast or limited broadcast (255.255.255.255, which this host would send out onto the LAN).
+# IPAddressDeny filters only this unit's own sockets; a host daemon that connects on a job's
+# behalf is outside it (tailscaled above; sshd, which forwards nothing for runner-user logins
+# because it denies them, ADR-194). Loopback stays allowed for the tests' 127.0.0.1 listeners and
+# the 127.0.0.53 DNS stub, so jobs can still connect to every service listening on loopback.
+# Not all of them authenticate: Redis on 127.0.0.1:6379 and the host mongod on 127.0.0.1:27017
+# accept every command without authentication, and sshd on 127.0.0.1:22 accepts password guesses
+# for other accounts. These are residual risks for the owner to decide (ADR-194).
+IPAddressDeny=10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 169.254.0.0/16 224.0.0.0/4 fc00::/7 fe80::/10 ff00::/8 255.255.255.255/32
+
+# Leave headroom for CORE, the services and benchmarks on the same host.
+CPUQuota=800%
+MemoryMax=16G
+# A runaway job is OOM-killed after at most 2G of swap instead of filling the host's 8G swap file
+# (/swap.img on the root file system). Not 0: the low-priority runner should still be swapped out
+# first under host pressure, so that reclaim does not fall on CORE and the services.
+MemorySwapMax=2G
+TasksMax=4096
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+
+[Install]
+WantedBy=multi-user.target
