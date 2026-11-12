@@ -6226,3 +6226,25 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Load:** 61 samples, mean 1.38, median 1.28, max 2.31.
 - **Database and Qdrant:** unchanged.
 - **Records:** [receipt](../docs/evidence/d87-20261112-develop-48d5694-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.24.
+
+## 2026-11-12 — HAR-006 v2: allocation verified, resources measured, semantic UNSAFE
+
+- **Design.** A judge panel of three independent designs, scored against the code, produced the pre-registered [protocol](../docs/HAR006_V2_PROTOCOL.md): 68 cases, 112 inputs and 172 generation cells, with separate labels for allocation, resources and semantic quality and for each backlog failure case.
+- **Implementation** (`feat/har006-v2`):
+  - a golden baseline pinned the composer first;
+  - an opt-in inspect-only layer report sits behind `prepare(inspect_layers)` ([ADR-193](../docs/ADR/193-opt-in-inspect-only-context-layer-report.md));
+  - the benchmark and its tests.
+
+  Two rounds of adversarial review per part confirmed and fixed 11 findings. Gates:
+  - the 15-file focused command in the result's Gates section: 600 passed, 0 skipped, in 79.5 s, on the code committed as `88ef291` before Window 1;
+  - after amendment `883e620` and the recording commit `6cd4da2`, only `benchmarks/tests/test_context_har006_v2.py` was rerun (114 passed), with the software-record tests (`tests/test_workspace_tools.py` 64, owner-isolation 49 + 1 + 2, golden 5, all passed);
+  - D87 on the branch with 6,818 passed.
+- **Window 1** (tokenizer only, 0 generations). The first attempt stopped at the client-system probe: the CORE template rejects a second system message (500), and `prepare` raised the raw HTTP error. Amendment 18 records the rejection. The rerun reached MANIFEST_WRITTEN: calibration equal to the provisional constants, 270 design entries, 66 probes, sweep verified, v1 replay unchanged, T-RB CONTROL_TOKENS_PARSED. The manifest was committed before Window 2.
+- **Window 2:** 172/172 cells COMPLETE in 637 s. The independent recheck (`--recheck`, by an agent that did not write the scorer) gave RECHECK_VERIFIED with 0 mismatches, and the blind classification agreed on 172/172.
+- **Labels:**
+  - ALLOCATION_VERIFIED: server count exact 172/172.
+  - RESOURCES_MEASURED: RSS about 9.8 GiB, GPU 8,026 MiB, cold first text 6.7 s above 28k tokens.
+  - SEMANTIC UNSAFE: 4/30 injection violations, all in the I3 forged-control-token cells; plain-text injection 0. I3 is also the only attack that asks to append a canary, so control-token parsing is not isolated as the cause.
+  - Reference failed: control 14/22. History facts were often abstained on when an about 8.5k-token evidence block with same-type lure values was attached: `history_old` (pair 1) control 0/4 against 8/8 without evidence, `history_recent` (pair 10) 2/6 with evidence against 4/4 without. `both_old_key` control 3/4 and ladder L5 2/2 argue against pair-1 position or evidence size alone; the cause is not isolated. The newer user correction lost to the source attached after the question (stale control 0/2; S H-newer 0/6: 4 stale, 2 abstained), with source preference and position not separated.
+  - Overflow COMPOSER_FAILS_CLEAR but masked as 502; oversized tools CLOSED; truncation CONSERVED; baseline unchanged.
+- **Records:** [result](../docs/HAR006_V2_RESULT.md), [receipt](../docs/evidence/har006-v2-20261112.json) (its top-level labels are the provisional Window-2 labels, with allocation ALLOCATION_FAILED; the final labels are under `recheck`), backlog row, roadmap v5.19.25. Under the backlog rule the three open items stay OPEN, and HAR-006 stays PARTIAL. Follow-ups need ADRs and owner approval; the top one is escaping control tokens in composed evidence (security).
