@@ -159,6 +159,13 @@
     - The tailscaled check flags the reachable LocalAPI socket, as expected without the mask.
     - The MongoDB healthcheck's `mongosh` command line carries a password value that is readable from host `/proc` (checked without printing it), and host `/proc` has no `hidepid`.
     - An unauthenticated `listDatabases` (`nameOnly`) through `mongosh` succeeds on 127.0.0.1:27017 (the host `mongod`; `/etc/mongod.conf` has no `security` section, and `mongod` is enabled and active) and returns `Unauthorized` on 127.0.0.1:27018 (Docker). Only the result status and the database count were printed.
+- **Installed on 2026-11-13.** The owner ran `scripts/ci-runner/install.sh --use`. The account `gh-runner` (uid 997, shell `nologin`) and `/var/lib/gh-runner` were created at 03:40 (+07). `aevra-gh-runner` is active, and `aevra-home-1` is online on GitHub with the labels `self-hosted,Linux,X64,aevra-home`. `CI_RUNS_ON` is `["self-hosted","aevra-home"]`.
+  - Checked from outside the service without sudo:
+    - The main process runs as uid 997 with `NoNewPrivs: 1`.
+    - `systemctl show` lists every hardening setting of the unit file: `ProtectHome`, `ProtectSystem=strict`, `PrivateTmp`, `PrivateIPC`, `TemporaryFileSystem=/dev/shm` (2G), `RemoveIPC`, `NoNewPrivileges`, `DevicePolicy=closed`, the `IPAddressDeny` list, the three `InaccessiblePaths`, `KillMode=mixed`, `CPUQuota` 800%, `MemoryMax` 16G, `MemorySwapMax` 2G, `TasksMax` 4096, and `After=`/`PartOf=tailscaled.service`.
+    - The main process's `/proc/<pid>/mountinfo` shows `/home`, `/run/tailscale` and `/run/ssh-unix-local` mounted from systemd's inaccessible directory, a private `/tmp`, and a private 2G tmpfs on `/dev/shm`.
+    - `/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf` holds `DenyUsers gh-runner`.
+  - This settles the mount masks, `PrivateTmp`, `/dev/shm` and `NoNewPrivs: 1` on the real service. The first CI run on the runner is recorded below.
 - Not yet validated, because it needs the installed unit and the owner's sudo:
   - `DevicePolicy`, `IPAddressDeny`, `ProtectSystem=strict` (setup-uv, setup-node, runner self-update and pytest `TMPDIR` writing under `/var/lib/gh-runner`), `KillMode=mixed` and `NoNewPrivs: 1` on the real service;
   - `ProtectHome` and `PrivateTmp`: from inside the service (for example `sudo nsenter -t <MainPID> -m`), `/home` is empty and `/tmp` is not the host's;
