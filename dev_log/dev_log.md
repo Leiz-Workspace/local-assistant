@@ -6187,3 +6187,19 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - Probes show the known gaps: value-less corrections and targets past the cap.
 - **Records:** [result](../docs/HAR009_C_SUMMARY_V2_RESULT.md), [receipt](../docs/evidence/context-summary-c2-20261112.json), ADR-192 A1.13 and A1.14, protocol status, backlog, roadmap v5.19.21. `/status` now reads `opt-in-experimental-v2-measured-gain`.
 - **No change to defaults, model or context size.** The flag stays opt-in; making it a default is the owner's decision.
+
+## 2026-11-12 — PR #65 merged; D87 PASS on develop dde7c39
+
+- **PR [#65](https://github.com/DungeonLeiz/local-assistant/pull/65)** (HAR-009-C summary v2, held-out GAIN) was merged into `develop` as `dde7c39`. GitHub Actions is blocked by billing (`prepare` and `ci-gate` failed in 2 s). The local CI-scope run was posted on the PR: 7,229 passed, 368 skipped, 30 deselected, 0 failed.
+- **D87 run:** `data/backups/d87-20261112-full-4` on `develop` `dde7c39`, tree `9edff17624369e933b40afcfe1d738d4467bea11`, equal to `origin/develop`. The host was idle (0.29 / 0.31 / 0.33) and Vault was already unsealed. CORE ran via `docker compose --profile core` and was stopped afterwards.
+- **Result: PASS.** **6739 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1817.70 s (10:49:00–11:19:20), 883 source files unchanged.
+  - Source freeze `19b3dd2c…`, log `9906c3af…`.
+  - The reranker CPU test passed.
+  - The 161 added test cases are the summary v2 contract tests, the pinned hashes and the `/status` label test.
+- **Load:** 61 samples, mean 1.37, median 1.25, max 2.30.
+- **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+- **Records:**
+  - [receipt](../docs/evidence/d87-20261112-develop-dde7c39-acceptance.json);
+  - the D87 result doc, with the `d8ed1cb` run moved to history;
+  - the D90 D87 row (owner form untouched);
+  - roadmap v5.19.22.
