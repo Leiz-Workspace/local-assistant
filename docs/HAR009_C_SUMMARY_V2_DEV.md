@@ -27,3 +27,47 @@
 - **Per-case oracle checks:** no per-case violation under any knob; the only violations were `output_bound` and `reserve_bound`, which do not depend on the corpus.
 - **Check with the committed defaults:** CORE was started again on 2026-11-12 for the held-out calibration. `--cases v1 --mode design`, run with no knob options, gives DESIGN_VALID with 0 violations: maximal output 1,393 ≤ 1,472 and R 1,394 ≤ 1,408. Records: `s-1/defaults-v1/`.
 - **Change:** `history_summary.py` sets `MAX_SLOTS = 4` and `RESERVE_TOKENS = 1408` ([ADR-192 A1.12](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a112-s1-outcome-2026-11-12-tokenizer-only-0-generations)). The runner's `maximal_output()` no longer fails with `MAX_CLAIMS` 0.
+
+## Dev-plus (written 2026-11-12, after the held-out hash)
+
+`benchmarks/context_summary_dev_plus.py` holds 6 scored cases. Its `dev_plus()` digest is `2daa469bde1bed5c6973cfe483bc2622b43005304a64103342e853805c7b52f3` and its file SHA-256 is `9f7b689f35973b00c6baeed8f5146d638a7d126983136dfa1731c41c1c466eeb`. Together with the 14 v1 cases they form the 20-case dev set (18 scored).
+
+| Case | Language | Protocol shape | Targets | Gold value |
+|---|---|---|---|---|
+| `dp-multi-quarrymoor` | EN | multi-fact; the asked identifier is third of three | 4 | `KX-82-TD` |
+| `dp-multi-trangquyt` | VI | multi-fact; the asked number is third of three | 3 | `317` |
+| `dp-late-tamarack` | EN | late target at pair 7 behind 4 value-bearing distractors, one a near-miss value | 7 | `4.85` |
+| `dp-late-oqua` | VI | late target at pair 7 behind 4 value-bearing distractors, one an expired near-miss code | 7 | `OQR-8142-V` |
+| `dp-fix-wexcombe` | EN | correction without the entity name (`replaces` = 3) | 3, 6 | `33` |
+| `dp-neg-ngoive` | VI | negation inside a 528-character message; the answer must state the prohibited window | 4 | `20:15` |
+
+- **Layout.** Each case follows the v1 layout:
+  - pairs 1–7 hold the targets, value-bearing distractors and v1 short fillers;
+  - pairs 8–16 are v1 `log_block` worker logs;
+  - the question carries the v1 suffix.
+- **Every case has:**
+  - at least 2 value-bearing distractor user messages;
+  - an authored non-target assistant reply with a digit-bearing value, sent under (4, 1);
+  - exactly 4 listed rows under every knob, with every target listed and none clipped.
+- **Disjointness.** `benchmarks/tests/test_context_summary_dev_plus.py` checks that dev-plus is disjoint from v1, the prompt and its example entities, and the hashed held-out set. For the held-out set it compares digests only. A failure reports a finite code (`HELDOUT_CHANGED`, `HELDOUT_FIXTURE_FAILED`).
+- **First-draft collisions.** The first draft collided with the held-out set in 3 cases (value tokens) and then in 2 messages and one value (held-out test 3). Each was fixed by replacing the case's values or rewording the message, from counts and locations only. See the protocol's [exposure log](HAR009_C_SUMMARY_PROTOCOL_V2.md#held-out-manifest-recorded-2026-11-12-before-s0).
+- **Review.** Three independent lenses reviewed dev-plus: protocol and tests, answer scoring, and listing/verifier/design. Two skeptics then tried to refute each finding (39 agents). 9 findings were confirmed, covering 5 distinct issues; 9 were refuted. Fixes:
+  - `dp-neg-ngoive` used gold value `nv-app-31`, which also sits in a non-negated clause. A note that dropped the prohibition, or its window, therefore counted as gold. The value is now `20:15`, which occurs only inside the negated clause. The question now asks for the prohibited window, so required gains a second group (`20:15`, `20h15`) and evidence adds `20:15`. Bare "Không" and no-information answers no longer pass.
+  - The held-out fixture could print a truncated repr of the corpus on a hash mismatch. It now returns digests or a code, and never raises with held-out data in a frame.
+  - Test hardening:
+    - values must carry a digit (the filler reply "sans-serif" no longer counts);
+    - authored replies must be sent;
+    - the multi-fact gold must not be the first value;
+    - the correction must not name the entity in any position or case;
+    - the negation quote must sit inside the message;
+    - each gold value must occur once, inside its quote;
+    - no required, forbidden or evidence string may occur in the retained pairs 9–16;
+    - a guard keeps the dev-set test from seeing a loaded held-out module.
+  - A mutation check confirms that each new assertion catches its defect.
+- **Expected native design.** A reviewer used a native-equivalent tokenizer port, which matched `llama-tokenize` on 164 of 164 texts and reproduces the S−1 numbers. It found 0 violations for v1 plus dev-plus under all 4 knobs:
+  - the budget arm keeps pairs 9–16 at 23,627–23,686 tokens, at least 506 under the 24,192 soft limit, so no pair is lost to the reserve;
+  - pairs 1–8 are always evicted and covered;
+  - `full` needs at most 27,025 tokens.
+
+  The native design check runs before S0.
+- **Proceed condition.** The runner does not split dev-plus gold from the rest, so the ledger computes the ≥ 4/6 dev-plus condition from the per-case rows.

@@ -523,9 +523,13 @@ async def test_dev_mode_cannot_load_the_heldout_module(tmp_path, monkeypatch):
         return real(name, *args, **kwargs)
 
     monkeypatch.setattr(module.importlib, "import_module", watch)
-    with pytest.raises(module.CampaignRefused):
-        module.dev_cases()
+    try:
+        assert len(module.dev_cases()) == 20
+    except module.CampaignRefused as error:
+        assert error.code == "DEV_PLUS_MISSING"
+    assert module.DEV_PLUS_MODULE in imported
     assert module.HELDOUT_MODULE not in imported
+    assert module.HELDOUT_MODULE not in sys.modules
     cases = module.v1_cases()[:1]
     fake, calls = transport(cases)
     monkeypatch.setitem(

@@ -30,6 +30,7 @@
   - at least 2 value-bearing distractor user messages;
   - at least 1 substantive non-target assistant reply with a value.
 - Dev-plus shapes: multi-fact (EN, VI); a late target at pair 7 behind 4 value-bearing distractors (EN, VI); a correction without the entity name (EN); a negation inside a medium message (VI).
+- Dev-plus was written on 2026-11-12, after the held-out hash. The [dev ledger](HAR009_C_SUMMARY_V2_DEV.md#dev-plus-written-2026-11-12-after-the-held-out-hash) records its cases, digest and review.
 
 ### Runs
 
@@ -178,6 +179,12 @@ One per language for each:
 - **Token margins:** the authoring check, which used a native-equivalent tokenizer port, found the largest `full` input to be 29,129 tokens (EN) and 29,107 (VI), at least 2,871 tokens under 32,000. The design stays valid for token-count scale factors from 0.91 to 1.09.
 - **Software tests:** `benchmarks/tests/test_context_summary_heldout.py` gives 29 passed once the hash is recorded. Before that, 28 passed and test 9 failed, as expected.
 - **Private records:** `data/evaluations/context-summary-c2-dev-20261112/heldout-calibrate/`, one `calibration.json` per run, holding counts and digests only.
+- **Exposure log (after hashing, before S0):**
+  - While the dev-plus disjointness test was being written, one pytest failure printed the repr of a fixture that held the held-out cases. The visible, truncated part showed held-out case ids and the target pair numbers of 3 cases. It showed no message text, value, quote or question.
+  - The fixture now holds digests only.
+  - A subagent then located the remaining dev-plus collisions in held-out test 3 and reported dev-plus locations and counts only. The orchestrating session rewrote the dev-plus messages and values at those locations.
+  - From the locations, the session could narrow one colliding word down to two common Vietnamese words.
+  - The held-out file is unchanged, with the SHA-256 above.
 
 ### Leakage and validity tests (software only)
 
