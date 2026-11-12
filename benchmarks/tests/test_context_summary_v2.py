@@ -224,6 +224,23 @@ async def test_design_check_composes_v1_cases_with_the_oracle():
     assert sum(entry["gold_admitted"] for entry in v2) == 12
 
 
+@pytest.mark.asyncio
+async def test_reserve_bound_uses_the_covered_pairs_of_either_summary_arm():
+    """A v1-contract design (the A0 ablation) bounds R over the pairs its summaries cover, as a v2 design does, not over the fallback pair."""
+    cases = module.v1_cases()
+    found = {}
+    for name in ("budget_summary_v1", "budget_summary_v2"):
+        fake, _ = transport(cases)
+        arms = tuple(arm for arm in module.ARMS if arm[0] == name)
+        _, _, checks = await module.design(
+            ProductInference(transport=fake), cases, arms, count_text=count_text
+        )
+        found[name] = checks["reserve"]["tokens"]
+    fallback = await module.reserve_bound(count_text, {module.BOUND_PAIR})
+    assert found["budget_summary_v1"] == found["budget_summary_v2"]
+    assert found["budget_summary_v1"] < fallback["tokens"]
+
+
 def test_prompt_leakage_and_reserved_example_entities():
     """The prompt holds no v1 value or acknowledgement; no corpus, filler or log mentions an example entity; leaks print digests."""
     cases = module.v1_cases()

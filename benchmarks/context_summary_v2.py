@@ -1002,7 +1002,8 @@ async def design(inference, cases, arms, *, count_text=None):
                 )
             receipt = report.get("history_policy") or {}
             summary = receipt.get("summary")
-            if name == "budget_summary_v2" and summary:
+            # Both summary contracts cover the same evicted pairs, so a v1-contract run (A0) bounds R over real pairs too.
+            if name in SUMMARY_ARMS and summary:
                 covered |= set(summary.get("covered_pairs", []))
             entry = dict(
                 case_id=item["id"],
