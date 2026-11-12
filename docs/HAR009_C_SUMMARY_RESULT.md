@@ -31,7 +31,7 @@
 
 ## What the summarizer did
 
-- **It copied acknowledgements, not facts.** Every admitted item (26 across 14 cells) is an `assistant_claim` that copies a short assistant reply from a filler or target pair, such as "Noted as a personal reminder." or "Try 'Hello again, everyone!'". No gold value reached any capsule (gold value admitted: 0 of 28 summary cells). The user's statements, which hold every target fact, were never summarized.
+- **It copied acknowledgements, not facts.** Every admitted item, 26 per arm across 7 applied cells (both summary arms share one deterministic generation), is an `assistant_claim` that copies a short assistant reply from a filler or target pair, such as "Noted as a personal reminder." or "Try 'Hello again, everyone!'". No gold value reached any capsule (gold value admitted: 0 of 28 summary cells). The user's statements, which hold every target fact, were never summarized.
 - **The verifier dropped the rest:** 18 `invalid_supersession`, 18 `quote_not_in_source` (mostly one-word acknowledgements such as "Noted."), 16 `speaker_mismatch` and 2 `quote_too_short` across both summary arms.
 - **The output was deterministic.** Both summary arms produced the same items at temperature 0.
 - **Safety held.**
@@ -41,6 +41,12 @@
   - Summary generation took an upper median of 6.6 s (maximum 8.2 s), with 432 output tokens (maximum 557).
   - Summary arms had a slightly earlier first text than `budget` (4.7 against 5.0 s, upper medians), because their input carried a small capsule while the reserve cost no pair.
   - Sampled CORE peaks: RSS 10,242,836 KiB and GPU 8018 MiB, from 2,202 samples, all COMPLETE.
+- **Later analysis (2026-11-12).** From the owner-private results, with each packet rebuilt from `frozen-inputs.json`; it led to [ADR-192 Amendment 1](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#amendment-1-v2-contract).
+  - The 14 distinct outputs (one per case) returned 53 items. All 53 copy a whole assistant reply; 0 quote user text.
+  - The grammar's 12-character quote minimum, which the prompt never stated, forced fabricated quotes for acknowledgements shorter than 12 characters: 6 of the 9 `quote_not_in_source` drops per arm and the 1 `quote_too_short`.
+  - Pair 7 duplicates pair 1 in every case, and item 0 was dropped as `invalid_supersession` in 9 of 14 outputs.
+  - 7 of 14 outputs were degenerate (1–2 items). The cause is unknown because the raw output was not stored.
+  - Six semantic checks (`value_not_quoted`, `text_not_grounded`, `negation_mismatch`, `condition_mismatch`, `quote_context_dropped`, `authority_lexicon`) never fired on native output, so "safety held" is partly vacuous.
 
 ## Independent check
 

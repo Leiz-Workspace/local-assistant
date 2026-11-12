@@ -1,0 +1,1003 @@
+{
+ "schema_version": 1,
+ "description": "HAR-009-C summary v2 dev rounds under protocol v2 (2026-11-12): counts, drop reasons by kind and language, per-case gold, the listed-to-gold funnel and empty-slot rates. Dev numbers tune the contract and are never evidence of gain. No dialogue text, prompt text or held-out content.",
+ "model": {
+  "profile": "core",
+  "weights_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+  "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "started_with": "scripts/start-core.py (unchanged)",
+  "stopped_with": "SIGINT"
+ },
+ "source": {
+  "branch": "feat/har009-c-summary-v2",
+  "commit_at_runs": "058d09d (S0, R0); 0df547f (A0 rerun, k=3)",
+  "runner_change_between": "0df547f changes only the design-check reserve bound for v1-contract runs; R0 and k=3 use the same contract and corpus"
+ },
+ "dev_set": {
+  "cases": 20,
+  "scored": 18,
+  "corpus_sha256": "39c8ca39f69283199580df059d1852e945555cb3da1dc0ca61bd6884233dbdd8",
+  "dev_plus_digest": "2daa469bde1bed5c6973cfe483bc2622b43005304a64103342e853805c7b52f3"
+ },
+ "generation": {
+  "temperature": 0,
+  "max_tokens": 1536,
+  "thinking": false,
+  "retries": 0,
+  "deadline_seconds": 120,
+  "cache": null
+ },
+ "design_check": {
+  "native": true,
+  "knobs": [
+   "(4,1,last)",
+   "(4,1,withheld)",
+   "(4,0,last)",
+   "(4,0,withheld)"
+  ],
+  "status": "DESIGN_VALID under every knob",
+  "violations": 0,
+  "gold_admitted_by_oracle": "18/18",
+  "maximal_output_tokens": 1393,
+  "output_limit": 1472,
+  "r_tokens": 1394,
+  "reserve_tokens": 1408
+ },
+ "runs": {
+  "S0": {
+   "generations": 2,
+   "status": "COMPLETE",
+   "statuses": {
+    "example-1": "verified",
+    "example-2": "verified"
+   },
+   "key_order_declared": {
+    "example-1": true,
+    "example-2": true
+   },
+   "variant": {
+    "prompt_version": 2,
+    "packet_version": 2,
+    "prompt_sha256": "a5cace131e9f470ac7d550015991b15b4341b280bdb525d59b7cba39963602c2",
+    "schema_template_sha256": "2045be19c232bdb6bb9bcd185d6a4e487996eaeab88881c70949d1baab7e1dac",
+    "max_slots": 4,
+    "max_claims": 1,
+    "clipped_user": "last"
+   }
+  },
+  "R0": {
+   "generations": 20,
+   "knobs": {
+    "max_slots": 4,
+    "max_claims": 1,
+    "clipped_user": "last"
+   },
+   "prompt_sha256": "a5cace131e9f470ac7d550015991b15b4341b280bdb525d59b7cba39963602c2",
+   "schema_template_sha256": "2045be19c232bdb6bb9bcd185d6a4e487996eaeab88881c70949d1baab7e1dac",
+   "aggregate": {
+    "cells": 20,
+    "scored_cells": 18,
+    "gold_admitted": 18,
+    "statuses": {
+     "applied": 18,
+     "none_verified": 2
+    },
+    "drop_reasons": {
+     "quote_context_dropped": 1,
+     "authority_context": 1
+    },
+    "forbidden_admitted": 13,
+    "self_check_defects": 0,
+    "approval_overlap": 0,
+    "admitted_example_copies": 0,
+    "returned_example_copies": 0,
+    "invalid_or_unfinished": 0,
+    "stale_unflagged": 0,
+    "ack_items": 0,
+    "log_items": 2,
+    "claims_admitted": 6,
+    "reverify_mismatches": 0,
+    "request_mismatches": 0,
+    "key_order_declared": 20,
+    "key_order_observed": 20,
+    "funnel": {
+     "listed": 18,
+     "returned": 18,
+     "admitted": 18,
+     "gold": 18
+    },
+    "by_language": {
+     "en": {
+      "gold": 9,
+      "cells": 9
+     },
+     "vi": {
+      "gold": 9,
+      "cells": 9
+     }
+    },
+    "gates": {
+     "self_check_defects": true,
+     "invalid_or_unfinished": true,
+     "admitted_example_copies": true,
+     "reverify": true
+    },
+    "gates_passed": true
+   },
+   "empty_slot_rate": {
+    "target": 0.043,
+    "distractor": 0.355,
+    "counts": {
+     "target": 1,
+     "target_listed": 23,
+     "distractor": 11,
+     "distractor_listed": 31
+    }
+   },
+   "dev_plus_gold": 6,
+   "drop_reasons_by_kind_language": {
+    "negation/vi": {
+     "quote_context_dropped": 1
+    },
+    "authority_gate/vi": {
+     "authority_context": 1
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "num-lynx",
+     "kind": "number",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 145
+    },
+    {
+     "case_id": "num-sonla",
+     "kind": "number",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 148
+    },
+    {
+     "case_id": "id-heron",
+     "kind": "identifier",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 158
+    },
+    {
+     "case_id": "id-cuulong",
+     "kind": "identifier",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 2,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 248
+    },
+    {
+     "case_id": "swap-osprey",
+     "kind": "swap",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 146
+    },
+    {
+     "case_id": "swap-thaibinh",
+     "kind": "swap",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 135
+    },
+    {
+     "case_id": "fix-mantis",
+     "kind": "correction",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 2,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 187
+    },
+    {
+     "case_id": "fix-bachdang",
+     "kind": "correction",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 2,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 214
+    },
+    {
+     "case_id": "neg-puffin",
+     "kind": "negation",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 0,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 134
+    },
+    {
+     "case_id": "neg-camau",
+     "kind": "negation",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 0,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 204
+    },
+    {
+     "case_id": "cond-falcon",
+     "kind": "condition",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 0,
+     "admitted": 1,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 116
+    },
+    {
+     "case_id": "cond-phuquoc",
+     "kind": "condition",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 0,
+     "admitted": 2,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 208
+    },
+    {
+     "case_id": "auth-atlas",
+     "kind": "authority_gate",
+     "language": "en",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": true,
+     "target_note_returned": false,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 51
+    },
+    {
+     "case_id": "auth-hoabinh",
+     "kind": "authority_gate",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 122
+    },
+    {
+     "case_id": "dp-multi-quarrymoor",
+     "kind": "identifier",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 3,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 515
+    },
+    {
+     "case_id": "dp-multi-trangquyt",
+     "kind": "number",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 2,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 536
+    },
+    {
+     "case_id": "dp-late-tamarack",
+     "kind": "number",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 412
+    },
+    {
+     "case_id": "dp-late-oqua",
+     "kind": "identifier",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 481
+    },
+    {
+     "case_id": "dp-fix-wexcombe",
+     "kind": "correction",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 1,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 394
+    },
+    {
+     "case_id": "dp-neg-ngoive",
+     "kind": "negation",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": true,
+     "target_listed": true,
+     "target_note_returned": true,
+     "target_admitted": true,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 516
+    }
+   ]
+  },
+  "A0_refused": {
+   "generations": 0,
+   "status": "DESIGN_INVALID",
+   "cause": "runner defect: on the v1 contract the design check bounded R over the fallback pair 1000100 (1,656 tokens) instead of the covered pairs 1-8 (1,394); fixed in 0df547f with a regression test"
+  },
+  "A0": {
+   "generations": 20,
+   "contract": "v1 control copy with the system message swapped to prompt-minimal v2a",
+   "v2a_prompt_sha256": "e410685174604fc926d0b500b51c78226dcb168e12556082e2bd57da4b482eb6",
+   "variant_prompt_sha256": "0d6525a527432158e880368915fd7d09f44b8b2970282ce705582b13a0c14220",
+   "frozen": false,
+   "aggregate": {
+    "cells": 20,
+    "scored_cells": 18,
+    "gold_admitted": 0,
+    "statuses": {
+     "applied": 12,
+     "none_verified": 8
+    },
+    "drop_reasons": {
+     "quote_too_short": 1,
+     "speaker_mismatch": 64,
+     "quote_not_in_source": 8
+    },
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "approval_overlap": 0,
+    "admitted_example_copies": 0,
+    "returned_example_copies": 0,
+    "invalid_or_unfinished": 0,
+    "stale_unflagged": 0,
+    "ack_items": 0,
+    "log_items": 0,
+    "claims_admitted": 47,
+    "reverify_mismatches": 0,
+    "request_mismatches": 0,
+    "key_order_declared": 0,
+    "key_order_observed": 0,
+    "funnel": {
+     "listed": 0,
+     "returned": 0,
+     "admitted": 0,
+     "gold": 0
+    },
+    "by_language": {
+     "en": {
+      "gold": 0,
+      "cells": 9
+     },
+     "vi": {
+      "gold": 0,
+      "cells": 9
+     }
+    },
+    "gates": {
+     "self_check_defects": true,
+     "invalid_or_unfinished": true,
+     "admitted_example_copies": true,
+     "reverify": true
+    },
+    "gates_passed": true
+   },
+   "empty_slot_rate": {
+    "target": 0.0,
+    "distractor": 0.0,
+    "counts": {
+     "target": 0,
+     "target_listed": 0,
+     "distractor": 0,
+     "distractor_listed": 0
+    }
+   },
+   "dev_plus_gold": 0,
+   "drop_reasons_by_kind_language": {
+    "number/en": {
+     "quote_too_short": 1,
+     "quote_not_in_source": 3
+    },
+    "number/vi": {
+     "speaker_mismatch": 12
+    },
+    "identifier/en": {
+     "speaker_mismatch": 5
+    },
+    "identifier/vi": {
+     "speaker_mismatch": 10
+    },
+    "swap/en": {
+     "speaker_mismatch": 1
+    },
+    "swap/vi": {
+     "speaker_mismatch": 6
+    },
+    "correction/en": {
+     "speaker_mismatch": 6,
+     "quote_not_in_source": 1
+    },
+    "correction/vi": {
+     "speaker_mismatch": 6
+    },
+    "negation/en": {
+     "speaker_mismatch": 1
+    },
+    "negation/vi": {
+     "speaker_mismatch": 11,
+     "quote_not_in_source": 1
+    },
+    "condition/en": {
+     "quote_not_in_source": 1
+    },
+    "condition/vi": {
+     "speaker_mismatch": 6
+    },
+    "authority_gate/en": {
+     "quote_not_in_source": 1
+    },
+    "authority_gate/vi": {
+     "quote_not_in_source": 1
+    }
+   },
+   "per_case": [
+    {
+     "case_id": "num-lynx",
+     "kind": "number",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 437
+    },
+    {
+     "case_id": "num-sonla",
+     "kind": "number",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 557
+    },
+    {
+     "case_id": "id-heron",
+     "kind": "identifier",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 497
+    },
+    {
+     "case_id": "id-cuulong",
+     "kind": "identifier",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 603
+    },
+    {
+     "case_id": "swap-osprey",
+     "kind": "swap",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 485
+    },
+    {
+     "case_id": "swap-thaibinh",
+     "kind": "swap",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 562
+    },
+    {
+     "case_id": "fix-mantis",
+     "kind": "correction",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 4,
+     "claims_admitted": 4,
+     "finish_reason": "stop",
+     "completion_tokens": 458
+    },
+    {
+     "case_id": "fix-bachdang",
+     "kind": "correction",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 544
+    },
+    {
+     "case_id": "neg-puffin",
+     "kind": "negation",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 475
+    },
+    {
+     "case_id": "neg-camau",
+     "kind": "negation",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 586
+    },
+    {
+     "case_id": "cond-falcon",
+     "kind": "condition",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 443
+    },
+    {
+     "case_id": "cond-phuquoc",
+     "kind": "condition",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 558
+    },
+    {
+     "case_id": "auth-atlas",
+     "kind": "authority_gate",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 453
+    },
+    {
+     "case_id": "auth-hoabinh",
+     "kind": "authority_gate",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 5,
+     "claims_admitted": 5,
+     "finish_reason": "stop",
+     "completion_tokens": 486
+    },
+    {
+     "case_id": "dp-multi-quarrymoor",
+     "kind": "identifier",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 2,
+     "claims_admitted": 2,
+     "finish_reason": "stop",
+     "completion_tokens": 606
+    },
+    {
+     "case_id": "dp-multi-trangquyt",
+     "kind": "number",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 613
+    },
+    {
+     "case_id": "dp-late-tamarack",
+     "kind": "number",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 3,
+     "claims_admitted": 3,
+     "finish_reason": "stop",
+     "completion_tokens": 483
+    },
+    {
+     "case_id": "dp-late-oqua",
+     "kind": "identifier",
+     "language": "vi",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 2,
+     "claims_admitted": 2,
+     "finish_reason": "stop",
+     "completion_tokens": 542
+    },
+    {
+     "case_id": "dp-fix-wexcombe",
+     "kind": "correction",
+     "language": "en",
+     "status": "applied",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 1,
+     "claims_admitted": 1,
+     "finish_reason": "stop",
+     "completion_tokens": 492
+    },
+    {
+     "case_id": "dp-neg-ngoive",
+     "kind": "negation",
+     "language": "vi",
+     "status": "none_verified",
+     "gold_admitted": false,
+     "target_listed": false,
+     "target_note_returned": null,
+     "target_admitted": false,
+     "forbidden_admitted": 0,
+     "admitted": 0,
+     "claims_admitted": 0,
+     "finish_reason": "stop",
+     "completion_tokens": 716
+    }
+   ]
+  },
+  "k3": {
+   "generations": 40,
+   "draws": {
+    "1": {
+     "cells": 20,
+     "scored_cells": 18,
+     "gold_admitted": 18,
+     "statuses": {
+      "applied": 18,
+      "none_verified": 2
+     },
+     "drop_reasons": {
+      "quote_context_dropped": 1,
+      "authority_context": 1
+     },
+     "forbidden_admitted": 13,
+     "self_check_defects": 0,
+     "approval_overlap": 0,
+     "admitted_example_copies": 0,
+     "returned_example_copies": 0,
+     "invalid_or_unfinished": 0,
+     "stale_unflagged": 0,
+     "ack_items": 0,
+     "log_items": 2,
+     "claims_admitted": 6,
+     "reverify_mismatches": 0,
+     "request_mismatches": 0,
+     "key_order_declared": 20,
+     "key_order_observed": 20,
+     "funnel": {
+      "listed": 18,
+      "returned": 18,
+      "admitted": 18,
+      "gold": 18
+     },
+     "by_language": {
+      "en": {
+       "gold": 9,
+       "cells": 9
+      },
+      "vi": {
+       "gold": 9,
+       "cells": 9
+      }
+     },
+     "gates": {
+      "self_check_defects": true,
+      "invalid_or_unfinished": true,
+      "admitted_example_copies": true,
+      "reverify": true
+     },
+     "gates_passed": true
+    },
+    "2": {
+     "cells": 20,
+     "scored_cells": 18,
+     "gold_admitted": 18,
+     "statuses": {
+      "applied": 18,
+      "none_verified": 2
+     },
+     "drop_reasons": {
+      "quote_context_dropped": 1,
+      "authority_context": 1
+     },
+     "forbidden_admitted": 13,
+     "self_check_defects": 0,
+     "approval_overlap": 0,
+     "admitted_example_copies": 0,
+     "returned_example_copies": 0,
+     "invalid_or_unfinished": 0,
+     "stale_unflagged": 0,
+     "ack_items": 0,
+     "log_items": 2,
+     "claims_admitted": 6,
+     "reverify_mismatches": 0,
+     "request_mismatches": 0,
+     "key_order_declared": 20,
+     "key_order_observed": 20,
+     "funnel": {
+      "listed": 18,
+      "returned": 18,
+      "admitted": 18,
+      "gold": 18
+     },
+     "by_language": {
+      "en": {
+       "gold": 9,
+       "cells": 9
+      },
+      "vi": {
+       "gold": 9,
+       "cells": 9
+      }
+     },
+     "gates": {
+      "self_check_defects": true,
+      "invalid_or_unfinished": true,
+      "admitted_example_copies": true,
+      "reverify": true
+     },
+     "gates_passed": true
+    }
+   },
+   "dev_plus_gold": {
+    "1": 6,
+    "2": 6
+   },
+   "raw_content_identical_to_R0": "20/20 cases in both draws (temperature 0)"
+  }
+ },
+ "generations_total": 82,
+ "generations_cap": 142,
+ "decision": {
+  "stopping": "R0 met the early stop (gold >= 16/18 with all hard gates)",
+  "frozen_round": "R0",
+  "rounds_not_run": [
+   "R1",
+   "R2",
+   "R3"
+  ],
+  "proceed_conditions": {
+   "frozen_gold": "18/18 (>= 14/18)",
+   "dev_plus_gold": "6/6 (>= 4/6)",
+   "k3_median": "18/18 (>= 14/18)",
+   "gates_all_draws": true
+  },
+  "proceed_to_heldout": true,
+  "limits": "k=3 shows determinism at temperature 0, not variance; forbidden_admitted 13/20 mostly comes from faithful notes that keep near-miss or sibling values stated in the same message or in listed distractor slots"
+ },
+ "private_records": "data/evaluations/context-summary-c2-dev-20261112/"
+}

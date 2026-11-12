@@ -6158,3 +6158,32 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Load:** 62 samples, mean 1.44, median 1.33, max 2.36, including a concurrent read-only design workflow (no tests, no model calls).
 - **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
 - **Records:** [receipt](../docs/evidence/d87-20261112-develop-d8ed1cb-acceptance.json); the D87 result doc (the `695a52e` run moved to history); the D90 D87 row (owner form untouched); the ledger; roadmap v5.19.20.
+
+## 2026-11-12 — HAR-009-C summary v2: held-out measured, GAIN
+
+- **Contract and S−1.** ADR-192 Amendment 1 (v2 contract) runs on branch `feat/har009-c-summary-v2`. The tokenizer-only S−1 fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (`cf366eb`, A1.12).
+- **Held-out corpus.**
+  - Blind subagents wrote 38 cases from the protocol specification (24 scored, 6 gates, 8 probes; 19 EN, 19 VI) and revised them for 4 slots after review.
+  - Native calibration gave DESIGN_VALID under all 4 knobs. The corpus was hashed and the manifest committed before S0 (`24569a5`, `HELDOUT_SHA256` `100f2848…`).
+  - This session never opened the file. The protocol's exposure log records what it saw: ids, the target pair numbers of 3 cases, the dev-plus collision locations, and the narrowing of one colliding word to two candidates.
+- **Dev-plus** (`058d09d`): 6 cases written after the hash.
+  - Disjointness from the held-out set is tested on digests only.
+  - Three-lens adversarial review: 9 confirmed findings (5 issues), all fixed. The main one was a negation gold value that a non-negated clause also carried.
+- **D87 before S0:** PASS, 6,738 passed on `058d09d` ([receipt](../docs/evidence/d87-20261112-branch-058d09d-acceptance.json)).
+- **Dev rounds** (82 generations, temperature 0, [ledger](../docs/HAR009_C_SUMMARY_V2_DEV.md)):
+  - S0 verified;
+  - **R0 gold 18/18** with the gates passed, so the early stop applied;
+  - A0 (prompt only, on the v1 contract) 0/18, with 64 `speaker_mismatch` drops. A runner defect (R bounded over the fallback pair) was fixed in `0df547f`;
+  - k=3 identical to R0.
+- **Freeze** (`ac9b9f2`): `FROZEN_V2`, with the prompt and schema hashes pinned. D87 at freeze PASSED, 6,739 passed ([receipt](../docs/evidence/d87-20261112-branch-ac9b9f2-acceptance.json)). The protocol was committed as frozen before any held-out native call (`dc1a447`).
+- **Held-out matrix, one run:** 304 native calls, no retries, 1,478.6 s of CORE time.
+  - Strict on 24 scored cases: `full` 23, `budget` 0, v1 control 2, **v2 23**.
+  - Net +23 (EN +11, VI +12), 0 new stale answers; against v1, 21 gains and 0 losses, p = 4.8·10⁻⁷.
+  - Safety clean.
+  - **Label GAIN.**
+- **Independent check** (separate agents plus a critic, counts only): 0 mismatches in rescoring, presence, `source_sha256`, `reverify()` and hashes, and the outcome rebuilt identically.
+- **Caveats:**
+  - Timing comparisons are confounded by CORE prompt-cache reuse.
+  - Probes show the known gaps: value-less corrections and targets past the cap.
+- **Records:** [result](../docs/HAR009_C_SUMMARY_V2_RESULT.md), [receipt](../docs/evidence/context-summary-c2-20261112.json), ADR-192 A1.13 and A1.14, protocol status, backlog, roadmap v5.19.21. `/status` now reads `opt-in-experimental-v2-measured-gain`.
+- **No change to defaults, model or context size.** The flag stays opt-in; making it a default is the owner's decision.
