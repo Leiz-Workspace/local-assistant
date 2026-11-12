@@ -45,7 +45,7 @@ DEV_PLUS_MODULE = "benchmarks.context_summary_dev_plus"
 HELDOUT_MODULE = "benchmarks.context_summary_heldout"
 HELDOUT_FILE = "benchmarks/context_summary_heldout.py"
 # Recorded in the held-out commit before S0: digest(corpus_heldout()).
-HELDOUT_SHA256 = None
+HELDOUT_SHA256 = "100f28484c86851089554257b36a7d713390dff85d0ef19e20727d69ed542497"
 # Filled at freeze: prompt_sha256, schema_template_sha256, max_slots, max_claims, clipped_user, history_summary_sha256.
 FROZEN_V2 = None
 CLIPPED_CHOICES = ("last", "withheld")

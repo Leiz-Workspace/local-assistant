@@ -7,6 +7,7 @@
 | Run | Date | Knobs | Generations | Result |
 |---|---|---|---:|---|
 | S−1 | 2026-11-12 | (5, 1), (4, 1), (5, 0), (4, 0); v1 corpus, 14 cases | 0 | `MAX_SLOTS` 4; R 1,394 at (4, 1); `RESERVE_TOKENS` 1,024 → 1,408 |
+| S−1 check | 2026-11-12 | committed defaults (4, 1, `last`); v1 corpus | 0 | DESIGN_VALID, 0 violations; output 1,393 ≤ 1,472; R 1,394 ≤ 1,408 |
 
 ## S−1 (tokenizer only)
 
@@ -24,4 +25,5 @@
   By the ADR-192 A1.4 rule (largest value ≤ 5 within the limit), `MAX_SLOTS` is 4. No slot can be traded for the claim, so the allowed knob becomes (4, 1) or (4, 0).
 - **R** (capsule of `MAX_SLOTS + MAX_CLAIMS` maximal rows over pairs 1–8): 1,664 at (5, 1), 1,394 at (4, 1), 1,124 at (4, 0), all above the expected 1,024. Decision 3 freezes R by the design check, so `RESERVE_TOKENS` is 1,408 (R rounded up to a multiple of 64). The v1 control copy keeps 1,024.
 - **Per-case oracle checks:** no per-case violation under any knob; the only violations were `output_bound` and `reserve_bound`, which do not depend on the corpus.
+- **Check with the committed defaults:** CORE was started again on 2026-11-12 for the held-out calibration. `--cases v1 --mode design`, run with no knob options, gives DESIGN_VALID with 0 violations: maximal output 1,393 ≤ 1,472 and R 1,394 ≤ 1,408. Records: `s-1/defaults-v1/`.
 - **Change:** `history_summary.py` sets `MAX_SLOTS = 4` and `RESERVE_TOKENS = 1408` ([ADR-192 A1.12](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a112-s1-outcome-2026-11-12-tokenizer-only-0-generations)). The runner's `maximal_output()` no longer fails with `MAX_CLAIMS` 0.

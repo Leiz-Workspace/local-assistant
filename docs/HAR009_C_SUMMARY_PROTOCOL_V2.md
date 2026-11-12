@@ -2,7 +2,7 @@
 
 **Purpose:** Fix the development rounds and the held-out measurement of the v2 summary contract ([ADR-192 Amendment 1](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#amendment-1-v2-contract)) **before any v2 native output**. It follows the [v1 protocol](HAR009_C_SUMMARY_PROTOCOL_V1.md) and the [v1 result](HAR009_C_SUMMARY_RESULT.md). Date: 2026-11-12.
 
-**Status:** DRAFT, not frozen. The held-out manifest is committed before S0; the frozen v2 configuration and this protocol are committed before any held-out native call.
+**Status:** DRAFT, not frozen. The [held-out manifest](#held-out-manifest-recorded-2026-11-12-before-s0) was recorded on 2026-11-12, before S0. The frozen v2 configuration and this protocol are committed before any held-out native call.
 
 ## Ground rules
 
@@ -153,6 +153,31 @@ One per language for each:
   - the design-check counts.
 - Any edit after hashing retires the corpus. The prompt-tuning session never opens the file.
 - The runner refuses the held-out run on any difference (`HELDOUT_CHANGED` or a `FROZEN_V2` mismatch), and refuses a held-out run other than the v2 matrix or a design check, with the v1 contract or with an A0 prompt (`HELDOUT_CONTRACT`). Dev mode cannot load the held-out module.
+
+### Held-out manifest (recorded 2026-11-12, before S0)
+
+- **Corpus:** 38 cases: 24 scored, 6 gates and 8 probes; 19 EN and 19 VI. Blind subagents wrote it from this specification, reviewed it and then revised it for `MAX_SLOTS` 4 after S−1. The orchestrating session saw only ids, counts, rule names and digests, and never opened the file. The owner wrote no cases.
+- `HELDOUT_SHA256` = `100f28484c86851089554257b36a7d713390dff85d0ef19e20727d69ed542497`, recorded in `benchmarks/context_summary_v2.py`.
+- File SHA-256 of `benchmarks/context_summary_heldout.py`: `c223d18b172602fe302e88fb0f48b62e0ba5c1b5e305a15dbc350a633ac10fef`.
+- **Native design check:** `--cases heldout --mode design --calibrate`, using only the CORE tokenizer (0 generations). It ran once with the committed defaults and once for each allowed knob, with the clipped user set to `last` and to `withheld`:
+
+  | Knob | Status | Violations | Maximal output (≤ 1,472) | R (≤ 1,408) |
+  |---|---|---:|---:|---:|
+  | (4, 1), `last` and `withheld`; defaults | DESIGN_VALID | 0 | 1,393 | 1,394 |
+  | (4, 0), `last` and `withheld` | DESIGN_VALID | 0 | 1,220 | 1,124 |
+
+- **Oracle statuses** (identical under every knob):
+
+  | Arm | Statuses |
+  |---|---|
+  | `full`, `budget` | no summary, 38 each |
+  | `budget_summary_v1` | applied 36, none verified 2 |
+  | `budget_summary_v2` | applied 28, none verified 10 |
+
+  28 gold notes are admitted.
+- **Token margins:** the authoring check, which used a native-equivalent tokenizer port, found the largest `full` input to be 29,129 tokens (EN) and 29,107 (VI), at least 2,871 tokens under 32,000. The design stays valid for token-count scale factors from 0.91 to 1.09.
+- **Software tests:** `benchmarks/tests/test_context_summary_heldout.py` gives 29 passed once the hash is recorded. Before that, 28 passed and test 9 failed, as expected.
+- **Private records:** `data/evaluations/context-summary-c2-dev-20261112/heldout-calibrate/`, one `calibration.json` per run, holding counts and digests only.
 
 ### Leakage and validity tests (software only)
 
