@@ -1,13 +1,13 @@
-# HAR-009-C summary — protocol v2 (draft, not frozen)
+# HAR-009-C summary — protocol v2 (frozen 2026-11-12)
 
 **Purpose:** Fix the development rounds and the held-out measurement of the v2 summary contract ([ADR-192 Amendment 1](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#amendment-1-v2-contract)) **before any v2 native output**. It follows the [v1 protocol](HAR009_C_SUMMARY_PROTOCOL_V1.md) and the [v1 result](HAR009_C_SUMMARY_RESULT.md). Date: 2026-11-12.
 
-**Status:** DRAFT, not frozen. The [held-out manifest](#held-out-manifest-recorded-2026-11-12-before-s0) was recorded on 2026-11-12, before S0. The frozen v2 configuration and this protocol are committed before any held-out native call.
+**Status:** FROZEN on 2026-11-12 after the dev rounds. R0 met the early stop with gold 18/18 ([dev ledger](HAR009_C_SUMMARY_V2_DEV.md#dev-rounds-2026-11-12), [ADR-192 A1.13](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a113-dev-rounds-and-freeze-2026-11-12)). The [held-out manifest](#held-out-manifest-recorded-2026-11-12-before-s0) was recorded before S0. This protocol and the frozen v2 configuration (`FROZEN_V2`) are committed before any held-out native call. The held-out run is pending.
 
 ## Ground rules
 
 - **The v1 corpus is tuning data.** Its 14 cases shaped the v2 design and are used for dev rounds. No dev number is evidence of gain.
-- **The held-out corpus is authored by a separate agent from the specification only.** The author gets the [held-out section](#held-out-protocol-v2-draft) of this protocol, the v2 code as committed before S0 (listing rule and verifier, which dev cannot change) and a blocklist. It never sees any v2 output.
+- **The held-out corpus is authored by a separate agent from the specification only.** The author gets the [held-out section](#held-out-protocol-v2) of this protocol, the v2 code as committed before S0 (listing rule and verifier, which dev cannot change) and a blocklist. It never sees any v2 output.
 - **The held-out corpus is hashed before any v2 native output.** `HELDOUT_SHA256`, the file SHA-256 and the design-check counts are committed before S0. Any later edit retires the corpus.
 - **Dev-plus is written after the held-out hash**, and a test enforces disjointness.
 - No model, default, flag-scope or context-size change. Adoption stays with the owner.
@@ -92,7 +92,7 @@ All runs are summary-only, through `inference.prepare` with `token-budget` plus 
   - run the focused tests and D87;
   - commit the frozen protocol before any held-out native call.
 
-## Held-out protocol v2 (draft)
+## Held-out protocol v2
 
 ### Corpus (`benchmarks/context_summary_heldout.py`)
 

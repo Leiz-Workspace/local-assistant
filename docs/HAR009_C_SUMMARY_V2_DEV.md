@@ -16,6 +16,7 @@
 | A0 | 2026-11-12 | prompt-minimal v2a (`e4106851…`) on the v1 contract; never frozen | 20 | gold 0/18; 64 `speaker_mismatch` drops, 47 assistant claims admitted |
 | k=3 | 2026-11-12 | R0 configuration, 2 more draws | 40 | 18/18 and 18/18; gates passed; raw output identical to R0 in 20/20 cases |
 | Freeze | 2026-11-12 | R0 configuration | 0 | `FROZEN_V2` filled; prompt and schema template hashes pinned by test |
+| D87 (freeze) | 2026-11-12 | branch `ac9b9f2`, tree `5e97bf8` | 0 | PASS: 6,739 passed, 0 failed, 0 errors, 0 skipped ([receipt](evidence/d87-20261112-branch-ac9b9f2-acceptance.json)) |
 
 ## S−1 (tokenizer only)
 
