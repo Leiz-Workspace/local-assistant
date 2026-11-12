@@ -6271,3 +6271,9 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Database and Qdrant:** unchanged.
 - **Records:** [receipt](../docs/evidence/d87-20261112-develop-5aab38e-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.26.
 - **Prepared for the owner, not applied:** `infras/mongo-server/mongo-compose.yaml` no longer passes the root credentials to the healthcheck's `mongosh` (an unauthenticated `ping` was checked inside the running container: exit 0). The change is uncommitted in the `infras` repository; applying it recreates the `mongo` container, which is the owner's step before `install.sh --use`.
+
+## 2026-11-13 — MongoDB healthcheck fix committed in the Server repository
+
+- The healthcheck change in `infras/mongo-server/mongo-compose.yaml` (no `--username`, `--password` or `--authenticationDatabase` for the `ping`) was committed as `71aa2c0` in the `Server` repository, the parent of `infras/`. That repository has no remote, so nothing was pushed. Only this file was committed; the other uncommitted entries in that repository were left as they were.
+- Checks: an unauthenticated `ping` in the running `mongo` container returned exit 0; `docker compose config` renders the healthcheck; `mongo-server/tests/test_create_database_template.py` passed (6 passed).
+- Not applied: applying it recreates the shared `mongo` container, which stays the owner's step before `scripts/ci-runner/install.sh --use`. ADR-194, the runner README and the outstanding-work status now say so.
