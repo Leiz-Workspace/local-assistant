@@ -1,0 +1,103 @@
+{
+ "description": "Public receipt of D87 full software regression on feat/har006-v2 at 88ef291 (HAR-006 v2 inspector, golden baseline and benchmark), run before any native call as the protocol's S1 gate (2026-11-12 local). Private directory not published; names and hashes only.",
+ "date": "2026-11-12",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; the HAR-006 v2 protocol requires a D87 pass after the source change and before Window 1.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "feat/har006-v2 at 88ef291 (branch from develop f30a49f)",
+  "git_commit": "88ef291f57a1456a899f1fc0c4e315f06946a1a7",
+  "git_tree": "77d9bb2c0cf81171e5ca41d2d81e88f65b49441c",
+  "branch_base": {
+   "branch": "origin/develop",
+   "git_commit": "f30a49f"
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 886,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "a355ef8118ba79b58ba889ffc7aeca1dbeb32121984ea0a07bb38844e8136b60"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261112-full-6",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": "already unsealed (no restart since the earlier unseal)",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  },
+  "shared_services": "not restarted"
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 90,
+  "last_three_samples_busy_cores": [
+   0.3,
+   0.29,
+   0.3
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 61,
+  "mean_busy_cores": 1.31,
+  "median_busy_cores": 1.2,
+  "max_busy_cores": 2.2,
+  "note": "includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6818,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1810.28,
+  "wrapper_seconds": 1811.79,
+  "summary": "6818 passed, 1 warning in 1810.28s (0:30:10)",
+  "started_at_utc": "2026-11-12T09:36:21.276788+00:00",
+  "completed_at_utc": "2026-11-12T10:06:33.069265+00:00",
+  "log_sha256": "daa448f9f658ec0e42541374117e5b384a3527cb86842a7b5d266d022346ed73",
+  "result_json_sha256": "1be9400108b111b16dd401f8b0d1a00901473ca45ebfb5bc853824e793945494",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6743 passed on 883 files, develop 48d5694 (tree a2d1318); the branch adds the inspector, its tests and the golden baseline (3 source files, 75 test cases)"
+ },
+ "scope": "Software regression evidence for the source tree 77d9bb2 of feat/har006-v2 88ef291, before HAR-006 v2 Window 1. Not model quality, device acceptance, D89 or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directory": "data/backups/d87-20261112-full-6/"
+}
