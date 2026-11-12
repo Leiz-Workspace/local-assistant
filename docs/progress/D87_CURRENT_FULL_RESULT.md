@@ -1,8 +1,31 @@
 # D87 — Full regression trên source hiện tại
 
-**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `48d5694` (cây `a2d1318`, sau PR #67: regression test của bridge UI cho HAR-002). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+**Mục đích:** Ghi kết quả full suite hiện hành trên cây source của `develop` `5aab38e` (cây `42fab3e`, sau PR #69: HAR-006 v2, và PR #70: bộ cài CI self-hosted). Các lượt trước được giữ ở các mục lịch sử bên dưới.
 
-**Trạng thái: PASS — full software regression cho cây source của `develop` `48d5694` (cây `a2d1318091d35e04ab431f3ba79d92cc934bc1fa`), lượt chạy kết thúc 12:10 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-48d5694-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
+**Trạng thái: PASS — full software regression cho cây source của `develop` `5aab38e` (cây `42fab3e08d8e38fcac7b1481e49b1f7226f829cf`), lượt chạy kết thúc 23:55 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-5aab38e-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89, nghiệm thu runner CI self-hosted hay quyết định release.
+
+| Phạm vi | Kết quả thực tế (lượt `d87-20261112-full-8`) |
+|---|---|
+| Toàn bộ `pytest tests` | **6.818 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, exit 0, status `complete`, `accepted_full_software_regression: true` |
+| Thời gian pytest | **1.871,73 giây** (summary "6818 passed, 1 warning in 1871.73s (0:31:11)"); wrapper 1.873,62 giây |
+| Source snapshot | **890 file**, `source_bytes_unchanged: true`; source freeze `9630ab091ea5207ea76f274e7cb59c11f8ac1eb5431bfc4265d0370396980cb2` |
+| Commit và cây | `develop` `5aab38e` (merge PR #70), cây trùng `origin/develop`; ngoài source chỉ có dòng kết nối editor ở đầu `dev_log/dev_log.md` |
+| Log SHA-256 | `e28268bc3f393db9461612199fc4aea40fb245e8d0532b89ea250870940a3ca0` |
+| So với full trước | 6.743 PASS trên 883 file (`48d5694`) nay là lịch sử. PR #69 thêm lớp báo cáo inspect-only của HAR-006 v2 (3 file source mới, 1 file sửa, thêm 75 test); PR #70 thêm 4 file trong `scripts/ci-runner/` (không có Python). `develop` khác `production` ở 71 file source |
+
+- **Thời gian.** Lượt chạy từ 23:24:35 tới 23:55:48 ngày 2026-11-12 (16:24:35Z–16:55:48Z).
+- **Lượt bị gián đoạn trước đó.** Lượt `d87-20261112-full-7` trên `develop` `7fbedad` dừng ở khoảng 61% (4.168 PASS, chưa có test hỏng) vì máy khởi động lại; `result.json` của nó vẫn ghi `running`. Lượt đó không phải bằng chứng và không được chạy tiếp.
+- **Máy rảnh.** Điều kiện rảnh đạt sau 90 giây (0,49 / 0,48 / 0,47).
+- **Tải trong lúc chạy.** 63 lần đo: trung bình 1,58, trung vị 1,51, tối đa 2,37 CPU bận. Test reranker PASS.
+- **Dịch vụ.** Vault bị seal sau lần khởi động lại và đã được unseal trước lượt chạy (không init, không rotate). CORE chạy bằng `docker compose --profile core up -d` (healthy sau 30 giây) rồi được dừng sau lượt chạy. Dịch vụ dùng chung không bị restart. Runner CI self-hosted chưa được cài.
+- **Database và Qdrant (read-only).** Kết quả trước và sau giống nhau: các bảng hội thoại, bộ nhớ và ingestion đều 0; usage 1 dòng mỗi bảng; Alembic `0006`; Qdrant không có collection nào.
+- **Phạm vi.** Chưa promote, chưa tag, chưa release, chưa deploy. D81, D89, D90 vẫn mở.
+
+## Lịch sử: lượt 2026-11-12 trên `develop` `48d5694`
+
+**Mục đích (lượt này):** Ghi kết quả full suite hiện hành trên cây source của `develop` `48d5694` (cây `a2d1318`, sau PR #67: regression test của bridge UI cho HAR-002). Các lượt trước được giữ ở các mục lịch sử bên dưới.
+
+**Trạng thái lượt này: PASS — full software regression cho cây source của `develop` `48d5694` (cây `a2d1318091d35e04ab431f3ba79d92cc934bc1fa`), lượt chạy kết thúc 12:10 ngày 2026-11-12.** [Receipt công khai](../evidence/d87-20261112-develop-48d5694-acceptance.json). Đây là bằng chứng hồi quy phần mềm, không phải đo chất lượng model, nghiệm thu thiết bị, D89 hay quyết định release.
 
 | Phạm vi | Kết quả thực tế (lượt `d87-20261112-full-5`) |
 |---|---|

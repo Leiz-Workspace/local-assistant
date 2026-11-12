@@ -6260,3 +6260,14 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Review.** Three rounds of adversarial review confirmed 27, 13 and 6 findings, all fixed (for example the `runsvc.sh` path, `ProtectKernelLogs` and `RestrictSUIDSGID` breaking the sandboxes, uninstall executing the job-writable tree, `/dev/shm` and IPC sharing, the tailscaled LocalAPI, sshd password guessing through the local socket).
 - **Checks:** `bash -n` on both scripts, both YAML files parse, `systemd-analyze verify` on the rendered unit is clean. No Python code changed.
 - **Not done yet:** the runner is not installed. The live run needs the owner's sudo (`scripts/ci-runner/install.sh --use`). Required before `--use`: take the MongoDB root password off the healthcheck's command line in `infras/mongo-server/mongo-compose.yaml`, and record a choice for the unauthenticated host `mongod` on 127.0.0.1:27017. Recommended: turn off sshd password logins on loopback. Residual risks (loopback services, `/proc` command lines, no disk limit, no isolation between jobs) are listed in the ADR.
+
+## 2026-11-12 — PR #70 merged; D87 PASS on develop 5aab38e
+
+- **PR [#70](https://github.com/DungeonLeiz/local-assistant/pull/70)** (self-hosted CI runner kit, ADR-194) was merged into `develop` as `5aab38e`. Its CI run created all 9 jobs with the new `runs-on` expression; `prepare` and `ci-gate` stopped at the billing check as before, because `CI_RUNS_ON` is unset. The local evidence was posted on the PR.
+- **Interrupted attempt.** The D87 on `develop` `7fbedad` (after PR #69) stopped at about 61% (4,168 passed, none failed) when the host rebooted. It is not evidence. The reboot also sealed Vault and wiped `/tmp`.
+- **D87 run:** `data/backups/d87-20261112-full-8` on `develop` `5aab38e`, tree `42fab3e08d8e38fcac7b1481e49b1f7226f829cf`, equal to `origin/develop`. Vault was unsealed first (no init or rotation). The host was idle (0.49 / 0.48 / 0.47). CORE ran via `docker compose --profile core` (healthy after 30 s) and was stopped afterwards.
+- **Result: PASS.** **6818 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1871.73 s, 890 source files unchanged; the reranker CPU test passed. Against `48d5694`: PR #69 adds 75 tests and 3 source files, PR #70 adds the 4 `scripts/ci-runner` files.
+- **Load:** 63 samples, mean 1.58, median 1.51, max 2.37.
+- **Database and Qdrant:** unchanged.
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-5aab38e-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.26.
+- **Prepared for the owner, not applied:** `infras/mongo-server/mongo-compose.yaml` no longer passes the root credentials to the healthcheck's `mongosh` (an unauthenticated `ping` was checked inside the running container: exit 0). The change is uncommitted in the `infras` repository; applying it recreates the `mongo` container, which is the owner's step before `install.sh --use`.
