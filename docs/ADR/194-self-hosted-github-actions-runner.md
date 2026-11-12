@@ -151,6 +151,10 @@
   - Run as the owner, outside the unit:
     - The preflight's `bwrap` sandbox shape passes, also under `setpriv --no-new-privs`.
     - The `openat2()` probe passes at baseline and under `NoNewPrivileges=yes`, and fails with `ENOSYS` under `RestrictSUIDSGID=yes` (transient user units).
+    - On 2026-11-13, the eight test files that use `bwrap` or `openat2()` gave 96 passed and 0 skipped in a transient user unit with `NoNewPrivileges=yes` (`NoNewPrivs: 1`), the same as in a normal shell (`NoNewPrivs: 0`). The files are `test_sandbox_process.py`, `test_check_seccomp.py`, `test_readonly_workspace.py`, `test_checkpoint_git.py`, the two TTS namespace tests, `test_voice_vad_comparison.py` and `test_voice_trial_native.py`.
+      - The preflight in that unit failed only on its 12 expected checks: 11 GPU nodes and the tailscaled socket, which are closed only by the real unit.
+      - This shows that `no_new_privs` under this AppArmor policy keeps the project sandboxes working.
+      - It does not cover the `gh-runner` account or the unit's mount, IPC, device and network settings.
     - The GPU check flags the 0666 `/dev/nvidia*` nodes, as expected without `DevicePolicy`.
     - The tailscaled check flags the reachable LocalAPI socket, as expected without the mask.
     - The MongoDB healthcheck's `mongosh` command line carries a password value that is readable from host `/proc` (checked without printing it), and host `/proc` has no `hidepid`.
