@@ -181,7 +181,15 @@
     - the `bwrap --unshare-all ... --proc /proc` sandbox shape and `openat2()` work under `NoNewPrivileges`, the mount masks and `PrivateIPC`;
     - a multiprocessing lock works on the private `/dev/shm`.
   - **`ProtectSystem=strict`.** `actions/setup-node`, `uv sync` into the job's environment, and pytest's temporary trees all wrote under `/var/lib/gh-runner` without errors. The GitHub-hosted apt and layout steps were skipped, as designed.
-  - **Warning.** GitHub warns that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and the other pinned v4 actions target Node.js 20 and are forced onto Node.js 24. They work. Moving the pins to versions that target Node.js 24 is a follow-up that applies to both runner types.
+  - **Warning, since resolved.** GitHub warned that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and `astral-sh/setup-uv` targeted Node.js 20 and were being forced onto Node.js 24. On 2026-11-13 every pin moved to the lowest major whose `runs.using` is `node24`:
+    - `actions/checkout` v5.1.0;
+    - `actions/setup-node` v5.0.0, whose automatic package-manager cache does not trigger because no tracked `package.json` has `packageManager`;
+    - `actions/upload-artifact` v6.0.0;
+    - `actions/download-artifact` v7.0.0, which downloads by name, so the v5 path change for downloads by ID does not apply;
+    - `actions/cache/restore` and `actions/cache/save` v5.1.0;
+    - `astral-sh/setup-uv` v7.6.0, whose removed input `server-url` is not used.
+
+    Each SHA was resolved with `gh api repos/<repo>/commits/<tag>`, and each action's `action.yml` at that tag says `node24`. All of these need runner 2.327.1 or later; `aevra-home-1` runs 2.338.2.
 - **`IPAddressDeny` in practice** (PR #77, run 43309094006, 2026-11-13). The preflight's address check ran inside the unit, in `test-python` and `test-python-quarantine`, and printed `IPAddressDeny: 8 host addresses in denied ranges blocked`. The addresses are 192.168.3.200, the tailnet IPv4 and IPv6 addresses, three Docker bridges and two k3s addresses. Outside the unit the same 8 answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host. The run passed in full on `aevra-home-1`: test-python 7,422 passed, 0 failed.
 - Still not validated on the installed unit:
   - `KillMode=mixed` and `RemoveIPC` on a stop: after `sudo systemctl stop aevra-gh-runner`, no process or IPC object of `gh-runner` remains;
