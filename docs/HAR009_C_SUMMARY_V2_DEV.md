@@ -8,6 +8,7 @@
 |---|---|---|---:|---|
 | S−1 | 2026-11-12 | (5, 1), (4, 1), (5, 0), (4, 0); v1 corpus, 14 cases | 0 | `MAX_SLOTS` 4; R 1,394 at (4, 1); `RESERVE_TOKENS` 1,024 → 1,408 |
 | S−1 check | 2026-11-12 | committed defaults (4, 1, `last`); v1 corpus | 0 | DESIGN_VALID, 0 violations; output 1,393 ≤ 1,472; R 1,394 ≤ 1,408 |
+| D87 (precondition) | 2026-11-12 | branch `058d09d`, tree `2995f65` | 0 | PASS: 6,738 passed, 0 failed, 0 errors, 0 skipped ([receipt](evidence/d87-20261112-branch-058d09d-acceptance.json)) |
 
 ## S−1 (tokenizer only)
 
