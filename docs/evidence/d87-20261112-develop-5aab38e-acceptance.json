@@ -1,0 +1,112 @@
+{
+ "description": "Public receipt of D87 full software regression on develop 5aab38e after PR #69 (HAR-006 v2) and PR #70 (self-hosted CI runner kit) (2026-11-12 local). Private directory not published; names and hashes only.",
+ "date": "2026-11-12",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; the D87 on develop 7fbedad (after PR #69) was interrupted by a host reboot at about 61%, and PR #70 added the self-hosted CI runner kit.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at 5aab38e (merge of PR #70)",
+  "git_commit": "5aab38e41bcfe8d629c848a35064b022ae33a0de",
+  "git_tree": "42fab3e08d8e38fcac7b1481e49b1f7226f829cf",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "5aab38e"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "source_files_different_in_freeze_paths": 71
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 890,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "9630ab091ea5207ea76f274e7cb59c11f8ac1eb5431bfc4265d0370396980cb2"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261112-full-8",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": "sealed after a host reboot; unsealed before the run under the owner's standing authorization, without init or rotation",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "healthy_after_seconds": 30,
+   "stopped_after_run_with": "docker compose --profile core stop"
+  },
+  "shared_services": "not restarted",
+  "self_hosted_ci_runner": "not installed"
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 90,
+  "last_three_samples_busy_cores": [
+   0.49,
+   0.48,
+   0.47
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 63,
+  "mean_busy_cores": 1.58,
+  "median_busy_cores": 1.51,
+  "max_busy_cores": 2.37,
+  "note": "1-minute load average sampled every 30 s; includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6818,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1871.73,
+  "wrapper_seconds": 1873.62,
+  "summary": "6818 passed, 1 warning in 1871.73s (0:31:11)",
+  "started_at_utc": "2026-11-12T16:24:35.356679+00:00",
+  "completed_at_utc": "2026-11-12T16:55:48.977782+00:00",
+  "log_sha256": "e28268bc3f393db9461612199fc4aea40fb245e8d0532b89ea250870940a3ca0",
+  "result_json_sha256": "674fb9b6a561c4944993ea21c5295484dcabac0f3e79eca4bc3bda5383bc02f0",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_develop_pass": "6743 passed on 883 files, develop 48d5694 (tree a2d1318), 2026-11-12; now history",
+  "branch_pass": "6818 passed on 886 files on the HAR-006 v2 branch 88ef291 (receipt d87-20261112-branch-88ef291); PR #69 then changed only benchmarks and docs, outside the freeze scope",
+  "interrupted_attempt": "data/backups/d87-20261112-full-7 on develop 7fbedad stopped at about 61% (4168 passed, none failed up to then) when the host rebooted; its result.json still says running. It is not evidence and was not resumed",
+  "changes_since_previous_develop_pass": "PR #69 adds the HAR-006 v2 inspect-only layer report and its tests (75 more tests, 3 more source files); PR #70 adds the 4 files of scripts/ci-runner (no Python) and changes the CI workflow"
+ },
+ "scope": "Software regression evidence for the source tree 42fab3e of develop 5aab38e. Not model quality, device acceptance, D89, the self-hosted CI runner (not installed) or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; GitHub-hosted CI blocked by billing, self-hosted runner kit merged but not installed"
+ },
+ "private_result_directory": "data/backups/d87-20261112-full-8/"
+}
