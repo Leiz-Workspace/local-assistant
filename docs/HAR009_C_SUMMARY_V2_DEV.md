@@ -9,6 +9,13 @@
 | S−1 | 2026-11-12 | (5, 1), (4, 1), (5, 0), (4, 0); v1 corpus, 14 cases | 0 | `MAX_SLOTS` 4; R 1,394 at (4, 1); `RESERVE_TOKENS` 1,024 → 1,408 |
 | S−1 check | 2026-11-12 | committed defaults (4, 1, `last`); v1 corpus | 0 | DESIGN_VALID, 0 violations; output 1,393 ≤ 1,472; R 1,394 ≤ 1,408 |
 | D87 (precondition) | 2026-11-12 | branch `058d09d`, tree `2995f65` | 0 | PASS: 6,738 passed, 0 failed, 0 errors, 0 skipped ([receipt](evidence/d87-20261112-branch-058d09d-acceptance.json)) |
+| Dev design | 2026-11-12 | (4, 1), (4, 0) × `last`, `withheld`; dev set, 20 cases | 0 | DESIGN_VALID under every knob, 0 violations; oracle gold 18/18 |
+| S0 | 2026-11-12 | defaults (4, 1, `last`) | 2 | COMPLETE: both example packets verified, declared key order kept, finish `stop` |
+| R0 | 2026-11-12 | Amendment text as written: (4, 1, `last`), prompt `a5cace13…` | 20 | **gold 18/18** (EN 9/9, VI 9/9; dev-plus 6/6); hard gates passed; early stop met |
+| A0 (refused) | 2026-11-12 | prompt-minimal v2a on the v1 contract | 0 | DESIGN_INVALID from a runner defect (R bounded over the fallback pair); fixed in `0df547f` |
+| A0 | 2026-11-12 | prompt-minimal v2a (`e4106851…`) on the v1 contract; never frozen | 20 | gold 0/18; 64 `speaker_mismatch` drops, 47 assistant claims admitted |
+| k=3 | 2026-11-12 | R0 configuration, 2 more draws | 40 | 18/18 and 18/18; gates passed; raw output identical to R0 in 20/20 cases |
+| Freeze | 2026-11-12 | R0 configuration | 0 | `FROZEN_V2` filled; prompt and schema template hashes pinned by test |
 
 ## S−1 (tokenizer only)
 
@@ -72,3 +79,30 @@
 
   The native design check runs before S0.
 - **Proceed condition.** The runner does not split dev-plus gold from the rest, so the ledger computes the ≥ 4/6 dev-plus condition from the per-case rows.
+
+## Dev rounds (2026-11-12)
+
+- **Setup.** CORE was started with the unchanged `scripts/start-core.py` on an idle host. The run used the weights SHA-256 `073a9275…` and runtime pin `5c8854fd…`, and CORE was stopped with SIGINT afterwards. All runs are summary-only through `inference.prepare`, with temperature 0, a 120 s deadline per cell, no cache, no answers and no retries. Total: 82 generations of the 142 cap. Public counts are in [`evidence/context-summary-c2-dev-20261112.json`](evidence/context-summary-c2-dev-20261112.json).
+- **R0 (Amendment text as written).**
+  - Gold 18/18: the 12 v1 scored cases and the 6 dev-plus cases.
+  - Funnel: listed 18, returned 18, admitted 18, gold 18.
+  - Gates: 0 self-check defects, 0 `invalid_output`/`unfinished`, 0 example copies, 0 reverify mismatches, 0 approval overlap. Both authority gates gave `none_verified`.
+  - Drops: 1 `quote_context_dropped` (neg-camau; another note at that pair was admitted) and 1 `authority_context` (auth-hoabinh).
+  - Other counts: 6 assistant claims admitted (the dev-plus replies) and 2 log items.
+  - Empty-slot rate: 1 of 23 target slots and 11 of 31 distractor slots.
+  - Forbidden tokens were admitted in 13 of 20 cells. Most come from faithful notes that keep a near-miss or sibling value stated in the same message (for example "port 9446 is the retired exporter") or in a listed distractor slot. The metric is descriptive and only breaks ties.
+- **Stopping and rounds not run.** R0 met the early stop (gold ≥ 16/18 with the gates passed), so R1–R3 were not run and no knob changed.
+- **A0 ablation.**
+  - The prompt-minimal v2a is the v1 prompt plus the v2 content rules in v1 schema terms (user statements first, whole-clause quotes, text only from quote words, claim restraint), with no examples. It ran on the v1 control copy and gave gold 0/18.
+  - The model still quoted assistant text under user kinds: 64 `speaker_mismatch` drops, and 47 assistant claims were admitted. A prompt change alone does not fix the v1 failure. This supports the contract change of ADR-192 Amendment 1.
+  - The first A0 attempt was refused before any generation because of a runner defect, fixed in `0df547f` with a regression test.
+- **k=3.** Two more draws of the R0 configuration gave 18/18 each, with the gates passing in all three draws. Because summaries run at temperature 0, the raw output matched R0 byte for byte in 20/20 cases. The repeats show determinism, not variance.
+- **Proceed to held-out:**
+  - frozen round 18/18 (≥ 14/18 required);
+  - dev-plus 6/6 (≥ 4/6);
+  - k=3 median 18/18 (≥ 14/18);
+  - gates hold in all draws.
+- **Freeze.**
+  - `history_summary.py` keeps the R0 values: `MAX_SLOTS` 4, `MAX_CLAIMS` 1, `CLIPPED_USER` `last`, prompt unchanged.
+  - Tests pin `PROMPT_SHA256` `a5cace131e9f…` and `SCHEMA_TEMPLATE_SHA256` `2045be19c232…`.
+  - `FROZEN_V2` in the runner records these with the `history_summary.py` SHA-256 `ab21586d3b3b…`, and the frozen guard refuses any other contract.

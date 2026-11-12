@@ -46,8 +46,15 @@ HELDOUT_MODULE = "benchmarks.context_summary_heldout"
 HELDOUT_FILE = "benchmarks/context_summary_heldout.py"
 # Recorded in the held-out commit before S0: digest(corpus_heldout()).
 HELDOUT_SHA256 = "100f28484c86851089554257b36a7d713390dff85d0ef19e20727d69ed542497"
-# Filled at freeze: prompt_sha256, schema_template_sha256, max_slots, max_claims, clipped_user, history_summary_sha256.
-FROZEN_V2 = None
+# Frozen after the dev rounds (protocol v2: R0 met the early stop, k=3 confirmed); a held-out run refuses any other contract.
+FROZEN_V2 = dict(
+    prompt_sha256="a5cace131e9f470ac7d550015991b15b4341b280bdb525d59b7cba39963602c2",
+    schema_template_sha256="2045be19c232bdb6bb9bcd185d6a4e487996eaeab88881c70949d1baab7e1dac",
+    max_slots=4,
+    max_claims=1,
+    clipped_user="last",
+    history_summary_sha256="ab21586d3b3b581305963775ab52b84a9ff926af8a9b72cfabaf5031d27e72a5",
+)
 CLIPPED_CHOICES = ("last", "withheld")
 EXAMPLE_WORDS = (("juniper",), ("tây", "ninh"))
 # Example codes match as whole joined parts of a case-folded token: k-27 or gpu-07, never rack-27 or gpu-011.

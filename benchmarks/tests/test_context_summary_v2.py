@@ -241,6 +241,16 @@ async def test_reserve_bound_uses_the_covered_pairs_of_either_summary_arm():
     assert found["budget_summary_v1"] < fallback["tokens"]
 
 
+def test_frozen_v2_is_the_contract_in_force():
+    """The committed FROZEN_V2 equals the contract in force, so the frozen guard passes only for these hashes and knobs."""
+    assert module.FROZEN_V2 == module.current_freeze()
+    module.frozen_guard()
+    with module.variant(clipped_user="withheld"):
+        with pytest.raises(module.CampaignRefused) as error:
+            module.frozen_guard()
+    assert error.value.code == "FROZEN_V2_MISMATCH"
+
+
 def test_prompt_leakage_and_reserved_example_entities():
     """The prompt holds no v1 value or acknowledgement; no corpus, filler or log mentions an example entity; leaks print digests."""
     cases = module.v1_cases()

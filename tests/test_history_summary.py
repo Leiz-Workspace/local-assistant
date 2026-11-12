@@ -520,6 +520,17 @@ def test_prompt_numbers_match_the_constants_and_text_is_nfc():
     assert prompt.endswith("\n\nReturn only JSON that matches the schema.")
 
 
+def test_frozen_v2_prompt_and_schema_hashes_are_pinned():
+    """The v2 prompt and schema template are frozen by the dev rounds (HAR-009-C protocol v2, R0); any edit must fail here."""
+    assert module.PROMPT_SHA256 == (
+        "a5cace131e9f470ac7d550015991b15b4341b280bdb525d59b7cba39963602c2"
+    )
+    assert module.SCHEMA_TEMPLATE_SHA256 == (
+        "2045be19c232bdb6bb9bcd185d6a4e487996eaeab88881c70949d1baab7e1dac"
+    )
+    assert (module.MAX_SLOTS, module.MAX_CLAIMS, module.CLIPPED_USER) == (4, 1, "last")
+
+
 @pytest.mark.parametrize(
     "dialogue,start,example,output",
     [
