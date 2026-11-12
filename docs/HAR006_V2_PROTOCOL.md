@@ -1,8 +1,12 @@
-# HAR-006 v2 — pre-registered protocol (draft 2026-11-12)
+# HAR-006 v2 — pre-registered protocol (frozen and run 2026-11-12)
 
 **Purpose:** Fix, before any native call, how HAR-006 v2 measures the default whole-turn composer (report schema 1) on the approved CORE, and how the result closes the three open HAR-006 items (full layered allocation, peak resources, semantic quality) and the six backlog failure cases. It follows the [v1 tokenizer probe](HAR006_NATIVE_CONTEXT_PACKING_RESULT.md) and uses the inspect-only layer report of [ADR-193](ADR/193-opt-in-inspect-only-context-layer-report.md). Runner: [`benchmarks/context_har006_v2.py`](../benchmarks/context_har006_v2.py). Date: 2026-11-12.
 
-**Status:** DRAFT until Window 1. No native call has been made. The code and this protocol must be committed before Window 1 (gate S4); the [Window-1 manifest](#window-1-manifest) is appended in a separate commit before Window 2. The module currently holds `PROVISIONAL` constants for software tests only; they came from an offline dry run with a scratch tokenizer port and are not evidence. Window 1 replaces them by calibration.
+**Status:** COMPLETE.
+- **Commits.** The code and this protocol were committed before Window 1 (gate S4). The [Window-1 manifest](#window-1-manifest) was committed before Window 2 (`6cd4da2`).
+- **Window 2.** All 172 cells completed; the independent recheck verified them with 0 mismatches.
+- **Labels.** ALLOCATION_VERIFIED, RESOURCES_MEASURED, SEMANTIC UNSAFE, and REFERENCE failed. See the [result](HAR006_V2_RESULT.md).
+- **Corpus.** The corpus is spent for any tuning.
 
 ## Ground rules
 

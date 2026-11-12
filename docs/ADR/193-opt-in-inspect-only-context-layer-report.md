@@ -2,7 +2,10 @@
 
 **Purpose:** Let a caller of `ProductInference.prepare` ask for an exact, layered account of one default whole-turn packing (schema 1): which tokens each layer costs, why each message or source was left out, and how the output budget was set. Packing, routes, models, presets, defaults and context size do not change.
 
-**Date:** 2026-11-12. **Status:** Implemented as an opt-in software change (software tests only; no native measurement yet). It is the product change of the HAR-006 v2 protocol and is required before that protocol's tokenizer-only Window 1. Commit and adoption are the owner's decisions. Supersedes nothing.
+**Date:** 2026-11-12. **Status:** IMPLEMENTED as an opt-in software change and MEASURED in HAR-006 v2 on 2026-11-12.
+- **Measured result.** Inspection completed on every default-path composition. The layers telescoped exactly to `input_tokens`, and C1–C6 held. The server count matched in 172 of 172 cells, so the label is ALLOCATION_VERIFIED ([result](../HAR006_V2_RESULT.md)).
+- **Scope.** It is not exposed through routes, the CLI, the UI or `/status`. Exposing it, and adopting it, are the owner's decisions.
+- **Supersedes:** nothing.
 
 ## Context
 
