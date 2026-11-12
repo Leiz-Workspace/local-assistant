@@ -1967,7 +1967,13 @@ def probes(constants=None):
             + short_pairs(2, "en", "cs")
             + [dict(role="user", content=probe_task("en"))],
             every(
-                dict(packed=True, trim=trim_only(), reasons=[], layer="client_system")
+                dict(
+                    packed=True,
+                    trim=trim_only(),
+                    reasons=[],
+                    layer="client_system",
+                    alt_error=CLIENT_SYSTEM_REJECTED,
+                )
             ),
         )
     )
@@ -2809,6 +2815,9 @@ async def compose(
         result["error"] = error.code
     except ValueError as error:
         result["error"] = str(error)
+    except httpx.HTTPStatusError as error:
+        # The CORE chat template can reject a composition (a non-leading system message); record it, never crash.
+        result["error"] = f"upstream_http_{error.response.status_code}"
     after = call_count(prepare)
     result["calls"] = None if before is None or after is None else after - before
     return result
@@ -3220,6 +3229,10 @@ def probe_summary(result):
         for entry in entries
     )
     return dict(
+        client_system_rejected=any(
+            entry["kind"] == "CS" and entry["error"] == CLIENT_SYSTEM_REJECTED
+            for entry in entries
+        ),
         overflow_d5=not failed & overflow and bool(entries),
         overflow_packed=packed_overflow,
         mandatory_kept=all(
@@ -3251,6 +3264,8 @@ def expectation_table(entries):
 def d5_problems(item, strategy, entry, inspection):
     """Return D5 deviations of one probe composition from its prediction."""
     expect = item["expect"][strategy]
+    if expect.get("alt_error") is not None and entry["error"] == expect["alt_error"]:
+        return []
     if "error" in expect:
         codes = [] if entry["error"] == expect["error"] else ["d5_" + item["kind"]]
         if "count_calls" in expect and entry["calls"] != expect["count_calls"]:
@@ -4124,6 +4139,7 @@ def har006_v2_outcome(evidence):
                 labels["stale_evidence"]["label"] == "PACKING_HAZARD_RECORDED",
             ),
             ("STRICT_PAIR_CAP", bool(probes_.get("overflow_d5"))),
+            ("CLIENT_SYSTEM_REJECTED", bool(probes_.get("client_system_rejected"))),
             ("ASYMMETRIC_CEILINGS", bool(evidence.get("sweep_verified"))),
             ("INVENTS_UNDER_OMISSION", semantic == "INVENTS_UNDER_OMISSION"),
         )
@@ -4362,6 +4378,8 @@ LABEL_RULES = dict(
         "NOT_RUN",
     ],
 )
+# Amendment (Window 1 attempt 1, before any manifest): the CORE template rejects a non-leading system message.
+CLIENT_SYSTEM_REJECTED = "upstream_http_500"
 SOFTWARE_KEYS = dict(
     tool_limit_suite=bool, owner_tests=bool, golden=bool, api_observation=str
 )

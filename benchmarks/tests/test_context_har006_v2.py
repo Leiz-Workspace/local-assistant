@@ -593,6 +593,33 @@ def test_6_derived_expectation_table_equals_the_matrix():
         assert pressure["recent-turns"]["omitted"] == [[0, "history_priority"]]
 
 
+@pytest.mark.asyncio
+async def test_template_rejection_is_recorded_and_accepted_only_for_the_client_system_probe():
+    """A CORE template 500 (non-leading system message) is a recorded error, not a crash; only CS accepts it, as a follow-up."""
+    request = httpx.Request("POST", "http://127.0.0.1:8080/apply-template")
+
+    async def rejecting(messages, **options):
+        """Fail like the CORE chat template on a second system message."""
+        raise httpx.HTTPStatusError(
+            "500", request=request, response=httpx.Response(500, request=request)
+        )
+
+    result = await h.compose(rejecting, [], [], "evidence-first", inspect=False)
+    assert result["error"] == h.CLIENT_SYSTEM_REJECTED == "upstream_http_500"
+    items = {item["kind"]: item for item in h.probes()}
+    entry = dict(error=h.CLIENT_SYSTEM_REJECTED, calls=None)
+    for strategy in h.STRATEGIES:
+        assert h.d5_problems(items["CS"], strategy, entry, None) == []
+        assert h.d5_problems(items["CT1"], strategy, entry, None) == ["d5_CT1"]
+    summary = h.probe_summary(
+        dict(
+            entries=[dict(probe_id="cs", kind="CS", error=h.CLIENT_SYSTEM_REJECTED)],
+            problems=[],
+        )
+    )
+    assert summary["client_system_rejected"] is True
+
+
 def test_6_probes_and_sweep_behave_as_predicted():
     """D5 holds for OV1-OV5, G3, B64K, G4 and the layer probes; the sweep matches the brute-force ceilings."""
     _, probed, swept = chain()
@@ -615,6 +642,7 @@ def test_6_probes_and_sweep_behave_as_predicted():
         assert entries[("ov1-vi", strategy)]["error"] == "context_overflow"
     assert entries[("ov4", "strict")]["error"] == "strict_context_would_trim"
     assert h.probe_summary(probed) == dict(
+        client_system_rejected=False,
         overflow_d5=True,
         overflow_packed=False,
         mandatory_kept=True,
