@@ -6320,3 +6320,30 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Check:** a transient user unit with `NoNewPrivileges=yes` (`NoNewPrivs: 1`) ran the eight test files that use `bwrap` or `openat2()`. Result: 96 passed, 0 skipped. A normal shell (`NoNewPrivs: 0`) gave the same 96 passed, 0 skipped.
 - **Preflight:** in the same unit it failed only on its 12 expected checks (11 GPU nodes and the tailscaled socket, which only the real unit closes).
 - **Not covered:** the filesystem, IPC, device and network settings. A user unit cannot apply them on this host (`226/NAMESPACE` under the AppArmor restriction), so they still need the installed unit. ADR-194's Validation section now records this check.
+
+## 2026-11-13 — Self-hosted runner installed; first CI run on the Home Server passed
+
+- **Install.** The owner ran `scripts/ci-runner/install.sh --use` after the two earlier sudo timeouts. At 03:40 (+07) it created `gh-runner` (uid 997, `nologin`) and `/var/lib/gh-runner`. `aevra-gh-runner` is active, `aevra-home-1` is online with `self-hosted,Linux,X64,aevra-home`, and `CI_RUNS_ON` is `["self-hosted","aevra-home"]`. A leftover `sudo -v` prompt from the earlier attempt stayed open in the terminal pane; the owner was told to cancel it.
+- **Live-unit checks without sudo:**
+  - The main process runs as uid 997 with `NoNewPrivs: 1`.
+  - `systemctl show` lists every hardening property of the unit file.
+  - The service's `mountinfo` shows `/home`, `/run/tailscale` and `/run/ssh-unix-local` masked, a private `/tmp`, and a private 2G `/dev/shm`.
+  - The sshd drop-in holds `DenyUsers gh-runner`.
+- **First CI run.** PR #76, run 43302985450, about 11 minutes. Every job that ran was picked up by `aevra-home-1` and succeeded:
+  - `prepare`;
+  - `test-python`: 7,422 passed, 368 skipped, 30 deselected, 0 failed, 534.94 s;
+  - `test-python-quarantine`: none selected;
+  - `test-js`: 27/27;
+  - `ci-gate`.
+
+  The self-hosted preflight inside the unit printed "Home Server layout and sandbox verified". That covers the GPU closed, the tailscaled socket unreachable, and `bwrap`, `openat2` and a multiprocessing lock all working.
+- **Not yet exercised:**
+  - `lint`, which runs on the next pull request that changes Python;
+  - `IPAddressDeny` in practice;
+  - stop, kill and IPC cleanup;
+  - the tailscaled restart path;
+  - runner self-update;
+  - the uninstall path.
+- **Follow-up.** GitHub warns that the pinned v4 actions target Node.js 20 and are forced onto Node.js 24.
+- **Still the owner's:** enabling authorization on the host `mongod`, which the owner chose and which is not done yet, and the sshd password-login decision.
+- **Records:** ADR-194 Validation, the outstanding-work status, and roadmap v5.19.28.
