@@ -19,7 +19,7 @@ runs:
     - name: Restore cached apt packages
       id: apt-cache
       if: runner.environment == 'github-hosted'
-      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25  # v5.1.0
       with:
         path: ~/apt-debs
         key: apt-ubuntu-24.04-${{ hashFiles('.github/actions/hosted-python/action.yml') }}
@@ -64,7 +64,7 @@ runs:
 
     - name: Save apt packages for later runs
       if: runner.environment == 'github-hosted' && steps.apt-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25  # v5.1.0
       with:
         path: ~/apt-debs
         key: apt-ubuntu-24.04-${{ hashFiles('.github/actions/hosted-python/action.yml') }}
@@ -202,7 +202,7 @@ runs:
         git config --global user.name "CI"
         git config --global user.email "ci@localhost"
 
-    - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+    - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78  # v7.6.0
       with:
         version: "0.9.13"
 

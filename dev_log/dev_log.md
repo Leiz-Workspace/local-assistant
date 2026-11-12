@@ -6353,3 +6353,20 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - The self-hosted preflight now also opens TCP connects to the host's own addresses in the denied ranges. The addresses come from `hostname -I`: LAN, tailnet, Docker and k3s, IPv4 and `fc00::/7`. Each connect must fail with `EPERM` or time out. Outside the unit the check fails as intended, because all 8 addresses answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host.
 - **PR #77, run 43309094006 on `aevra-home-1`.** Inside the unit the check printed `IPAddressDeny: 8 host addresses in denied ranges blocked`, in both Python jobs. The run passed in full: test-python 7,422 passed, 0 failed.
 - **Still not exercised on the installed unit:** `lint`, stop/kill/IPC cleanup, the tailscaled restart path, runner self-update and uninstall. Except for `lint` and self-update, these need the owner's sudo.
+
+## 2026-11-13 — CI action pins moved to Node.js 24 releases
+
+- **Why.** The runs on `aevra-home-1` warned that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and `astral-sh/setup-uv` target Node.js 20 and were being forced onto Node.js 24.
+- **Change.** All 17 pins moved to the lowest major whose `runs.using` is `node24`. Each SHA was resolved from its tag, and each action's `action.yml` at that tag was checked:
+  - `actions/checkout` v5.1.0;
+  - `actions/setup-node` v5.0.0;
+  - `actions/upload-artifact` v6.0.0;
+  - `actions/download-artifact` v7.0.0;
+  - `actions/cache/restore` and `actions/cache/save` v5.1.0;
+  - `astral-sh/setup-uv` v7.6.0.
+- **Release notes checked against our usage:**
+  - Runner 2.327.1 or later is required; `aevra-home-1` runs 2.338.2.
+  - `setup-node` v5 caches automatically only when `package.json` has `packageManager`. No tracked `package.json` exists.
+  - `download-artifact` v5 changed the path only for downloads by ID. The release job downloads by name.
+  - `setup-uv` v7 removed `server-url`, which the workflow does not use.
+- **Not exercised.** The `release` and `package` jobs, and the GitHub-hosted cache path, only run on tags, promotions or GitHub-hosted runners.
