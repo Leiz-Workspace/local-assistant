@@ -182,8 +182,8 @@
     - a multiprocessing lock works on the private `/dev/shm`.
   - **`ProtectSystem=strict`.** `actions/setup-node`, `uv sync` into the job's environment, and pytest's temporary trees all wrote under `/var/lib/gh-runner` without errors. The GitHub-hosted apt and layout steps were skipped, as designed.
   - **Warning.** GitHub warns that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and the other pinned v4 actions target Node.js 20 and are forced onto Node.js 24. They work. Moving the pins to versions that target Node.js 24 is a follow-up that applies to both runner types.
+- **`IPAddressDeny` in practice** (PR #77, run 43309094006, 2026-11-13). The preflight's address check ran inside the unit, in `test-python` and `test-python-quarantine`, and printed `IPAddressDeny: 8 host addresses in denied ranges blocked`. The addresses are 192.168.3.200, the tailnet IPv4 and IPv6 addresses, three Docker bridges and two k3s addresses. Outside the unit the same 8 answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host. The run passed in full on `aevra-home-1`: test-python 7,422 passed, 0 failed.
 - Still not validated on the installed unit:
-  - `IPAddressDeny` blocking a real connection from a job (the property is set; no job has tried a LAN address);
   - `KillMode=mixed` and `RemoveIPC` on a stop: after `sudo systemctl stop aevra-gh-runner`, no process or IPC object of `gh-runner` remains;
   - the tailscaled restart path (`PartOf=`) re-applying the `/run/tailscale` mask;
   - the SSH denial on the live sshd: a login attempt as `gh-runner` is refused, and sshd logs `DenyUsers`;
