@@ -2,7 +2,7 @@
 
 **Purpose:** Let the repository's CI run on the Home Server while staying a normal GitHub Actions workflow with checks on every pull request. Any job can be switched back to GitHub-hosted runners without a code change.
 
-**Date:** 2026-11-12. **Status:** ACCEPTED by the owner's request ("tự host CI và vẫn muốn chạy được trên Github"). The workflow change and the setup kit are implemented and were revised after security reviews before the first install. Registering the runner needs the owner's sudo, so the first live run follows that step.
+**Date:** 2026-11-12. **Status:** ACCEPTED by the owner's request ("tự host CI và vẫn muốn chạy được trên Github"). The workflow change and the setup kit are implemented and were revised after security reviews before the first install. The owner installed the runner on 2026-11-13. Its first CI run passed on the Home Server (PR #76, run 43302985450); see Validation.
 
 ## Context
 
@@ -165,15 +165,28 @@
     - `systemctl show` lists every hardening setting of the unit file: `ProtectHome`, `ProtectSystem=strict`, `PrivateTmp`, `PrivateIPC`, `TemporaryFileSystem=/dev/shm` (2G), `RemoveIPC`, `NoNewPrivileges`, `DevicePolicy=closed`, the `IPAddressDeny` list, the three `InaccessiblePaths`, `KillMode=mixed`, `CPUQuota` 800%, `MemoryMax` 16G, `MemorySwapMax` 2G, `TasksMax` 4096, and `After=`/`PartOf=tailscaled.service`.
     - The main process's `/proc/<pid>/mountinfo` shows `/home`, `/run/tailscale` and `/run/ssh-unix-local` mounted from systemd's inaccessible directory, a private `/tmp`, and a private 2G tmpfs on `/dev/shm`.
     - `/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf` holds `DenyUsers gh-runner`.
-  - This settles the mount masks, `PrivateTmp`, `/dev/shm` and `NoNewPrivs: 1` on the real service. The first CI run on the runner is recorded below.
-- Not yet validated, because it needs the installed unit and the owner's sudo:
-  - `DevicePolicy`, `IPAddressDeny`, `ProtectSystem=strict` (setup-uv, setup-node, runner self-update and pytest `TMPDIR` writing under `/var/lib/gh-runner`), `KillMode=mixed` and `NoNewPrivs: 1` on the real service;
-  - `ProtectHome` and `PrivateTmp`: from inside the service (for example `sudo nsenter -t <MainPID> -m`), `/home` is empty and `/tmp` is not the host's;
-  - the `/run/ssh-unix-local` mask: from inside the service the directory is empty, so the local sshd socket cannot be reached;
-  - the `/run/tailscale` mask: from inside the service the directory is empty and the preflight's socket check passes, also after `sudo systemctl restart tailscaled` (the runner's start time changes with it). Whether a crash restart of tailscaled propagates through `PartOf=` too (expected with `RestartMode=normal`) is checked on the installed unit;
-  - `PrivateIPC`, `TemporaryFileSystem=/dev/shm` and `RemoveIPC` with the preflight's `bwrap` sandbox shape and multiprocessing lock. On this host (systemd 259, unprivileged user namespaces restricted by AppArmor) a transient user unit cannot apply them: `TemporaryFileSystem=/dev/shm` fails with `226/NAMESPACE`; `PrivateIPC=yes` exits 0 but is skipped (the journal logs "IPC namespace setup failed, ignoring", and the process stays in the host IPC namespace); `RemoveIPC` is available only for system services, so it exits 0 and does nothing. `PrivateTmp` and `ProtectHome` are skipped in the same way, with exit 0 in the host mount namespace (checked with `systemd-run --user`). A passing user unit is therefore no evidence for any of them; they can be validated only on the installed system unit. Then `systemctl show -p PrivateIPC,RemoveIPC,TemporaryFileSystem aevra-gh-runner`, and after a stop, `sudo find /dev/shm /dev/mqueue -user gh-runner` and `ipcs` show nothing owned by `gh-runner`;
-  - the SSH denial on the live sshd: `install.sh` checks it with `sshd -t` and `sshd -T`; a login attempt as `gh-runner` on port 22 and on `/run/ssh-unix-local/socket` is then refused, and sshd logs that the user is listed in `DenyUsers`;
-  - the uninstall path against the real GitHub API (lookup by name and `DELETE`);
-  - a full CI job on the runner.
+  - This settles the mount masks, `PrivateTmp`, `/dev/shm` and `NoNewPrivs: 1` on the real service.
+- **First CI run on the runner** (PR #76, run 43302985450, head `14b116f`, 2026-11-12 20:42:40Z–20:53:34Z, about 11 minutes). Every job that ran was picked up by `aevra-home-1` and succeeded:
+  - `prepare`;
+  - `test-python`: 7,422 passed, 368 skipped, 30 deselected, 0 failed, 534.94 s;
+  - `test-python-quarantine`: no quarantined tests selected;
+  - `test-js`: 27 of 27 passed;
+  - `ci-gate`.
+
+  `lint`, `package`, `deploy-staging` and `release` were skipped by their own conditions. `lint` runs only when a pull request into `develop` changes Python files, so it is exercised on the next such pull request.
+  - **Preflight.** Inside the unit the self-hosted preflight printed `Runner gh-runner on 7.0.0-43-generic: Home Server layout and sandbox verified.` That shows, on the real service:
+    - `DevicePolicy=closed`: no GPU node is accessible;
+    - the `/run/tailscale` mask: the LocalAPI socket connect fails;
+    - the `bwrap --unshare-all ... --proc /proc` sandbox shape and `openat2()` work under `NoNewPrivileges`, the mount masks and `PrivateIPC`;
+    - a multiprocessing lock works on the private `/dev/shm`.
+  - **`ProtectSystem=strict`.** `actions/setup-node`, `uv sync` into the job's environment, and pytest's temporary trees all wrote under `/var/lib/gh-runner` without errors. The GitHub-hosted apt and layout steps were skipped, as designed.
+  - **Warning.** GitHub warns that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and the other pinned v4 actions target Node.js 20 and are forced onto Node.js 24. They work. Moving the pins to versions that target Node.js 24 is a follow-up that applies to both runner types.
+- Still not validated on the installed unit:
+  - `IPAddressDeny` blocking a real connection from a job (the property is set; no job has tried a LAN address);
+  - `KillMode=mixed` and `RemoveIPC` on a stop: after `sudo systemctl stop aevra-gh-runner`, no process or IPC object of `gh-runner` remains;
+  - the tailscaled restart path (`PartOf=`) re-applying the `/run/tailscale` mask;
+  - the SSH denial on the live sshd: a login attempt as `gh-runner` is refused, and sshd logs `DenyUsers`;
+  - a runner self-update;
+  - the uninstall path against the real GitHub API (lookup by name and `DELETE`).
 
   The first live run on a pull request records these, together with the job results, timings, the runner name and the absence of billing failures, before `CI_RUNS_ON` is relied on.
