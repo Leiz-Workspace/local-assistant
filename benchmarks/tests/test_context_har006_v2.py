@@ -2241,19 +2241,43 @@ def test_9_window2_stop_gates_halt_before_any_generation(native_run, tmp_path):
 
 
 def test_9_recorded_constants_are_not_a_code_change(tmp_path):
-    """code_sha256 ignores the recorded CALIBRATION and CORPUS_SHA256 values but sees any other edit."""
+    """code_sha256 ignores the recorded CALIBRATION and CORPUS_SHA256 values, recorded or not, but sees any other edit."""
+    import ast
+
     source = (ROOT / h.SOURCES[0]).read_text()
-    assert "\nCALIBRATION = None\n" in source and "\nCORPUS_SHA256 = None\n" in source
-    recorded_source = source.replace(
-        "\nCALIBRATION = None\n",
-        "\nCALIBRATION = dict(\n    evidence_lines=48,\n    pressure_lines=136,\n)\n",
-    ).replace("\nCORPUS_SHA256 = None\n", '\nCORPUS_SHA256 = "' + "a" * 64 + '"\n')
-    (tmp_path / "recorded.py").write_text(recorded_source)
+    lines = source.splitlines(keepends=True)
+    nodes = [
+        node
+        for node in ast.parse(source).body
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id in ("CALIBRATION", "CORPUS_SHA256")
+    ]
+    assert len(nodes) == 2
+
+    def with_values(calibration, corpus):
+        """Return the module source with the two recorded assignments replaced."""
+        out = list(lines)
+        for node in sorted(nodes, key=lambda item: item.lineno, reverse=True):
+            value = calibration if node.targets[0].id == "CALIBRATION" else corpus
+            out[node.lineno - 1 : node.end_lineno] = [
+                f"{node.targets[0].id} = {value}\n"
+            ]
+        return "".join(out)
+
+    (tmp_path / "reset.py").write_text(with_values("None", "None"))
+    (tmp_path / "recorded.py").write_text(
+        with_values("dict(evidence_lines=48)", '"' + "a" * 64 + '"')
+    )
     (tmp_path / "edited.py").write_text(
         source.replace("TEMPERATURE = 0.7", "TEMPERATURE = 0.8")
     )
+    assert h.code_sha256(tmp_path / "reset.py") == h.code_sha256()
     assert h.code_sha256(tmp_path / "recorded.py") == h.code_sha256()
     assert h.code_sha256(tmp_path / "edited.py") != h.code_sha256()
+    if h.CALIBRATION is not None:
+        assert h.corpus_sha256(h.CALIBRATION) == h.CORPUS_SHA256
 
 
 def test_9_memory_wrapper_reads_rss_anon_file_and_shmem(tmp_path):

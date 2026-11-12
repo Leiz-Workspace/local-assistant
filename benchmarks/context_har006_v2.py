@@ -218,8 +218,28 @@ PROVISIONAL = dict(
     ov2_lines=1135,
 )
 # Recorded from Window 1 before Window 2; None until then (CORPUS_CHANGED is checked against them).
-CALIBRATION = None
-CORPUS_SHA256 = None
+CALIBRATION = dict(
+    evidence_lines=48,
+    pressure_lines=136,
+    control_lines=96,
+    r_item_lines=72,
+    i_long_lines=dict(i17=104, i18=108, i19=106, i20=105),
+    ladder=dict(
+        l01=[42, 2],
+        l02=[210, 13],
+        l03=[433, 26],
+        l04=[655, 41],
+        l05=[898, 54],
+        l06=[42, 2],
+        l07=[210, 12],
+        l08=[428, 27],
+        l09=[657, 40],
+        l10=[896, 54],
+    ),
+    ov1_lines=dict(en=1143, vi=1143),
+    ov2_lines=1135,
+)
+CORPUS_SHA256 = "7968acd5fccc25ff876fab82ded052faba5f4ed175425f44174a2585eef52197"
 
 SENTINEL = "NOT_AVAILABLE"
 SUFFIX = dict(

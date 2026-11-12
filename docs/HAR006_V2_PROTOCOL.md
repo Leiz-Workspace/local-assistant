@@ -452,21 +452,66 @@ uv run --no-sync python -m benchmarks.context_har006_v2 \
 
 ## Window-1 manifest
 
-*To be filled after Window 1 and committed before Window 2. Nothing below is recorded yet.*
+Recorded on 2026-11-12, after Window 1 and before Window 2.
 
-- **Date, commit, operator authorization:** pending.
-- **CORE:** PID and start ticks, `build_info`, model file, `n_ctx`, `total_slots`, chat-template SHA: pending.
-- **Window-1 status:** pending (MANIFEST_WRITTEN required); elapsed seconds, tokenize calls, completions (must be 0): pending.
-- **Calibrated constants** (`CALIBRATION`): `evidence_lines`, `pressure_lines`, `control_lines`, `r_item_lines`, `i_long_lines` (i17–i20), `ladder` (l01–l10 filler and evidence lines), `ov1_lines` (EN, VI), `ov2_lines`: pending. Calibration count calls: pending.
-- **`CORPUS_SHA256`:** pending. **`code_sha256`:** pending. **File SHA-256 of `benchmarks/context_har006_v2.py` and `src/application/services/context_inspection.py`:** pending.
-- **Design check:** status, expectation table, token ranges per panel and regime (min/max input, E, T_rt, T_ef, T_ctrl): pending.
-- **Probes:** status, D5 outcomes per probe, G3/B64K/OV3/OV4 band values: pending.
-- **T-RB:** label, reference ids and excess, per-input excess: pending.
-- **Sweep:** status, digest, ceilings: pending.
-- **V1 replay:** pending.
-- **Inspection overhead** (off/on upper medians, maximum): pending.
-- **`manifest.json` SHA-256:** pending.
-- **Exposure log:** pending (what the orchestrating session saw before Window 2; only counts, digests and labels are expected).
+- **Commit and authorization.** Window 1 ran at commit `883e620` (feat/har006-v2) under the owner's standing goal to finish outstanding work, the same task authorization as the HAR-009 measurements. An earlier attempt (`w1-attempt1`, 0 generations) stopped at the CS probe; see deviation 18.
+- **CORE.**
+  - Process: PID 2445671, start ticks 7864714.
+  - Build `b11557-5c8854fd8`, model file `Qwen_Qwen3.5-9B-Q6_K.gguf` (weights `073a9275…`, pin `5c8854fd…`).
+  - `n_ctx` 32,768 and `total_slots` 1.
+  - Chat template SHA-256 `a4aee8af…`.
+- **Window 1 result.** MANIFEST_WRITTEN in 81.1 s, with 8,556 tokenize calls and 0 completions. Phases: PREFLIGHT_OK, CALIBRATED (374 count calls), DESIGN_VERIFIED, PROBES_AS_PREDICTED, TRB_RECORDED, SWEEP_VERIFIED, BASELINE_UNCHANGED.
+- **Calibrated constants (`CALIBRATION`).** The calibration reproduced the provisional constants exactly:
+
+  | Constant | Value |
+  |---|---|
+  | `evidence_lines` | 48 |
+  | `pressure_lines` | 136 |
+  | `control_lines` | 96 |
+  | `r_item_lines` | 72 |
+  | `i_long_lines` | i17 104, i18 108, i19 106, i20 105 |
+  | `ladder` (filler, evidence lines) | l01 [42, 2], l02 [210, 13], l03 [433, 26], l04 [655, 41], l05 [898, 54], l06 [42, 2], l07 [210, 12], l08 [428, 27], l09 [657, 40], l10 [896, 54] |
+  | `ov1_lines` | 1,143 (EN), 1,143 (VI) |
+  | `ov2_lines` | 1,135 |
+
+- **Hashes.**
+  - `CORPUS_SHA256` `7968acd5fccc25ff876fab82ded052faba5f4ed175425f44174a2585eef52197`.
+  - `code_sha256` `6016018a25ac9e2303c8e7bb87463b81d3cbe7202708a76ee109d2a5c9decba6`; it is unchanged by recording the two constants.
+  - `manifest.json` SHA-256 `32e673eea66e5a58c7b09240608d5895d35bf581f275932ded192f72c6d1676e`.
+- **Design check.** 270 entries, 0 problems. The expectation table matches the frozen matrix:
+  - M pressure, evidence-first: 12 ANSWER, 8 ABSTAIN, 2 STALE_BY_PACKING;
+  - M pressure, recent-turns and strict: 8 ANSWER, 14 ABSTAIN;
+  - M control: 22 ANSWER under every strategy;
+  - R: 2 ANSWER, 2 ABSTAIN;
+  - I, S and L: every case ANSWER;
+  - A: every case ABSTAIN.
+- **Input token ranges** (min–max, identical under every strategy unless noted):
+
+  | Panel | Tokens |
+  |---|---|
+  | M control | 27,413–28,071 |
+  | M pressure, evidence-first | 28,154–31,990 |
+  | M pressure, recent-turns/strict | 27,063–27,259 |
+  | R | 27,094–27,838 |
+  | I | 1,411–26,414 |
+  | S | 1,492–1,556 |
+  | L | 1,972–31,885 |
+  | A | 1,223–2,138 |
+
+- **Probes.** 66 entries, 0 problems:
+  - OV1 (EN, VI) and OV2 with the skill give `context_overflow` under every strategy; OV2 without the skill fits at 31,966 tokens.
+  - OV3, OV4 and OV5 make strict raise `strict_context_would_trim`, while the other two strategies pack at 29,018, 398 and 132 tokens.
+  - G3 gives [included, duplicate_evidence, source_byte_limit, token_budget] at 22,831 (EN) and 22,614 (VI).
+  - B64K includes 65,536 bytes (13,749 tokens) and omits 65,537 bytes.
+  - G4 gives `evidence_limit` with 0 tokenize calls.
+  - CT1, CT2 and SK pack with their layers.
+  - CS is rejected by the CORE template (`upstream_http_500`, `CLIENT_SYSTEM_REJECTED`; deviation 18).
+- **T-RB.** CONTROL_TOKENS_PARSED. The literal `<|im_start|>`/`<|im_end|>` strings inside evidence are tokenized as the control tokens (ids 248045/248046): excess 4 in each injected input (i03, i07, i18), and 0 in each escaped control.
+- **Sweep.** SWEEP_VERIFIED, digest `cd3f3151…`. Input ceilings: fast/512 32,000; fast/None 32,000; balanced/None 27,904; deep/None 23,808; unlimited/None 32,000.
+- **V1 replay.** BASELINE_UNCHANGED: fitted SHAs `f178b062…`/`630ce37f…`/`630ce37f…` and input tokens 10,129/24,131/24,131.
+- **Inspection overhead.** Over 270 pairs: flag off upper median 0.043 s, flag on 0.139 s; overhead upper median 0.095 s, maximum 0.131 s.
+- **Software record** (S1, for Window 2): `tool_limit_suite` true (tests/test_workspace_tools.py, 64 passed); `owner_tests` true (the listed archive, compaction, memory and summary-cache owner tests plus the default-path no-archive test); `golden` true (5 passed); `api_observation` API_MASKED (test 11).
+- **Exposure log.** Before Window 2 the orchestrating session saw only counts, token ranges, digests, labels and the stop trace of `w1-attempt1`. No generation had run, so there were no answers to see.
 
 ## Deviations from the frozen design
 
