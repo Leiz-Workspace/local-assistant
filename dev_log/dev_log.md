@@ -6347,3 +6347,9 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Follow-up.** GitHub warns that the pinned v4 actions target Node.js 20 and are forced onto Node.js 24.
 - **Still the owner's:** enabling authorization on the host `mongod`, which the owner chose and which is not done yet, and the sshd password-login decision.
 - **Records:** ADR-194 Validation, the outstanding-work status, and roadmap v5.19.28.
+
+## 2026-11-13 — IPAddressDeny verified on the live runner
+
+- The self-hosted preflight now also opens TCP connects to the host's own addresses in the denied ranges. The addresses come from `hostname -I`: LAN, tailnet, Docker and k3s, IPv4 and `fc00::/7`. Each connect must fail with `EPERM` or time out. Outside the unit the check fails as intended, because all 8 addresses answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host.
+- **PR #77, run 43309094006 on `aevra-home-1`.** Inside the unit the check printed `IPAddressDeny: 8 host addresses in denied ranges blocked`, in both Python jobs. The run passed in full: test-python 7,422 passed, 0 failed.
+- **Still not exercised on the installed unit:** `lint`, stop/kill/IPC cleanup, the tailscaled restart path, runner self-update and uninstall. Except for `lint` and self-update, these need the owner's sudo.

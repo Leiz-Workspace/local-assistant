@@ -33,9 +33,10 @@ The composite action `.github/actions/hosted-python` handles both runner types:
   - an `openat2()` call, which the workspace layer needs;
   - that the GPU device nodes are not accessible;
   - that tailscaled's LocalAPI socket `/run/tailscale/tailscaled.sock` cannot be connected to;
+  - that TCP connects to the host's own addresses in the denied ranges (LAN, tailnet, Docker, k3s; IPv4 and `fc00::/7`) fail with `EPERM` or time out, as `IPAddressDeny` makes them;
   - a multiprocessing lock, which needs a writable `/dev/shm`.
 
-  The GPU and tailscaled checks only report a sandbox that lost its settings. They control nothing, because code on a branch can change the preflight.
+  The GPU, tailscaled and address checks only report a sandbox that lost its settings. They control nothing, because code on a branch can change the preflight.
 - **Node.js** comes from `actions/setup-node` (`NODE_VERSION`) in the test jobs on both runner types, before the composite action. The runner user sees only `/usr/local/bin:/usr/bin:/bin` and no `/home`, so the owner's nvm node is out of reach and the host needs no system node. D87 runs as the owner with nvm on `PATH`, so it never showed this gap.
 
 Every remote action in `ci.yml` and the composite action is pinned to a full commit SHA, with the version in a comment, because on this runner the action code runs on the Home Server.

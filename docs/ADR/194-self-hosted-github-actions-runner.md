@@ -34,9 +34,10 @@
      - an `openat2()` call with the workspace root's resolve flags;
      - that the GPU device nodes are not accessible;
      - that an `AF_UNIX` connect to tailscaled's LocalAPI socket `/run/tailscale/tailscaled.sock` fails;
+     - that TCP connects to the host's own addresses in the denied ranges (from `hostname -I`: LAN, tailnet, Docker and k3s, IPv4 and `fc00::/7`) fail with `EPERM` or time out (added 2026-11-13);
      - a multiprocessing lock, which needs a writable `/dev/shm`.
 
-     The GPU and tailscaled checks only detect a sandbox that lost its settings. They control nothing, because code on a branch can change the preflight.
+     The GPU, tailscaled and address checks only detect a sandbox that lost its settings. They control nothing, because code on a branch can change the preflight.
    - `test-python` and `test-python-quarantine` run `actions/setup-node` (`NODE_VERSION`) before the composite action, on both runner types.
    - Every remote action in `ci.yml` and the composite action is pinned to a full commit SHA, with the version in a comment. Each SHA was resolved with `gh api repos/<owner>/<repo>/commits/<tag>`.
 3. **A native runner under an unprivileged system user**, kept in `scripts/ci-runner/`.
@@ -181,8 +182,8 @@
     - a multiprocessing lock works on the private `/dev/shm`.
   - **`ProtectSystem=strict`.** `actions/setup-node`, `uv sync` into the job's environment, and pytest's temporary trees all wrote under `/var/lib/gh-runner` without errors. The GitHub-hosted apt and layout steps were skipped, as designed.
   - **Warning.** GitHub warns that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and the other pinned v4 actions target Node.js 20 and are forced onto Node.js 24. They work. Moving the pins to versions that target Node.js 24 is a follow-up that applies to both runner types.
+- **`IPAddressDeny` in practice** (PR #77, run 43309094006, 2026-11-13). The preflight's address check ran inside the unit, in `test-python` and `test-python-quarantine`, and printed `IPAddressDeny: 8 host addresses in denied ranges blocked`. The addresses are 192.168.3.200, the tailnet IPv4 and IPv6 addresses, three Docker bridges and two k3s addresses. Outside the unit the same 8 answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host. The run passed in full on `aevra-home-1`: test-python 7,422 passed, 0 failed.
 - Still not validated on the installed unit:
-  - `IPAddressDeny` blocking a real connection from a job (the property is set; no job has tried a LAN address);
   - `KillMode=mixed` and `RemoveIPC` on a stop: after `sudo systemctl stop aevra-gh-runner`, no process or IPC object of `gh-runner` remains;
   - the tailscaled restart path (`PartOf=`) re-applying the `/run/tailscale` mask;
   - the SSH denial on the live sshd: a login attempt as `gh-runner` is refused, and sshd logs `DenyUsers`;
