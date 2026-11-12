@@ -143,9 +143,8 @@ def test_write_and_unknown_tools_fail_before_admission(tool):
         )
 
 
-@pytest.fixture
-def product_client(auth_settings, tmp_path):
-    """Create a direct-loopback fixture app with isolated assets and process-local product state."""
+def fixture_assets(tmp_path):
+    """Write a minimal pinned UI asset tree with a matching receipt."""
     assets = tmp_path / "assets"
     assets.mkdir()
     index = b"<html><head></head><body>PINNED_UI_FIXTURE</body></html>"
@@ -159,6 +158,13 @@ def product_client(auth_settings, tmp_path):
             }
         )
     )
+    return assets
+
+
+@pytest.fixture
+def product_client(auth_settings, tmp_path):
+    """Create a direct-loopback fixture app with isolated assets and process-local product state."""
+    assets = fixture_assets(tmp_path)
     inference = FixtureInference()
     app = compose(FastAPI(), inference=inference, asset_root=assets)
     with TestClient(
@@ -323,6 +329,229 @@ def test_browser_pairing_cookie_acl_and_real_stream(product_client):
     )
     assert response.status_code == 200 and "fixture" in response.text
     assert client.get("/tools").json() == []
+
+
+UI_HEADERS = {"Origin": "http://127.0.0.1:7090", "X-Harness-UI": "1"}
+
+
+def test_browser_stream_lookup_accepts_at_most_64_conversations(product_client):
+    """The UI's resumable-stream lookup returns no sessions for up to 64 ids and refuses more (HAR-002 point 2)."""
+    client, _, settings, _ = product_client
+    pair(client, settings)
+    ids = [f"conv-{index}" for index in range(65)]
+    allowed = client.post(
+        "/v1/streams/lookup", headers=UI_HEADERS, json={"conversation_ids": ids[:64]}
+    )
+    assert allowed.status_code == 200 and allowed.json() == []
+    for body in (
+        {"conversation_ids": ids},
+        {"conversation_ids": ids[:1], "extra": True},
+        {"conversation_ids": ["x" * 257]},
+        {"conversation_ids": "conv-1"},
+    ):
+        refused = client.post("/v1/streams/lookup", headers=UI_HEADERS, json=body)
+        assert refused.status_code == 422
+        assert refused.json()["error"]["code"] == "invalid_stream_lookup"
+
+
+def test_browser_chat_error_mappings(product_client):
+    """customJson collisions, non-text content, long chats and malformed bodies map to their documented codes before any model call (HAR-002 point 6)."""
+    client, inference, settings, _ = product_client
+    pair(client, settings)
+    user = [{"role": "user", "content": "Hello"}]
+    cases = [
+        ({"messages": user, "stream": False}, 422, "stream_required"),
+        (
+            {"messages": user, "stream": True, "max_tokens": 256},
+            422,
+            "invalid_output_budget",
+        ),
+        ({"messages": user, "stream": True, "model": "x"}, 422, "unapproved_model"),
+        (
+            {"messages": user, "stream": True, "tools": [{"type": "function"}]},
+            422,
+            "browser_tools_not_supported",
+        ),
+        (
+            {
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image_url", "image_url": {"url": "data:,"}}
+                        ],
+                    }
+                ],
+                "stream": True,
+            },
+            422,
+            "text_only",
+        ),
+        ({"messages": user * 257, "stream": True}, 422, "invalid_messages"),
+        ({"messages": [], "stream": True}, 422, "invalid_messages"),
+        (
+            {"messages": [{"role": "user", "content": "x" * 262144}], "stream": True},
+            413,
+            "request_limit",
+        ),
+    ]
+    for body, status, code in cases:
+        response = client.post("/v1/chat/completions", headers=UI_HEADERS, json=body)
+        assert (response.status_code, response.json()["error"]["code"]) == (
+            status,
+            code,
+        )
+    response = client.post(
+        "/v1/chat/completions",
+        headers={**UI_HEADERS, "Content-Type": "text/plain"},
+        content=b"{}",
+    )
+    assert (response.status_code, response.json()["error"]["code"]) == (
+        415,
+        "json_required",
+    )
+    response = client.post(
+        "/v1/chat/completions",
+        headers={**UI_HEADERS, "Content-Type": "application/json"},
+        content=b'{"stream": true, "stream": false, "messages": []}',
+    )
+    assert (response.status_code, response.json()["error"]["code"]) == (
+        422,
+        "invalid_json",
+    )
+    assert inference.calls == []
+
+
+class FailingStreamInference(FixtureInference):
+    """Send one real chunk, then fail the way the gateway does when the stream exceeds its byte limit."""
+
+    async def stream(self, messages, **options):
+        """Yield a delta, then raise the gateway's stream_limit error."""
+        from apps.api.services.llama_gateway import GatewayError
+
+        self.calls.append((messages, options))
+        yield b'data: {"choices":[{"delta":{"content":"partial"}}]}\n\n'
+        raise GatewayError("stream_limit")
+
+
+def test_browser_stream_failure_is_reported_as_inference_unavailable(
+    auth_settings, tmp_path, caplog
+):
+    """A mid-stream stream_limit reaches the UI only as the generic inference_unavailable SSE error, then [DONE], and admission is released (HAR-002 point 6)."""
+    inference = FailingStreamInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    with TestClient(
+        app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+    ) as client:
+        pair(client, auth_settings)
+        with caplog.at_level(logging.INFO):
+            response = client.post(
+                "/v1/chat/completions",
+                headers=UI_HEADERS,
+                json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+            )
+        assert response.status_code == 200
+        assert (
+            "partial" in response.text
+            and '"code":"inference_unavailable"' in response.text
+        )
+        assert response.text.rstrip().endswith("data: [DONE]")
+        assert "stream_limit" not in response.text
+        assert "harness_ui_stream_failed" in caplog.text
+        assert not app.state.product_harness.admission.locked()
+
+
+class BlockingStreamInference(FixtureInference):
+    """Send one chunk, then wait until cancelled; record whether the upstream generator was closed."""
+
+    def __init__(self):
+        """Track the first chunk and the generator's cleanup."""
+        super().__init__()
+        self.sent, self.closed = asyncio.Event(), False
+
+    async def stream(self, messages, **options):
+        """Yield one delta and block until the consumer cancels."""
+        self.calls.append((messages, options))
+        try:
+            yield b'data: {"choices":[{"delta":{"content":"first"}}]}\n\n'
+            self.sent.set()
+            await asyncio.Event().wait()
+        finally:
+            self.closed = True
+
+
+@pytest.mark.asyncio
+async def test_browser_stream_disconnect_cancels_closes_upstream_and_releases_admission(
+    auth_settings, tmp_path, caplog
+):
+    """A client disconnect mid-stream (uvicorn's ASGI 2.3 path) logs harness_ui_stream_cancelled, closes the upstream stream and frees admission (HAR-002 point 5)."""
+    import httpx
+
+    inference = BlockingStreamInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    async with app.router.lifespan_context(app):
+        transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 49001))
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://127.0.0.1:7090"
+        ) as client:
+            response = await client.post(
+                PREFIX + "/ui-pairings", headers=bearer(auth_settings), json={}
+            )
+            code = response.json()["code"]
+            response = await client.post(
+                "/ui/pairings", headers=UI_HEADERS, json={"code": code}
+            )
+            assert response.status_code == 200
+            cookie = response.headers["set-cookie"].split(";", 1)[0]
+        body = json.dumps(
+            {"messages": [{"role": "user", "content": "Hi"}], "stream": True}
+        ).encode()
+        scope = {
+            "type": "http",
+            "asgi": {"version": "3.0", "spec_version": "2.3"},
+            "http_version": "1.1",
+            "method": "POST",
+            "scheme": "http",
+            "path": "/v1/chat/completions",
+            "raw_path": b"/v1/chat/completions",
+            "query_string": b"",
+            "root_path": "",
+            "headers": [
+                (b"host", b"127.0.0.1:7090"),
+                (b"origin", b"http://127.0.0.1:7090"),
+                (b"x-harness-ui", b"1"),
+                (b"content-type", b"application/json"),
+                (b"cookie", cookie.encode()),
+            ],
+            "client": ("127.0.0.1", 49001),
+            "server": ("127.0.0.1", 7090),
+        }
+        disconnect, messages, delivered = asyncio.Event(), [], False
+
+        async def receive():
+            """Deliver the body once, then report a disconnect when the test asks for it."""
+            nonlocal delivered
+            if not delivered:
+                delivered = True
+                return {"type": "http.request", "body": body, "more_body": False}
+            await disconnect.wait()
+            return {"type": "http.disconnect"}
+
+        async def send(message):
+            """Collect response messages."""
+            messages.append(message)
+
+        with caplog.at_level(logging.INFO):
+            call = asyncio.create_task(app(scope, receive, send))
+            await asyncio.wait_for(inference.sent.wait(), 5)
+            assert app.state.product_harness.admission.locked()
+            disconnect.set()
+            await asyncio.wait_for(call, 5)
+        assert messages[0]["status"] == 200
+        assert b"first" in b"".join(m.get("body", b"") for m in messages[1:])
+        assert "harness_ui_stream_cancelled" in caplog.text
+        assert inference.closed
+        assert not app.state.product_harness.admission.locked()
 
 
 @pytest.mark.parametrize(

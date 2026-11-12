@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-- **Date:** 2026-11-11. **Status:** static analysis (file reads and greps), followed by a live browser capture on 2026-11-12 that confirmed 4 of the 8 open points. See *Live capture results*.
+- **Date:** 2026-11-11. **Status:** static analysis (file reads and greps), followed by a live browser capture on 2026-11-12 that confirmed 4 of the 8 open points, and a second pass the same day that closed the other 4 with regression tests and live checks. See *Live capture results* and *Second pass*.
 - **Purpose:** list every request the pinned UI can make, how the Aevra harness answers it, and whether any path reaches native llama.cpp authority. None does. The only upstream call is the CORE chat stream that the server builds.
 - **Notation:** `B` = `/home/korosaki-ryukai/Workspace/Server/ai/data/ui/b11557/_app/immutable/bundle.dxrg9fom.js`. Evidence patterns are `grep -oF` against `B` unless noted. `br` = `apps/harness/browser.py`.
 
@@ -164,6 +164,27 @@ Code follow-ups, for a separate authorised task:
 - `customCss`/MCP.
 
 The test conversation stays in the in-app browser's IndexedDB.
+
+## Second pass (2026-11-12): points 2, 4, 5, 6 and 8
+
+**Setup.** As in the first capture:
+- an isolated `aevra serve --port 7093` with a session-only test principal (the token was never printed and was shredded afterwards);
+- the approved CORE (weights `073a9275…`, pin `5c8854fd…`), started with the unchanged `scripts/start-core.py`;
+- the in-app browser, paired through `/pair/#code`.
+
+Both processes were stopped afterwards, and ports 7093 and 8080 were free. The test custom CSS and MCP entry were cleared from the browser's `LlamaUi.config`.
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 2 | `/v1/streams/lookup` above 64 conversations | Regression test (`test_browser_stream_lookup_accepts_at_most_64_conversations`) | Confirmed. 64 ids return `[]`; 65 ids, an extra key, an id over 256 characters or a non-list return 422 `invalid_stream_lookup`. |
+| 4 | Code preview and `run_javascript` | Live | **Code preview:** the preview iframe is `sandbox="allow-scripts"` with `srcdoc`, so the parent cannot reach its document. A fixed HTML block rendered its static heading (`STATIC-OK`), and its inline script did not run, because the iframe inherits the page CSP. **`run_javascript`:** the UI logs "Starting agentic flow with 2 tools", but `bridge.js` deletes `tools`, `tool_choice`, `functions` and `function_call` before sending. Chat requests return 200, while truthy `tools` would get 422, so no tool reaches the server. The tool's Web Worker would also be blocked by `worker-src 'none'`. |
+| 5 | Stream abort releases admission and closes upstream | Regression test (`test_browser_stream_disconnect_cancels_closes_upstream_and_releases_admission`) | Confirmed in-process with uvicorn's ASGI spec 2.3 path: a client disconnect mid-stream logs `harness_ui_stream_cancelled`, closes the upstream generator and frees admission. **Dependency found:** with ASGI spec 2.4, Starlette stops listening for the disconnect and only notices on a failed send, so a stalled upstream would not be cancelled; the test fails under 2.4. Uvicorn 0.54.0 advertises 2.3. |
+| 6 | customJson collisions, long chats, `stream_limit` | Regression tests (`test_browser_chat_error_mappings`, `test_browser_stream_failure_is_reported_as_inference_unavailable`) | Confirmed, before any model call:<br>• `stream:false` → 422 `stream_required`<br>• `max_tokens` 256 → `invalid_output_budget`<br>• `model:"x"` → `unapproved_model`<br>• `tools` → `browser_tools_not_supported`<br>• image content → `text_only`<br>• 0 or 257 messages → `invalid_messages`<br>• a body over 262,144 bytes → 413 `request_limit`<br>• non-JSON → 415 `json_required`<br>• duplicate keys → 422 `invalid_json`<br>UI errors use the OpenAI shape `{"error":{"code":…}}`. A mid-stream `stream_limit` reaches the UI only as the generic SSE `inference_unavailable` followed by `[DONE]`, and admission is released. |
+| 8 | `customCss` and MCP | Live | `customCss` (`html body button[aria-label="MCP"]{display:inline-flex!important}`) brings the hidden MCP button back, as predicted. Adding `http://127.0.0.1:9/mcp` fails inside the bridge's fetch guard ("Aevra supports same-origin requests only."), so no network request leaves the page. Because the guard rejects first, no CSP violation is logged, although CSP `connect-src 'self'` would block it too. A same-origin `POST /mcp` gets 403 `unsupported_capability`. |
+
+**All 8 open points are now closed.** Two items remain owner choices:
+- the PDF-attachment fix (below);
+- the two code follow-ups (`/openapi` outside the boundary, and CORE native without `--api-key`).
 
 **Owner decision.** PDF attachments fail silently. There are two fixes:
 - allow the pdf.js worker (for example `worker-src blob:` together with a `script-src` exception), a CSP relaxation that needs its own review;

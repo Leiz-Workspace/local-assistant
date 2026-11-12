@@ -6203,3 +6203,17 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - the D87 result doc, with the `d8ed1cb` run moved to history;
   - the D90 D87 row (owner form untouched);
   - roadmap v5.19.22.
+
+## 2026-11-12 — HAR-002 second pass: the remaining 4 open points closed
+
+- **Regression tests** (`tests/test_product_harness.py`, 4 new tests, 22 pass in the file):
+  - the stream lookup returns `[]` for 64 ids and 422 `invalid_stream_lookup` for 65 ids, an extra key, an overlong id or a non-list;
+  - the chat bridge maps errors to the documented codes before any model call: `stream_required`, `invalid_output_budget`, `unapproved_model`, `browser_tools_not_supported`, `text_only`, `invalid_messages`, 413 `request_limit`, 415 `json_required`, 422 `invalid_json`;
+  - a mid-stream `stream_limit` reaches the UI only as `inference_unavailable` followed by `[DONE]`, and admission is released;
+  - a client disconnect on uvicorn's ASGI 2.3 path logs `harness_ui_stream_cancelled`, closes the upstream generator and frees admission. A mutation run with ASGI 2.4 makes this test fail: Starlette then stops listening for disconnects, so this behaviour depends on uvicorn advertising 2.3 (0.54.0 does).
+- **Live checks** (isolated `aevra serve --port 7093` with a session-only test principal, approved CORE, in-app browser):
+  - the code preview is a `sandbox="allow-scripts"` srcdoc iframe; static HTML rendered and the inline script did not run;
+  - `run_javascript` cannot reach the server, because the bridge deletes `tools` before sending;
+  - customCss re-shows the MCP button, but a cross-origin MCP server is refused by the bridge's same-origin guard before any network request, and same-origin `POST /mcp` gets 403 `unsupported_capability`.
+- **Teardown:** both processes stopped, ports 7093 and 8080 free, test credentials shredded, and the test settings cleared from the browser.
+- **Records:** HAR-002 inventory ("Second pass"), backlog row, roadmap v5.19.23. All 8 open points are closed. Still owner choices: the PDF fix, `/openapi` and CORE without `--api-key`.
