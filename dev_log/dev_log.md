@@ -6217,3 +6217,12 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - customCss re-shows the MCP button, but a cross-origin MCP server is refused by the bridge's same-origin guard before any network request, and same-origin `POST /mcp` gets 403 `unsupported_capability`.
 - **Teardown:** both processes stopped, ports 7093 and 8080 free, test credentials shredded, and the test settings cleared from the browser.
 - **Records:** HAR-002 inventory ("Second pass"), backlog row, roadmap v5.19.23. All 8 open points are closed. Still owner choices: the PDF fix, `/openapi` and CORE without `--api-key`.
+
+## 2026-11-12 — PR #67 merged; D87 PASS on develop 48d5694
+
+- **PR [#67](https://github.com/DungeonLeiz/local-assistant/pull/67)** (HAR-002 second pass, tests and docs only) was merged into `develop` as `48d5694`. GitHub Actions is blocked by billing. The local CI-scope run was posted on the PR: 7,233 passed, 368 skipped, 30 deselected, 0 failed.
+- **D87 run:** `data/backups/d87-20261112-full-5` on `develop` `48d5694`, tree `a2d1318091d35e04ab431f3ba79d92cc934bc1fa`, equal to `origin/develop`. The host was idle (0.30 / 0.34 / 0.33). CORE ran via `docker compose --profile core` and was stopped afterwards.
+- **Result: PASS.** **6743 passed, 0 failed, 0 errors, 0 skipped**, exit 0, 883 source files unchanged; the reranker CPU test passed. The 4 added tests are the HAR-002 bridge regressions.
+- **Load:** 61 samples, mean 1.38, median 1.28, max 2.31.
+- **Database and Qdrant:** unchanged.
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-48d5694-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.24.
