@@ -6313,3 +6313,10 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
     - an exact discordance test on inputs and a merge mapping fixed in advance.
 - **Not done.** Nothing is implemented. The owner has 9 decisions: approval, the content form, the generic pattern, the model binding, the handling of v2, the corpus and statistics, CORE windows, quote contracts, and later ADRs.
 - **Records.** The HAR-006 backlog row, `HAR006_V2_RESULT.md` follow-up 1, the outstanding-work status, and roadmap v5.19.27.
+
+## 2026-11-13 — Runner pre-install check: sandbox tests under no_new_privs
+
+- The runner is still not installed. Both `install.sh` attempts stopped at `sudo: timed out`, and nothing was changed. While waiting, I checked the unit's riskiest assumption without sudo: that `NoNewPrivileges=yes` keeps `bwrap` working under `kernel.apparmor_restrict_unprivileged_userns=1`.
+- **Check:** a transient user unit with `NoNewPrivileges=yes` (`NoNewPrivs: 1`) ran the eight test files that use `bwrap` or `openat2()`. Result: 96 passed, 0 skipped. A normal shell (`NoNewPrivs: 0`) gave the same 96 passed, 0 skipped.
+- **Preflight:** in the same unit it failed only on its 12 expected checks (11 GPU nodes and the tailscaled socket, which only the real unit closes).
+- **Not covered:** the filesystem, IPC, device and network settings. A user unit cannot apply them on this host (`226/NAMESPACE` under the AppArmor restriction), so they still need the installed unit. ADR-194's Validation section now records this check.
