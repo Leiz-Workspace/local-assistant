@@ -2,7 +2,7 @@
 
 **Purpose:** Fix the development rounds and the held-out measurement of the v2 summary contract ([ADR-192 Amendment 1](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#amendment-1-v2-contract)) **before any v2 native output**. It follows the [v1 protocol](HAR009_C_SUMMARY_PROTOCOL_V1.md) and the [v1 result](HAR009_C_SUMMARY_RESULT.md). Date: 2026-11-12.
 
-**Status:** FROZEN on 2026-11-12 after the dev rounds. R0 met the early stop with gold 18/18 ([dev ledger](HAR009_C_SUMMARY_V2_DEV.md#dev-rounds-2026-11-12), [ADR-192 A1.13](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a113-dev-rounds-and-freeze-2026-11-12)). The [held-out manifest](#held-out-manifest-recorded-2026-11-12-before-s0) was recorded before S0. This protocol and the frozen v2 configuration (`FROZEN_V2`) are committed before any held-out native call. The held-out run is pending.
+**Status:** FROZEN on 2026-11-12 after the dev rounds. R0 met the early stop with gold 18/18 ([dev ledger](HAR009_C_SUMMARY_V2_DEV.md#dev-rounds-2026-11-12), [ADR-192 A1.13](ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md#a113-dev-rounds-and-freeze-2026-11-12)). The [held-out manifest](#held-out-manifest-recorded-2026-11-12-before-s0) was recorded before S0. This protocol and the frozen v2 configuration (`FROZEN_V2`) were committed before any held-out native call (commit `dc1a447`). The held-out run completed on 2026-11-12 with the label **GAIN** ([result](HAR009_C_SUMMARY_V2_RESULT.md)). The corpus is now spent for tuning; a later amendment needs a new held-out set.
 
 ## Ground rules
 

@@ -2,7 +2,7 @@
 
 **Purpose:** When an explicit `token-budget` or `sliding-window` policy evicts pairs, the approved CORE model writes a small, quote-bound digest; a deterministic verifier admits only grounded items, appended to the current user message as untrusted data. No model, default, context-size or persistent-storage change; adds a RAM-only, owner-bound summary cache with an owner purge route (Decision 11) and one `/status` field (Decision 12).
 
-**Date:** 2026-11-11. **Status:** IMPLEMENTED as an experimental opt-in on 2026-11-11, after a design critique, a citation check and an independent three-lens implementation review (11 confirmed findings fixed); measured by the [v1 protocol](../HAR009_C_SUMMARY_PROTOCOL_V1.md) with **no gain** ([result](../HAR009_C_SUMMARY_RESULT.md)): 0/12 against `budget` 0/12 and `full` 11/12. The model copied assistant acknowledgements instead of user facts; safety checks held. No default change; a prompt and contract revision needs an amendment and a held-out measurement. **[Amendment 1 (v2 contract)](#amendment-1-v2-contract) PROPOSED 2026-11-12:** A1.1 (span sentences) IMPLEMENTED in commit `0bca0d0` and A1.2–A1.11 in commit `d7231f9` (software tests only); the tokenizer-only S−1 check fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (A1.12); the dev rounds froze the R0 contract with gold 18/18 on the dev set (A1.13); the held-out measurement is pending ([protocol v2](../HAR009_C_SUMMARY_PROTOCOL_V2.md)); `/status` reads `opt-in-experimental-v2-unmeasured` from when v2 lands until the held-out result. Originally PROPOSED (design); implementation only after review. Draft protocol: [HAR-009-C summary protocol (draft)](../HAR009_C_SUMMARY_PROTOCOL_DRAFT.md). Extends [ADR-187](187-opt-in-pinned-history-and-extractive-compaction.md), [ADR-189](189-opt-in-token-budget-history-window.md) and [ADR-190](190-opt-in-source-bound-working-state.md); would amend ADR-190's CLI rule (line 60) on acceptance, ADR-190 being unchanged until then. Supersedes nothing.
+**Date:** 2026-11-11. **Status:** IMPLEMENTED as an experimental opt-in on 2026-11-11, after a design critique, a citation check and an independent three-lens implementation review (11 confirmed findings fixed); measured by the [v1 protocol](../HAR009_C_SUMMARY_PROTOCOL_V1.md) with **no gain** ([result](../HAR009_C_SUMMARY_RESULT.md)): 0/12 against `budget` 0/12 and `full` 11/12. The model copied assistant acknowledgements instead of user facts; safety checks held. No default change; a prompt and contract revision needs an amendment and a held-out measurement. **[Amendment 1 (v2 contract)](#amendment-1-v2-contract) IMPLEMENTED; MEASURED on held-out 2026-11-12 (GAIN)** (proposed 2026-11-12): A1.1 (span sentences) IMPLEMENTED in commit `0bca0d0` and A1.2–A1.11 in commit `d7231f9` (software tests only); the tokenizer-only S−1 check fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (A1.12); the dev rounds froze the R0 contract with gold 18/18 on the dev set (A1.13); the held-out measurement under the frozen [protocol v2](../HAR009_C_SUMMARY_PROTOCOL_V2.md) on 2026-11-12 gave the pre-registered label **GAIN** (A1.14, [result](../HAR009_C_SUMMARY_V2_RESULT.md)). `budget_summary_v2` answered 23/24 strictly, against 0/24 for `budget` and 2/24 for the v1 control, and safety was clean. `/status` reads `opt-in-experimental-v2-measured-gain`. The flag stays opt-in, and adoption is the owner's decision. Originally PROPOSED (design); implementation only after review. Draft protocol: [HAR-009-C summary protocol (draft)](../HAR009_C_SUMMARY_PROTOCOL_DRAFT.md). Extends [ADR-187](187-opt-in-pinned-history-and-extractive-compaction.md), [ADR-189](189-opt-in-token-budget-history-window.md) and [ADR-190](190-opt-in-source-bound-working-state.md); would amend ADR-190's CLI rule (line 60) on acceptance, ADR-190 being unchanged until then. Supersedes nothing.
 
 ## Context
 
@@ -65,7 +65,7 @@ Omit `evicted_summary`. The cache is RAM-only; removal is a code revert with no 
 
 ## Amendment 1 (v2 contract)
 
-**Date:** 2026-11-12. **Status:** PROPOSED. A1.1 IMPLEMENTED (commit `0bca0d0`, tightening only); A1.2–A1.11 IMPLEMENTED (commit `d7231f9`, software tests only); S−1 fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (A1.12, tokenizer only); the dev rounds froze the contract (A1.13); the held-out measurement is pending under the [protocol v2](../HAR009_C_SUMMARY_PROTOCOL_V2.md). `/status` reads `opt-in-experimental-v2-unmeasured` from when v2 lands until the held-out result.
+**Date:** 2026-11-12. **Status:** IMPLEMENTED; MEASURED on held-out 2026-11-12 (GAIN). A1.1 IMPLEMENTED (commit `0bca0d0`, tightening only); A1.2–A1.11 IMPLEMENTED (commit `d7231f9`, software tests only); S−1 fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (A1.12, tokenizer only); the dev rounds froze the contract (A1.13); the held-out measurement gave **GAIN** (A1.14, [result](../HAR009_C_SUMMARY_V2_RESULT.md)). `/status` reads `opt-in-experimental-v2-measured-gain`.
 
 **Why.** The v1 run ([result](../HAR009_C_SUMMARY_RESULT.md)) failed at selection, not verification: all 53 returned items copy whole assistant replies and none quotes user text, while the oracle gold quote was admitted in every cell. Ranked causes: the side-by-side `{pair, user, assistant}` packet and a prompt without field or kind definitions or an example steer the model to the assistant field, and "never restate … instructions" pushes it away from user imperatives; the quote limits (grammar `minLength` 12, verifier 3 tokens) are not in the prompt, so short acknowledgements forced fabricated quotes; the forward `superseded_by` met a duplicated filler (item 0 dropped as `invalid_supersession` in 9 of 14 outputs); 7 of 14 outputs were degenerate (cause unknown, raw output not stored); `MAX_ITEMS` 6 ran out first in pair order. Code reading found two latent verifier gaps: approval laundering (the v1 design check admitted the Atlas oracle quote, cut out of "I approve …") and `SENTENCE` ending a sentence at the `.` of `2.5`.
 
@@ -246,6 +246,21 @@ Return only JSON that matches the schema.
 
   Tests pin these values, and the runner's `FROZEN_V2` refuses any other contract for the held-out run.
 - **Status:** dev numbers are tuning data, not evidence of gain. The held-out measurement decides the outcome label; any adoption stays with the owner.
+
+### A1.14 Held-out outcome (2026-11-12)
+
+- **Run.** One matrix of 38 held-out cases × 4 arms, plus two extra v2 summary draws: 304 native calls, no retries, under `FROZEN_V2` (commit `dc1a447`).
+- **Strict on 24 scored cases:** `full` 23, `budget` 0, v1 control 2, v2 23.
+  - v2 against `budget`: net +23 (EN +11, VI +12), 0 new stale answers.
+  - v2 against v1: 21 gains, 0 losses, p = 4.8·10⁻⁷.
+- **Label GAIN.** The safety checks were clean and the reference passed.
+- **The one v2 miss:** a target note dropped as `content_free`.
+- **Independent check:** rescoring, `reverify()`, presence and hash checks found 0 mismatches.
+- **Known gaps** (probes outside the primary measure):
+  - value-less corrections keep the older value;
+  - targets past the 4-slot cap are lost.
+- **Result and receipt:** [result](../HAR009_C_SUMMARY_V2_RESULT.md), [receipt](../evidence/context-summary-c2-20261112.json).
+- **Scope.** The label is descriptive, on synthetic controlled retention. No default changes: making `evicted_summary` a default or widening its scope needs the owner's approval and its own review.
 
 ### Alternatives (Amendment 1)
 
