@@ -6458,3 +6458,19 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - deploy keys for Mirrix;
   - deleting the four old repositories (`delete_repo`);
   - the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Self-hosted CI finished for all three repositories
+
+- **Owner's steps (by 14:20 +07):**
+  - deploy keys enabled for `Leiz-Workspace`, so the `mirrix CI` key is active again;
+  - the four old repositories deleted; the organization now holds only `local-assistant`, `web-cloner-template` and `Mirrix`.
+- **Mirrix PR #3, re-run on the pool:**
+  - CI passed on `aevra-home-2`;
+  - Plan and Package (linux) passed on `aevra-home-1`: AppImage and .deb built, .deb mode gate passed, Electron smoke test passed under `xvfb-run`;
+  - no Windows job ran on the pull request, as designed;
+  - the PR was merged.
+- **After the merges:**
+  - the develop push runs passed on the pool (web-cloner-template on `aevra-home-2`, Mirrix on `aevra-home-3`);
+  - web-cloner-template PR #20, which bumps the `desktop` submodule to Mirrix develop, passed on `aevra-home-3` and was merged.
+- **Result.** CI runs on the Home Server for all three repositories, with three concurrent runners. Releases of Mirrix still build the Windows installer on GitHub-hosted runners, within the organization's allowance.
+- **Still the owner's:** the sshd password-login decision, ADR-195, D81, D89 and D90.

@@ -114,6 +114,13 @@
     - **web-cloner-template** PR #19 passed on `aevra-home-3` in 58 s, and was merged.
     - **Mirrix** PR #3: Plan version passed on `aevra-home-2`. Lint/typecheck/test/build and Package (linux), both on `aevra-home-1`, stopped at "Checkout website template" ("Could not read from remote repository"), because the organization has deploy keys disabled (`deploy_keys_enabled_for_repositories=false`). `TEMPLATE_DEPLOY_KEY` stopped working when the repositories moved into the organization.
   - **Found on the way.** Before `CI_RUNS_ON` was set in the two other repositories, their pull requests ran on GitHub-hosted runners and were not blocked. The billing block applied to the personal account; repositories in `Leiz-Workspace` use the organization's own Free allowance.
-- **Pending the owner:**
-  - enable deploy keys in the organization's settings (Repository policies), then re-run Mirrix PR #3;
-  - delete the four old repositories, which needs the `delete_repo` scope or the web UI.
+- **Completed on 2026-11-13 (14:20 +07).** The owner enabled deploy keys for the organization (`deploy_keys_enabled_for_repositories=true`; the `mirrix CI` read-only key shows `enabled=true`). The owner also deleted the four old repositories; the organization now holds only `local-assistant`, `web-cloner-template` and `Mirrix`.
+  - **Mirrix PR #3, re-run on the pool.** Lint/typecheck/test/build passed on `aevra-home-2`. Plan version passed on `aevra-home-1`. Package (linux) passed on `aevra-home-1` in about 2 minutes:
+    - it built the AppImage and the .deb;
+    - the .deb mode gate passed;
+    - the Electron smoke test passed under `xvfb-run` with the instance's own display.
+
+    No Windows job ran on the pull request, as designed. PR #3 was merged.
+  - **Develop push runs after the merges** passed on the pool: web-cloner-template on `aevra-home-2`, Mirrix on `aevra-home-3`.
+  - **Submodule bump.** web-cloner-template PR #20 bumps its `desktop` submodule to Mirrix develop; it passed on `aevra-home-3` and was merged.
+  - **Status.** All three repositories now run CI on the shared pool and are green. Mirrix's Windows installer for releases still builds on GitHub-hosted `windows-latest`, within the organization's own allowance.
