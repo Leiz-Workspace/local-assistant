@@ -113,9 +113,10 @@ InaccessiblePaths=-/run/ssh-unix-local
 # behalf is outside it (tailscaled above; sshd, which forwards nothing for runner-user logins
 # because it denies them, ADR-194). Loopback stays allowed for the tests' 127.0.0.1 listeners and
 # the 127.0.0.53 DNS stub, so jobs can still connect to every service listening on loopback.
-# Not all of them authenticate: Redis on 127.0.0.1:6379 and the host mongod on 127.0.0.1:27017
-# accept every command without authentication, and sshd on 127.0.0.1:22 accepts password guesses
-# for other accounts. These are residual risks for the owner to decide (ADR-194).
+# Not all of them authenticate: Redis on 127.0.0.1:6379 accepts every command without
+# authentication (the host mongod on 127.0.0.1:27017 has had authorization since 2026-11-13), and
+# sshd on 127.0.0.1:22 accepts password guesses for other accounts. These are residual risks for
+# the owner to decide (ADR-194).
 IPAddressDeny=10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 169.254.0.0/16 224.0.0.0/4 fc00::/7 fe80::/10 ff00::/8 255.255.255.255/32
 
 # Leave headroom for CORE, the services and benchmarks on the same host.

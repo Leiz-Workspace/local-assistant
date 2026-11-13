@@ -233,10 +233,10 @@ cat <<EOF
 
 Done. The runner runs as ${RUNNER_USER} with no access to /home (owner files, Vault bootstrap,
 models, data/) or the GPU, and no direct connections to the LAN, Docker or k3s networks.
-Services listening on loopback stay reachable. Redis (127.0.0.1:6379) and the host mongod
-(127.0.0.1:27017) accept every command without authentication, and sshd on 127.0.0.1:22 accepts
-password guesses for other accounts. The tailnet (through tailscaled) stays an open path until
-the unit's mask is validated. See ADR-194, Residual risks.
+Services listening on loopback stay reachable. Redis (127.0.0.1:6379) accepts every command
+without authentication, and sshd on 127.0.0.1:22 accepts password guesses for other accounts.
+The unit hides tailscaled's LocalAPI socket; the self-hosted preflight reports it if that mask
+is ever lost. See ADR-194, Residual risks.
   Status:         sudo systemctl status ${SERVICE}
   Pause (benchmarks, D87): sudo systemctl stop ${SERVICE}
   Resume:         sudo systemctl start ${SERVICE}
