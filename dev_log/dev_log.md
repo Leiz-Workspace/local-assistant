@@ -6385,3 +6385,15 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **SSH denial, live:** one `ssh -o BatchMode=yes gh-runner@127.0.0.1` attempt was refused, and sshd logged `User gh-runner from 127.0.0.1 not allowed because listed in DenyUsers`.
 - **Still not exercised on the installed unit:** runner self-update (waits for a new runner release), uninstall (only when the runner is removed) and `lint` (the next pull request that changes Python).
 - **Still the owner's:** authorization on the host `mongod` (`/etc/mongod.conf` still has no `authorization`), the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Host mongod authorization enabled
+
+- **What the owner did.** Following the steps recorded in ADR-194:
+  - created the admin user (`root@admin`) with `passwordPrompt()`, so the password never appeared on a command line;
+  - added `security.authorization: enabled` to `/etc/mongod.conf`;
+  - restarted `mongod` at 11:50:42 (+07).
+
+  An earlier attempt restarted `mongod` at 11:48:18 without changing the file. The command had joined its steps with `;`, so the restart ran even though the file write failed. The second command used `&&`.
+- **Checks without credentials:** an unauthenticated `listDatabases` returns `Unauthorized`, and `ping` still returns `ok: 1`.
+- **Records updated:** ADR-194 (context, loopback residual risks, hardening list), the runner README, the unit file's comment and the outstanding-work status. The installed unit still carries the old comment; the next `install.sh` run replaces it, and that restarts the runner when it is idle.
+- **Still the owner's:** clients of `agent_angi_recipes`, `default_database`, `nutrition_ai` and `steam_db` need their own credentials. Redis on 6379 still has no authentication, and the sshd password-login decision is open. ADR-195, D81, D89 and D90 are also open.
