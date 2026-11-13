@@ -2,7 +2,7 @@
 
 **Purpose:** Run the CI of the owner's three private repositories on one pool of self-hosted runners on the Home Server. The repositories are `local-assistant`, `web-cloner-template` and `Mirrix`, all now in the `Leiz-Workspace` organization. The change also shortens `local-assistant`'s CI without dropping any test it ran. It extends [ADR-194](194-self-hosted-github-actions-runner.md), whose hardened runner unit it keeps.
 
-**Date:** 2026-11-13. **Status:** ACCEPTED by the owner's request. The owner asked to remove the four old repositories of `Leiz-Workspace`, move the three current repositories into it, run a shared runner, and make CI faster but still effective. The scripts, units and workflow changes are implemented. Installing the pool needs the owner's sudo, and organization registration needs a token from the owner (see Validation).
+**Date:** 2026-11-13. **Status:** ACCEPTED by the owner's request. The owner asked to remove the four old repositories of `Leiz-Workspace`, move the three current repositories into it, run a shared runner, and make CI faster but still effective. The scripts, units and workflow changes are implemented. The owner installed the pool on 2026-11-13, and the first concurrent run passed in local-assistant and web-cloner-template (see Validation).
 
 ## Context
 
@@ -103,9 +103,17 @@
     - documentation fixes.
 - **The first xdist measurement failed for a reason in the measurement itself.** It used `uv run --with pytest-xdist`, whose interpreter lives in uv's cache. The project sandboxes do not bind that directory, so 132 sandbox tests failed. The same 10 tests fail with that interpreter and no xdist, and pass with the project venv.
 - **With xdist in the project venv,** two causes remained: the AF_UNIX path length, and the leak check counting other workers' sandboxes. Both are fixed above.
+- **Installed and run on 2026-11-13.**
+  - **Install.** The owner installed `xvfb`, then ran `sudo -v && scripts/ci-runner/install.sh --use` with a pasted registration token (no `admin:org` scope). The script reported `aevra-home-1`, `-2` and `-3` online and set `CI_RUNS_ON` in all three repositories.
+  - **Checked afterwards, without sudo:**
+    - the v1 unit file is gone and `Leiz-Workspace/local-assistant` has 0 repository-level runners;
+    - the three instances run in `/system.slice/system-ghrunners.slice` (`CPUWeight` 20, `CPUQuota` 1200%, `MemoryMax` 20G);
+    - each instance has `NoNewPrivs: 1`, the three mount masks and its own `TMPDIR` (`/var/lib/gh-runner/tmp/<n>`).
+  - **First concurrent run.** All three repositories started CI at the same time (07:08 UTC):
+    - **local-assistant** (`workflow_dispatch` on `develop`, run 43383562394) passed in about 4.5 minutes, with its jobs spread over all three runners: test-python on `aevra-home-2` (7,422 passed, 368 skipped, 0 failed, pytest 194.72 s while the other repositories' jobs ran), test-js on `aevra-home-1`, lint on `aevra-home-3`. The preflight blocked the 8 host addresses.
+    - **web-cloner-template** PR #19 passed on `aevra-home-3` in 58 s, and was merged.
+    - **Mirrix** PR #3: Plan version passed on `aevra-home-2`. Lint/typecheck/test/build and Package (linux), both on `aevra-home-1`, stopped at "Checkout website template" ("Could not read from remote repository"), because the organization has deploy keys disabled (`deploy_keys_enabled_for_repositories=false`). `TEMPLATE_DEPLOY_KEY` stopped working when the repositories moved into the organization.
+  - **Found on the way.** Before `CI_RUNS_ON` was set in the two other repositories, their pull requests ran on GitHub-hosted runners and were not blocked. The billing block applied to the personal account; repositories in `Leiz-Workspace` use the organization's own Free allowance.
 - **Pending the owner:**
-  - `sudo apt install xvfb`, for Mirrix's Linux smoke test;
-  - `sudo -v && scripts/ci-runner/install.sh --use`, which needs the organization registration token or the `admin:org` scope;
-  - deleting the four old repositories, which needs the `delete_repo` scope or the web UI.
-
-  After that, a pull request in each of the three repositories must pass on the pool.
+  - enable deploy keys in the organization's settings (Repository policies), then re-run Mirrix PR #3;
+  - delete the four old repositories, which needs the `delete_repo` scope or the web UI.

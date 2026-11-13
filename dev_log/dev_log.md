@@ -6441,3 +6441,20 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - `sudo apt install xvfb`;
   - `sudo -v && scripts/ci-runner/install.sh --use`, with the organization registration token or the `admin:org` scope;
   - deleting the four repositories, through the `delete_repo` scope or the web UI.
+
+## 2026-11-13 — Shared runner pool installed; first concurrent CI on all three repositories
+
+- **Install.** The owner installed `xvfb`, then ran `sudo -v && scripts/ci-runner/install.sh --use` with a pasted registration token. Result: `aevra-home-1..3` online in `Leiz-Workspace`, and `CI_RUNS_ON` set in `local-assistant`, `web-cloner-template` and `Mirrix`.
+- **Checks without sudo:**
+  - the v1 unit is removed and no repository-level runner remains;
+  - the instances run in `/system.slice/system-ghrunners.slice` (`CPUWeight` 20, 1200%, 20G);
+  - each instance has `NoNewPrivs: 1`, the three masks and its own `TMPDIR`.
+- **Concurrent run at 07:08 UTC** (each instance picked up jobs at the same time):
+  - **local-assistant**, run 43383562394: passed in about 4.5 minutes, with jobs on all three runners. test-python on `aevra-home-2`: 7,422 passed, 0 failed, 194.72 s.
+  - **web-cloner-template**, PR #19: passed on `aevra-home-3` and was merged.
+  - **Mirrix**, PR #3: stops at the template checkout. The organization has deploy keys disabled, so `TEMPLATE_DEPLOY_KEY` stopped working after the transfer. The owner needs to enable deploy keys in the organization settings.
+- **Found on the way.** Repositories in the organization can run on GitHub-hosted runners again. The billing block was on the personal account; the organization has its own Free allowance.
+- **Still the owner's:**
+  - deploy keys for Mirrix;
+  - deleting the four old repositories (`delete_repo`);
+  - the sshd password-login decision, ADR-195, D81, D89 and D90.
