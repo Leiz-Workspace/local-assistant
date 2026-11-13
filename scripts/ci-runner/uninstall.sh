@@ -1,50 +1,50 @@
 #!/usr/bin/env bash
-# Remove the Home Server's self-hosted GitHub Actions runner (ADR-194).
+# Remove the Home Server's shared self-hosted GitHub Actions runners (ADR-194, ADR-196).
 #
 # Run as your own user (not root); sudo is used for the system steps.
-#   scripts/ci-runner/uninstall.sh           delete CI_RUNS_ON, stop the service, kill every process of
-#                                            the runner user, delete its ~/.ssh, deregister the runner
-#                                            through the GitHub API, delete the runner tree and remove
-#                                            the unit
+#   scripts/ci-runner/uninstall.sh           delete CI_RUNS_ON in RUNNER_USE_REPOS, stop every runner
+#                                            instance (and a v1 runner), kill every process of the
+#                                            runner user, delete its ~/.ssh, deregister the runners
+#                                            through the GitHub API, delete the runner trees and
+#                                            remove the units and the slice
 #   scripts/ci-runner/uninstall.sh --purge   also delete the user and its home and remove its SSH denial
-# Overrides: RUNNER_REPO (default DungeonLeiz/local-assistant), RUNNER_NAME.
+# Overrides: RUNNER_ORG (default Leiz-Workspace), RUNNER_USE_REPOS, RUNNER_V1_REPO.
 # CI falls back to GitHub-hosted runners once CI_RUNS_ON is deleted. If that deletion fails, the
-# script stops before touching the runner. Nothing in the runner tree is ever executed here: job
-# code can rewrite that tree, so it is deleted, not run.
+# script stops before touching the runners. Nothing in a runner tree is ever executed here: job
+# code can rewrite those trees, so they are deleted, not run. Deregistering organization runners
+# needs the admin:org scope; without it the script does everything else, names the page where you
+# remove them, and exits with status 3, because their stolen credentials stay valid until then.
 set -euo pipefail
 
-REPO="${RUNNER_REPO:-DungeonLeiz/local-assistant}"
-RUNNER_NAME="${RUNNER_NAME:-aevra-home-1}"
-# Fixed on purpose: install.sh creates exactly this account and home.
+ORG="${RUNNER_ORG:-Leiz-Workspace}"
+USE_REPOS="${RUNNER_USE_REPOS:-local-assistant web-cloner-template Mirrix}"
+V1_REPO="${RUNNER_V1_REPO:-${ORG}/local-assistant}"
+# Fixed on purpose: install.sh creates exactly this account, home and these units.
 RUNNER_USER="gh-runner"
 RUNNER_HOME="/var/lib/gh-runner"
-SERVICE="aevra-gh-runner"
-UNIT_PATH="/etc/systemd/system/${SERVICE}.service"
-CGROUP_PROCS="/sys/fs/cgroup/system.slice/${SERVICE}.service/cgroup.procs"
+NAME_PREFIX="aevra-home-"
+TEMPLATE="aevra-gh-runner@"
+SLICE="system-ghrunners.slice"
+V1_SERVICE="aevra-gh-runner"
 
 die() { echo "error: $*" >&2; exit 1; }
 step() { echo "==> $*"; }
 user_procs() { pgrep -u "$RUNNER_USER" >/dev/null || pgrep -U "$RUNNER_USER" >/dev/null; }
 
-# Print one jq expression evaluated on each entry with this name in the repository's runner list.
-runner_field() {
-  gh api "repos/${REPO}/actions/runners" --paginate \
-    --jq ".runners[] | select(.name == \"${RUNNER_NAME}\") | $1"
-}
-
 purge=0
 for arg in "$@"; do
   case "$arg" in
     --purge) purge=1 ;;
-    -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
     *) die "unknown argument: $arg" ;;
   esac
 done
 [ "$(id -u)" -ne 0 ] || die "run as your own user; the script calls sudo for the system steps"
 command -v gh >/dev/null || die "gh CLI is required"
 gh auth status >/dev/null 2>&1 || die "gh is not authenticated (run: gh auth login); nothing was changed"
-[[ "$REPO" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || die "invalid RUNNER_REPO"
-[[ "$RUNNER_NAME" =~ ^[A-Za-z0-9_.-]+$ ]] || die "invalid RUNNER_NAME"
+[[ "$ORG" =~ ^[A-Za-z0-9_.-]+$ ]] || die "invalid RUNNER_ORG"
+[[ "$V1_REPO" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || die "invalid RUNNER_V1_REPO"
+for repo in $USE_REPOS; do [[ "$repo" =~ ^[A-Za-z0-9_.-]+$ ]] || die "invalid name in RUNNER_USE_REPOS: $repo"; done
 
 # Sanity checks before anything changes: only the runner's own system account, its processes and
 # its home are touched.
@@ -65,29 +65,37 @@ elif sudo test -e "$RUNNER_HOME"; then
     || die "${RUNNER_HOME} belongs to an existing account; refusing; nothing was changed"
 fi
 
-step "Routing CI back to GitHub-hosted runners"
-# Read the list first: inside an `if gh ... | grep` condition, a gh failure would skip the delete.
-names="$(gh variable list --repo "$REPO" --json name --jq '.[].name')" \
-  || die "cannot read the variables of ${REPO}; nothing was changed"
-if grep -qx CI_RUNS_ON <<<"$names"; then
-  gh variable delete CI_RUNS_ON --repo "$REPO" \
-    || die "could not delete CI_RUNS_ON; the runner was left running"
-fi
+step "Routing CI of ${USE_REPOS} back to GitHub-hosted runners"
+for repo in $USE_REPOS; do
+  # Read the list first: inside an `if gh ... | grep` condition, a gh failure would skip the delete.
+  names="$(gh variable list --repo "${ORG}/${repo}" --json name --jq '.[].name')" \
+    || die "cannot read the variables of ${ORG}/${repo}; the runners were left running"
+  if grep -qx CI_RUNS_ON <<<"$names"; then
+    gh variable delete CI_RUNS_ON --repo "${ORG}/${repo}" \
+      || die "could not delete CI_RUNS_ON in ${ORG}/${repo}; the runners were left running"
+  fi
+done
 
-step "Stopping ${SERVICE} (sudo)"
-if [ -f "$UNIT_PATH" ]; then
-  sudo systemctl disable --now "$SERVICE"
+step "Stopping every runner instance (sudo)"
+units="$(systemctl list-units --all --plain --no-legend "${TEMPLATE}*.service" | awk '{print $1}')"
+for unit in $units; do
+  sudo systemctl disable --now "$unit" || true
+done
+if [ -f "/etc/systemd/system/${V1_SERVICE}.service" ]; then
+  sudo systemctl disable --now "$V1_SERVICE"
 fi
-if [ -n "$(cat "$CGROUP_PROCS" 2>/dev/null)" ]; then
-  # A unit from before KillMode=mixed, or a stop that timed out, can leave job processes behind.
-  step "Killing processes left in the ${SERVICE} cgroup (sudo)"
-  sudo systemctl kill --kill-whom=all --signal=SIGKILL "$SERVICE"
-fi
+# A stop that timed out can leave job processes behind in a unit's cgroup.
+for unit in $units "${V1_SERVICE}.service"; do
+  cg="$(systemctl show -p ControlGroup --value "$unit" 2>/dev/null || true)"
+  if [ -n "$cg" ] && [ -n "$(cat "/sys/fs/cgroup${cg}/cgroup.procs" 2>/dev/null)" ]; then
+    step "Killing processes left in ${unit} (sudo)"
+    sudo systemctl kill --kill-whom=all --signal=SIGKILL "$unit"
+  fi
+done
 
 if [ -n "$runner_uid" ]; then
-  # Processes of the runner user may run outside the unit, for example an SSH session opened
-  # before install.sh denied SSH logins as that user (ADR-194). None of them may outlive the
-  # uninstall, with or without --purge.
+  # Processes of the runner user may run outside the units, for example an SSH session opened
+  # before install.sh denied SSH logins as that user. None of them may outlive the uninstall.
   step "Removing lingering, the crontab and every process of ${RUNNER_USER} (sudo)"
   sudo loginctl disable-linger "$RUNNER_USER"
   if sudo crontab -l -u "$RUNNER_USER" >/dev/null 2>&1; then
@@ -99,35 +107,47 @@ if [ -n "$runner_uid" ]; then
     sudo pkill -KILL -U "$RUNNER_USER" || [ "$?" -eq 1 ]
   fi
   for _ in $(seq 1 20); do user_procs || break; sleep 0.5; done
-  ! user_procs || die "processes of ${RUNNER_USER} are still running; the runner tree and the account were kept"
-
-  # sshd denies SSH logins as the runner user (install.sh, ADR-194), so a key that job code planted
-  # in ~/.ssh gives no login. Delete it anyway as defense in depth, in case that denial is ever
-  # lost, with or without --purge, now that no process of the user can write a new one. rm removes
-  # a planted symlink itself and does not follow it.
+  ! user_procs || die "processes of ${RUNNER_USER} are still running; the runner trees and the account were kept"
+  # A key that job code planted in ~/.ssh gives no login while sshd denies the user; delete it
+  # anyway, now that no process of the user can write a new one. rm does not follow a planted link.
   step "Deleting ${RUNNER_HOME}/.ssh (sudo)"
   sudo rm -rf --one-file-system -- "$RUNNER_HOME/.ssh"
 fi
 
-step "Deregistering ${RUNNER_NAME} from ${REPO} through the GitHub API"
-# The runner id comes from GitHub, not from the job-writable runner/.runner file, and no removal
-# token reaches the runner user. This needs the same admin access to the repository as install.sh.
-ids="$(runner_field .id)" \
-  || die "cannot read the runner list of ${REPO}; the service is stopped and the runner tree was kept, rerun to finish"
-[ -n "$ids" ] || echo "note: no runner named ${RUNNER_NAME} is registered on ${REPO}"
-for id in $ids; do
+org_left=0
+step "Deregistering the runners from GitHub"
+# Ids come from GitHub, not from the job-writable runner trees, and no removal token reaches the
+# runner user. A v1 runner is registered on a repository; repository admin is enough for it.
+v1_ids="$(gh api "repos/${V1_REPO}/actions/runners" --paginate --jq ".runners[] | select(.name | startswith(\"${NAME_PREFIX}\")) | .id" 2>/dev/null || true)"
+for id in $v1_ids; do
   [[ "$id" =~ ^[0-9]+$ ]] || die "unexpected runner id from the GitHub API"
-  gh api -X DELETE "repos/${REPO}/actions/runners/${id}" >/dev/null \
-    || die "could not deregister runner ${id}; the service is stopped and the runner tree was kept, rerun to finish"
+  gh api -X DELETE "repos/${V1_REPO}/actions/runners/${id}" >/dev/null \
+    || die "could not deregister runner ${id} from ${V1_REPO}; the services are stopped and the trees were kept, rerun to finish"
 done
+if org_ids="$(gh api "orgs/${ORG}/actions/runners" --paginate --jq ".runners[] | select(.name | startswith(\"${NAME_PREFIX}\")) | .id" 2>/dev/null)"; then
+  [ -n "$org_ids" ] || echo "note: no runner named ${NAME_PREFIX}* is registered in ${ORG}"
+  for id in $org_ids; do
+    [[ "$id" =~ ^[0-9]+$ ]] || die "unexpected runner id from the GitHub API"
+    gh api -X DELETE "orgs/${ORG}/actions/runners/${id}" >/dev/null \
+      || die "could not deregister runner ${id} from ${ORG}; the services are stopped and the trees were kept, rerun to finish"
+  done
+else
+  org_left=1
+  echo "warning: gh has no admin:org scope, so the organization runners stay registered (offline), and" \
+    "credentials a job may have copied stay valid until they are removed." \
+    "Remove the ${NAME_PREFIX}* runners at https://github.com/organizations/${ORG}/settings/actions/runners" \
+    "or run: gh auth refresh -h github.com -s admin:org, then rerun this script." >&2
+fi
 
-step "Deleting the runner tree ${RUNNER_HOME}/runner (sudo)"
-# Job code can rewrite this tree, credentials included. A later install.sh unpacks a fresh,
-# checksum-verified copy and registers again.
-sudo rm -rf --one-file-system -- "$RUNNER_HOME/runner"
+step "Deleting the runner trees (sudo)"
+# Job code can rewrite these trees, credentials included. A later install.sh unpacks fresh,
+# checksum-verified copies and registers again.
+sudo rm -rf --one-file-system -- "$RUNNER_HOME/runners" "$RUNNER_HOME/runner"
 
-step "Removing the unit file (sudo)"
-sudo rm -f "$UNIT_PATH"
+step "Removing the units and the slice (sudo)"
+sudo rm -f "/etc/systemd/system/${TEMPLATE}.service" "/etc/systemd/system/${V1_SERVICE}.service" \
+  "/etc/systemd/system/${SLICE}"
+sudo rm -f /etc/systemd/system/multi-user.target.wants/${TEMPLATE}*.service
 sudo systemctl daemon-reload
 
 SSHD_DROPIN="/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf"
@@ -150,6 +170,10 @@ if [ "$purge" = 1 ]; then
   step "Deleting ${RUNNER_HOME} (sudo)"
   sudo rm -rf --one-file-system -- "$RUNNER_HOME"
 fi
-# Without --purge the account, the rest of its home (for example ~/.gitconfig and caches written
-# by CI jobs), the mask on its user manager and its SSH denial stay; ~/.ssh was deleted above.
+# Without --purge the account, the rest of its home (for example ~/.gitconfig, tmp/ and caches
+# written by CI jobs), the mask on its user manager and its SSH denial stay; ~/.ssh was deleted above.
+if [ "$org_left" = 1 ]; then
+  echo "Done locally. Remove every ${NAME_PREFIX}* runner at https://github.com/organizations/${ORG}/settings/actions/runners" >&2
+  exit 3
+fi
 echo "Done."

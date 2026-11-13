@@ -2,7 +2,7 @@
 
 **Purpose:** Let the repository's CI run on the Home Server while staying a normal GitHub Actions workflow with checks on every pull request. Any job can be switched back to GitHub-hosted runners without a code change.
 
-**Date:** 2026-11-12. **Status:** ACCEPTED by the owner's request ("tự host CI và vẫn muốn chạy được trên Github"). The workflow change and the setup kit are implemented and were revised after security reviews before the first install. The owner installed the runner on 2026-11-13. Its first CI run passed on the Home Server (PR #76, run 43302985450); see Validation.
+**Date:** 2026-11-12. **Status:** ACCEPTED by the owner's request ("tự host CI và vẫn muốn chạy được trên Github"). The workflow change and the setup kit are implemented and were revised after security reviews before the first install. The owner installed the runner on 2026-11-13. Its first CI run passed on the Home Server (PR #76, run 43302985450); see Validation. **Extended by [ADR-196](196-organization-shared-runner-pool.md) on 2026-11-13:** the repository moved into the `Leiz-Workspace` organization, and the single repository-level runner is replaced by a pool of three organization-level instances of the same hardened unit (`aevra-gh-runner@<n>.service`), shared with `web-cloner-template` and `Mirrix`.
 
 ## Context
 
@@ -79,7 +79,7 @@
    - Still reachable around `IPAddressDeny=`: tailnet peers through tailscaled's LocalAPI socket, until the unit's mask on it is validated (see Consequences).
    - Still readable: the command line of every host process, so no secret may be passed as an argument on the host while the runner is installed.
    - Redis on 127.0.0.1:6379 accepts every command without authentication. The host `mongod` on 127.0.0.1:27017 did too until the owner enabled authorization on 2026-11-13. The Docker MongoDB on 27018 runs with `--auth`. sshd on 127.0.0.1:22 accepts password guesses for other accounts, the owner included. These residual risks are the owner's to decide (see Consequences).
-5. **Measurements.** Native benchmarks and D87 pause the runner (`systemctl stop aevra-gh-runner`) and keep using the idle-host check. With `KillMode=mixed`, the pause also ends any process a job left behind in the unit, and `RemoveIPC=yes` removes the IPC objects it left. An SSH key a job planted gives no SSH session that could outlive the pause, because sshd denies logins as `gh-runner`.
+5. **Measurements.** Native benchmarks and D87 pause the runner (`systemctl stop aevra-gh-runner`; since ADR-196 all pool instances: `sudo systemctl stop 'aevra-gh-runner@*'`) and keep using the idle-host check. With `KillMode=mixed`, the pause also ends any process a job left behind in the unit, and `RemoveIPC=yes` removes the IPC objects it left. An SSH key a job planted gives no SSH session that could outlive the pause, because sshd denies logins as `gh-runner`.
 
 ## Alternatives
 

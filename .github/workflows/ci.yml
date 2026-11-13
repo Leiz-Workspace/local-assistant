@@ -49,12 +49,14 @@ jobs:
     runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
     outputs:
       python_files: ${{ steps.changed.outputs.python_files }}
+      run_tests: ${{ steps.changed.outputs.run_tests }}
+      quarantine: ${{ steps.changed.outputs.quarantine }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
         with:
           fetch-depth: 0
       - id: changed
-        name: List changed Python files
+        name: List changed files
         env:
           EVENT: ${{ github.event_name }}
           BASE_REF: ${{ github.base_ref }}
@@ -62,13 +64,21 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           BEFORE_SHA: ${{ github.event.before }}
         run: |
+          # The quarantine job runs only while its list has an entry.
+          if grep -Eqv '^[[:space:]]*(#|$)' .github/ci/hosted-runner-quarantine.txt 2>/dev/null; then
+            echo "quarantine=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "quarantine=false" >> "$GITHUB_OUTPUT"
+          fi
           # Lint guards changes entering develop. Promotions to staging/production carry
           # code already linted there; linting their whole diff would only re-report the
-          # pre-existing debt in hash-protected historical files.
+          # pre-existing debt in hash-protected historical files. Promotions, tags and manual
+          # runs always run every test job.
           if [[ "$EVENT" == "pull_request" && "$BASE_REF" =~ ^(staging|production)$ ]] ||
              [[ "$EVENT" == "push" && "$REF" =~ ^refs/(heads/(staging|production)|tags/) ]]; then
             echo "Promotion ($EVENT ${BASE_REF:-$REF}): lint is enforced on changes into develop."
             echo "python_files=" >> "$GITHUB_OUTPUT"
+            echo "run_tests=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if [ "$EVENT" = "pull_request" ]; then
@@ -81,6 +91,30 @@ jobs:
           files="$(git diff --name-only --diff-filter=ACMR "$base" HEAD -- '*.py' | tr '\n' ' ')"
           echo "Changed Python files: $(echo $files | wc -w)"
           echo "python_files=$files" >> "$GITHUB_OUTPUT"
+          # A pull request skips the test jobs only when every changed path is documentation that
+          # nothing reads: dev_log/, or docs/ outside docs/evidence/ and docs/proposals/ (tests and the
+          # voice trial read those) whose exact path appears in no non-Markdown file of tests,
+          # benchmarks, src, apps, scripts, configs or .github. A rename lists its old and new paths,
+          # so moving a file out of code into docs/ runs every test. Every push (develop after a
+          # merge, where an earlier run may have been cancelled) and every manual run tests all.
+          run_tests=false
+          [ "$EVENT" = pull_request ] || run_tests=true
+          changed="$(git diff --no-renames --name-only "$base" HEAD)"
+          [ -n "$changed" ] || run_tests=true
+          while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            case "$path" in
+              dev_log/*) ;;
+              docs/evidence/*|docs/proposals/*) run_tests=true ;;
+              docs/*)
+                if git grep -qF -- "$path" -- tests benchmarks src apps scripts configs .github ':(exclude)*.md'; then
+                  run_tests=true
+                fi ;;
+              *) run_tests=true ;;
+            esac
+          done <<<"$changed"
+          echo "Run test jobs: $run_tests"
+          echo "run_tests=$run_tests" >> "$GITHUB_OUTPUT"
 
   lint:
     needs: prepare
@@ -98,6 +132,7 @@ jobs:
 
   test-python:
     needs: prepare
+    if: needs.prepare.outputs.run_tests == 'true'
     runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
     timeout-minutes: 45
     env:
@@ -114,25 +149,42 @@ jobs:
         env:
           PYTHONPATH: .github/ci
           HOSTED_TEST_MODE: main
+          # pytest-xdist needs every worker to collect the same parametrized ids; some ids come
+          # from set iteration, so the hash seed is fixed.
+          PYTHONHASHSEED: "0"
+          RUNNER_KIND: ${{ runner.environment }}
         run: |
           # Pinned-Ruff tests look for the binary under ~/.cache/uv, as on the Home Server.
           export UV_CACHE_DIR="$HOME/.cache/uv"
           # Older revisions have no benchmarks/tests; pass only directories that exist.
           dirs=()
           for d in tests benchmarks/tests; do [ -d "$d" ] && dirs+=("$d"); done
-          uv run --no-sync python -m pytest "${dirs[@]}" \
+          # Parallel workers when the revision has pytest-xdist: 6 on the Home Server (a runner
+          # instance may use 8 CPUs), 2 on a GitHub-hosted runner. Whole files stay on one worker
+          # (--dist loadfile), so module fixtures are built once.
+          parallel=()
+          if uv run --no-sync python -c 'import xdist' 2>/dev/null; then
+            workers=6; [ "$RUNNER_KIND" = github-hosted ] && workers=2
+            parallel=(-n "$workers" --dist loadfile)
+          fi
+          # A short base directory keeps AF_UNIX socket paths in tmp_path under 108 bytes.
+          basetemp="${TMPDIR:-${RUNNER_TEMP:-/tmp}}/pt"
+          uv run --no-sync python -m pytest "${dirs[@]}" "${parallel[@]}" \
             -p hosted_exclusions -p no:cacheprovider -q -rfE \
-            -o tmp_path_retention_policy=failed \
+            -o tmp_path_retention_policy=failed --basetemp="$basetemp" \
             --junitxml=pytest-junit.xml
+      # Nothing reads the JUnit file of a passing run, so it is kept only for a failed or
+      # cancelled one.
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
-        if: always()
+        if: failure() || cancelled()
         with:
           name: pytest-junit-main
           path: pytest-junit.xml
-          retention-days: 14
+          retention-days: 7
 
   test-python-quarantine:
     needs: prepare
+    if: needs.prepare.outputs.run_tests == 'true' && needs.prepare.outputs.quarantine == 'true'
     runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
     timeout-minutes: 45
     # Known-intermittent tests (see .github/ci/hosted-runner-quarantine.txt) still run and
@@ -170,14 +222,15 @@ jobs:
           fi
           exit "$status"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
-        if: always()
+        if: failure() || cancelled()
         with:
           name: pytest-junit-quarantine
           path: pytest-junit.xml
-          retention-days: 14
+          retention-days: 7
 
   test-js:
     needs: prepare
+    if: needs.prepare.outputs.run_tests == 'true'
     runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
@@ -232,7 +285,8 @@ jobs:
         with:
           name: ${{ steps.bundle.outputs.name }}
           path: dist/
-          retention-days: 30
+          # Reproducible from the tagged commit with git archive; the release job copies it.
+          retention-days: 14
 
   deploy-staging:
     needs: package

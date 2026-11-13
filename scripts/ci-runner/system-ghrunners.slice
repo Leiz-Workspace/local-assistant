@@ -1,0 +1,17 @@
+# Shared resource limits for all instances of aevra-gh-runner@.service (ADR-196).
+# The name places it under system.slice (system-ghrunners.slice is a child of system.slice), so the
+# pool competes with the other system services, not with system.slice as a whole.
+# Rendered and installed by scripts/ci-runner/install.sh.
+[Unit]
+Description=Leiz-Workspace self-hosted CI runners (shared limits, ADR-196)
+
+[Slice]
+# Three concurrent jobs may together use at most 12 of the host's 16 logical CPUs and 20G of its
+# 30G of RAM, which leaves headroom for CORE, the data services and interactive use. Each instance
+# also keeps its own CPUQuota=800% and MemoryMax=16G. Under CPU contention the pool gets a fifth
+# of a default service's weight, so CORE and the data services go first.
+CPUWeight=20
+CPUQuota=1200%
+MemoryMax=20G
+MemorySwapMax=4G
+TasksMax=8192

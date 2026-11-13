@@ -164,26 +164,26 @@ runs:
         # fails with EPERM (or times out); outside it the closed port refuses or something answers.
         # Like the checks above, this only reports a lost setting and controls nothing.
         if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c '
-        import errno, ipaddress, socket, sys
+        import concurrent.futures, errno, ipaddress, socket, sys
         denied = [ipaddress.ip_network(n) for n in ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "100.64.0.0/10", "fc00::/7")]
         targets = [a for a in sys.argv[1:] if any(ipaddress.ip_address(a) in n for n in denied if n.version == ipaddress.ip_address(a).version)]
-        reachable = []
-        for address in targets:
+        def probe(address):
             s = socket.socket(socket.AF_INET6 if ":" in address else socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(2)
             try:
                 s.connect((address, 9))
-                reachable.append(f"{address} connected")
-            except PermissionError:
-                pass
-            except TimeoutError:
-                pass
+                return f"{address} connected"
+            except (PermissionError, TimeoutError):
+                return None
             except OSError as error:
                 if error.errno in (errno.EPERM, errno.EACCES):
-                    continue
-                reachable.append(f"{address} {errno.errorcode.get(error.errno, error.errno)}")
+                    return None
+                return f"{address} {errno.errorcode.get(error.errno, error.errno)}"
             finally:
                 s.close()
+        # All addresses at once: each blocked connect waits out its 2 s timeout.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, len(targets))) as pool:
+            reachable = [r for r in pool.map(probe, targets) if r]
         if reachable:
             sys.exit("; ".join(reachable))
         print(f"IPAddressDeny: {len(targets)} host addresses in denied ranges blocked")

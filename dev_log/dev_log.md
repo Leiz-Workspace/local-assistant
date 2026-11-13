@@ -6397,3 +6397,47 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Checks without credentials:** an unauthenticated `listDatabases` returns `Unauthorized`, and `ping` still returns `ok: 1`.
 - **Records updated:** ADR-194 (context, loopback residual risks, hardening list), the runner README, the unit file's comment and the outstanding-work status. The installed unit still carries the old comment; the next `install.sh` run replaces it, and that restarts the runner when it is idle.
 - **Still the owner's:** clients of `agent_angi_recipes`, `default_database`, `nutrition_ai` and `steam_db` need their own credentials. Redis on 6379 still has no authentication, and the sshd password-login decision is open. ADR-195, D81, D89 and D90 are also open.
+
+## 2026-11-13 — Repositories moved into Leiz-Workspace; shared runner pool; faster CI (ADR-196)
+
+- **Owner's request.** Delete the four old repositories of `Leiz-Workspace`, move the three current repositories into it, run a shared runner, and make CI faster without losing effectiveness.
+- **Owner's choices:**
+  - delete the four repositories without a backup;
+  - three runner instances;
+  - Mirrix's Windows installer only for release runs;
+  - jobs that hold write tokens run on the pool, after the risk was explained.
+- **Done:**
+  - `local-assistant`, `web-cloner-template` and `Mirrix` were transferred to `Leiz-Workspace`, all private. Repository variables, the `staging` environment and the repository-level runner moved with them.
+  - Local remotes were updated: the `ai` checkout, `ai-website-cloner-template` and its `desktop` submodule.
+  - PR #80 (host mongod authorization record) was merged with green CI.
+  - Deleting the four old repositories waits for the `delete_repo` scope; the owner's `gh auth refresh` did not reach this machine's token.
+- **Runner pool (ADR-196, not installed yet):**
+  - `install.sh` and `uninstall.sh` were rewritten for organization-level runners: `aevra-home-1..3`, template unit `aevra-gh-runner@.service`, `system-ghrunners.slice` (12 CPUs and 20G together, `CPUWeight=20`).
+  - The install migrates from v1. Without `admin:org`, the owner pastes the registration token, and runner status comes from the journal.
+- **Other repositories:**
+  - pushed to branches `ci/self-hosted-runner` in `web-cloner-template` and `Mirrix`, with no pull requests yet;
+  - runner variable and SHA pins in both;
+  - Mirrix: Windows only on publishing runs, `jq` in place of `node` in `plan`, normalized file modes plus a `.deb` mode gate, per-instance X displays, release files in `$RUNNER_TEMP`;
+  - the token badge job uses a per-job venv and a fresh badge repository.
+- **Faster CI in `local-assistant`:**
+  - pytest-xdist (`-n 6 --dist loadfile`; 2 workers on GitHub-hosted), with `PYTHONHASHSEED=0` and a short `--basetemp`;
+  - the exclusions plugin merges the xdist workers' reports;
+  - the `test_check_runner` leak check counts only its own sandboxes;
+  - a documentation-only pull request skips the test jobs; every push runs them;
+  - the quarantine job runs only when its list has an entry;
+  - JUnit artifacts are kept only on failure, for 7 days;
+  - the `IPAddressDeny` probe runs in parallel.
+- **Measurements** (owner account, project venv, CI scope):
+  - Serial pytest took 526 s on the runner.
+  - The first xdist attempt used `uv run --with`, whose interpreter the sandboxes do not bind; 132 sandbox tests failed for that reason.
+  - In the project venv, two real causes remained: the AF_UNIX path length, and the leak check seeing other workers' sandboxes. Both are fixed.
+  - Afterwards `-n 4`, `-n 6` and `-n 8` took 185 s, 136–144 s and 115 s.
+  - The final double run at `-n 6`: 7,422 passed, 368 skipped, 0 failed, 141.46 s and 141.05 s; the scope line read `19 files ignored, 30 excluded`.
+- **Review.** Three adversarial reviewers, each with a verifier, confirmed 17 findings, 2 of them blocking; all are fixed. Afterwards:
+  - the docs-only rule was re-simulated on real commits and on a rename case;
+  - the `.deb` mode gate was tested on sample listings;
+  - `bash -n`, YAML parsing and `systemd-analyze verify` passed.
+- **Still the owner's:**
+  - `sudo apt install xvfb`;
+  - `sudo -v && scripts/ci-runner/install.sh --use`, with the organization registration token or the `admin:org` scope;
+  - deleting the four repositories, through the `delete_repo` scope or the web UI.
