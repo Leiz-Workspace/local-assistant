@@ -26,7 +26,7 @@
 
 ## Decision
 
-1. **One pool of three organization-level runners** (owner's choice: 3 instances), installed by `scripts/ci-runner/install.sh`:
+1. **One pool of three organization-level runners** (owner's choice: 3 instances), installed by `infras/ci-runner/install.sh` in the `Server` repository (moved there from `ai/scripts/ci-runner/` on 2026-11-13, because the runners serve the whole server):
    - **Registration.** `aevra-home-1`, `-2` and `-3` are registered in the Default runner group with the label `aevra-home`, so `CI_RUNS_ON=["self-hosted","aevra-home"]` reaches any idle instance.
    - **Units.** Each instance runs as the template unit `aevra-gh-runner@<n>.service` with every ADR-194 setting. Each has its own runner tree `runners/<n>`, its own `TMPDIR` (`tmp/<n>`) and its own private `/tmp` and `/dev/shm`.
    - **Shared limits.** All instances run in `system-ghrunners.slice`, a child of `system.slice` with `CPUWeight=20`, so under contention the pool yields to CORE and the data services: `CPUQuota=1200%`, `MemoryMax=20G`, `MemorySwapMax=4G`, `TasksMax=8192`. Each instance keeps `CPUQuota=800%` and `MemoryMax=16G`.
@@ -79,7 +79,7 @@
 ## Rollback
 
 - **Back to GitHub-hosted runners.** Delete `CI_RUNS_ON` in a repository: `gh variable delete CI_RUNS_ON --repo Leiz-Workspace/<repo>`.
-- **Remove the pool.** Run `scripts/ci-runner/uninstall.sh` (or `--purge`). It stops every instance, deregisters the runners (organization runners need `admin:org`; without it the script exits with status 3 and names the page where you remove them), and deletes the trees, the template unit and the slice.
+- **Remove the pool.** Run `infras/ci-runner/uninstall.sh` in the `Server` repository (or `--purge`). It stops every instance, deregisters the runners (organization runners need `admin:org`; without it the script exits with status 3 and names the page where you remove them), and deletes the trees, the template unit and the slice.
 - **Revert the CI speed changes.** Revert the `ci.yml` and plugin commits; serial pytest still works, because the `-n` flag is only added when xdist is importable.
 
 ## Validation

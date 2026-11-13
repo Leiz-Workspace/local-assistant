@@ -3,7 +3,7 @@
 # Every job runs on the runner chosen by the repository variable CI_RUNS_ON (a JSON value
 # for runs-on). Unset, jobs use the GitHub-hosted ubuntu-24.04 image. Set to
 # ["self-hosted","aevra-home"], they use the self-hosted runner on the Home Server
-# (scripts/ci-runner/, ADR-194).
+# (Server repository infras/ci-runner/, ADR-194/196).
 #
 # GitHub-hosted runners have no GPU, models, PostgreSQL, Vault, Qdrant or private data/.
 # The self-hosted runner is a hardened systemd service under an unprivileged user: /home (owner

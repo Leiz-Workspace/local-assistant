@@ -6474,3 +6474,12 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - web-cloner-template PR #20, which bumps the `desktop` submodule to Mirrix develop, passed on `aevra-home-3` and was merged.
 - **Result.** CI runs on the Home Server for all three repositories, with three concurrent runners. Releases of Mirrix still build the Windows installer on GitHub-hosted runners, within the organization's allowance.
 - **Still the owner's:** the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Runner kit moved from ai to the Server repository
+
+- **Why.** The owner pointed out that the runners serve the whole server, not the `ai` project. The install and uninstall scripts, the template unit `aevra-gh-runner@.service`, the slice `system-ghrunners.slice` and the README now live in the `Server` repository at `infras/ci-runner/` (commit `8bd9dc5` there). That repository has no remote, so the commit is local only.
+- **Changes in `ai`:**
+  - `scripts/ci-runner/` is removed;
+  - the comments in `ci.yml` and the composite action, ADR-194, ADR-196 and the outstanding-work status point to the new place;
+  - records of commands run before the move keep the old path.
+- **Installed runners are unaffected.** The units under `/etc/systemd/system` do not refer to the source directory. A later `install.sh` run from the new place sees changed comments in the units and restarts the instances only while they are idle.
