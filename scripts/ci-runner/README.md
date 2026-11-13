@@ -1,8 +1,8 @@
-# Self-hosted CI runner (Home Server)
+# Shared self-hosted CI runners (Home Server)
 
-This directory sets up a GitHub Actions self-hosted runner, so the repository's CI (`.github/workflows/ci.yml`) can run on the Home Server and still report as normal GitHub checks. The design is recorded in [ADR-194](../../docs/ADR/194-self-hosted-github-actions-runner.md).
+This directory sets up three GitHub Actions self-hosted runners on the Home Server, registered at the level of the `Leiz-Workspace` organization. The CI of `local-assistant`, `web-cloner-template` and `Mirrix` runs on them and still reports as normal GitHub checks. The design is recorded in [ADR-194](../../docs/ADR/194-self-hosted-github-actions-runner.md) (the hardened runner unit) and [ADR-196](../../docs/ADR/196-organization-shared-runner-pool.md) (organization-level runner pool, three instances, faster CI).
 
-Self-hosted runner minutes are not billed and do not draw from the plan's included compute. GitHub-hosted jobs in this private repository were blocked by the account's billing state, so CI could not run at all.
+Self-hosted runner minutes are not billed and do not draw from the plan's included compute. GitHub-hosted jobs in these private repositories are blocked by the account's billing state.
 
 ## How CI chooses a runner
 
@@ -10,19 +10,21 @@ Every job uses `runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}`.
 
 | `CI_RUNS_ON` (repository variable) | Jobs run on |
 |---|---|
-| unset | GitHub-hosted `ubuntu-24.04` (the previous behaviour) |
-| `["self-hosted","aevra-home"]` | this runner |
+| unset | GitHub-hosted `ubuntu-24.04` (`ubuntu-latest` in the other two repositories) |
+| `["self-hosted","aevra-home"]` | any idle runner of the pool (`aevra-home-1`, `-2`, `-3`) |
 
-Switching needs no code change. Use the self-hosted runner:
+`web-cloner-template` and `Mirrix` use the same expression. Mirrix builds its Windows installer on GitHub-hosted `windows-latest`, and only for runs that publish a release.
+
+Switching needs no code change. Use the self-hosted runners for one repository:
 
 ```bash
-gh variable set CI_RUNS_ON --repo DungeonLeiz/local-assistant --body '["self-hosted","aevra-home"]'
+gh variable set CI_RUNS_ON --repo Leiz-Workspace/local-assistant --body '["self-hosted","aevra-home"]'
 ```
 
 Go back to GitHub-hosted runners:
 
 ```bash
-gh variable delete CI_RUNS_ON --repo DungeonLeiz/local-assistant
+gh variable delete CI_RUNS_ON --repo Leiz-Workspace/local-assistant
 ```
 
 The composite action `.github/actions/hosted-python` handles both runner types:
@@ -45,51 +47,64 @@ Every remote action in `ci.yml` and the composite action is pinned to a full com
 
 Before `--use`, take secrets off host processes' command lines, because CI jobs can read every host process's command line (see Residual risks). The MongoDB healthcheck in `infras/mongo-server/mongo-compose.yaml` no longer has credentials (commit `71aa2c0` in the `Server` repository, applied on 2026-11-13). Keep it that way, and do not run a MongoDB rotation with `infras/scripts/manage_server_secrets.py` while the runner is installed. The host `mongod` on 127.0.0.1:27017 has had authorization enabled since 2026-11-13 (see Residual risks, Loopback services). Deciding on SSH password logins (Residual risks, sshd) before `--use` is recommended too. The script denies SSH logins as `gh-runner` itself (step 6).
 
+First install `xvfb` for Mirrix's Linux smoke test; the runners have no sudo, and `--use` refuses to route Mirrix without `xvfb-run`:
+
+```bash
+sudo apt install xvfb
+```
+
+Then:
+
 ```bash
 cd /home/korosaki-ryukai/Workspace/Server/ai
-scripts/ci-runner/install.sh --use
+sudo -v && scripts/ci-runner/install.sh --use
 ```
+
+Registering organization runners needs a registration token. With the `admin:org` scope on your `gh` login (`gh auth refresh -h github.com -s admin:org`), the script fetches it. Without that scope it asks you to paste the token shown on https://github.com/organizations/Leiz-Workspace/settings/actions/runners/new (hidden input, valid for one hour), and it reads runner status from the journal instead of the API.
 
 The script:
 
 1. Runs as your user, refuses to run as root, and asks for your sudo password only for the system steps.
-2. Refuses a repository that is not private, before any system step. The repository is `RUNNER_REPO` (default `DungeonLeiz/local-assistant`). This check runs only at install time: the repository must stay private afterwards, and before making it public you must run `uninstall.sh`.
+2. Refuses an organization that holds a repository that is not private, before any system step (`RUNNER_ORG`, default `Leiz-Workspace`). With `admin:org` it also checks that the Default runner group refuses public repositories. This check runs only at install time: before making any repository of the organization public, run `uninstall.sh`.
 3. Checks the host tools with the runner's `PATH`, and that `tailscaled`, when installed, is running, so the unit can hide its socket (see Isolation).
 4. Creates the system user `gh-runner` with home `/var/lib/gh-runner`, no login shell and no privileged group. If the user exists, it checks that it is that non-root system account and owns that home. The user name, home and label are fixed in the scripts.
 5. Masks the user's systemd user manager (`user@<uid>.service`), disables lingering and removes any crontab, so job code cannot get a service manager outside the unit.
 6. Denies SSH logins as `gh-runner`: it writes `/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf` with `DenyUsers gh-runner` and checks it with `sshd -t`. It first runs `sshd -t` on the current configuration and, if that already fails, stops without touching the drop-in. A drop-in that already holds exactly that line is left as it is. If sshd rejects the new file, the script puts back what was there before and stops: a drop-in this run created is removed, and an earlier one is restored, so an existing denial is never dropped. It then checks with `sshd -T` that sshd reads the drop-in, and stops if it does not (no `Include` of `sshd_config.d`). It reloads `ssh.service` when it is active. The step runs on every run, and is skipped only when `sshd` is not installed or `/etc/ssh/sshd_config.d` does not exist. See Isolation, SSH.
-7. On a first install, downloads the pinned runner (`RUNNER_VERSION`, default 2.338.2), verifies its SHA-256, unpacks it as `gh-runner` and registers it as `aevra-home-1` with the label `aevra-home`. Root creates only `/var/lib/gh-runner` itself. `runner/` and `tmp/` below it are created as `gh-runner`, so a symlink that job code plants there cannot redirect a root write. The short-lived registration token comes from your `gh` login and is passed through stdin, never printed. An existing registration is kept as it is (see Recovery).
-8. Installs and starts the `aevra-gh-runner` systemd service. When the unit file changed, it restarts the service so the new settings apply, and refuses while the runner is running a job.
-9. Waits until the runner is online and checks that it runs with `no_new_privs`.
-10. With `--use`, checks that the registered runner has the labels `self-hosted` and `aevra-home`, then sets `CI_RUNS_ON` to `["self-hosted","aevra-home"]`.
+7. Before any system step, when a runner tree has to be built, downloads the pinned runner (`RUNNER_VERSION`, default 2.338.2), verifies its SHA-256 and gets the registration token. A failed download or a rejected token therefore leaves the earlier runner, and CI, as they were.
+8. Removes the single-repository runner of the first install (ADR-194 v1), if present: it refuses while that runner runs a job, stops and removes `aevra-gh-runner.service`, deletes `/var/lib/gh-runner/runner` without executing anything from it, and deregisters `aevra-home-1` from `Leiz-Workspace/local-assistant` through the API (the id comes from GitHub). Until the pool's template unit is installed, it also deletes any `runners/` tree, which job code of the v1 runner could have written.
+9. Before building any runner tree, refuses while an instance runs a job, stops every instance and kills every `gh-runner` process. `config.sh` and the runner come from a tree that running jobs could rewrite, and they run outside the units' sandbox. Then, for each instance that needs one: deletes its tree as `gh-runner`, unpacks a fresh copy as `gh-runner` into `runners/<n>`, and registers it in the organization's Default runner group as `aevra-home-<n>` with the label `aevra-home`. Root creates only `/var/lib/gh-runner` itself, so a symlink that job code plants below it cannot redirect a root write. The token is passed through stdin, never printed. An instance whose tree is registered is kept as it is (see Recovery).
+10. Installs `system-ghrunners.slice` (a child of `system.slice`, with `CPUWeight=20`) and the template `aevra-gh-runner@.service`, and enables and starts `aevra-gh-runner@1` to `@<count>`. When a unit file changed, it restarts the instances so the new settings apply, and refuses while any of them runs a job (it looks for a `Runner.Worker` process in the instance's cgroup).
+11. Waits until each runner is online (from the API with `admin:org`, otherwise from `Listening for Jobs` in the journal of the instance's current invocation) and checks that each runs with `no_new_privs`.
+12. With `--use`, refuses to route Mirrix while `xvfb-run` is missing, checks the labels when it can read them, then sets `CI_RUNS_ON` to `["self-hosted","aevra-home"]` in each repository of `RUNNER_USE_REPOS` (default `local-assistant web-cloner-template Mirrix`).
 
-Without `--use`, the runner is online but CI keeps targeting GitHub-hosted runners until you set the variable.
+Without `--use`, the runners are online but CI keeps targeting GitHub-hosted runners until you set the variable.
 
 ## Isolation
 
-What `aevra-gh-runner.service` enforces, plus the sshd denial that `install.sh` adds on the host:
+What each `aevra-gh-runner@<n>.service` instance enforces, plus the sshd denial that `install.sh` adds on the host. All instances run as the same user and share these settings:
 
 - **User.** The service runs as `gh-runner`, which has no sudo rights and is in no privileged group.
 - **Files.** `ProtectHome=yes` hides `/home` entirely, including your files, the Vault bootstrap file, models, `.env` and `data/`. `ProtectSystem=strict` makes the file system read-only except `/var/lib/gh-runner` and the kernel API trees `/dev`, `/proc` and `/sys`. `PrivateTmp` gives the service its own `/tmp` and `/var/tmp`.
-- **Shared memory and IPC.** The host's `/dev/shm` and `/dev/mqueue` are world-writable and stay writable under `ProtectSystem=strict`, so the unit replaces them. `TemporaryFileSystem=/dev/shm:mode=1777,nosuid,nodev,size=2G` gives the service its own size-capped `/dev/shm`, and `PrivateIPC=yes` its own SysV IPC namespace and `/dev/mqueue`. `RemoveIPC=yes` removes every SysV and POSIX IPC object that `gh-runner` still owns on the host when the service stops. None of these mounts anything under `/proc`. They are not yet validated on the installed unit; the preflight's `bwrap` and multiprocessing checks catch a breakage on the first run.
+- **Shared memory and IPC.** The host's `/dev/shm` and `/dev/mqueue` are world-writable and stay writable under `ProtectSystem=strict`, so the unit replaces them. `TemporaryFileSystem=/dev/shm:mode=1777,nosuid,nodev,size=2G` gives the service its own size-capped `/dev/shm`, and `PrivateIPC=yes` its own SysV IPC namespace and `/dev/mqueue`. `RemoveIPC=yes` removes every SysV and POSIX IPC object that `gh-runner` still owns on the host once the last instance stops; a single instance's own objects go away with its private IPC and mount namespaces. None of these mounts anything under `/proc`. Validated on the installed unit on 2026-11-13: the preflight's `bwrap` and multiprocessing checks passed inside it, and a stop left no IPC object of `gh-runner` on the host (ADR-194, Validation).
 - **Privileges.** `NoNewPrivileges=yes`: setuid and setgid binaries (`crontab`, `su`, `pkexec`, `fusermount3`, `newuidmap`) and file capabilities cannot raise privileges for job code. `bwrap` still gets user namespaces, because AppArmor allows the exec from the unconfined runner into the `bwrap` profile under `no_new_privs`. systemd 259 does not imply `no_new_privs` for this unit, so the unit sets it explicitly. `ProtectKernelModules`, `ProtectControlGroups`, `ProtectClock`, `LockPersonality` and `UMask=0027` are also set.
 - **System D-Bus.** `InaccessiblePaths=-/run/dbus/system_bus_socket` hides the system bus from processes inside the service, so job code there cannot ask logind to enable lingering or call other bus services directly. sshd denies SSH logins as `gh-runner` (see SSH below), so job code cannot reach the bus through an SSH session as `gh-runner` either (a password login as another account is a separate path; Residual risks, sshd). This is not a complete block: a restart of `dbus.socket` re-creates the socket file, which detaches the mask until the runner service restarts.
 - **Tailscale LocalAPI.** `InaccessiblePaths=-/run/tailscale` hides tailscaled's LocalAPI socket (`/run/tailscale/tailscaled.sock`, mode 0666; `/var/run` is a symlink to `/run`). Through that socket, job code could make root `tailscaled`, which is outside the unit's `IPAddressDeny`, open connections to tailnet peers (`POST /localapi/v0/dial`, `tailscale nc`) and read the full peer list (`/localapi/v0/status`). `tailscaled.service` has `RuntimeDirectory=tailscale`, so every tailscaled restart deletes and re-creates `/run/tailscale`, and the kernel then drops the mask in the runner's namespace. The unit therefore has `After=tailscaled.service` and `PartOf=tailscaled.service`:
-  - `systemctl restart tailscaled`, which package upgrades also use, restarts the runner too. The runner stops first and starts after tailscaled, so it never sees the new socket. A crash restart of tailscaled (`Restart=on-failure`, `RestartMode=normal` on this host) is expected to propagate the same way; this is not yet checked on the installed unit.
+  - `systemctl restart tailscaled`, which package upgrades also use, restarts the runner too. The runner stops first and starts after tailscaled, so it never sees the new socket. Checked on 2026-11-13 with `sudo systemctl restart tailscaled`: the runner restarted with it and the mask was set up again. A crash restart of tailscaled (`Restart=on-failure`, `RestartMode=normal` on this host) is expected to propagate the same way; that path is not checked.
   - The tailscaled restart waits until the runner has stopped, up to `TimeoutStopSec=5min`, and the CI job in progress ends. After a tailscaled crash, the tailnet stays down for that time.
   - `systemctl stop tailscaled` stops the runner, and the runner stays stopped when tailscaled starts again. Start tailscaled first, then the runner. If the runner starts while `/run/tailscale` does not exist, the `-` prefix skips the mask without a message, and a later tailscaled start exposes the socket. `After=` keeps that order at boot, and `install.sh` refuses to run while an installed tailscaled is stopped.
-  - None of this is validated on the installed unit yet. The preflight reports a reachable socket. An SSH session as `gh-runner` cannot forward to the socket, because sshd denies those logins (see SSH below).
+  - The preflight's socket check passes inside the unit on every CI run, and reports a lost mask. An SSH session as `gh-runner` cannot forward to the socket, because sshd denies those logins (see SSH below).
 - **Devices.** `DevicePolicy=closed` allows only the standard pseudo devices that `bwrap --dev` binds, plus read access to `/dev/rtc*` (`DeviceAllow=char-rtc r`, implied by `ProtectClock=yes`; the nodes are `root:clock` 0660 and `gh-runner` is not in `clock`, so it still cannot open them). The GPU nodes (`/dev/nvidia*`, mode 0666) and `/dev/kmsg` are refused.
-- **Network.** `IPAddressDeny=` blocks `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `100.64.0.0/10`, `169.254.0.0/16`, `224.0.0.0/4`, `fc00::/7`, `fe80::/10`, `ff00::/8` and `255.255.255.255/32`. Processes in the service cannot open direct connections to the LAN, Docker or k3s networks, tailnet addresses, or the host's own addresses on them. Limited broadcast is blocked too, so jobs cannot send broadcasts onto the LAN, Docker or k3s bridges. Public internet (GitHub, PyPI) and loopback stay allowed, for the DNS stub on 127.0.0.53 and the tests' 127.0.0.1 listeners. `IPAddressDeny=` filters only the service's own sockets. A host daemon that connects on a job's behalf is outside it: tailscaled (previous point) and sshd. Through tailscaled, jobs can still reach tailnet peers until the mask is validated. sshd forwards nothing for `gh-runner` logins, because it denies them (next point). A password login as another account through sshd on loopback is a separate path (Residual risks, sshd).
-- **SSH.** Outside the unit, `install.sh` adds `/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf` with `DenyUsers gh-runner` (Install, step 6), so sshd refuses every SSH login as `gh-runner` before any session or forwarding starts. It applies to port 22 (`ssh.socket` and `ssh.service`) and to `/run/ssh-unix-local/socket` (`sshd-unix-local.socket` from systemd-ssh-generator, mode 0666), which reads the same configuration. Job code can still write `/var/lib/gh-runner/.ssh/authorized_keys`, but a key planted there gives no login. Without the denial, such a key would be a standing login that works with no job running, survives a stop of the service, and makes sshd forward TCP and Unix sockets from outside `IPAddressDeny` and the mount sandbox: to loopback-only services, the LAN, the tailnet, the Docker and k3s networks, the system D-Bus and tailscaled's LocalAPI socket. The denial is host configuration, not part of the unit: it holds while the drop-in stays and sshd reads it, which `install.sh` checks with `sshd -T` on every run. `uninstall.sh` still deletes `~/.ssh` as defense in depth, and only `uninstall.sh --purge`, which also deletes the account, removes the drop-in. Check it with `sudo sshd -T -C user=gh-runner,host=localhost,addr=127.0.0.1 | grep -i denyusers`, which prints `denyusers gh-runner`. The denial covers only logins as `gh-runner`. The unit also hides `/run/ssh-unix-local` from processes inside it (`InaccessiblePaths=-/run/ssh-unix-local`), because each connection to that socket is a fresh `sshd -i` that sshd's `PerSourcePenalties` do not throttle, so job code could guess other accounts' passwords there. Like the D-Bus mask, it holds while the directory persists: re-creating `/run/ssh-unix-local` detaches it until the runner restarts. It is not yet validated on the installed unit. sshd on 127.0.0.1:22 stays reachable (Residual risks, sshd).
-- **Processes.** `KillMode=mixed`: stopping the service, including the D87 pause, ends the runner gracefully and then kills every process left in its cgroup. `RemoveIPC=yes` also removes the user's IPC objects at that point.
+- **Network.** `IPAddressDeny=` blocks `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `100.64.0.0/10`, `169.254.0.0/16`, `224.0.0.0/4`, `fc00::/7`, `fe80::/10`, `ff00::/8` and `255.255.255.255/32`. Processes in the service cannot open direct connections to the LAN, Docker or k3s networks, tailnet addresses, or the host's own addresses on them. Limited broadcast is blocked too, so jobs cannot send broadcasts onto the LAN, Docker or k3s bridges. Public internet (GitHub, PyPI) and loopback stay allowed, for the DNS stub on 127.0.0.53 and the tests' 127.0.0.1 listeners. `IPAddressDeny=` filters only the service's own sockets. A host daemon that connects on a job's behalf is outside it: tailscaled (previous point) and sshd. sshd forwards nothing for `gh-runner` logins, because it denies them (next point). A password login as another account through sshd on loopback is a separate path (Residual risks, sshd).
+- **SSH.** Outside the unit, `install.sh` adds `/etc/ssh/sshd_config.d/90-aevra-gh-runner.conf` with `DenyUsers gh-runner` (Install, step 6), so sshd refuses every SSH login as `gh-runner` before any session or forwarding starts. It applies to port 22 (`ssh.socket` and `ssh.service`) and to `/run/ssh-unix-local/socket` (`sshd-unix-local.socket` from systemd-ssh-generator, mode 0666), which reads the same configuration. Job code can still write `/var/lib/gh-runner/.ssh/authorized_keys`, but a key planted there gives no login. Without the denial, such a key would be a standing login that works with no job running, survives a stop of the service, and makes sshd forward TCP and Unix sockets from outside `IPAddressDeny` and the mount sandbox: to loopback-only services, the LAN, the tailnet, the Docker and k3s networks, the system D-Bus and tailscaled's LocalAPI socket. The denial is host configuration, not part of the unit: it holds while the drop-in stays and sshd reads it, which `install.sh` checks with `sshd -T` on every run. `uninstall.sh` still deletes `~/.ssh` as defense in depth, and only `uninstall.sh --purge`, which also deletes the account, removes the drop-in. Check it with `sudo sshd -T -C user=gh-runner,host=localhost,addr=127.0.0.1 | grep -i denyusers`, which prints `denyusers gh-runner`. The denial covers only logins as `gh-runner`. The unit also hides `/run/ssh-unix-local` from processes inside it (`InaccessiblePaths=-/run/ssh-unix-local`), because each connection to that socket is a fresh `sshd -i` that sshd's `PerSourcePenalties` do not throttle, so job code could guess other accounts' passwords there. Like the D-Bus mask, it holds while the directory persists: re-creating `/run/ssh-unix-local` detaches it until the runner restarts. The mask was confirmed in the service's mount table on 2026-11-13, and a live login attempt as `gh-runner` was refused with `listed in DenyUsers`. sshd on 127.0.0.1:22 stays reachable (Residual risks, sshd).
+- **Processes.** `KillMode=mixed`: stopping an instance, including the D87 pause, ends its runner gracefully and then kills every process left in its cgroup. When the last instance stops, `RemoveIPC=yes` also removes the user's host IPC objects.
 - **Resources.** Limits leave headroom for CORE and the services:
-  - `CPUQuota=800%`, about 8 of 16 cores;
-  - `MemoryMax=16G` and `MemorySwapMax=2G`: a job past that is OOM-killed instead of using up the host's 8 GB swap;
+  - all instances together, through `system-ghrunners.slice`: `CPUQuota=1200%` (12 of 16 logical CPUs), `MemoryMax=20G`, `MemorySwapMax=4G`, `TasksMax=8192`;
+  - each instance: `CPUQuota=800%`, about 8 of 16 cores;
+  - each instance: `MemoryMax=16G` and `MemorySwapMax=2G`: a job past that is OOM-killed instead of using up the host's 8 GB swap;
   - `Nice=10`;
   - low I/O priority;
   - disk: not limited; see Residual risks.
-- **Temporary files.** Pytest temporary trees go to `/var/lib/gh-runner/tmp` on disk, not the 16 GB `/tmp` tmpfs.
+- **Temporary files.** Pytest temporary trees go to `/var/lib/gh-runner/tmp/<n>` on disk, one directory per instance, not the 16 GB `/tmp` tmpfs.
 
 What the unit deliberately does not set, because each one breaks the project sandboxes:
 
@@ -117,44 +132,48 @@ These are accepted for a private, single-owner repository. Each one is the owner
 - **Process list and command lines.** `ProtectProc` and `ProcSubset` are unset (see above), so jobs see every host process and can read its full command line in `/proc/<pid>/cmdline`: your shells, Claude sessions, cron, services, and Docker/k3s containers with their healthchecks and `exec` commands. Any secret passed as a command-line argument is readable by CI jobs while it runs. Other users' `/proc/<pid>/environ` is mode 0400 and stays unreadable.
   - Instances: the MongoDB healthcheck in `infras/mongo-server/mongo-compose.yaml` ran `mongosh --password <root password>` every 10 seconds. It needs no credentials, because `db.adminCommand({ping: 1})` works without authentication, so it was fixed (commit `71aa2c0` in the `Server` repository) and applied on 2026-11-13. Still current: `infras/scripts/manage_server_secrets.py` passes the password as an argument during a MongoDB rotation, and the commands that `mongo-server/scripts/create-database-template.py` prints do too.
   - While the runner is installed, never pass a secret as an argument (for example `curl -H 'X-Vault-Token: ...'`, `redis-cli -a`, `docker exec -e K=V`, or a URI with a password). Use stdin, an environment variable or a file instead.
-- **Tailnet through tailscaled.** Through tailscaled's LocalAPI socket, job code can make root `tailscaled` open connections to other tailnet peers, outside `IPAddressDeny`, and read the full peer list. The unit hides `/run/tailscale` and restarts with tailscaled (see Isolation), but that is not yet validated on the installed unit. Until it is, treat tailnet peers as reachable from CI jobs. An SSH session as `gh-runner` cannot forward to the socket, because sshd denies those logins (Isolation, SSH). Host-side options, your decision: a tailscaled drop-in with `RuntimeDirectoryPreserve=yes`, which keeps `/run/tailscale` across tailscaled restarts so the mask holds without restarting the runner, or restricting access to the LocalAPI socket on the host.
+- **Tailnet through tailscaled.** Through tailscaled's LocalAPI socket, job code can make root `tailscaled` open connections to other tailnet peers, outside `IPAddressDeny`, and read the full peer list. The unit hides `/run/tailscale` and restarts with tailscaled (see Isolation), which was checked on 2026-11-13 for a `systemctl restart`; a crash restart of tailscaled is the remaining unchecked path. An SSH session as `gh-runner` cannot forward to the socket, because sshd denies those logins (Isolation, SSH). Host-side options, your decision: a tailscaled drop-in with `RuntimeDirectoryPreserve=yes`, which keeps `/run/tailscale` across tailscaled restarts so the mask holds without restarting the runner, or restricting access to the LocalAPI socket on the host.
 - **Abstract Unix sockets** are not covered by the mount sandbox.
-- **Jobs are not isolated from each other.** The runner is persistent, and every job runs as the same user with a writable runner directory. Job code can:
-  - leave modified files that affect later jobs: `runner/bin`, `.env`, `.path`, `~/.gitconfig`, `~/.cache/uv`;
-  - read later steps' environment, including tokens such as the `contents: write` token of the tag-only `release` job;
-  - read the runner credentials (`.credentials`, `.credentials_rsaparams`) and impersonate the runner.
+- **Jobs are not isolated from each other, across instances and across repositories.** The runners are persistent, and every job of every repository in the pool runs as the same user with writable runner directories. Job code of any of the three repositories can:
+  - leave modified files that affect later jobs: `runners/<n>/bin`, `.env`, `.path`, `~/.gitconfig`, `~/.cache/uv`;
+  - read the environment of jobs that run at the same time or later on the host, including tokens and secrets: the `contents: write` tokens of the `release` jobs (local-assistant, Mirrix) and of `web-cloner-template`'s `token-badge` publish job, and Mirrix's long-lived `TEMPLATE_DEPLOY_KEY`;
+  - read the runner credentials (`.credentials`, `.credentials_rsaparams`) and impersonate a runner.
 
-  Processes that a job starts with an empty environment escape the runner's own cleanup between jobs. `KillMode=mixed` ends them only when the service stops.
+  The owner accepted this for the three private repositories on 2026-11-13 (ADR-196). Processes that a job starts with an empty environment escape the runner's own cleanup between jobs. `KillMode=mixed` ends them only when the instance stops.
+- **Concurrent jobs see each other.** Up to three jobs run at once and see each other's processes in `/proc` and their loopback listeners. Tests must not assume that they are the only process on the host; `tests/test_check_runner.py` counts only its own sandbox processes for that reason.
 - **Third-party action code** runs on the host. The remote actions are pinned to commit SHAs for that reason.
 
-The repository is private, so only accounts with write access can trigger workflows. Do not attach this runner to a public repository: a fork pull request could then run arbitrary code on the Home Server. `install.sh` refuses a repository that is not private, but only at install time; run `uninstall.sh` before making the repository public.
+The repositories are private, so only accounts with write access can trigger workflows. Do not let these runners serve a public repository: a fork pull request could then run arbitrary code on the Home Server. `install.sh` refuses an organization that holds a public repository, but only at install time; run `uninstall.sh` before making any repository of the organization public, and keep the Default runner group's "Allow public repositories" off.
 
 ## Native measurements and D87
 
-The runner shares the host with CORE and the services, and CI jobs add CPU load. Before a native benchmark or D87, pause it and check that no job is running:
+The runners share the host with CORE and the services, and CI jobs add CPU load (up to 12 CPUs). Before a native benchmark or D87, pause them and check that no job is running:
 
 ```bash
-sudo systemctl stop aevra-gh-runner
-sudo systemctl start aevra-gh-runner   # afterwards
+sudo systemctl stop 'aevra-gh-runner@*'
 ```
 
-Stopping the service also kills any process a job left behind in the service and removes the IPC objects it left (`RemoveIPC=yes`). An SSH key that a job planted gives no SSH session that could outlive the stop, because sshd denies logins as `gh-runner` (Isolation, SSH). A queued job waits on GitHub (up to 24 hours) while the runner is stopped. The idle-host check used before measurements also catches a running CI job through its CPU load.
+```bash
+sudo systemctl start aevra-gh-runner@1 aevra-gh-runner@2 aevra-gh-runner@3   # afterwards
+```
+
+Stopping an instance also kills any process a job left behind in it; stopping all of them also removes the IPC objects the user left on the host (`RemoveIPC=yes`). An SSH key that a job planted gives no SSH session that could outlive the stop, because sshd denies logins as `gh-runner` (Isolation, SSH). A queued job waits on GitHub (up to 24 hours) while the runner is stopped. The idle-host check used before measurements also catches a running CI job through its CPU load.
 
 ## Operate
 
 | Task | Command |
 |---|---|
-| Status and logs | `sudo systemctl status aevra-gh-runner`, `sudo journalctl -u aevra-gh-runner -n 100` |
-| Runner list on GitHub | `gh api repos/DungeonLeiz/local-assistant/actions/runners --jq '.runners[] \| {name,status,busy,labels:[.labels[].name]}'` |
-| Check the sandbox | `systemctl show -p NoNewPrivileges,ProtectSystem,ProtectHome,PrivateTmp,PrivateIPC,RemoveIPC,TemporaryFileSystem,InaccessiblePaths,DevicePolicy,DeviceAllow,IPAddressDeny,MemoryMax,MemorySwapMax,KillMode,PartOf aevra-gh-runner` (`DeviceAllow` prints `char-rtc r`, from `ProtectClock`); `grep NoNewPrivs /proc/$(systemctl show -p MainPID --value aevra-gh-runner)/status` prints 1; `sudo nsenter -t "$(systemctl show -p MainPID --value aevra-gh-runner)" -m ls -A /home /run/tailscale /run/ssh-unix-local` lists nothing in any of the three directories |
-| Apply a changed unit | rerun `scripts/ci-runner/install.sh` while the runner is idle; it restarts the service only when the unit changed |
-| Updates | the runner updates itself in `/var/lib/gh-runner/runner`, and the unit starts the current `bin/runsvc.sh`. Re-pinning `RUNNER_VERSION`/`RUNNER_SHA256` matters only for a fresh install. |
-| Uninstall | `scripts/ci-runner/uninstall.sh` deletes `CI_RUNS_ON` first, so CI returns to GitHub-hosted runners. If it cannot delete the variable, it stops with an error and leaves the runner running. It then stops the service, kills every `gh-runner` process, removes lingering and any crontab, deletes `~gh-runner/.ssh` as defense in depth (sshd already denies logins as `gh-runner`), deregisters the runner through the GitHub API from your `gh` login, and deletes `/var/lib/gh-runner/runner`. It never executes anything from the runner tree, because job code can rewrite it. Without `--purge`, the account, the rest of its home and the sshd denial stay; add `--purge` to also delete the user and its home and remove the sshd drop-in (reloading `ssh.service` when it is active). |
+| Status and logs | `systemctl status 'aevra-gh-runner@*' system-ghrunners.slice`, `sudo journalctl -u aevra-gh-runner@1 -n 100` |
+| Runner list on GitHub | `gh api orgs/Leiz-Workspace/actions/runners --jq '.runners[] \| {name,status,busy,labels:[.labels[].name]}'` (needs `admin:org`), or the organization's Settings > Actions > Runners page |
+| Check the sandbox | `systemctl show -p NoNewPrivileges,ProtectSystem,ProtectHome,PrivateTmp,PrivateIPC,RemoveIPC,TemporaryFileSystem,InaccessiblePaths,DevicePolicy,DeviceAllow,IPAddressDeny,MemoryMax,MemorySwapMax,KillMode,PartOf,Slice aevra-gh-runner@1` (`DeviceAllow` prints `char-rtc r`, from `ProtectClock`); `grep NoNewPrivs /proc/$(systemctl show -p MainPID --value aevra-gh-runner@1)/status` prints 1; `grep -E ' /home \| /run/tailscale \| /run/ssh-unix-local ' /proc/$(systemctl show -p MainPID --value aevra-gh-runner@1)/mountinfo` shows each mounted from `/systemd/inaccessible/dir` |
+| Apply changed units | rerun `scripts/ci-runner/install.sh` while the runners are idle; it restarts the instances only when a unit file changed |
+| Updates | each runner updates itself in `/var/lib/gh-runner/runners/<n>`, and the unit starts the current `bin/runsvc.sh`. Re-pinning `RUNNER_VERSION`/`RUNNER_SHA256` matters only for a fresh install. |
+| Uninstall | `scripts/ci-runner/uninstall.sh` deletes `CI_RUNS_ON` in each repository first, so CI returns to GitHub-hosted runners. If it cannot delete a variable, it stops with an error and leaves the runners running. It then stops every instance, kills every `gh-runner` process, removes lingering and any crontab, deletes `~gh-runner/.ssh` as defense in depth (sshd already denies logins as `gh-runner`), deregisters the runners through the GitHub API from your `gh` login (organization runners need `admin:org`; without it the script names the page where you remove them), and deletes the runner trees, the template unit and the slice. It never executes anything from a runner tree, because job code can rewrite it. Without `--purge`, the account, the rest of its home and the sshd denial stay; add `--purge` to also delete the user and its home and remove the sshd drop-in (reloading `ssh.service` when it is active). |
 
 ## Recovery after a suspected compromise
 
 A rerun of `install.sh` keeps an existing runner tree as it is, so it does not repair tampered files.
 
-1. Run `scripts/ci-runner/uninstall.sh --purge`. It deletes `CI_RUNS_ON`, kills every `gh-runner` process, deregisters the runner through the GitHub API from your shell, and deletes the user and its home. No code from the possibly tampered runner tree runs outside the unit: the tree is deleted, never executed.
-2. Check the runner list on GitHub and remove any runner you do not expect.
+1. Give your `gh` login the `admin:org` scope first (`gh auth refresh -h github.com -s admin:org`), so the script can deregister the organization runners. Then run `scripts/ci-runner/uninstall.sh --purge`. It deletes `CI_RUNS_ON`, kills every `gh-runner` process, deregisters the runners through the GitHub API from your shell, and deletes the user and its home. Without `admin:org` it does everything else and exits with status 3; then remove every `aevra-home-*` runner, not only unexpected ones, on the organization's Settings > Actions > Runners page, because credentials a job copied stay valid until the runner is removed. No code from a possibly tampered runner tree runs outside the units: the trees are deleted, never executed.
+2. Check the organization's runner list on GitHub and remove any runner you do not expect. Rotate Mirrix's `TEMPLATE_DEPLOY_KEY`, which jobs on the runners could read.
 3. Run `scripts/ci-runner/install.sh --use`. It reinstalls from the pinned, checksum-verified tarball with a fresh registration.

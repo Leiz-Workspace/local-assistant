@@ -1,7 +1,8 @@
-# Self-hosted GitHub Actions runner for the Local Assistant repository (ADR-194).
-# Rendered by scripts/ci-runner/install.sh; @RUNNER_USER@ and @RUNNER_HOME@ are replaced there.
+# One of the Home Server's shared organization-level GitHub Actions runners (ADR-194, ADR-196).
+# Template unit: instance %i runs the runner tree runners/%i. Rendered by scripts/ci-runner/install.sh;
+# @RUNNER_USER@ and @RUNNER_HOME@ are replaced there.
 [Unit]
-Description=GitHub Actions runner for Local Assistant CI (unprivileged, ADR-194)
+Description=GitHub Actions runner %i for Leiz-Workspace CI (unprivileged, ADR-194/196)
 Wants=network-online.target
 # tailscaled: see the /run/tailscale mask below. After= starts the runner only once tailscaled has
 # created /run/tailscale (at boot too) and stops it before tailscaled stops. PartOf= passes a
@@ -11,6 +12,9 @@ PartOf=tailscaled.service
 
 [Service]
 Type=simple
+# All instances share the slice's CPU, memory and task limits (system-ghrunners.slice), on top of
+# each instance's own limits below.
+Slice=system-ghrunners.slice
 # Runs as the unprivileged runner user. The runner's own root check (RUNNER_ALLOW_RUNASROOT) only
 # applies to an interactive config.sh/run.sh, so it is not set here; install.sh refuses uid 0.
 User=@RUNNER_USER@
@@ -18,13 +22,13 @@ Group=@RUNNER_USER@
 # runsvc.sh resolves .path, ./externals and ./bin from the working directory. After a self-update,
 # bin is a symlink to bin.<version>, so each start runs the current wrapper with its own node.
 # bash runs it, so the exec bit does not matter.
-WorkingDirectory=@RUNNER_HOME@/runner
-ExecStart=/bin/bash @RUNNER_HOME@/runner/bin/runsvc.sh
+WorkingDirectory=@RUNNER_HOME@/runners/%i
+ExecStart=/bin/bash @RUNNER_HOME@/runners/%i/bin/runsvc.sh
 # SIGTERM goes only to runsvc.sh, which stops the listener gracefully. Once it has exited, systemd
 # SIGKILLs everything left in the cgroup, so a stop or a D87 pause leaves no process of the unit
-# behind (the upstream template uses KillMode=process). RemoveIPC below also removes the runner
-# user's IPC objects at stop. An SSH session as the runner user would run outside this cgroup;
-# sshd denies those logins (install.sh's DenyUsers drop-in, ADR-194).
+# behind (the upstream template uses KillMode=process). RemoveIPC below removes the runner user's
+# host IPC objects once the last instance stops. An SSH session as the runner user would run
+# outside this cgroup; sshd denies those logins (install.sh's DenyUsers drop-in, ADR-194).
 KillMode=mixed
 KillSignal=SIGTERM
 TimeoutStopSec=5min
@@ -32,8 +36,9 @@ Restart=on-failure
 RestartSec=30s
 
 Environment=HOME=@RUNNER_HOME@
-# Large pytest temporary trees go to disk, not to the host's small /tmp tmpfs.
-Environment=TMPDIR=@RUNNER_HOME@/tmp
+# Large pytest temporary trees go to disk, not to the host's small /tmp tmpfs; one directory per
+# instance, so concurrent jobs never share a temporary root.
+Environment=TMPDIR=@RUNNER_HOME@/tmp/%i
 
 # Filesystem: no access to /home (owner files, Vault bootstrap, models, .env, data/) and a private
 # /tmp and /var/tmp. ProtectSystem=strict makes the host read-only except the runner's own home
@@ -49,10 +54,12 @@ UMask=0027
 #   shared memory, which lives in /dev/shm.
 # - TemporaryFileSystem: a private, size-capped /dev/shm that disappears with the unit's mount
 #   namespace. It is not hidden, because multiprocessing locks need a writable /dev/shm.
-# - RemoveIPC: when the unit stops, including the D87 pause, PID 1 removes every SysV and POSIX IPC
-#   object the runner user still owns on the host.
-# None of these mounts anything under /proc (see below). Not yet validated on the installed unit:
-# the self-hosted preflight checks the bwrap sandbox shape and a multiprocessing lock (ADR-194).
+# - RemoveIPC: when the last unit running as the runner user stops (for example the D87 pause of
+#   every instance), PID 1 removes every SysV and POSIX IPC object that user still owns on the host.
+#   A single instance's own objects go away with its private IPC and mount namespaces.
+# None of these mounts anything under /proc (see below). Validated on the installed unit on
+# 2026-11-13; the self-hosted preflight checks the bwrap sandbox shape and a multiprocessing lock
+# on every run (ADR-194).
 PrivateIPC=yes
 TemporaryFileSystem=/dev/shm:mode=1777,nosuid,nodev,size=2G
 RemoveIPC=yes
@@ -98,7 +105,8 @@ InaccessiblePaths=-/run/dbus/system_bus_socket
 # exist at start, so start tailscaled before the runner. /var/run is a symlink to /run. sshd
 # denies SSH logins as the runner user (install.sh), so no session as that user can forward to
 # the socket.
-# Not yet validated on the installed unit; the self-hosted preflight reports a reachable socket.
+# Validated on the installed unit on 2026-11-13, also after a tailscaled restart; the self-hosted
+# preflight reports a reachable socket on every run.
 InaccessiblePaths=-/run/tailscale
 # systemd-ssh-generator's local sshd socket (/run/ssh-unix-local/socket, mode 0666). Each
 # connection there is a fresh sshd -i, so sshd's PerSourcePenalties do not apply, and job code
@@ -119,7 +127,8 @@ InaccessiblePaths=-/run/ssh-unix-local
 # the owner to decide (ADR-194).
 IPAddressDeny=10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 169.254.0.0/16 224.0.0.0/4 fc00::/7 fe80::/10 ff00::/8 255.255.255.255/32
 
-# Leave headroom for CORE, the services and benchmarks on the same host.
+# Leave headroom for CORE, the services and benchmarks on the same host. These are per instance;
+# the slice caps all instances together (system-ghrunners.slice).
 CPUQuota=800%
 MemoryMax=16G
 # A runaway job is OOM-killed after at most 2G of swap instead of filling the host's 8G swap file
