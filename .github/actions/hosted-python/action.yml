@@ -1,6 +1,6 @@
 # Prepare the runner to run the Python suite like the Home Server.
 # On a GitHub-hosted ubuntu-24.04 runner this installs native tools and aligns the layout with sudo.
-# On the self-hosted Home Server runner (Server repository infras/ci-runner/, ADR-194/196) the host already has that
+# On the self-hosted Home Server runner (self-software-distribution-platform repository github-runner/, ADR-194/196) the host already has that
 # layout, the runner user has no sudo, and a preflight only verifies the prerequisites and the
 # sandbox the runner unit must allow. The calling job installs node with actions/setup-node first.
 name: Hosted Python environment

@@ -6483,3 +6483,10 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - the comments in `ci.yml` and the composite action, ADR-194, ADR-196 and the outstanding-work status point to the new place;
   - records of commands run before the move keep the old path.
 - **Installed runners are unaffected.** The units under `/etc/systemd/system` do not refer to the source directory. A later `install.sh` run from the new place sees changed comments in the units and restarts the instances only while they are idle.
+
+## 2026-11-13 — Runner kit moved to self-software-distribution-platform
+
+- **Why.** The owner created the private repository `Leiz-Workspace/self-software-distribution-platform` for the self-hosted distribution platform (Forgejo, its Actions runner, registries, Renovate). The GitHub runner kit belongs with the other CI runner infrastructure, and the `Server` repository has no remote, so the kit had no off-host copy.
+- **Where.** `github-runner/` in that repository (commit `835cb1f`). The `Server` repository keeps only a pointer README in `infras/ci-runner/` (commit `3616a5d`).
+- **Changes in `ai`:** the comments in `ci.yml` and the composite action, ADR-194, ADR-196 and the outstanding-work status point to the new place; records of commands run before the move keep the old paths.
+- **Installed runners are unaffected.** `aevra-gh-runner@1..3` run from the rendered units under `/etc/systemd/system`. The next `install.sh` run sees the changed comments in the unit and the slice and restarts the instances only while they are idle.
