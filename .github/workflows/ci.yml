@@ -10,12 +10,11 @@
 # files, Vault bootstrap, models, .env, data/) is hidden, and the unit refuses the GPU devices and
 # direct connections to the LAN, Docker and k3s networks. Jobs there can still connect to services
 # listening on loopback (Vault, Qdrant, PostgreSQL, Redis, MongoDB, sshd, k3s, CORE when running)
-# and rely on those services' own authentication. Redis on 127.0.0.1:6379 and the host mongod on
-# 127.0.0.1:27017 accept every command without authentication (the Docker MongoDB on 27018 runs
-# with --auth), and sshd on 127.0.0.1:22 accepts password guesses for other accounts; those
-# residual risks are the owner's decision (ADR-194). The unit's network filter
-# covers only its own sockets: tailnet peers stay reachable through tailscaled's LocalAPI socket
-# until the unit's mask on it is validated. sshd denies SSH logins as the runner user, so a key
+# and rely on those services' own authentication. Redis on 127.0.0.1:6379 accepts every command
+# without authentication (both MongoDB instances require it), and sshd on 127.0.0.1:22 accepts
+# password guesses for other accounts; those residual risks are the owner's decision (ADR-194).
+# The unit's network filter covers only its own sockets; it also hides tailscaled's LocalAPI
+# socket, which would otherwise reach tailnet peers, and the preflight checks both. sshd denies SSH logins as the runner user, so a key
 # that a job plants in its ~/.ssh forwards nothing (ADR-194). Jobs there can also
 # read the command line of every host process, so no secret may be passed as an argument on the host.
 # Tests that need those services are listed with reasons in .github/ci/hosted-runner-exclusions.txt;
