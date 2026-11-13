@@ -6370,3 +6370,18 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - `download-artifact` v5 changed the path only for downloads by ID. The release job downloads by name.
   - `setup-uv` v7 removed `server-url`, which the workflow does not use.
 - **Not exercised.** The `release` and `package` jobs, and the GitHub-hosted cache path, only run on tags, promotions or GitHub-hosted runners.
+
+## 2026-11-13 — Runner stop, tailscaled restart and SSH denial verified
+
+- **Owner steps (11:33 +07).** The owner ran `sudo systemctl stop aevra-gh-runner`, then `start`, then `sudo systemctl restart tailscaled`.
+  - **Stop:** the journal shows `Stopping` at 11:33:15 and `Deactivated successfully` at 11:33:16, with no `Killing process` line.
+  - **Restart:** the runner was stopped and started again with tailscaled through `PartOf=`. Its `Started` line is at 11:33:23, the same second as tailscaled's start.
+- **Checks afterwards, without sudo:**
+  - the only `gh-runner` processes are the three of the new service, all started at 11:33:22;
+  - the host has no `/dev/shm` or `/dev/mqueue` object of `gh-runner`, and no SysV IPC object of uid 997;
+  - the new main process has `NoNewPrivs: 1`, and `/run/tailscale`, `/run/ssh-unix-local` and `/home` are masked again.
+
+  This verifies `KillMode=mixed`, `RemoveIPC` and the tailscaled restart path.
+- **SSH denial, live:** one `ssh -o BatchMode=yes gh-runner@127.0.0.1` attempt was refused, and sshd logged `User gh-runner from 127.0.0.1 not allowed because listed in DenyUsers`.
+- **Still not exercised on the installed unit:** runner self-update (waits for a new runner release), uninstall (only when the runner is removed) and `lint` (the next pull request that changes Python).
+- **Still the owner's:** authorization on the host `mongod` (`/etc/mongod.conf` still has no `authorization`), the sshd password-login decision, ADR-195, D81, D89 and D90.

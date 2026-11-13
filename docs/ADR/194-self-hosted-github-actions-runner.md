@@ -191,11 +191,17 @@
 
     Each SHA was resolved with `gh api repos/<repo>/commits/<tag>`, and each action's `action.yml` at that tag says `node24`. All of these need runner 2.327.1 or later; `aevra-home-1` runs 2.338.2.
 - **`IPAddressDeny` in practice** (PR #77, run 43309094006, 2026-11-13). The preflight's address check ran inside the unit, in `test-python` and `test-python-quarantine`, and printed `IPAddressDeny: 8 host addresses in denied ranges blocked`. The addresses are 192.168.3.200, the tailnet IPv4 and IPv6 addresses, three Docker bridges and two k3s addresses. Outside the unit the same 8 answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host. The run passed in full on `aevra-home-1`: test-python 7,422 passed, 0 failed.
+- **Stop and tailscaled restart** (2026-11-13, run by the owner at 11:33 +07). The owner ran `sudo systemctl stop aevra-gh-runner`, then `start`, then `sudo systemctl restart tailscaled`.
+  - **Stop.** The journal shows `Stopping` at 11:33:15 and `Deactivated successfully` at 11:33:16, with no `Killing process` line.
+  - **Restart with tailscaled.** After the restart, the runner was stopped and started again with tailscaled (`PartOf=`): `Stopping` at 11:33:22, `Started` at 11:33:23, while tailscaled's `ActiveEnterTimestamp` is 11:33:23.
+  - **Afterwards, checked without sudo:**
+    - the only `gh-runner` processes are the three of the new service, all started at 11:33:22, so nothing survived the stop;
+    - the host's `/dev/shm` and `/dev/mqueue` hold no object of `gh-runner`, and `/proc/sysvipc` has no object of uid 997;
+    - the new main process has `NoNewPrivs: 1`, and `/run/tailscale`, `/run/ssh-unix-local` and `/home` are again mounted from systemd's inaccessible directory, so the masks were set up again in the new namespace.
+  - This settles `KillMode=mixed`, `RemoveIPC` and the tailscaled restart path through `PartOf=`. The preflight's socket check after the restart is recorded with this change's CI run.
+- **SSH denial on the live sshd** (2026-11-13, 11:34 +07, no sudo). One `ssh -o BatchMode=yes gh-runner@127.0.0.1` attempt was refused. The system journal logs `User gh-runner from 127.0.0.1 not allowed because listed in DenyUsers` and `Connection closed by invalid user gh-runner ... [preauth]`.
 - Still not validated on the installed unit:
-  - `KillMode=mixed` and `RemoveIPC` on a stop: after `sudo systemctl stop aevra-gh-runner`, no process or IPC object of `gh-runner` remains;
-  - the tailscaled restart path (`PartOf=`) re-applying the `/run/tailscale` mask;
-  - the SSH denial on the live sshd: a login attempt as `gh-runner` is refused, and sshd logs `DenyUsers`;
   - a runner self-update;
   - the uninstall path against the real GitHub API (lookup by name and `DELETE`).
 
-  The first live run on a pull request records these, together with the job results, timings, the runner name and the absence of billing failures, before `CI_RUNS_ON` is relied on.
+  A runner self-update happens when GitHub releases a new runner version. The uninstall path is exercised only when the runner is removed.
