@@ -1,0 +1,92 @@
+# File description: Forgejo release for local-assistant on the Home Server's self-hosted Forgejo. It runs in parallel
+# with the GitHub pipeline while GitHub stays the source of truth: a v* tag synced by the pull mirror
+# publishes the same source bundle to Forgejo's generic package registry and a Forgejo Release.
+# Runs on the Forgejo runner label "docker" only; GitHub workflows (.github/) never run on Forgejo.
+name: forgejo-release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Upload the bundle as a dev package (no Release)
+        type: boolean
+        default: false
+
+env:
+  SERVER_URL: ${{ forgejo.server_url }}
+  REPOSITORY: ${{ forgejo.repository }}
+  OWNER: ${{ forgejo.repository_owner }}
+  REF_NAME: ${{ forgejo.ref_name }}
+  REF_TYPE: ${{ forgejo.ref_type }}
+  SHA: ${{ forgejo.sha }}
+  PACKAGE: local-assistant
+
+jobs:
+  bundle:
+    runs-on: docker
+    container:
+      image: python:3.14.10-slim-trixie
+    steps:
+      # Plain git: no JavaScript action, and the job token never reaches a process list.
+      - name: Checkout
+        env:
+          TOKEN: ${{ forgejo.token }}
+        run: |
+          set -eu
+          apt-get update -qq && apt-get install -y -qq --no-install-recommends git curl ca-certificates >/dev/null
+          host="${SERVER_URL#*://}"; host="${host%%/*}"
+          ( umask 077 && printf 'https://x-access-token:%s@%s\n' "${TOKEN}" "${host}" > "${HOME}/.git-credentials" )
+          git config --global credential.helper store
+          git init -q . && git remote add origin "${SERVER_URL}/${REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${SHA}" && git checkout -q FETCH_HEAD
+          rm -f "${HOME}/.git-credentials"
+
+      - name: Build source bundle
+        run: |
+          set -eu
+          ref="$(printf '%s' "${REF_NAME}" | tr '/' '-')"
+          name="${PACKAGE}-${ref}-$(printf '%s' "${SHA}" | cut -c1-7)"
+          mkdir -p dist
+          git archive --format=tar.gz --prefix="${name}/" -o "dist/${name}.tar.gz" HEAD
+          (cd dist && sha256sum -- * > SHA256SUMS && cat SHA256SUMS)
+          if [ "${REF_TYPE}" = tag ]; then echo "VERSION=${REF_NAME#v}" >> "${FORGEJO_ENV:-$GITHUB_ENV}"; else echo "VERSION=dev-$(printf '%s' "${SHA}" | cut -c1-7)" >> "${FORGEJO_ENV:-$GITHUB_ENV}"; fi
+
+      - name: Publish to the generic registry
+        if: ${{ forgejo.ref_type == 'tag' || inputs.publish }}
+        env:
+          PACKAGES_USER: ${{ vars.PACKAGES_USER }}
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+        run: |
+          set -eu
+          if [ -n "${SDP_FORGEJO_CA:-}" ]; then export CURL_CA_BUNDLE="${SDP_FORGEJO_CA}"; fi
+          host="${SERVER_URL#*://}"; host="${host%%/*}"
+          netrc="$(mktemp)"
+          printf 'machine %s login %s password %s\n' "${host}" "${PACKAGES_USER}" "${PACKAGES_TOKEN}" > "${netrc}"
+          for file in dist/*; do
+            curl -fsS --netrc-file "${netrc}" --upload-file "${file}" \
+              "${SERVER_URL}/api/packages/${OWNER}/generic/${PACKAGE}/${VERSION}/$(basename "${file}")"
+            echo "generic: ${PACKAGE}/${VERSION}/$(basename "${file}")"
+          done
+          rm -f "${netrc}"
+
+      - name: Create Forgejo Release
+        if: ${{ forgejo.ref_type == 'tag' }}
+        env:
+          TOKEN: ${{ forgejo.token }}
+        run: |
+          set -eu
+          if [ -n "${SDP_FORGEJO_CA:-}" ]; then export CURL_CA_BUNDLE="${SDP_FORGEJO_CA}"; fi
+          api="${SERVER_URL}/api/v1/repos/${REPOSITORY}"
+          header="$(mktemp)"
+          printf 'Authorization: token %s\n' "${TOKEN}" > "${header}"
+          prerelease=false; case "${REF_NAME}" in *-*) prerelease=true ;; esac
+          release_id="$(curl -fsS -H @"${header}" -H 'Content-Type: application/json' \
+            -d "{\"tag_name\":\"${REF_NAME}\",\"name\":\"${REF_NAME}\",\"prerelease\":${prerelease},\"body\":\"Source bundle built by Forgejo Actions from ${SHA}. Verify with SHA256SUMS.\"}" \
+            "${api}/releases" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')"
+          for file in dist/*; do
+            curl -fsS -H @"${header}" -F "attachment=@${file}" "${api}/releases/${release_id}/assets?name=$(basename "${file}")" >/dev/null
+            echo "asset: $(basename "${file}")"
+          done
+          rm -f "${header}"
