@@ -5,6 +5,7 @@ import asyncio
 import httpx
 
 from apps.api.services.llama_gateway import GatewayError
+from src.application.services.special_literals import require_current_binding
 from src.application.services.history_summary import MAX_TOKENS, SummaryUnavailable
 
 RESPONSE_LIMIT = 262144
@@ -33,6 +34,7 @@ class GatewaySummarizer:
 
     async def generate(self, messages, schema):
         """Run one non-streaming schema-constrained completion and return content, finish reason and usage."""
+        require_current_binding()
         payload = dict(
             model=self.model_id,
             messages=messages,

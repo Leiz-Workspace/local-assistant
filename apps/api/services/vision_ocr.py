@@ -8,6 +8,7 @@ import httpx
 
 from apps.api.core.model_config import ModelConfigError, get_model_profile
 from src.application.services.file_storage_policy import StoragePolicyError
+from src.application.services.special_literals import require_current_binding
 from src.application.services.ocr_contract import VisionResult, validate_vision
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ async def bounded_json(client, method, path, *, payload=None, limit=MAX_RESPONSE
 
 async def transcribe_image(image_base64, *, transport=None):
     """Verify CORE identity and request one bounded untrusted structured image transcription."""
+    require_current_binding()
     try:
         profile = get_model_profile("core")
         async with asyncio.timeout(VISION_TIMEOUT_SECONDS):

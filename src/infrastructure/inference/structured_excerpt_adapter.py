@@ -19,6 +19,7 @@ from apps.api.runtime.presets import (
 from apps.api.services.llama_gateway import LlamaGateway
 from src.application.ports.inference import CompletionResult, InferenceFailure
 from src.application.services.mcp_adapter import canonical
+from src.application.services.special_literals import require_current_binding
 from src.application.services.profile_prompts import TEMPLATES, PromptInput
 from src.application.services.workspace_requests import parse_workspace_json
 
@@ -354,6 +355,7 @@ class StructuredExcerptAdapter:
 
     async def complete(self, **request):
         """Perform one original-model Fast512 inference with an optional per-request JSON grammar and no fallback, repair or retry."""
+        require_current_binding()
         self.calls += 1
         self.provenance = None
         phase = "invalid_request"
