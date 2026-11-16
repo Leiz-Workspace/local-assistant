@@ -1,11 +1,14 @@
 """Verify ADR-195 Layer 1: neutralized evidence and history capsules, the inspector, the model binding and the product shape."""
 
+import ast
 import asyncio
 import copy
 import hashlib
 import json
 import logging
 import time
+from collections import Counter
+from pathlib import Path
 from uuid import UUID, uuid4
 
 import httpx
@@ -549,6 +552,7 @@ async def test_working_state_cap_applies_to_raw_bytes(caplog):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("path", PATHS)
+@pytest.mark.parametrize("strategy", STRATEGIES)
 @pytest.mark.parametrize(
     "error",
     [
@@ -558,8 +562,8 @@ async def test_working_state_cap_applies_to_raw_bytes(caplog):
     ],
     ids=["runtime", "inference_failure", "cancelled"],
 )
-async def test_counter_failures_and_cancellation_propagate(path, error):
-    """A failing or cancelled count of a neutralized candidate reaches the caller unchanged."""
+async def test_counter_failures_and_cancellation_propagate(path, strategy, error):
+    """A failing or cancelled count of a neutralized candidate reaches the caller unchanged under every strategy."""
     seen = []
 
     async def failing(messages):
@@ -570,8 +574,9 @@ async def test_counter_failures_and_cancellation_propagate(path, error):
             raise error
         return 8 * len(messages)
 
-    with pytest.raises(type(error)):
-        await compose(dialogue(), [FORGED.encode()], "evidence-first", path, failing)
+    with pytest.raises(type(error)) as caught:
+        await compose(dialogue(), [FORGED.encode()], strategy, path, failing)
+    assert caught.value is error
     assert seen == [0]
 
 
@@ -815,10 +820,13 @@ async def test_stale_binding_refuses_composition_before_any_count(
 
     monkeypatch.setattr(model_config, "get_model_digests", digests)
     assert model_config.bind_special_literals() == roles
-    assert (
-        f"special_literals_binding status=stale roles={','.join(roles)} config={source}"
-        in caplog.text
-    )
+    stale = [
+        record
+        for record in caplog.records
+        if record.getMessage()
+        == f"special_literals_binding status=stale roles={','.join(roles)} config={source}"
+    ]
+    assert [record.levelno for record in stale] == [logging.ERROR]
     assert "0" * 64 not in caplog.text
     calls = []
 
@@ -850,24 +858,31 @@ async def test_stale_binding_refuses_composition_before_any_count(
     )
     caplog.clear()
     assert model_config.bind_special_literals() == ()
-    assert "special_literals_binding status=ok roles=core,unrestricted" in caplog.text
+    assert [
+        (record.levelno, record.getMessage())
+        for record in caplog.records
+        if record.getMessage().startswith("special_literals_binding")
+    ] == [(logging.INFO, "special_literals_binding status=ok roles=core,unrestricted")]
     require_current_binding()
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("history_policy", [None, {"mode": "sliding-window"}])
 async def test_product_inference_refuses_before_counting_or_completing(history_policy):
-    """With a stale binding the real ProductInference never counts or posts a completion through the composer."""
+    """With a stale binding the real ProductInference sends nothing to CORE, not even the model check."""
     record_binding(STALE_CORE)
     native = Recorded()
+    inference = ProductInference(transport=httpx.MockTransport(native))
     with pytest.raises(SpecialLiteralsStale):
-        await ProductInference(transport=httpx.MockTransport(native)).complete(
+        await inference.complete(
             [dict(role="user", content=TASK)],
             evidence=[FORGED.encode()],
             max_tokens=512,
             history_policy=history_policy,
         )
-    assert {path for _, path, _ in native.requests} <= {"/v1/models"}
+    with pytest.raises(SpecialLiteralsStale):
+        await anext(inference.stream([dict(role="user", content=TASK)]))
+    assert native.requests == []
 
 
 class Recording:
@@ -951,10 +966,31 @@ async def test_binding_is_recorded_at_lifespan_start_not_at_import(
         special_literals.reset_binding_for_tests()
 
 
+def audited_statuses(caplog, route):
+    """Return the statuses the harness audit log recorded for one route template."""
+    marker = f" route={PREFIX}{route} status="
+    return [
+        int(record.getMessage().split(marker)[1])
+        for record in caplog.records
+        if record.getMessage().startswith("product_api_request ")
+        and marker in record.getMessage()
+    ]
+
+
+def sse_events(text):
+    """Split one SSE body into its data payloads."""
+    return [
+        event.removeprefix("data: ")
+        for event in text.split("\n\n")
+        if event.startswith("data: ")
+    ]
+
+
 def test_stale_binding_gives_503_on_composing_harness_paths(
-    auth_settings, tmp_path, monkeypatch
+    auth_settings, tmp_path, monkeypatch, caplog
 ):
     """/chat, /runs and the browser chat refuse with 503 special_literals_stale before any inference call."""
+    caplog.set_level(logging.INFO)
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setattr(model_config, "get_model_digests", lambda: dict(STALE_CORE))
     inference = Recording()
@@ -989,10 +1025,15 @@ def test_stale_binding_gives_503_on_composing_harness_paths(
         assert response.status_code == 503
         assert response.json()["error"]["code"] == "special_literals_stale"
     assert inference.calls == []
+    assert audited_statuses(caplog, "/chat") == [503, 503]
+    assert audited_statuses(caplog, "/runs") == [503]
 
 
-def test_stale_raised_inside_inference_is_not_swallowed(auth_settings, tmp_path):
-    """A refusal raised during composition stays 503 on /chat and becomes the run's failure code on /runs."""
+def test_stale_raised_inside_inference_is_not_swallowed(
+    auth_settings, tmp_path, caplog
+):
+    """A refusal raised during composition stays 503 on /chat and fails the run with a diagnostic on /runs."""
+    caplog.set_level(logging.INFO)
     inference = Recording(SpecialLiteralsStale(("core",)))
     with harness_client(tmp_path, inference) as client:
         headers = bearer(auth_settings)
@@ -1017,7 +1058,8 @@ def test_stale_raised_inside_inference_is_not_swallowed(auth_settings, tmp_path)
                 break
             time.sleep(0.01)
         assert row["state"] == "failed"
-        assert row["error"] == {"code": "special_literals_stale"}
+        assert row["error"] == {"code": "run_failed"}
+        assert row["diagnostic"] == {"code": "special_literals_stale"}
         pair(client, auth_settings)
         response = client.post(
             "/v1/chat/completions",
@@ -1025,8 +1067,43 @@ def test_stale_raised_inside_inference_is_not_swallowed(auth_settings, tmp_path)
             json={"messages": [{"role": "user", "content": "Hello"}], "stream": True},
         )
         assert response.status_code == 200
-        assert '"code":"special_literals_stale"' in response.text
+        events = sse_events(response.text)
+        assert events[-1] == "[DONE]"
+        assert json.loads(events[-2])["error"]["code"] == "special_literals_stale"
+        assert len(events) == 2
     assert len(inference.calls) == 4
+    assert audited_statuses(caplog, "/chat") == [503, 503]
+
+
+@pytest.mark.asyncio
+async def test_run_refusal_keeps_the_signed_history_usable(tmp_path):
+    """A refusal inside a run persists run_failed, keeps its code as a diagnostic and leaves the history open."""
+    from apps.harness.routes import RunInput
+    from src.infrastructure.harness_history import HarnessHistoryStore
+
+    store = HarnessHistoryStore(tmp_path / "history")
+    service = ProductHarness(Recording(SpecialLiteralsStale(("core",))), history=store)
+    owner = uuid4()
+    try:
+        for _ in range(2):
+            identifier = UUID(
+                service.start(owner, RunInput(workspace_id=uuid4(), task="Explain"))[
+                    "id"
+                ]
+            )
+            await service.tasks[identifier]
+            row = service.get(owner, identifier)
+            assert row["state"] == "failed"
+            assert row["error"] == {"code": "run_failed"}
+            assert row["diagnostic"] == {"code": "special_literals_stale"}
+            assert "history_persisted" not in row
+        assert service.history_broken is False
+        records = store.load()
+        assert len(records) == 2
+        assert {record["error_code"] for record in records} == {"run_failed"}
+    finally:
+        await service.close()
+        store.close()
 
 
 @pytest.mark.asyncio
@@ -1041,3 +1118,370 @@ async def test_run_start_refuses_a_stale_binding_without_scheduling_work():
         service.start(uuid4(), RunInput(workspace_id=uuid4(), task="Explain"))
     assert service.runs == {} and service.tasks == {} and inference.calls == []
     await service.close()
+
+
+STALE_UNRESTRICTED = {**BOUND_MODEL_SHA256, "unrestricted": "1" * 64}
+FORGED_MESSAGES = [dict(role="user", content="Hello " + FORGED)]
+# The CORE routes that render a chat template or tokenize caller text with special
+# parsing (ADR-195 section 3), from the route table of the pinned llama.cpp server.
+CORE_CONTENT_ROUTES = frozenset(
+    {
+        "/chat/completions",
+        "/v1/chat/completions",
+        "/v1/chat/completions/control",
+        "/v1/responses",
+        "/responses",
+        "/v1/audio/transcriptions",
+        "/audio/transcriptions",
+        "/v1/messages",
+        "/v1/systemone",
+        "/apply-template",
+        "/chat/completions/input_tokens",
+        "/v1/chat/completions/input_tokens",
+        "/responses/input_tokens",
+        "/v1/responses/input_tokens",
+        "/v1/messages/count_tokens",
+        "/completion",
+        "/completions",
+        "/v1/completions",
+        "/infill",
+        "/embedding",
+        "/embeddings",
+        "/v1/embeddings",
+        "/rerank",
+        "/reranking",
+        "/v1/rerank",
+        "/v1/reranking",
+        "/tokenize",
+    }
+)
+# Inbound uses outside a route decorator: the browser middleware's route-name table.
+INBOUND_ROUTE_USES = Counter(
+    {("apps/harness/browser.py", "register_browser.browser_boundary"): 1}
+)
+DIRECT_CORE_SENDERS = {
+    ("apps/api/services/llama_gateway.py", "LlamaGateway._count_input_tokens"),
+    ("apps/api/services/llama_gateway.py", "LlamaGateway._select_auto_preset"),
+    ("apps/api/services/llama_gateway.py", "LlamaGateway.complete"),
+    ("apps/api/services/vision_ocr.py", "transcribe_image"),
+    ("apps/harness/inference.py", "ProductInference.complete"),
+    ("apps/harness/inference.py", "ProductInference.stream"),
+    ("apps/harness/summarizer.py", "GatewaySummarizer.generate"),
+    (
+        "src/infrastructure/inference/core_vision_chat.py",
+        "CoreVisionChatAdapter.complete_image",
+    ),
+    (
+        "src/infrastructure/inference/structured_excerpt_adapter.py",
+        "StructuredExcerptAdapter.complete",
+    ),
+    (
+        "src/infrastructure/inference/structured_profile.py",
+        "StructuredProfileAdapter._complete_native",
+    ),
+}
+
+
+@pytest.fixture
+def core_sends(monkeypatch):
+    """Record and fail every outbound async HTTP request, so a refusal is shown to send nothing."""
+    sent = []
+
+    async def send(self, request, **options):
+        """Record the path and never reach a server."""
+        sent.append(request.url.path)
+        raise AssertionError("unexpected_core_request")
+
+    monkeypatch.setattr(httpx.AsyncClient, "send", send)
+    return sent
+
+
+def core_entry_points():
+    """Return one call per product CORE entry point, keyed like apps.api.voice_admission.TARGETS."""
+    from apps.api.services import files, vision_ocr
+    from apps.api.services.llama_gateway import LlamaGateway
+    from apps.harness.summarizer import GatewaySummarizer
+    from src.infrastructure.inference.coding_reasoning import CodingReasoningAdapter
+    from src.infrastructure.inference.core_vision_chat import CoreVisionChatAdapter
+    from src.infrastructure.inference.llama_adapter import LlamaInferenceAdapter
+    from src.infrastructure.inference.structured_profile import (
+        StructuredProfileAdapter,
+    )
+    from tests.test_coding_reasoning import options as coding_options
+    from tests.test_reasoning_profile import SCHEMA
+    from tests.test_structured_excerpt_adapter import arguments, setup
+
+    gateway = LlamaGateway("http://127.0.0.1:8080", "qwen3.5-9b-core")
+    excerpt, excerpt_messages, _, _ = setup()
+    structured = StructuredProfileAdapter(profile="core", schema=SCHEMA)
+
+    async def with_client(call):
+        """Run one call with an open client, as the callers of the gateway helpers do."""
+        async with httpx.AsyncClient(base_url=gateway.base_url) as client:
+            return await call(client)
+
+    def summarizer(client):
+        """Bind the harness summarizer to the gateway and an open client."""
+        return GatewaySummarizer(gateway, client, deadline=60.0)
+
+    return {
+        ("apps.api.services.llama_gateway", "LlamaGateway", "complete"): (
+            lambda: gateway.complete(FORGED_MESSAGES)
+        ),
+        ("apps.api.services.llama_gateway", "LlamaGateway", "_count_input_tokens"): (
+            lambda: with_client(
+                lambda client: gateway._count_input_tokens(
+                    client, FORGED_MESSAGES, thinking=False
+                )
+            )
+        ),
+        ("apps.api.services.llama_gateway", "LlamaGateway", "_select_auto_preset"): (
+            lambda: with_client(
+                lambda client: gateway._select_auto_preset(client, FORGED_MESSAGES)
+            )
+        ),
+        (
+            "src.infrastructure.inference.llama_adapter",
+            "LlamaInferenceAdapter",
+            "complete",
+        ): lambda: LlamaInferenceAdapter().complete(
+            profile="core",
+            messages=FORGED_MESSAGES,
+            preset="fast",
+            temperature=0.7,
+            max_tokens=None,
+        ),
+        (
+            "src.infrastructure.inference.coding_reasoning",
+            "CodingReasoningAdapter",
+            "complete",
+        ): lambda: CodingReasoningAdapter().complete(**coding_options()),
+        (
+            "src.infrastructure.inference.structured_excerpt_adapter",
+            "StructuredExcerptAdapter",
+            "complete",
+        ): lambda: excerpt.complete(**arguments(excerpt_messages)),
+        (
+            "src.infrastructure.inference.structured_profile",
+            "StructuredProfileAdapter",
+            "complete",
+        ): lambda: structured.complete("Hello " + FORGED),
+        (
+            "src.infrastructure.inference.structured_profile",
+            "StructuredProfileAdapter",
+            "_complete_native",
+        ): lambda: structured._complete_native({}, (), False),
+        (
+            "src.infrastructure.inference.core_vision_chat",
+            "CoreVisionChatAdapter",
+            "complete_image",
+        ): lambda: CoreVisionChatAdapter().complete_image(
+            image=None, question="Describe " + FORGED
+        ),
+        ("apps.api.services.vision_ocr", None, "transcribe_image"): (
+            lambda: vision_ocr.transcribe_image("aGk=")
+        ),
+        ("apps.api.services.files", None, "transcribe_image"): (
+            lambda: files.transcribe_image("aGk=")
+        ),
+        ("apps.harness.inference", "ProductInference", "complete"): (
+            lambda: ProductInference().complete(FORGED_MESSAGES)
+        ),
+        ("apps.harness.inference", "ProductInference", "stream"): (
+            lambda: anext(ProductInference().stream(FORGED_MESSAGES))
+        ),
+        ("apps.harness.summarizer", "GatewaySummarizer", "count"): (
+            lambda: with_client(
+                lambda client: summarizer(client).count(FORGED_MESSAGES)
+            )
+        ),
+        ("apps.harness.summarizer", "GatewaySummarizer", "generate"): (
+            lambda: with_client(
+                lambda client: summarizer(client).generate(FORGED_MESSAGES, {})
+            )
+        ),
+    }
+
+
+@pytest.mark.asyncio
+async def test_every_core_entry_point_refuses_a_stale_binding_before_any_request(
+    core_sends,
+):
+    """Every reviewed CORE entry point, base API and harness alike, refuses before any HTTP request."""
+    from apps.api.voice_admission import TARGETS
+
+    calls = core_entry_points()
+    assert set(TARGETS) <= set(calls)
+    for configured, roles in (
+        (STALE_CORE, ("core",)),
+        (None, tuple(BOUND_MODEL_SHA256)),
+    ):
+        record_binding(configured)
+        for key, call in calls.items():
+            with pytest.raises(SpecialLiteralsStale) as caught:
+                await call()
+            assert caught.value.roles == roles, key
+    record_binding(STALE_UNRESTRICTED)
+    for key, call in calls.items():
+        with pytest.raises(SpecialLiteralsStale) as caught:
+            await call()
+        assert caught.value.roles == ("unrestricted",), key
+    assert core_sends == []
+    special_literals.reset_binding_for_tests()
+    with pytest.raises(AssertionError, match="unexpected_core_request"):
+        await calls[("apps.api.services.llama_gateway", "LlamaGateway", "complete")]()
+    assert core_sends == ["/v1/models"]
+
+
+def chat_body(profile):
+    """Return a stateless chat request for one profile with forged literals in the task."""
+    return {
+        "profile": profile,
+        "messages": [{"role": "user", "content": "Hello " + FORGED}],
+        "preset": "fast",
+    }
+
+
+@pytest.mark.parametrize(
+    "configured,roles",
+    [(STALE_CORE, ("core",)), (STALE_UNRESTRICTED, ("unrestricted",))],
+    ids=["core", "unrestricted"],
+)
+def test_default_api_chat_refuses_a_stale_binding_for_both_profiles(
+    auth_settings, monkeypatch, caplog, core_sends, configured, roles
+):
+    """The default API answers /api/v1/chat/completions with 503 for either stale sha and either profile, sending nothing."""
+    caplog.set_level(logging.INFO)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setattr(model_config, "get_model_digests", lambda: dict(configured))
+    with TestClient(main.app, client=("127.0.0.1", 42000)) as client:
+        for profile in ("core", "unrestricted"):
+            response = client.post(
+                "/api/v1/chat/completions",
+                headers=auth_settings["headers"][0],
+                json=chat_body(profile),
+            )
+            assert response.status_code == 503
+            assert response.json() == {"detail": {"code": "special_literals_stale"}}
+            assert response.headers["cache-control"] == "private, no-store"
+            assert response.headers["x-content-type-options"] == "nosniff"
+    assert core_sends == []
+    refused = [
+        (record.levelno, record.getMessage())
+        for record in caplog.records
+        if record.getMessage().startswith("special_literals_refused")
+    ]
+    message = "special_literals_refused code=special_literals_stale roles="
+    assert refused == [(logging.ERROR, message + ",".join(roles))] * 2
+    assert "Hello" not in caplog.text
+
+
+def test_default_api_chat_reaches_core_with_a_current_binding(
+    auth_settings, monkeypatch, core_sends
+):
+    """With the pinned digests configured the same request reaches the gateway, so the refusal above is the binding."""
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setattr(
+        model_config, "get_model_digests", lambda: dict(BOUND_MODEL_SHA256)
+    )
+    with TestClient(
+        main.app, client=("127.0.0.1", 42000), raise_server_exceptions=False
+    ) as client:
+        response = client.post(
+            "/api/v1/chat/completions",
+            headers=auth_settings["headers"][0],
+            json=chat_body("unrestricted"),
+        )
+    assert response.status_code == 500
+    assert core_sends == ["/v1/models"]
+
+
+def test_harness_process_refuses_base_chat_for_both_profiles(
+    auth_settings, tmp_path, monkeypatch, core_sends
+):
+    """In the harness composition the base stateless chat refuses like the harness routes."""
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setattr(model_config, "get_model_digests", lambda: dict(STALE_CORE))
+    inference = Recording()
+    with harness_client(tmp_path, inference) as client:
+        for profile in ("core", "unrestricted"):
+            response = client.post(
+                "/api/v1/chat/completions",
+                headers=bearer(auth_settings),
+                json=chat_body(profile),
+            )
+            assert response.status_code == 503
+            assert response.json() == {"detail": {"code": "special_literals_stale"}}
+    assert core_sends == [] and inference.calls == []
+
+
+class RouteUses(ast.NodeVisitor):
+    """Collect each CORE content route string with its enclosing function, skipping route decorators."""
+
+    def __init__(self):
+        """Start outside any class or function."""
+        self.names, self.functions, self.uses = [], [], []
+
+    def visit_ClassDef(self, node):
+        """Name the class body without visiting its decorators."""
+        for item in node.bases + node.keywords:
+            self.visit(item)
+        self.names.append(node.name)
+        for item in node.body:
+            self.visit(item)
+        self.names.pop()
+
+    def visit_FunctionDef(self, node):
+        """Visit the body inside this function; decorators register inbound routes."""
+        self.visit(node.args)
+        self.names.append(node.name)
+        self.functions.append(node)
+        for item in node.body:
+            self.visit(item)
+        self.functions.pop()
+        self.names.pop()
+
+    visit_AsyncFunctionDef = visit_FunctionDef
+
+    def visit_Constant(self, node):
+        """Record a CORE content route with the innermost enclosing function."""
+        if node.value in CORE_CONTENT_ROUTES:
+            function = self.functions[-1] if self.functions else None
+            self.uses.append((".".join(self.names) or "<module>", function))
+
+
+def checks_binding_first(function):
+    """Return whether the first statement after the docstring is require_current_binding()."""
+    body = function.body
+    if (
+        body
+        and isinstance(body[0], ast.Expr)
+        and isinstance(body[0].value, ast.Constant)
+        and isinstance(body[0].value.value, str)
+    ):
+        body = body[1:]
+    expected = ast.dump(ast.parse("require_current_binding()").body[0])
+    return bool(body) and ast.dump(body[0]) == expected
+
+
+def test_every_function_naming_a_core_content_route_checks_the_binding_first():
+    """Each product function that sends to a CORE content route refuses a stale binding before anything else."""
+    root = Path(__file__).resolve().parents[1]
+    senders, inbound = {}, Counter()
+    for base in ("apps", "src"):
+        for path in sorted((root / base).rglob("*.py")):
+            visitor = RouteUses()
+            visitor.visit(ast.parse(path.read_text(encoding="utf-8")))
+            name = path.relative_to(root).as_posix()
+            for qualname, function in visitor.uses:
+                if (name, qualname) in INBOUND_ROUTE_USES:
+                    inbound[(name, qualname)] += 1
+                    continue
+                assert function is not None, (name, qualname)
+                senders[(name, qualname)] = function
+    assert inbound == INBOUND_ROUTE_USES
+    assert DIRECT_CORE_SENDERS <= set(senders)
+    assert (
+        sorted(key for key, value in senders.items() if not checks_binding_first(value))
+        == []
+    )

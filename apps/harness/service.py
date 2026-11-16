@@ -282,9 +282,11 @@ class ProductHarness:
             code = "skill_revoked" if isinstance(error, SkillError) else "run_failed"
             if isinstance(error, TimeoutError):
                 code = "run_timeout"
-            elif isinstance(error, SpecialLiteralsStale):
-                code = error.code
             diagnostic = {}
+            if isinstance(error, SpecialLiteralsStale):
+                # The signed history keeps its closed error codes; the CORE request
+                # refusal keeps its own code as an unpersisted diagnostic (ADR-195).
+                diagnostic["diagnostic"] = {"code": error.code}
             if isinstance(error, SourceContractError):
                 diagnostic["diagnostic"] = {"code": error.code}
                 if error.raw_result is not None:

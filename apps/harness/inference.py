@@ -19,6 +19,7 @@ from src.application.services.context_composer import compose_context
 from src.application.services.context_inspection import inspect_context
 from src.application.services.context_reduction import HistoryPolicy
 from src.application.services import review_output_contract as review_contract
+from src.application.services.special_literals import require_current_binding
 from src.application.services.source_output_contract import (
     NAME,
     SourceContractError,
@@ -120,6 +121,7 @@ class ProductInference:
 
     async def complete(self, messages, **options):
         """Return one verified gateway completion together with a redacted context report."""
+        require_current_binding()
         gateway, fitted, report = await self.prepare(messages, **options)
         contract_name = options.get("output_contract", "text")
         review_mode = contract_name in {
@@ -207,6 +209,7 @@ class ProductInference:
 
     async def stream(self, messages, *, max_tokens=None):
         """Stream bounded native SSE and close the upstream request on cancellation or timeout."""
+        require_current_binding()
         gateway, fitted, report = await self.prepare(
             messages, preset="fast", max_tokens=max_tokens
         )

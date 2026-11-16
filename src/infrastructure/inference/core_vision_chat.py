@@ -6,6 +6,7 @@ import logging
 import httpx
 
 from apps.api.core.model_config import get_model_profile
+from src.application.services.special_literals import require_current_binding
 from src.application.ports.inference import CompletionResult
 from src.application.services.vision_chat_policy import (
     MAX_TOKENS,
@@ -54,6 +55,7 @@ class CoreVisionChatAdapter:
 
     async def complete_image(self, *, image, question):
         """Verify current original CORE capabilities and validate one complete structured native image completion."""
+        require_current_binding()
         try:
             validate_image(image, image.source_sha256)
             messages = model_messages(question, image)

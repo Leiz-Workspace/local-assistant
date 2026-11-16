@@ -1,4 +1,3 @@
-
 """
 Local Assistant - llama.cpp Model Gateway.
 
@@ -23,6 +22,7 @@ from typing import Any
 
 import httpx
 
+from src.application.services.special_literals import require_current_binding
 from apps.api.runtime.presets import (
     AutoDecision,
     PresetError,
@@ -77,15 +77,12 @@ class LlamaGateway:
         response = await client.get("/v1/models")
         response.raise_for_status()
 
-        available_models = (
-            response.json().get("data", [])
-        )
+        available_models = response.json().get("data", [])
 
         loaded_ids = {
             item["id"]
             for item in available_models
-            if isinstance(item, dict)
-            and isinstance(item.get("id"), str)
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
         }
 
         if self.model_id not in loaded_ids:
@@ -109,6 +106,7 @@ class LlamaGateway:
         The tokenizer count is later comparable with
         response.usage.prompt_tokens.
         """
+        require_current_binding()
 
         template_response = await client.post(
             "/apply-template",
@@ -124,10 +122,7 @@ class LlamaGateway:
         prompt = template_response.json().get("prompt")
 
         if not isinstance(prompt, str):
-            raise GatewayError(
-                "llama.cpp /apply-template returned "
-                "no string prompt"
-            )
+            raise GatewayError("llama.cpp /apply-template returned no string prompt")
 
         token_response = await client.post(
             "/tokenize",
@@ -141,10 +136,7 @@ class LlamaGateway:
         tokens = token_response.json().get("tokens")
 
         if not isinstance(tokens, list):
-            raise GatewayError(
-                "llama.cpp /tokenize returned "
-                "no token list"
-            )
+            raise GatewayError("llama.cpp /tokenize returned no token list")
 
         return len(tokens)
 
@@ -161,6 +153,7 @@ class LlamaGateway:
 
         If classification fails, use Balanced.
         """
+        require_current_binding()
 
         shortcut = classify_simple_request(messages)
 
@@ -172,8 +165,7 @@ class LlamaGateway:
         recent = messages[-6:]
 
         summary = "\n".join(
-            f"{item.get('role', 'unknown')}: "
-            f"{str(item.get('content', ''))[:1200]}"
+            f"{item.get('role', 'unknown')}: {str(item.get('content', ''))[:1200]}"
             for item in recent
         )
 
@@ -244,21 +236,14 @@ class LlamaGateway:
             first = choices[0]
 
             if first.get("finish_reason") != "stop":
-                raise ValueError(
-                    "Classifier did not finish normally"
-                )
+                raise ValueError("Classifier did not finish normally")
 
-            answer = (
-                (first.get("message") or {})
-                .get("content") or ""
-            )
+            answer = (first.get("message") or {}).get("content") or ""
 
             selected = parse_classifier_output(answer)
 
             if selected is None:
-                raise ValueError(
-                    "Invalid classifier label"
-                )
+                raise ValueError("Invalid classifier label")
 
             return AutoDecision(
                 preset=selected,
@@ -291,6 +276,7 @@ class LlamaGateway:
         preset=auto performs routing before planning output.
         Explicit presets skip the classifier entirely.
         """
+        require_current_binding()
 
         async with httpx.AsyncClient(
             base_url=self.base_url,
@@ -314,37 +300,29 @@ class LlamaGateway:
                 if preset is None:
                     # Backward compatibility for older callers.
                     payload["max_tokens"] = (
-                        max_tokens
-                        if max_tokens is not None
-                        else 512
+                        max_tokens if max_tokens is not None else 512
                     )
                 else:
                     try:
                         requested = RuntimePreset(preset)
                     except ValueError as exc:
-                        raise PresetError(
-                            f"Unknown preset: {preset}"
-                        ) from exc
+                        raise PresetError(f"Unknown preset: {preset}") from exc
 
                     selected = requested
 
                     if requested == RuntimePreset.AUTO:
-                        auto_decision = (
-                            await self._select_auto_preset(
-                                client,
-                                messages,
-                            )
+                        auto_decision = await self._select_auto_preset(
+                            client,
+                            messages,
                         )
                         selected = auto_decision.preset
 
                     preset_config = get_preset(selected)
 
-                    input_tokens = (
-                        await self._count_input_tokens(
-                            client,
-                            messages,
-                            thinking=preset_config.thinking,
-                        )
+                    input_tokens = await self._count_input_tokens(
+                        client,
+                        messages,
+                        thinking=preset_config.thinking,
                     )
 
                     plan = calculate_budget(
@@ -353,9 +331,7 @@ class LlamaGateway:
                         requested_max_tokens=max_tokens,
                     )
 
-                    payload.update(
-                        build_generation_params(plan)
-                    )
+                    payload.update(build_generation_params(plan))
 
                 response = await client.post(
                     "/v1/chat/completions",
@@ -366,9 +342,7 @@ class LlamaGateway:
                 result = response.json()
 
                 if not isinstance(result, dict):
-                    raise GatewayError(
-                        "Invalid chat completion response"
-                    )
+                    raise GatewayError("Invalid chat completion response")
 
                 if plan is not None:
                     status = classify_completion(result)
@@ -377,8 +351,7 @@ class LlamaGateway:
                         choices = result.get("choices") or []
                         choice = (
                             choices[0]
-                            if choices
-                            and isinstance(choices[0], dict)
+                            if choices and isinstance(choices[0], dict)
                             else {}
                         )
 
@@ -394,29 +367,21 @@ class LlamaGateway:
                     meta: dict[str, Any] = {
                         "preset": plan.preset.value,
                         "thinking_requested": plan.thinking,
-                        "reasoning_budget_requested": (
-                            plan.reasoning_budget
-                        ),
-                        "max_tokens_requested": (
-                            plan.max_tokens
-                        ),
-                        "input_tokens_counted": (
-                            plan.input_tokens
-                        ),
+                        "reasoning_budget_requested": (plan.reasoning_budget),
+                        "max_tokens_requested": (plan.max_tokens),
+                        "input_tokens_counted": (plan.input_tokens),
                         "context_size": plan.context_size,
                         "status": status,
                     }
 
                     if auto_decision is not None:
-                        meta.update({
-                            "preset_requested": "auto",
-                            "preset_selected": (
-                                plan.preset.value
-                            ),
-                            "auto_source": (
-                                auto_decision.source
-                            ),
-                        })
+                        meta.update(
+                            {
+                                "preset_requested": "auto",
+                                "preset_selected": (plan.preset.value),
+                                "auto_source": (auto_decision.source),
+                            }
+                        )
 
                     result["local_assistant"] = meta
 
@@ -442,8 +407,7 @@ class LlamaGateway:
 
             except httpx.HTTPStatusError as exc:
                 raise GatewayError(
-                    "llama-server returned HTTP "
-                    f"{exc.response.status_code}",
+                    f"llama-server returned HTTP {exc.response.status_code}",
                     status_code=502,
                 ) from exc
 
