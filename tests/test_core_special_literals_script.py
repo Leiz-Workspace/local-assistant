@@ -1,6 +1,7 @@
 """Test the offline GGUF special-literal generator on synthetic vocabularies (ADR-195 commit A)."""
 
 import hashlib
+import json
 import struct
 
 import pytest
@@ -195,6 +196,31 @@ def test_hash_mismatch_is_refused_unless_skipped(tmp_path, capsys):
     assert run(tmp_path, config, module, "--check") == 2
     assert "reason=gguf_sha256_mismatch_core" in capsys.readouterr().err
     assert run(tmp_path, config, module, "--write", "--skip-hash") == 0
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        str.upper,
+        lambda digest: digest[:-1],
+        lambda digest: digest[:-1] + "g",
+        lambda digest: " " + digest,
+        lambda digest: digest + "\n",
+    ],
+)
+def test_a_non_canonical_configured_sha_is_refused(tmp_path, capsys, mutate):
+    """The runtime binding compares the configured sha exactly, so the generator must not accept a variant."""
+    config, module = make_setup(tmp_path)
+    before = module.read_text(encoding="utf-8")
+    text = config.read_text(encoding="utf-8")
+    core_sha = text.split("sha256: ")[1].split("\n")[0]
+    config.write_text(
+        text.replace(core_sha, json.dumps(mutate(core_sha)), 1), encoding="utf-8"
+    )
+    for mode in ("--write", "--check"):
+        assert run(tmp_path, config, module, mode) == 2
+        assert "reason=config_model_invalid" in capsys.readouterr().err
+    assert module.read_text(encoding="utf-8") == before
 
 
 def test_missing_markers_and_missing_files_are_refused(tmp_path, capsys):
