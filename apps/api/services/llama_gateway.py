@@ -34,6 +34,7 @@ from apps.api.runtime.presets import (
     get_preset,
     parse_classifier_output,
 )
+from src.infrastructure.inference.core_request_seal import seal_payload
 
 
 class GatewayError(Exception):
@@ -108,14 +109,19 @@ class LlamaGateway:
         """
         require_current_binding()
 
-        template_response = await client.post(
-            "/apply-template",
-            json={
+        body, _ = seal_payload(
+            {
                 "messages": messages,
                 "chat_template_kwargs": {
                     "enable_thinking": thinking,
                 },
             },
+            "gateway_apply_template",
+        )
+
+        template_response = await client.post(
+            "/apply-template",
+            json=body,
         )
         template_response.raise_for_status()
 
@@ -211,6 +217,9 @@ class LlamaGateway:
                 "enable_thinking": False,
             },
         }
+
+        # Sealed outside the try: a refusal must not fall back to Balanced.
+        payload, _ = seal_payload(payload, "gateway_classifier")
 
         try:
             # Classification errors are nonfatal:
@@ -332,6 +341,8 @@ class LlamaGateway:
                     )
 
                     payload.update(build_generation_params(plan))
+
+                payload, _ = seal_payload(payload, "gateway_complete")
 
                 response = await client.post(
                     "/v1/chat/completions",

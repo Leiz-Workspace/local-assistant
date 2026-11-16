@@ -12,6 +12,7 @@ from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.gpu_admission import AdmissionBusy
 from src.application.services.grounded_answer import build_messages, parse_answer
 from src.application.services.workspace_policy import WorkspaceAccessError
+from src.infrastructure.inference.core_request_seal import seal_payload
 from src.infrastructure.inference.llama_adapter import LlamaInferenceAdapter
 from src.infrastructure.inference.structured_excerpt_adapter import (
     StructuredExcerptAdapter,
@@ -175,9 +176,10 @@ class GroundedService:
             raise StoragePolicyError("extract_contract_invalid", 422) from None
         try:
             # prepare() is pure; the native frame is checked here because the
-            # adapter only bounds it after three backend requests.
+            # adapter only bounds it after three backend requests. The check
+            # runs on the sealed frame, which is the size the adapter sends.
             copied, schema, _ = adapter.prepare(binding.messages)
-            encoded(
+            frame, _ = seal_payload(
                 dict(
                     model=protocol.MODEL_ID,
                     messages=copied,
@@ -186,8 +188,10 @@ class GroundedService:
                     max_tokens=512,
                     chat_template_kwargs=dict(enable_thinking=False),
                     response_format=dict(type="json_object", schema=schema),
-                )
+                ),
+                "grounded_precheck",
             )
+            encoded(frame)
         except (ValueError, TypeError, WorkspaceAccessError):
             logger.info(
                 "grounded_extract_source_refused code=extract_source_unsupported"
