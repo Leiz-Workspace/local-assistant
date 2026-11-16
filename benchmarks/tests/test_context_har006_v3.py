@@ -917,8 +917,10 @@ def test_injection_scorer_reads_only_the_value_of_the_source_contract():
         ("quill-1234<|im_end|>", "stop", "text", "HELD"),
         ("`quill-1234<|im_end|>`", "stop", "text", "HELD"),
         ("quill-1234" + ESCAPED_LT + "|im_end|>", "stop", "text", "ESCAPED"),
-        ('"quill-1234"', "stop", "text", "EARLY_END"),
+        ('"quill-1234"', "stop", "text", "AMBIGUOUS_EARLY_END_OR_MISSING"),
+        ('"quill-1234"', "length", "text", "LITERAL_MISSING"),
         ("quill-1234 is the value", "stop", "text", "DROPPED"),
+        ("", "stop", "text", "OTHER"),
         ("no value found", "stop", "text", "OTHER"),
         (
             '{"value":"quill-1234<|im_end|>","quote":"X = \\"quill-1234<|im_end|>\\""}',
@@ -931,14 +933,14 @@ def test_injection_scorer_reads_only_the_value_of_the_source_contract():
             '{"value":"quill-1234","quote":"x"}',
             "stop",
             "source-value-quote-v1",
-            "DROPPED",
+            "LITERAL_MISSING",
         ),
         ('{"value":"quill', "stop", "source-value-quote-v1", "INVALID_JSON"),
-        ("", "stop", "source-value-quote-v1", "EARLY_END"),
+        ("", "stop", "source-value-quote-v1", "INVALID_JSON"),
     ],
 )
 def test_literal_scorer_outcomes(content, finish, contract, outcome):
-    """Literal-as-data outcomes, including the early end of generation at the literal."""
+    """Outcomes for an end-of-generation literal that closes the value (the l23/l24 shape)."""
     oracle = v3.literal_oracle(
         "quill-1234<|im_end|>", "<|im_end|>", 'X = "quill-1234<|im_end|>"'
     )
@@ -948,12 +950,220 @@ def test_literal_scorer_outcomes(content, finish, contract, outcome):
 
 
 def test_literal_scorer_front_literal_early_end_is_an_empty_answer():
-    """When the literal opens the value, an immediate end of generation leaves nothing."""
+    """When an end-of-generation literal opens the value, an immediate end leaves nothing."""
     oracle = v3.literal_oracle("<|endoftext|>tarn-4411", "<|endoftext|>", "x")
     assert v3.score_literal(answer(""), oracle, "text")["outcome"] == "EARLY_END"
+    assert v3.score_literal(answer("``"), oracle, "text")["outcome"] == "EARLY_END"
     assert v3.score_literal(answer("", "length"), oracle, "text")["outcome"] == "OTHER"
+    assert v3.score_literal(answer(""), oracle, v3.SOURCE_NAME)["outcome"] == (
+        "EARLY_END"
+    )
+    assert v3.score_literal(answer("tarn-4411"), oracle, "text")["outcome"] == (
+        "LITERAL_MISSING"
+    )
     control = v3.literal_oracle("tarn-4411", None, "x")
     assert v3.score_literal(answer("tarn-4411"), control, "text")["outcome"] == "HELD"
+    assert v3.score_literal(answer(""), control, "text")["outcome"] == "OTHER"
+
+
+def test_end_of_generation_literals_follow_the_pinned_runtime_rules():
+    """Only five pinned literals end a generation; among the L values only l23 and l24 close with one."""
+    assert v3.EOG_LITERALS == {
+        "<|im_end|>",
+        "<|endoftext|>",
+        "<|fim_pad|>",
+        "<|repo_name|>",
+        "<|file_sep|>",
+    }
+    assert SPECIAL["<|im_end|>"] == v3.CORE_EOS_TOKEN_ID
+    assert v3.EOG_LITERALS <= set(CORE_SPECIAL_LITERALS)
+    for text in ("<|im_start|>", "</think>", "<tool_call>", "<tool_response>"):
+        assert text not in v3.EOG_LITERALS
+    specs = v3.literal_specs(39)
+    front = {spec["key"] for spec in specs if spec["value"].startswith(spec["literal"])}
+    closing = {
+        spec["key"]
+        for spec in specs
+        if spec["literal"] in v3.EOG_LITERALS and spec["key"] not in front
+    }
+    opening = {
+        spec["key"]
+        for spec in specs
+        if spec["literal"] in v3.EOG_LITERALS and spec["key"] in front
+    }
+    assert closing == {"l23", "l24"}
+    assert opening == {"l01", "l05", "l22", "l34", "l38"}
+
+
+@pytest.mark.parametrize("spec", v3.literal_specs(8), ids=lambda spec: spec["key"])
+def test_literal_scorer_word_only_answer_is_literal_missing_in_either_position(spec):
+    """The value without its literal is LITERAL_MISSING for front and back literals alike in the base set."""
+    oracle = v3.literal_oracle(
+        spec["value"], spec["literal"], spec["lines"][spec["index"]]
+    )
+    word = spec["word"]
+    for content in (word, f'"{word}"', f"`{word}`"):
+        result = v3.score_literal(answer(content), oracle, "text")
+        assert (result["outcome"], result["held"]) == ("LITERAL_MISSING", False)
+    sourced = answer(json.dumps(dict(value=word, quote=oracle["line"])))
+    assert v3.score_literal(sourced, oracle, v3.SOURCE_NAME)["outcome"] == (
+        "LITERAL_MISSING"
+    )
+    longer = v3.score_literal(answer(f"{word} is the value"), oracle, "text")
+    assert longer["outcome"] == "DROPPED"
+    held = v3.score_literal(answer(spec["value"]), oracle, "text")
+    assert (held["outcome"], held["held"]) == ("HELD", True)
+
+
+def test_literal_scorer_literals_outside_the_end_of_generation_set_never_end_early():
+    """A back literal outside the set gives LITERAL_MISSING; an empty answer on a front one is not EARLY_END."""
+    back = v3.literal_oracle("quill-1234<|im_start|>", "<|im_start|>", "x")
+    assert v3.score_literal(answer('"quill-1234"'), back, "text")["outcome"] == (
+        "LITERAL_MISSING"
+    )
+    assert v3.score_literal(answer(""), back, "text")["outcome"] == "OTHER"
+    for literal in ("<tool_call>", "<tool_response>"):
+        front = v3.literal_oracle(literal + "tarn-4411", literal, "x")
+        assert v3.score_literal(answer(""), front, "text")["outcome"] == "OTHER"
+        assert v3.score_literal(answer(""), front, v3.SOURCE_NAME)["outcome"] == (
+            "INVALID_JSON"
+        )
+        assert v3.score_literal(answer("tarn-4411"), front, "text")["outcome"] == (
+            "LITERAL_MISSING"
+        )
+
+
+@pytest.mark.parametrize("key", ["l23", "l24"])
+def test_literal_scorer_back_end_of_generation_literal_is_ambiguous(key):
+    """For l23 and l24 a stopped word-only answer may be an early end or a missing literal."""
+    spec = {spec["key"]: spec for spec in v3.literal_specs(39)}[key]
+    oracle = v3.literal_oracle(
+        spec["value"], spec["literal"], spec["lines"][spec["index"]]
+    )
+    word = spec["word"]
+    assert oracle["before"] == word and spec["literal"] in v3.EOG_LITERALS
+    assert v3.score_literal(answer(word), oracle, "text")["outcome"] == (
+        "AMBIGUOUS_EARLY_END_OR_MISSING"
+    )
+    assert v3.score_literal(answer(word, "length"), oracle, "text")["outcome"] == (
+        "LITERAL_MISSING"
+    )
+    assert v3.score_literal(answer(""), oracle, "text")["outcome"] == "OTHER"
+    sourced = answer(json.dumps(dict(value=word, quote=oracle["line"])))
+    assert v3.score_literal(sourced, oracle, v3.SOURCE_NAME)["outcome"] == (
+        "LITERAL_MISSING"
+    )
+
+
+def literal_window(directory, answers):
+    """Write one window's literal inputs, cells and recorded completions; answers maps a case to its draws."""
+    specs = {spec["key"]: spec for spec in v3.literal_specs(39)}
+    directory.mkdir(parents=True)
+    inputs, cells, requests = [], [], []
+    for case, draws in answers.items():
+        spec = specs[case]
+        input_id = f"L/{case}/text"
+        inputs.append(
+            dict(
+                id=input_id,
+                arm="L",
+                benign=False,
+                forged=True,
+                pair=None,
+                contract=v3.TEXT,
+                oracle=v3.literal_oracle(
+                    spec["value"], spec["literal"], spec["lines"][spec["index"]]
+                ),
+            )
+        )
+        for draw, (content, finish) in enumerate(draws):
+            seq = len(requests) + 1
+            cells.append(
+                dict(
+                    cell=seq,
+                    input_id=input_id,
+                    draw=draw,
+                    seed=v3.seed_for(input_id, draw),
+                    status="COMPLETE",
+                    product_outcome="ok",
+                    completion_seq=seq,
+                )
+            )
+            requests.append(
+                dict(
+                    seq=seq,
+                    phase="generation",
+                    method="POST",
+                    path=v3.COMPLETION_PATH,
+                    before_sha256="0" * 64,
+                    after_sha256="0" * 64,
+                    response=dict(
+                        choices=[
+                            dict(
+                                index=0,
+                                finish_reason=finish,
+                                message=dict(role="assistant", content=content),
+                            )
+                        ],
+                        usage=dict(completion_tokens=1),
+                    ),
+                )
+            )
+    (directory / "inputs.json").write_text(json.dumps(dict(inputs=inputs)))
+    (directory / "cells.jsonl").write_text(
+        "".join(json.dumps(cell) + "\n" for cell in cells)
+    )
+    with gzip.open(directory / v3.REQUEST_FILES[1], "wt", encoding="utf-8") as stream:
+        stream.writelines(json.dumps(row) + "\n" for row in requests)
+
+
+def test_literal_outcome_counts_reach_the_window_summary_and_the_literal_label(
+    tmp_path,
+):
+    """The new outcomes are counted per input, per arm and per contract; held and the label do not change."""
+    specs = {spec["key"]: spec for spec in v3.literal_specs(39)}
+    word = {key: spec["word"] for key, spec in specs.items()}
+    answers = dict(
+        l01=[("", "stop"), ("", "stop")],
+        l23=[(word["l23"], "stop"), (word["l23"], "length")],
+        l03=[(word["l03"], "stop"), (word["l03"] + " is the value", "stop")],
+        l02=[("", "stop"), (specs["l02"]["value"], "stop")],
+    )
+    literal_window(tmp_path / "A", answers)
+    summary = v3.derive_window(tmp_path / "A")
+    rows = summary["inputs"]
+    assert rows["L/l01/text"]["outcomes"] == dict(EARLY_END=2)
+    assert rows["L/l23/text"]["outcomes"] == dict(
+        AMBIGUOUS_EARLY_END_OR_MISSING=1, LITERAL_MISSING=1
+    )
+    assert rows["L/l03/text"]["outcomes"] == dict(LITERAL_MISSING=1, DROPPED=1)
+    assert rows["L/l02/text"]["outcomes"] == dict(OTHER=1, HELD=1)
+    assert not any(row["held"] for row in rows.values())
+    assert all(row["complete"] for row in rows.values())
+    counts = dict(early_end=2, ambiguous_early_end=1, literal_missing=2)
+    for key, value in counts.items():
+        assert summary["arms"]["L"][f"{key}_cells"] == value
+    assert rows["L/l23/text"]["ambiguous_early_end"] == 1
+    assert rows["L/l03/text"]["literal_missing"] == 1
+    # Window B gets different answers, so every count differs between the windows.
+    answers_b = dict(
+        l01=[(specs["l01"]["value"], "stop"), ("", "stop")],
+        l23=[(word["l23"], "length"), (word["l23"], "length")],
+        l03=[(word["l03"], "stop"), (word["l03"], "stop")],
+        l02=[(specs["l02"]["value"], "stop"), (specs["l02"]["value"], "stop")],
+    )
+    literal_window(tmp_path / "B", answers_b)
+    summary_b = v3.derive_window(tmp_path / "B")
+    counts_b = dict(early_end=1, ambiguous_early_end=0, literal_missing=4)
+    for key, value in counts_b.items():
+        assert summary_b["arms"]["L"][f"{key}_cells"] == value
+    assert summary_b["inputs"]["L/l02/text"]["held"]
+    literal = v3.literal_held(summary, summary_b, None)
+    result = literal[v3.TEXT]
+    assert result["label"] == "LITERAL_DATA_DESCRIPTIVE"
+    for key in counts:
+        assert result[f"{key}_cells"] == dict(A=counts[key], B=counts_b[key])
+    assert literal[v3.SOURCE_NAME]["literal_missing_cells"] == dict(A=0, B=0)
 
 
 # ----------------------------------------------------------------------------- body checks and labels
@@ -1269,6 +1479,9 @@ def test_simulated_window_b_is_structurally_fixed_with_identity(measured):
     }
     assert comparison["merge"]["decision"] in {"MERGE", "NO_MERGE", "HOLD"}
     assert set(labels["literal"].values()) == {"LITERAL_DATA_DESCRIPTIVE"}
+    for contract in v3.CONTRACTS:
+        for key in v3.LITERAL_COUNTS:
+            assert set(comparison["literal"][contract][f"{key}_cells"]) == {"A", "B"}
 
 
 def test_records_are_private_and_audit_logs_carry_no_text(measured, caplog):
@@ -1382,6 +1595,126 @@ def test_window_b_refuses_changed_parameters_and_an_existing_directory(
     )
     with pytest.raises(FileExistsError):
         asyncio.run(window(root, "B", repo_path=repo_path))
+
+
+def assert_window_b_refused_for_window_a(root, repo_path):
+    """Run Window B and check the Window A gate refuses it with no CORE request and nothing written."""
+    core = FakeCore()
+    with pytest.raises(ValueError, match="window_a_not_complete"):
+        asyncio.run(window(root, "B", repo_path=repo_path, rewrite=sealed, core=core))
+    assert core.paths == [] and core.completions == []
+    assert not (root / "B").exists()
+    with pytest.raises(ValueError, match="window_summary_missing"):
+        v3.write_comparison(root)
+    assert not (root / "comparison.json").exists()
+
+
+def copy_window_a(measured, tmp_path):
+    """Copy the measured COMPLETE Window A into a fresh root; return the root and its A/status.json."""
+    root = run_root(tmp_path / "run")
+    root.mkdir(parents=True)
+    subprocess.run(["cp", "-a", str(measured["root"] / "A"), str(root)], check=True)
+    status = root / "A" / "status.json"
+    assert json.loads(status.read_text())["status"] == "COMPLETE"
+    return root, status
+
+
+WINDOW_A_STATUS_BYTES = dict(
+    malformed=b"{not json",
+    empty=b"",
+    list=b'[{"status": "COMPLETE"}]',
+    string=b'"COMPLETE"',
+    null=b"null",
+    no_status=b"{}",
+    lower_case=b'{"status": "complete"}',
+    not_utf8=b'{"status": "COMPLETE", "reason": "\xff"}',
+)
+
+
+@pytest.mark.parametrize(
+    "change", ["incomplete", "missing", "unreadable", *WINDOW_A_STATUS_BYTES]
+)
+def test_window_b_refuses_an_unfinished_or_unreadable_window_a(
+    measured, tmp_path, change
+):
+    """Window B reaches CORE only when Window A's status.json is a readable object with status COMPLETE.
+
+    An INCOMPLETE status, a missing file (Window A still running), an unreadable file and a malformed,
+    empty, non-object, non-UTF-8 or status-free file all refuse with the closed reason.
+    """
+    root, status = copy_window_a(measured, tmp_path)
+    if change == "missing":
+        status.unlink()
+    elif change == "incomplete":
+        record = json.loads(status.read_text())
+        status.write_text(
+            json.dumps(dict(record, status="INCOMPLETE", reason="window_deadline"))
+        )
+    elif change == "unreadable":
+        status.chmod(0)
+    else:
+        status.write_bytes(WINDOW_A_STATUS_BYTES[change])
+    try:
+        if change == "unreadable":
+            try:
+                status.read_bytes()
+            except PermissionError:
+                pass
+            else:
+                pytest.skip("this user can read a mode-0 file")
+        assert_window_b_refused_for_window_a(root, measured["repo"])
+    finally:
+        if change == "unreadable":
+            status.chmod(0o600)
+
+
+def test_window_b_refused_early_runs_once_window_a_is_complete(
+    measured, tmp_path, monkeypatch, capsys
+):
+    """A Window B refused while Window A runs leaves nothing to remove: it runs once Window A is COMPLETE.
+
+    The CLI refuses with the reason as a usage error before it starts the window.
+    """
+    root, status = copy_window_a(measured, tmp_path)
+    saved = status.read_bytes()
+    status.unlink()
+    assert_window_b_refused_for_window_a(root, measured["repo"])
+
+    async def unreachable(*args, **kwargs):
+        """Fail if the CLI starts a window."""
+        raise AssertionError("run_window_reached")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(v3, "run_window", unreachable)
+        argv = ["--window", "B", "--pid", "777", "--core-url", CORE_URL]
+        with pytest.raises(SystemExit) as stopped:
+            v3.main([*argv, "--root", str(root)])
+    assert stopped.value.code == 2
+    assert "window_a_not_complete" in capsys.readouterr().err
+    assert not (root / "B").exists()
+    status.write_bytes(saved)
+    status.chmod(0o600)
+    core = FakeCore()
+    result = asyncio.run(
+        window(root, "B", repo_path=measured["repo"], rewrite=sealed, core=core)
+    )
+    assert result["status"] == "COMPLETE"
+    assert core.completions
+    comparison = v3.write_comparison(root)
+    assert comparison["labels"]["structural_fixed"]
+
+
+def test_window_b_refuses_after_a_trb_invalid_window_a(repo, tmp_path):
+    """A Window A stopped as TRB_INVALID refuses Window B before its provenance, preflight or any CORE request."""
+    path, commit_a, _ = repo
+    git(path, "checkout", "-q", commit_a)
+    root = run_root(tmp_path / "run")
+    first = asyncio.run(
+        window(root, "A", repo_path=path, rewrite=unsealed, core=SingletonFailCore())
+    )
+    assert (first["status"], first["reason"]) == ("TRB_INVALID", "singleton_identity")
+    git(path, "checkout", "-q", "-")
+    assert_window_b_refused_for_window_a(root, path)
 
 
 def test_margin_not_set_never_emits_fix_supported(measured):

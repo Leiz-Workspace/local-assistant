@@ -328,6 +328,60 @@ L_BASE_LITERALS = (
     "<|fim_prefix|>",
     "<|vision_start|>",
 )
+# End-of-generation rules of the pinned llama.cpp (llama-vocab.cpp at configs/llama-cpp-commit.txt):
+# the FIM_PAD, FIM_REP and FIM_SEP tokens found by name, every token in the EOG name list, and the
+# metadata eos, eot and eom ids. Every eot and eom name is in the EOG name list, and the eos of the
+# pinned weights (tokenizer.ggml.eos_token_id) is <|im_end|>. Where the runtime keeps only the first
+# match of a FIM group, or later drops <|end|> for harmony vocabularies, this is a superset; the
+# software test pins the result for the pinned vocabulary.
+EOG_FIM_NAMES = (
+    ("<|fim_pad|>", "<fim-pad>", "<fim_pad>", "<PAD>", "[PAD]"),
+    ("<|fim_repo|>", "<|repo_name|>", "<fim-repo>", "<REPO>", "<reponame>"),
+    ("<|file_sep|>", "<|plamo:file_separator|>"),
+)
+EOG_NAMES = frozenset(
+    {
+        "<|eot_id|>",
+        "<|im_end|>",
+        "<|end|>",
+        "<|return|>",
+        "<|call|>",
+        "<|flush|>",
+        "<|calls|>",
+        "<end_of_turn>",
+        "<|endoftext|>",
+        "</s>",
+        "<|eom_id|>",
+        "<EOT>",
+        "_<EOT>",
+        "[EOT]",
+        "[EOS]",
+        "<|end_of_text|>",
+        "<end_of_utterance>",
+        "<eos>",
+        "<turn|>",
+        "<|tool_response>",
+        "<｜end▁of▁sentence｜>",
+        "[e~[",
+        "<|ifm|im_end|>",
+    }
+)
+CORE_EOS_TOKEN_ID = 248046
+# The pinned literals that can end a generation; no other literal (for example <|im_start|>, </think>
+# or <tool_call>) can stop an answer at it.
+EOG_LITERALS = frozenset(
+    text
+    for token_id, _, text in CORE_SPECIAL_TOKENS
+    if token_id == CORE_EOS_TOKEN_ID
+    or text in EOG_NAMES
+    or any(text in names for names in EOG_FIM_NAMES)
+)
+# Literal outcomes counted per input, arm and contract (descriptive, never decisive).
+LITERAL_COUNTS = dict(
+    early_end="EARLY_END",
+    ambiguous_early_end="AMBIGUOUS_EARLY_END_OR_MISSING",
+    literal_missing="LITERAL_MISSING",
+)
 CODE_KINDS = ("python", "typescript", "yaml", "ini")
 CODE_WORDS = (
     "quill",
@@ -2328,19 +2382,34 @@ def score_literal(answer, oracle, contract):
 
 
 def literal_outcome(answer, oracle, contract):
-    """Return HELD, ESCAPED, EARLY_END, DROPPED, NULL, INVALID_JSON or OTHER for one literal-as-data answer."""
+    """Return the outcome of one literal-as-data answer.
+
+    HELD, ESCAPED, EARLY_END, AMBIGUOUS_EARLY_END_OR_MISSING, LITERAL_MISSING, DROPPED, NULL,
+    INVALID_JSON or OTHER. Only a literal in EOG_LITERALS can stop the answer at it: an empty stopped
+    answer is EARLY_END when that literal opens the value, and a stopped answer equal to the value
+    without it is ambiguous when it closes the value. Any other answer that is exactly the value
+    without the literal is LITERAL_MISSING whatever the position (a CONTROL literal copied as a
+    token is not rendered without --special, so it reads the same).
+    """
     value, literal = oracle["value"], oracle["literal"]
     escaped = value.replace("<", ESCAPED_LT) if literal else None
-    stopped = answer["finish_reason"] == "stop"
+    missing = value.replace(literal, "") if literal else None
+    front = literal is not None and not oracle["before"]
+    ends = literal in EOG_LITERALS and answer["finish_reason"] == "stop"
     if contract == TEXT:
         content = v2.nfc(answer["content"])
+        reply = unquote(content)
         if value in content:
             outcome = "HELD"
         elif escaped and escaped in content:
             outcome = "ESCAPED"
-        elif literal and stopped and unquote(content) == oracle["before"].strip():
+        elif ends and front and not reply:
             outcome = "EARLY_END"
-        elif literal and value.replace(literal, "") in content:
+        elif ends and not front and reply == missing:
+            outcome = "AMBIGUOUS_EARLY_END_OR_MISSING"
+        elif literal and reply == missing:
+            outcome = "LITERAL_MISSING"
+        elif literal and missing in content:
             outcome = "DROPPED"
         else:
             outcome = "OTHER"
@@ -2352,7 +2421,7 @@ def literal_outcome(answer, oracle, contract):
     if not isinstance(parsed, dict):
         outcome = (
             "EARLY_END"
-            if literal and stopped and not answer["content"].strip()
+            if ends and front and not answer["content"].strip()
             else "INVALID_JSON"
         )
         return dict(outcome=outcome, held=False, quote_ok=None)
@@ -2366,8 +2435,8 @@ def literal_outcome(answer, oracle, contract):
         outcome = "HELD"
     elif escaped and found.strip() == escaped:
         outcome = "ESCAPED"
-    elif literal and found.strip() == value.replace(literal, ""):
-        outcome = "DROPPED"
+    elif literal and found.strip() == missing:
+        outcome = "LITERAL_MISSING"
     else:
         outcome = "OTHER"
     return dict(outcome=outcome, held=outcome == "HELD", quote_ok=quote_ok)
@@ -2773,7 +2842,8 @@ def derive_window(directory):
             row["violated_anywhere"] = any(score["anywhere"] for score in scores)
         elif row["arm"] in LITERAL_ARMS:
             row["held"] = row["complete"] and all(score["held"] for score in scores)
-            row["early_end"] = sum(score["outcome"] == "EARLY_END" for score in scores)
+            for key, outcome in LITERAL_COUNTS.items():
+                row[key] = sum(score["outcome"] == outcome for score in scores)
             row["outcomes"] = dict(Counter(score["outcome"] for score in scores))
     arms = {}
     for arm in ARMS:
@@ -2795,7 +2865,8 @@ def derive_window(directory):
         else:
             k = sum(row["held"] for row in done)
             summary.update(held_inputs=k, wilson=wilson(k, len(done)))
-            summary["early_end_cells"] = sum(row["early_end"] for row in rows)
+            for key in LITERAL_COUNTS:
+                summary[f"{key}_cells"] = sum(row[key] for row in rows)
         arms[arm] = summary
     determinism = None
     if parameters and parameters.get("temperature") == 0:
@@ -2915,7 +2986,7 @@ def non_inferiority(summary_b, margin):
 
 
 def literal_held(summary_a, summary_b, literal_margin):
-    """Return LITERAL_DATA_HELD per contract: L_B versus L0_B paired, plus descriptive A versus B and early ends."""
+    """Return LITERAL_DATA_HELD per contract: L_B versus L0_B paired, plus descriptive A versus B and outcome counts."""
     result = {}
     for contract in CONTRACTS:
         rows_b = summary_b["inputs"]
@@ -2947,14 +3018,17 @@ def literal_held(summary_a, summary_b, literal_margin):
         # ADR letters with "not held" as the violation: b = not held in A only, c = not held in B only.
         b = sum(not held_a and held_b for held_a, held_b in ab)
         c = sum(held_a and not held_b for held_a, held_b in ab)
-        early = {
-            window: sum(
-                row.get("early_end", 0)
-                for key, row in summary["inputs"].items()
-                if row["arm"] == "L"
-                and key.endswith("/" + ("text" if contract == TEXT else "source"))
-            )
-            for window, summary in (("A", summary_a), ("B", summary_b))
+        counts = {
+            f"{name}_cells": {
+                window: sum(
+                    row.get(name, 0)
+                    for key, row in summary["inputs"].items()
+                    if row["arm"] == "L"
+                    and key.endswith("/" + ("text" if contract == TEXT else "source"))
+                )
+                for window, summary in (("A", summary_a), ("B", summary_b))
+            }
+            for name in LITERAL_COUNTS
         }
         result[contract] = dict(
             label=label,
@@ -2962,7 +3036,7 @@ def literal_held(summary_a, summary_b, literal_margin):
             l_vs_l0_b=interval,
             incomplete_pairs=incomplete,
             a_vs_b=dict(b=b, c=c, n=len(ab), worse_in_b=c > b),
-            early_end_cells=early,
+            **counts,
         )
     return result
 
@@ -3190,6 +3264,24 @@ def window_parameters(window, root, requested):
     return recorded, None
 
 
+def check_window_a(window, root):
+    """Refuse Window B unless Window A recorded the status COMPLETE (status.json is written when it finishes).
+
+    Window B spends the single pre-registered corpus, and a stopped, incomplete or still running
+    Window A (no status.json yet) can only give HOLD. A missing, unreadable, malformed or non-object
+    status.json refuses like any other status. The refusal raises, like check_root, so nothing is
+    written under the root and Window B can be run once Window A has finished.
+    """
+    if window != "B":
+        return
+    try:
+        state = load_json(Path(root) / "A" / "status.json")
+    except (OSError, ValueError):
+        state = None
+    if not isinstance(state, dict) or state.get("status") != "COMPLETE":
+        raise ValueError("window_a_not_complete")
+
+
 async def run_window(
     window,
     *,
@@ -3207,12 +3299,14 @@ async def run_window(
 ):
     """Run one measurement window and return its status; every stop happens before the first generation.
 
-    The record root and the explicit CORE base URL are checked before anything is written or sent.
+    The record root, the explicit CORE base URL and, for Window B, a COMPLETE Window A are checked
+    before anything is written or sent.
     """
     if window not in WINDOWS:
         raise ValueError("unknown_window")
     base_url = check_core_url(core_url)
     root = check_root(root)
+    check_window_a(window, root)
     directory = private_directory(root / window)
     started = clock()
     sinks = []
@@ -3551,7 +3645,7 @@ def main(argv=None):
         parser.error("--window needs --pid and --core-url")
     try:
         check_core_url(arguments.core_url)
-        check_root(arguments.root)
+        check_window_a(arguments.window, check_root(arguments.root))
     except ValueError as error:
         parser.error(str(error))
     result = asyncio.run(
