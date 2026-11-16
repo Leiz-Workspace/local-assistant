@@ -28,6 +28,7 @@ from src.application.services.source_output_contract import (
     validate_completion,
     digest,
 )
+from src.infrastructure.inference.core_request_seal import seal_payload
 
 LOGGER = logging.getLogger(__name__)
 
@@ -158,6 +159,7 @@ class ProductInference:
                     "json_schema": {"schema": schema},
                 },
             )
+            payload, _ = seal_payload(payload, "harness_structured")
             async with httpx.AsyncClient(
                 base_url=gateway.base_url,
                 transport=self.transport,
@@ -220,6 +222,7 @@ class ProductInference:
         )
         payload = build_generation_params(plan)
         payload.update(model=gateway.model_id, messages=fitted, stream=True)
+        payload, _ = seal_payload(payload, "harness_stream")
         total, finished = 0, False
         async with asyncio.timeout(120):
             async with httpx.AsyncClient(
