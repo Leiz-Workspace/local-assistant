@@ -26,6 +26,10 @@ from apps.api.routes.conversations import require_local_client
 from apps.api.voice_routes import local_browser
 from apps.harness.assets import ASSETS, PIN, VERSION
 from apps.branding.identity import brand_index, resource
+from src.application.services.special_literals import (
+    SpecialLiteralsStale,
+    require_current_binding,
+)
 
 LOGGER = logging.getLogger(__name__)
 STATIC = Path(__file__).with_name("static")
@@ -405,6 +409,10 @@ def register_browser(app, *, asset_root=ASSETS):
             raise HTTPException(422, detail={"code": "invalid_output_budget"})
         if body.get("stream") is not True:
             raise HTTPException(422, detail={"code": "stream_required"})
+        try:
+            require_current_binding()
+        except SpecialLiteralsStale as error:
+            raise HTTPException(503, detail={"code": error.code}) from None
 
         async def events():
             """Stream real deltas under shared admission and turn failures into safe SSE errors."""
@@ -419,6 +427,13 @@ def register_browser(app, *, asset_root=ASSETS):
             except asyncio.CancelledError:
                 LOGGER.info("harness_ui_stream_cancelled")
                 raise
+            except SpecialLiteralsStale as error:
+                LOGGER.warning("harness_ui_stream_failed code=%s", error.code)
+                yield (
+                    b'data: {"error":{"code":"special_literals_stale",'
+                    b'"message":"Local inference is refused for this model."}}\n\n'
+                )
+                yield b"data: [DONE]\n\n"
             except Exception:
                 LOGGER.warning("harness_ui_stream_failed")
                 yield b'data: {"error":{"code":"inference_unavailable","message":"Local inference could not complete."}}\n\n'

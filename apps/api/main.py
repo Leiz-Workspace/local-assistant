@@ -12,12 +12,15 @@ and the model gateway, not directly in main.py.
 """
 
 import logging
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from apps.api.core.logging_config import configure_application_logging
+from apps.api.core.model_config import bind_special_literals
 from apps.api.routes.approvals import router as approval_router
-from apps.api.routes.chat import router as chat_router
+from apps.api.routes.chat import PRIVATE_HEADERS, router as chat_router
 from apps.api.routes.checkpoints import router as checkpoint_router
 from apps.api.routes.checks import router as check_router
 from apps.api.routes.chunks import router as chunk_router
@@ -40,11 +43,22 @@ from apps.api.routes.workspace_explanations import (
 from apps.api.routes.workspaces import router as workspace_router
 from apps.api.routes.xlsx import router as xlsx_router
 from apps.api.storage.lifecycle import conversation_lifespan
+from src.application.services.special_literals import SpecialLiteralsStale
 
 configure_application_logging()
+LOGGER = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Record the special-literal model binding at process start, then own the original resources."""
+    bind_special_literals()
+    async with conversation_lifespan(app):
+        yield
+
 
 app = FastAPI(
-    lifespan=conversation_lifespan,
+    lifespan=lifespan,
     title="Local Assistant",
     version="0.1.0",
     description="Local-first Personal AI Backend",
@@ -81,4 +95,19 @@ app.include_router(workspace_diagnosis_router, prefix="/api/v1")
 app.include_router(approval_router, prefix="/api/v1")
 app.include_router(patch_router, prefix="/api/v1")
 app.include_router(checkpoint_router, prefix="/api/v1")
-logging.getLogger(__name__).info("api_routers_registered")
+
+
+@app.exception_handler(SpecialLiteralsStale)
+async def special_literals_stale(request: Request, error: SpecialLiteralsStale):
+    """Refuse CORE work while the configured model differs from the pinned special-token list."""
+    LOGGER.error(
+        "special_literals_refused code=%s roles=%s", error.code, ",".join(error.roles)
+    )
+    return JSONResponse(
+        {"detail": {"code": error.code}},
+        status_code=503,
+        headers=PRIVATE_HEADERS,
+    )
+
+
+LOGGER.info("api_routers_registered")
