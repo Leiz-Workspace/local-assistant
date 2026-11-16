@@ -13,6 +13,10 @@ from src.infrastructure.harness_history import HistoryError
 from src.infrastructure.context_archive import ContextArchive
 from src.infrastructure.summary_cache import SummaryCache
 from src.application.services.source_output_contract import SourceContractError, digest
+from src.application.services.special_literals import (
+    SpecialLiteralsStale,
+    require_current_binding,
+)
 
 LOGGER = logging.getLogger(__name__)
 TERMINAL = frozenset({"succeeded", "failed", "cancelled"})
@@ -183,6 +187,7 @@ class ProductHarness:
             raise HarnessError("harness_closed", 503)
         if self.history_broken:
             raise HarnessError("history_unavailable", 503)
+        require_current_binding()
         if (
             len(self.runs) >= 64
             or sum(row["owner"] == owner for row in self.runs.values()) >= 8
@@ -277,6 +282,8 @@ class ProductHarness:
             code = "skill_revoked" if isinstance(error, SkillError) else "run_failed"
             if isinstance(error, TimeoutError):
                 code = "run_timeout"
+            elif isinstance(error, SpecialLiteralsStale):
+                code = error.code
             diagnostic = {}
             if isinstance(error, SourceContractError):
                 diagnostic["diagnostic"] = {"code": error.code}

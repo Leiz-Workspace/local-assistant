@@ -12,7 +12,7 @@ from apps.api.runtime.presets import (
     get_preset,
 )
 from src.application.ports.inference import InferenceFailure
-from src.application.services.context_composer import POLICY
+from src.application.services.context_composer import POLICY, evidence_block
 from src.application.services.conversation_context import (
     fit_token_budget,
     select_whole_turns,
@@ -23,6 +23,7 @@ from src.application.services.review_output_contract import (
     QUOTE_FIRST_NAME,
 )
 from src.application.services.source_output_contract import INSTRUCTIONS, NAME
+from src.application.services.special_literals import neutralize
 
 LOGGER = logging.getLogger(__name__)
 METHOD = "prefix-marginal-v1"
@@ -112,10 +113,7 @@ def _contract_matches(segment, output_contract):
 
 def _block(raw):
     """Rebuild the exact evidence suffix the composer appends to the current task."""
-    return "\n" + json.dumps(
-        {"untrusted_evidence": raw.decode("utf-8", errors="replace")},
-        ensure_ascii=False,
-    )
+    return evidence_block(raw)
 
 
 def _evidence_facts(raw):
@@ -332,7 +330,13 @@ async def _inspect(
         escaped = json.dumps(
             evidence[index].decode("utf-8", errors="replace"), ensure_ascii=False
         )[1:-1]
-        fragments = {escaped[:FRAGMENT_CHARS], escaped[-FRAGMENT_CHARS:]} - {""}
+        sent = neutralize(escaped)[0]
+        fragments = {
+            escaped[:FRAGMENT_CHARS],
+            escaped[-FRAGMENT_CHARS:],
+            sent[:FRAGMENT_CHARS],
+            sent[-FRAGMENT_CHARS:],
+        } - {""}
         if any(part in row["content"] for part in fragments for row in fitted):
             raise _Mismatch("omitted_evidence_present")
 

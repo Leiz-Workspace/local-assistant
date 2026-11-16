@@ -16,6 +16,7 @@ from uuid import UUID
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
 
+from apps.api.core.model_config import bind_special_literals
 from apps.voice_trial.audio import MAX_BODY, decode_wave
 from src.application.services.voice_pipeline import VoiceError
 from src.application.services.web_fetch_tasks import finish_owned, spawn_owned
@@ -245,7 +246,8 @@ def create_app(factory=None):
 
     @asynccontextmanager
     async def lifespan(app):
-        """Own the idle guard and joined shutdown without loading anything merely at service startup."""
+        """Record the special-literal model binding, then own the idle guard and joined shutdown without loading a model."""
+        bind_special_literals()
         watcher = spawn_owned(controller.watch())
         try:
             yield
