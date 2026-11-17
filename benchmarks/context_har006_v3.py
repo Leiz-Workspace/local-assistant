@@ -105,15 +105,13 @@ FORGED_TEXT = re.compile(
 )
 
 # Provenance gate: the exact A..B2 file set (ADR-195 Validation > Software gates > Commits).
-# PROVISIONAL: the union of `git diff --no-renames --name-only 250cada <tip>` for the B1 branch
-# (dfe7022) and the B2 branch (73c3d8a), both cut from commit A's first commit. The lead re-checks
-# it against the final rebased B2 with --check-planned, then sets PLANNED_FILES_FINAL in commit A
-# before Window A; both windows refuse to run while it is False, so the runner is never edited
-# between windows. Any other path in the A..B2 diff (documentation included) refuses Window B.
+# FINAL: `git diff --no-renames --name-only` from commit A (the commit that sets this flag) to B2,
+# checked with --check-planned after B1 and B2 were rebased on it. Both windows refuse to run
+# while the flag is False, so the runner is never edited between windows. Any other path in the
+# A..B2 diff (documentation included) refuses Window B.
 PLANNED_PRODUCT_FILES = (
     "apps/api/core/model_config.py",
     "apps/api/main.py",
-    "apps/api/services/coding_workflows.py",
     "apps/api/services/grounded.py",
     "apps/api/services/llama_gateway.py",
     "apps/api/services/vision_ocr.py",
@@ -126,8 +124,8 @@ PLANNED_PRODUCT_FILES = (
     "src/application/services/context_composer.py",
     "src/application/services/context_inspection.py",
     "src/application/services/context_reduction.py",
+    "src/application/services/grounded_extract.py",
     "src/application/services/profile_prompts.py",
-    "src/application/services/vision_chat.py",
     "src/infrastructure/inference/core_request_seal.py",
     "src/infrastructure/inference/core_vision_chat.py",
     "src/infrastructure/inference/structured_excerpt_adapter.py",
@@ -138,16 +136,14 @@ PLANNED_TEST_FILES = (
     "benchmarks/tests/har006_v2_pin.py",
     "benchmarks/tests/test_har006_v2_pinning.py",
     "tests/conftest.py",
-    "tests/test_coding_workflow_service.py",
     "tests/test_context_baseline_golden.py",
     "tests/test_core_request_builders.py",
     "tests/test_core_request_registry.py",
     "tests/test_core_request_seal.py",
     "tests/test_special_literals_layer1.py",
-    "tests/test_vision_chat.py",
 )
 PLANNED_FILES = PLANNED_PRODUCT_FILES + PLANNED_TEST_FILES
-PLANNED_FILES_FINAL = False
+PLANNED_FILES_FINAL = True
 
 # Sources hashed in each window; the runner itself must be byte-identical in A and B.
 SOURCES = (
