@@ -4,7 +4,7 @@
 
 **Status: AWAITING OWNER AUTHORIZATION.**
 - Nothing in this protocol has run on CORE, and neither window runs until the owner authorizes both (ADR-195 owner decision 7).
-- The open owner parameters are listed under [Owner parameters](#owner-parameters-still-open). The runner refuses both windows until the lead checks `PLANNED_FILES` against the final B2 (`--check-planned`) and sets `PLANNED_FILES_FINAL = True` in commit A ([lead items](#lead-items-before-window-a)).
+- The open owner parameters are listed under [Owner parameters](#owner-parameters-still-open). Commit A holds the final `PLANNED_FILES` with `PLANNED_FILES_FINAL = True`; the lead re-runs `--check-planned` before Window A ([lead items](#lead-items-before-window-a)).
 - The software tests run without CORE against a fake server (`benchmarks/tests/test_context_har006_v3.py`).
 
 ## Ground rules
@@ -25,7 +25,7 @@
   - a clean tracked tree (`git status --porcelain --untracked-files=no` empty), else `dirty_worktree`;
   - `PLANNED_FILES_FINAL` true, else `planned_files_not_final`;
   - Window B only: Window A's commit is an ancestor of HEAD; `git diff --no-renames --name-only A B2` equals `PLANNED_FILES` exactly, else `planned_diff_mismatch` with the unexpected and missing paths; the runner's own SHA-256 equals Window A's, else `runner_changed`.
-- **`PLANNED_FILES` (provisional).** The union of `git diff --no-renames --name-only 250cada <tip>` for the B1 branch (`feat/adr195-b1` at `dfe7022`, 15 paths) and the B2 branch (`feat/adr195-b2` at `73c3d8a`, 20 paths), which are both cut from `250cada`: 21 product paths (`PLANNED_PRODUCT_FILES`) and 11 test paths (`PLANNED_TEST_FILES`), 32 in all, with `apps/harness/browser.py`, `routes.py` and `service.py` changed by both. The runner, this protocol, the v2 runner and test module, and `benchmarks/tests/test_context_har006_v3.py` are not in the set and must not change in A..B2. The lead re-checks the set against the final rebased B2 with `--check-planned <A> <B2>` (exit 0 only on an exact match) and finalizes it in commit A before Window A; any other file in the A..B2 diff (documentation included) refuses Window B.
+- **`PLANNED_FILES` (final).** `git diff --no-renames --name-only <A> <B2>` after B1 and B2 were rebased on commit A: 20 product paths (`PLANNED_PRODUCT_FILES`) and 9 test paths (`PLANNED_TEST_FILES`), 29 in all, checked with `--check-planned` (exact match). The runner, this protocol, the v2 runner and test module, and `benchmarks/tests/test_context_har006_v3.py` are not in the set and must not change in A..B2. `PLANNED_FILES_FINAL` is True in commit A; any other file in the A..B2 diff (documentation included) refuses Window B.
 - **Assets and modules.** A worktree has no `models/` or `runtimes/llama.cpp`, so the operator passes the main checkout as `--assets`; the weights SHA-256 and the runtime checkout are read there. Every product module must load from the window's own worktree, else `foreign_modules` (a run with the main checkout's interpreter from the worktree directory loads the worktree's packages first).
 - **Parameters.** Window A records the owner parameters in `parameters.json`. Window B reuses them; a different value given to Window B stops it as PARAMETERS_CHANGED.
 - **Inputs.** Window B rebuilds every input and the schedule and requires the same digests as Window A, else DESIGN_CHANGED.
@@ -145,7 +145,7 @@ Reported, not blocking: S and U UNDERPOWERED with c ≤ b. A LITERAL_DATA_SHORTF
 
 ## Lead items before Window A
 
-- **Finalize `PLANNED_FILES`** in commit A and set `PLANNED_FILES_FINAL = True`. The constant now holds the union of the current B1 and B2 branch diffs against `250cada` (see the provenance gate above). Once B2 is rebased on B1, run `--check-planned <A> <B2>` from a checkout at commit A: it prints the changed, unexpected and missing paths and exits 0 only when the diff equals the set and A is an ancestor of B2. Update both tuples to that diff (a later B1 or B2 fix may add or drop a path), then set the flag.
+- **`PLANNED_FILES` is final.** Commit A sets the final set and `PLANNED_FILES_FINAL = True`. Before Window A, run `--check-planned <A> <B2>` from a checkout at commit A again; it must exit 0. A later B1 or B2 fix that adds or drops a path needs a new commit A, which restarts the protocol before Window A.
 - **The v3 test module stays outside the set.** `benchmarks/tests/test_context_har006_v3.py` simulates both product states itself (Window A restores every neutralized literal, Window B seals), so it passes unchanged at commit A, with B1 and with B2 (verified by overlaying each branch's product files). It must not be edited in A..B2.
 - **Documentation in A..B2.** Any path outside the set refuses Window B, documentation included. ADR status, dev-log and result edits therefore go after B2 or are added to the set.
 - **Runner unchanged.** The runner and this protocol are part of commit A. Window B refuses a runner whose SHA-256 differs from Window A's (`runner_changed`).
@@ -207,7 +207,7 @@ A fake CORE (`httpx.MockTransport`) emulates `/v1/models`, `/props`, `/apply-tem
 
 ## Deviations from ADR-195
 
-1. **`PLANNED_FILES` is provisional.** The ADR asks commit A's runner to record the exact paths. B1 and B2 still live on separate branches, so the constant holds the union of their current diffs, and both windows refuse to run until the lead checks it with `--check-planned` and sets `PLANNED_FILES_FINAL`.
+1. **`PLANNED_FILES` was set after B1 and B2.** The ADR asks commit A's runner to record the exact paths. B1 and B2 were written on separate branches, so the set was finalized in a later commit of the A part, after both were rebased on it and `--check-planned` matched exactly.
 2. **S contract split** (not given by the ADR): of the 8 LF inputs, 4 short use the text contract, 2 short use `source-value-quote-v1` and 2 long use the text contract; the 4 CR-only inputs use the text contract.
 3. **U forms** (not given by the ADR): `tool_response`, `think` and both, EN/VI, short only.
 4. **L values and early end** (operational definitions): each needed value is a literal plus a code word, alternating front and back. EARLY_END is a stopped empty answer when a literal of the pinned runtime's end-of-generation set opens the value. A stopped answer equal to the code word when such a literal closes the value (l23 and l24, enlarged only) is AMBIGUOUS_EARLY_END_OR_MISSING, because a normal end of turn looks the same. Any other answer equal to the code word is LITERAL_MISSING, whatever the position.

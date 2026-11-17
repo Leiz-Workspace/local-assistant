@@ -1404,9 +1404,11 @@ def test_check_planned_reports_the_diff_against_the_planned_set(
     path, commit_a, commit_b = repo
     monkeypatch.setattr(v3, "ROOT", path)
     monkeypatch.setattr(v3, "PLANNED_FILES", ("src/planned.py",))
-    assert v3.main(["--check-planned", commit_a, commit_b]) == 0
-    shown = json.loads(capsys.readouterr().out)
-    assert shown["changed"] == ["src/planned.py"] and shown["final"] is False
+    for final in (False, True):
+        monkeypatch.setattr(v3, "PLANNED_FILES_FINAL", final)
+        assert v3.main(["--check-planned", commit_a, commit_b]) == 0
+        shown = json.loads(capsys.readouterr().out)
+        assert shown["changed"] == ["src/planned.py"] and shown["final"] is final
     monkeypatch.setattr(v3, "PLANNED_FILES", ("src/other.py",))
     assert v3.main(["--check-planned", commit_a, commit_b]) == 1
     shown = json.loads(capsys.readouterr().out)
