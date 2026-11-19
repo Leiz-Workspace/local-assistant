@@ -4,6 +4,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import secrets
 import stat
 from pathlib import Path
@@ -15,6 +16,10 @@ import httpx
 LOGGER = logging.getLogger(__name__)
 DEFAULT_TOKEN = Path.home() / ".local/state/local-assistant/token"
 DEFAULT_AUTH = DEFAULT_TOKEN.with_name("principals.json")
+ERROR_BODY_LIMIT = 16384
+ERROR_CODE = re.compile(r"[a-z][a-z0-9_]{0,63}")
+# Codes the client raises itself for transport failures; a server cannot claim them.
+LOCAL_CODES = frozenset({"server_unavailable", "invalid_server_response"})
 
 
 def initialize_auth(token_path, auth_path):
@@ -118,6 +123,25 @@ def save_token(path, value):
     LOGGER.info("cli_credential_saved")
 
 
+def server_code(response):
+    """Return the finite error code of a small JSON error body, or None when it has no allowlisted code."""
+    if len(response.content) > ERROR_BODY_LIMIT:
+        return None
+    try:
+        body = json.loads(response.content)
+    except (ValueError, UnicodeError, RecursionError):
+        return None
+    if not isinstance(body, dict):
+        return None
+    for envelope in (body.get("detail"), body.get("error"), body):
+        code = envelope.get("code") if isinstance(envelope, dict) else None
+        if isinstance(code, str):
+            if ERROR_CODE.fullmatch(code) is None or code in LOCAL_CODES:
+                return None
+            return code
+    return None
+
+
 class ApiClient:
     """Send credentials only to an explicit direct loopback HTTP endpoint with redirects disabled."""
 
@@ -157,7 +181,9 @@ class ApiClient:
             category = {401: 3, 403: 4, 404: 6, 409: 5, 422: 2, 429: 7, 503: 6}.get(
                 response.status_code, 1
             )
-            raise ClientError(f"http_{response.status_code}", category)
+            raise ClientError(
+                server_code(response) or f"http_{response.status_code}", category
+            )
         try:
             if len(response.content) > 524288:
                 raise ValueError()

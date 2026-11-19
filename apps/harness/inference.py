@@ -11,6 +11,7 @@ from apps.api.runtime.presets import (
     RuntimePreset,
     build_generation_params,
     calculate_budget,
+    classify_completion,
     get_preset,
 )
 from apps.api.services.llama_gateway import GatewayError, LlamaGateway
@@ -29,6 +30,34 @@ from src.application.services.source_output_contract import (
 )
 
 LOGGER = logging.getLogger(__name__)
+
+
+class IncompleteCompletion(GatewayError):
+    """Report a native stream that ended without a verified complete answer."""
+
+    code = "incomplete_completion"
+
+    def __init__(self, status):
+        """Keep only the finite completion classification."""
+        super().__init__(self.code)
+        self.status = status
+
+
+def verify_stream_completion(finish_reason, parts):
+    """Classify the streamed answer as the non-stream gateway does and refuse anything but PASS."""
+    status = classify_completion(
+        {
+            "choices": [
+                {
+                    "finish_reason": finish_reason,
+                    "message": {"content": "".join(parts)},
+                }
+            ]
+        }
+    )
+    if status != "PASS":
+        LOGGER.warning("product_stream_incomplete status=%s", status)
+        raise IncompleteCompletion(status)
 
 
 class ProductInference:
@@ -229,6 +258,7 @@ class ProductInference:
                     "POST", "/v1/chat/completions", json=payload
                 ) as response:
                     response.raise_for_status()
+                    finish, parts = None, []
                     async for line in response.aiter_lines():
                         total += len(line.encode())
                         if total > 262144 or len(line) > 65536:
@@ -237,6 +267,7 @@ class ProductInference:
                             continue
                         value = line[6:]
                         if value == "[DONE]":
+                            verify_stream_completion(finish, parts)
                             finished = True
                             yield b"data: [DONE]\n\n"
                             break
@@ -244,6 +275,11 @@ class ProductInference:
                         for choice in event.get("choices", []):
                             if choice.get("delta", {}).get("tool_calls"):
                                 raise GatewayError("unexpected_tool_call")
+                            content = choice.get("delta", {}).get("content")
+                            if isinstance(content, str):
+                                parts.append(content)
+                            if choice.get("finish_reason") is not None:
+                                finish = choice["finish_reason"]
                         yield ("data: " + json.dumps(event) + "\n\n").encode()
         if not finished:
             raise GatewayError("incomplete_stream")

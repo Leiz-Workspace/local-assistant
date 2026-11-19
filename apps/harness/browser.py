@@ -20,16 +20,17 @@ from fastapi.responses import (
     StreamingResponse,
 )
 
-from apps.api.core.conversation_auth import authenticate_principal, load_principals
+from apps.api.core.conversation_auth import load_principals
 from apps.api.core.model_config import get_model_profile
-from apps.api.routes.conversations import require_local_client
 from apps.api.voice_routes import local_browser
 from apps.harness.assets import ASSETS, PIN, VERSION
+from apps.harness.inference import IncompleteCompletion
 from apps.branding.identity import brand_index, resource
 
 LOGGER = logging.getLogger(__name__)
 STATIC = Path(__file__).with_name("static")
 COOKIE = "assistant_harness_session"
+BODY_SECONDS = 10
 SECURITY = {
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
@@ -109,11 +110,15 @@ async def bounded_json(request, limit=262144):
     ):
         raise HTTPException(415, detail={"code": "json_required"})
     data = bytearray()
-    async with asyncio.timeout(10):
-        async for chunk in request.stream():
-            data.extend(chunk)
-            if len(data) > limit:
-                raise HTTPException(413, detail={"code": "request_limit"})
+    try:
+        async with asyncio.timeout(BODY_SECONDS):
+            async for chunk in request.stream():
+                data.extend(chunk)
+                if len(data) > limit:
+                    raise HTTPException(413, detail={"code": "request_limit"})
+    except TimeoutError:
+        LOGGER.warning("harness_browser_body_timeout")
+        raise HTTPException(408, detail={"code": "request_timeout"}) from None
 
     def unique(pairs):
         """Reject ambiguous duplicate fields instead of accepting hidden alternate controls."""
@@ -154,17 +159,8 @@ def content_policy(index=""):
 def register_browser(app, *, asset_root=ASSETS):
     """Register explicit browser endpoints and assets without proxying native tools or model administration."""
     sessions = BrowserSessions()
+    # The bearer-authenticated pairing route lives in the harness API router.
     app.state.browser_sessions = sessions
-
-    @app.post("/api/v1/harness/ui-pairings")
-    async def pairing(request: Request):
-        """Allow only the unchanged direct-loopback bearer boundary to mint a pairing."""
-        await require_local_client(request)
-        owner = await authenticate_principal(request)
-        digest = hashlib.sha256(
-            request.headers["authorization"].partition(" ")[2].encode()
-        ).hexdigest()
-        return {"code": sessions.pairing(owner, digest), "expires_in_seconds": 60}
 
     @app.middleware("http")
     async def browser_boundary(request, call_next):
@@ -408,6 +404,9 @@ def register_browser(app, *, asset_root=ASSETS):
 
         async def events():
             """Stream real deltas under shared admission and turn failures into safe SSE errors."""
+            # The pinned UI ignores SSE error events and saves whatever it has as a
+            # complete answer on [DONE]. A failed stream therefore ends right after
+            # its error event: the UI then asks to resume, gets 403 and shows an error.
             service = request.app.state.product_harness
             try:
                 async with asyncio.timeout(120):
@@ -416,13 +415,15 @@ def register_browser(app, *, asset_root=ASSETS):
                             normalized, max_tokens=max_tokens
                         ):
                             yield chunk
+            except IncompleteCompletion:
+                LOGGER.warning("harness_ui_stream_incomplete")
+                yield b'data: {"error":{"code":"incomplete_completion","message":"The answer stopped before it was complete."}}\n\n'
             except asyncio.CancelledError:
                 LOGGER.info("harness_ui_stream_cancelled")
                 raise
             except Exception:
                 LOGGER.warning("harness_ui_stream_failed")
                 yield b'data: {"error":{"code":"inference_unavailable","message":"Local inference could not complete."}}\n\n'
-                yield b"data: [DONE]\n\n"
 
         return StreamingResponse(
             events(),

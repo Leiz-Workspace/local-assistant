@@ -4,6 +4,10 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
+import re
+import shutil
+import subprocess
 import time
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -334,6 +338,11 @@ def test_browser_pairing_cookie_acl_and_real_stream(product_client):
 UI_HEADERS = {"Origin": "http://127.0.0.1:7090", "X-Harness-UI": "1"}
 
 
+def sse_data(text):
+    """Return the data payloads of an SSE body in order."""
+    return [line[6:] for line in text.splitlines() if line.startswith("data: ")]
+
+
 def test_browser_stream_lookup_accepts_at_most_64_conversations(product_client):
     """The UI's resumable-stream lookup returns no sessions for up to 64 ids and refuses more (HAR-002 point 2)."""
     client, _, settings, _ = product_client
@@ -437,7 +446,7 @@ class FailingStreamInference(FixtureInference):
 def test_browser_stream_failure_is_reported_as_inference_unavailable(
     auth_settings, tmp_path, caplog
 ):
-    """A mid-stream stream_limit reaches the UI only as the generic inference_unavailable SSE error, then [DONE], and admission is released (HAR-002 point 6)."""
+    """A mid-stream stream_limit reaches the UI only as the generic inference_unavailable SSE error with no [DONE] after it, and admission is released (HAR-002 point 6)."""
     inference = FailingStreamInference()
     app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
     with TestClient(
@@ -451,11 +460,10 @@ def test_browser_stream_failure_is_reported_as_inference_unavailable(
                 json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
             )
         assert response.status_code == 200
-        assert (
-            "partial" in response.text
-            and '"code":"inference_unavailable"' in response.text
-        )
-        assert response.text.rstrip().endswith("data: [DONE]")
+        events = sse_data(response.text)
+        assert json.loads(events[0])["choices"][0]["delta"]["content"] == "partial"
+        assert json.loads(events[1])["error"]["code"] == "inference_unavailable"
+        assert len(events) == 2 and "[DONE]" not in response.text
         assert "stream_limit" not in response.text
         assert "harness_ui_stream_failed" in caplog.text
         assert not app.state.product_harness.admission.locked()
@@ -625,3 +633,545 @@ def test_product_route_audit_redacts_tokens_and_query_strings(product_client, ca
     assert "status=422" in text and "status=503" in text
     assert "harness_browser_request operation=properties" in text
     assert "DO_NOT_LOG" not in text and settings["tokens"][0] not in text
+
+
+def test_bodiless_product_requests_need_no_json_media_type(product_client, caplog):
+    """GET and DELETE without a body work without Content-Type, keep auth, private headers and the audit log."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    plain = settings["headers"][0]
+    status = client.get(PREFIX + "/status", headers=plain)
+    assert status.status_code == 200 and status.json()["product"] == "Aevra"
+    assert UUID(status.headers["x-request-id"])
+    assert status.headers["cache-control"] == "private, no-store"
+    assert status.headers["x-content-type-options"] == "nosniff"
+    purged = client.delete(PREFIX + "/context/summaries", headers=plain)
+    assert purged.status_code == 200 and purged.json() == {"purged": 0}
+    assert client.get(PREFIX + "/runs", headers=plain).json() == []
+    text = caplog.text
+    assert "method=GET route=/api/v1/harness/status status=200" in text
+    assert "method=DELETE route=/api/v1/harness/context/summaries status=200" in text
+    assert client.get(PREFIX + "/status").status_code == 401
+    assert client.delete(PREFIX + "/context/summaries").status_code == 401
+    assert (
+        client.get(
+            PREFIX + "/status", headers={**plain, "Origin": "http://127.0.0.1:7090"}
+        ).status_code
+        == 403
+    )
+    assert (
+        client.get(
+            PREFIX + "/status", headers={**plain, "X-Forwarded-For": "192.0.2.1"}
+        ).status_code
+        == 403
+    )
+
+
+@pytest.mark.parametrize(
+    "headers", [{"Content-Type": "text/plain"}, {}, {"Content-Type": "application/xml"}]
+)
+def test_product_request_bodies_still_require_json(product_client, headers):
+    """A request that carries a body must declare application/json, whatever the method."""
+    client, inference, settings, _ = product_client
+    body = json.dumps({"workspace_id": str(uuid4()), "task": "Explain"}).encode()
+    for method, path in (
+        ("POST", "/runs"),
+        ("POST", "/chat"),
+        ("DELETE", "/context/summaries"),
+    ):
+        response = client.request(
+            method,
+            PREFIX + path,
+            headers={**settings["headers"][0], **headers},
+            content=body,
+        )
+        assert response.status_code == 415, (method, path)
+        assert response.json() == {"detail": {"code": "json_required"}}
+        assert response.headers["cache-control"] == "private, no-store"
+    assert inference.calls == []
+    assert (
+        client.post(PREFIX + "/runs", content=body, headers=headers).status_code == 401
+    )
+    response = client.post(
+        PREFIX + "/runs",
+        headers={
+            **settings["headers"][0],
+            "Content-Type": "Application/JSON; charset=utf-8",
+        },
+        content=body,
+    )
+    assert response.status_code == 200 and response.json()["state"] == "created"
+
+
+def test_product_request_body_limit_boundary(product_client):
+    """Accept a body of exactly 262144 bytes for validation and refuse one byte more with 413."""
+    client, inference, settings, _ = product_client
+    prefix = b'{"workspace_id":"' + str(uuid4()).encode() + b'","task":"'
+    for size, status in ((262144, 422), (262145, 413)):
+        body = prefix + b"x" * (size - len(prefix) - 2) + b'"}'
+        assert len(body) == size
+        response = client.post(PREFIX + "/runs", headers=bearer(settings), content=body)
+        assert response.status_code == status, size
+    assert response.json() == {"detail": {"code": "request_limit"}}
+    assert inference.calls == []
+
+
+def test_ui_pairing_route_is_guarded_and_audited_by_the_harness_router(
+    product_client, caplog
+):
+    """The pairing mint uses the harness route guard and audit, with or without a JSON body."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    minted = client.post(path, headers=bearer(settings), json={})
+    assert minted.status_code == 200 and minted.json()["expires_in_seconds"] == 60
+    assert UUID(minted.headers["x-request-id"])
+    assert minted.headers["cache-control"] == "private, no-store"
+    assert "method=POST route=/api/v1/harness/ui-pairings status=200" in caplog.text
+    bodiless = client.post(path, headers=settings["headers"][0])
+    assert bodiless.status_code == 200 and bodiless.json()["code"]
+    assert client.post(path, json={}).status_code == 401
+    assert "route=/api/v1/harness/ui-pairings status=401" in caplog.text
+    assert (
+        client.post(
+            path,
+            headers={**bearer(settings), "Origin": "http://127.0.0.1:7090"},
+            json={},
+        ).status_code
+        == 403
+    )
+    refused = client.post(
+        path,
+        headers={**settings["headers"][0], "Content-Type": "text/plain"},
+        content=b"{}",
+    )
+    assert refused.status_code == 415
+    code = client.post(path, headers=bearer(settings), json={}).json()["code"]
+    exchanged = client.post("/ui/pairings", headers=UI_HEADERS, json={"code": code})
+    assert exchanged.status_code == 200
+    assert settings["tokens"][0] not in caplog.text
+
+
+def test_ui_pairing_capacity_is_audited(product_client, caplog):
+    """The 33rd live pairing is refused with 429 pairing_capacity and logged by the route audit."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    for _ in range(32):
+        assert client.post(path, headers=bearer(settings), json={}).status_code == 200
+    refused = client.post(path, headers=bearer(settings), json={})
+    assert refused.status_code == 429
+    assert refused.json() == {"detail": {"code": "pairing_capacity"}}
+    assert "route=/api/v1/harness/ui-pairings status=429" in caplog.text
+
+
+def test_ui_pairing_without_browser_sessions_is_a_finite_503(product_client, caplog):
+    """Without the browser session store the pairing mint is 503 harness_unavailable, still guarded and audited."""
+    client, _, settings, _ = product_client
+    del client.app.state.browser_sessions
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    assert client.post(path, json={}).status_code == 401
+    refused = client.post(path, headers=bearer(settings), json={})
+    assert refused.status_code == 503
+    assert refused.json() == {"detail": {"code": "harness_unavailable"}}
+    assert "route=/api/v1/harness/ui-pairings status=401" in caplog.text
+    assert "route=/api/v1/harness/ui-pairings status=503" in caplog.text
+    assert settings["tokens"][0] not in caplog.text
+
+
+def body_request(receive, content_type=b"application/json"):
+    """Build a browser POST request whose body arrives through the given ASGI receive."""
+    from starlette.requests import Request
+
+    scope = {
+        "type": "http",
+        "method": "POST",
+        "path": "/ui/pairings",
+        "headers": [(b"content-type", content_type)],
+        "query_string": b"",
+    }
+    return Request(scope, receive)
+
+
+async def stalled():
+    """Never deliver a body chunk."""
+    await asyncio.Event().wait()
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_body_timeout_is_a_finite_408(monkeypatch):
+    """A body that stalls past the deadline becomes 408 request_timeout, not an escaped TimeoutError."""
+    from fastapi import HTTPException
+
+    from apps.harness import browser
+
+    monkeypatch.setattr(browser, "BODY_SECONDS", 0.05)
+    with pytest.raises(HTTPException) as raised:
+        await browser.bounded_json(body_request(stalled))
+    assert (raised.value.status_code, raised.value.detail) == (
+        408,
+        {"code": "request_timeout"},
+    )
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_cancellation_is_not_a_timeout(monkeypatch):
+    """Cancelling the reader propagates CancelledError instead of turning into a 408."""
+    from apps.harness import browser
+
+    monkeypatch.setattr(browser, "BODY_SECONDS", 30)
+    task = asyncio.create_task(browser.bounded_json(body_request(stalled)))
+    await asyncio.sleep(0.01)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_size_boundary():
+    """Accept an object of exactly the limit and refuse one byte more with 413."""
+    from fastapi import HTTPException
+
+    from apps.harness.browser import bounded_json
+
+    def once(data):
+        """Deliver data as one complete body."""
+
+        async def receive():
+            """Return the whole body."""
+            return {"type": "http.request", "body": data, "more_body": False}
+
+        return receive
+
+    exact = b'{"code":"' + b"x" * 1013 + b'"}'
+    assert len(exact) == 1024
+    assert await bounded_json(body_request(once(exact)), 1024) == {"code": "x" * 1013}
+    with pytest.raises(HTTPException) as raised:
+        await bounded_json(body_request(once(exact + b" ")), 1024)
+    assert raised.value.status_code == 413
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("path", ["/ui/pairings", "/v1/chat/completions"])
+async def test_stalled_browser_body_returns_408_and_releases_nothing(
+    auth_settings, tmp_path, caplog, monkeypatch, path
+):
+    """Through the real middleware and handler, a stalled body gets 408 request_timeout and no model work."""
+    import httpx
+
+    from apps.harness import browser
+
+    inference = FixtureInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    async with app.router.lifespan_context(app):
+        transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 49001))
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://127.0.0.1:7090"
+        ) as client:
+            response = await client.post(
+                PREFIX + "/ui-pairings", headers=bearer(auth_settings), json={}
+            )
+            code = response.json()["code"]
+            response = await client.post(
+                "/ui/pairings", headers=UI_HEADERS, json={"code": code}
+            )
+            cookie = response.headers["set-cookie"].split(";", 1)[0]
+        monkeypatch.setattr(browser, "BODY_SECONDS", 0.05)
+        scope = {
+            "type": "http",
+            "asgi": {"version": "3.0", "spec_version": "2.3"},
+            "http_version": "1.1",
+            "method": "POST",
+            "scheme": "http",
+            "path": path,
+            "raw_path": path.encode(),
+            "query_string": b"",
+            "root_path": "",
+            "headers": [
+                (b"host", b"127.0.0.1:7090"),
+                (b"origin", b"http://127.0.0.1:7090"),
+                (b"x-harness-ui", b"1"),
+                (b"content-type", b"application/json"),
+                (b"cookie", cookie.encode()),
+            ],
+            "client": ("127.0.0.1", 49001),
+            "server": ("127.0.0.1", 7090),
+        }
+        messages = []
+
+        async def send(message):
+            """Collect response messages."""
+            messages.append(message)
+
+        with caplog.at_level(logging.INFO):
+            await asyncio.wait_for(app(scope, stalled, send), 5)
+        assert messages[0]["status"] == 408
+        body = json.loads(b"".join(m.get("body", b"") for m in messages[1:]))
+        assert body["error"]["code"] == "request_timeout"
+        assert "harness_browser_body_timeout" in caplog.text
+        assert "status=408" in caplog.text
+        assert inference.calls == []
+        assert not app.state.product_harness.admission.locked()
+
+
+class TruncatedStreamInference(FixtureInference):
+    """Send one real chunk, then end the way stream() does when finish_reason is not stop."""
+
+    async def stream(self, messages, **options):
+        """Yield a delta, then raise the incomplete-completion error."""
+        from apps.harness.inference import IncompleteCompletion
+
+        self.calls.append((messages, options))
+        yield b'data: {"choices":[{"delta":{"content":"partial"}}]}\n\n'
+        raise IncompleteCompletion("INCOMPLETE")
+
+
+def test_browser_truncated_stream_reports_incomplete_completion(
+    auth_settings, tmp_path, caplog
+):
+    """A truncated answer ends with the closed incomplete_completion SSE error and no [DONE], not as a normal answer."""
+    inference = TruncatedStreamInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    with TestClient(
+        app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+    ) as client:
+        pair(client, auth_settings)
+        with caplog.at_level(logging.INFO):
+            response = client.post(
+                "/v1/chat/completions",
+                headers=UI_HEADERS,
+                json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+            )
+        assert response.status_code == 200
+        events = sse_data(response.text)
+        assert json.loads(events[0])["choices"][0]["delta"]["content"] == "partial"
+        assert json.loads(events[1])["error"]["code"] == "incomplete_completion"
+        assert len(events) == 2 and "[DONE]" not in response.text
+        assert "inference_unavailable" not in response.text
+        assert "harness_ui_stream_incomplete" in caplog.text
+        assert not app.state.product_harness.admission.locked()
+
+
+def native_inference(finish):
+    """Build the real ProductInference over a native SSE double that ends with the given finish_reason."""
+    import httpx
+
+    from apps.api.core.model_config import get_model_profile
+    from apps.harness.inference import ProductInference
+
+    model = get_model_profile("core")["model_id"]
+    chunks = [
+        {"choices": [{"index": 0, "delta": {"content": "native"}}]},
+        {"choices": [{"index": 0, "delta": {}, "finish_reason": finish}]},
+    ]
+    body = "".join("data: " + json.dumps(chunk) + "\n\n" for chunk in chunks)
+    body += "data: [DONE]\n\n"
+
+    def respond(request):
+        """Serve preparation calls and one native SSE completion."""
+        path = request.url.path
+        if path == "/v1/models":
+            return httpx.Response(200, json={"data": [{"id": model}]})
+        if path == "/apply-template":
+            return httpx.Response(200, json={"prompt": "templated"})
+        if path == "/tokenize":
+            return httpx.Response(200, json={"tokens": [1, 2, 3]})
+        if path == "/v1/chat/completions":
+            return httpx.Response(
+                200, text=body, headers={"content-type": "text/event-stream"}
+            )
+        raise AssertionError(path)
+
+    return ProductInference(transport=httpx.MockTransport(respond))
+
+
+@pytest.mark.parametrize(
+    ("finish", "complete"), [("stop", True), ("length", False), (None, False)]
+)
+def test_browser_stream_verifies_the_native_finish_reason(
+    auth_settings, tmp_path, finish, complete
+):
+    """Through the real ProductInference, only a stop-finished answer reaches DONE; any other ending gets the error event and no DONE."""
+    inference = native_inference(finish)
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    with TestClient(
+        app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+    ) as client:
+        pair(client, auth_settings)
+        response = client.post(
+            "/v1/chat/completions",
+            headers=UI_HEADERS,
+            json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+        )
+        assert response.status_code == 200
+        assert "native" in response.text
+        events = sse_data(response.text)
+        assert (events[-1] == "[DONE]") is complete
+        assert ("[DONE]" in events) is complete
+        assert ('"incomplete_completion"' in events[-1]) is not complete
+        assert "inference_unavailable" not in response.text
+        assert not app.state.product_harness.admission.locked()
+
+
+def test_browser_stream_resume_is_refused(product_client):
+    """The UI's resume request after a stream without [DONE] gets 403, so the UI reports an error instead of waiting."""
+    client, inference, settings, _ = product_client
+    pair(client, settings)
+    for query in (
+        {"conv_id": "conv-1::model", "from": "42"},
+        {"conv_id": "conv-1", "from": "0"},
+    ):
+        resume = client.get("/v1/stream", params=query, headers={"X-Harness-UI": "1"})
+        assert resume.status_code == 403
+        assert resume.json() == {"detail": {"code": "unsupported_query"}}
+    assert inference.calls == []
+
+
+PINNED_STREAM_READER = r"""
+const fs = require('fs');
+const vm = require('vm');
+const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+const source = fs.readFileSync(input.bundle, 'utf8');
+function slice(start, end) {
+  const from = source.indexOf(start);
+  if (from < 0 || source.indexOf(start, from + 1) >= 0) throw new Error('marker ' + start);
+  const to = source.indexOf(end, from);
+  if (to < 0) throw new Error('marker ' + end);
+  return source.slice(from, to);
+}
+const context = vm.createContext({
+  TextDecoder, TextEncoder, DOMException,
+  console: {log() {}, warn() {}, error() {}},
+});
+vm.runInContext('var ' + slice('iAt=3e3,Ite="::"', ',sAt={') + ';', context);
+vm.runInContext('var ' + slice('Ore="AbortError",xGt=', ';function AGt(') + ';', context);
+vm.runInContext(slice('function Xu(t){', 'function kG('), context);
+vm.runInContext('var Q_;' + slice('Q_=(t=>(t.LOST=', ',hte=(t=>') + ';', context);
+const method = slice('static async handleStreamResponse(', 'static async lookupStreamSessions(');
+vm.runInContext(method.replace('static async handleStreamResponse(', 'async function handleStreamResponse('), context);
+async function read(body) {
+  const out = {chunks: '', complete: null, error: null, resumed: []};
+  context.Un = {
+    saveStreamState() {}, saveStreamStateThrottled() {}, notifyTimings() {},
+    extractModelName() { return null; }, mergeToolCallDeltas(calls) { return calls; },
+    clearStreamState() {}, flushStreamState() {},
+    async resumeStream(id) { out.resumed.push(id); return {status: input.resume_status, body: null}; },
+  };
+  const parts = body.split(/(?<=\n\n)/).map((part) => new TextEncoder().encode(part));
+  const response = {body: {getReader() {
+    return {
+      async read() { return parts.length ? {done: false, value: parts.shift()} : {done: true, value: undefined}; },
+      releaseLock() {}, async cancel() {},
+    };
+  }}};
+  await context.handleStreamResponse(
+    response, (chunk) => { out.chunks += chunk; }, (content) => { out.complete = content; },
+    (error) => { out.error = error.message; }, undefined, undefined, undefined, undefined,
+    undefined, 'conv-1', undefined, () => {}, 'model');
+  return out;
+}
+(async () => {
+  const results = {};
+  for (const [name, body] of Object.entries(input.bodies)) results[name] = await read(body);
+  process.stdout.write(JSON.stringify(results));
+})().catch((error) => { console.error(String(error)); process.exitCode = 1; });
+"""
+
+
+def pinned_ui_bundle():
+    """Return the receipt-verified pinned UI bundle, or skip when the local download is absent.
+
+    AEVRA_PINNED_UI_ASSETS may point at a downloaded b11557 tree outside this checkout.
+    """
+    from apps.harness.assets import ASSETS
+
+    root = Path(os.environ.get("AEVRA_PINNED_UI_ASSETS") or ASSETS)
+    if not (root / "receipt.json").is_file():
+        pytest.skip("the pinned llama-ui assets are not downloaded")
+    receipt = json.loads((root / "receipt.json").read_text())
+    assert (receipt["version"], receipt["source_pin"]) == (VERSION, PIN)
+    names = [
+        name
+        for name in receipt["files"]
+        if re.fullmatch(r"_app/immutable/bundle\.[A-Za-z0-9_-]+\.js", name)
+    ]
+    assert len(names) == 1
+    bundle = root / names[0]
+    digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
+    assert digest == receipt["files"][names[0]]
+    return bundle
+
+
+def test_pinned_ui_shows_a_failed_stream_as_an_error(auth_settings, tmp_path):
+    """The pinned llama-ui stream reader completes only a verified answer; a failed stream reaches its error callback."""
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required for browser-script validation")
+    bundle = pinned_ui_bundle()
+    bodies = {}
+    for name, inference in (
+        ("complete", FixtureInference()),
+        ("native_stop", native_inference("stop")),
+        ("native_length", native_inference("length")),
+        ("truncated", TruncatedStreamInference()),
+        ("failed", FailingStreamInference()),
+    ):
+        (tmp_path / name).mkdir()
+        app = compose(
+            FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path / name)
+        )
+        with TestClient(
+            app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+        ) as client:
+            pair(client, auth_settings)
+            response = client.post(
+                "/v1/chat/completions",
+                headers=UI_HEADERS,
+                json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+            )
+            assert response.status_code == 200
+            bodies[name] = response.text
+            resume = client.get(
+                "/v1/stream",
+                params={"conv_id": "conv-1::model", "from": "1"},
+                headers={"X-Harness-UI": "1"},
+            )
+            assert resume.status_code == 403
+    # The body this branch first sent: the error event followed by [DONE].
+    bodies["error_then_done"] = bodies["truncated"] + "data: [DONE]\n\n"
+    result = subprocess.run(
+        [node, "-e", PINNED_STREAM_READER],
+        input=json.dumps(
+            {"bundle": str(bundle), "bodies": bodies, "resume_status": 403}
+        ).encode(),
+        capture_output=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr.decode()
+    seen = json.loads(result.stdout)
+    assert seen["complete"] == {
+        "chunks": "fixture",
+        "complete": "fixture",
+        "error": None,
+        "resumed": [],
+    }
+    assert seen["native_stop"] == {
+        "chunks": "native",
+        "complete": "native",
+        "error": None,
+        "resumed": [],
+    }
+    for name, chunks in (
+        ("native_length", "native"),
+        ("truncated", "partial"),
+        ("failed", "partial"),
+    ):
+        assert seen[name]["chunks"] == chunks
+        assert seen[name]["complete"] is None
+        assert seen[name]["error"] == "Stream connection lost and could not be resumed"
+        assert seen[name]["resumed"] == ["conv-1"]
+    # The pinned UI ignores SSE error events: with [DONE] the partial answer completes.
+    assert seen["error_then_done"]["complete"] == "partial"
+    assert seen["error_then_done"]["error"] is None

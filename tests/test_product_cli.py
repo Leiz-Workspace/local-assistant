@@ -116,6 +116,121 @@ def test_http_redirect_and_error_bodies_never_leak(capsys):
     assert "PRIVATE_RESPONSE" not in capsys.readouterr().out
 
 
+def failing_client(status, **response):
+    """Return a client whose requests all receive one fixed error response."""
+    return ApiClient(
+        "http://127.0.0.1:7090",
+        "s" * 48,
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(status, **response)
+        ),
+    )
+
+
+def padded(code, size):
+    """Return a JSON error body of exactly size bytes that carries code in detail.code."""
+    import json
+
+    empty = json.dumps({"detail": {"code": code}, "pad": ""}).encode()
+    body = json.dumps({"detail": {"code": code}, "pad": "x" * (size - len(empty))})
+    assert len(body.encode()) == size
+    return body.encode()
+
+
+@pytest.mark.parametrize(
+    ("status", "body", "code", "exit_code"),
+    [
+        (503, {"detail": {"code": "history_unavailable"}}, "history_unavailable", 6),
+        (503, {"detail": {"code": "harness_closed"}}, "harness_closed", 6),
+        (429, {"detail": {"code": "run_capacity"}}, "run_capacity", 7),
+        (404, {"detail": {"code": "review_required"}}, "review_required", 6),
+        (
+            409,
+            {"detail": {"code": "skill_operation_denied"}},
+            "skill_operation_denied",
+            5,
+        ),
+        (
+            422,
+            {"error": {"code": "context_overflow", "type": "invalid_request_error"}},
+            "context_overflow",
+            2,
+        ),
+        (413, {"code": "request_limit"}, "request_limit", 1),
+        (
+            502,
+            {"detail": {"code": "first"}, "error": {"code": "second"}, "code": "third"},
+            "first",
+            1,
+        ),
+        (502, {"detail": {"message": "no code"}, "code": "top_level"}, "top_level", 1),
+        (503, {"detail": {"code": "a" + "0" * 63}}, "a" + "0" * 63, 6),
+    ],
+)
+def test_server_error_codes_reach_cli_with_status_category(
+    status, body, code, exit_code
+):
+    """Raise the server's allowlisted code while the exit category still follows the HTTP status."""
+    with pytest.raises(ClientError) as raised:
+        failing_client(status, json=body).request("GET", "/status")
+    assert (raised.value.code, raised.value.exit_code) == (code, exit_code)
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        dict(content=b"PRIVATE_RESPONSE not json"),
+        dict(content=b"\xff\xfe"),
+        dict(content=b""),
+        dict(content=b"[" * 16000),
+        dict(json=["history_unavailable"]),
+        dict(json="history_unavailable"),
+        dict(json={"detail": [{"loc": ["body"], "input": "PRIVATE_RESPONSE"}]}),
+        dict(json={"detail": {"code": "History_Unavailable"}}),
+        dict(json={"detail": {"code": "history unavailable"}}),
+        dict(json={"detail": {"code": "history_unavailable\n"}}),
+        dict(json={"detail": {"code": "1history"}}),
+        dict(json={"detail": {"code": "../private"}}),
+        dict(json={"detail": {"code": ""}}),
+        dict(json={"detail": {"code": "a" * 65}}),
+        dict(json={"detail": {"code": 503}}),
+        dict(json={"detail": {"code": "PRIVATE_RESPONSE"}, "code": "valid_code"}),
+        dict(json={"detail": {"code": "server_unavailable"}}),
+        dict(json={"error": {"code": "invalid_server_response"}}),
+        dict(content=padded("history_unavailable", 16385)),
+    ],
+)
+def test_server_error_without_valid_code_falls_back_to_status(response, capsys):
+    """Keep http_<status> for bodies that are invalid, oversized, or whose code fails the allowlist."""
+    with pytest.raises(ClientError) as raised:
+        failing_client(503, **response).request("GET", "/status")
+    assert (raised.value.code, raised.value.exit_code) == ("http_503", 6)
+    assert "PRIVATE_RESPONSE" not in capsys.readouterr().out
+
+
+def test_error_body_at_the_size_limit_is_parsed():
+    """Accept a code in a body of exactly the bounded error size."""
+    with pytest.raises(ClientError, match="^history_unavailable$"):
+        failing_client(503, content=padded("history_unavailable", 16384)).request(
+            "GET", "/status"
+        )
+
+
+def test_cli_prints_the_server_code_and_status_exit(monkeypatch, capsys, tmp_path):
+    """Show the finite server code instead of http_503 and keep the stable exit category."""
+    token = tmp_path / "token"
+    save_token(token, "s" * 48)
+    monkeypatch.setattr(
+        cli,
+        "ApiClient",
+        lambda url, value: failing_client(
+            503, json={"detail": {"code": "harness_unavailable"}}
+        ),
+    )
+    assert cli.main(["--token-file", str(token), "status"]) == 6
+    assert '{"error": "harness_unavailable"}' in capsys.readouterr().err
+
+
 def test_doctor_needs_no_credential_or_network(capsys, tmp_path):
     """Permit read-only startup inspection without a running backend or model."""
     assert cli.main(["--token-file", str(tmp_path / "absent"), "--json", "doctor"]) == 0
