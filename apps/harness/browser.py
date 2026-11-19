@@ -404,6 +404,9 @@ def register_browser(app, *, asset_root=ASSETS):
 
         async def events():
             """Stream real deltas under shared admission and turn failures into safe SSE errors."""
+            # The pinned UI ignores SSE error events and saves whatever it has as a
+            # complete answer on [DONE]. A failed stream therefore ends right after
+            # its error event: the UI then asks to resume, gets 403 and shows an error.
             service = request.app.state.product_harness
             try:
                 async with asyncio.timeout(120):
@@ -415,14 +418,12 @@ def register_browser(app, *, asset_root=ASSETS):
             except IncompleteCompletion:
                 LOGGER.warning("harness_ui_stream_incomplete")
                 yield b'data: {"error":{"code":"incomplete_completion","message":"The answer stopped before it was complete."}}\n\n'
-                yield b"data: [DONE]\n\n"
             except asyncio.CancelledError:
                 LOGGER.info("harness_ui_stream_cancelled")
                 raise
             except Exception:
                 LOGGER.warning("harness_ui_stream_failed")
                 yield b'data: {"error":{"code":"inference_unavailable","message":"Local inference could not complete."}}\n\n'
-                yield b"data: [DONE]\n\n"
 
         return StreamingResponse(
             events(),

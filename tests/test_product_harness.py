@@ -4,6 +4,10 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
+import re
+import shutil
+import subprocess
 import time
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -334,6 +338,11 @@ def test_browser_pairing_cookie_acl_and_real_stream(product_client):
 UI_HEADERS = {"Origin": "http://127.0.0.1:7090", "X-Harness-UI": "1"}
 
 
+def sse_data(text):
+    """Return the data payloads of an SSE body in order."""
+    return [line[6:] for line in text.splitlines() if line.startswith("data: ")]
+
+
 def test_browser_stream_lookup_accepts_at_most_64_conversations(product_client):
     """The UI's resumable-stream lookup returns no sessions for up to 64 ids and refuses more (HAR-002 point 2)."""
     client, _, settings, _ = product_client
@@ -437,7 +446,7 @@ class FailingStreamInference(FixtureInference):
 def test_browser_stream_failure_is_reported_as_inference_unavailable(
     auth_settings, tmp_path, caplog
 ):
-    """A mid-stream stream_limit reaches the UI only as the generic inference_unavailable SSE error, then [DONE], and admission is released (HAR-002 point 6)."""
+    """A mid-stream stream_limit reaches the UI only as the generic inference_unavailable SSE error with no [DONE] after it, and admission is released (HAR-002 point 6)."""
     inference = FailingStreamInference()
     app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
     with TestClient(
@@ -451,11 +460,10 @@ def test_browser_stream_failure_is_reported_as_inference_unavailable(
                 json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
             )
         assert response.status_code == 200
-        assert (
-            "partial" in response.text
-            and '"code":"inference_unavailable"' in response.text
-        )
-        assert response.text.rstrip().endswith("data: [DONE]")
+        events = sse_data(response.text)
+        assert json.loads(events[0])["choices"][0]["delta"]["content"] == "partial"
+        assert json.loads(events[1])["error"]["code"] == "inference_unavailable"
+        assert len(events) == 2 and "[DONE]" not in response.text
         assert "stream_limit" not in response.text
         assert "harness_ui_stream_failed" in caplog.text
         assert not app.state.product_harness.admission.locked()
@@ -907,7 +915,7 @@ class TruncatedStreamInference(FixtureInference):
 def test_browser_truncated_stream_reports_incomplete_completion(
     auth_settings, tmp_path, caplog
 ):
-    """A truncated answer ends with the closed incomplete_completion SSE error before DONE, not as a normal answer."""
+    """A truncated answer ends with the closed incomplete_completion SSE error and no [DONE], not as a normal answer."""
     inference = TruncatedStreamInference()
     app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
     with TestClient(
@@ -921,24 +929,17 @@ def test_browser_truncated_stream_reports_incomplete_completion(
                 json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
             )
         assert response.status_code == 200
-        events = [
-            line[6:] for line in response.text.splitlines() if line.startswith("data: ")
-        ]
+        events = sse_data(response.text)
         assert json.loads(events[0])["choices"][0]["delta"]["content"] == "partial"
         assert json.loads(events[1])["error"]["code"] == "incomplete_completion"
-        assert events[2:] == ["[DONE]"]
+        assert len(events) == 2 and "[DONE]" not in response.text
         assert "inference_unavailable" not in response.text
         assert "harness_ui_stream_incomplete" in caplog.text
         assert not app.state.product_harness.admission.locked()
 
 
-@pytest.mark.parametrize(
-    ("finish", "complete"), [("stop", True), ("length", False), (None, False)]
-)
-def test_browser_stream_verifies_the_native_finish_reason(
-    auth_settings, tmp_path, finish, complete
-):
-    """Through the real ProductInference, only a stop-finished answer reaches DONE without an error event."""
+def native_inference(finish):
+    """Build the real ProductInference over a native SSE double that ends with the given finish_reason."""
     import httpx
 
     from apps.api.core.model_config import get_model_profile
@@ -967,7 +968,17 @@ def test_browser_stream_verifies_the_native_finish_reason(
             )
         raise AssertionError(path)
 
-    inference = ProductInference(transport=httpx.MockTransport(respond))
+    return ProductInference(transport=httpx.MockTransport(respond))
+
+
+@pytest.mark.parametrize(
+    ("finish", "complete"), [("stop", True), ("length", False), (None, False)]
+)
+def test_browser_stream_verifies_the_native_finish_reason(
+    auth_settings, tmp_path, finish, complete
+):
+    """Through the real ProductInference, only a stop-finished answer reaches DONE; any other ending gets the error event and no DONE."""
+    inference = native_inference(finish)
     app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
     with TestClient(
         app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
@@ -980,7 +991,172 @@ def test_browser_stream_verifies_the_native_finish_reason(
         )
         assert response.status_code == 200
         assert "native" in response.text
-        assert response.text.rstrip().endswith("data: [DONE]")
-        assert ('"incomplete_completion"' in response.text) is not complete
+        events = sse_data(response.text)
+        assert (events[-1] == "[DONE]") is complete
+        assert ("[DONE]" in events) is complete
+        assert ('"incomplete_completion"' in events[-1]) is not complete
         assert "inference_unavailable" not in response.text
         assert not app.state.product_harness.admission.locked()
+
+
+def test_browser_stream_resume_is_refused(product_client):
+    """The UI's resume request after a stream without [DONE] gets 403, so the UI reports an error instead of waiting."""
+    client, inference, settings, _ = product_client
+    pair(client, settings)
+    for query in (
+        {"conv_id": "conv-1::model", "from": "42"},
+        {"conv_id": "conv-1", "from": "0"},
+    ):
+        resume = client.get("/v1/stream", params=query, headers={"X-Harness-UI": "1"})
+        assert resume.status_code == 403
+        assert resume.json() == {"detail": {"code": "unsupported_query"}}
+    assert inference.calls == []
+
+
+PINNED_STREAM_READER = r"""
+const fs = require('fs');
+const vm = require('vm');
+const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+const source = fs.readFileSync(input.bundle, 'utf8');
+function slice(start, end) {
+  const from = source.indexOf(start);
+  if (from < 0 || source.indexOf(start, from + 1) >= 0) throw new Error('marker ' + start);
+  const to = source.indexOf(end, from);
+  if (to < 0) throw new Error('marker ' + end);
+  return source.slice(from, to);
+}
+const context = vm.createContext({
+  TextDecoder, TextEncoder, DOMException,
+  console: {log() {}, warn() {}, error() {}},
+});
+vm.runInContext('var ' + slice('iAt=3e3,Ite="::"', ',sAt={') + ';', context);
+vm.runInContext('var ' + slice('Ore="AbortError",xGt=', ';function AGt(') + ';', context);
+vm.runInContext(slice('function Xu(t){', 'function kG('), context);
+vm.runInContext('var Q_;' + slice('Q_=(t=>(t.LOST=', ',hte=(t=>') + ';', context);
+const method = slice('static async handleStreamResponse(', 'static async lookupStreamSessions(');
+vm.runInContext(method.replace('static async handleStreamResponse(', 'async function handleStreamResponse('), context);
+async function read(body) {
+  const out = {chunks: '', complete: null, error: null, resumed: []};
+  context.Un = {
+    saveStreamState() {}, saveStreamStateThrottled() {}, notifyTimings() {},
+    extractModelName() { return null; }, mergeToolCallDeltas(calls) { return calls; },
+    clearStreamState() {}, flushStreamState() {},
+    async resumeStream(id) { out.resumed.push(id); return {status: input.resume_status, body: null}; },
+  };
+  const parts = body.split(/(?<=\n\n)/).map((part) => new TextEncoder().encode(part));
+  const response = {body: {getReader() {
+    return {
+      async read() { return parts.length ? {done: false, value: parts.shift()} : {done: true, value: undefined}; },
+      releaseLock() {}, async cancel() {},
+    };
+  }}};
+  await context.handleStreamResponse(
+    response, (chunk) => { out.chunks += chunk; }, (content) => { out.complete = content; },
+    (error) => { out.error = error.message; }, undefined, undefined, undefined, undefined,
+    undefined, 'conv-1', undefined, () => {}, 'model');
+  return out;
+}
+(async () => {
+  const results = {};
+  for (const [name, body] of Object.entries(input.bodies)) results[name] = await read(body);
+  process.stdout.write(JSON.stringify(results));
+})().catch((error) => { console.error(String(error)); process.exitCode = 1; });
+"""
+
+
+def pinned_ui_bundle():
+    """Return the receipt-verified pinned UI bundle, or skip when the local download is absent.
+
+    AEVRA_PINNED_UI_ASSETS may point at a downloaded b11557 tree outside this checkout.
+    """
+    from apps.harness.assets import ASSETS
+
+    root = Path(os.environ.get("AEVRA_PINNED_UI_ASSETS") or ASSETS)
+    if not (root / "receipt.json").is_file():
+        pytest.skip("the pinned llama-ui assets are not downloaded")
+    receipt = json.loads((root / "receipt.json").read_text())
+    assert (receipt["version"], receipt["source_pin"]) == (VERSION, PIN)
+    names = [
+        name
+        for name in receipt["files"]
+        if re.fullmatch(r"_app/immutable/bundle\.[A-Za-z0-9_-]+\.js", name)
+    ]
+    assert len(names) == 1
+    bundle = root / names[0]
+    digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
+    assert digest == receipt["files"][names[0]]
+    return bundle
+
+
+def test_pinned_ui_shows_a_failed_stream_as_an_error(auth_settings, tmp_path):
+    """The pinned llama-ui stream reader completes only a verified answer; a failed stream reaches its error callback."""
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node.js is required for browser-script validation")
+    bundle = pinned_ui_bundle()
+    bodies = {}
+    for name, inference in (
+        ("complete", FixtureInference()),
+        ("native_stop", native_inference("stop")),
+        ("native_length", native_inference("length")),
+        ("truncated", TruncatedStreamInference()),
+        ("failed", FailingStreamInference()),
+    ):
+        (tmp_path / name).mkdir()
+        app = compose(
+            FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path / name)
+        )
+        with TestClient(
+            app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+        ) as client:
+            pair(client, auth_settings)
+            response = client.post(
+                "/v1/chat/completions",
+                headers=UI_HEADERS,
+                json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+            )
+            assert response.status_code == 200
+            bodies[name] = response.text
+            resume = client.get(
+                "/v1/stream",
+                params={"conv_id": "conv-1::model", "from": "1"},
+                headers={"X-Harness-UI": "1"},
+            )
+            assert resume.status_code == 403
+    # The body this branch first sent: the error event followed by [DONE].
+    bodies["error_then_done"] = bodies["truncated"] + "data: [DONE]\n\n"
+    result = subprocess.run(
+        [node, "-e", PINNED_STREAM_READER],
+        input=json.dumps(
+            {"bundle": str(bundle), "bodies": bodies, "resume_status": 403}
+        ).encode(),
+        capture_output=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr.decode()
+    seen = json.loads(result.stdout)
+    assert seen["complete"] == {
+        "chunks": "fixture",
+        "complete": "fixture",
+        "error": None,
+        "resumed": [],
+    }
+    assert seen["native_stop"] == {
+        "chunks": "native",
+        "complete": "native",
+        "error": None,
+        "resumed": [],
+    }
+    for name, chunks in (
+        ("native_length", "native"),
+        ("truncated", "partial"),
+        ("failed", "partial"),
+    ):
+        assert seen[name]["chunks"] == chunks
+        assert seen[name]["complete"] is None
+        assert seen[name]["error"] == "Stream connection lost and could not be resumed"
+        assert seen[name]["resumed"] == ["conv-1"]
+    # The pinned UI ignores SSE error events: with [DONE] the partial answer completes.
+    assert seen["error_then_done"]["complete"] == "partial"
+    assert seen["error_then_done"]["error"] is None
