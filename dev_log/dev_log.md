@@ -6534,3 +6534,31 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Deviations** are listed in the ADR's new "Implementation status" section. They include: the PyYAML config read, the binding check as the first statement of every CORE sender, `run_failed` in the signed run history, Tango's interval with a margin floor of 0.242494 at 12 pairs, and the obedience-based injection oracle (owner approval needed with decision 6).
 - **Not done.** No CORE window has run, CONTROL_TOKENS_PARSED stays open, and nothing is merged or deployed. CI on PR #90 is for software checks only.
 - **Incidents.** The host rebooted between sessions and cleared `/tmp`, including the scratchpad helper scripts; they were recreated under `~/.cache/wt`. CORE and the owner's backend on 7090 were stopped and were not started.
+
+## 2026-11-19 — Code quality review and Phase 1 quick fixes (PRs #92, #93, #94)
+
+- **Owner requests.** "Đọc kỹ toàn bộ code đi tôi thấy harness và 1 số component khác bạn làm nó cứ tạm bợ kiểu gì ấy", then "Pha 1: sửa nhanh".
+- **Review** ([report](../docs/reviews/2026-11-19-code-quality-review.md)). Eleven read-only agents each read one area in full, with a skeptic per area and one synthesis: 23 agents in all. Result: 220 findings kept (10 high, 101 medium, 109 low), grouped into 10 themes. The root cause is the evidence rule that old files stay byte-identical, which forced every feature to be added by wrapping or copying. Also found: no single CORE client (12 `httpx.AsyncClient` in 9 modules), inverted layering (`src/` importing `apps/`), three wrapper app factories, copied primitives, no error-code registry, untyped run and workflow state, and about 20% of product lines unreachable from any entrypoint. The report proposes a 10-phase roadmap; Phases 0, 2, 3 and 6 to 9 need ADRs and owner approval.
+- **Phase 1** (three branches, each reviewed adversarially and fixed, merged one at a time on green CI):
+  - **PR #92** (`a5f42cc`): deleted the tracked `apps/api/main.py.bak` and `docker-compose.yaml.bak`, with a hygiene test; gave `qwen_token_preflight.run_worker` explicit `cwd` and `timeout`; deleted the never-raised `WorkingStateError`; removed the unreachable parent capture in `publisher_links.py`; added the review.
+  - **PR #93** (`9cf4576`, ADR-197):
+    - The CLI shows the server's finite error code instead of `http_<status>`.
+    - The harness has its own route guard: bodiless GET and DELETE no longer need a JSON content type, and `ui-pairings` is guarded and audited.
+    - `/chat` messages are typed, so invalid turns get 422 `invalid_context_request`.
+    - A stalled browser body gets 408 `request_timeout` instead of 500.
+    - The stream checks `finish_reason` and ends a failed stream with an error event and no `[DONE]`. The pinned UI treats `[DONE]` as success, so it now shows the error and keeps the partial text.
+  - **PR #94** (`b35e470`):
+    - The check runner builds its prlimit ceilings from the reviewed policy; the argv is unchanged.
+    - Memory grant and manual creation set their timeouts before the global quota lock, and file-journal row locks wait at most 5 s. Both map to the existing 503 codes.
+    - Embedding-contract drift fails closed at ingestion startup as 503 instead of 422.
+    - `postgres_recovery_acceptance.py` refuses the legacy canary run without `--legacy-canary-run`, and the recovery drill uses coded checks instead of `assert`.
+    - The first CI run failed one test: the new constant `LOCK_NOT_AVAILABLE` contained the HAR-006 v2 sentinel `NOT_AVAILABLE`. It was renamed `LOCK_TIMEOUT_SQLSTATE`, and CI passed.
+- **CI.** Each PR passed on the self-hosted runners before merge, and the `develop` push runs after #92, #93 and #94 passed.
+- **Not done.** Mapping context-budget failures to 422 on default `/chat` is blocked by the frozen HAR-006 v2 test that records the current 502 (HAR-006 v2 follow-up 3). There is no live UI screenshot of the incomplete-answer path, because CORE was stopped. The PostgreSQL integration tests for the new lock timeouts were skipped locally because `DATABASE_URL` was not set.
+- **ADR-195 branch.** Rebased onto `b35e470` with no textual conflict. Changes on the branch:
+  - The stale-binding browser stream also ends without `[DONE]` (new commit after B1).
+  - Two B2 tests were updated for Phase 1's stream completion check.
+  - Commit A is now `97d2461` and B2 `97f6dc0`. `--check-planned` still matches exactly (29 paths).
+  - Focused suites: 2,649 passed, 24 skipped. Runner tests at commit A: 211 passed.
+
+  The force-push to draft PR #90 was refused by the session's safety classifier, so the rebased branch is local until the owner decides.
