@@ -18,6 +18,14 @@ from src.application.services.file_storage_policy import StoragePolicyError
 
 logger = logging.getLogger(__name__)
 HEX64 = re.compile(r"[0-9a-f]{64}")
+CONTRACT_FAULTS = (
+    KeyError,
+    TypeError,
+    ValueError,
+    AttributeError,
+    OverflowError,
+    RecursionError,
+)
 
 
 @dataclass(frozen=True)
@@ -51,24 +59,77 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 
-def plan_ingestion(row, owner_id, namespace_id, view, selection):
-    """Recheck trusted ready-source scope and exact D22 identity before making a deterministic plan."""
+def validate_model_contract(selection):
+    """Require the approved selection to match the pinned D22 model contract and report drift as a server fault."""
     try:
-        return _plan_ingestion(row, owner_id, namespace_id, view, selection)
-    except (
-        KeyError,
-        TypeError,
-        ValueError,
-        AttributeError,
-        OverflowError,
-        RecursionError,
+        return _model_contract(selection)
+    except CONTRACT_FAULTS:
+        logger.error("ingestion_model_contract_mismatch")
+        raise StoragePolicyError("ingestion_model_contract_mismatch", 503) from None
+
+
+def _model_contract(selection):
+    """Compare every selected model/runtime/collection field with the deliberate ADR-033 pin and return its fingerprint."""
+    runtime, collection = selection["runtime"], selection["collection"]
+    model = collection["model_fingerprint"]
+    if not HEX64.fullmatch(model) or runtime["fingerprint"] != model:
+        raise ValueError("model")
+    if (
+        selection["candidate"]["repository"] != "Qwen/Qwen3-Embedding-0.6B"
+        or selection["candidate"]["dimension"] != 1024
     ):
+        raise ValueError("selection")
+    if (
+        runtime["device"] != "cpu"
+        or runtime["max_tokens"] != 512
+        or runtime["passage_prefix"] != ""
+        or runtime["distance"] != "Cosine"
+        or runtime["pooling"] != "last_attended_token_float32"
+        or runtime["normalization"] != "l2"
+        or runtime["use_cache"] is not False
+        or runtime["weight_dtype"] != "bfloat16"
+        or runtime["intra_op_threads"] != 2
+        or runtime["inter_op_threads"] != 1
+        or runtime["batch_size"] != 4
+        or runtime["query_prefix"] != selection["candidate"]["query_prefix"]
+    ):
+        raise ValueError("runtime")
+    expected_model = digest(
+        dict(
+            profile=selection["candidate"],
+            format="official-safetensors-bf16-cpu",
+            pooling="last_attended_token_float32",
+            normalization="l2",
+            attention="sdpa",
+            use_cache=False,
+            runtime=runtime["packages"],
+        )
+    )
+    if model != expected_model:
+        raise ValueError("model_contract")
+    if collection["create"]["vectors"]["dense"] != dict(
+        size=1024, distance="Cosine", on_disk=True
+    ):
+        raise ValueError("vector_schema")
+    if collection["collection_name"] != f"la_chunks_{model}_v1":
+        raise ValueError("collection")
+    return model
+
+
+def plan_ingestion(row, owner_id, namespace_id, view, selection):
+    """Recheck the server model contract, then trusted ready-source scope and exact D22 identity, before making a deterministic plan."""
+    model = validate_model_contract(selection)
+    try:
+        return _plan_ingestion(
+            row, owner_id, namespace_id, view, model, selection["collection"]
+        )
+    except CONTRACT_FAULTS:
         logger.warning("ingestion_plan_rejected")
         raise StoragePolicyError("ingestion_input_invalid", 422) from None
 
 
-def _plan_ingestion(row, owner_id, namespace_id, view, selection):
-    """Validate bounded source/chunk/model contracts and construct content-addressed immutable records."""
+def _plan_ingestion(row, owner_id, namespace_id, view, model, collection):
+    """Validate bounded source/chunk contracts against a validated model and construct content-addressed immutable records."""
     if not isinstance(owner_id, UUID) or not isinstance(namespace_id, UUID):
         raise ValueError("scope")
     if row["owner_id"] != owner_id or row["policy_snapshot"].get(
@@ -116,49 +177,6 @@ def _plan_ingestion(row, owner_id, namespace_id, view, selection):
         or len(chunks) + len(empty) > MAX_CHUNKS
     ):
         raise ValueError("chunks")
-    runtime, collection = selection["runtime"], selection["collection"]
-    model = collection["model_fingerprint"]
-    if not HEX64.fullmatch(model) or runtime["fingerprint"] != model:
-        raise ValueError("model")
-    if (
-        selection["candidate"]["repository"] != "Qwen/Qwen3-Embedding-0.6B"
-        or selection["candidate"]["dimension"] != 1024
-    ):
-        raise ValueError("selection")
-    if (
-        runtime["device"] != "cpu"
-        or runtime["max_tokens"] != 512
-        or runtime["passage_prefix"] != ""
-        or runtime["distance"] != "Cosine"
-        or runtime["pooling"] != "last_attended_token_float32"
-        or runtime["normalization"] != "l2"
-        or runtime["use_cache"] is not False
-        or runtime["weight_dtype"] != "bfloat16"
-        or runtime["intra_op_threads"] != 2
-        or runtime["inter_op_threads"] != 1
-        or runtime["batch_size"] != 4
-        or runtime["query_prefix"] != selection["candidate"]["query_prefix"]
-    ):
-        raise ValueError("runtime")
-    expected_model = digest(
-        dict(
-            profile=selection["candidate"],
-            format="official-safetensors-bf16-cpu",
-            pooling="last_attended_token_float32",
-            normalization="l2",
-            attention="sdpa",
-            use_cache=False,
-            runtime=runtime["packages"],
-        )
-    )
-    if model != expected_model:
-        raise ValueError("model_contract")
-    if collection["create"]["vectors"]["dense"] != dict(
-        size=1024, distance="Cosine", on_disk=True
-    ):
-        raise ValueError("vector_schema")
-    if collection["collection_name"] != f"la_chunks_{model}_v1":
-        raise ValueError("collection")
     identity = dict(
         source.identity(),
         sha256=sha,

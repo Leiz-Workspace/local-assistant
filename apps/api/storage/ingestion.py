@@ -11,6 +11,7 @@ from uuid import UUID
 
 from apps.api.services.files import file_io
 from apps.api.services.ingestion import IngestionService
+from src.application.services.ingestion_contract import validate_model_contract
 from src.infrastructure.qdrant_ingestion import QdrantIngestion
 
 logger = logging.getLogger(__name__)
@@ -75,6 +76,8 @@ async def initialize_ingestion_service(files):
     service = None
     try:
         selection, owner, key = await file_io(read_configuration, Path(path))
+        validate_model_contract(selection)
+        logger.info("ingestion_model_contract_validated")
         vectors = QdrantIngestion(selection, owner, key)
         service = IngestionService(files, selection, vectors)
         await service.start()
