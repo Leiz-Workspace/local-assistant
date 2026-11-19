@@ -31,12 +31,13 @@
 4. **The stream verifies completion (C-m2).**
    - `stream()` keeps the last `finish_reason` and the streamed `delta.content`. At `[DONE]` it classifies them with `classify_completion`, the function the non-stream gateway uses.
    - Anything but PASS raises `IncompleteCompletion` (a `GatewayError`) before `[DONE]` is forwarded. That covers `length`, a missing or other `finish_reason`, and an answer with no text.
-   - The browser SSE path then sends `data: {"error":{"code":"incomplete_completion",...}}` and `data: [DONE]`. The deltas already streamed stay on screen, followed by the error.
-   - Other stream failures still end with `inference_unavailable`. A stream cut before `[DONE]` still raises `incomplete_stream`. `llama_gateway.py` is unchanged.
+   - The browser SSE path then sends `data: {"error":{"code":"incomplete_completion",...}}` and ends the stream without `data: [DONE]`.
+   - Why no `[DONE]`: the pinned llama-ui b11557 (`Un.handleStreamResponse` in its bundle) reads only `choices[0]`, timings, progress and the id of each event and ignores an `error` field. On `[DONE]` it saves the text it has as a complete answer. Without `[DONE]` it treats the stream as cut, asks `GET ./v1/stream?conv_id=…&from=N` to resume, gets 403 `unsupported_query`, keeps the partial text and shows its own error dialog, "Stream connection lost and could not be resumed". The harness's error message is not shown by that UI; the code stays in the stream for other readers and the log.
+   - Other stream failures still send `inference_unavailable`, and now also end without `[DONE]`. Before, they were followed by `[DONE]`, so an answer cut by `stream_limit` or the 120-second bound was saved as complete. A native stream cut before `[DONE]` still raises `incomplete_stream`. `llama_gateway.py` is unchanged.
 5. **The harness has its own route class (H18).**
    - `HarnessRoute` now derives from `APIRoute`. It still requires a direct local client and a bearer principal, bounds the body at 262,144 bytes (413 `request_limit`), adds the private no-store headers and `X-Request-ID`, and writes the `product_api_request` audit line.
    - It requires `application/json` only when the request carries a body. A bodiless GET or DELETE without `Content-Type` now succeeds; the CLI may keep sending the header. The body is read before the media check, so an oversized non-JSON body now gets 413 rather than 415.
-   - `POST /api/v1/harness/ui-pairings` moves into the harness router and so gets the same guard, private headers, request identifier and audit line. A JSON body is optional.
+   - `POST /api/v1/harness/ui-pairings` moves into the harness router and so gets the same guard and audit line; its successful responses carry the private headers and request identifier. A JSON body is optional. Its finite operation errors (429 `pairing_capacity`, and 503 `harness_unavailable` when the app has no browser session store) are built by the app's `HarnessError` handler and, as on every other harness route, carry neither.
 
 ## Not changed
 
@@ -50,16 +51,17 @@
   - CLI: errors print the server's code, for example `{"error": "history_unavailable"}` instead of `{"error": "http_503"}`. Exit codes are unchanged.
   - `/chat`: an invalid turn gets 422 `invalid_context_request` instead of 502 `inference_unavailable` (default path). A malformed field elsewhere in the body gets the same finite body instead of FastAPI's echoing detail; the status stays 422.
   - Browser POST routes: a stalled body gets 408 `request_timeout` instead of 500.
-  - Web UI: an answer cut by the output budget ends with the `incomplete_completion` error event instead of looking complete.
-  - Harness API: bodiless GET and DELETE need no `Content-Type`. A body without `application/json` still gets 415. `ui-pairings` responses gain `Cache-Control: private, no-store`, `X-Content-Type-Options: nosniff` and `X-Request-ID`, and the route is audited.
+  - Web UI: a stream that fails, including an answer cut by the output budget, ends with its error event (`incomplete_completion` or `inference_unavailable`) and no `[DONE]`. The pinned UI keeps the partial text and shows its generic "Stream connection lost and could not be resumed" error instead of saving the answer as complete. A complete answer still ends with `[DONE]`.
+  - Harness API: bodiless GET and DELETE need no `Content-Type`. A body without `application/json` still gets 415. Successful `ui-pairings` responses gain `Cache-Control: private, no-store`, `X-Content-Type-Options: nosniff` and `X-Request-ID`, and the route is audited.
 - **No persisted change.** The signed run history, its error codes and the evidence files are unchanged.
 - **Rebase with draft PR #90.**
   - The edits in `routes.py`, `browser.py` and `inference.py` avoid the lines PR #90 changes. `git merge-tree` of this branch with `feat/adr195-special-literals` (`eaff4cb`) reports no conflict.
+  - PR #90 adds a `SpecialLiteralsStale` branch to the browser `events()` that sends `special_literals_stale` followed by `[DONE]`. After the merge that branch should drop its `[DONE]` like the other two error paths, or the pinned UI saves the partial answer as complete.
   - One PR #90 test needs a fixture update after the merge. `tests/test_core_request_builders.py::test_product_inference_stream_body_is_sealed` streams a delta without `finish_reason`, which now raises `IncompleteCompletion`. Its fixture should end with `finish_reason: "stop"`, as llama.cpp does.
 
 ## Rollback
 
-Revert the five `fix:` commits of the branch. No state, migration or configuration is involved; the CLI and the server can be rolled back independently.
+Revert the `fix:` commits of the branch. No state, migration or configuration is involved; the CLI and the server can be rolled back independently.
 
 ## Validation
 
@@ -72,5 +74,7 @@ Run from the worktree with the project virtual environment, `-p no:cacheprovider
   - Route guard: bodiless GET and DELETE without `Content-Type`, 415 for non-JSON bodies on POST and DELETE, the 262,144-byte boundary, `ui-pairings` guard, audit and capacity.
   - `/chat`: every invalid turn shape on both paths without echo or admission, the 0, 256 and 257 turn bounds, the content bound, and the accepted roles reaching inference as plain dictionaries.
   - `bounded_json`: timeout, cancellation and the size boundary, plus a stalled body through the real middleware and handler.
-  - Stream: `stop` shapes that pass; `length`, missing, `tool_calls` and textless endings that fail; a stream without `[DONE]`; the SSE error event through a fake stream and through the real `ProductInference`.
+  - Stream: `stop` shapes that pass; `length`, missing, `tool_calls` and textless endings that fail; a stream without `[DONE]`; the SSE error event with no `[DONE]` after it through a fake stream and through the real `ProductInference`, for both `incomplete_completion` and `inference_unavailable`; 403 for the UI's resume request.
+  - Pinned UI: `test_pinned_ui_shows_a_failed_stream_as_an_error` runs the real `handleStreamResponse` of the receipt-verified b11557 bundle in Node on the harness's own SSE bodies. A complete answer reaches the completion callback; `finish_reason: length` through the real `ProductInference`, a truncated stream and a failed stream reach the error callback after a refused resume; the old body (error event, then `[DONE]`) is recorded as completing. The bundle is a local download (`data/ui/b11557`, not in git), so the test skips where it is absent, as in CI; `AEVRA_PINNED_UI_ASSETS` can point it at another copy.
+- Review round (2026-11-19): `pytest tests/test_product_harness.py tests/test_product_browser_scripts.py tests/test_product_inference.py tests/test_aevra_desktop.py tests/test_product_assets.py tests/test_aevra_branding.py -q -n 2` with `AEVRA_PINNED_UI_ASSETS` set to the main checkout's `data/ui/b11557`: 99 passed, 0 skipped. Without it, the pinned-UI test skips. Mutations checked: putting `[DONE]` back after the error event fails the pinned-UI test and the byte tests; reading `browser_sessions` without the 503 guard fails the new pairing test.
 - The full suite was not run here; CI runs it.
