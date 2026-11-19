@@ -1,7 +1,10 @@
 """Verify default-off ingestion and private approved configuration before any database/vector side effect."""
 
+import asyncio
 import json
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
+from uuid import UUID
 
 import pytest
 
@@ -92,6 +95,92 @@ async def test_enabled_ingestion_requires_existing_source_resources_and_config(
     files = None if case == "files" else SimpleNamespace(closing=case == "closing")
     with pytest.raises(RuntimeError):
         await ingestion.initialize_ingestion_service(files)
+
+
+def startup_probe(monkeypatch, tmp_path, selection):
+    """Enable ingestion with a private config and record which startup resources get constructed."""
+    monkeypatch.setenv("ASSISTANT_INGESTION_ENABLED", "1")
+    monkeypatch.setenv("ASSISTANT_INGESTION_CONFIG_FILE", str(private_config(tmp_path)))
+    owner = UUID("00000000-0000-0000-0000-000000000001")
+    monkeypatch.setattr(
+        ingestion, "read_configuration", lambda path: (selection, owner, "k" * 40)
+    )
+    built = []
+
+    class Vectors:
+        """Record vector client construction without opening a client."""
+
+        def __init__(self, *arguments):
+            """Record that startup reached the vector boundary."""
+            built.append("vectors")
+
+    class Service:
+        """Record service construction and start without a database or worker."""
+
+        def __init__(self, files, selected, vectors):
+            """Record that startup reached the service boundary."""
+            built.append("service")
+            self.start = AsyncMock()
+            self.shutdown = AsyncMock()
+
+    monkeypatch.setattr(ingestion, "QdrantIngestion", Vectors)
+    monkeypatch.setattr(ingestion, "IngestionService", Service)
+    return built
+
+
+def approved_selection():
+    """Load the shipped owner-approved embedding selection."""
+    return json.loads((ingestion.ROOT / "configs/embedding-selected.json").read_text())
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("field", ["intra_op_threads", "batch_size", "missing"])
+async def test_drifted_selection_fails_startup_closed_before_any_resource(
+    monkeypatch, tmp_path, caplog, field
+):
+    """Refuse startup with the coded contract mismatch instead of failing every later request as 422."""
+    selection = approved_selection()
+    if field == "missing":
+        del selection["runtime"]
+    else:
+        selection["runtime"][field] *= 2
+    built = startup_probe(monkeypatch, tmp_path, selection)
+    files = SimpleNamespace(closing=False)
+    with caplog.at_level("INFO"), pytest.raises(RuntimeError):
+        await ingestion.initialize_ingestion_service(files)
+    assert built == []
+    assert "code=ingestion_model_contract_mismatch status=503" in caplog.text
+    assert "ingestion_startup_failed_safely" in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_approved_selection_is_validated_once_before_resources(
+    monkeypatch, tmp_path, caplog
+):
+    """Validate the shipped selection at startup, then construct vectors and the service."""
+    built = startup_probe(monkeypatch, tmp_path, approved_selection())
+    with caplog.at_level("INFO"):
+        service = await ingestion.initialize_ingestion_service(
+            SimpleNamespace(closing=False)
+        )
+    assert built == ["vectors", "service"]
+    service.start.assert_awaited_once()
+    assert caplog.text.count("ingestion_model_contract_validated") == 1
+
+
+@pytest.mark.asyncio
+async def test_cancelled_startup_still_propagates_cancellation(monkeypatch, tmp_path):
+    """Keep cancellation during configuration reading as cancellation, not a startup failure."""
+    built = startup_probe(monkeypatch, tmp_path, approved_selection())
+
+    def cancelled(path):
+        """Simulate cancellation while the configuration is being read."""
+        raise asyncio.CancelledError()
+
+    monkeypatch.setattr(ingestion, "read_configuration", cancelled)
+    with pytest.raises(asyncio.CancelledError):
+        await ingestion.initialize_ingestion_service(SimpleNamespace(closing=False))
+    assert built == []
 
 
 def test_http_feature_off_and_auth_boundaries(auth_settings, monkeypatch):

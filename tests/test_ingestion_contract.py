@@ -17,7 +17,9 @@ from src.application.services.document_chunks import (
 )
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ingestion_contract import (
+    digest,
     plan_ingestion,
+    validate_model_contract,
     validate_source_fence,
     validate_token_counts,
 )
@@ -198,6 +200,144 @@ def test_foreign_tampered_or_model_drift_inputs_fail_closed(field):
         selected["collection"]["collection_name"] = "existing-foreign-collection"
     with pytest.raises(StoragePolicyError):
         plan_ingestion(*args)
+
+
+MODEL_DRIFT = {
+    "repository": ("candidate", "repository", "Qwen/Qwen3-Embedding-4B"),
+    "dimension": ("candidate", "dimension", 768),
+    "device": ("runtime", "device", "cuda"),
+    "max_tokens": ("runtime", "max_tokens", 1024),
+    "passage_prefix": ("runtime", "passage_prefix", "passage: "),
+    "distance": ("runtime", "distance", "Dot"),
+    "pooling": ("runtime", "pooling", "attention_mask_mean"),
+    "normalization": ("runtime", "normalization", "none"),
+    "use_cache": ("runtime", "use_cache", 0),
+    "weight_dtype": ("runtime", "weight_dtype", "float32"),
+    "intra_op_threads": ("runtime", "intra_op_threads", 4),
+    "inter_op_threads": ("runtime", "inter_op_threads", 2),
+    "batch_size": ("runtime", "batch_size", 8),
+    "query_prefix": ("runtime", "query_prefix", "Query:"),
+    "fingerprint": ("runtime", "fingerprint", "b" * 64),
+}
+
+
+def contract_error(selected, args=None):
+    """Plan with a selection and return the coded policy error it raises."""
+    row, owner, namespace, view, _ = args or sample()
+    with pytest.raises(StoragePolicyError) as caught:
+        plan_ingestion(row, owner, namespace, view, selected)
+    return caught.value
+
+
+@pytest.mark.parametrize("field", sorted(MODEL_DRIFT))
+def test_selected_model_drift_is_a_server_fault_not_client_input(field):
+    """Report every pinned model/runtime field that drifts as a 503 server contract mismatch."""
+    selected = sample()[4]
+    section, key, value = MODEL_DRIFT[field]
+    selected[section][key] = value
+    error = contract_error(selected)
+    assert (error.code, error.status_code) == (
+        "ingestion_model_contract_mismatch",
+        503,
+    )
+    with pytest.raises(StoragePolicyError, match="ingestion_model_contract_mismatch"):
+        validate_model_contract(selected)
+
+
+@pytest.mark.parametrize(
+    "fault",
+    ["no_runtime", "no_collection", "fingerprint_type", "packages", "vectors", "none"],
+)
+def test_malformed_selection_fails_closed_as_the_same_server_fault(fault):
+    """Treat a structurally broken selected configuration as server drift, never as 422 client input."""
+    selected = sample()[4]
+    if fault == "no_runtime":
+        del selected["runtime"]
+    elif fault == "no_collection":
+        del selected["collection"]
+    elif fault == "fingerprint_type":
+        selected["collection"]["model_fingerprint"] = 1024
+    elif fault == "packages":
+        selected["runtime"]["packages"]["torch"] = "foreign-version"
+    elif fault == "vectors":
+        selected["collection"]["create"]["vectors"]["dense"]["on_disk"] = False
+    else:
+        selected = None
+    error = contract_error(selected)
+    assert (error.code, error.status_code) == (
+        "ingestion_model_contract_mismatch",
+        503,
+    )
+
+
+def test_self_consistent_foreign_model_is_still_refused_by_the_pinned_literals():
+    """Keep the deliberate third pin: recomputed fingerprint and collection do not admit another repository."""
+    selected = sample()[4]
+    selected["candidate"]["repository"] = "Qwen/Qwen3-Embedding-4B"
+    fingerprint = digest(
+        dict(
+            profile=selected["candidate"],
+            format="official-safetensors-bf16-cpu",
+            pooling="last_attended_token_float32",
+            normalization="l2",
+            attention="sdpa",
+            use_cache=False,
+            runtime=selected["runtime"]["packages"],
+        )
+    )
+    selected["runtime"]["fingerprint"] = fingerprint
+    selected["collection"]["model_fingerprint"] = fingerprint
+    selected["collection"]["collection_name"] = f"la_chunks_{fingerprint}_v1"
+    assert contract_error(selected).code == "ingestion_model_contract_mismatch"
+
+
+def test_approved_selection_validates_once_to_its_fingerprint():
+    """Return the approved fingerprint so startup can validate the shipped selection before any resource."""
+    selected = sample()[4]
+    assert (
+        validate_model_contract(selected)
+        == selected["collection"]["model_fingerprint"]
+        == selected["runtime"]["fingerprint"]
+    )
+    assert plan_ingestion(*sample()).model_fingerprint == validate_model_contract(
+        selected
+    )
+
+
+@pytest.mark.parametrize(
+    "field", ["text", "access", "trust", "chunker", "max_bytes", "scope", "source"]
+)
+def test_genuine_client_input_faults_keep_their_422_code(field):
+    """Keep tampered or malformed source/projection input as 422 ingestion_input_invalid."""
+    row, owner, namespace, view, selected = sample()
+    if field == "text":
+        view["chunks"][0]["text"] = "tampered"
+    elif field == "access":
+        view["access"]["principal_id"] = str(UUID(int=99))
+    elif field == "trust":
+        view["content_trust"] = "trusted"
+    elif field == "chunker":
+        view["chunker"] = "foreign-version"
+    elif field == "max_bytes":
+        view["max_bytes"] = 128
+    elif field == "scope":
+        owner = str(owner)
+    else:
+        row["actual_sha256"] = "not-a-digest"
+        view["sha256"] = "not-a-digest"
+    error = contract_error(selected, (row, owner, namespace, view, selected))
+    assert (error.code, error.status_code) == ("ingestion_input_invalid", 422)
+
+
+def test_server_drift_is_reported_before_client_input_faults():
+    """Name the server fault first when both the selection and the request input are wrong."""
+    row, owner, namespace, view, selected = sample()
+    view["content_trust"] = "trusted"
+    selected["runtime"]["batch_size"] = 8
+    assert (
+        contract_error(selected, (row, owner, namespace, view, selected)).status_code
+        == 503
+    )
 
 
 @pytest.mark.parametrize(
