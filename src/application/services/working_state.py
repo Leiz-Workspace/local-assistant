@@ -116,15 +116,6 @@ STOPWORDS = {
 MARKER_WORDS = {word for marker in MARKER_KIND for word in marker.casefold().split()}
 
 
-class WorkingStateError(Exception):
-    """Carry a finite working-state failure category without any history text."""
-
-    def __init__(self, code, status=422):
-        """Expose only the safe code and HTTP status."""
-        self.code, self.status = code, status
-        super().__init__(code)
-
-
 class StateItem(BaseModel):
     """Validate one carried item returned by an earlier response; it stays untrusted client data."""
 

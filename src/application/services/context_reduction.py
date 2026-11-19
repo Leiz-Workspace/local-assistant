@@ -21,7 +21,6 @@ from src.application.ports.inference import InferenceFailure
 from src.application.services import history_summary
 from src.application.services.working_state import (
     StateItem,
-    WorkingStateError,
     build_state,
     render,
 )
@@ -372,15 +371,12 @@ async def reduce_history(
     budget = None
     built = state_raw = None
     if policy.working_state:
-        try:
-            built = build_state(
-                turns,
-                offset=policy.history_offset,
-                carried=[item.model_dump() for item in policy.carried_state],
-            )
-            state_raw = render(built)
-        except WorkingStateError as error:
-            raise ContextError(error.code, error.status) from None
+        built = build_state(
+            turns,
+            offset=policy.history_offset,
+            carried=[item.model_dump() for item in policy.carried_state],
+        )
+        state_raw = render(built)
     summary_raw = None
     summary_report = None
     first_selection = None
