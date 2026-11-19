@@ -24,6 +24,7 @@ from apps.api.core.conversation_auth import load_principals
 from apps.api.core.model_config import get_model_profile
 from apps.api.voice_routes import local_browser
 from apps.harness.assets import ASSETS, PIN, VERSION
+from apps.harness.inference import IncompleteCompletion
 from apps.branding.identity import brand_index, resource
 
 LOGGER = logging.getLogger(__name__)
@@ -411,6 +412,10 @@ def register_browser(app, *, asset_root=ASSETS):
                             normalized, max_tokens=max_tokens
                         ):
                             yield chunk
+            except IncompleteCompletion:
+                LOGGER.warning("harness_ui_stream_incomplete")
+                yield b'data: {"error":{"code":"incomplete_completion","message":"The answer stopped before it was complete."}}\n\n'
+                yield b"data: [DONE]\n\n"
             except asyncio.CancelledError:
                 LOGGER.info("harness_ui_stream_cancelled")
                 raise

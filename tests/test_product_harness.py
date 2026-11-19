@@ -890,3 +890,97 @@ async def test_stalled_browser_body_returns_408_and_releases_nothing(
         assert "status=408" in caplog.text
         assert inference.calls == []
         assert not app.state.product_harness.admission.locked()
+
+
+class TruncatedStreamInference(FixtureInference):
+    """Send one real chunk, then end the way stream() does when finish_reason is not stop."""
+
+    async def stream(self, messages, **options):
+        """Yield a delta, then raise the incomplete-completion error."""
+        from apps.harness.inference import IncompleteCompletion
+
+        self.calls.append((messages, options))
+        yield b'data: {"choices":[{"delta":{"content":"partial"}}]}\n\n'
+        raise IncompleteCompletion("INCOMPLETE")
+
+
+def test_browser_truncated_stream_reports_incomplete_completion(
+    auth_settings, tmp_path, caplog
+):
+    """A truncated answer ends with the closed incomplete_completion SSE error before DONE, not as a normal answer."""
+    inference = TruncatedStreamInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    with TestClient(
+        app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+    ) as client:
+        pair(client, auth_settings)
+        with caplog.at_level(logging.INFO):
+            response = client.post(
+                "/v1/chat/completions",
+                headers=UI_HEADERS,
+                json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+            )
+        assert response.status_code == 200
+        events = [
+            line[6:] for line in response.text.splitlines() if line.startswith("data: ")
+        ]
+        assert json.loads(events[0])["choices"][0]["delta"]["content"] == "partial"
+        assert json.loads(events[1])["error"]["code"] == "incomplete_completion"
+        assert events[2:] == ["[DONE]"]
+        assert "inference_unavailable" not in response.text
+        assert "harness_ui_stream_incomplete" in caplog.text
+        assert not app.state.product_harness.admission.locked()
+
+
+@pytest.mark.parametrize(
+    ("finish", "complete"), [("stop", True), ("length", False), (None, False)]
+)
+def test_browser_stream_verifies_the_native_finish_reason(
+    auth_settings, tmp_path, finish, complete
+):
+    """Through the real ProductInference, only a stop-finished answer reaches DONE without an error event."""
+    import httpx
+
+    from apps.api.core.model_config import get_model_profile
+    from apps.harness.inference import ProductInference
+
+    model = get_model_profile("core")["model_id"]
+    chunks = [
+        {"choices": [{"index": 0, "delta": {"content": "native"}}]},
+        {"choices": [{"index": 0, "delta": {}, "finish_reason": finish}]},
+    ]
+    body = "".join("data: " + json.dumps(chunk) + "\n\n" for chunk in chunks)
+    body += "data: [DONE]\n\n"
+
+    def respond(request):
+        """Serve preparation calls and one native SSE completion."""
+        path = request.url.path
+        if path == "/v1/models":
+            return httpx.Response(200, json={"data": [{"id": model}]})
+        if path == "/apply-template":
+            return httpx.Response(200, json={"prompt": "templated"})
+        if path == "/tokenize":
+            return httpx.Response(200, json={"tokens": [1, 2, 3]})
+        if path == "/v1/chat/completions":
+            return httpx.Response(
+                200, text=body, headers={"content-type": "text/event-stream"}
+            )
+        raise AssertionError(path)
+
+    inference = ProductInference(transport=httpx.MockTransport(respond))
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    with TestClient(
+        app, base_url="http://127.0.0.1:7090", client=("127.0.0.1", 49001)
+    ) as client:
+        pair(client, auth_settings)
+        response = client.post(
+            "/v1/chat/completions",
+            headers=UI_HEADERS,
+            json={"messages": [{"role": "user", "content": "Hi"}], "stream": True},
+        )
+        assert response.status_code == 200
+        assert "native" in response.text
+        assert response.text.rstrip().endswith("data: [DONE]")
+        assert ('"incomplete_completion"' in response.text) is not complete
+        assert "inference_unavailable" not in response.text
+        assert not app.state.product_harness.admission.locked()
