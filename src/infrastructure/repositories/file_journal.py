@@ -29,7 +29,7 @@ from src.application.services.file_storage_policy import (
 
 logger = logging.getLogger(__name__)
 LOCK_TIMEOUT = "SET LOCAL lock_timeout='5s'"
-LOCK_NOT_AVAILABLE = "55P03"
+LOCK_TIMEOUT_SQLSTATE = "55P03"
 VISIBLE = "state IN ('reserved','receiving','verifying','ready') AND deleted_at IS NULL"
 TERMINAL = frozenset({"deleted", "rejected", "interrupted"})
 SAFE_ERRORS = frozenset(
@@ -109,7 +109,7 @@ class PostgresFileJournal:
                 await session.execute(text(LOCK_TIMEOUT))
                 yield session
         except DBAPIError as error:
-            if getattr(error.orig, "sqlstate", None) != LOCK_NOT_AVAILABLE:
+            if getattr(error.orig, "sqlstate", None) != LOCK_TIMEOUT_SQLSTATE:
                 raise
             logger.warning("file_journal_lock_timeout")
             raise StoragePolicyError("file_storage_unavailable", 503) from None
