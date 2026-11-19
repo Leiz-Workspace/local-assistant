@@ -30,11 +30,11 @@ def preflight_plan(plan):
         ADMISSION.release()
 
 
-def run_worker(command, *, env, input, **options):
-    """Kill and join the entire owned process group on timeout or caller interruption."""
+def run_worker(command, *, cwd, env, input, timeout):
+    """Run one owned worker in cwd with piped text I/O; kill and join its group on timeout or interruption."""
     with subprocess.Popen(
         command,
-        cwd=ROOT,
+        cwd=cwd,
         env=env,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
@@ -43,7 +43,7 @@ def run_worker(command, *, env, input, **options):
         start_new_session=True,
     ) as child:
         try:
-            stdout, stderr = child.communicate(input=input, timeout=90)
+            stdout, stderr = child.communicate(input=input, timeout=timeout)
         except BaseException:
             try:
                 os.killpg(child.pid, signal.SIGKILL)
@@ -85,10 +85,7 @@ def _preflight_plan(plan):
             cwd=ROOT,
             env=env,
             input=data,
-            capture_output=True,
-            text=True,
             timeout=90,
-            check=False,
         )
         if len(result.stdout.encode()) > 16384:
             raise ValueError("preflight_failed")

@@ -505,3 +505,52 @@ def test_cli_working_state_flag_errors(flags, code, monkeypatch, capsys):
     assert cli.main(["chat", "--message", "PRIVATE_INPUT"] + flags) == 2
     error = capsys.readouterr().err
     assert code in error and "PRIVATE_INPUT" not in error
+
+
+def test_unraised_working_state_error_type_is_gone():
+    """No module defines or catches a working-state error that nothing raises."""
+    from src.application.services import context_reduction
+
+    assert not hasattr(module, "WorkingStateError")
+    assert not hasattr(context_reduction, "WorkingStateError")
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("key", ["   ", "\t"])
+async def test_invalid_carried_key_is_rejected_before_any_token_count(key):
+    """A carried key that folds to nothing fails policy validation, never a relabelled context error."""
+    counted = []
+
+    async def counting(messages):
+        """Record any token count; a rejected policy must not reach one."""
+        counted.append(messages)
+        return 0
+
+    item = dict(kind="decision", key=key, text="x", turn=1, sha256="0" * 64)
+    with pytest.raises(ValidationError, match="invalid_state_key"):
+        await reduce_history(
+            conversation([("Decision: A", "ok")]),
+            policy={**STATE, "carried_state": [item]},
+            count_tokens=counting,
+            preset="fast",
+            max_tokens=4096,
+        )
+    assert counted == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("stage", ["build_state", "render"])
+async def test_working_state_failures_propagate_unchanged(monkeypatch, stage):
+    """An unexpected build or render failure keeps its own type instead of becoming a ContextError."""
+    from src.application.services import context_reduction
+
+    class Unexpected(Exception):
+        """Mark a failure that no handler may relabel."""
+
+    def fail(*args, **kwargs):
+        """Fail the patched working-state stage."""
+        raise Unexpected(stage)
+
+    monkeypatch.setattr(context_reduction, stage, fail)
+    with pytest.raises(Unexpected, match=stage):
+        await reduce(conversation([("Decision: A", "ok")]))
