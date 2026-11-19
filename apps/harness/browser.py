@@ -435,7 +435,6 @@ def register_browser(app, *, asset_root=ASSETS):
                     b'data: {"error":{"code":"special_literals_stale",'
                     b'"message":"Local inference is refused for this model."}}\n\n'
                 )
-                yield b"data: [DONE]\n\n"
             except Exception:
                 LOGGER.warning("harness_ui_stream_failed")
                 yield b'data: {"error":{"code":"inference_unavailable","message":"Local inference could not complete."}}\n\n'
