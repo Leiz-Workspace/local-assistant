@@ -755,3 +755,138 @@ def test_ui_pairing_capacity_is_audited(product_client, caplog):
     assert refused.status_code == 429
     assert refused.json() == {"detail": {"code": "pairing_capacity"}}
     assert "route=/api/v1/harness/ui-pairings status=429" in caplog.text
+
+
+def body_request(receive, content_type=b"application/json"):
+    """Build a browser POST request whose body arrives through the given ASGI receive."""
+    from starlette.requests import Request
+
+    scope = {
+        "type": "http",
+        "method": "POST",
+        "path": "/ui/pairings",
+        "headers": [(b"content-type", content_type)],
+        "query_string": b"",
+    }
+    return Request(scope, receive)
+
+
+async def stalled():
+    """Never deliver a body chunk."""
+    await asyncio.Event().wait()
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_body_timeout_is_a_finite_408(monkeypatch):
+    """A body that stalls past the deadline becomes 408 request_timeout, not an escaped TimeoutError."""
+    from fastapi import HTTPException
+
+    from apps.harness import browser
+
+    monkeypatch.setattr(browser, "BODY_SECONDS", 0.05)
+    with pytest.raises(HTTPException) as raised:
+        await browser.bounded_json(body_request(stalled))
+    assert (raised.value.status_code, raised.value.detail) == (
+        408,
+        {"code": "request_timeout"},
+    )
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_cancellation_is_not_a_timeout(monkeypatch):
+    """Cancelling the reader propagates CancelledError instead of turning into a 408."""
+    from apps.harness import browser
+
+    monkeypatch.setattr(browser, "BODY_SECONDS", 30)
+    task = asyncio.create_task(browser.bounded_json(body_request(stalled)))
+    await asyncio.sleep(0.01)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+
+
+@pytest.mark.asyncio
+async def test_bounded_json_size_boundary():
+    """Accept an object of exactly the limit and refuse one byte more with 413."""
+    from fastapi import HTTPException
+
+    from apps.harness.browser import bounded_json
+
+    def once(data):
+        """Deliver data as one complete body."""
+
+        async def receive():
+            """Return the whole body."""
+            return {"type": "http.request", "body": data, "more_body": False}
+
+        return receive
+
+    exact = b'{"code":"' + b"x" * 1013 + b'"}'
+    assert len(exact) == 1024
+    assert await bounded_json(body_request(once(exact)), 1024) == {"code": "x" * 1013}
+    with pytest.raises(HTTPException) as raised:
+        await bounded_json(body_request(once(exact + b" ")), 1024)
+    assert raised.value.status_code == 413
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("path", ["/ui/pairings", "/v1/chat/completions"])
+async def test_stalled_browser_body_returns_408_and_releases_nothing(
+    auth_settings, tmp_path, caplog, monkeypatch, path
+):
+    """Through the real middleware and handler, a stalled body gets 408 request_timeout and no model work."""
+    import httpx
+
+    from apps.harness import browser
+
+    inference = FixtureInference()
+    app = compose(FastAPI(), inference=inference, asset_root=fixture_assets(tmp_path))
+    async with app.router.lifespan_context(app):
+        transport = httpx.ASGITransport(app=app, client=("127.0.0.1", 49001))
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://127.0.0.1:7090"
+        ) as client:
+            response = await client.post(
+                PREFIX + "/ui-pairings", headers=bearer(auth_settings), json={}
+            )
+            code = response.json()["code"]
+            response = await client.post(
+                "/ui/pairings", headers=UI_HEADERS, json={"code": code}
+            )
+            cookie = response.headers["set-cookie"].split(";", 1)[0]
+        monkeypatch.setattr(browser, "BODY_SECONDS", 0.05)
+        scope = {
+            "type": "http",
+            "asgi": {"version": "3.0", "spec_version": "2.3"},
+            "http_version": "1.1",
+            "method": "POST",
+            "scheme": "http",
+            "path": path,
+            "raw_path": path.encode(),
+            "query_string": b"",
+            "root_path": "",
+            "headers": [
+                (b"host", b"127.0.0.1:7090"),
+                (b"origin", b"http://127.0.0.1:7090"),
+                (b"x-harness-ui", b"1"),
+                (b"content-type", b"application/json"),
+                (b"cookie", cookie.encode()),
+            ],
+            "client": ("127.0.0.1", 49001),
+            "server": ("127.0.0.1", 7090),
+        }
+        messages = []
+
+        async def send(message):
+            """Collect response messages."""
+            messages.append(message)
+
+        with caplog.at_level(logging.INFO):
+            await asyncio.wait_for(app(scope, stalled, send), 5)
+        assert messages[0]["status"] == 408
+        body = json.loads(b"".join(m.get("body", b"") for m in messages[1:]))
+        assert body["error"]["code"] == "request_timeout"
+        assert "harness_browser_body_timeout" in caplog.text
+        assert "status=408" in caplog.text
+        assert inference.calls == []
+        assert not app.state.product_harness.admission.locked()

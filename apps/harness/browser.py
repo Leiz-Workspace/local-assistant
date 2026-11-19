@@ -29,6 +29,7 @@ from apps.branding.identity import brand_index, resource
 LOGGER = logging.getLogger(__name__)
 STATIC = Path(__file__).with_name("static")
 COOKIE = "assistant_harness_session"
+BODY_SECONDS = 10
 SECURITY = {
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
@@ -108,11 +109,15 @@ async def bounded_json(request, limit=262144):
     ):
         raise HTTPException(415, detail={"code": "json_required"})
     data = bytearray()
-    async with asyncio.timeout(10):
-        async for chunk in request.stream():
-            data.extend(chunk)
-            if len(data) > limit:
-                raise HTTPException(413, detail={"code": "request_limit"})
+    try:
+        async with asyncio.timeout(BODY_SECONDS):
+            async for chunk in request.stream():
+                data.extend(chunk)
+                if len(data) > limit:
+                    raise HTTPException(413, detail={"code": "request_limit"})
+    except TimeoutError:
+        LOGGER.warning("harness_browser_body_timeout")
+        raise HTTPException(408, detail={"code": "request_timeout"}) from None
 
     def unique(pairs):
         """Reject ambiguous duplicate fields instead of accepting hidden alternate controls."""
