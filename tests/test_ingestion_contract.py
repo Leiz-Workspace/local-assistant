@@ -276,7 +276,9 @@ def test_private_worker_protocol_is_frozen_offline_and_credential_free(monkeypat
             "--frozen",
             "--script",
         ]
-        assert options["timeout"] == 90
+        assert set(options) == {"cwd", "env", "input", "timeout"}
+        assert options["cwd"] == adapter.ROOT and options["timeout"] == 90
+        assert command[5:] == [str(adapter.WORKER)]
         assert not any(
             name in options["env"]
             for name in ("VAULT_TOKEN", "DATABASE_URL", "HF_TOKEN", "HTTP_PROXY")
@@ -393,5 +395,153 @@ def test_timeout_kills_and_joins_owned_process_group(monkeypatch):
     monkeypatch.setattr(adapter.subprocess, "Popen", create)
     monkeypatch.setattr(adapter.os, "killpg", kill)
     with pytest.raises(adapter.subprocess.TimeoutExpired):
-        adapter.run_worker(["controlled"], env={}, input="private-marker")
+        adapter.run_worker(
+            ["controlled"], cwd=adapter.ROOT, env={}, input="private-marker", timeout=90
+        )
     assert events == ["timeout", "killed", "joined", "closed"]
+
+
+class RecordedChild:
+    """Simulate one owned worker and record how it was waited on and cleaned up."""
+
+    pid = 4321
+    returncode = 3
+
+    def __init__(self, events, failure=None):
+        """Keep a shared event ledger and an optional first-wait failure."""
+        self.events, self.failure = events, failure
+
+    def __enter__(self):
+        """Return the synthetic handle for the owned wait."""
+        return self
+
+    def __exit__(self, *args):
+        """Record that the owned handle was closed."""
+        self.events.append(("closed",))
+
+    def communicate(self, **kwargs):
+        """Record each wait, failing the first timed wait when configured."""
+        self.events.append(("communicate", kwargs))
+        if "timeout" in kwargs and self.failure is not None:
+            raise self.failure
+        return "private-stdout", "private-stderr"
+
+
+def test_run_worker_uses_exactly_the_callers_argv_cwd_env_and_timeout(
+    monkeypatch, tmp_path
+):
+    """Pass every caller value through instead of hard-coding cwd or the 90 s timeout."""
+    events, command, env = [], ["worker", "--flag"], {"PATH": "/usr/bin"}
+
+    def create(argv, **kwargs):
+        """Record the spawn request and return a child that exits normally."""
+        events.append(("spawn", argv, kwargs))
+        return RecordedChild(events)
+
+    monkeypatch.setattr(adapter.subprocess, "Popen", create)
+    monkeypatch.setattr(adapter.os, "killpg", lambda *args: events.append(("kill",)))
+    result = adapter.run_worker(
+        command, cwd=tmp_path, env=env, input="stdin-data", timeout=7.5
+    )
+    pipe = adapter.subprocess.PIPE
+    assert events == [
+        (
+            "spawn",
+            command,
+            dict(
+                cwd=tmp_path,
+                env=env,
+                stdin=pipe,
+                stdout=pipe,
+                stderr=pipe,
+                text=True,
+                start_new_session=True,
+            ),
+        ),
+        ("communicate", dict(input="stdin-data", timeout=7.5)),
+        ("closed",),
+    ]
+    assert (result.args, result.returncode, result.stdout, result.stderr) == (
+        command,
+        3,
+        "private-stdout",
+        "private-stderr",
+    )
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        dict(cwd="/", env={}, input="", timeout=90, check=False),
+        dict(cwd="/", env={}, input="", timeout=90, capture_output=True),
+        dict(cwd="/", env={}, input="", timeout=90, text=True),
+        dict(env={}, input="", timeout=90),
+        dict(cwd="/", env={}, input=""),
+    ],
+)
+def test_run_worker_rejects_unused_or_missing_options_before_spawning(
+    monkeypatch, options
+):
+    """Fail loudly on subprocess.run-style options instead of silently ignoring them."""
+    monkeypatch.setattr(
+        adapter.subprocess,
+        "Popen",
+        lambda *args, **kwargs: pytest.fail("worker must not spawn"),
+    )
+    with pytest.raises(TypeError):
+        adapter.run_worker(["controlled"], **options)
+
+
+@pytest.mark.parametrize("vanished", [False, True])
+def test_interrupted_wait_kills_and_joins_owned_process_group(monkeypatch, vanished):
+    """Treat caller interruption like a timeout and still join if the group already exited."""
+    events = []
+
+    def kill(pid, sig):
+        """Record the owned group kill, optionally after the group already exited."""
+        events.append(("kill", pid, sig))
+        if vanished:
+            raise ProcessLookupError(pid)
+
+    monkeypatch.setattr(
+        adapter.subprocess,
+        "Popen",
+        lambda *args, **kwargs: RecordedChild(events, KeyboardInterrupt()),
+    )
+    monkeypatch.setattr(adapter.os, "killpg", kill)
+    with pytest.raises(KeyboardInterrupt):
+        adapter.run_worker(["controlled"], cwd="/", env={}, input="", timeout=5)
+    assert events == [
+        ("communicate", dict(input="", timeout=5)),
+        ("kill", 4321, adapter.signal.SIGKILL),
+        ("communicate", {}),
+        ("closed",),
+    ]
+
+
+def test_run_worker_really_runs_in_cwd_and_honours_a_short_timeout(tmp_path):
+    """Run real children: one reports its cwd and stdin, one outlives the caller's timeout."""
+    import sys
+    import time
+
+    env = {"PATH": "/usr/bin:/bin"}
+    echo = "import os, sys; print(os.getcwd()); print(sys.stdin.read())"
+    result = adapter.run_worker(
+        [sys.executable, "-I", "-c", echo],
+        cwd=tmp_path,
+        env=env,
+        input="stdin-data",
+        timeout=30,
+    )
+    assert result.returncode == 0
+    assert result.stdout.splitlines() == [str(tmp_path.resolve()), "stdin-data"]
+    started = time.monotonic()
+    with pytest.raises(adapter.subprocess.TimeoutExpired):
+        adapter.run_worker(
+            [sys.executable, "-I", "-c", "import time; time.sleep(60)"],
+            cwd=tmp_path,
+            env=env,
+            input="",
+            timeout=0.5,
+        )
+    assert time.monotonic() - started < 20
