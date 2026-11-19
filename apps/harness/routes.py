@@ -32,6 +32,9 @@ from src.application.services.workspace_tool_contracts import (
 
 LOGGER = logging.getLogger(__name__)
 REQUEST_LIMIT = 262144
+# Routes whose bodies carry conversation text answer validation failures with a
+# finite code instead of FastAPI's default detail, which echoes the input.
+PRIVATE_VALIDATION = {"/api/v1/harness/chat": "invalid_context_request"}
 
 
 def json_media(request):
@@ -71,7 +74,14 @@ class HarnessRoute(APIRoute):
                 """Replay only the bounded authenticated complete body to schema validation."""
                 return dict(type="http.request", body=body, more_body=False)
 
-            response = await original(Request(request.scope, receive=replay))
+            try:
+                response = await original(Request(request.scope, receive=replay))
+            except RequestValidationError:
+                code = PRIVATE_VALIDATION.get(self.path)
+                if code is None:
+                    raise
+                LOGGER.warning("product_api_validation_failed code=%s", code)
+                raise ContextError(code) from None
             response.headers.update(PRIVATE_HEADERS)
             return response
 
@@ -175,10 +185,24 @@ class InstallInput(Contract):
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
+class ChatMessage(Contract):
+    """Accept one text turn in the closed role set the shared context composer admits."""
+
+    role: Literal["system", "user", "assistant"]
+    content: str = Field(min_length=1, max_length=REQUEST_LIMIT)
+
+    @model_validator(mode="after")
+    def require_text(self):
+        """Reject whitespace-only turns, which the context composer refuses."""
+        if not self.content.strip():
+            raise ValueError("empty_message")
+        return self
+
+
 class ChatInput(Contract):
     """Accept bounded CLI conversation turns using the shared context composer."""
 
-    messages: list[dict[str, str]] = Field(min_length=1, max_length=256)
+    messages: list[ChatMessage] = Field(min_length=1, max_length=256)
     preset: Literal["fast", "balanced", "deep", "auto", "unlimited"] = "fast"
     context_strategy: Literal["evidence-first", "recent-turns", "strict"] = (
         "evidence-first"
@@ -258,7 +282,7 @@ async def chat(body: ChatInput, request: Request):
         async with asyncio.timeout(120):
             async with service.admission:
                 result, context = await service.inference.complete(
-                    body.messages,
+                    [message.model_dump() for message in body.messages],
                     **options,
                 )
     except ContextError:

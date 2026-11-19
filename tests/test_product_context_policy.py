@@ -336,3 +336,103 @@ def test_malformed_explicit_context_is_422_with_no_payload_echo(
     )
     assert response.status_code == 422
     assert response.json() == {"detail": {"code": "invalid_context_request"}}
+
+
+INVALID_MESSAGES = [
+    dict(role="tool", content="PRIVATE_MALFORMED"),
+    dict(role="function", content="PRIVATE_MALFORMED"),
+    dict(role="User", content="PRIVATE_MALFORMED"),
+    dict(role="user", content=""),
+    dict(role="user", content=" \n\t"),
+    dict(role="user", content="PRIVATE_MALFORMED", name="PRIVATE_MALFORMED"),
+    dict(content="PRIVATE_MALFORMED"),
+    dict(role="user"),
+    dict(role="user", content=["PRIVATE_MALFORMED"]),
+    dict(role="user", content=7),
+    dict(role="user", content=None),
+    "PRIVATE_MALFORMED",
+]
+
+
+@pytest.mark.parametrize("history_policy", [None, {}])
+@pytest.mark.parametrize("message", INVALID_MESSAGES)
+def test_invalid_chat_messages_fail_at_the_boundary(
+    product_client, caplog, message, history_policy
+):
+    """Reject roles and contents the composer refuses with 422 before admission, on both paths, without echo."""
+    client, inference, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    body = dict(messages=[dict(role="user", content="Hello"), message])
+    if history_policy is not None:
+        body["history_policy"] = history_policy
+    response = client.post(PREFIX + "/chat", json=body, headers=bearer(settings))
+    assert response.status_code == 422
+    assert response.json() == {"detail": {"code": "invalid_context_request"}}
+    assert "PRIVATE_MALFORMED" not in response.text
+    assert "PRIVATE_MALFORMED" not in caplog.text
+    assert "route=/api/v1/harness/chat status=422" in caplog.text
+    assert inference.calls == []
+    assert not client.app.state.product_harness.admission.locked()
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        dict(messages=[]),
+        dict(messages=[dict(role="user", content="Hi")] * 257),
+        dict(messages=[dict(role="user", content="Hi")], preset="PRIVATE_MALFORMED"),
+        dict(messages=[dict(role="user", content="Hi")], owner="PRIVATE_MALFORMED"),
+        dict(messages="PRIVATE_MALFORMED"),
+        dict(),
+    ],
+)
+def test_invalid_chat_bodies_have_a_finite_code(product_client, body):
+    """Every /chat validation failure answers with the same finite code and never echoes the input."""
+    client, inference, settings, _ = product_client
+    response = client.post(PREFIX + "/chat", json=body, headers=bearer(settings))
+    assert response.status_code == 422
+    assert response.json() == {"detail": {"code": "invalid_context_request"}}
+    assert "PRIVATE_MALFORMED" not in response.text
+    assert inference.calls == []
+
+
+def test_invalid_input_on_other_routes_keeps_default_validation(product_client):
+    """Only /chat bodies switch to the finite validation code; other routes are unchanged."""
+    client, _, settings, _ = product_client
+    response = client.post(PREFIX + "/runs", json={}, headers=bearer(settings))
+    assert response.status_code == 422
+    assert isinstance(response.json()["detail"], list)
+
+
+def test_chat_accepts_every_role_the_cli_sends(product_client):
+    """System, user and assistant turns, up to 256, reach inference as plain role/content dicts."""
+    client, inference, settings, _ = product_client
+    messages = [dict(role="system", content="Be brief.")]
+    messages += [
+        dict(role="user", content=f"question {number}")
+        if number % 2
+        else dict(role="assistant", content=f"answer {number}")
+        for number in range(1, 256)
+    ]
+    assert len(messages) == 256 and messages[-1]["role"] == "user"
+    response = client.post(
+        PREFIX + "/chat", json=dict(messages=messages), headers=bearer(settings)
+    )
+    assert response.status_code == 200
+    received, options = inference.calls[0]
+    assert received == messages
+    assert all(
+        type(item) is dict and set(item) == {"role", "content"} for item in received
+    )
+    assert options == dict(preset="fast", context_strategy="evidence-first")
+
+
+def test_chat_message_content_bound():
+    """Accept content up to the 256 KiB request bound and refuse one character more."""
+    from pydantic import ValidationError
+
+    from apps.harness.routes import ChatInput
+
+    ChatInput(messages=[dict(role="user", content="x" * 262144)])
+    with pytest.raises(ValidationError):
+        ChatInput(messages=[dict(role="user", content="x" * 262145)])
