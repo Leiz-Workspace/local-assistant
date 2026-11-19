@@ -1,6 +1,7 @@
 """Expose authenticated local run, context and exact-hash skill management contracts."""
 
 import asyncio
+import hashlib
 import logging
 from typing import Literal
 from uuid import UUID, uuid4
@@ -8,9 +9,11 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Request, Response, HTTPException
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from fastapi.exceptions import RequestValidationError
+from fastapi.routing import APIRoute
 
 from apps.api.core.conversation_auth import authenticate_principal
-from apps.api.routes.chat import ProtectedStatelessRoute
+from apps.api.routes.conversations import require_local_client
+from apps.api.routes.chat import PRIVATE_HEADERS
 from apps.harness.service import HarnessError
 from src.application.services.skill_contract import SkillError
 from src.application.services.context_reduction import ContextError, HistoryPolicy
@@ -28,14 +31,55 @@ from src.application.services.workspace_tool_contracts import (
 )
 
 LOGGER = logging.getLogger(__name__)
+REQUEST_LIMIT = 262144
 
 
-class HarnessRoute(ProtectedStatelessRoute):
-    """Audit finite route templates and status codes without logging query strings, payloads or credentials."""
+def json_media(request):
+    """Report whether the declared request media type is JSON."""
+    media = request.headers.get("content-type", "").split(";", 1)[0]
+    return media.strip().lower() == "application/json"
+
+
+class HarnessRoute(APIRoute):
+    """Authenticate, bound and audit product API requests without logging query strings, payloads or credentials."""
+
+    def guarded_handler(self):
+        """Wrap the endpoint with the direct-local principal policy and a bounded JSON body replay."""
+        original = super().get_route_handler()
+
+        async def guarded(request: Request):
+            """Reject non-local, unauthenticated, oversized or non-JSON bodies; bodiless requests need no media type."""
+            await require_local_client(request)
+            await authenticate_principal(request)
+            chunks, length = [], 0
+            async for chunk in request.stream():
+                length += len(chunk)
+                if length > REQUEST_LIMIT:
+                    LOGGER.warning("product_api_request_bytes_rejected")
+                    raise HTTPException(
+                        413, detail=dict(code="request_limit"), headers=PRIVATE_HEADERS
+                    )
+                chunks.append(chunk)
+            body = b"".join(chunks)
+            if body and not json_media(request):
+                LOGGER.warning("product_api_media_rejected")
+                raise HTTPException(
+                    415, detail=dict(code="json_required"), headers=PRIVATE_HEADERS
+                )
+
+            async def replay():
+                """Replay only the bounded authenticated complete body to schema validation."""
+                return dict(type="http.request", body=body, more_body=False)
+
+            response = await original(Request(request.scope, receive=replay))
+            response.headers.update(PRIVATE_HEADERS)
+            return response
+
+        return guarded
 
     def get_route_handler(self):
-        """Wrap the unchanged authentication/body guard with a host-generated request identifier."""
-        guarded = super().get_route_handler()
+        """Wrap the authentication/body guard with a host-generated request identifier."""
+        guarded = self.guarded_handler()
 
         async def audited(request: Request):
             """Log every completed or rejected product operation while preserving its original exception."""
@@ -410,3 +454,16 @@ async def generation_artifact(identifier: UUID, request: Request):
             "X-Content-Type-Options": "nosniff",
         },
     )
+
+
+@router.post("/ui-pairings")
+async def ui_pairing(request: Request):
+    """Mint a one-use browser pairing for the bearer principal without exposing the bearer to the UI."""
+    owner = await authenticate_principal(request)
+    sessions = getattr(request.app.state, "browser_sessions", None)
+    if sessions is None:
+        raise HarnessError("harness_unavailable", 503)
+    digest = hashlib.sha256(
+        request.headers["authorization"].partition(" ")[2].encode()
+    ).hexdigest()
+    return {"code": sessions.pairing(owner, digest), "expires_in_seconds": 60}

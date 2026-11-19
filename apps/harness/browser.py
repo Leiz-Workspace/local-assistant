@@ -20,9 +20,8 @@ from fastapi.responses import (
     StreamingResponse,
 )
 
-from apps.api.core.conversation_auth import authenticate_principal, load_principals
+from apps.api.core.conversation_auth import load_principals
 from apps.api.core.model_config import get_model_profile
-from apps.api.routes.conversations import require_local_client
 from apps.api.voice_routes import local_browser
 from apps.harness.assets import ASSETS, PIN, VERSION
 from apps.branding.identity import brand_index, resource
@@ -154,17 +153,8 @@ def content_policy(index=""):
 def register_browser(app, *, asset_root=ASSETS):
     """Register explicit browser endpoints and assets without proxying native tools or model administration."""
     sessions = BrowserSessions()
+    # The bearer-authenticated pairing route lives in the harness API router.
     app.state.browser_sessions = sessions
-
-    @app.post("/api/v1/harness/ui-pairings")
-    async def pairing(request: Request):
-        """Allow only the unchanged direct-loopback bearer boundary to mint a pairing."""
-        await require_local_client(request)
-        owner = await authenticate_principal(request)
-        digest = hashlib.sha256(
-            request.headers["authorization"].partition(" ")[2].encode()
-        ).hexdigest()
-        return {"code": sessions.pairing(owner, digest), "expires_in_seconds": 60}
 
     @app.middleware("http")
     async def browser_boundary(request, call_next):

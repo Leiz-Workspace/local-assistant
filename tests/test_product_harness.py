@@ -625,3 +625,133 @@ def test_product_route_audit_redacts_tokens_and_query_strings(product_client, ca
     assert "status=422" in text and "status=503" in text
     assert "harness_browser_request operation=properties" in text
     assert "DO_NOT_LOG" not in text and settings["tokens"][0] not in text
+
+
+def test_bodiless_product_requests_need_no_json_media_type(product_client, caplog):
+    """GET and DELETE without a body work without Content-Type, keep auth, private headers and the audit log."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    plain = settings["headers"][0]
+    status = client.get(PREFIX + "/status", headers=plain)
+    assert status.status_code == 200 and status.json()["product"] == "Aevra"
+    assert UUID(status.headers["x-request-id"])
+    assert status.headers["cache-control"] == "private, no-store"
+    assert status.headers["x-content-type-options"] == "nosniff"
+    purged = client.delete(PREFIX + "/context/summaries", headers=plain)
+    assert purged.status_code == 200 and purged.json() == {"purged": 0}
+    assert client.get(PREFIX + "/runs", headers=plain).json() == []
+    text = caplog.text
+    assert "method=GET route=/api/v1/harness/status status=200" in text
+    assert "method=DELETE route=/api/v1/harness/context/summaries status=200" in text
+    assert client.get(PREFIX + "/status").status_code == 401
+    assert client.delete(PREFIX + "/context/summaries").status_code == 401
+    assert (
+        client.get(
+            PREFIX + "/status", headers={**plain, "Origin": "http://127.0.0.1:7090"}
+        ).status_code
+        == 403
+    )
+    assert (
+        client.get(
+            PREFIX + "/status", headers={**plain, "X-Forwarded-For": "192.0.2.1"}
+        ).status_code
+        == 403
+    )
+
+
+@pytest.mark.parametrize(
+    "headers", [{"Content-Type": "text/plain"}, {}, {"Content-Type": "application/xml"}]
+)
+def test_product_request_bodies_still_require_json(product_client, headers):
+    """A request that carries a body must declare application/json, whatever the method."""
+    client, inference, settings, _ = product_client
+    body = json.dumps({"workspace_id": str(uuid4()), "task": "Explain"}).encode()
+    for method, path in (
+        ("POST", "/runs"),
+        ("POST", "/chat"),
+        ("DELETE", "/context/summaries"),
+    ):
+        response = client.request(
+            method,
+            PREFIX + path,
+            headers={**settings["headers"][0], **headers},
+            content=body,
+        )
+        assert response.status_code == 415, (method, path)
+        assert response.json() == {"detail": {"code": "json_required"}}
+        assert response.headers["cache-control"] == "private, no-store"
+    assert inference.calls == []
+    assert (
+        client.post(PREFIX + "/runs", content=body, headers=headers).status_code == 401
+    )
+    response = client.post(
+        PREFIX + "/runs",
+        headers={
+            **settings["headers"][0],
+            "Content-Type": "Application/JSON; charset=utf-8",
+        },
+        content=body,
+    )
+    assert response.status_code == 200 and response.json()["state"] == "created"
+
+
+def test_product_request_body_limit_boundary(product_client):
+    """Accept a body of exactly 262144 bytes for validation and refuse one byte more with 413."""
+    client, inference, settings, _ = product_client
+    prefix = b'{"workspace_id":"' + str(uuid4()).encode() + b'","task":"'
+    for size, status in ((262144, 422), (262145, 413)):
+        body = prefix + b"x" * (size - len(prefix) - 2) + b'"}'
+        assert len(body) == size
+        response = client.post(PREFIX + "/runs", headers=bearer(settings), content=body)
+        assert response.status_code == status, size
+    assert response.json() == {"detail": {"code": "request_limit"}}
+    assert inference.calls == []
+
+
+def test_ui_pairing_route_is_guarded_and_audited_by_the_harness_router(
+    product_client, caplog
+):
+    """The pairing mint uses the harness route guard and audit, with or without a JSON body."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    minted = client.post(path, headers=bearer(settings), json={})
+    assert minted.status_code == 200 and minted.json()["expires_in_seconds"] == 60
+    assert UUID(minted.headers["x-request-id"])
+    assert minted.headers["cache-control"] == "private, no-store"
+    assert "method=POST route=/api/v1/harness/ui-pairings status=200" in caplog.text
+    bodiless = client.post(path, headers=settings["headers"][0])
+    assert bodiless.status_code == 200 and bodiless.json()["code"]
+    assert client.post(path, json={}).status_code == 401
+    assert "route=/api/v1/harness/ui-pairings status=401" in caplog.text
+    assert (
+        client.post(
+            path,
+            headers={**bearer(settings), "Origin": "http://127.0.0.1:7090"},
+            json={},
+        ).status_code
+        == 403
+    )
+    refused = client.post(
+        path,
+        headers={**settings["headers"][0], "Content-Type": "text/plain"},
+        content=b"{}",
+    )
+    assert refused.status_code == 415
+    code = client.post(path, headers=bearer(settings), json={}).json()["code"]
+    exchanged = client.post("/ui/pairings", headers=UI_HEADERS, json={"code": code})
+    assert exchanged.status_code == 200
+    assert settings["tokens"][0] not in caplog.text
+
+
+def test_ui_pairing_capacity_is_audited(product_client, caplog):
+    """The 33rd live pairing is refused with 429 pairing_capacity and logged by the route audit."""
+    client, _, settings, _ = product_client
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    for _ in range(32):
+        assert client.post(path, headers=bearer(settings), json={}).status_code == 200
+    refused = client.post(path, headers=bearer(settings), json={})
+    assert refused.status_code == 429
+    assert refused.json() == {"detail": {"code": "pairing_capacity"}}
+    assert "route=/api/v1/harness/ui-pairings status=429" in caplog.text
