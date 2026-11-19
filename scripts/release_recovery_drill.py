@@ -21,6 +21,28 @@ CONFIGS = (
     "configs/llama-cpp-commit.txt",
 )
 PREFIX = "la_restore_probe_"
+CHECK_CODES = frozenset(
+    {
+        "recovery_vector_export_incomplete",
+        "recovery_vector_restore_mismatch",
+        "recovery_vector_index_mismatch",
+        "recovery_config_restore_mismatch",
+        "recovery_object_restore_mismatch",
+        "recovery_source_changed_during_backup",
+        "recovery_original_changed",
+        "recovery_schema_revision_changed",
+        "recovery_probe_database_retained",
+    }
+)
+
+
+def require(condition, code):
+    """Fail an acceptance check with a closed code; unlike assert, it still runs under python -O."""
+    if code not in CHECK_CODES:
+        raise ValueError("recovery_check_code_unknown")
+    if not condition:
+        logger.error("recovery_check_failed code=%s", code)
+        raise RuntimeError(code)
 
 
 def digest(raw):
@@ -108,7 +130,10 @@ def vector_drill(client, root):
             "/collections/" + names[0] + "/points/scroll",
             payload=dict(limit=4, with_payload=True, with_vector=True),
         )
-        assert original["next_page_offset"] is None and len(original["points"]) == 3
+        require(
+            original["next_page_offset"] is None and len(original["points"]) == 3,
+            "recovery_vector_export_incomplete",
+        )
         exported = dict(
             description="Authored storage canaries, not production embedding vectors.",
             schema=schema,
@@ -130,17 +155,18 @@ def vector_drill(client, root):
             "/collections/" + names[1] + "/points/scroll",
             payload=dict(limit=4, with_payload=True, with_vector=True),
         )
-        assert restored == original
+        require(restored == original, "recovery_vector_restore_mismatch")
         index_schemas = [
             qrequest(client, "GET", "/collections/" + name)["payload_schema"]
             for name in names
         ]
-        assert index_schemas[0] == index_schemas[1] and set(index_schemas[0]) == {
-            "owner_id",
-            "source_sha256",
-        }
+        require(
+            index_schemas[0] == index_schemas[1]
+            and set(index_schemas[0]) == {"owner_id", "source_sha256"},
+            "recovery_vector_index_mismatch",
+        )
         for value in index_schemas[0].values():
-            assert value["data_type"] == "keyword"
+            require(value["data_type"] == "keyword", "recovery_vector_index_mismatch")
         private_write(
             root / "vector-canary-restored.json",
             json.dumps(
@@ -185,7 +211,10 @@ def config_object_drill(root):
         raw = source.read_bytes()
         private_write(backup / str(index), raw)
         private_write(restored / str(index), (backup / str(index)).read_bytes())
-        assert raw == (restored / str(index)).read_bytes() == source.read_bytes()
+        require(
+            raw == (restored / str(index)).read_bytes() == source.read_bytes(),
+            "recovery_config_restore_mismatch",
+        )
         manifest[name] = digest(raw)
     blob = b"D84 authored synthetic object payload.\n"
     private_write(root / "object-source.bin", blob)
@@ -202,7 +231,10 @@ def config_object_drill(root):
     private_write(
         root / "object-restored.bin", (root / "object-backup.bin").read_bytes()
     )
-    assert digest((root / "object-restored.bin").read_bytes()) == metadata["sha256"]
+    require(
+        digest((root / "object-restored.bin").read_bytes()) == metadata["sha256"],
+        "recovery_object_restore_mismatch",
+    )
     logger.info("recovery_config_object_restore_verified configs=%d", len(manifest))
     return dict(
         config_sha256=manifest,
@@ -239,9 +271,10 @@ def drill(root, key):
     )
     if archive.stat().st_size > 64 * 1024 * 1024:
         raise RuntimeError("recovery_archive_limit")
-    assert (
+    require(
         operator.fingerprint("local_assistant") == rows
-        and operator.security_fingerprint("local_assistant") == security
+        and operator.security_fingerprint("local_assistant") == security,
+        "recovery_source_changed_during_backup",
     )
     operator.verify_restore(archive, rows, security)
     operator.save_manifest()
@@ -254,22 +287,25 @@ def drill(root, key):
     ) as client:
         vectors = vector_drill(client, root)
     config_object = config_object_drill(root)
-    assert (
+    require(
         operator.fingerprint("local_assistant") == rows
-        and operator.security_fingerprint("local_assistant") == security
+        and operator.security_fingerprint("local_assistant") == security,
+        "recovery_original_changed",
     )
-    assert (
+    require(
         operator.sql(
             "local_assistant", "SELECT version_num FROM assistant.alembic_version"
         )
-        == revision
+        == revision,
+        "recovery_schema_revision_changed",
     )
-    assert (
+    require(
         operator.sql(
             "postgres",
             "SELECT count(*) FROM pg_database WHERE datname LIKE 'la_restore_probe_%'",
         )
-        == "0"
+        == "0",
+        "recovery_probe_database_retained",
     )
     result = dict(
         description="Actual same-cluster isolated restore; existing roles assumed. No original writes, restart, off-host/failover/RPO/RTO certification.",
