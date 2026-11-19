@@ -13,7 +13,13 @@ from src.application.ports.research import ResearchQuery, ResearchResult, Resear
 from src.application.ports.web_fetch import PublicResponse
 from src.application.services.web_evidence import WebEvidenceService
 from src.application.services.web_evidence_policy import WebEvidenceError
-from src.infrastructure.publisher_links import observed_link, rfc_url
+from src.application.services.web_fetch_policy import WebFetchError
+from src.infrastructure.publisher_links import (
+    PublisherCapture,
+    PublisherSource,
+    observed_link,
+    rfc_url,
+)
 
 PARENT = "https://www.rfc-editor.org/info/rfc9112/"
 CHILD = "https://www.rfc-editor.org/rfc/rfc9112.html"
@@ -205,3 +211,108 @@ async def test_anchor_only_issuer_is_explicit_and_default_issuer_keeps_original_
             resolver.evidence.validate_source(altered, PARENT, "static")
     await default.shutdown()
     await resolver.shutdown()
+
+
+class RedirectingClient(Client):
+    """Answer the child URL with one redirect to an authored location."""
+
+    def __init__(self, location):
+        """Keep the authored redirect target beside the base client's ledger."""
+        super().__init__()
+        self.location = location
+
+    async def get(self, url):
+        """Redirect the child once and serve every other URL like the base client."""
+        if url != CHILD:
+            return await super().get(url)
+        self.calls.append(url)
+        return PublicResponse(301, (("location", self.location),), b"", "8.8.8.8")
+
+
+@pytest.mark.asyncio
+async def test_source_reads_parent_as_anchor_only_binding_without_capture():
+    """A configured parent is fetched once through the anchor-only path and binds the observed child."""
+    client = Client()
+    source = PublisherSource(9112, client)
+    observation = await source.read(PARENT, "static")
+    assert client.calls == [PARENT]
+    assert observation.page.extractor_version == "publisher-anchors-utf8-v1"
+    final, child, sha, anchors = source.parent_binding
+    assert (final, child, sha) == (PARENT, CHILD, hashlib.sha256(BODY).hexdigest())
+    assert anchors[0][:2] == ("/rfc/rfc9112.html", CHILD)
+
+
+@pytest.mark.asyncio
+async def test_source_reads_child_without_touching_the_parent_binding(caplog):
+    """A configured child goes through the capture, keeps the binding unset and logs the same event."""
+    client = Client()
+    source = PublisherSource(9112, client)
+    with caplog.at_level("INFO", logger="src.infrastructure.publisher_links"):
+        observation = await source.read(CHILD, "static")
+    assert client.calls == [CHILD]
+    assert observation.page.final_url == CHILD
+    assert observation.page.extractor_version == "static-html-utf8-v1"
+    assert source.parent_binding is None
+    assert "publisher_original_source_read parent=False" in caplog.messages
+
+
+@pytest.mark.asyncio
+async def test_child_redirect_to_the_other_publisher_host_is_followed():
+    """Both configured publisher hosts are valid child hops."""
+    other = "https://rfc-editor.org/rfc/rfc9112.html"
+    client = RedirectingClient(other)
+    source = PublisherSource(9112, client)
+    observation = await source.read(CHILD, "static")
+    assert client.calls == [CHILD, other]
+    assert observation.page.final_url == other
+    assert source.parent_binding is None
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "location",
+    [
+        PARENT,
+        "/info/rfc9112",
+        "https://www.rfc-editor.org/rfc/rfc9111.html",
+        "https://example.org/rfc/rfc9112.html",
+        CHILD + "?token=x",
+    ],
+)
+async def test_child_redirect_outside_the_full_text_path_never_reaches_transport(
+    location,
+):
+    """The capture refuses a parent, another RFC, another host or a query before any request."""
+    client = RedirectingClient(location)
+    source = PublisherSource(9112, client)
+    with pytest.raises(WebFetchError):
+        await source.read(CHILD, "static")
+    assert client.calls == [CHILD]
+    assert source.parent_binding is None
+
+
+@pytest.mark.asyncio
+async def test_capture_checks_scope_first_and_keeps_no_body():
+    """The capture validates before delegating and returns the response without retaining it."""
+    client = Client()
+    capture = PublisherCapture(client, 9112)
+    with pytest.raises(ValueError, match="publisher_scope"):
+        await capture.get(PARENT)
+    assert client.calls == []
+    response = await capture.get(CHILD)
+    assert response.status == 200 and client.calls == [CHILD]
+    assert vars(capture) == dict(client=client, number=9112)
+
+
+@pytest.mark.asyncio
+async def test_cancelled_child_read_joins_the_held_transport():
+    """Cancelling a child read propagates and the held transport call exits."""
+    client = Client()
+    client.hold = True
+    source = PublisherSource(9112, client)
+    task = asyncio.create_task(source.read(CHILD, "static"))
+    await asyncio.wait_for(client.entered.wait(), 2)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    assert client.exited.is_set() and source.parent_binding is None
