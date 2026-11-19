@@ -765,6 +765,21 @@ def test_ui_pairing_capacity_is_audited(product_client, caplog):
     assert "route=/api/v1/harness/ui-pairings status=429" in caplog.text
 
 
+def test_ui_pairing_without_browser_sessions_is_a_finite_503(product_client, caplog):
+    """Without the browser session store the pairing mint is 503 harness_unavailable, still guarded and audited."""
+    client, _, settings, _ = product_client
+    del client.app.state.browser_sessions
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    path = PREFIX + "/ui-pairings"
+    assert client.post(path, json={}).status_code == 401
+    refused = client.post(path, headers=bearer(settings), json={})
+    assert refused.status_code == 503
+    assert refused.json() == {"detail": {"code": "harness_unavailable"}}
+    assert "route=/api/v1/harness/ui-pairings status=401" in caplog.text
+    assert "route=/api/v1/harness/ui-pairings status=503" in caplog.text
+    assert settings["tokens"][0] not in caplog.text
+
+
 def body_request(receive, content_type=b"application/json"):
     """Build a browser POST request whose body arrives through the given ASGI receive."""
     from starlette.requests import Request
