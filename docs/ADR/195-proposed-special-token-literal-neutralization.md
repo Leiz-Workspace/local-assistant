@@ -426,3 +426,13 @@ The owner approved this ADR on 2026-11-13 ("Duyệt theo khuyến nghị") with 
   - Non-inferiority of E_B to P_B is not shown at the 0.25 margin (verdict `not_non_inferior`): the Tango upper bound is 0.3539, from one E-only input.
   - So the fix label is FIX_NOT_SUPPORTED, and the recommended merge mapping gives **NO_MERGE**.
 - **Consequence.** Draft PR #90 is not merged, and CONTROL_TOKENS_PARSED (HAR-006 v2 follow-up 1) stays open. The protocol forbids re-running v3, changing the margin or dropping an input after the fact. Any further step is the owner's decision: accepting NO_MERGE, merging against the recommendation, a new pre-registered measurement with a fresh corpus, or another design from Alternatives or decision 9.
+
+- **HAR-006 v4 (draft, 2026-11-21).** The owner chose to draft a new pre-registered measurement ("Soạn protocol v4"): [HAR006_V4_PROTOCOL.md](../HAR006_V4_PROTOCOL.md). It is a design only; nothing is implemented or run. The design:
+  - a fresh corpus written by a template author who has not seen v3, with 192 seed-matched cases each for the forged-literal and USER_DEFINED-tag families and 264 literal-as-data cases;
+  - one scored draw per case at temperature 0.7;
+  - a per-answer non-inferiority margin of 0.10 against the strip twin;
+  - exact clustered Tango decisions;
+  - a monotone merge mapping with a benefit gate and harm tests;
+  - a window authorization bound to the measured SHAs.
+
+  Its section 18 lists the amendments to this ADR's Validation section that the owner would approve with decision 6. Owner decisions V4-1 to V4-21 are open.

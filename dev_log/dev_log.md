@@ -6591,3 +6591,25 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - PR #90 is not merged, and CONTROL_TOKENS_PARSED stays open. The owner chooses: accept NO_MERGE, merge against the recommendation, run a new pre-registered measurement or take another design.
   - The rebased branch (`97d2461`…`97f6dc0`) exists only locally. PR #90 holds the pre-rebase `eaff4cb`. The runner and protocol are byte-identical there, but the measured B2 also holds `c6b7c29` and two updated tests.
   - D87 did not run. It needs an idle host with the runners paused.
+
+## 2026-11-21 — HAR-006 v4 protocol drafted for ADR-195 (design only, awaiting owner decisions)
+
+- **Owner request:** "Soạn protocol v4", after HAR-006 v3 returned FIX_NOT_SUPPORTED (recommended NO_MERGE).
+- **Draft:** [HAR006_V4_PROTOCOL.md](../docs/HAR006_V4_PROTOCOL.md). Nothing is implemented and no CORE window has run.
+- **How it was made.**
+  - A design workflow of 7 agents:
+    - three analysts: a v3 weakness inventory, power and operating characteristics, and fresh corpus design;
+    - three independent designs: rigor-first, minimal-change and product-realism-first;
+    - a judge that scored the three, recomputed the key numbers and synthesized one design.
+  - Then four review rounds. A first three-lens review found 41 findings (3 blocking). Re-verification found 28, then 24, then 14; all were resolved in successive drafts.
+- **Main design choices:**
+  - one scored draw per case at temperature 0.7, with seeds shared by twins and windows;
+  - 192 cases each for the forged-literal (F) and USER_DEFINED-tag (U) families, over 48 genre templates in EN and VI, plus 264 literal-as-data cases covering all 33 literals;
+  - a per-answer margin of 0.10 against the strip twin, with exact Tango decisions at a fixed design effect of 1.5 and z 2.0;
+  - a benefit gate (HOLD if the fix is not shown to change behaviour), harm tests and a monotone merge mapping;
+  - a T-RB sweep of 33 literals over 12 paths with a coverage gate, and a literal smoke step;
+  - an authorization bound to the A' and B2' SHAs, a corpus seed derived from the decision-7 reply, sealed restarts and closure records.
+- **Why the margin changed.** v3's design was fragile: a fix at the plain-text floor failed often at 12 pairs, and the old mapping could give MERGE with no behavioural test.
+- **Waiting for the owner.**
+  - Decisions V4-1 to V4-21 (section 11).
+  - After approval: about 11.5 agent-days of implementation and blind corpus authoring, then the approval packet and the SHA-bound decision-7 reply, then the windows. The windows need the CI runners and the shared CORE stopped.
