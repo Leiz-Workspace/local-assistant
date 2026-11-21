@@ -6613,3 +6613,17 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
 - **Waiting for the owner.**
   - Decisions V4-1 to V4-21 (section 11).
   - After approval: about 11.5 agent-days of implementation and blind corpus authoring, then the approval packet and the SHA-bound decision-7 reply, then the windows. The windows need the CI runners and the shared CORE stopped.
+
+## 2026-11-21 — HAR-006 v4: decision 6 approved; v3 tags pushed; branch rebased
+
+- **Owner decision:** "Duyệt theo khuyến nghị". V4-1 to V4-21 of the [v4 protocol](../docs/HAR006_V4_PROTOCOL.md) are approved as recommended. This settles decision 6 for v4 and authorizes the implementation, the v3 tags, the new branch and the draft PR. No window is authorized.
+- **v3 tags** (protocol section 2.1, step 0), annotated and pushed to origin:
+  - `har006-v3/A` points to `97d2461`;
+  - `har006-v3/B2` points to `97f6dc0`.
+- **Rebase.**
+  - The ADR-195 branch was rebased onto `develop` `82121af` as the local branch `feat/adr195-har006-v4`, and the rebase had no conflict.
+  - `git range-diff` shows the four B1/B2 commits unchanged.
+  - The A..B2 patch is byte-identical to the measured v3 patch, and the planned set is still 29 paths.
+  - The old branch and PR #90 are untouched until the v4 draft PR replaces it.
+- **Next:** the decision module and OC verifier, the corpus spec and generator, the blind template authoring, the runner, the driver and the tests. Then come the software gates, the A'/B2' freeze and the approval packet for decision 7.
+
