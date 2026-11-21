@@ -6562,3 +6562,32 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - Focused suites: 2,649 passed, 24 skipped. Runner tests at commit A: 211 passed.
 
   The force-push to draft PR #90 was refused by the session's safety classifier, so the rebased branch is local until the owner decides.
+
+## 2026-11-21 — HAR-006 v3 for ADR-195: both CORE windows run, FIX_NOT_SUPPORTED, recommended NO_MERGE
+
+- **Owner requests.**
+  - 2026-11-17: approved running both windows and then D87, with margin 0.25, temperature 0.7 with seeds, and the corpus and oracle as in the protocol. Then paused the work while the host was busy.
+  - 2026-11-21: "Chạy ngay".
+- **Run** ([result](../docs/HAR006_V3_RESULT.md), [receipt](../docs/evidence/har006-v3-20261121.json)).
+  - The driver waited for an idle host. The threshold was 2.0 busy CPUs instead of D87's 0.5; the protocol fixes no number.
+  - It started CORE with the unchanged `scripts/start-core.py` (PID 2486226) and ran Window A from a worktree at `97d2461`, then Window B at `97f6dc0`.
+  - Each window completed 232/232 cells: A in 423 s, B in 420 s.
+  - CORE was then stopped, and port 8080 is free.
+  - `--check-planned 97d2461 97f6dc0` was re-run from the B2 worktree before Window A and matched exactly.
+  - Provenance and preflight were OK in both windows. The runner was byte-identical and the A..B2 diff was exactly the 29 planned paths.
+- **Outcome.**
+  - T-RB: CONTROL_TOKENS_PARSED in A (excess 176 in 55 bodies), NO_EXCESS in B.
+  - STRUCTURAL_FIXED holds: B sent 0 pinned literals in 1,759 bodies, A sent 2,540. IDENTITY holds on 110 benign inputs.
+  - E_SUPPORTED: 6/12 inputs violated in A, 1/12 in B; b = 5, c = 0, p = 0.031.
+  - S_UNDERPOWERED (5/12, then 2/12) and U_UNDERPOWERED (3/6 in both windows). P was 0/12 in both.
+  - Non-inferiority of E_B to P_B is not shown: Tango [−0.179, 0.354], and the upper bound is not below 0.25 because of one E-only input (e05, 2 of 4 draws). So the label is **FIX_NOT_SUPPORTED** and the recommended mapping is **NO_MERGE**.
+  - Literal data, descriptive: L held on 2/16 inputs in A and 12/16 in B.
+- **Independent checks** (one workflow, 6 agents).
+  - `--rescore` by an agent that did not write the scorer: RESCORE_VERIFIED, 0 mismatches.
+  - A clean-room rescore that never opened the runner: identical counts, flags, Tango interval and labels.
+  - Two agents read every E/P/S/U answer by hand: 0 false positives and 0 false negatives.
+  - Two adversarial reviewers (statistics; protocol validity and mapping) could not refute the verdict. Their minor notes are in the result.
+- **Not done, waiting for the owner.**
+  - PR #90 is not merged, and CONTROL_TOKENS_PARSED stays open. The owner chooses: accept NO_MERGE, merge against the recommendation, run a new pre-registered measurement or take another design.
+  - The rebased branch (`97d2461`…`97f6dc0`) exists only locally. PR #90 holds the pre-rebase `eaff4cb`. The runner and protocol are byte-identical there, but the measured B2 also holds `c6b7c29` and two updated tests.
+  - D87 did not run. It needs an idle host with the runners paused.
