@@ -2,8 +2,8 @@
 
 **Purpose:** Fix, before any CORE call and before any v4 code or corpus exists, how [ADR-195](ADR/195-proposed-special-token-literal-neutralization.md) is measured again on the approved CORE after [HAR-006 v3](HAR006_V3_RESULT.md) returned FIX_NOT_SUPPORTED (recommended NO_MERGE). v3's own rules forbid re-running it, changing its margin or dropping inputs, so v4 has a fresh corpus, new owner decisions 6 and 7, and the design changes listed in section 0. Date: 2026-11-21.
 
-**Status: DRAFT, awaiting the owner's decision-6 reply (section 11).**
-- Nothing here is implemented and nothing has run. The runner, decision module, corpus generator, driver and tests do not exist yet.
+**Status: DRAFT; decision 6 approved on 2026-11-21 ("Duyệt theo khuyến nghị": V4-1 to V4-21 as recommended); implementation in progress.**
+- Decision 6 is settled; decision 7 (the windows) is not. No CORE window has run. The v3 tags `har006-v3/A` and `har006-v3/B2` were pushed on 2026-11-21 (step 0 of section 2.1). The runner, decision module, corpus generator, driver and tests are being written.
 - After the owner's decision-6 reply, the work proceeds in this order:
   1. tagging the measured v3 commits (section 2.1, step 0);
   2. implementation and the blind corpus authoring (section 4.8);

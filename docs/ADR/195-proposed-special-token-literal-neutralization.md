@@ -435,4 +435,4 @@ The owner approved this ADR on 2026-11-13 ("Duyệt theo khuyến nghị") with 
   - a monotone merge mapping with a benefit gate and harm tests;
   - a window authorization bound to the measured SHAs.
 
-  Its section 18 lists the amendments to this ADR's Validation section that the owner would approve with decision 6. Owner decisions V4-1 to V4-21 are open.
+  Its section 18 lists the amendments to this ADR's Validation section that come with decision 6. On 2026-11-21 the owner approved V4-1 to V4-21 as recommended ("Duyệt theo khuyến nghị"). That settles decision 6 for v4 and authorizes the implementation, the v3 tags, the new branch and the draft PR. It authorizes no window: decision 7 comes later, bound to the measured SHAs.
