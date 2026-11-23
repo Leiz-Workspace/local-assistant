@@ -5,7 +5,7 @@ out="${2:-dist}"
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
-pkg="aevra-desktop"
+pkg="aevra-linux-amd64"
 base="$work/${pkg}_${version}_amd64"
 mkdir -p -m 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/DEBIAN/control" <<CTRL
@@ -24,6 +24,13 @@ if [[ ! -x "$root/.venv/bin/python" ]]; then
   exit 2
 fi
 cp -a "$root/apps" "$root/src" "$root/.venv" "$base/usr/lib/aevra/"
+# Replace the build-machine Python symlink with a real interpreter binary.
+python_target="$(readlink -f "$root/.venv/bin/python")"
+if [[ ! -x "$python_target" ]]; then
+  echo "Could not resolve the build Python binary" >&2
+  exit 2
+fi
+cp --remove-destination "$python_target" "$base/usr/lib/aevra/.venv/bin/aevra-python"
 # uv creates a private venv; normalize it for the unprivileged desktop user.
 find "$base/usr/lib/aevra/.venv" -type d -exec chmod 0755 {} +
 find "$base/usr/lib/aevra/.venv" -type f -exec chmod 0644 {} +
@@ -40,7 +47,7 @@ chmod 0755 "$base/DEBIAN" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
-exec /usr/lib/aevra/.venv/bin/python /usr/lib/aevra/apps/desktop/main.py "$@"
+exec /usr/lib/aevra/.venv/bin/aevra-python /usr/lib/aevra/apps/desktop/main.py "$@"
 LAUNCH
 chmod 0755 "$base/usr/bin/aevra-desktop"
 cat > "$base/usr/share/applications/aevra.desktop" <<DESKTOP
@@ -55,5 +62,6 @@ Categories=Utility;
 DESKTOP
 mkdir -p "$out"
 chmod 0644 "$base/DEBIAN/control" "$base/usr/share/applications/aevra.desktop"
-dpkg-deb --build --root-owner-group "$base" "$out/${pkg}_${version}_amd64.deb" >/dev/null
-sha256sum "$out/${pkg}_${version}_amd64.deb"
+output="$out/${pkg}_v${version}.deb"
+dpkg-deb --build --root-owner-group "$base" "$output" >/dev/null
+sha256sum "$output"
