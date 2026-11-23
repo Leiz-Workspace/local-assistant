@@ -278,7 +278,12 @@ jobs:
           name="local-assistant-${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}"
           mkdir dist
           git archive --format=tar.gz --prefix="$name/" -o "dist/$name.tar.gz" HEAD
-          (cd dist && sha256sum "$name.tar.gz" > SHA256SUMS)
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            uv sync --locked --no-dev
+            uv run --no-sync aevra ui prepare
+            packaging/deb/build-deb.sh "${GITHUB_REF_NAME#v}" dist
+          fi
+          (cd dist && sha256sum * > SHA256SUMS)
           cat dist/SHA256SUMS
           echo "name=$name" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
