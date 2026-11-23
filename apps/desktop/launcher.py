@@ -19,21 +19,17 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def native_command():
-    """Select the operating system's GTK Python through uv without resolving packages or falling back to a browser."""
+    """Select bundled Python when packaged, otherwise use the development uv path."""
+    if sys.platform != "linux":
+        raise ClientError("native_desktop_dependencies_required", 6)
+    bundled = Path(sys.prefix) / "bin/python"
+    if str(Path(sys.prefix)).startswith("/usr/lib/aevra/") and bundled.is_file() and bundled.stat().st_mode & 0o111:
+        return [str(bundled), str(ROOT / "apps/desktop/main.py")]
     uv = shutil.which("uv")
     python = Path("/usr/bin/python3")
-    if sys.platform != "linux" or uv is None or not python.is_file():
+    if uv is None or not python.is_file():
         raise ClientError("native_desktop_dependencies_required", 6)
-    return [
-        uv,
-        "run",
-        "--offline",
-        "--no-project",
-        "--python",
-        str(python),
-        "python",
-        str(ROOT / "apps/desktop/main.py"),
-    ]
+    return [uv, "run", "--offline", "--no-project", "--python", str(python), "python", str(ROOT / "apps/desktop/main.py")]
 
 
 def check_native(command):
@@ -94,26 +90,17 @@ def ensure_backend(client, auth_file=DEFAULT_AUTH):
             raise ValueError
     except (OSError, ValueError, TypeError, AttributeError):
         raise ClientError("matching_backend_auth_required", 3) from None
-    uv = shutil.which("uv")
-    if uv is None:
-        raise ClientError("uv_required", 6)
     parsed = urlsplit(client.url)
     if parsed.hostname != "127.0.0.1" or not 1024 <= (parsed.port or 80) <= 65535:
         raise ClientError("managed_backend_ipv4_port_required", 2)
-    command = [
-        uv,
-        "run",
-        "--offline",
-        "--project",
-        str(ROOT),
-        "--no-sync",
-        "aevra",
-        "serve",
-        "--port",
-        str(parsed.port),
-        "--auth-file",
-        str(path.absolute()),
-    ]
+    bundled_cli = Path(sys.prefix) / "bin/aevra"
+    if str(Path(sys.prefix)).startswith("/usr/lib/aevra/") and bundled_cli.is_file() and bundled_cli.stat().st_mode & 0o111:
+        command = [str(bundled_cli), "serve", "--port", str(parsed.port), "--auth-file", str(path.absolute())]
+    else:
+        uv = shutil.which("uv")
+        if uv is None:
+            raise ClientError("desktop_backend_runtime_required", 6)
+        command = [uv, "run", "--offline", "--project", str(ROOT), "--no-sync", "aevra", "serve", "--port", str(parsed.port), "--auth-file", str(path.absolute())]
     process = subprocess.Popen(
         command,
         stdout=subprocess.DEVNULL,
