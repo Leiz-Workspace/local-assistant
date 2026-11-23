@@ -12,6 +12,14 @@ import sys
 import time
 from urllib.parse import urlsplit
 
+LOG_DIR = Path.home() / ".local/state/aevra"
+LOG_FILE = LOG_DIR / "desktop.log"
+
+
+def launch_log_path():
+    LOG_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    return LOG_FILE.open("a", encoding="utf-8")
+
 from apps.cli.client import ClientError, DEFAULT_AUTH
 
 LOGGER = logging.getLogger(__name__)
@@ -101,10 +109,11 @@ def ensure_backend(client, auth_file=DEFAULT_AUTH):
         if uv is None:
             raise ClientError("desktop_backend_runtime_required", 6)
         command = [uv, "run", "--offline", "--project", str(ROOT), "--no-sync", "aevra", "serve", "--port", str(parsed.port), "--auth-file", str(path.absolute())]
+    log_handle = launch_log_path()
     process = subprocess.Popen(
         command,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        stdout=log_handle,
+        stderr=subprocess.STDOUT,
         cwd=str(ROOT),
         start_new_session=True,
     )
@@ -128,7 +137,8 @@ def ensure_backend(client, auth_file=DEFAULT_AUTH):
 
 
 def launch(client, *, auth_file=DEFAULT_AUTH):
-    """Run a native app lifetime, passing a one-use nonce over stdin and joining only owned children on close."""
+    """Run native app lifetime and preserve bounded child diagnostics in the private state log."""
+    log_handle = launch_log_path()
     command = native_command()
     check_native(command)
     backend, native = None, None
@@ -148,7 +158,7 @@ def launch(client, *, auth_file=DEFAULT_AUTH):
             command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=log_handle,
             cwd=str(ROOT),
             start_new_session=True,
         )
@@ -188,6 +198,7 @@ def launch(client, *, auth_file=DEFAULT_AUTH):
     finally:
         stop_owned(native)
         stop_owned(backend)
+        log_handle.close()
 
 
 def main(argv=None):
