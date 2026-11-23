@@ -32,7 +32,11 @@ mkdir -p "$base/usr/lib/aevra/data"
 cp -a "$root/data/ui" "$base/usr/lib/aevra/data/"
 mkdir -p "$base/usr/lib/aevra/apps/branding/assets"
 cp -a "$root/apps/branding/assets/." "$base/usr/lib/aevra/apps/branding/assets/"
-chmod 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
+# Source trees may inherit umask 027 on the self-hosted runner; the desktop user must read code and icons.
+find "$base/usr/lib/aevra" -type d -exec chmod 0755 {} +
+find "$base/usr/lib/aevra" -type f -exec chmod 0644 {} +
+find "$base/usr/lib/aevra/.venv/bin" -type f -exec chmod 0755 {} +
+chmod 0755 "$base/DEBIAN" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
