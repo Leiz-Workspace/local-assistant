@@ -47,7 +47,7 @@ chmod 0755 "$base/DEBIAN" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
-exec /usr/lib/aevra/.venv/bin/aevra-python /usr/lib/aevra/apps/desktop/main.py "$@"
+exec /usr/lib/aevra/.venv/bin/aevra-python /usr/lib/aevra/apps/desktop/launcher.py "$@"
 LAUNCH
 chmod 0755 "$base/usr/bin/aevra-desktop"
 cat > "$base/usr/share/applications/aevra.desktop" <<DESKTOP
