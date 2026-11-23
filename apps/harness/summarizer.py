@@ -5,7 +5,9 @@ import asyncio
 import httpx
 
 from apps.api.services.llama_gateway import GatewayError
+from src.application.services.special_literals import require_current_binding
 from src.application.services.history_summary import MAX_TOKENS, SummaryUnavailable
+from src.infrastructure.inference.core_request_seal import seal_payload
 
 RESPONSE_LIMIT = 262144
 FAILURES = (GatewayError, httpx.HTTPError, ValueError, KeyError, TypeError, IndexError)
@@ -33,6 +35,7 @@ class GatewaySummarizer:
 
     async def generate(self, messages, schema):
         """Run one non-streaming schema-constrained completion and return content, finish reason and usage."""
+        require_current_binding()
         payload = dict(
             model=self.model_id,
             messages=messages,
@@ -42,6 +45,10 @@ class GatewaySummarizer:
             chat_template_kwargs={"enable_thinking": False},
             response_format={"type": "json_schema", "json_schema": {"schema": schema}},
         )
+        # Sealed outside FAILURES: a refusal must not read as a gateway error.
+        # history_summary records pre-seal digests (source_sha256, pair_sha256);
+        # its file hash is frozen by the summary v2 campaign, so the label lives here.
+        payload, _ = seal_payload(payload, "summarizer")
         try:
             response = await self.client.post("/v1/chat/completions", json=payload)
             response.raise_for_status()

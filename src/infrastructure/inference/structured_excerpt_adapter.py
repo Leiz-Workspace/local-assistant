@@ -20,7 +20,15 @@ from apps.api.services.llama_gateway import LlamaGateway
 from src.application.ports.inference import CompletionResult, InferenceFailure
 from src.application.services.mcp_adapter import canonical
 from src.application.services.profile_prompts import TEMPLATES, PromptInput
+from src.application.services.special_literals import (
+    SpecialLiteralsStale,
+    require_current_binding,
+)
 from src.application.services.workspace_requests import parse_workspace_json
+from src.infrastructure.inference.core_request_seal import (
+    CoreRequestRejected,
+    seal_payload,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -113,8 +121,10 @@ def literal_string_values(units):
 class StructuredProvenance:
     """Record prompt/schema/native-request/output digests as provenance, never as authorization or semantic certification."""
 
+    # Pre-seal: the messages before the CORE request seal, as the grounded binding hashes them.
     prompt_sha256: str
     schema_sha256: str
+    # Post-seal: the sealed bytes actually sent (ADR-195).
     native_request_sha256: str
     content_sha256: str
     schema_enabled: bool
@@ -354,6 +364,7 @@ class StructuredExcerptAdapter:
 
     async def complete(self, **request):
         """Perform one original-model Fast512 inference with an optional per-request JSON grammar and no fallback, repair or retry."""
+        require_current_binding()
         self.calls += 1
         self.provenance = None
         phase = "invalid_request"
@@ -382,6 +393,8 @@ class StructuredExcerptAdapter:
                 follow_redirects=False,
             ) as client:
                 await gateway._verify_model(client)
+                # Both the counting body and the native body carry a sealed copy;
+                # messages itself stays unsealed for the pre-seal prompt digest.
                 count = await gateway._count_input_tokens(
                     client, messages, thinking=False
                 )
@@ -397,6 +410,7 @@ class StructuredExcerptAdapter:
                 )
                 if self.schema_enabled:
                     native["response_format"] = dict(type="json_object", schema=schema)
+                native, _ = seal_payload(native, "structured_excerpt")
                 raw_request = encoded(native)
                 chunks, size = [], 0
                 async with client.stream(
@@ -450,6 +464,10 @@ class StructuredExcerptAdapter:
         except asyncio.CancelledError:
             self.last_error = "cancelled"
             logger.info("structured_excerpt_cancelled")
+            raise
+        except (SpecialLiteralsStale, CoreRequestRejected) as error:
+            self.last_error = error.code
+            logger.warning("structured_excerpt_rejected code=%s", error.code)
             raise
         except StructuredRefusal:
             self.last_error = "insufficient_evidence"
