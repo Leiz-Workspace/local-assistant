@@ -23,7 +23,7 @@ if [[ ! -x "$root/.venv/bin/python" ]]; then
   echo "Build requires a prepared .venv; run uv sync --locked --no-dev first" >&2
   exit 2
 fi
-cp -a "$root/apps" "$root/src" "$root/.venv" "$base/usr/lib/aevra/"
+cp -a "$root/apps" "$root/src" "$root/configs" "$root/.venv" "$base/usr/lib/aevra/"
 # Replace the build-machine Python symlink with a real interpreter binary.
 python_target="$(readlink -f "$root/.venv/bin/python")"
 if [[ ! -x "$python_target" ]]; then
