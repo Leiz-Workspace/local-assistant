@@ -358,7 +358,7 @@ async def test_product_inference_structured_body_is_sealed_and_quotes_stay_raw()
 
 @pytest.mark.asyncio
 async def test_product_inference_stream_body_is_sealed():
-    events = 'data: {"choices":[{"delta":{"content":"hi"}}]}\n\ndata: [DONE]\n\n'
+    events = 'data: {"choices":[{"delta":{"content":"hi"},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n'
     core = Core(None, stream=events)
     inference = ProductInference(transport=httpx.MockTransport(core))
     messages = [
@@ -882,5 +882,5 @@ def test_browser_stream_bounds_a_seal_rejection(auth_settings, tmp_path, caplog)
             )
     assert response.status_code == 200
     assert '"code":"inference_unavailable"' in response.text
-    assert response.text.rstrip().endswith("data: [DONE]")
+    assert not response.text.rstrip().endswith("data: [DONE]")
     assert not app.state.product_harness.admission.locked()
