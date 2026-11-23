@@ -5,7 +5,7 @@ out="${2:-dist}"
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
-pkg="aevra-linux-amd64"
+pkg="aevra-desktop"
 base="$work/${pkg}_${version}_amd64"
 mkdir -p -m 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/DEBIAN/control" <<CTRL
@@ -62,6 +62,6 @@ Categories=Utility;
 DESKTOP
 mkdir -p "$out"
 chmod 0644 "$base/DEBIAN/control" "$base/usr/share/applications/aevra.desktop"
-output="$out/${pkg}_v${version}.deb"
+output="$out/aevra-linux-amd64_v${version}.deb"
 dpkg-deb --build --root-owner-group "$base" "$output" >/dev/null
 sha256sum "$output"
