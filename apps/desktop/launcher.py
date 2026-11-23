@@ -24,7 +24,7 @@ def native_command():
         raise ClientError("native_desktop_dependencies_required", 6)
     bundled = Path(sys.prefix) / "bin/python"
     if str(Path(sys.prefix)).startswith("/usr/lib/aevra/") and bundled.is_file() and bundled.stat().st_mode & 0o111:
-        return [str(bundled), str(ROOT / "apps/desktop/main.py")]
+        return [str(bundled), "-m", "apps.desktop.main"]
     uv = shutil.which("uv")
     python = Path("/usr/bin/python3")
     if uv is None or not python.is_file():
@@ -95,7 +95,7 @@ def ensure_backend(client, auth_file=DEFAULT_AUTH):
         raise ClientError("managed_backend_ipv4_port_required", 2)
     bundled_cli = Path(sys.prefix) / "bin/aevra"
     if str(Path(sys.prefix)).startswith("/usr/lib/aevra/") and bundled_cli.is_file() and bundled_cli.stat().st_mode & 0o111:
-        command = [str(bundled_cli), "serve", "--port", str(parsed.port), "--auth-file", str(path.absolute())]
+        command = [str(Path(sys.prefix) / "bin/aevra-python"), "-m", "apps.cli.main", "serve", "--port", str(parsed.port), "--auth-file", str(path.absolute())]
     else:
         uv = shutil.which("uv")
         if uv is None:
@@ -105,6 +105,7 @@ def ensure_backend(client, auth_file=DEFAULT_AUTH):
         command,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
+        cwd=str(ROOT),
         start_new_session=True,
     )
     LOGGER.info("aevra_owned_backend_started")
@@ -148,6 +149,7 @@ def launch(client, *, auth_file=DEFAULT_AUTH):
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
+            cwd=str(ROOT),
             start_new_session=True,
         )
         LOGGER.info("aevra_native_application_started")
