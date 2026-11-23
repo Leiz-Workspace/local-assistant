@@ -19,7 +19,9 @@ Depends: python3 (>= 3.11), python3-gi, gir1.2-gtk-3.0, gir1.2-webkit2-4.1, uv
 Description: Aevra native desktop
  Local Assistant desktop using the pinned local Qwen/llama.cpp web UI.
 CTRL
-cp -a "$root/apps" "$root/src" "$root/data/ui" "$root/pyproject.toml" "$root/uv.lock" "$base/usr/lib/aevra/"
+cp -a "$root/apps" "$root/src" "$root/pyproject.toml" "$root/uv.lock" "$base/usr/lib/aevra/"
+mkdir -p "$base/usr/lib/aevra/data"
+cp -a "$root/data/ui" "$base/usr/lib/aevra/data/"
 mkdir -p "$base/usr/lib/aevra/apps/branding/assets"
 cp -a "$root/apps/branding/assets/." "$base/usr/lib/aevra/apps/branding/assets/"
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
