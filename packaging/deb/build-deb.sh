@@ -15,11 +15,15 @@ Section: utils
 Priority: optional
 Architecture: amd64
 Maintainer: Aevra project
-Depends: python3 (>= 3.11), python3-gi, gir1.2-gtk-3.0, gir1.2-webkit2-4.1, uv
+Depends: python3 (>= 3.11), python3-gi, gir1.2-gtk-3.0, gir1.2-webkit2-4.1
 Description: Aevra native desktop
  Local Assistant desktop using the pinned local Qwen/llama.cpp web UI.
 CTRL
-cp -a "$root/apps" "$root/src" "$root/pyproject.toml" "$root/uv.lock" "$base/usr/lib/aevra/"
+if [[ ! -x "$root/.venv/bin/python" ]]; then
+  echo "Build requires a prepared .venv; run uv sync --locked --no-dev first" >&2
+  exit 2
+fi
+cp -a "$root/apps" "$root/src" "$root/.venv" "$base/usr/lib/aevra/"
 mkdir -p "$base/usr/lib/aevra/data"
 cp -a "$root/data/ui" "$base/usr/lib/aevra/data/"
 mkdir -p "$base/usr/lib/aevra/apps/branding/assets"
@@ -28,7 +32,7 @@ chmod 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
-exec uv run --offline --no-project --python /usr/bin/python3 python /usr/lib/aevra/apps/desktop/main.py "$@"
+exec /usr/lib/aevra/.venv/bin/python /usr/lib/aevra/apps/desktop/main.py "$@"
 LAUNCH
 chmod 0755 "$base/usr/bin/aevra-desktop"
 cat > "$base/usr/share/applications/aevra.desktop" <<DESKTOP

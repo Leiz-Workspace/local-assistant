@@ -282,9 +282,13 @@ jobs:
           mkdir dist
           git archive --format=tar.gz --prefix="$name/" -o "dist/$name.tar.gz" HEAD
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            rm -rf .venv
+            uv venv --python /usr/bin/python3 --system-site-packages .venv
             uv sync --locked --no-dev
             uv run --no-sync aevra ui prepare
             packaging/deb/build-deb.sh "${GITHUB_REF_NAME#v}" dist
+            cp packaging/cli/install.sh "dist/install-aevra-${GITHUB_REF_NAME}.sh"
+            chmod 0755 "dist/install-aevra-${GITHUB_REF_NAME}.sh"
           fi
           (cd dist && sha256sum * > SHA256SUMS)
           cat dist/SHA256SUMS
