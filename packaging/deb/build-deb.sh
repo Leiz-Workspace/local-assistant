@@ -15,7 +15,8 @@ Section: utils
 Priority: optional
 Architecture: amd64
 Maintainer: Aevra project
-Depends: python3 (>= 3.11), python3-gi, gir1.2-gtk-3.0, gir1.2-webkit2-4.1, uv
+Depends: python3 (>= 3.11), python3-gi, gir1.2-gtk-3.0, gir1.2-webkit2-4.1
+Suggests: uv
 Description: Aevra native desktop
  Local Assistant desktop using the pinned local Qwen/llama.cpp web UI.
 CTRL
@@ -28,6 +29,10 @@ chmod 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
+if ! command -v uv >/dev/null 2>&1; then
+  echo "Aevra requires uv. Install it from https://docs.astral.sh/uv/getting-started/installation/" >&2
+  exit 127
+fi
 exec uv run --offline --no-project --python /usr/bin/python3 python /usr/lib/aevra/apps/desktop/main.py "$@"
 LAUNCH
 chmod 0755 "$base/usr/bin/aevra-desktop"
