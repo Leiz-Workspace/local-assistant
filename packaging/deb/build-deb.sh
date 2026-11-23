@@ -7,7 +7,7 @@ work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 pkg="aevra-desktop"
 base="$work/${pkg}_${version}_amd64"
-mkdir -p "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
+mkdir -p -m 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/DEBIAN/control" <<CTRL
 Package: $pkg
 Version: $version
@@ -24,6 +24,7 @@ mkdir -p "$base/usr/lib/aevra/data"
 cp -a "$root/data/ui" "$base/usr/lib/aevra/data/"
 mkdir -p "$base/usr/lib/aevra/apps/branding/assets"
 cp -a "$root/apps/branding/assets/." "$base/usr/lib/aevra/apps/branding/assets/"
+chmod 0755 "$base/DEBIAN" "$base/usr/lib/aevra" "$base/usr/bin" "$base/usr/share/applications"
 cat > "$base/usr/bin/aevra-desktop" <<'LAUNCH'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -40,5 +41,6 @@ Terminal=false
 Categories=Utility;
 DESKTOP
 mkdir -p "$out"
+chmod 0644 "$base/DEBIAN/control" "$base/usr/share/applications/aevra.desktop"
 dpkg-deb --build --root-owner-group "$base" "$out/${pkg}_${version}_amd64.deb" >/dev/null
 sha256sum "$out/${pkg}_${version}_amd64.deb"
