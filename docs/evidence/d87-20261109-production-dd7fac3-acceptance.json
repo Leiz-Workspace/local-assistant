@@ -1,0 +1,261 @@
+{
+  "description": "Public receipt of the D87 full software regression on the source tree of production dd7fac3 (tree 5f2653d, after the 2026-11-09 ADR179 promotion), run by the assistant at the owner's request. It records the second run of the day (NOT PASS, retained unchanged) and the third run (PASS). Software regression evidence only: not model quality, device acceptance, D89 or a release decision. No credentials, Vault material, DATABASE_URL or log content.",
+  "date": "2026-11-09",
+  "timezone": "UTC (Asia/Ho_Chi_Minh is UTC+07)",
+  "status": "FULL_SOFTWARE_REGRESSION_PASS_PRODUCT_GATES_OPEN",
+  "owner_request": {
+    "owner_verbatim": "Chạy D87",
+    "context": "after the ADR179 promotion (PR #48 develop -> staging, PR #49 staging -> production), the assistant asked whether to run D87 on the new production tree 5f2653d",
+    "after_run_2_owner_verbatim": "Chạy lại khi máy rảnh",
+    "after_run_2_meaning": "rerun D87 unchanged once the host is idle; the alternative of a CPU-pinning ADR for the reranker test was not chosen",
+    "run_by": "assistant, at the owner's request"
+  },
+  "runbook": "docs/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+  "source": {
+    "checkout": "detached at origin/production for both runs, then restored to develop",
+    "git_commit": "dd7fac3",
+    "git_tree": "5f2653d7814672b73c7d6b982b7600e63e17cea2",
+    "tree_identical_to": {
+      "branch": "production",
+      "git_commit": "dd7fac3"
+    },
+    "develop_at_run_time": {
+      "git_commit": "fd1a2a5",
+      "difference_from_production": "documentation only (PR #50); the D87 source-freeze scope has no difference (empty git diff)"
+    },
+    "tree_check": "git rev-parse HEAD^{tree} equals git rev-parse origin/production^{tree}; the runbook's develop-equals-production check was not used because develop was ahead by documentation only",
+    "uv_sync_locked_dev_changed_anything": false,
+    "source_scope_clean": true,
+    "source_freeze_scope": [
+      "src",
+      "apps",
+      "scripts",
+      "tests",
+      "configs",
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "difference_from_previous_D87_tree_0b67d95": "20 source-scope files changed (PR #46 tests, PR #47 ADR179 code and tests); 4 added: src/infrastructure/sandbox_process.py, tests/process_probe.py, tests/test_process_probe.py, tests/test_sandbox_process.py",
+    "includes": [
+      "ADR179 sandbox namespace retirement (PR #47)",
+      "timeout reap test change (PR #46)",
+      "D81 grounded extraction code, default-off (PR #42)",
+      "PR #33 decoder fix",
+      "B1/B2 voice code",
+      "ADR176",
+      "ADR178"
+    ]
+  },
+  "promotion_before_runs": {
+    "PR_48_develop_to_staging": {
+      "merged_at_utc": "2026-11-09T08:45:17Z",
+      "merge_commit": "11b4020",
+      "PR_CI_run": 42586567285
+    },
+    "PR_49_staging_to_production": {
+      "merged_at_utc": "2026-11-09T09:10:15Z",
+      "merge_commit": "dd7fac3",
+      "PR_CI_run": 42590054114
+    },
+    "production_push_run": 42591324567,
+    "tag": false,
+    "GitHub_release": false,
+    "deployed_to_home_server": false,
+    "voice_default_enabled": false
+  },
+  "command_cwd": "ai/",
+  "pytest_scope": "pytest tests (benchmarks/tests not included), nothing excluded",
+  "environment_set_by_script_includes": [
+    "DATABASE_URL",
+    "LOCAL_ASSISTANT_LIVE_E2E=1",
+    "LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1"
+  ],
+  "services": {
+    "PostgreSQL": "shared container, not restarted",
+    "Qdrant": "shared container, not restarted",
+    "Vault": {
+      "restarted": false,
+      "sealed_before_runs": false,
+      "unseal_needed": false,
+      "credentials_read": "in memory through infras/scripts/vault_static_secret.py, as designed"
+    },
+    "CORE": {
+      "started_with": "docker compose --profile core up -d (before each run)",
+      "container": "local-assistant-core-1",
+      "image": "local-assistant/llama-cuda:5c8854fd8",
+      "model": "qwen3.5-9b-core",
+      "endpoint": "127.0.0.1:8080",
+      "health_status": 200,
+      "stopped_after_each_run_with": "docker compose --profile core stop"
+    }
+  },
+  "run_2_not_pass": {
+    "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261109-full-2",
+    "accepted_full_software_regression": false,
+    "status": "complete",
+    "passed": 6232,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 1,
+    "pytest_seconds": 1945.21,
+    "elapsed_seconds": 1946.95,
+    "summary": "1 failed, 6232 passed, 1 warning in 1945.21s (0:32:25)",
+    "started_at_utc": "2026-11-09T09:48:07Z",
+    "completed_at_utc": "2026-11-09T10:20:34Z",
+    "source_files": 821,
+    "source_bytes_unchanged": true,
+    "source_freeze_sha256": "c5c9ff586fe06cb266923ea8b1218b891448209d8ca62ba22c2c717d60ba08e7",
+    "log_sha256": "1f1f69f7da96baa2bcd7f6716387a224051d605c0fda137c4df46253989b8dfc",
+    "failed_test": "tests/integration/test_reranker_live.py::test_actual_pinned_reranker_paired_comparison",
+    "failure": "ValueError reranker_evaluation_failed; log reranker_worker_nonzero exit_code=152 completed_rounds=2",
+    "interpretation": "152 = 128 + SIGXCPU (24): the reranker worker reached its own RLIMIT_CPU of 480 s soft / 481 s hard (scripts/qwen_reranker_worker.py) during the third of three rounds",
+    "related_to_ADR179": false,
+    "reason_not_related": "the reranker comparison code is unchanged and does not use the sandbox code changed by ADR179",
+    "history": "same failure mode as the 2026-11-02 full runs (5836 PASS / 1 FAIL, exit 152 after 2 rounds), when ADR150/ADR151 were accepted for one probe and one full only",
+    "retained_unchanged": true,
+    "host_load_during_run": "not measured"
+  },
+  "solo_probe_after_run_2": {
+    "purpose": "analysis only; not a D87 run and not counted",
+    "conditions": "CORE stopped, same production tree, LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1, single test under /usr/bin/time -v",
+    "result": "1 failed in 241.94 s, exit 152 after 2 rounds",
+    "process_tree_cpu_seconds": {
+      "user": 479.43,
+      "system": 2.29
+    },
+    "cpu_percent": 198,
+    "max_rss_kbytes": 1633044,
+    "host_load_average_before_after": [
+      1.26,
+      3.15
+    ],
+    "background_processes_observed": "RustDesk, Claude desktop, k3s, GNOME Shell",
+    "cpu": "AMD Ryzen 7 7700 (8 cores, 16 threads), governor powersave",
+    "latest_comparison_file_overwritten": false
+  },
+  "run_3_pass": {
+    "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261109-full-3",
+    "idle_wait": {
+      "criterion": "busy logical CPUs (from /proc/stat) below 0.5 for 3 consecutive 30 s samples, up to 6 hours",
+      "waited_seconds": 421,
+      "last_three_samples_busy_cores": [
+        0.48,
+        0.38,
+        0.28
+      ],
+      "processes_stopped_by_assistant": "none; no owner application was closed"
+    },
+    "load_during_run": {
+      "samples": 61,
+      "mean_busy_cores": 1.49,
+      "max_busy_cores": 2.65,
+      "note": "includes the regression suite itself"
+    },
+    "accepted_full_software_regression": true,
+    "status": "complete",
+    "passed": 6233,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "pytest_seconds": 1830.43,
+    "elapsed_seconds": 1831.98,
+    "summary": "6233 passed, 1 warning in 1830.43s (0:30:30)",
+    "started_at_utc": "2026-11-09T10:36:26Z",
+    "completed_at_utc": "2026-11-09T11:06:58Z",
+    "source_files": 821,
+    "source_bytes_unchanged": true,
+    "source_freeze_sha256": "c5c9ff586fe06cb266923ea8b1218b891448209d8ca62ba22c2c717d60ba08e7",
+    "source_freeze_identical_to_run_2": true,
+    "log_sha256": "720fe50632c17a71a23ede1235e1e2a7b5ab1939553be9fec8d4db1e9421039a",
+    "reranker_round_wall_seconds": [
+      78.19,
+      77.26,
+      77.0
+    ],
+    "reranker_round_wall_seconds_morning_run_0b67d95": [
+      79.39,
+      79.13,
+      79.19
+    ],
+    "reranker_resource_gates_met": true,
+    "reranker_adoption_authorized": false,
+    "precision_note": "Times are given to the second and elapsed_seconds to two decimals; the private result.json keeps full precision. The warning's content is not recorded in this receipt.",
+    "morning_comparison_copy": "data/backups/d27-t02-comparison-20261109-morning.json (private, git-ignored; SHA-256 prefix 73ffa8e2b1c63a12)"
+  },
+  "residual_risk": "When it passes, the reranker comparison uses an estimated 465-475 s (round wall time x 2 threads) of its 480 s CPU limit on this host, an estimated margin of about 1-3%. It exceeded the limit in run 2 (host load was not measured during that run) and in the solo probe right after it, where background load was present. The next D87 run should also start on an idle host. A durable remedy (for example the ADR151 CPU partition as a standing test environment) would need its own ADR and owner approval; the 480 s limit, model, profile and algorithm were not changed.",
+  "database_after_runs": {
+    "method": "read-only queries as the runtime role, after run 2 and after run 3",
+    "database": "local_assistant",
+    "row_counts_after_each_run": {
+      "conversations": 0,
+      "messages": 0,
+      "inference_runs": 0,
+      "files": 0,
+      "memories": 0,
+      "memory_consents": 0,
+      "memory_settings": 0,
+      "ingestion_jobs": 0,
+      "ingestion_heads": 0,
+      "file_owner_usage": 1,
+      "file_global_usage": 1
+    },
+    "alembic_revision": "0006",
+    "alembic_revision_same_as_before_runs": true
+  },
+  "comparison": {
+    "previous_full": {
+      "date": "2026-11-09 (morning)",
+      "passed": 6200,
+      "source_files": 817,
+      "tree_of": "production 0b67d95",
+      "receipt": "docs/evidence/d87-20261109-full-acceptance.json",
+      "state": "historical"
+    },
+    "test_count_difference": "+33 tests (5 from PR #46, 28 from PR #47) and +4 source files",
+    "CI_production_push": {
+      "run": 42591324567,
+      "git_commit": "dd7fac3",
+      "conclusion": "success",
+      "main_pytest": {
+        "passed": 6490,
+        "skipped": 368,
+        "deselected": 30
+      },
+      "package_artifact": "local-assistant-production-dd7fac3",
+      "package_artifact_bytes": 14081040
+    },
+    "CI_comparable_with_D87": false,
+    "CI_difference": "CI's 6490 counts tests plus benchmarks/tests with exclusions and without DB/CORE; D87's 6233 is pytest tests only, nothing excluded, with real services."
+  },
+  "scope": "Software regression evidence for the source tree of production dd7fac3 (tree 5f2653d). It is not model quality, device acceptance, D89 or a release decision.",
+  "effect_on_D90": "D87 for D90 must run on the exact content of the commit to be tagged (D90 dossier section 6, D87 runbook step 1). Run 3 matches production dd7fac3 now. Later docs-only commits (PR #50, the PR recording this run and the owner's filled D90 form) change the commit tree but not the D87 source-freeze scope; whether that difference is acceptable for the tag, or D87 is rerun on the final tag commit, is the owner's decision when filling the D90 form (named-exception box).",
+  "D90_owner_form_filled": false,
+  "model_quality_measured": false,
+  "still_open": {
+    "D81": "OPEN",
+    "D89": "OPEN",
+    "D90": "OPEN",
+    "D60": "deferred",
+    "D88": "only if distributing",
+    "final_model_voice_default_product_decision": "OPEN",
+    "voice_default_enabled": false
+  },
+  "release_state": {
+    "tag": false,
+    "GitHub_release": false,
+    "deployed_to_home_server": false
+  },
+  "private_result_directories": [
+    "data/backups/d87-20261109-full-2/",
+    "data/backups/d87-20261109-full-3/"
+  ],
+  "notes": [
+    "The private result directories (result.json, pytest.log, source-freeze.json) are git-ignored and not published; only their names and the hashes above are public.",
+    "source_freeze_sha256 is the SHA-256 of the private source-freeze.json; log_sha256 is the SHA-256 of the private, redacted pytest.log.",
+    "Run 2 is retained as NOT PASS and is not replaced by run 3; run 3 was started only after the owner chose to rerun on an idle host.",
+    "The database check records row counts and the Alembic revision; it is not a row-by-row before/after comparison, and no Qdrant inventory is recorded here.",
+    "Earlier full results (6200 on 817 files, 2026-11-09 morning; 5889 on 750 files, 2026-11-03; 5759 on 732 files, 2026-10-27) remain history and are not rewritten."
+  ]
+}

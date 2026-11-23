@@ -1,0 +1,2106 @@
+{
+  "description": "HAR-008-Q2 controlled maintenance first outcomes and sampled native resources; separate warm streaming timing, not broad specialist/release qualification.",
+  "schema_version": 1,
+  "date": "2026-11-10",
+  "adr": "184",
+  "model": "qwen3.5-9b-core",
+  "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "quality": {
+    "expected_attempts": 96,
+    "completed_attempts": 96,
+    "complete_blocks": 24,
+    "arms": {
+      "text_baseline": {
+        "attempts": 24,
+        "format": 22,
+        "value": 21,
+        "quote": 11,
+        "passed": 11,
+        "contract_failures": 0
+      },
+      "text_skill": {
+        "attempts": 24,
+        "format": 19,
+        "value": 18,
+        "quote": 11,
+        "passed": 11,
+        "contract_failures": 0
+      },
+      "constrained_baseline": {
+        "attempts": 24,
+        "format": 24,
+        "value": 21,
+        "quote": 21,
+        "passed": 21,
+        "contract_failures": 0
+      },
+      "constrained_skill": {
+        "attempts": 24,
+        "format": 24,
+        "value": 23,
+        "quote": 24,
+        "passed": 23,
+        "contract_failures": 0
+      }
+    },
+    "comparisons": {
+      "text_baseline_to_text_skill": {
+        "pairs": 24,
+        "gains": 1,
+        "regressions": 1
+      },
+      "constrained_baseline_to_constrained_skill": {
+        "pairs": 24,
+        "gains": 2,
+        "regressions": 0
+      },
+      "text_baseline_to_constrained_baseline": {
+        "pairs": 24,
+        "gains": 11,
+        "regressions": 1
+      },
+      "text_skill_to_constrained_skill": {
+        "pairs": 24,
+        "gains": 12,
+        "regressions": 0
+      }
+    },
+    "status": "MEASUREMENT_COMPLETE",
+    "promotion": "NOT_QUALIFIED",
+    "reason": "Same-author controlled maintenance panel, one draw per arm/case; broader independent generalization and skill benefit remain unestablished.",
+    "categories": {
+      "review-cross-file": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 1,
+          "passed": 1,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 2,
+          "passed": 2,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 4,
+          "passed": 3,
+          "contract_failures": 0
+        }
+      },
+      "review-defect": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 0,
+          "passed": 0,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 3,
+          "value": 3,
+          "quote": 0,
+          "passed": 0,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        }
+      },
+      "review-safe": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        }
+      },
+      "source-long": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 3,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 3,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        }
+      },
+      "source-supported": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 3,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 2,
+          "value": 2,
+          "quote": 2,
+          "passed": 2,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 3,
+          "quote": 3,
+          "passed": 3,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        }
+      },
+      "source-unsupported": {
+        "text_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 0,
+          "passed": 0,
+          "contract_failures": 0
+        },
+        "text_skill": {
+          "attempts": 4,
+          "format": 3,
+          "value": 3,
+          "quote": 0,
+          "passed": 0,
+          "contract_failures": 0
+        },
+        "constrained_baseline": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        },
+        "constrained_skill": {
+          "attempts": 4,
+          "format": 4,
+          "value": 4,
+          "quote": 4,
+          "passed": 4,
+          "contract_failures": 0
+        }
+      }
+    },
+    "resources": {
+      "status": "COMPLETE",
+      "measured_attempts": 96,
+      "sampled_peak_rss_kib": 10013460,
+      "sampled_peak_gpu_process_mib": 8018,
+      "limits": "Warm process RSS/allocation sampled every 0.2 seconds; not absolute peaks or per-model tensor consumption. TTFT is unobservable on this nonstreaming task API and needs the separate predeclared streaming replay."
+    },
+    "cleanup_failures": 0,
+    "unidentified_submission": false,
+    "elapsed_seconds": 109.779
+  },
+  "streaming_timing": {
+    "status": "MEASUREMENT_COMPLETE",
+    "expected_attempts": 8,
+    "completed_attempts": 8,
+    "semantic_scored": false,
+    "rows": [
+      {
+        "case_id": "approved-retry-delay",
+        "arm": "constrained_baseline",
+        "input_tokens": 1428,
+        "first_text_delta_seconds": 0.443306,
+        "total_seconds": 0.806727,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "approved-retry-delay",
+        "arm": "constrained_skill",
+        "input_tokens": 1477,
+        "first_text_delta_seconds": 0.416774,
+        "total_seconds": 0.738554,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "long-maintenance-2",
+        "arm": "constrained_skill",
+        "input_tokens": 12379,
+        "first_text_delta_seconds": 2.371246,
+        "total_seconds": 2.663984,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "long-maintenance-2",
+        "arm": "constrained_baseline",
+        "input_tokens": 12315,
+        "first_text_delta_seconds": 2.525117,
+        "total_seconds": 2.86083,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "review-safe-cancellation",
+        "arm": "constrained_baseline",
+        "input_tokens": 1785,
+        "first_text_delta_seconds": 0.624449,
+        "total_seconds": 0.80639,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "review-safe-cancellation",
+        "arm": "constrained_skill",
+        "input_tokens": 1888,
+        "first_text_delta_seconds": 0.491198,
+        "total_seconds": 0.612825,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "review-caller-stale-token",
+        "arm": "constrained_skill",
+        "input_tokens": 1924,
+        "first_text_delta_seconds": 0.472165,
+        "total_seconds": 0.679213,
+        "resource_status": "COMPLETE"
+      },
+      {
+        "case_id": "review-caller-stale-token",
+        "arm": "constrained_baseline",
+        "input_tokens": 1828,
+        "first_text_delta_seconds": 0.468181,
+        "total_seconds": 0.657471,
+        "resource_status": "COMPLETE"
+      }
+    ],
+    "scope": "Warm native streaming replay, not task API TTFT or a semantic retry."
+  },
+  "quality_latency_by_arm": {
+    "text_baseline": {
+      "median_seconds": 0.749795,
+      "max_seconds": 3.175196
+    },
+    "text_skill": {
+      "median_seconds": 0.746984,
+      "max_seconds": 3.70061
+    },
+    "constrained_baseline": {
+      "median_seconds": 0.694991,
+      "max_seconds": 3.072821
+    },
+    "constrained_skill": {
+      "median_seconds": 0.746852,
+      "max_seconds": 3.177266
+    }
+  },
+  "native_completions": 104,
+  "quality_calls": 96,
+  "timing_replays_not_scored": 8,
+  "preparation_only_cases": 24,
+  "corpus_sha256": "e3e84b495178a73b4b3687e1290846e735dc194e9bf0fe54aedd8a39e1ff88f5",
+  "source_files_sha256": {
+    "benchmarks/har008_maintenance.py": "72f2da77785a9bfed0d7a2af0b56999b67d0864f2cf2056e3734540a950b7554",
+    "benchmarks/harness_resources.py": "3c22aa2c1c9e147c7caade6bdf288c6547ce40c58604a888ba5ba123844dfb49",
+    "benchmarks/harness_stream_timing.py": "f8f3bed31dbf2c2b2328160ad2507b9b4bf7638cc25b7b83ce3e83ebf2ca64e7",
+    "benchmarks/har008_contract.py": "8d5a9984801aaaf20765927a451c9a92483bd7556710e9cb2ca2fe5c839a29b0",
+    "benchmarks/har008.py": "b50f3557ba34684b6628a9edf87d511e2c2d624b673a922768e3e3fe08169139",
+    "apps/harness/service.py": "2aba66b65ce140bf42c6ab7365bb62d94990db6cc424f927d0e261f712804cbd",
+    "apps/harness/inference.py": "15435b5f4aa6a2d7871c128db37e0059bccd46e57678a9e5b3fe5b4d961e6b18",
+    "apps/harness/routes.py": "c7b02b0e47c43078f7f88f8e66c560e653c020ccf9da06dcf936afd57a2afd0a",
+    "src/application/services/context_composer.py": "e6d771560a32b476028c30c500c73d2d762c7a6771999c095fe181f6b0fdee02",
+    "src/application/services/source_output_contract.py": "c4da0510ce1aa4fd65dc5bf1719001d067455ddf8e84c62f90eeca87652f304d",
+    "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+    "configs/llama-cpp-commit.txt": "c44dffe2f5df93448c3bfe956285e9e21f7faa9f51f709ea9da1b2e5874901ab"
+  },
+  "skill_sha256": {
+    "source-reader": "48820ef8b361b33381c2c58d496f520aef9c5db7a2763b3afea1b0b9895b6a15",
+    "repo-review": "1ef232ca51bfcdfb1aeb393776ea653f32f8e3103d43053b19cec695aa0e5624"
+  },
+  "input_tokens_range": [
+    778,
+    12970
+  ],
+  "rss_baseline_kib_range": [
+    9282936,
+    10013460
+  ],
+  "independent_receipt_checks": {
+    "constrained_schema_catalog_content_origins": 48,
+    "quality_resource_samples": 637,
+    "streaming_resource_samples": 58,
+    "quality_frozen_source_config_unchanged": true
+  },
+  "software_tests": {
+    "passed": 349,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 4.07,
+    "related_files": 29,
+    "native_calls_in_pytest": 0,
+    "full_regression": false,
+    "ruff_check": "PASS",
+    "ruff_format_files": 6,
+    "offline_lock_check": "PASS"
+  },
+  "outcomes": [
+    {
+      "case_id": "approved-retry-delay",
+      "category": "source-supported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.855837,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "approved-retry-delay",
+      "category": "source-supported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.958955,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "approved-retry-delay",
+      "category": "source-supported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.851852,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "approved-retry-delay",
+      "category": "source-supported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.853806,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "archive-signature-key",
+      "category": "source-supported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.849142,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "archive-signature-key",
+      "category": "source-supported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.74216,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "archive-signature-key",
+      "category": "source-supported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.74624,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "archive-signature-key",
+      "category": "source-supported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.749413,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "invoice-before-tax",
+      "category": "source-supported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.538952,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "invoice-before-tax",
+      "category": "source-supported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.752924,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "invoice-before-tax",
+      "category": "source-supported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.852353,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "invoice-before-tax",
+      "category": "source-supported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.847558,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "credential-storage-policy",
+      "category": "source-supported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.641614,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "credential-storage-policy",
+      "category": "source-supported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.643531,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "credential-storage-policy",
+      "category": "source-supported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.645955,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "credential-storage-policy",
+      "category": "source-supported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.647823,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "conflicting-current-port",
+      "category": "source-unsupported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.74782,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "conflicting-current-port",
+      "category": "source-unsupported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.85698,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "conflicting-current-port",
+      "category": "source-unsupported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.637833,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "conflicting-current-port",
+      "category": "source-unsupported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.639223,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "template-not-live-state",
+      "category": "source-unsupported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.64704,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "template-not-live-state",
+      "category": "source-unsupported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.540811,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "template-not-live-state",
+      "category": "source-unsupported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.5351,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "template-not-live-state",
+      "category": "source-unsupported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.639588,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "stale-spreadsheet-total",
+      "category": "source-unsupported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.540457,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "stale-spreadsheet-total",
+      "category": "source-unsupported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.647628,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "stale-spreadsheet-total",
+      "category": "source-unsupported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.853861,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "stale-spreadsheet-total",
+      "category": "source-unsupported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.63805,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "unreadable-production-label",
+      "category": "source-unsupported",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.533381,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "unreadable-production-label",
+      "category": "source-unsupported",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.750087,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "unreadable-production-label",
+      "category": "source-unsupported",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.537756,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "unreadable-production-label",
+      "category": "source-unsupported",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.539052,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-1",
+      "category": "source-long",
+      "arm": "text_baseline",
+      "elapsed_seconds": 2.962655,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-1",
+      "category": "source-long",
+      "arm": "text_skill",
+      "elapsed_seconds": 2.965404,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-1",
+      "category": "source-long",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 3.066917,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-1",
+      "category": "source-long",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 3.070705,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-2",
+      "category": "source-long",
+      "arm": "text_skill",
+      "elapsed_seconds": 2.959033,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-2",
+      "category": "source-long",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 2.967435,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-2",
+      "category": "source-long",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 2.961354,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-2",
+      "category": "source-long",
+      "arm": "text_baseline",
+      "elapsed_seconds": 2.963573,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-3",
+      "category": "source-long",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 3.069369,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-3",
+      "category": "source-long",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 3.076092,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-3",
+      "category": "source-long",
+      "arm": "text_baseline",
+      "elapsed_seconds": 3.169991,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-3",
+      "category": "source-long",
+      "arm": "text_skill",
+      "elapsed_seconds": 3.70061,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-4",
+      "category": "source-long",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 3.177266,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-4",
+      "category": "source-long",
+      "arm": "text_baseline",
+      "elapsed_seconds": 3.175196,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-4",
+      "category": "source-long",
+      "arm": "text_skill",
+      "elapsed_seconds": 3.17227,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "long-maintenance-4",
+      "category": "source-long",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 3.072821,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-utf8-byte-quota",
+      "category": "review-defect",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.853377,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-utf8-byte-quota",
+      "category": "review-defect",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.745768,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-utf8-byte-quota",
+      "category": "review-defect",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.746536,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-utf8-byte-quota",
+      "category": "review-defect",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.746386,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-disabled-admin",
+      "category": "review-defect",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.64533,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-disabled-admin",
+      "category": "review-defect",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.74932,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-disabled-admin",
+      "category": "review-defect",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.750683,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-disabled-admin",
+      "category": "review-defect",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.750533,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-zero-timeout",
+      "category": "review-defect",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.534069,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-zero-timeout",
+      "category": "review-defect",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.642904,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-zero-timeout",
+      "category": "review-defect",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.655095,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-zero-timeout",
+      "category": "review-defect",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.638328,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-chunk-boundary",
+      "category": "review-defect",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.748389,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-chunk-boundary",
+      "category": "review-defect",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.856623,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-chunk-boundary",
+      "category": "review-defect",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.959234,
+      "score": {
+        "passed": false,
+        "format": false,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-chunk-boundary",
+      "category": "review-defect",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.753687,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-utf8-limit",
+      "category": "review-safe",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.538639,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-utf8-limit",
+      "category": "review-safe",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.645512,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-utf8-limit",
+      "category": "review-safe",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.535519,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-utf8-limit",
+      "category": "review-safe",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.645019,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-zero-default",
+      "category": "review-safe",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.539962,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-zero-default",
+      "category": "review-safe",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.53434,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-zero-default",
+      "category": "review-safe",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.641224,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-zero-default",
+      "category": "review-safe",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.645194,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-cancellation",
+      "category": "review-safe",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.645873,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-cancellation",
+      "category": "review-safe",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.752085,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-cancellation",
+      "category": "review-safe",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.645065,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-cancellation",
+      "category": "review-safe",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.636721,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-closed-range",
+      "category": "review-safe",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.639141,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-closed-range",
+      "category": "review-safe",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.538298,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-closed-range",
+      "category": "review-safe",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.538734,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-safe-closed-range",
+      "category": "review-safe",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.638717,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-integer-input",
+      "category": "review-cross-file",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.848778,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-integer-input",
+      "category": "review-cross-file",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.849169,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-integer-input",
+      "category": "review-cross-file",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.753032,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-integer-input",
+      "category": "review-cross-file",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.747319,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-validated-size",
+      "category": "review-cross-file",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.748201,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-validated-size",
+      "category": "review-cross-file",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.646536,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-validated-size",
+      "category": "review-cross-file",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.644354,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-validated-size",
+      "category": "review-cross-file",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.638384,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-stale-token",
+      "category": "review-cross-file",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.745805,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-stale-token",
+      "category": "review-cross-file",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.854904,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-stale-token",
+      "category": "review-cross-file",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.749503,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-stale-token",
+      "category": "review-cross-file",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.75152,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": true,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-unknown-units",
+      "category": "review-cross-file",
+      "arm": "constrained_skill",
+      "elapsed_seconds": 0.75133,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-unknown-units",
+      "category": "review-cross-file",
+      "arm": "text_baseline",
+      "elapsed_seconds": 0.747994,
+      "score": {
+        "passed": false,
+        "format": true,
+        "value": false,
+        "quote": false
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-unknown-units",
+      "category": "review-cross-file",
+      "arm": "text_skill",
+      "elapsed_seconds": 0.637739,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    },
+    {
+      "case_id": "review-caller-unknown-units",
+      "category": "review-cross-file",
+      "arm": "constrained_baseline",
+      "elapsed_seconds": 0.743678,
+      "score": {
+        "passed": true,
+        "format": true,
+        "value": true,
+        "quote": true
+      },
+      "contract_failed": false
+    }
+  ],
+  "private_receipts": {
+    "data/evaluations/20261110-har008-q2-maintenance-v1": {
+      "01-request.json": "a30154fbfcbeb109a7e56394c270e8839a0d13d31f39a751953f2a28ba2ee890",
+      "01-resources.json": "0450422a30b990e1b300b986fe0411e5cb6dc73d72e07be130fb212b429d7c6e",
+      "01-response.json": "0f44ace97fb9bd29b4bde9296292393850750e6776fcbd391c356bc549b96ff0",
+      "01-score.json": "2aff1e0f2257a1f399b8efdaf553ec450e1bb65c17aa4d7172ab5d1a8377f23b",
+      "02-request.json": "f8c3100106f2c6cdb0c71842579abe0e83f6096044e36c363dce9d2980ccdc52",
+      "02-resources.json": "1d78ea2d9d656bd49af839a0ff344d46c257308ecd8bb9698f87cdcd3d00afa6",
+      "02-response.json": "e5722b0db514224e6412b40b41bbadbbcb73c8f2bdcb081bea0629d9504b3e4c",
+      "02-score.json": "37dd8390cca07ab9714a5c2919d8b7225ef90a52e53145428b69ae47c5e0d809",
+      "03-request.json": "540616c2bb10f1302223800bf1a9811ac4846a31959197ca381835201ec8cd1c",
+      "03-resources.json": "c78068d4bc78dd7cbee29f50bfe33086ed2bdf02e295b28b271873a3abd35477",
+      "03-response.json": "1daf5eefde19bf294ae470a63b950a8141197642b3f56bb2b5ae43d559a400f9",
+      "03-score.json": "88125ef7045349541687364a48077cf0764776eb9d751e68c904cebaab9d8188",
+      "04-request.json": "74ebeb6bf2f4a38d3d468865cd78069d742cd4daba54d1b42783c9b718d9e56b",
+      "04-resources.json": "417b94dcc44950e6a6b826b4b223ebf6b7656c5fc1ba95a4d759674811158385",
+      "04-response.json": "d9061970ea727b505cf7bcd927e4e450030d974b00b6de524e39d9f0959e5aeb",
+      "04-score.json": "9764b421aa9a5b22d489f7cd7d9a28cbb54208fa7f27437f66dbf1726ad4ac2f",
+      "05-request.json": "7d335960cdff9f14857871b12206a919fd5f60ffa6213f4a9e7e7da8b5b4d696",
+      "05-resources.json": "d7adac556e086339093de334666e2ba419c42d9fd7c376df7d2594577cb100b7",
+      "05-response.json": "1e4c1c43a88e8e9b8f968cb976c473dfc6ada36950926c2f21d8227827179322",
+      "05-score.json": "a2fcef54736b18d9c4116d5e07721703d05af39625a13c54b1051b520a8ea6ca",
+      "06-request.json": "2e2f909f988e63ef0b380ea0893941bddfcf8e5161280672e4508fc76c45e8c9",
+      "06-resources.json": "684ef13e1c01b22208222afa2e632f788e34ca2cf3829aa37653994974732cd8",
+      "06-response.json": "384daa9240729a3e015b77b27602513414e61d2bca3228938d29fffe5c2de4c0",
+      "06-score.json": "af26a874a19d6e5185eba70e0523008ed45ea1e6e536f34c19e959965f1fa2fa",
+      "07-request.json": "a1e9fde1c8eb5c6c830e475567a7967ca0e435e6a4382b47eb5ea932b1c3946c",
+      "07-resources.json": "8f953ab9cb280c0ea9164cb25911f2bdb44407ef5ab9d069e7cd9716fb93b3cf",
+      "07-response.json": "10167305a4c37e9018835771ae052ea83420f6f87365b434610641b61d0c717a",
+      "07-score.json": "ff61527090aa00ead75c3700fd96d1f951d8fe44399a39cdce97946fc2b3593a",
+      "08-request.json": "71e422b739c351ef35e8e965cb3db95aae89f20e1a2357e48383e63c326f4cf4",
+      "08-resources.json": "cfba789fdccb7369f7c321ef8815e4b5cd0d2acb44f3a48eada569b4f2798da8",
+      "08-response.json": "0272337d8eec10fe64f2de26978a39612901406ee18df6247fef615aff341b3f",
+      "08-score.json": "12e53571d9f353a9477d5e60b35e42cd4ce318c5b55c1192415c426e8e257151",
+      "09-request.json": "d113f56968c7e3f1d35cfcdbcc1aac48cc41deb5d182297b6e6933544e71fadd",
+      "09-resources.json": "390639a6a25ade52ce8d39527bb8bed0046297463861826a3146b029adb49add",
+      "09-response.json": "2e0d387fa2cb878c244b5d69297be050df971c69cec53a81640c8cd47564ccdc",
+      "09-score.json": "b88541e2427b3f1fffa626ecbaca1d392cdf67d3aa8fab0ed1b0ba3158516e04",
+      "10-request.json": "f74f13812ad8f55ecd17c90e7e4ef11937d3fa7d826a3c4f59c0e7b65288e0fc",
+      "10-resources.json": "bb8df73296b4771c95afbb4deb7e571a21a0cbd0fb5d11a198dd1068b47c2982",
+      "10-response.json": "cd637dffcd3a203edcd2b05d48220f5cbc9c3a7e135b770674dfd691d6976764",
+      "10-score.json": "444a7b48623047b9f3d7a0822fde4d4b7add663e961cf12c036948a4e90af793",
+      "11-request.json": "a42e12bc75d5cfadf1d97b101c349bf4c9fdd8cf969450875892e388b2cc648c",
+      "11-resources.json": "337f3a799945e74736998afc18350f972522f65dd4b925d6d7b12fa3a7700879",
+      "11-response.json": "58268be28d081fcbfcced9f23cf2a42c6294abdeaaea27ecaa14e0728b17d3f9",
+      "11-score.json": "e1396dd36a57cdf341b13fc9162a317d26f8be3023e9534d3238df458d9e2daf",
+      "12-request.json": "8d68272a3556622a9300a38b3f74c8f9c6546de017476be42aaef6c35bcf381c",
+      "12-resources.json": "4a8e41623fb4caf234ce0de061c6ebcb3a2091b2e6a3ddac6ef60d154e57a705",
+      "12-response.json": "4733bb0b0559b5ce82b960dba328393a784456333edcddda944802ad0cf4c558",
+      "12-score.json": "3ecb783377b243be3aac96913784bb1922b0287cf69501ebebb35c18bb097254",
+      "13-request.json": "090e86a4c3d40203979cb4b09848162ee62aeb05604ed1e2931cb223269704c5",
+      "13-resources.json": "af0f1b9b5b0e62ec69efe8dc45394e23e25ff6239a2ceaba49032a805b3ef9d1",
+      "13-response.json": "44ed2b149dcf7d3e8610a90f25deb048ecad693e484cd59a158423b86c570048",
+      "13-score.json": "a31d110a0b659bfb05e62198a3a54bd426f7335214c9139e45c69d93de7e94e5",
+      "14-request.json": "32d65181b8142601dddd047fe4587d88b463f9f6298bee7a34982eeab5523f44",
+      "14-resources.json": "cf991d93d8998e05f2907bf8677511bb0f0f481f6412ec99d4d45b0e0d92914e",
+      "14-response.json": "3115e17c1785d413785d2ed4e9a93806d2eb2eecd284b680ad405cdc90f6e0c4",
+      "14-score.json": "7204d74ef0236f1ad5b693f40fdb9789b533017b69a6254a8b527b0a7b1d01c7",
+      "15-request.json": "e3a4a9b5347aec69c421ac0c371a935f3cf07387b056f0cb6e3e946b9d0a0429",
+      "15-resources.json": "2220bd58b1a627cacad641ea76ef48fcd4123551ce3892d7817cfd68ce5ce925",
+      "15-response.json": "c7be25111c22b82b4aa1da701961c898283bdee7d9a72aba5953e44f2d0ad079",
+      "15-score.json": "1aa7b16be36503443b61d10ff5bcaa8cbc47b009bfa31c1f8bb89ce29802e400",
+      "16-request.json": "1ff9fd1502702ae9d658727359bb5c867171d12c8515d5f8fea0e00b010b2ad0",
+      "16-resources.json": "f0feed633651c92f04f7e1b581374672876508ddb633115edfc6165e8e06ef48",
+      "16-response.json": "59670a6170d61716312d880fe93821c90d01c3fc89cbda9cc4f013837e3c8550",
+      "16-score.json": "ae510ada448544e4133b31e5b501879e19dbc822b9d5de34415ec69340070810",
+      "17-request.json": "c23df5c64a6c9f67fcad15bad7f2ee8e80c6266bc380b66f9176b7c856952309",
+      "17-resources.json": "fb3f1ec09c1263f43f9798e3d0a9898a5b7ebe270ebbdb1f2f5daf82edacb944",
+      "17-response.json": "f8e60394cb4950a7c5652c666b1eb37364ef8512c603e2ac2276d92d5d365131",
+      "17-score.json": "e9041f5b7591e023b587b011a9ce3073ba2ab63a1d755fac6b185dd52b061637",
+      "18-request.json": "2a996f4faf38bca9857fa42f44e3b6453b160b43786e1fafc10fa1beec1b044e",
+      "18-resources.json": "43f0a996f7832c538734d9511c69dde4a2c22a58db06719e1aad20c02ec690b2",
+      "18-response.json": "3ce7f73b795f52f61ba39377d3b1ba1f06955f1761e1ac0cbf9fe0db3e4b602b",
+      "18-score.json": "a61ad09b0022113452093aab510672e6cee94f77269ed2329dba01400d3f77df",
+      "19-request.json": "7a4f92f091c7a3ae022bf10a319af83082601c7e2068f97a92d9d8bb6901c517",
+      "19-resources.json": "b4d79a991cb3b4a1c341ddff5d4d3456a0a1d9fea4f94763e24f7b5ae6863a80",
+      "19-response.json": "555c3a1b563bcc2481a5b055279ae05c099c2b988b7315dd26a22119ef6cb75a",
+      "19-score.json": "59645b2a80bb7bdff4346ddd5a62d1ae99a5d776ef44326d0de68e2239436ce9",
+      "20-request.json": "6ab4d1a0cdf1c045d6f39f875edfc52317d8b0e076e397d9aac218c3a871287e",
+      "20-resources.json": "d566c00a6a9bab458ad0326d3f51a2caa0a0594683747d9271b7e6b0585e4834",
+      "20-response.json": "3fdcc833255364095511b5559586219ea61f309f357d2e503db9977c71fdd679",
+      "20-score.json": "cfa562c15f0ba025e979e47848d17276d24137bb82f067a5d7516c249bbb03c3",
+      "21-request.json": "d9c3660e32173b8f201c4d068bfb17c85a077d07934728e3ec13dcdea005d582",
+      "21-resources.json": "6b433cae5ef4a46bb302522e62d5afa2ffb576ad6edcb964c46b7ac0b0612e8d",
+      "21-response.json": "f9be41a6f86dd1169d4d8cfc2f7d9b9cb0c809af648e78347e49995263087601",
+      "21-score.json": "2d628e64ad30cc7f3b2b8db58b52eafbc3fcc4e2df1bc3ab8c8e401d141df4f8",
+      "22-request.json": "12e8c94f041feff04d355a1b8e104242e43a632c82c0942057968f464f17bb0b",
+      "22-resources.json": "809758ddbc35fac1f02db9c42fcde35d2a4b7fc134727b8fa1f7ce02889dd7b7",
+      "22-response.json": "c5bf22882f77df68aa13a8e40c378a14de0260922f67de70b681be5a98db26bc",
+      "22-score.json": "e11bdd7c5262e81726163a33f1cee5f0d6c256b64c710acbd3818c58db9cb282",
+      "23-request.json": "14c58996563a6eccc51a06b7a7721d331c46c398e6382f28ae71a07ff5627f0f",
+      "23-resources.json": "085715bbdf0e5ac3379377c3f86839495abf4c40d4476b15e8c1e3e3ad1c9c1e",
+      "23-response.json": "282c64f157541635903678ac34e2cf22d067b6b4ca5b772dc4c7fd7b7a912bbc",
+      "23-score.json": "cfc48bab7dc483f352002726f483e3ea8e4ac59a000a65688038bdf3aad3be1a",
+      "24-request.json": "af0a3dfbeef8d1e4ef58753897f5061b75fed8b19960ead4e05b65f4464c0009",
+      "24-resources.json": "15244e873f1044d0fb262aa7275d0e1ddf64e0268867f11200a60e93193b75bc",
+      "24-response.json": "66dfb379d7738a6e0491f3e722132e8271ebc5ccb5028522bf797368470f93c7",
+      "24-score.json": "ac8b27019ebe0bdbfff7687f434b5e0fba21a034a8fd9f061f2172a1f48c97ca",
+      "25-request.json": "7b31553ad5b64952ce1602281b5cf3b7c1844b4c22c98d95799b59d637c41bd3",
+      "25-resources.json": "52df2d0dcfb5b9e03ecbbd6d7dd34948be69c255cfba40e6cf7304ecfe45ecbd",
+      "25-response.json": "8423dfaf4eee610c09ff41d6d65c3fefeec591d22a422b4a2f5229edca9ab608",
+      "25-score.json": "3ab5c8422f52c6bec4f3febda646a231ce36729a1f9ecf8b44f5bb0d7f5879ac",
+      "26-request.json": "c07b4f70d9e8fc833ce3dd2a8c34176e23ebd6749bf8503daa75a03d64c76e47",
+      "26-resources.json": "42e3e1e2412f9a0704c0e8cede5c2256f1e2ace1afc6dba95890ea6b1c84e353",
+      "26-response.json": "8b1846e83850f96c561c609f82c4c3aa6d34f3a2e2d80b10eb37a88bb664f3c5",
+      "26-score.json": "0d026f8e899bd4c6f12f1570b47e874dd253d42b5867d3ce9cde86d4222483f8",
+      "27-request.json": "f5f4c5331b6f34bfac16888448dc3267dd6fad0c2b191de15c145dda51abf7da",
+      "27-resources.json": "858bdc29f4b51a68cba7a6ea9a470fbf4e34b2821e41574e55e0f4f1b6e5f1a8",
+      "27-response.json": "cca6ba44cb2e84aef5dfc943371a9191509c0d6e189094e5f2896fd8a5ada3a9",
+      "27-score.json": "56eb5b4316db05c68a7201a09237a1445ef068ed5e56514d744f304977d04145",
+      "28-request.json": "11b0b28e775aaffbd65aa1be23783396bc7202184e7a99248c0d312521593e43",
+      "28-resources.json": "4ccb1ff991363b1e6b32442087af29063031dbddb31b400d79d89e5f7f52fe88",
+      "28-response.json": "5ee53f12eed5b9879662f58dc3efdfa533744335e311f671edbd3fa8ea568067",
+      "28-score.json": "c64ba21362d9e82f920fb20b002c2126a35ae6d72887df539c0abcf0dab27bab",
+      "29-request.json": "768502a2a4529be2c1e7b4c8d7808b9bd9a6fe476d28093086335206241f793a",
+      "29-resources.json": "478d02231f7c7d15273987231367fa8382a954e65316653a78c411621bc991f3",
+      "29-response.json": "899b3783980bf5e11d311e53de96424e32fd641acb8cc7c94beeecf7fccdf4a7",
+      "29-score.json": "312dd422ab37494c4fd19ca27171dc7395f9d9e5d06dd073302d836cdeb9ad49",
+      "30-request.json": "3aa9159f36342fb39d72fdebeae8490fa518f0818fa6bc3e61e9e59528fe45d1",
+      "30-resources.json": "c9977db974aacce093aeb9e603de7b4fa72a9eb0b5949df6d473b42ba0f4f70a",
+      "30-response.json": "e1b99de08a6a89285655cae57d57d58fc2c08d93b5dd66035f46d8763012722e",
+      "30-score.json": "f5f7292ad7002808acd39b33a76e00bb9bebbb429d07481e0e7a5f844ba47fcc",
+      "31-request.json": "f58168c5a2070a59b268228e92ca1e891d5fff365c0f35efc8e9f17d7029d071",
+      "31-resources.json": "048e0da06fe92fb3acf873653201dc64544d12cc8d06184c4e179ec2e1fc2cc1",
+      "31-response.json": "d9774aa6ad32f91923fa617a020f82fb9e52250e66ad02578775d61bb20f44cf",
+      "31-score.json": "9128916962fbd78d7692cb2a18e2adb5c6265251c182bf0ec9b3d85a970378d5",
+      "32-request.json": "9accc723f8463c860a9dbf16ed551dfd1341693c881c91071cb841cdd64dda48",
+      "32-resources.json": "2a14c540d5eed9d695a1d6b8d21c227fb57c86a37580740b8c651c2866fca696",
+      "32-response.json": "b1e5cea19b812bab2b967cb317acd9f5ecf5fe26d12c8ad8bf5f5f4ffcc8988b",
+      "32-score.json": "a51926046d1b3895ad5f50c1719b7c54635e788235d8bfbb3291aebf61cd3b6a",
+      "33-request.json": "a403758f9e60cd71aadeb3fa4d8dd3764f9655034d23bafe7c1dce951bc41810",
+      "33-resources.json": "77e77aa187311f028209fe6362442bb4f1f87085bfd4a0b3ea56e1364c47fc30",
+      "33-response.json": "92ee26919da7b86e93ebadbd72ff5ebbca33ab4e1415d1f01933f75428c447bc",
+      "33-score.json": "cdfbe68ca68aec9f3a50a79092edfd004374df19d024d5279c09e9ebe80e684b",
+      "34-request.json": "e7fa643b54dd5ceb929a6cb40ca3e423542f58b857ee2a9c17a036c59883e7f1",
+      "34-resources.json": "9a0597e7fc26bd8e00097497f9801e99c96a802563c8dea15f03ac96a70c5517",
+      "34-response.json": "526e02f0d3a9d04da1c8160418bae432a0961fdeb41d15eaba9e0b0e7dd6eb3b",
+      "34-score.json": "dd3d87e66dd18f9927a844a4371c3666eb70641c360a165aef846df323f14ea9",
+      "35-request.json": "383cc897ae39aadd384a1e4005cb97f727cff7068d64fb7c9524c719e0bcd30c",
+      "35-resources.json": "74e5913010d3062666eae9b3208330e5a3398bc0087c868555dc7baba409d146",
+      "35-response.json": "27f6cccb9df408507eaf208184afd38432981daa2e8e987cd463917a0f77ff5d",
+      "35-score.json": "17cd85ae386b6865b8730ea293e66d68eef35907a6429e66a971284ac4e9fc66",
+      "36-request.json": "9bc5bdf8fb9ec4962f40ce3535108ae2b57d2e977b94203b74f2d3d4f534088f",
+      "36-resources.json": "2b820d5979614b3990ea54c730af279219caa0adfd5ca56b5738d1d85301592d",
+      "36-response.json": "ddc662286d9ce1dacf13edfc90184712d7200fc6ff3fe2de1343d5077ab90878",
+      "36-score.json": "75b68ef88678a6158c0da511c88de69dd52164c5ef4247cf2d9ef92f7f95fa53",
+      "37-request.json": "66770873b3b7d4d67b2efce2985b5d99f4932cf4522801b8e1cc25b75b8d46ef",
+      "37-resources.json": "5ef11aefa5c7f6aeb67cfb1f293d1e09bca040c45ceabb0c59624a469f8ab5c4",
+      "37-response.json": "def6bb0a65c90fbd00f347ed50ae3fb976de2f1ae706bacc3ec993cd455c522b",
+      "37-score.json": "c17a84d85b2bca9dd9aa6bff36023d8bae66f0068dcfc92b30c21bc851c58c57",
+      "38-request.json": "0fe37e92e8804e083b576336a4fcb9fd92ff8eff7e43ba6e08a72451d4243662",
+      "38-resources.json": "11fba181269395756ab21352aed476bcb19b4e929249a6d13ab2726a064f1e9e",
+      "38-response.json": "6351f8b8038088350a6074683f842695827e6700bb63d00ddef644b2628dc0dd",
+      "38-score.json": "5c3b4d25018ddf8c05baac03507ab179beac84cffb3fd10b64d163dc7d6f8387",
+      "39-request.json": "7448c749f3c75661361b0e59ce362e9db35af0ed6ea1db48b62078f788bfd0e2",
+      "39-resources.json": "82141dbbd8fe0527808c7d1c5dcfb7384d4561fdabddec1d0230d337c54bca5f",
+      "39-response.json": "49f86b594fe913a0c520af130cafec83857c459ec16165c57020cdaca14121a4",
+      "39-score.json": "354e573b3b6ae10ae63248ef07a41d409d5582b0563cdaeabd67ecaebeaf72a2",
+      "40-request.json": "2486c102846deb5ad0873ef9232c022da3a3dd0543f1ff5dd596d8b4954b3433",
+      "40-resources.json": "43912491c3c9a937d264e5555fce2017bee9337e154c4c87dcb1229c07ff37b0",
+      "40-response.json": "fbf11db51b90ee325070e2dea480014881902924f0de2f77809f0773f44326f3",
+      "40-score.json": "cba712a411eba44a66588b669f32b5fd3e4f2726fa8cd5412276261e9f78f661",
+      "41-request.json": "68241b268d6bb4e10814020ee1370219a548a1e314ec2acbab7ee514d85f2eed",
+      "41-resources.json": "791c22f7131a12cae7853e8c0ecf5bb4e428aafe8feea5140e821740dc0c75ca",
+      "41-response.json": "511fc06405d65f07a7069ba9fdfe2744e83cf78908203ca0573ca315eccf427c",
+      "41-score.json": "203bd93d02eedd55f4f594740d8f0a58493e503af226ed7149e4fee2ea13a932",
+      "42-request.json": "4923740a84bc2e6396e310de79ce6e768e3a3cc013129a87c56384452632a139",
+      "42-resources.json": "3353790ec90fcd4326019dec97c56c7a82347486aa79329f1d2be8f9728eb079",
+      "42-response.json": "ca052769e9dc238674d90bd8ff7a22fa9d5398e0a8d1456583fd6afee65f123e",
+      "42-score.json": "00a0539434e6c6e5dbc1e643b84643bdefdadde23f41f3740fed637e1ac6d8aa",
+      "43-request.json": "b113a1385919167cb2c2698f3cbfc9f8fb4ffd3af99d1db6c3e26e9205ab1f19",
+      "43-resources.json": "c0fa6d8497f22aacfadbab77148dd924f6b6714b3321dea43b1ff5b61f1f4e84",
+      "43-response.json": "afd11b738f0555063e8e745702e32d2c6d0a39e0f0ea98cfab15d8bc801b10f5",
+      "43-score.json": "25aed3699b51b78e1b57722aeba77edbf93d250dcfeeec5cd36206e802c6aa30",
+      "44-request.json": "73d61466566d3edae7762cd013b418c5f04c7eeae55577a39b45064235e5f46c",
+      "44-resources.json": "1bfea082549bb63349934a790263057bf401d3e87624f3d54d29a95631ebc759",
+      "44-response.json": "4cc9bd84cd49b1ed5f8f92c8f1eaa5b40b9b178e299ddb45818902be83b4d1af",
+      "44-score.json": "8f5b5b4b787e007e2ad0592c5a83bf1591f51b2f500e9bc88682fde537b90a41",
+      "45-request.json": "c39e41eb07e494f5dd98de6bbba4935336ebdf4f6f05c7a6700ee071e5fd6dc5",
+      "45-resources.json": "d3384110bd7c53a3e562dae7ed43c3597c463e7e86463c04dc6bdff63c046305",
+      "45-response.json": "c2e8588b59979f4b5c99bcbcb6b2acb99c503a3b2108ff0c09a7ab965250101d",
+      "45-score.json": "843a5ee37d9b0914c9ccc6136dcfb1ac6368f31d9792205a7c69386b3db6d53c",
+      "46-request.json": "f7160425519e8d115e096a86b839703602dec26596a92c7d526adf11291e6554",
+      "46-resources.json": "423ee24b7217aa063725b295f5e4db29c3dec8c0dbc861d2f5f9ec44cdd99b1a",
+      "46-response.json": "2d37c27eed0130d089b5046a2312d8963a380c95bff23bad9a1e6187a1b4422b",
+      "46-score.json": "e4e380fa7d45335acd5ae3c4d49873de300ce439b84a612a554585aab6e173ab",
+      "47-request.json": "f62061cd45cbbe20ee6767a695af7399c4afa1ffcd198e9b1bddf76887dc3965",
+      "47-resources.json": "79277a6ba451447da2beeb907404499cd4cc4e4b3b8de894bd3e8d586cc1fbcb",
+      "47-response.json": "f4a8dd0131535f04a5e945db5a65c03263f75c884ad4e632d496b72f5cf41799",
+      "47-score.json": "6af67411c8fe4348ab6b920ce9e70639d4cae1f893db381daf4bae3e78802414",
+      "48-request.json": "032c00d881b97cc97a000a82c6abc717e7fb64f10cfd4533b71a14b0bd8d1701",
+      "48-resources.json": "ab4f235ddb21481dab385398f48d2b4a6320d8a52c1f7db82464b93e6c0a58eb",
+      "48-response.json": "b4672a8a1b8c1e35eaf6d1f56da94246edb5f707c03223d8b3962f0f39c28307",
+      "48-score.json": "cbce645e25487f621d3493c16701b9ea29f02dc56c32aa1326d0052b5b8ed74a",
+      "49-request.json": "1e0be539893aa18e443d1e5cd83583b870f8446128ab023bf750a8067c6332f7",
+      "49-resources.json": "ce6f59fd03d931aab2c16abc8c9a9653cdc71aeefde4d3c0c49d39bc538f28b1",
+      "49-response.json": "0ff3e291c39e475b09456533ba26edb558a4395154e6a9b698ea71e9c2829ab7",
+      "49-score.json": "e80b6f309ac4bf8e96099891b6197486f4a9c8a1d3c1762d9198ff3250b225be",
+      "50-request.json": "d0f2673c5cb682ec8e2bd200c3f738f7b6216de6e8de8ea8e1f0f3259639455e",
+      "50-resources.json": "6c0d5e3b97b0ef56e260db25a59d1f7054bf7220a4076a1e5cce65442c67ffc1",
+      "50-response.json": "c92e2db45a24c5c01c875128a4fe19fa49f879f963cf484a76d6cc4a3f2ef6c1",
+      "50-score.json": "e54f229ac8f5b146d5fa8605860ec1bdfb9e5a102f76f645b52284b824ccb449",
+      "51-request.json": "328407bdffd642f6a4e07fbac10c7a46bfb509e00e63c8dd1051dfb948ff9806",
+      "51-resources.json": "0747707683d55c0961a9cc4addc3b943f1a5b960d74ca0c9ec60f9d4c9e53412",
+      "51-response.json": "73a322048a1d1c69863dfa701b15bf9260eac8aea454e020a9a3f0fc2712877b",
+      "51-score.json": "b36fe2bb361da3bcdfab1be6d03b04bd5571ab791989844c02aadabe15dcbc41",
+      "52-request.json": "f934bb2a2de00282704e22bb0bc26ade4821b3ad71b99c4e82fc11e3df302030",
+      "52-resources.json": "3928e08f3c8fa7b41693ea8c247185f93059059e8a72317f9e682fbfe44ae061",
+      "52-response.json": "17bf7f327098f564882a077d60bf8e4b2bab8b217062f854b65019dd9ec3c8e2",
+      "52-score.json": "ec7f832d75d27638aa1706bbdde20cc0b0ed1664d7a1395af7586ca5728a0772",
+      "53-request.json": "0ca301ef3ee0f8d49a0b05afe0d59e1655bc7903b289186aa1ec528e31e6681e",
+      "53-resources.json": "47d4e11a2d6de40c7fce108c1e5eb1cde6b06a6e09a25e7ab53729360e19fe18",
+      "53-response.json": "d4351a440aad5491969f83941db4c78c2f3d0f5189cbd45908ee8c84c92f831f",
+      "53-score.json": "a1aee8426505b2afcb854d08e2076ffcc9f10670e3bccb5ae8044f5117dd3afe",
+      "54-request.json": "d5d783c78ca3f879f82ad39d4bf8d505c7197b2642f172c0f75b9d437c517268",
+      "54-resources.json": "e6954ab0e188e829412e16ba5f46638e64b703dc8a60a35a82c6b13bf1f6d27a",
+      "54-response.json": "c8f470b2e70dc80d265c43b22fe69db1533b2caa94593bc17f2f7180530da70e",
+      "54-score.json": "88dab962a4bf4b16dd0990d9beaa6c8945af65bd7c0654840d3adae90d12a624",
+      "55-request.json": "8f4c93913b3c4e060b1cf9fc616ce0fff1c888556e2b6faf146e2eb23d567add",
+      "55-resources.json": "181cd0bef11ea2edc8411c806a84a3bce81c6ef5f2e25015e83b026e6fb2fa42",
+      "55-response.json": "e39e25c2249fc2e89e0a506343078b87749cc6124cbbb523a498764100deef06",
+      "55-score.json": "c4de8682b45b7533d2cb6f5f39100bbe753388c5c000bbdf06deef4a69f2aa99",
+      "56-request.json": "0f4a02dab82755a1149a877518ba0e2f09a0c121db41da36c9eecb1dab392799",
+      "56-resources.json": "5eb61ea0369d0aa380ffa2fd8ff1c8602a741dbb818bfdaeb8f5965e34ddb59b",
+      "56-response.json": "1b5ba0952fc3163c69a44a2c29cb761c9622c3cc169d5f6e33fd01cf18ce76a2",
+      "56-score.json": "27ed543bb56690053a0aa9f255ba5833ade6fd6b2ac294579b52d2878f6c0e14",
+      "57-request.json": "800a236719f39264d3edde697ecd296fcd439e95d639b4e4275393c646a556fe",
+      "57-resources.json": "1b70dbec13633bda20c1a73e17bf5e7e87d7c9cb4110e3e311e7801d2e0b5bd6",
+      "57-response.json": "dde1c30ff4fcaa7c314b79192e3225274e1c660033785693a490f1e86b6e2ab5",
+      "57-score.json": "9e70942e9156f28bcef21aa9bd06501d04049c9dd76b9c335b299a6c93969f5c",
+      "58-request.json": "26ec8da350616bf4bc83086be333faa7a5052818f15183cab856db1865ce9937",
+      "58-resources.json": "a09f5de95a5b7d58e6276fe303450f17a24d9f3d8cca0911aff3f53d35403099",
+      "58-response.json": "8bbaad5fa1951b9e0108de22aa14531570759dacc32d393cd0a7fd3d7d58733c",
+      "58-score.json": "f9292545e53c85105d459438422de59cf3500424826a7938b41d9bf7e5e8f82a",
+      "59-request.json": "62a14c78aa2d3a5b2798084431adcf5138fcc335948317ddf2fe8ff902ce49a7",
+      "59-resources.json": "90aaeb457e92d372f6f3ac2f7c28d4ba0bcbd8600349738c5c3d83caad1fa728",
+      "59-response.json": "fb36ac91aecf964d9792e9e9c7d93e43ddffac440d3257b8b6280e528329e646",
+      "59-score.json": "6211fae28225fbd981a14c429f67797d23c325d8601fa0e51c9c0907fdf61da1",
+      "60-request.json": "4d79ba6f7e4795e4ecca09a44ca7637fd16cbe30a0d5e76b1abc27a45dff402a",
+      "60-resources.json": "f2a7d989b4dbe0c9303d993468ae9e90c7d171f24ff46e0d17d97eb03052b1d1",
+      "60-response.json": "27aee8809d74129405fa1d8651df9a23549fe74fb6edf3044328507e1e76ac79",
+      "60-score.json": "bedb166bde6bdc6e8f2d79b087ed73feb500006f189cf81efa73444ef45e039c",
+      "61-request.json": "9fb5b76aa2456ee4f464a8fd68162bde3b520b4dfd4b4b7d5558bca902eb55cf",
+      "61-resources.json": "10238c6aa36b9b88851f4ba653bab7a3b12e4438075b653626ab346ce7d2043a",
+      "61-response.json": "df48c08a5f5984f3c1ff1f86b0aeefbcdd1ba720de5c5216a87e274ac97c9259",
+      "61-score.json": "c960708ef21206f0c54d5041d4a92423d98991c0f797563769960420ba2f1cd7",
+      "62-request.json": "47ee21960156c4ed37b2a1500b514e66f5fabd62714da0137b94bf6d9b62b98a",
+      "62-resources.json": "93148038f5c95ce70e672aed4e57da7bef8d6038ad472a98464919895edf0c08",
+      "62-response.json": "d4dc5622af1a3716d7efad8fc220e1aa3f0a258084b4400026894f54a558c2bc",
+      "62-score.json": "48c27d644c8c695cac23446a4d417bc1be3494b1ff8284140f1280084a93778a",
+      "63-request.json": "e438f805e4d903ee4a3cfc6b04a582ffd2b0b3b03f05c1f788f7fe9d174b110e",
+      "63-resources.json": "b07bfa00fd9b04299ad0c56ab3b5202b067a83d7d33bbde4fc5b15be07ae885d",
+      "63-response.json": "ac16708078e5c0f07dc17f3e546b4eb109d0df14fee684395f9ecbe9b093a0f4",
+      "63-score.json": "c849df0ce7f22edf8a959a74328eeb5692409710292944eb7c7a50966306de47",
+      "64-request.json": "d2ca5b1d52bdd9ad431e2838c525fdf02576294957c19e562eaab24f9d1ea53e",
+      "64-resources.json": "c2bf68c86529066f679bcc9f548d6685283631fcb6153cbb78186707f1a553e3",
+      "64-response.json": "5c080e9dad279b9ce331ecb7f2f65ebac8f7a54223aec2000db4582c33541000",
+      "64-score.json": "07e2b8f2d9a44e48403714d11b6f04a51cd69ed990df20e27c7563d4cc7e2689",
+      "65-request.json": "3ba3862b83ff904fa5f335ae7a3378d671ddbd656bf54189de76d47ec32041ed",
+      "65-resources.json": "c6d56dec039d8b3bbdd9e27bceeeee7a946babfa2ebd4ed80bcb51bbe195d8d8",
+      "65-response.json": "cba70c8e83f8a0597d0908d4535ee55a34715717262e61fe069277b977630605",
+      "65-score.json": "8714f838ef68f3a0bf27b0328cac9370242261d1a020a18f19a76bed829d3386",
+      "66-request.json": "776fa15e07d220dc5833bc37e0ded950f13efa8f6faca7d118dc4133cc91e162",
+      "66-resources.json": "417aca0f133a18e1d0cd9297c971cf65dd816d8cd9f3bde44c20ee7f81ab30b5",
+      "66-response.json": "a48916a3b0b201af1cdcdbee683f069ef0b293c30544f147af203d1049c58954",
+      "66-score.json": "5ce9b224319af5edf72a704b582694e76c8d78aba6c42c2df687e34707897c2b",
+      "67-request.json": "01d63c2f01817093863644081f693284b9816e66c82738e264c437f8839daf35",
+      "67-resources.json": "d2052dc0d34a982f1cc5814aafd0d0803d5395647eea6550e7378108570201ec",
+      "67-response.json": "dbaa20be5f989c4b4f4d306dbb44af034224a9d6c477ac53f3d2662946676d38",
+      "67-score.json": "cde914d5bde6e9f1db828ea6f74ccd4c3ec42624e68b1334acd19327f9afce96",
+      "68-request.json": "7f5389b03b5d18be59f7be3785a934d5262c7e4cbf70d67964174405cc17791a",
+      "68-resources.json": "be2ca4f8e20a079034c7e58a6e5d13591df519d8d6bb88096990c4cefc8ed893",
+      "68-response.json": "f6efdc79b02b446012f15721c903bbcfb0d298d6f5941197d213a625cd86009c",
+      "68-score.json": "4c0e470d26ff2be63502284e0f69dabfe1d4ef1577a9b0ae6dea7ffe7f95dd27",
+      "69-request.json": "eef35a10a60b66a79c03addaa3ccc82685c1ca14d4bb174ea4e8b10cfeb790fc",
+      "69-resources.json": "fd18e63f366bf0746cc263b07a4e6b52f80ce283ed6e4c860e0a6aada0e1ae94",
+      "69-response.json": "69876c04cfc1e4d2c05433764b8194463c7264d0dc82825f1ca2dcca3fdcefba",
+      "69-score.json": "757526e578fc5599a56b655aa7f9212c14c7e29c89127997d5d6b1f31601c065",
+      "70-request.json": "d298395287fb9f8d44e22e613b9d49edc1f3d1968831913185fc3e28646504b9",
+      "70-resources.json": "5ddeca3c551342fe0bd921994ec74cc4eea3411c26afad0a364e169b263bb9db",
+      "70-response.json": "cb5f1c29cb1bb78793e74a8bffee000c5f7db1f43220487305086d950a93152c",
+      "70-score.json": "4a65f9a4aca9e13873b1161223959c14129a8e3ef21ab95a099656722c16c18f",
+      "71-request.json": "7e123cdf19d601a7a98367556d438e0a505f8fd91093303f955a2ae2bdea13ea",
+      "71-resources.json": "3756d39edc091882ec9f2bf5867c0a8ae01cb1066af6ffc58aef3043631574f1",
+      "71-response.json": "609ade30650ab7f342fcf6fd3cf42877ce9c17a1cf59d1103ee20661d53ccb2d",
+      "71-score.json": "b885d9a38bcab5d3df2c3de211db28fbad9cd713cf95a47ffb67fee16ac68a9e",
+      "72-request.json": "c14bb71fb7eaa5d3cecdf033479e9dea7cc286ab179184caf297afb7c42e43d2",
+      "72-resources.json": "ed050fb29696c7c34bf349cb36417e3954eddafafb2f232a7e518b2f1f02d038",
+      "72-response.json": "632447e76732cc1aa3753d7dabc1bc61ff6d419b924c3a6c9dcc90722fb11afb",
+      "72-score.json": "8275f5fa4b86e27963db1cb29f746e4beb9478984a26b4b8278350903dba6ab9",
+      "73-request.json": "d917f5242d81a1d77c7ececa355a798df1dcb439919e8f7e35ab1e4525dd0456",
+      "73-resources.json": "4a61ec97098668b02b3f9eedda18af89171449fe8a6a8404639353979956f2b4",
+      "73-response.json": "b2b3c5786cc7cebf5bdf38a87387ecd0f3141968700603f49c74bcddac1ef323",
+      "73-score.json": "7111d7a46a78aa619e300cce92dcdacf0bed1fd5d8e3f7973e3087be495f2ecc",
+      "74-request.json": "b72b8e169e416cb3f5977b6a77b77e384d2db98a71165be9820339c0e5d04a6c",
+      "74-resources.json": "811e45560242fc88c22c97f57e0247750d1822b65f13a53e1fecd8ec487b0243",
+      "74-response.json": "f70071610bcb1a94d953321bf64fd991d90b5f49971e4443a109108b413bc21f",
+      "74-score.json": "5b9b47fd1dc2c214e639a62092543c86a5bd50a98aad1adfdd4054c7513fcf09",
+      "75-request.json": "64fc66803bb570c2ebf7c9ce5cebb9f833193a450fecf93fc05258bd88ce8803",
+      "75-resources.json": "c0e4d3e2c8e06c24371acf57bbff1a723d4af75d81461b4c7d64b91fc4b8a230",
+      "75-response.json": "8935f5d299f48bf2b357b835dad5876d378842bb24b1d2a264b299e0c2bd831b",
+      "75-score.json": "33ba08884114d327ea7e1fbe18b9d1d76c089bd0312d409e4b9ba742305ecd2f",
+      "76-request.json": "d347653ed7484adefd78cfc486e496a45de45fd1e1976cfe14850b2dad2dd4d1",
+      "76-resources.json": "73d72933f5640cc66b19e639d691b1f5858f082a848188282e566f2253ff2f9d",
+      "76-response.json": "40c57b7457cb35261f49285b614ea2da4a735a0f27add32b85640240eab2fd6f",
+      "76-score.json": "d57829c3a7dd9cc6be1c8491eb55b0490c23ea13366ddd4c7d04ca9e183c4e58",
+      "77-request.json": "3a9a1c9d8d90872cb9c3bc73bcf3a75f4feaf0320614f9da8106edb71988b9e5",
+      "77-resources.json": "7a36550c8895649f9570be9a38f08d33cdcecfdac005f61f49e1914e3e3546c3",
+      "77-response.json": "f3f8d7c0b183e00ade8e194597cc9bbd8ddcaa5f87007dae87ece6ec5867648a",
+      "77-score.json": "4c2b906ba04f371bdbe03dd0a3dac65afc0ba58a93dc2fd36967ae14da5c8a54",
+      "78-request.json": "4292ebc726631a2b4eafb0cdaceabb61c6777304ad7f7837c3c7a98119c8c294",
+      "78-resources.json": "7fd8e4b1edd4cbaeefcaa2c2a05c22b0f9bf14c84d94ffd475265dd6af4b064f",
+      "78-response.json": "0ac2295e35f8688a17f64b12a48b54885fec99d14157ab5a7c7fec276d3b2cd5",
+      "78-score.json": "ceb5a6e8cd53d7cb23b2f83a1dfde2a610c321b0048daddb176ef27f98cd44c0",
+      "79-request.json": "2da1680186dd8c99719a10cf51c2aa297767fdf9d3d581a270d320e3dcd9e3a7",
+      "79-resources.json": "54c4987ed32c776affce014c2119faf546a14bbcdd35a15dcfe6ba2012d1e8fd",
+      "79-response.json": "c26acd84404a5556b798567eaaf839db9e6d2b68b69bac01f6ba583e38d3fa51",
+      "79-score.json": "474c348f3b84349aa12562394d3de9dfacfb31990755ed0746b8bc2c3cbea31f",
+      "80-request.json": "2c7f23c59d1bf7e418f7724d08e499c6dda7f3c886e13bf7a1b3a0df6b8f6c67",
+      "80-resources.json": "88e18b3ec6e095586f2e5be0c7c04fae44979d4281f85c8fe29e04a77a149d1c",
+      "80-response.json": "03729c6d2e730735a0b51a5d3930700d68be7e2e0c7bfd15f4afa547b464e201",
+      "80-score.json": "5ce24319af1a9d67fb6084620938f93b16b6d339ad951797cba7bf6224474284",
+      "81-request.json": "df8371ac46fcd4015fa04d518529ac7f569133fc10b7bb2311d4546bdb584d10",
+      "81-resources.json": "14b6c0a43acc39f6f49855aa9ac3f7b90916e0dd0f141e89ee0abb59863ec410",
+      "81-response.json": "7f3905e4391d3e007969a39cf8caa04ea8c4d330651aac669485990ffe8bacb8",
+      "81-score.json": "cd3e600c8d4aa2f2e9633f1937ad5878af817e895fa1140eae0e74aba5611a50",
+      "82-request.json": "74cf5409b3277966eb9af4732d81f58753c9f27a82d68eda5f29149efcb1dfbb",
+      "82-resources.json": "3012c06227f304f2a5b7a1eb0be9053c5fbe2ce89c325bcb3782d04c2a8b8512",
+      "82-response.json": "68e23c2521e6aaff6fbd99c96e823d9aa275c5eea52e7358ed4e5da8b2c9ef12",
+      "82-score.json": "c704384b67b71663dc53a9113f076b391476ab9458d468f62f5ba5583a020c23",
+      "83-request.json": "471e3e3e695262d309cfcdb7b3af081cbbec1dd6683842d6d53a8d4654be33b0",
+      "83-resources.json": "00fa4414ab5fe9e13248dd441417b01c34690ac342ce2568d3ad9df9b4221d98",
+      "83-response.json": "90c8b24cd5ae0c9044edbaf3c77ca2e80d6e32e902a013aed6d534fe534948b9",
+      "83-score.json": "befd2457f80887f1e1e7962f8a3dd04bf7272090eb4914ad2511e213afd33045",
+      "84-request.json": "5cd45f19afe1bcb608e0df856169381d180c904d691dbe2ba58ce6e986f58f96",
+      "84-resources.json": "c9db889df0651ef2b5bcf37e390591d9dbb0b4c22834b74306c3b1618d72ea69",
+      "84-response.json": "ab5de313ba549e236ea021f0078637da6724f3ea8c8bc40290b29f9e5994d06a",
+      "84-score.json": "fdbc5fcf5a3d87df8676d84ebd44ab199a136fc6ea6e3e11b42e652e5f5dcf27",
+      "85-request.json": "0f4e434583e5efd7f4eb2c7d69864cebf55cca5551dcb35c9af577d13cfee73a",
+      "85-resources.json": "d09c0d4f3850bc5b49626dfdafe99cc1b3f9e26868fe8ba3e5690bdfc579d6a5",
+      "85-response.json": "aba1c9f9b92369bfab66ef3b3a448e1b5e2a66eaaf2bcf36d23a3e4cb204906d",
+      "85-score.json": "8db69a3c6c60dfd930eb9eed1a58d503b868a2c9fc797b5ddb96e04592d9a628",
+      "86-request.json": "6891f6d8c051a86e3bb7c4f183c859cda6a25f46cdc7f019d42f54c9a52aa9ee",
+      "86-resources.json": "931a8a437bbc19dccb718cd2e63679b69bba5dcb43a7cd9634f5fa2b3d3976f4",
+      "86-response.json": "74cc9e7b477ad7e17bc6f320870f990f3e30df07c7b9cd7eb1ca9ea46c72bce4",
+      "86-score.json": "16030b518cf5e0b6fa37252d2461f2c9a5e737e2bf363f1307c92bca591790c1",
+      "87-request.json": "c5160c2b9473efe9e068ab6a86588ed3095010f688464066c9093019a9ea9067",
+      "87-resources.json": "f4a3c8eef17df69c5fbefe932d12ff02003400b51396a3a68086c2182053399a",
+      "87-response.json": "56106d07d89d063ad802b420177b43a077ead4eda47ad0cf4ec02974353d02ef",
+      "87-score.json": "3055ebf933b68b050ab0b0dbdf75681417f593ded385fb3d1fbffe68b16bf2f0",
+      "88-request.json": "2ddcc36791e96403e79eacbecb777ffa5a2772e1f3b2b01eb4adb2f503fbf96d",
+      "88-resources.json": "507f8d372791762bbef0a2020d163773a23d7e29218e85db54844f1a0e088906",
+      "88-response.json": "3b6c42e4ef97ea775b219d27ebf26001e3b4f495f0146292a98bca559118db85",
+      "88-score.json": "9a73be2223d029066777b8f47fdd5794b80b775f603b20e36626aa058b6fda78",
+      "89-request.json": "d90c9e3ebdacfd2748e435c2f4a4dec96faaf34a4ed8e24bcb5abef8acfb1eda",
+      "89-resources.json": "51cd6daf77fa4f148a4e9a9236b22ef59defdd7df871a6a6c20e88883d0d085f",
+      "89-response.json": "41fc117c519a85be131cb9012b5a724f4e708456cccdbe6b8bcd6d289b8980a0",
+      "89-score.json": "3e47e0a5f59ccecce406fffdfded3f7b20c98022f99341b7565d1509b7068cc8",
+      "90-request.json": "d0662d9cd1c33726db54ed7eefc2e3135728d10113a0b69040d9e553cd1e1c78",
+      "90-resources.json": "fc2828f78a9ad3e6379c66993e22210b97a05ead86f94463d2a2cf78e46ffb9f",
+      "90-response.json": "cc74caddee91f7db24a69a517d5f940d985a8e4f8e6f9e4794ea712d3c0371fc",
+      "90-score.json": "dc02fa0f70e5feddddbb19864fdf7f4995de4ec943716a5155e1e9abdf60a530",
+      "91-request.json": "be7333971fe213af440f7958e3a253cc5f98a143dca71f52482fcf4e937efd59",
+      "91-resources.json": "5e1a77429ea80d9c71786651aeb19fba2ba7a976002062c03ca873319aa876c0",
+      "91-response.json": "2f4e89b540a5b6a174f637f9ec40afe86d4ed860df00a2872d4c13a06db09338",
+      "91-score.json": "2b883581b7e6d23ea91e906b71e542222892b49c537b718c718901e140f54d4b",
+      "92-request.json": "bcbdf2594407af31576e674cd02b84d0fb01a5ceea016f4a2dc4130bbabf0f5f",
+      "92-resources.json": "91692677c73f4e2352cb8cb520b15f0828461147109fe950593389dc22e2a6ac",
+      "92-response.json": "5b9e39dae916383974cf7f2fa43ffd9b9e71395c9e7c38c2b21ea4a601003de1",
+      "92-score.json": "cc4fdcbc611532739503b23ef640007501b8af9be0f6945a0144a8d5bb1cc824",
+      "93-request.json": "41a4010541719e99c4839289596a15b0962f6f5156e06ab101c47802ae4a0f9e",
+      "93-resources.json": "24d5256a38e608b05e98dac4f3b253a50090bed47439df74147825530e5579f1",
+      "93-response.json": "6a1959fc0e77a9fb676cb5dfedc443ae78d9fd18c905e5d8d7642159c85346e5",
+      "93-score.json": "b797166babb981a3b7754c0b31fc13ef789232c6c016469ae2a9ab110dd96660",
+      "94-request.json": "11c5e05b82f82d3d4f0d7fc4f0c03eff094f0a6782ca2765d981e322c3673d18",
+      "94-resources.json": "78ade09eb4fdf496c963230bba78ea4ea44b30d14098f0397240f324d38fa4cb",
+      "94-response.json": "0233f8b207c37800644e8baf8dc24d9d93375caae84c5963952660bbe2974f3c",
+      "94-score.json": "c86527d73c16bf5471299d44569b27f543917fbd001caf076aca53ebc8e8a6ef",
+      "95-request.json": "f3773258d71f21e67e9086f1aea7466ca4610a0fba97b7898a70128c47dade18",
+      "95-resources.json": "dc6ef723a010e4c2a19a1293ed73bb11a4ff6d34d3abd29b8c679983cc256904",
+      "95-response.json": "f4876a43dbdaee799e72d14cdb5904578165083705cdf86d4a012dfd670d5d1e",
+      "95-score.json": "10f9ea5a2cbe83c1a344d6e436831f33d3313826c318ba90401865f4be01b65c",
+      "96-request.json": "531e9759f137b567f46ddccee9cd782afaed2f2770b5da8380d0ebb2b4eef845",
+      "96-resources.json": "09e4ed931d0e0e5cc7e73fd37b9cec248c007d4361b1acd52e325dc7079bf562",
+      "96-response.json": "40f43d10a286e02d61e1b1f84d493ab0ad998a128bddb5b5a35b7fbfaa591551",
+      "96-score.json": "3c48158fe35065e28cc9bbf5d868f85f48130989ba711d3e1d7678cec980d65e",
+      "frozen-inputs.json": "eae60c79e72ecfe06b49f831b9f9cb02a34697dc18fbc74f5dc4d844458b6bd9",
+      "summary.json": "61eebd3446b945eb9d967462856b4ed2aa9871f8f84c1b9a4819abd2c814fd82"
+    },
+    "data/evaluations/20261110-har008-q2-streaming-v1": {
+      "01-request.json": "7857ef73913b47d54bfdd22e45d2f69cc5467eefdb51ea7730c05719103aa022",
+      "01-response.json": "40f1d5ed57ed3ab5d8d4ec617bd73cdcd67c67db3e9611798c71812a5517bddb",
+      "02-request.json": "e09aafbb9017e0043e708116aada09da4c9883146abe562f3a2fdfef649479f5",
+      "02-response.json": "13dfa05bcf7f4745977dd8076a949c7ae3b9c1ab50463ff6a4c8840b07820ece",
+      "03-request.json": "830f6c45398ee99d9b9105445bfc314046b0d05f3155d55e516c1217ed71a66c",
+      "03-response.json": "100e6422f897fe0c337c62bb2aee8cee23ed160bb1378aa82fc9a621761b715e",
+      "04-request.json": "03d8ba4125b8b8da34320a81594b722a63410d1f66751504f08744067fe8da84",
+      "04-response.json": "139628db1e88362a379ce87ad69680cf3808e6925b2ff984fe4c3d6bbe18df01",
+      "05-request.json": "c0adb2583880a501368e9c0d2dba9001c00ef329add61539ed8bade61f3ec2ad",
+      "05-response.json": "5490ec0bdcf4ea6d88b2e745ce98af656b443cffb231765cb2da53ecd5b80db4",
+      "06-request.json": "cc6bd63ad25ed937e90a40915169efdc2c3b31e01e20e177b642a5d860c50f9e",
+      "06-response.json": "98862c5ce82c288d6cb6274d19f2072a24327261884f74ad5633855a0ad954fa",
+      "07-request.json": "713b33a49af7eaaaa5458fd14cb0f53def9426c40c72709f88b11ccd27607e48",
+      "07-response.json": "ab27e850dee002c66973d035d9af696187becf097bf3031f17f1a03630169ff9",
+      "08-request.json": "9b3a5c97a03020b887f5299aad4128d42a49581d211fd276182952251d0bb531",
+      "08-response.json": "f1bf9299c20982387236f60c82506e824c775e7bca03d1468d3eb74b19e69c8b",
+      "frozen-inputs.json": "d7da0250500664e9adeb9065b27102e55fdbe99d9bf68217667cce8d6e4c6cbb",
+      "summary.json": "e629660bf83c9735633677163eb4326777cf218ab408032fb802940679deb66c"
+    }
+  },
+  "historical_receipt_sha256": {
+    "docs/evidence/har008-paired-v1-20261110.json": "efd042d25b05c4f4b7510b72c2da4296e414e2bd6b4c89cb5016c10e40e085f8",
+    "docs/evidence/har008-output-contract-20261110.json": "23604d1a8a18266f9272358edff7492001d4b823db29fb407b989344721414e0"
+  },
+  "unchanged": {
+    "production_source": true,
+    "models_and_configs": true,
+    "weights_sdk": true,
+    "docker_vault_database_qdrant": true,
+    "defaults": true,
+    "primary_desktop_and_core_not_restarted": true
+  },
+  "probe": {
+    "port": 7092,
+    "owned_runs_and_grants_removed": true,
+    "stopped": true
+  },
+  "promotion": "NOT_QUALIFIED"
+}

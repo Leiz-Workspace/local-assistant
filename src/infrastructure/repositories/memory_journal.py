@@ -71,6 +71,9 @@ class PostgresMemoryJournal:
         """Reuse the existing bounded runtime pool without acquiring a new credential or opening resources."""
         self.sessions = sessions
 
+    async def _bounded(self, session):
+        """Keep database wait defaults here; a subclass may bound waits before the first lock of a mutation."""
+
     async def _now(self, session):
         """Read DB wall time after locks rather than a potentially stale transaction-start timestamp."""
         return await session.scalar(text("SELECT clock_timestamp()"))
@@ -202,6 +205,7 @@ class PostgresMemoryJournal:
         if type(seconds) is not int or not isinstance(scope_id, UUID):
             raise MemoryPolicyError("memory_consent_invalid")
         async with self.sessions() as session, session.begin():
+            await self._bounded(session)
             await session.execute(text("SELECT pg_advisory_xact_lock(1146310990,30)"))
             settings = await self._settings(session, owner, lock=True)
             if settings is None or not settings["enabled"]:
@@ -341,6 +345,7 @@ class PostgresMemoryJournal:
         """Atomically admit one bounded manual memory after global quota, owner and receipt serialization."""
         typed_owner(owner)
         async with self.sessions() as session, session.begin():
+            await self._bounded(session)
             await session.execute(text("SELECT pg_advisory_xact_lock(1146310990,30)"))
             settings = await self._settings(session, owner, lock=True)
             now = await self._now(session)

@@ -19,6 +19,50 @@ from src.infrastructure.check_runner import NativeChecks
 logger = logging.getLogger(__name__)
 
 
+def sandboxed_pins():
+    """Return the PIDs of host processes running a sandboxed private pin (/runtime/bin/...)."""
+    pids = []
+    for path in Path("/proc").glob("[0-9]*/cmdline"):
+        try:
+            arguments = path.read_bytes().split(b"\x00")
+        except OSError:
+            continue
+        if {b"/runtime/bin/python3.12", b"/runtime/bin/ruff"}.intersection(arguments):
+            pids.append(int(path.parent.name))
+    return pids
+
+
+def parent_of(pid):
+    """Return the parent PID from /proc/<pid>/stat, or None once the process is gone."""
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+    except OSError:
+        return None
+    return int(stat.rsplit(")", 1)[1].split()[1])
+
+
+def descends_from(pid, ancestor):
+    """Walk the parent chain of a live process up to PID 1."""
+    seen = set()
+    while pid and pid > 1 and pid not in seen:
+        if pid == ancestor:
+            return True
+        seen.add(pid)
+        pid = parent_of(pid)
+    return False
+
+
+def orphaned(pid):
+    """A process whose parent is PID 1 or a systemd user manager was reparented after its launcher exited."""
+    parent = parent_of(pid)
+    if parent is None:
+        return False
+    try:
+        return Path(f"/proc/{parent}/comm").read_text().strip() == "systemd"
+    except OSError:
+        return False
+
+
 @pytest.fixture
 def native_job(tmp_path, monkeypatch):
     """Provide disposable source/private executable pins and assert every actual supervised process exits before pin teardown."""
@@ -43,6 +87,7 @@ def native_job(tmp_path, monkeypatch):
         return process
 
     monkeypatch.setattr(module.subprocess, "Popen", tracked)
+    preexisting = set(sandboxed_pins())
     try:
         yield snapshot, runtime, descriptors, processes
     finally:
@@ -54,14 +99,13 @@ def native_job(tmp_path, monkeypatch):
             assert process.poll() is not None
             with pytest.raises(ProcessLookupError):
                 os.kill(process.pid, 0)
-        for path in Path("/proc").glob("[0-9]*/cmdline"):
-            try:
-                arguments = path.read_bytes().split(b"\x00")
-            except OSError:
-                continue
-            assert not {b"/runtime/bin/python3.12", b"/runtime/bin/ruff"}.intersection(
-                arguments
-            ), path.parent.name
+        for pid in sandboxed_pins():
+            # Other pytest workers and concurrent CI jobs on the same host run the same pins;
+            # only a process this test started, or an orphan that appeared during it, is a leak.
+            assert not (
+                descends_from(pid, os.getpid())
+                or (pid not in preexisting and orphaned(pid))
+            ), pid
         for descriptor in descriptors:
             os.close(descriptor)
         logger.info("checks_native_fixture_joined")

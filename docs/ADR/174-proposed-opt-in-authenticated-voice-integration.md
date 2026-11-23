@@ -11,7 +11,7 @@
 - `apps/api/main.py` is the main API. `apps/web/` exists but is empty. Building the main voice view is additional UI composition, not attaching a button to an existing main web app.
 - Existing `require_local_client` rejects any Origin and proxy headers; `authenticate_principal` requires a protected digest-to-principal file and bearer credential. The trial cookie issued to a local page visitor and its fresh per-turn owner UUID cannot be adopted as product identity.
 - There is no identified global GPU-residency coordinator across application inference paths. Conversation leases and D85 bounded fixture admission do not establish that capability.
-- [Rights review](../D74_VOICE_RIGHTS_REVIEW.md) supports proposing personal-local source integration, with separate bundle/distribution obligations. Preserve all candidate roles and earlier failed results.
+- [Rights review](../progress/D74_VOICE_RIGHTS_REVIEW.md) supports proposing personal-local source integration, with separate bundle/distribution obligations. Preserve all candidate roles and earlier failed results.
 
 ## Decision proposed: A — personal-local, disabled by default
 

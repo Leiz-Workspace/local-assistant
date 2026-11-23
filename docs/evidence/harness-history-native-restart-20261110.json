@@ -1,0 +1,40 @@
+{
+  "description": "Actual separate-process metadata recovery after one native CORE completion; no replay, raw result or grant recovery.",
+  "before": {
+    "description": "Actual CORE run persisted as signed metadata only; restart verification follows.",
+    "run_id": "d1939384-6d6b-4e94-906f-3ebb7cd55b08",
+    "state": "succeeded",
+    "result_sha256": "db67cb903aab88e8460fa227b9e51b1b8e75cc383d566af60b179093315112d1",
+    "context_sha256": "1bc5a080b17a5b559f4cfa2199109c3ee957af2f0ed2c61d4f78ac3504efab5b",
+    "model": "qwen3.5-9b-core",
+    "raw_canary_absent": true
+  },
+  "after": {
+    "id": "d1939384-6d6b-4e94-906f-3ebb7cd55b08",
+    "workspace_id": "512ae550-18bf-4048-b8ff-09376bd78609",
+    "state": "succeeded",
+    "events": [
+      {
+        "sequence": 1,
+        "state": "created"
+      },
+      {
+        "sequence": 2,
+        "state": "running"
+      },
+      {
+        "sequence": 3,
+        "state": "succeeded"
+      }
+    ],
+    "request_sha256": "93a14e59dd1a8070f7ee2fe17aa65824809c3e3870c161fd6592604fb77afbfc",
+    "result_sha256": "db67cb903aab88e8460fa227b9e51b1b8e75cc383d566af60b179093315112d1",
+    "context_sha256": "1bc5a080b17a5b559f4cfa2199109c3ee957af2f0ed2c61d4f78ac3504efab5b",
+    "archive_only": true,
+    "result_available": false
+  },
+  "skills_restored": false,
+  "raw_result_restored": false,
+  "automatic_resume": false,
+  "default_desktop_7090_restarted": false
+}

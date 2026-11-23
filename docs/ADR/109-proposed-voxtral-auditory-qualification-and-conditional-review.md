@@ -50,7 +50,7 @@ Rollback closes only the new campaign guard, retains packets/partial observation
 
 ## 2026-10-23 approved ADR-109 campaign completed: strict 4/12 FAIL
 
-[First campaign report](../D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](../evidence/d70-voxtral-auditory-first.json), [source-only triage](../evidence/d70-voxtral-auditory-source-triage.json).
+[First campaign report](../progress/D70_VOXTRAL_AUDITORY_CAMPAIGN.md), [immutable observations/audit](../evidence/d70-voxtral-auditory-first.json), [source-only triage](../evidence/d70-voxtral-auditory-source-triage.json).
 
 The owner explicitly approved “Duyệt campaign ADR-109” for commit2348566. One original-weight worker completed all12 first responses/EOS/schema; one no-weights conditioning replay matched every input/feature receipt and all762original tensor receipts matched ADR108. Strict scores: presence1/4, language1/2, comparisons2/6, total4/12 against unchanged12/12. Both identical pairs returned SECOND, silence YES, EN/VI speech NO and VI language ENGLISH. No answer repair, retry, threshold change or causal model-quality claim. The conditional24audio packet/worker were not created because the gate failed.
 
@@ -62,4 +62,4 @@ Final **432TTSrelated PASS40.13s/0FAIL/0SKIP/Ruff PASS** (one existing deliberat
 
 ## Subsequent investigation2026-10-23
 
-Synthetic loader-buffer/cache/mel/attention tests found no demonstrated causal fix. [ADR-110](110-proposed-voxtral-paired-attention-diagnostic.md) now has tested paired-backend diagnostic code and a historical four-signal packet; original execution remains separately unapproved/guardFalse. It does not reopen this consumed campaign, modify4/12FAIL, run24audio or grant qualification/model selection. [Completed investigation](../D70_VOXTRAL_SYNTHETIC_DIAGNOSTICS.md).
+Synthetic loader-buffer/cache/mel/attention tests found no demonstrated causal fix. [ADR-110](110-proposed-voxtral-paired-attention-diagnostic.md) now has tested paired-backend diagnostic code and a historical four-signal packet; original execution remains separately unapproved/guardFalse. It does not reopen this consumed campaign, modify4/12FAIL, run24audio or grant qualification/model selection. [Completed investigation](../progress/D70_VOXTRAL_SYNTHETIC_DIAGNOSTICS.md).

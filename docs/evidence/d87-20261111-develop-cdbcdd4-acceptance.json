@@ -1,0 +1,135 @@
+{
+ "description": "Public receipt of D87 full software regression on the develop tree after HAR-009-C1 (2026-11-11), including an earlier attempt interrupted by a host restart. Private directories not published; names and hashes only.",
+ "date": "2026-11-11",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; HAR-009-C1 (PR #56) changed source after the D87 PASS on develop 7fb5999.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at cdbcdd4 (merge of PR #56)",
+  "git_commit": "cdbcdd49b0577a4b733e1dea20bcb64b133e010c",
+  "git_tree": "3038817580a6cf679dbe086e55b2903fbab0a6d1",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "cdbcdd4"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "source_files_different_in_freeze_paths": 59
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 878,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "3351564763ee7b3e1819a8717a98e120a61868c2b84a95d22a0ae84eaa076163"
+ },
+ "interrupted_attempt": {
+  "directory": "data/backups/d87-20261111-full-2/ (private)",
+  "started_at_utc": "2026-11-11T11:56:43Z",
+  "cause": "host shutdown and restart: the CORE container stopped at 2026-11-11T12:08:35Z (exit 0) and the host was back up about 12:18Z; result.json stayed 'running'",
+  "partial_log": {
+   "passed_before_stop": 277,
+   "failed": 1,
+   "errors": 1,
+   "failing_test": "tests/integration/test_grounded_tcp.py::test_actual_grounded_core_tcp_citation_and_joined_delivery (needs CORE over TCP; passed in full-3)",
+   "log_sha256": "bad9934d80d633e71cc6dd7158d63c81640fd5c27054dae921562d152e590859"
+  },
+  "source_freeze_sha256": "3351564763ee7b3e1819a8717a98e120a61868c2b84a95d22a0ae84eaa076163",
+  "counted_as": "not a result: neither PASS nor FAIL",
+  "residue": {
+   "found_read_only": [
+    "Qdrant probe collection la_d25_probe_1f074c9f... (0 points)",
+    "test principal 09fc75e0...: 1 files row (40 bytes, request key grounded-tcp), 1 ingestion_jobs (running), 1 ingestion_heads, 1 file_owner_usage",
+    "file_global_usage +1 file / 40 bytes"
+   ],
+   "owner_decision": "owner chose 'Dọn rồi chạy D87' (clean up, then run D87)",
+   "cleanup": "replayed the fixture teardown: deleted the principal's ingestion rows (1 + 1), called cleanup_owners from tests/integration/test_file_http.py, deleted the probe collection after re-checking its name and 0 points; files 0 and file_global_usage 0 files / 0 bytes afterwards"
+  }
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full-3",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": {
+   "sealed_after_host_restart": true,
+   "unsealed_by": "assistant from the bootstrap file under the owner's standing authorization; shares never printed"
+  },
+  "shared_services": "restarted by the host restart, not by the assistant",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  }
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 210,
+  "last_three_samples_busy_cores": [
+   0.41,
+   0.29,
+   0.3
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 62,
+  "mean_busy_cores": 1.47,
+  "max_busy_cores": 2.31,
+  "note": "includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6508,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1839.05,
+  "wrapper_seconds": 1840.64,
+  "summary": "6508 passed, 1 warning in 1839.05s (0:30:39)",
+  "started_at_utc": "2026-11-11T12:27:43.423648+00:00",
+  "completed_at_utc": "2026-11-11T12:58:24.061222+00:00",
+  "log_sha256": "63c69b1aa9d2dc41b8ebd69a7510f0ebc802c71156a0c29533261399fa560db7",
+  "result_json_sha256": "2f479255fc081ca53b55dc72ea7c7058c2a2374ae9a43ca00227bb4a905858a9",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6479 passed on 876 files, develop 7fb5999 (tree d5ed277), 2026-11-11; now history"
+ },
+ "scope": "Software regression evidence for the source tree 3038817 of develop cdbcdd4. Not model quality, device acceptance, D89 or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directories": [
+  "data/backups/d87-20261111-full-2/",
+  "data/backups/d87-20261111-full-3/"
+ ]
+}

@@ -1,0 +1,551 @@
+{
+ "schema_version": 1,
+ "item": "har-006-v3",
+ "date": "2026-11-21",
+ "protocol": "docs/HAR006_V3_PROTOCOL.md at 8747950f05d7d0dbd3f210352ae6f56c151ce0b2 (byte-identical at commit A)",
+ "commits": {
+  "A": "97d2461093f201128ed8763a2ce6aa879ba764bd",
+  "B2": "97f6dc0faabe08a89d3d6a6bb850cca99cc26ee8",
+  "pre_rebase": {
+   "A": "8747950f05d7d0dbd3f210352ae6f56c151ce0b2",
+   "B2": "eaff4cbc123d3a19e5ec0751b6735f4ff9912520"
+  },
+  "b2_rebase_note": "97d2461 is a pure rebase of 8747950. 97f6dc0 is the rebase of eaff4cb plus commit c6b7c2994af1e5e4ccfadff2e26da7caef4ec10a (stale-binding browser stream ends without [DONE], ADR-197) and two B2 tests updated for PR #93; PR #90 head eaff4cb was not measured"
+ },
+ "parameters": {
+  "temperature": null,
+  "margin": 0.25,
+  "literal_margin": null,
+  "enlarge_literal": false,
+  "arm_b": false
+ },
+ "overrides": [],
+ "window_status": {
+  "A": "COMPLETE",
+  "B": "COMPLETE"
+ },
+ "labels": {
+  "escape_failed": false,
+  "window_status": {
+   "A": "COMPLETE",
+   "B": "COMPLETE"
+  },
+  "records_consistent": true,
+  "structural_fixed": true,
+  "identity": true,
+  "fix": "FIX_NOT_SUPPORTED",
+  "fix_reason": "not_non_inferior",
+  "arms": {
+   "E": "E_SUPPORTED",
+   "S": "S_UNDERPOWERED",
+   "U": "U_UNDERPOWERED"
+  },
+  "worse_in_b": {
+   "E": false,
+   "S": false,
+   "U": false
+  },
+  "literal": {
+   "text": "LITERAL_DATA_DESCRIPTIVE",
+   "source-value-quote-v1": "LITERAL_DATA_DESCRIPTIVE"
+  },
+  "incomplete_inputs": 0,
+  "incomplete_by_arm": {
+   "E": 0,
+   "S": 0,
+   "U": 0,
+   "P": 0
+  },
+  "trb_a": "CONTROL_TOKENS_PARSED",
+  "trb_b": "NO_EXCESS"
+ },
+ "merge": {
+  "decision": "NO_MERGE",
+  "reasons": [
+   "FIX_NOT_SUPPORTED"
+  ],
+  "notes": [
+   "S_underpowered_reported",
+   "U_underpowered_reported"
+  ]
+ },
+ "measures": {
+  "records": {
+   "A": true,
+   "B": true,
+   "same_inputs": true,
+   "same_schedule": true
+  },
+  "structural": {
+   "holds": true,
+   "reasons": [],
+   "exempt_literals": 64
+  },
+  "identity": {
+   "holds": true,
+   "benign_inputs": 110,
+   "differing": []
+  },
+  "discordance": {
+   "E": {
+    "b": 5,
+    "c": 0,
+    "n": 5,
+    "p_value": 0.03125,
+    "passes": true,
+    "underpowered": false,
+    "label": "E_SUPPORTED",
+    "inputs": 12,
+    "usable": 12,
+    "incomplete": 0,
+    "violated_a": 6,
+    "violated_b": 1,
+    "wilson_a": [
+     0.2537815976337061,
+     0.7462184023662939
+    ],
+    "wilson_b": [
+     0.014865094404917123,
+     0.35387991114111694
+    ],
+    "worse_in_b": false
+   },
+   "S": {
+    "b": 3,
+    "c": 0,
+    "n": 3,
+    "p_value": 0.125,
+    "passes": false,
+    "underpowered": true,
+    "label": "S_UNDERPOWERED",
+    "inputs": 12,
+    "usable": 12,
+    "incomplete": 0,
+    "violated_a": 5,
+    "violated_b": 2,
+    "wilson_a": [
+     0.1932603136587566,
+     0.6804886874504502
+    ],
+    "wilson_b": [
+     0.04696514218385381,
+     0.4480308622529734
+    ],
+    "worse_in_b": false
+   },
+   "U": {
+    "b": 0,
+    "c": 0,
+    "n": 0,
+    "p_value": 1.0,
+    "passes": false,
+    "underpowered": true,
+    "label": "U_UNDERPOWERED",
+    "inputs": 6,
+    "usable": 6,
+    "incomplete": 0,
+    "violated_a": 3,
+    "violated_b": 3,
+    "wilson_a": [
+     0.18761630648265054,
+     0.8123836935173494
+    ],
+    "wilson_b": [
+     0.18761630648265054,
+     0.8123836935173494
+    ],
+    "worse_in_b": false
+   }
+  },
+  "control_p": {
+   "b": 0,
+   "c": 0,
+   "n": 0,
+   "p_value": 1.0,
+   "passes": false,
+   "underpowered": true,
+   "label": "P_UNDERPOWERED",
+   "inputs": 12,
+   "usable": 12,
+   "incomplete": 0,
+   "violated_a": 0,
+   "violated_b": 0,
+   "wilson_a": [
+    0.0,
+    0.24249400665524087
+   ],
+   "wilson_b": [
+    0.0,
+    0.24249400665524087
+   ],
+   "worse_in_b": false
+  },
+  "non_inferiority": {
+   "margin": 0.25,
+   "pairs": 12,
+   "incomplete_pairs": 0,
+   "interval": {
+    "method": "tango",
+    "a": 0,
+    "b": 1,
+    "c": 0,
+    "d": 11,
+    "n": 12,
+    "difference": 0.08333333333333333,
+    "lower": -0.17936850720984424,
+    "upper": 0.3538799111411169
+   },
+   "verdict": "not_non_inferior"
+  },
+  "literal": {
+   "text": {
+    "label": "LITERAL_DATA_DESCRIPTIVE",
+    "margin": null,
+    "l_vs_l0_b": {
+     "method": "tango",
+     "a": 6,
+     "b": 0,
+     "c": 2,
+     "d": 0,
+     "n": 8,
+     "difference": -0.25,
+     "lower": -0.5907245696898312,
+     "upper": 0.15550945610485017
+    },
+    "incomplete_pairs": 0,
+    "a_vs_b": {
+     "b": 5,
+     "c": 1,
+     "n": 8,
+     "worse_in_b": false
+    },
+    "early_end_cells": {
+     "A": 0,
+     "B": 0
+    },
+    "ambiguous_early_end_cells": {
+     "A": 0,
+     "B": 0
+    },
+    "literal_missing_cells": {
+     "A": 12,
+     "B": 2
+    }
+   },
+   "source-value-quote-v1": {
+    "label": "LITERAL_DATA_DESCRIPTIVE",
+    "margin": null,
+    "l_vs_l0_b": {
+     "method": "tango",
+     "a": 6,
+     "b": 0,
+     "c": 2,
+     "d": 0,
+     "n": 8,
+     "difference": -0.25,
+     "lower": -0.5907245696898312,
+     "upper": 0.15550945610485017
+    },
+    "incomplete_pairs": 0,
+    "a_vs_b": {
+     "b": 6,
+     "c": 0,
+     "n": 8,
+     "worse_in_b": false
+    },
+    "early_end_cells": {
+     "A": 0,
+     "B": 0
+    },
+    "ambiguous_early_end_cells": {
+     "A": 0,
+     "B": 0
+    },
+    "literal_missing_cells": {
+     "A": 14,
+     "B": 1
+    }
+   }
+  }
+ },
+ "windows": {
+  "A": {
+   "status": {
+    "status": "COMPLETE",
+    "reason": null,
+    "elapsed": 423.277
+   },
+   "commit": "97d2461093f201128ed8763a2ce6aa879ba764bd",
+   "runner_sha256": "a29faab96e52fcd4e5f1213f198628fad2bea53e32d575895ce54b4808c5ab26",
+   "provenance": "PROVENANCE_OK",
+   "preflight": "PREFLIGHT_OK",
+   "cells": {
+    "planned": 232,
+    "recorded": 232,
+    "statuses": {
+     "COMPLETE": 232
+    },
+    "cache_reuse_draws": 0
+   },
+   "temperatures": {
+    "source-value-quote-v1": [
+     0.7
+    ],
+    "text": [
+     0.7
+    ]
+   },
+   "trb": {
+    "label": "CONTROL_TOKENS_PARSED",
+    "bodies": 116,
+    "inputs": 164,
+    "positive_excess": 176,
+    "negative_excess": 0,
+    "positive_bodies": 55,
+    "excess_by_id": {
+     "248044": 2,
+     "248045": 65,
+     "248046": 68,
+     "248053": 2,
+     "248058": 11,
+     "248059": 6,
+     "248060": 2,
+     "248066": 6,
+     "248067": 6,
+     "248068": 2,
+     "248069": 6
+    }
+   },
+   "structural": {
+    "bodies": 1759,
+    "literal_bodies": 791,
+    "literal_count": 2540,
+    "exempt_literals": 64,
+    "key_problems": {},
+    "literal_free": false,
+    "keys_ok": true
+   },
+   "arms": {
+    "E": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 6,
+     "wilson": [
+      0.2537815976337061,
+      0.7462184023662939
+     ],
+     "anywhere_inputs": 6,
+     "violated_cells": 20
+    },
+    "P": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 0,
+     "wilson": [
+      0.0,
+      0.24249400665524087
+     ],
+     "anywhere_inputs": 0,
+     "violated_cells": 0
+    },
+    "S": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 5,
+     "wilson": [
+      0.1932603136587566,
+      0.6804886874504502
+     ],
+     "anywhere_inputs": 5,
+     "violated_cells": 14
+    },
+    "U": {
+     "inputs": 6,
+     "complete_inputs": 6,
+     "violated_inputs": 3,
+     "wilson": [
+      0.18761630648265054,
+      0.8123836935173494
+     ],
+     "anywhere_inputs": 3,
+     "violated_cells": 9
+    },
+    "L": {
+     "inputs": 16,
+     "complete_inputs": 16,
+     "held_inputs": 2,
+     "wilson": [
+      0.03497748774324047,
+      0.36022827265758695
+     ],
+     "early_end_cells": 0,
+     "ambiguous_early_end_cells": 0,
+     "literal_missing_cells": 26
+    },
+    "L0": {
+     "inputs": 16,
+     "complete_inputs": 16,
+     "held_inputs": 16,
+     "wilson": [
+      0.8063923194655637,
+      1.0
+     ],
+     "early_end_cells": 0,
+     "ambiguous_early_end_cells": 0,
+     "literal_missing_cells": 0
+    }
+   },
+   "core": {
+    "pid": 2486226,
+    "start_ticks": 4666052,
+    "weights_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+    "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+    "build_info": "b11557-5c8854fd8",
+    "model_file": "Qwen_Qwen3.5-9B-Q6_K.gguf",
+    "n_ctx": 32768,
+    "total_slots": 1,
+    "chat_template_sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+   }
+  },
+  "B": {
+   "status": {
+    "status": "COMPLETE",
+    "reason": null,
+    "elapsed": 419.849
+   },
+   "commit": "97f6dc0faabe08a89d3d6a6bb850cca99cc26ee8",
+   "runner_sha256": "a29faab96e52fcd4e5f1213f198628fad2bea53e32d575895ce54b4808c5ab26",
+   "provenance": "PROVENANCE_OK",
+   "preflight": "PREFLIGHT_OK",
+   "cells": {
+    "planned": 232,
+    "recorded": 232,
+    "statuses": {
+     "COMPLETE": 232
+    },
+    "cache_reuse_draws": 0
+   },
+   "temperatures": {
+    "source-value-quote-v1": [
+     0.7
+    ],
+    "text": [
+     0.7
+    ]
+   },
+   "trb": {
+    "label": "NO_EXCESS",
+    "bodies": 116,
+    "inputs": 164,
+    "positive_excess": 0,
+    "negative_excess": 0,
+    "positive_bodies": 0,
+    "excess_by_id": {}
+   },
+   "structural": {
+    "bodies": 1759,
+    "literal_bodies": 0,
+    "literal_count": 0,
+    "exempt_literals": 64,
+    "key_problems": {},
+    "literal_free": true,
+    "keys_ok": true
+   },
+   "arms": {
+    "E": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 1,
+     "wilson": [
+      0.014865094404917123,
+      0.35387991114111694
+     ],
+     "anywhere_inputs": 1,
+     "violated_cells": 2
+    },
+    "P": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 0,
+     "wilson": [
+      0.0,
+      0.24249400665524087
+     ],
+     "anywhere_inputs": 0,
+     "violated_cells": 0
+    },
+    "S": {
+     "inputs": 12,
+     "complete_inputs": 12,
+     "violated_inputs": 2,
+     "wilson": [
+      0.04696514218385381,
+      0.4480308622529734
+     ],
+     "anywhere_inputs": 2,
+     "violated_cells": 6
+    },
+    "U": {
+     "inputs": 6,
+     "complete_inputs": 6,
+     "violated_inputs": 3,
+     "wilson": [
+      0.18761630648265054,
+      0.8123836935173494
+     ],
+     "anywhere_inputs": 3,
+     "violated_cells": 5
+    },
+    "L": {
+     "inputs": 16,
+     "complete_inputs": 16,
+     "held_inputs": 12,
+     "wilson": [
+      0.5050168346449122,
+      0.8981793250878696
+     ],
+     "early_end_cells": 0,
+     "ambiguous_early_end_cells": 0,
+     "literal_missing_cells": 3
+    },
+    "L0": {
+     "inputs": 16,
+     "complete_inputs": 16,
+     "held_inputs": 16,
+     "wilson": [
+      0.8063923194655637,
+      1.0
+     ],
+     "early_end_cells": 0,
+     "ambiguous_early_end_cells": 0,
+     "literal_missing_cells": 0
+    }
+   },
+   "core": {
+    "pid": 2486226,
+    "start_ticks": 4666052,
+    "weights_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+    "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+    "build_info": "b11557-5c8854fd8",
+    "model_file": "Qwen_Qwen3.5-9B-Q6_K.gguf",
+    "n_ctx": 32768,
+    "total_slots": 1,
+    "chat_template_sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715"
+   }
+  }
+ },
+ "rescore": {
+  "status": "RESCORE_VERIFIED",
+  "mismatches": [],
+  "labels_equal_comparison": true,
+  "merge_equal_comparison": true
+ },
+ "records_sha256": {
+  "comparison.json": "4eac26f870af02875f29773b9dfe46d74d380c6cb324a437cbc7106973330fa2",
+  "rescore.json": "16685d4de01175955463579d4a93f30e0ffec15b4fb89ae65e093b3d93a9122f",
+  "A/summary.json": "3f9ffc183634aacd526023301cda3de3639ffb173bd83486a97b0b27bb6d89db",
+  "B/summary.json": "19bf60e24b15abb8df1570b2b9cc1aa5d4abe99c65ebb833ebc797e6167f71e1",
+  "A/hashes.json": "cdd4e7692c178fc10517c5eca4e427cad146af31558f0befe6513249eb4fed3f",
+  "B/hashes.json": "7e23741450ea69dc6ff27a498cf442fef9e33b0c87423f503c938e05b0a15d5a"
+ }
+}

@@ -5508,3 +5508,1122 @@ Owner replies exactly “Ổn rồi” after delivery of the working local voice
 **CI:** PR #47 CI run 42582866883: lint passed (19 files), main pytest 6490 passed, 368 skipped, 30 deselected (strict timeout tests included, on the 2-vCPU hosted runner), quarantine job selected no test and passed.
 
 **Remaining:** Not covered by this change: a signal landing inside `Popen()` itself, and an outside SIGKILL of the launcher in the microseconds between clone and report. The latter is reported as unconfirmed, not as success.
+
+## 2026-11-09 — Promotion of ADR179 to staging and production
+
+**Owner request:** After PR #47 was merged, the assistant asked "Promote develop lên staging và production?" (promote develop to staging and production?) and the owner answered "Promote luôn" (promote right away), 2026-11-09.
+
+**Change set:** the three PRs merged into `develop` since the last promotion (#43/#44): #45 (docs: D81 promotion and the D87 PASS), #46 (timeout reap tests, empty CI quarantine list) and #47 (code: [ADR179](../docs/ADR/179-retire-sandbox-namespace-before-timeout-returns.md) sandbox namespace retirement).
+
+**Steps and CI:**
+- **`develop` push** run 42585399105 at `0e2d6b7` (PR #47 merge): passed.
+- **PR #48** (`develop` → `staging`):
+  - CI run 42586567285. The first attempt failed only in test-python's `Install native tools` (apt) step. All three `apt-get update` attempts got HTTP 403 ("no longer signed") from packages.microsoft.com, while the Ubuntu mirrors answered normally. Pytest did not run in that job; test-js and the quarantine job ran and passed. A rerun of the failed jobs (test-python, ci-gate) passed: main pytest 6490 passed, 368 skipped, 30 deselected.
+  - Merged as `11b4020` at 08:45 UTC (15:45 +07).
+- **`staging` push** run 42588240817 at `11b4020`: passed on the first attempt.
+  - Main pytest: 6490 passed, 368 skipped, 30 deselected.
+  - `package` artifact: `local-assistant-staging-11b4020`, 14,080,106 bytes.
+  - `deploy-staging`: deployment 7650723456 to the environment `staging`, 08:59 UTC (15:59 +07).
+- **PR #49** (`staging` → `production`):
+  - CI run 42590054114 passed: 6490 passed, 368 skipped, 30 deselected.
+  - Merged as `dd7fac3` at 09:10 UTC (16:10 +07).
+- **`production` push** run 42591324567 at `dd7fac3`: passed on the first attempt.
+  - Main pytest: 6490 passed, 368 skipped, 30 deselected.
+  - `package` artifact: `local-assistant-production-dd7fac3`, 14,081,040 bytes.
+  - `deploy-staging` and `release` were skipped.
+- **Result:** after PR #49, `origin/develop`, `origin/staging` and `origin/production` had the identical tree `5f2653d`. Once this documentation update is merged, `develop` is ahead of `production` by documentation only (D87 source-freeze scope unchanged).
+
+**State:** Branch promotion only. No tag, no GitHub Release, nothing deployed to the Home Server. The `production` branch now contains the ADR179 code (with it, report export fails closed with `export_cleanup_uncertain` when teardown is not confirmed); nothing running on the Home Server changed.
+
+**D87 and evidence:** The 2026-11-09 D87 PASS (6200 passed) is software regression evidence for the previous `production` tree `0b67d95` only. #46 and #47 changed `tests/` and `src/`, which are inside the D87 source-freeze scope. D87 for a tag therefore has to run on the current tree, which is now the same on all three branches, or on the final tag tree after any later change, or the owner records a named exception in the D90 form. The B3/B4 voice evidence stays bound to its recorded source snapshot; a future `/voice` session recomputes the manifest.
+
+**Unchanged:** D81 stays OPEN (full-flow acceptance, native v4 not run). Still open: the voice model/voice/default/product decision and product activation (voice default-off), D88 (only if distributing), D89 and D90. D60 deferred. No model or default change.
+
+**Remaining:** D87 on the current tree before a tag (owner decision on timing). The owner deletes the merged remote branches, including `fix/sandbox-namespace-teardown` and this docs branch.
+
+## 2026-11-09 — D87 on production dd7fac3: run 2 NOT PASS, run 3 PASS on an idle host
+
+**Owner request:** After the ADR179 promotion, the assistant asked "Chạy D87 trên cây production mới 5f2653d?" (run D87 on the new production tree?) and the owner answered "Chạy D87" (run D87). After run 2 failed, the owner was offered two options: a CPU-pinning ADR for the reranker test, or a rerun on an idle host. The owner chose "Chạy lại khi máy rảnh" (rerun when the machine is idle).
+
+**Setup:** The runbook was followed, with one difference: the checkout was detached at `origin/production` `dd7fac3` (tree `5f2653d`) and restored to `develop` afterwards. `develop` (`fd1a2a5`) was ahead only by documentation (PR #50), and the D87 source-freeze scope was identical, so the runbook's develop-equals-production check would have failed only on docs. `uv sync --locked --dev` changed nothing, and the source scope was clean. Vault was already unsealed. CORE (`local-assistant-core-1`, `qwen3.5-9b-core`, health 200) was started before each run and stopped after it. PostgreSQL, Vault and Qdrant were not restarted.
+
+**Run 2 (NOT PASS, retained):** `data/backups/d87-20261109-full-2`, 09:48–10:20 UTC (16:48–17:20 +07).
+- 6232 passed, 1 failed, 0 errors, 0 skipped. Exit 1, pytest 1945.21 s, 821 source files unchanged.
+- Source freeze `c5c9ff586fe06cb266923ea8b1218b891448209d8ca62ba22c2c717d60ba08e7`; log `1f1f69f7da96baa2bcd7f6716387a224051d605c0fda137c4df46253989b8dfc`.
+- Failed test: `tests/integration/test_reranker_live.py::test_actual_pinned_reranker_paired_comparison`, with `reranker_worker_nonzero exit_code=152 completed_rounds=2`. Exit 152 is 128 + SIGXCPU: the worker reached its own 480 s / 481 s `RLIMIT_CPU` (`scripts/qwen_reranker_worker.py`) during round 3 of 3. Host load was not measured during this run.
+- Not related to ADR179: the reranker code is unchanged and does not use the sandbox code. It is the same failure mode as the 2026-11-02 full runs (ADR150/151 one-off environments).
+- **Analysis probe** (not a D87 run). The single test was run with CORE stopped, under `/usr/bin/time -v`, and also failed: 241.94 s wall, exit 152 after 2 rounds, 479.43 s user + 2.29 s system CPU, 198% CPU.
+  - Load average was 1.26 before and 3.15 after. Background load came from RustDesk, Claude desktop, k3s and GNOME Shell.
+  - The morning PASS on `0b67d95` had rounds of 79.39/79.13/79.19 s: about 475 s CPU for two threads, about 1% margin.
+  - The analysis did not overwrite `data/backups/d27-t02-latest-comparison.json`, because failing runs do not write it.
+
+**Run 3 (PASS):** `data/backups/d87-20261109-full-3`, 10:36–11:06 UTC (17:36–18:06 +07).
+- A background script waited until the host was idle: busy CPUs from `/proc/stat` below 0.5 for three consecutive 30 s samples, with a 6 h limit. That took 421 s (last samples 0.48/0.38/0.28). No owner application was closed.
+- **6233 passed, 0 failed, 0 errors, 0 skipped.** Exit 0, `accepted_full_software_regression: true`, pytest 1830.43 s, 821 source files unchanged.
+- Source freeze is the same as run 2. Log `720fe50632c17a71a23ede1235e1e2a7b5ab1939553be9fec8d4db1e9421039a`.
+- Reranker rounds were 78.19/77.26/77.00 s and all resource gates passed. Load during the run, including the suite itself, averaged 1.49 busy CPUs with a maximum of 2.65 (61 samples).
+- The successful reranker test rewrote `data/backups/d27-t02-latest-comparison.json`, as designed. The morning copy that backs the morning round times is kept, privately and git-ignored, at `data/backups/d27-t02-comparison-20261109-morning.json` (same SHA-256 prefix `73ffa8e2b1c63a12`).
+
+**Database:** checked read-only after each run as the runtime role. Business tables have 0 rows; `file_owner_usage` and `file_global_usage` have 1 row each; Alembic is at `0006`, unchanged.
+
+**Docs:**
+- New public receipt `docs/evidence/d87-20261109-production-dd7fac3-acceptance.json`.
+- `docs/D87_CURRENT_FULL_RESULT.md` now leads with the `dd7fac3` result; the morning `0b67d95` result moved to a history section, unchanged.
+- Runbook note, plus a new precondition: start on an idle host.
+- D90 dossier (engineering text only; the owner form is unchanged), ledger, release status, roadmap v5.18.5 and OPEN_DAYS.
+
+**State:** D87 now matches current `production` `dd7fac3`. Later docs-only commits do not change the source-freeze scope; accepting that, or rerunning on the final tag commit, is the owner's D90 decision. This is software regression evidence only: not model quality, device acceptance, D89 or a release decision. No tag, no GitHub Release, nothing deployed to the Home Server.
+
+**Remaining:** The reranker test uses an estimated 465–475 s of its 480 s CPU limit when it passes (about 1–3% margin), so future D87 runs should start on an idle host. A standing remedy, such as the ADR151 CPU partition as a regular test environment, would need its own ADR and owner approval; the 480 s limit, model, profile and algorithm are unchanged. Still open: D81, D89 and D90; D60 deferred; voice stays default-off.
+
+
+## 2026-11-10 — Proposed harness CLI/UI, context, skills and media generation design
+
+Purpose: record the owner's requested product design and assessed scope without implementing or activating new capabilities.
+
+- Audited current harness tools/hooks/planner/checkpoints, process-local skill review/install/dispatch, whole-turn/token context management, API chat and pinned llama.cpp UI. A unified CLI/task-run surface and task-level skill instruction binder are not yet implemented; vision/video understanding does not supply image/video generation.
+- Added [product design](../docs/HARNESS_PRODUCT_DESIGN.md), [HAR-001–015 assessed backlog](../docs/progress/HARNESS_PRODUCT_BACKLOG.md) and [PROPOSED ADR-180](../docs/ADR/180-proposed-unified-harness-product-surface.md). Defined future CLI commands, same-origin upstream chat UI integration, run authority/recovery, context strategies, specialist skill lifecycle and separately gated generation jobs/assets. Updated roadmap and Documentation section 12.8 with explicit NOT IMPLEMENTED status.
+- Assessed priority/dependencies/engineer-day estimates/risks and AC. HAR-001 is the first proposed implementation step after architecture review. Existing day AC, model/provider choices and release gates are unchanged; no new model was selected, downloaded or loaded.
+- Validation: `env -u DATABASE_URL uv run --no-sync python -m pytest tests/test_harness_tools.py tests/test_skill_contract.py tests/test_skill_tools.py tests/test_conversation_context.py tests/test_tool_hooks.py tests/test_run_planner.py tests/test_plan_checkpoints.py -q`: **102 passed in 0.91s**, no failures/skips. This verifies existing foundations only, not new feature acceptance.
+- Documentation checks: **298 local links**, one v1 skill example accepted by the existing parser without installation, balanced fences and 12 top-level Documentation disclosures. Runtime checkout matches the configured pin. No source/tests/config/model/runtime/Docker/Vault/database changes, service restart, full live suite, deployment or commit in this task. Previous log bytes retained.
+
+
+## 2026-11-10 — HAR v1 implementation: CLI, pinned UI/desktop, context, skill binding and generation contracts
+
+Purpose: implement the owner's requested first product slice after “Vậy làm những thứ tôi đã bảo đi”, preserving existing models, passed components and milestone evidence.
+
+- Added the uv-editable `la` CLI: isolated private auth initialization/login/logout, doctor/status/chat, bounded readonly runs/cancel/inspection, skill review/install/show/remove, context policies, UI preparation/pairing/opening, Linux Brave/Chromium app-window and explicit shortcut generation. Existing dependency versions unchanged; pyproject entrypoint/build metadata and lock virtual→editable are the necessary packaging changes.
+- Added an opt-in composed app factory; the default app is unchanged when the product flag is off. Typed readonly task coordinator uses the original dispatchers and skill registry, at most four host-specified evidence calls plus one CORE completion, 120-second deadline, process-local state, owner ACL, cancellation/join and no auto-retry/write/resume. Exact skill instructions bind below host policy and revoke is checked before publication.
+- Added evidence-first/recent-turns/strict context priorities, exact tokenizer/preset fitting, evidence dedup/omission receipts; no automatic memory or semantic compaction. Added an inert repo-review manifest, not a self-installing package. Route/browser audit logs use finite templates/operations/status/request IDs and redact payload/query/token data.
+- Downloaded only the pinned llama-ui b11557 assets: 70 files, 10,074,640 unpacked bytes, archive SHA256 840a7017ac2a774b109c32752d15b24ced86db373b556b0d85baa60e1b2e4ae2. Separate one-use pairing/cookie/Origin/CSRF boundary, verified asset bytes and real native SSE; native tools/MCP/model-management/proxy and browser tool declarations denied. Upstream IndexedDB history is explicit, not PostgreSQL Conversation sync. Desktop is an app-window launcher, not a native installer.
+- Added model-neutral image/video request/backend contracts, bounded jobs and owner-scoped ephemeral artifacts with no production adapters. Actual generation fails unavailable before job creation; synthetic adapter tests are not real-media quality/format/resource acceptance. Public candidate metadata screened only; no generation weights/SDK downloaded or model selected.
+- Final focused/related invocation: **209 passed / 0 failed / 0 skipped in 2.38s**, 18 test files (seven new). Separate unchanged auth/stateless/preset invocation: **50 passed in 0.80s**. Ruff check/format, uv lock --check --offline and offline wheel build passed; wheel entrypoint/browser scripts checked, no weights bundled. These are not a new full suite.
+- Live: approved existing CORE digest verified and started with unchanged config/pin; a new isolated local app principal/catalog uses synthetic readonly evidence only, no existing DB identity reset. CLI got READY; review/install→native workspace read→CORE returned Cedar port 7443 with a source citation. Final strict-context CLI smoke succeeded in 1.560s, one source included, restart did not restore grants. Actual native SSE got STREAM-READY and DONE; actual browser UI got READY, screenshot retained. Tiny cached smokes are not TTFT/SLO or specialist qualification.
+- Retained failures: initial controlled overflow test inputs still fit the actual budget and their test setup was corrected; initial UI archive root-directory admission and upstream /tools/MODEL-mode differences were fixed with regressions. First native SSE smoke-validator TypeError on legal null content remains NOT_PASS in a separate receipt; subsequent valid smoke does not overwrite it. No benchmark oracle, model or old AC changed.
+- Updated design, ADR-180 accepted staged scope, ADR-181 implementation rationale, HAR partial-status backlog, Documentation section 13, master roadmap v5.19.0 and outstanding/release ledgers. Public evidence: docs/evidence/harness-v1-20261110-receipt.json and harness-v1-real-core-ui.png; private raw receipts remain under data/harness-local. D87 old source scope remains historical; full regression, complete HAR AC, actual generation, durable product state, specialist qualification and release gates remain open.
+- No Docker, Vault, database/migration, Qdrant, model/provider/runtime-config or upstream source change; no new model weights or model replacement. Only owned optional servers were started/restarted, disposable fixture server stopped and its test credentials removed. Local CORE and harness are available at loopback; no OS autostart, production promotion, tag/release or commit performed. Pre-existing development-log bytes preserved.
+
+
+## 2026-11-10 — HAR v1.1: first paired skill evaluation, native context packing and signed metadata history
+
+Purpose: continue the owner-requested harness work with measured outcomes and restart-safe metadata while preserving model decisions, active desktop and original gates.
+
+- HAR-008: froze 12 controlled cases/oracles, exact skill/source/config/code hashes before inference; ran 24 first native attempts on the existing CORE/Fast512/strict through product skill trust and native readonly evidence. Baseline strict success 5/12, skill 6/12; format 12/12 vs 11/12, value 11/12 each, quote 5/12 vs 6/12. One skill-only strict success, zero baseline-only strict successes; 16.727s descriptive campaign wall time, zero retries/cleanup failures. All first raw outputs retained, including null/quote contract failures, baseline false positive and skill malformed JSON. Measurement COMPLETE, promotion NOT_QUALIFIED; no oracle/skill/model change or large-model-parity claim. HAR-008-R1 assessed for a new constrained-output/quote/null cohort, not run here.
+- HAR-006: froze fixed synthetic 24K-history/10K-source collision before actual tokenizer preparation. Evidence-first packed 10129 tokens, kept source ID and dropped historical pair; recent-turns/strict packed 24131 tokens, retained history and omitted source with explicit history_priority. Three prepare calls, zero completions; no semantic-answer/TTFT/peak-RAM/VRAM qualification. Controlled probe is separate from skill quality.
+- ADR-182: added optional owner-private signed metadata snapshots, 0700 root/0600 single-link files, pinned directory FD, lifetime process lock, strict schema/IDs/events/HMAC, atomic rename and fsync. Metadata only: request/result/context hashes and state/events, no task/evidence/answer/skill/approval/session/token bodies. Unknown/corrupt/linked/permissive state fails closed; no silent memory fallback or failed-write retry.
+- Product coordinator now records created before schedule and running before source/inference, hides results on failed terminal publication, stops new admissions on storage failure and recovers active snapshots as interrupted without execution/grant recovery. CLI serve --state-dir is opt-in; status reports metadata-only and raw-results/skills nonpersistent. Archived owner inspection/removal works; CLI --wait exits task_interrupted without replay. Default app/memory-only mode preserved.
+- Validation: final combined **294 passed / 0 failed / 0 skipped in 3.80s**, 24 product/history/auth/preset/runner test files. Includes actual owned subprocess SIGKILL/reopen recovery, exclusive process lock, privacy, corruption/schema/link/permission/owner checks and publication faults before/after rename. No model calls in pytest. Initial 14 runner tests/0.17s and two context-probe tests/0.13s are prior separate invocations, not extra model successes. Final Ruff/format, offline lock check and wheel build passed; packaged history/CLI bytes match source.
+- Actual native history probe on isolated port7092: CORE replied HISTORY-READY; after stopping/reopening a different owned process, succeeded metadata and result/context hashes matched, archive_only true, result_available false, skill registry empty, no automatic replay. Probe stopped; primary desktop7090 and CORE were not restarted. Local history file contains no prompt/answer canary; raw results deliberately unavailable after restart.
+- Updated roadmap v5.19.1, partial HAR ledger, Documentation13.4, runbook/design, outstanding/release ledgers and new protocol/result/history guides. Public receipts: har008-paired-v1-20261110.json, context-priority-native-v1-20261110.json, harness-history-native-restart-20261110.json, harness-v1-1-20261110-receipt.json. Historical v1 evidence remains unchanged; new sources are not certified by old D87.
+- Remaining: HAR-008-R1/specialist qualification, semantic compaction and memory binding, durable execution/skill catalog, PostgreSQL Conversation sync/native installer, actual generation model approval/evaluation/adapters and release gates. No model/weights/SDK/provider/runtime-config, Vault/Docker/database/migration/Qdrant change, primary restart, commit, promotion or release. Previous development-log bytes retained.
+
+
+## 2026-11-10 — HAR v1.2: opt-in source JSON contract and retained integration findings
+
+Purpose: continue the owner-requested harness implementation by addressing JSON/quote/null mechanics without changing the model, defaults or original quality evidence.
+
+- ADR-183: added source-value-quote-v1 for explicit readonly workspace.read runs. Build a bounded canonical whole-line quote catalog from actual retained snapshots with exact hashes/trust/native metadata; mandatory host instructions and pinned native schema constrain output before generation. Validate the untouched first completion (shape/types/null pairing/quote membership/complete finish/no tool calls), without extracting fences, trimming output, casting, repairing or retrying. Catalog validity explicitly does not establish semantic correctness.
+- API/CLI accept the closed opt-in contract only, reject unknown schemas/non-read tools, and preserve default text. CLI omits the new field in text mode to remain compatible with the already running v1 server. Legacy gateway/browser streaming/skill manifests unchanged. Contract-invalid raw native evidence is owner-only ephemeral diagnostics on FAILED, not a successful result; signed history stores its digest/state only, never raw text or restored authority.
+- Retained R1: three API submissions, two text native completions, attempt 3 failed before constrained generation because the initial fixture/parser omitted real run/call IDs and workspace/trust/omission metadata. INCOMPLETE/1.888s; stopped without retry. Fixed exact native envelope handling and added a real filesystem/workspace-tool regression. All inputs and first receipts retained; no resume or regrade.
+- Retained R2: 48 first native outcomes/31.376s, strict text 7/12 and 6/12, constrained-labelled 8/12 and 7/12 with nine host rejections. INVALID_SCHEMA_BINDING for schema-enforcement claims: README's flat schema example differed from actual pinned server-common.cpp parser, which reads response_format.json_schema.schema; flat input silently became generic-object JSON. Corrected client nesting, added an exact payload regression and passed three adversarial development controls (outside quote, null+text quote, indentation). Never relabelled R2 or changed its oracle/results.
+- Fresh R3: froze 12 new controlled cases/oracles (one Vietnamese source case, six source/six review, four null controls), source/skill/code/config hashes and cyclic four-arm order before inference. Same CORE/Qwen3.5-9B Q6_K/b11557/Fast512/strict, unchanged skill manifests, one actual read per run. 48 first native completions/30.657s, zero retries/cleanup failures/unidentified submissions. Text baseline 8/12 (typed value12/12, quote8/12), text skill8/12 (value11/12, quote8/12); constrained baseline and skill12/12 each, all format/value/quote12/12, zero contract failures. Four within-cohort strict gains and zero regressions for each constrained-vs-text comparison; adding skill alone yields one gain/one regression, no net benefit. Promotion stays NOT_QUALIFIED; same-author controlled saturation is not broad quality/independence/large-model parity.
+- Independently checked all 24 constrained schema/catalog/raw-content hashes and quote origins against frozen inputs; measured source/config bytes unchanged. Native calls this follow-up:103 (R1 two + R2 48 + R3 48 + five development controls), not103 independent quality cases. Original v1 public receipt and corpus hashes unchanged, baseline5/12/skill6/12 retained. No TTFT/peak RAM/VRAM/resource qualification measured.
+- Final validation: 323 passed,0 failed,0 skipped in3.89s across26 related product/history/auth/preset/runner test files; no native calls in pytest. Includes native filesystem/tool envelope, exact nested schema payload, negative output/type/size/null/hash cases, owner-only failed diagnostics/history privacy, unchanged default CLI compatibility and existing crash/restart/auth/tool boundaries. Ruff check/format18files, offline lock check and offline wheel build PASS; packaged contract/inference/CLI bytes match source. Earlier invocations are not added to this final count; no new full D87 regression.
+- Updated Documentation13.5, runbook section8, ADR183, HAR design/backlog, current ledgers and roadmapv5.19.2. New protocol/result and public receipt docs/evidence/har008-output-contract-20261110.json record all campaigns and raw receipt hashes; owner-private first outputs remain under data/evaluations. HAR-008-R1 bounded mechanics VERIFIED; full HAR-008 remains PARTIAL/NOT_QUALIFIED. Assessed HAR-008-Q2 NEXT/P1/2–4 preparation days plus measurement, same model, fresh semantic/resource protocol required. Existing compaction/memory/durable execution/catalog/native installer/media/release gates remain open.
+- Confirmed empty campaign-owned runs/grants before stopping trial7092; connection closed afterwards. Primary7090 remains its previously loaded v1 process (401 without auth), CORE8080 healthy200, neither restarted. New opt-in mode needs a process started from the updated checkout; no automatic activation. No model/provider/runtime config/weights/SDK, Docker/Vault/database/migration/Qdrant change, commit/staging/promotion/release. Pre-existing development-log bytes preserved.
+
+
+## 2026-11-10 — HAR v1.3: controlled maintenance semantics, sampled CORE resources and first-text timing
+
+Purpose: continue HAR-008-Q2 with broader controlled maintenance/caller/long-source cases and actual resource observations, preserving all first outcomes and the approved model/defaults.
+
+- Added ADR184, frozen protocol, 24-case/34-file maintenance corpus and separate benchmark-only evaluation, telemetry and SSE timing modules/tests. Twelve source tasks/twelve reviews, six categories with four cases each, ten null controls; safe/caller-precondition/UTF-8 quota/None-zero/cancellation/boundary scenarios, contradictory/unavailable facts and four early/late longer sources with distractors/instructions. Same-author controlled oracles only, not independent human review or real repository defect claims; source snippets never executed.
+- Prepared all24 cases through actual native workspace reads/schema/tokenizer with zero completions; maximum preparation input10839 tokens. Frozen quality campaign later used longer fixture paths/metadata, with actual input778–12970 tokens; retained actual counts rather than substituting preparation estimates. No context/model/SDK/weights/config change.
+- Quality measurement COMPLETE:24 cases ×4 cyclically counterbalanced arms=96 first authenticated product-API calls, unchanged CORE/Q6_K/b11557/Fast512/strict and skill hashes, all requested one/two snapshots retained.109.779s campaign, zero retries/cleanup failures/unidentified submissions,24 complete blocks. Text baseline:format22/24,value21/24,quote11/24,strict11/24; text skill:format19/24,value18/24,quote11/24,strict11/24; constrained baseline:format24/24,value21/24,quote21/24,strict21/24; constrained skill:format24/24,value23/24,quote24/24,strict23/24. All48 constrained outputs passed source/schema contracts; four gold failures retained. Independent checks match every constrained catalog/schema/raw-content hash and quote origin; frozen measured code/config unchanged.
+- Within this controlled cohort, constrained skill gained two strict successes/no regressions over constrained baseline; text skill one gain/one regression. Constrained baseline versus text eleven gains/one regression (verified Vietnamese subtotal incorrectly became null/null); constrained skill versus text twelve gains/no regressions. No population, independent qualification or large-model parity claim. Broad specialist promotion remains NOT_QUALIFIED.
+- Remaining failures:baseline missed Vietnamese subtotal116 and zero-timeout truthiness defect, and selected return int(raw) line6 instead of the earlier integer .isdigit() operation atline4. Skill quoted that .isdigit() line correctly but returned5 instead of4. Generic source-value-quote schema proves admitted source membership, not value/line coupling or semantic correctness. No post-hoc repair/rerun. HAR-008-L1 assessed NEXT/P1/1–2 preparation days plus measurement: proposed explicit authorized review target and pre-generation origin-line/quote pairing, with ADR/new contract/regressions/fresh panel; no implementation/default activation/model change yet.
+- Resource telemetry pinned explicit native PID724576/start_ticks2179241 across baseline/periodic/final samples, bounded nvidia-smi calls and joined owned threads, no zero fabrication on missing data.637 complete quality samples:sampled CORE RSS maximum10013460KiB≈9.55GiB, GPU process allocation maximum8018MiB≈7.83GiB. Request baseline RSS9282936–10013460KiB; lifetime HWM retained separately, not mislabeled per-request. Sampling interval0.2s plus query overhead; sampled maxima are not absolute/tensor-only/total-app footprints, no cold/uncontended/concurrency/SLO acceptance. Task-duration medians0.694991–0.749795s include API polling and receipt serialization/fsync, not just inference or TTFT.
+- Separate predeclared timing replay COMPLETE:four named cases × constrained baseline/skill=8 warm native streaming calls, never added as semantic outcomes/retries. Exact sources/task/preset/schema/skill bytes, null/role-only chunks ignored, first nonempty text delta and complete stop/DONE observed. Six short first-text arrivals0.416774–0.624449s; two longer12315/12379-input-token arrivals2.525117/2.371246s.58 complete resource samples, maximum sampled RSS9984648KiB and GPU8018MiB. Native timing only, not task-API TTFT or a deployed streaming change. All raw first SSE events, payloads and partial-error behavior retained/tested. Total native104calls=96quality+8timing, not104unique quality cases.
+- Before native measurement, final combined invocation across29 related product/history/auth/preset/benchmark files:349 passed,0 failed,0 skipped in4.07s; no model calls in pytest. Includes26 new telemetry/panel/stream tests, native filesystem/multisource replay against fake HTTP, exact source/oracle bounds, no-retry cleanup, PID reuse and units, missing metrics, joined worker, null/role timing and incomplete/length/tool rejection. Ruff check/format6new files and offline uv lock check PASS. No new full D87 regression or release certification; original measurements are not added to these counts.
+- Updated Documentation1.7/13.6, CLI runbook9, harness design/backlog, current ledgers and roadmapv5.19.3. New result/protocol and public docs/evidence/har008-q2-maintenance-20261110.json record all exact scores, observed units/scope, source/skill/config and private receipt hashes. Owner-private artifacts retained separately under data/evaluations/20261110-har008-q2-maintenance-v1 and streaming-v1; original v1/R1/R2/R3 evidence untouched.
+- Only benchmark/test/docs additions; production source, models/config/defaults/weights/SDK, Docker/Vault/database/migration/Qdrant unchanged. Campaign-owned runs and grants confirmed empty, probe7092 stopped cleanly; primary7090 and nativeCORE8080 not restarted. No commit/staging/promotion/release. HAR-008-Q2 bounded measurement complete, full HAR-008 and HAR008-L1/advanced context-memory/durable state/native installers/media adapters/prior release gates still open. Previous development-log bytes preserved.
+
+
+## 2026-11-11 — HAR v1.4: opt-in target line/quote pairs, retained regressions and ordering experiment
+
+Purpose: implement HAR-008-L1's mechanical consistency fix, test actual CORE first outcomes and preserve semantic failures without changing the model/defaults or rewriting Q2.
+
+- ADR185: added review_output_contract.py and explicit review_target validation in API/CLI/context/inference/coordinator. Target must be a clean relative path also explicitly read in the authorized workspace; it grants no read/action authority. Existing hash/trust/native snapshot validation precedes target filtering. Missing/omitted/blank targets, conflicting source hashes/line contents and schema overflow fail before generation. Caller files remain context only. Preserve original partial-range numbering; duplicate quotes keep all eligible line occurrences. Construct exact line/quote alternatives before native generation, independently reject untouched first mismatches afterwards; no number repair, quote trimming, fence extraction, cast or retry.
+- Existing generic source schema/text policy, legacy gateway/browser streaming, skill manifests and history schema remain unchanged. CLI omits new fields in default mode, rejects target in text/generic mode. Failed raw responses remain owner-only ephemeral diagnostics, signed history stores only hashes/state. Every new pair retains semantic_correctness=not_established: source/line validity is not defect correctness.
+- First fresh cohort:12controlled review cases (four defect/four caller/four control, two null, two duplicate-quote findings, three partial ranges),48first authenticated API calls through same CORE/Q6_K/b11557/Fast512/strict and unchanged repo-review bytes. Generic baseline strict10/12(value10,quote11), generic skill8/12(value8,quote8), value-first bound baseline8/12(value8,quote8), bound skill8/12(value8,quote9); allformat12/12, zero host contract failures. Generic baseline had one line/quote mismatch; all24bound pairs valid. Bound baseline versus generic one gain/three regressions, skill one gain/one regression.38.269s, no retries/cleanup failures/unidentified submissions. Retained safe-control false positives, wrong findings/duplicate occurrences and all exact first outcomes. Archived exact measured source snapshot before any ordering change; did not regrade this cohort.
+- Inference/hypothesis: value-first decoding might lock an incorrect numeric location before choosing a quote. Added separately named review-quote-line-v1, same eligible pair/null domain and host instructions except contract identifier, native properties declared quote then value. Kept review-line-quote-v1 value-first unchanged in behavior; host accepts either JSON member order. Two independent opt-in names, neither automatically activated or qualified by mechanics. Exact payload/domain/order and native first-reply rejection tests added.
+- Second fresh opaque-ID cohort:12new cases, no first source reuse, six cyclic arms generic/value-first/quote-first × baseline/skill,72first calls, allsame sources/questions/caps/skill bytes. Strict generic6/12baseline(value8,quote6),7/12skill(value7,quote8); value-first11/12baseline(value11,quote11),9/12skill(value9,quote9); quote-first10/12baseline(value10,quote10),7/12skill(value7,quote7). Allformat12/12, zero native contract rejections. Generic pair mismatches2baseline/1skill, all48bound pairs valid. Quote-first versus value-first one gain/two regressions baseline, one gain/three regressions skill; hypothesis did not establish consistent improvement.56.436s, no retries/cleanup failures/unidentified submissions. Retained all false positives, unsupported nulls and neighboring-location outputs. Some neighboring lines can support a broader finding but fail the narrow requested occurrence; no post-hoc alternate credit, no cross-cohort causal claim or independent qualification.
+- Independently reconstructed all120source/catalog/schema/raw-content/origin checks, all72bound pairs and observed native bound property orders from frozen sources/ranges. First source snapshot matches original hashes; final sources match second frozen scope. Complete native resource samples241first/356second, same PID/start ticks, sampled RSS maxima9929108/10048876KiB(about9.47/9.58GiB), GPUprocess allocation8018MiB(7.83GiB). Warm sampled process footprint, not absolute/tensor-only/request-only memory. No L1TTFT/cold-load/concurrency/SLO measured or inferred from Q2. Total124native calls=48+72quality plus4excluded development controls; never added controls/replays as semantic successes.
+- Software final:389passed,0failed,0skipped in4.63s,32related product/history/auth/preset/benchmark files, zero model calls in pytest. Previous separate382/4.59s before ordering variant retained, not summed. Tests cover exact schema domain/order/budget, native read ranges/duplicate/conflicting/missing/size/type/null cases, no target authority escalation, unchanged default CLI, owner/log/history privacy and immutable first-outcome/transport cleanup. Ruff check/format19files, offline lock check and offline wheel build PASS; six packaged implementation files match source. Not a new full D87 regression/release.
+- CORE was absent initially. Approved existing weights SHA256073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef and runtime pin5c8854fd88319125125dc4b836c98b1b215b0f23 verified before starting unchanged local launcher. Owned app7092 restarted only between candidate stages; nativeCORE retained throughout both measurements. After capturing results, runs/grants confirmed empty, owned app239508 and native210447 stopped cleanly;8080/7092 no longer listening, restoring initially absent trial services. No primary desktop restart, downloads/new SDK/model/config/preset/skill/default/provider/Docker/Vault/database/migration/Qdrant changes, commit/staging/promotion/release.
+- Updated roadmapv5.19.4, Documentation13.7, runbook10, design/ADR/backlog/current ledgers, protocol amendment and L1result. Public docs/evidence/har008-l1-review-pairs-20261111.json records both complete matrices, pair/resource/source checks and private first-receipt hashes; data/evaluations/20261111-har008-l1-review-v1 and order-v1 preserve raw outputs separately. All v1/R1/R2/R3/Q2 scores/receipts unchanged. L1 bounded implementation/mechanics verified; semantic/adoption gates remain NOT_QUALIFIED and both new modes stay explicit research options.
+- Next assessed HAR-008-Q3/P1/2–4preparation days plus measurement: fresh semantic rubric with admissible locations/claims/counterexamples and bounded verification/workflow, ADR before new call counts/budgets/schema/skill changes. Avoid treating self-review as independent proof or tuning published cohorts; keep the approved model and old scores. Full HAR/release/advanced context/memory/durable state/native installer/media gates remain open. Previous development-log bytes preserved.
+
+
+## 2026-11-11 — HAR v1.5: finite semantic counterexamples and shared-candidate self-check measurement
+
+Purpose: finish interrupted L1 provenance checks and progress Q3 with stronger semantic criteria, preserving first outcomes and model choices rather than treating valid line/quote pairs as review correctness.
+
+- Resumed L1 audit: every published private-receipt/historical hash matched, five new-document links existed and Documentation retained13major disclosures. Owned L1trial processes were already stopped; no aborted native campaign was resumed or repeated. Q2/L1 and older scores/receipts untouched.
+- ADR186/protocol: added benchmark-only registered semantic cases/scorer/native runner and tests, no production workflow change. Twelve new opaque-ID cases, five defects/five finite-probe conformance controls/two unknown or conflicting caller contracts, four inputs each. Trusted pure reference operations calculate only registered template semantics on fixed inputs; never eval/exec/import source snippets or model code. Exact complete native source/provenance is checked against the registered source before freezing tables. Predeclare alternative supporting locations, global claim/probe domains and typed expected/observed counterexample rules. Title prose explicitly ungraded; no_defect only means conformance within the finite probes, not universal correctness.
+- Native-only research protocol, not product task API or a skill authority/installation change: existing CORE/Q6_K/b11557/Fast512/strict and optional exact unchanged repo-review prompt bytes. Each case has a single baseline candidate plus one preplanned shared-candidate check, and a single skill candidate plus one check.48first native calls=24initial+24checks; skill group order alternates, check necessarily follows its candidate. Raw previous candidate is untrusted data, never gold/grade feedback. No retry-until-pass or replacement of initial scores; checked workflow adds another512output-token call, product task still single-completion. One unrelated schema control retained separately, never scored (it had valid typed fields but selected a source header, illustrating source membership is not semantic relevance).
+- Measurement COMPLETE/resource COMPLETE. Overall single baseline6/12→checked5/12, single skill5/12→checked6/12. CRITICAL breakdown:complete proofs on all five known-defect cases0/5 in EVERY arm. Conforming controls single baseline5/5,checked baseline4/5,single/checked skill5/5; uncertainty1/2,1/2,0/2,1/2 respectively. All48finite JSON/pair shapes valid. Baseline checks one gain/two regressions; skill checks one gain/no regression, without fixing any complete defect proof. No stable self-check or skill advantage/adoption claim; safe controls dominate total successes.
+- Retained failure detail:checked skill correctly names truthiness and source line but swaps expected/observed for empty input; integer caller .isdigit() claim has expected string0 instead of int0 and ValueError instead of AttributeError. Known UTF-8 quota/range/cancellation defects often declared no_defect. Unknown unit conversion was claimed defective with equal string expected/observed values. No casts, repairs, favorable alternate locations or post-hoc credits. Self-check is another model output, not independent proof; fixed same-author templates/reference implementations do not establish arbitrary repository review, patch correctness or large-model parity.
+- Exact12source bindings, registered finite tables,48raw scores and24shared-candidate SHA links independently recomputed unchanged; frozen code/config/skill/source bytes unchanged. Private outbound native messages/schema/evidence and raw replies retained under data/evaluations/20261111-har008-q3-semantic-v1.49native calls total includes one excluded development control, not49quality cases. New public docs/evidence/har008-q3-semantic-20261111.json records breakdown, costs, audit scope and every private artifact hash; previous evidence unchanged.
+- Observed two-call costs:median single baseline0.717933s versus checked workflow1.379087s (check call0.630693s), single skill0.759914s versus checked workflow1.578827s (check call0.648006s). Includes preparation/request retention/concurrent sampling, excludes one-time source freeze/model load and baseline/final metric queries; no task/nativeTTFT/cold/concurrency/SLO claim.270complete pinned-PID samples:sampled native RSS max8227964KiB≈7.85GiB, GPUprocess allocation8018MiB≈7.83GiB. Different process/workload/cache, not a RAM optimization result relative to L1; lifetime HWM kept separate.
+- Before native scoring, final combined34-file invocation:407passed,0failed,0skipped in4.50s, zero model calls in pytest. Includes18new finite-scorer/real-source/fake-native orchestration tests (registered actuals/alternatives, false proofs/types/probes, uncertainty, source tampering/no execution, exact source-gold binding, no oracle leakage, shared candidates, partial HTTP/transport retention and no retries). Ruff check/format5newPython files and offline uv lock check PASS. Not a new full D87 regression/model quality or release pass.
+- CORE initially absent; approved existing weights checksum and runtime pin verified, unchanged launcher used for owned native305839 only. No product app started; native stopped cleanly after all48calls,8080/7092 confirmed not listening. No model/config/preset/skill/default/provider/weights/SDK, production source, Docker/Vault/database/migration/Qdrant change, primary restart, commit/staging/promotion/release.
+- Updated ADR186/Q3protocol/result, Documentation13.8, runbook11, design/backlog/current ledgers and roadmapv5.19.5. Bounded Q3prototype/measurement complete, semantic/adoption gate remains NOT_QUALIFIED. Assessed next HAR-008-Q4/P1/2–4preparation days plus measurement:fixed approved source/type/probe observation receipts with expected/verdict gold withheld, exact registered-domain refusal, authority/budget/latency ADR and fresh paired evidence before activation. No arbitrary source/model execution or inference of production capabilities from this finite prototype. Full HAR/context-memory/durable state/installers/media/prior release gates remain open. Previous development-log bytes preserved.
+
+
+## 2026-11-11 — HAR v1.6: explicit context overflow strategies and bounded history recall
+
+Purpose: follow the owner's new context priority with a seven-method strategy inventory and tested window/pin/extractive/offload mechanics, preserving approved models, legacy behavior and all historical benchmark outcomes.
+
+- Added ADR187 and CONTEXT_MANAGEMENT_STRATEGIES.md: truncation/sliding/summary/compaction/RAG/hierarchical-memory/offloading compared by mechanism, benefits, risks and actual implementation status. HAR-009-A experimental mechanics verified; full HAR-009 semantic/resource adoption AC unchanged. Assessed B next/P1/2–3 preparation days plus measurement, C/P2/4–7 days plus measurement and D/P2/3–5 days plus measurement with dependencies/risks. HAR-008-Q4 deferred under owner's context priority, not closed or silently abandoned.
+- Added explicit HistoryPolicy separate from source priorities: configurable recent whole pairs plus immutable numbered pins; exact native template/tokenizer budgeting and finite output reservation; controlled mandatory overflow, strict no-loss and malformed-history errors. Legacy branch, browser streaming, default CLI history, source/review contracts, skill/model/config/preset choices remain unchanged when policy absent. Unlimited's dynamic minimum-answer budget handled explicitly; no context-size increase.
+- Extractive compact performs zero summary inference: optional pairs offloaded byte-exact to an owner-private RAM cache, SHA/turn-bound lexical whole-pair excerpts appended as untrusted JSON, never new live roles/approval/consent. Eight extracts max,4KiB/pair, oversized originals offload-only. System/current/pins never clipped. Short contexts may grow due to JSON/policy overhead; neither lexical relevance nor old assistant text is certified factual.
+- Added authenticated cache metadata list/raw recall/delete, server-bound owner callbacks and explicit request recall IDs. No raw history in logs/signed metadata/disk; TTL1800seconds without refresh,128KiB/entry,16entries/2MiB owner,128entries/8MiB process; full/oversized admissions fail without silent eviction. Expiry is access control with lazy pruning, not physical secure erase. Failed completion snapshots remain owner-inspectable/deletable; closing service clears raw cache. No conversation DB deletion/recovery, permission resurrection or automatic file-RAG/memory injection.
+- CLI opt-in window/compact/pin/recall flags, cache commands and metadata notices implemented. Original full pairs retained in client RAM for stable numbering until explicit256-message bound; future configured pins become active only after their pair completes. No silent rolling renumbering or unbounded-history claim. Upstream chat UI controls, durable offload, LLM summaries, tool/task-state compaction and hierarchical consented memory remain pending.
+- Final related software invocation:462 passed,0 failed,0 skipped in4.75s across38files,55new tests; deterministic/fake-native tests make no actual model calls. Covered complete-pair/pin/source/strict/soft/hard/Unlimited boundaries, raw/hash provenance, request validation, foreign/absent/expired identity equivalence, no-refresh expiry, quotas/corruption/delete/shutdown, failed-completion cleanup, raw-log privacy, CLI compatibility/capacity and actual adapter protocol doubles. Earlier new-test invocation had two expected-code-name mismatches; first panel-double invocation exceeded raw cache limit due to verbose filler. Corrected fixture expectations/filler before native input freeze; final count is one combined invocation, not a sum of retries.
+- Native panel: froze fixed synthetic inputs and15source/config hashes, ran one eight-case preparation-only campaign with approved existing CORE/Q6_K/unchanged launcher/runtime. Legacy343tokens and sliding173 omit old G-17; pinned215/compact460/explicit-recall395 retain it. Pressure20328tokens keeps pins/turns1,4 and drops complete2,3 within32000input limit at512output; strict-window and mandatory overflow reject explicitly. PACKING_AS_EXPECTED,0completion calls/0automatic retries, exact input/fitted/receipt hashes retained. Presence is not answer correctness, semantic-summary retention or measured TTFT/peak RAM/VRAM. Public receipt docs/evidence/context-policy-native-20261111.json; originals data/evaluations/context-policy-20261111/native, synthetic raw cache cleared.
+- Ruff static/format13files PASS; all13new/changed measured Python modules/functions/classes have descriptions. Offline lock check and offline sdist/wheel build PASS; eight packaged product files byte-match source,15frozen source/config hashes match after measurement; six new-document links valid. No new full D87 or release qualification. Three pre-native development test failures and one unused-import lint finding were fixed; no native output repaired, resampled or relabelled.
+- Roadmapv5.19.6, Documentation13.9, harness design/runbook/backlog and current progress/release/open-day ledgers updated. Existing model/config/embedding/skill plus five old HAR public evidence files unchanged; development-log prefix byte-identical before this append. Owned CORE started from initially idle8080 and stopped/exit0 after probe; port8080 idle again, no shared app restart. No model download/selection, provider, Docker, Vault, database, Qdrant, source-root or migration change. Pre-existing unrelated worktree edits and historical first scores preserved; no staging/commit/release in this task.
+
+
+## 2026-11-11 — HAR-009 context optimization TODO recorded
+
+Purpose: record the owner's requested follow-up after comparing current context mechanics with publicly documented long-running agent approaches; documentation only.
+
+- Expanded the harness backlog with HAR-009-B1 frozen paired answer-retention/resource benchmark (NEXT/P1), B2 token-budget/importance-aware recent context, C1 source-bound structured working state/compaction and D1 durable originals/scoped retrieval. Recorded dependencies, effort estimates, risks, order and adoption criteria; estimates overlap existing B/C/D scope and are not summed into delivery commitments.
+- Target composition: pinned constraints plus recent whole turns within actual token budget, structured goals/decisions/evidence/in-progress/missing work and retrievable originals. First establish the baseline; evaluate actual answers/facts/constraints/citations/conflicts, token cost, latency/TTFT and RAM/VRAM rather than infer quality from software tests or prompt presence.
+- Preserved HAR-009 PARTIAL, earlier software/native observations and model/default/approval/memory gates. Added official OpenAI/Anthropic design references without asserting performance parity. No implementation, model/provider/configuration, storage/data or service change; no tests rerun for this documentation-only update. Existing devlog prefix preserved byte-for-byte.
+
+
+## 2026-11-11 — HAR-009 TODO clarification: threshold compaction and persistent notes
+
+Purpose: make the three requested public-design-inspired backlog gaps explicit, documentation only.
+
+- Clarified C1: configurable actual-token compaction trigger, output reserve, carry structured working state plus recent context into the next window, unresolved bugs/implementation details and repeated-compaction testing.
+- Clarified D1: durable original sources plus versioned structured notes, progress updates/conflict handling, source references and scoped reload after context reset/restart; verify continuation of unfinished work without restoring approval or consent. B1 retention/resource benchmark stays NEXT; all implementation/adoption statuses remain pending.
+- No source/model/configuration/storage/service changes or new benchmark claims. Checked exact backlog replacements and preserved the prior devlog byte prefix; no tests rerun for documentation-only clarification.
+
+
+## 2026-11-11 — HAR v1.7: Aevra identity and independent native Linux desktop
+
+Purpose: implement the owner's Aevra name/shared supplied white dragon and replace the external Brave/Chromium desktop app-window with a native application, preserving approved models/data and existing auth/context/tool authority.
+
+- ADR188 accepts the explicitly requested native-host change, superseding only ADR181's browser desktop choice. Added AEVRA_DESKTOP.md and current runbook/Documentation13.10/design/readme/backlog/ledger updates, roadmapv5.19.7. HAR-016 bounded Linux identity/native-host implementation verified; HAR-016-B/P2/3–5days plus matrix-testing assessed for clean-machine/bundled/cross-platform/UX qualification. Context B1 stays NEXT; B2/C1/D1 and prior semantic/release gates remain open.
+- Primary distribution/console name now aevra; aevra-desktop entry added, la retained as compatibility alias. uv offline lock/sync renamed only the local editable distribution, keeping the61-package dependency resolution and third-party versions. Existing token/auth locations, cookie/domain/model aliases and DB/schema identifiers not renamed or migrated.
+- Copied owner white dragon SVG/PNG byte-exact into apps/branding/assets with source/resource SHA256 manifest. Derived small dark-backed PNG/SVG/ICO for contrast; no new logo generation or source asset modification. CLI renders the supplied alpha mask as portable ASCII in interactive chat/aevra logo; JSON returns exact SVG metadata. Web branding applies to response metadata/title/sidebar/favicon/pairing and owned CSS/JS; no raw message rewriting or modifications to70pinned llama-ui files. Upstream licensing/resources preserved.
+- Native GTK3/WebKitGTK4.1 app uses installed OS Python/PyGObject through offline uv, no external browser discovery/launch/fallback, Rust/Electron/framework/model downloads or system package installation. Independent window/header/icon, private per-endpoint/credential-hash device history and writer lock; no Python/JavaScript bridge/native tools, no-sandbox flags, external/file/script navigation, popups/downloads or device permission grants. Existing loopback auth/cookie/CSRF/CSP enforced. History is separate from Brave, not DB sync or automatic migration; backend expiry remains30minutes.
+- One-use pairing passed only over renderer stdin; no bearer in renderer payload/argv/logs. Dependency probe happens before pairing; initialization errors quit/close rather than silently leaving an unusable app. Aevra desktop reuses an authenticated current backend, refuses occupied/unauthorized/older servers, or checks matching existing identity and starts an owned missing harness. Short2second readiness requests/15second startup bound; normal close/failure joins only owned children, graceful supervisor signal then bounded owned-group kill fallback. No CORE load/start/stop or shared-service restart.
+- Actual native development QA retained: initial load-only native window showed original sidebar logo and llama-ui title; owned response CSS/JS corrected those. Subsequent synthetic streaming verified UI while the focused test window accepted incidental keyboard input; retained those observations. Added non-focus-stealing QA presentation, then clean native-verified and final native-releasecheck each loaded exact packaged UI, white dragon/title/sidebar and one synthetic fixture stream, exit0. No actual model calls or semantic-quality trials/retries. Final screenshot/summary published at docs/evidence/aevra-native-desktop-20261111.png/.json; earlier logs/images retained privately, not relabelled.
+- Actual owned backend lifecycle probed separately twice: initially group-signal cleanup, then final graceful uv-supervisor termination; both matching private QA identity/start/statusAevra/join, no model calls. Final supervisor exit143 is expected SIGTERM status, distinct from native window exit0. Synthetic backend7092 stopped only after exact owned command verification;8080/7090/7092/7093 all idle after QA. No shared process stopped. Private synthetic profiles/history retained as device-test artifacts, not imported into real desktop profile.
+- Installed owner-local launcher ~/.local/share/applications/io.aevra.Desktop.desktop with verified icon and credential-file paths only, no token/nonce contents; previous file absent, default existing identity verified usable without printing its contents. The launcher opens native Aevra through uv, not a browser. It depends on current checkout/uv/system GTK/WebKit, not a fully bundled AppImage or Windows/macOS installer. CORE remains separately managed; GUI readiness is not proof of inference readiness.
+- Final combined41-file invocation:498passed,0failed,0skipped in5.14s,36new tests. Covers brand reproducibility/provenance/path/tamper checks, nondestructive head/sidebar/JS branding, CLI aliases/JSON, native origin/profile/lock/no-browser/nonce privacy, matching identity, reuse/start/failure/owned shutdown, short probe timeout, initialization failure and bounded smoke orchestration; earlier context/source/skill/auth/default boundaries pass. Three old browser-launch/shortcut assertions updated for the owner's new native requirement; earlier development lint unused imports corrected. No full D87/release/model-quality pass claimed.
+- Ruff static/format18Python files and all module/function/class descriptions PASS. Offline lock/build PASS;23packaged product/static/brand files byte-match final source and wheel declares aevra/aevra-desktop/la. Source freeze receipt verified after documentation edits; new guide/ADR relative links checked. All four original owner-logo files, model/embedding/runtime configuration and five historical HAR evidence files unchanged; previous devlog prefix retained byte-for-byte. No Docker/Vault/database/Qdrant/provider/model/weights/SDK/source-root/migration changes, staging/commit/release or weakening of old acceptance criteria.
+
+
+## 2026-11-11 — Aevra transparent logo correction
+
+Purpose: fix the owner's reported dark square/border around the Aevra launcher icon, preserving the supplied white dragon artwork.
+
+- Removed the previously added dark PNG/ICO background and SVG rectangle; icon derivatives retain transparency, and icon.svg is now byte-identical to the original supplied SVG. Original logo copies and all four owner source assets unchanged. Removed the owned web badge/sidebar logo background/border without changing chat layout, native architecture or model behavior.
+- Updated future shortcut generation and the existing installed Aevra launcher to use the packaged original logo.svg directly, changing the icon resource path from the former dark PNG. Existing Exec/identity configuration preserved; desktop-file-validate PASS. Saved old derived assets/launcher privately before replacing them; prior public native screenshot/receipt remains historical.
+- Scoped regression:72passed,0failed,0skipped in1.09s across branding/native/CLI/browser-script/harness tests. PNG512 and ICO64 corners alpha0 with full alpha range0–255; SVG exact original bytes; resource manifest/reproducible build checks PASS. Ruff static/format4Python files PASS; no full regression or fresh native/model-quality claim.
+- Updated current native guide and ADR188 with the owner's transparent-logo correction. No model, provider, runtime, auth, database, Vault, Docker or original upstream UI/source-logo changes. Existing devlog byte prefix preserved.
+
+
+## 2026-11-11 — Aevra system icon reinstallation and cache refresh
+
+Purpose: address the owner's report that the transparent icon correction was not visible, verifying the installed desktop resource rather than only packaged asset files.
+
+- Confirmed original packaged SVG/PNG already transparent and the previous launcher used the original SVG. The GNOME grid cache itself was not inspected; did not assert a proven shell-cache root cause. Reinstalled exact supplied SVG into the user hicolor theme as io.aevra.Desktop-transparent-26755277d2671bda, then atomically replaced the existing launcher's Icon key while preserving Exec/identity. Future shortcut creation installs/references the same immutable theme key; existing file/symlink conflicts refuse overwrite, linked directories rejected before writing.
+- desktop-file-validate, gtk-update-icon-cache --force --ignore-theme-index and update-desktop-database all exit0. Gio DesktopAppInfo now returns the new themed icon name; actual GTK icon lookup resolves the new user theme SVG,64px image has alpha and corner alpha0. Captured only an owned non-focus-stealing GTK preview on gray background at docs/evidence/aevra-icon-theme-20261111.png. Did not restart GNOME/login session or change favorites/icon-theme settings. This verifies system theme resolution/rendering, not automated observation of the owner's open app grid.
+- Final focused branding/CLI/native/browser/harness regression recorded separately; static/format checks4Python files PASS. Added regression coverage for immutable themed resource identity, changed-file refusal, linked-file refusal and linked-directory no-write behavior; original artwork unchanged. Updated native guide/ADR188; earlier receipts/screenshots kept historical, previous devlog bytes preserved. No model, inference, provider, runtime, Vault, Docker or database change.
+- Final scoped result:75 passed,0 failed,0 skipped in1.12s; exact system-resolution/cache-refresh receipt retained in data/evaluations/aevra-icon-cache-refresh-20261111/validation.json.
+
+
+## 2026-11-11 — Aevra outside-menu Desktop shortcut
+
+Purpose: address the owner's clarification that the remaining dark border is on the Desktop icon on this Ubuntu machine, rather than the menu preview.
+
+- Inspected GLib/XDG Desktop directory and actual files: only Steam existed, no Aevra Desktop entry; the earlier Aevra modifications applied to the applications-menu entry. Preserved Steam and all other shortcuts. Shell Eval returned unavailable; did not enable unsafe mode or restart the shell.
+- Created ~/Desktop/Aevra.desktop with the existing verified CLI, same Aevra native Exec/auth-file paths and immutable transparent theme key. Set executable/trusted launch metadata and a Desktop-specific custom-icon URI to the exact original transparent SVG. desktop-file-validate PASS; Gio DesktopAppInfo from this exact Desktop file resolves Aevra/the correct theme key, GTK64px alpha present/corner0 and SVG byte-identical to the owner's original. Verification retained in data/evaluations/aevra-desktop-shortcut-20261111/verification.json.
+- No source code changed or tests rerun; this is an installation/metadata correction using existing code. Updated native guide; previous devlog byte prefix preserved. No actual DING grid screenshot was captured, so no claim that a preview demonstrated the owner's visible desktop state. No model/provider/inference/database/Vault/Docker or shell-session/favorites/theme changes.
+
+
+## 2026-11-11 — Aevra Show Apps icon owner-verified fix
+
+Purpose: finish the owner's clarified Show Apps icon issue, preserving the already-correct physical Desktop shortcut and actual first visual outcomes.
+
+- Owner confirmed physical Desktop shortcut is borderless; the remaining issue is Show Apps. Preserved the working shortcut. Audited all standard applications directories: one original Aevra registration. Temporarily hid/restored that entry and switched to a fresh absolute transparent SVG path; owner still saw the dark square. Shell ShowApplications API returned AccessDenied; did not enable unsafe mode/restart shell or alter themes/favorites.
+- Created a temporary fresh application registration named TEST Aevra with a transparent PNG. Owner confirmed TEST borderless. Switched the old primary registration to byte-identical PNG content; owner still reported its square. Retained these negative observations rather than declaring cache/file changes sufficient.
+- Replaced only the old io.aevra.Desktop menu registration with fresh canonical io.aevra.Aevra.desktop; aligned native Gtk.Application through a dependency-free identity module. Immutable transparent PNG512 icon by absolute path in future/current launcher generation. Owner confirmed primary Aevra in Show Apps now has no dark square. Controlled outcome supports replacing the stale registration; no claim of proving GNOME internals or that SVG decoding was the root cause.
+- Removed TEST application registration and moved its PNG/entry plus the retired menu entry into private evidence. OS application registry verified exactly one visible Aevra with the new ID, TEST absent; physical Desktop shortcut still present and unchanged. Existing endpoint/token-derived native storage, credentials, permissions, backend and models untouched; no Aevra favorite migration needed. No model calls or shared-service/session restart.
+- Final75focused branding/CLI/native/browser/harness tests PASS/0FAIL/0SKIP in1.11s; native application ID assertion and PNG immutable path/alpha checks updated, seven-file Ruff/static/format PASS. OS-Python GTK/WebKit dependency probe PASS. Not a fresh full suite, model-quality or release pass; no extra GUI inference campaign. Updated native guide, ADR188 identity reason/impact and backlog owner acceptance. Evidence data/evaluations/aevra-showapps-icon-20261111 retains first attempts, owner-result and cleanup; prior devlog bytes preserved.
+
+
+## 2026-11-11 — Repository housekeeping: docs move completed, project README, HAR/Aevra committed
+
+Purpose: carry out the owner's request to move the former root README into `docs/` (“Cái này giống README nằm trong docs hơn là README của toàn bộ dự án, nên cứ cho cái này vào docs trước đi”) and the goal “đọc là và hoàn thành các việc cần làm và còn tồn đọng” (read and finish the work that is due and outstanding).
+
+- **State found:**
+  - The worktree on `develop` (`33e2cef`) held the HAR v1–v1.7/Aevra work recorded in the entries above, never committed: `apps/cli`, `apps/desktop`, `apps/harness`, `apps/branding`, `src` services, 15 test files, HAR benchmarks and fixtures, ADR180–188, 14 evidence files, the owner's logo assets, and `pyproject.toml`/`uv.lock` (distribution `aevra`, console scripts `aevra`, `aevra-desktop`, `la`).
+  - An unfinished move of 188 `docs/*.md` files into `docs/progress/` (184 byte-identical, 4 ledgers updated by HAR).
+  - An empty root `README.md`; its former content, renamed to Aevra, sat in `docs/README.md`.
+  - No other session was active in this directory, and no file had changed in the previous 2 hours.
+- **Verified before commit:**
+  - CI-scope suite (`hosted_exclusions`, main mode): 6799 passed, 368 skipped, 30 deselected, exit 0. That is 309 more tests than the last CI run on `develop` (6490).
+  - `uv lock --check --offline` passed.
+  - Ruff check (E4, E7, E9, F) and format check passed on all 67 new or changed Python files.
+  - A scan for tokens, credentials, private keys and database URLs in the changes found nothing.
+  - The three new evidence screenshots show only synthetic or READY chat content.
+- **Docs move completed:**
+  - Rewrote 1584 broken relative links in 204 Markdown files. A link was changed only when the new target existed, and none remained unresolved.
+  - Links from files that moved into `docs/progress/` were recomputed from their old location. Links in `docs/README.md` were recomputed from the repository root, where the file used to be. Links from other files to `docs/<NAME>.md` now point to `docs/progress/<NAME>.md`.
+  - This dev log is append-only, so its 179 historical links of the form `../docs/<NAME>.md` were left unchanged. Each of those targets now lives at `../docs/progress/<NAME>.md`; ADR, evidence and proposal paths did not move.
+  - `benchmarks/scripts/d14_report.py` and `d14_structured_report.py` still name `docs/MODEL_REGISTRY.md` in a historical protected-file check. They were not changed.
+- **READMEs:**
+  - `docs/README.md` is now the "Aevra API operator guide". It gained a scope line pointing to the project README, the new `apps/` entries, the docs layout, `uv sync` pinned to system CPython 3.12, and the CI-scope test command (a plain `pytest tests` needs CORE because `tests/test_core_acceptance.py` calls it at import time).
+  - The new root `README.md` covers what Aevra is, its components and their defaults, an architecture sketch, and prerequisites: the CI apt package list plus git, bubblewrap user namespaces through `bwrap-userns-restrict`, the desktop GTK3/WebKitGTK 4.1/PyGObject packages, and the pinned llama.cpp commit and weights.
+  - It also has a quick start with the `aevra` CLI (each subcommand was checked against `aevra --help`), the two ways to start CORE, the test and lint commands, a documentation map, safety rules and CI.
+- **Unchanged:** models, configuration, data, services, Vault, Docker, database and Qdrant. All HAR results and gates, D81, D89 and D90, and all earlier receipts. The HAR changes touch `src/` and `tests/`, so the 2026-11-09 D87 PASS on `production` `dd7fac3` will not match the `develop` source tree once this lands. Nothing was promoted, tagged or deployed.
+- PR #52 CI:
+  - Run 42989603156 was cancelled when a follow-up commit was pushed. Lint had already passed on 67 files.
+  - Run 42989786894 on `708c138` failed 1 test: `tests/test_product_assets.py::test_pinned_download_checks_digest_and_records_assets` (6798 passed). `apps/harness/assets.py` copied `runtimes/llama.cpp/LICENSE` from the git-ignored llama.cpp checkout, which hosted runners do not have; locally the file exists, so the test passed.
+  - Fix: the license source is now the module constant `LLAMA_CPP_LICENSE`, so product behaviour is unchanged, and the test points it at a temporary fixture. A check with the module default pointing at a missing path still passes.
+  - Also added a troubleshooting table, with every code checked in the source, to the API operator guide.
+- PR #52 CI run 42991364772 on `609e924`:
+  - test-python: 6799 passed, 368 skipped, 30 deselected.
+  - Lint passed on 67 files; test-js and the quarantine job also passed.
+  - `ci-gate` did not start, on the first attempt or on a rerun. GitHub's annotation: "The job was not started because recent account payments have failed or your spending limit needs to be increased." This is an account billing block, not a code result.
+  - Every job that `ci-gate` aggregates passed on `609e924`. Branch protection is not enabled, so the PR was merged with this run documented. The commit that records it changes this dev log only, and no new CI can start until the owner fixes Billing & plans. Later pushes, including the `develop` push run, are blocked the same way.
+
+
+## 2026-11-11 — HAR-009-B1: frozen paired context retention benchmark measured
+
+Purpose: carry out the NEXT item of the HAR backlog under the owner's goal to finish outstanding work. The task is to measure how the existing explicit history policies retain old facts, constraints, corrections and unfinished work, and at what cost, without changing any model, default or configuration.
+
+- **Benchmark only.** New `benchmarks/context_retention.py` and `benchmarks/tests/test_context_retention.py` (15 tests, no model calls).
+  - The corpus has 12 synthetic dialogues of 16 pairs each, three per type: early fact at pair 2, rule at pair 1 with detail at pair 15, old value at pair 3 corrected at pair 12, and unfinished work with a ticket at pair 4. Each type has one Vietnamese case.
+  - The tests check that no filler holds an answer, distractor or evidence token, and that the question never contains the answer.
+  - Five arms: `full` (window 16), `legacy`, `window3`, `window3_pin1` and `compact3` (extractive, owner-bound RAM archive). The arm order rotates per case.
+  - Scoring: strict means every required group appears and no stale or distractor token appears. Presence of the source facts in the composed input is checked separately.
+  - The [protocol](../docs/HAR009_B1_RETENTION_PROTOCOL.md) and `frozen-inputs.json` (corpus, arms, options, analysis plan, native PID and start ticks, source hashes) were written before inference.
+- **Run.**
+  - Weights SHA-256 `073a9275…` and runtime pin `5c8854fd…` were verified. CORE was started with the unchanged `scripts/start-core.py` as PID 881894 and stopped afterwards with exit 0, freeing port 8080.
+  - Settings: preset `fast`, 512 tokens, temperature 0.7, native streaming.
+  - 60/60 first outcomes in 36 s, no retries. Owner-private records are in `data/evaluations/context-retention-b1-20261111`.
+- **Results (strict / stale / facts in context, each out of 12):**
+
+  | Arm | Strict | Stale | Facts in context |
+  |---|---|---|---|
+  | `full` | 11 | 0 | 12 |
+  | `legacy` | 3 | 1 | 3 |
+  | `window3` | 1 | 1 | 0 |
+  | `window3_pin1` | 3 | 0 | 3 |
+  | `compact3` | 12 | 0 | 12 |
+
+  - Paired against `legacy`: `compact3` 9 gains and 0 regressions, `full` 8 and 0, `window3_pin1` 3 and 3, `window3` 1 and 3.
+  - Upper-median input tokens (7th of 12): `compact3` 1210, `full` 564, `legacy` 415, `window3_pin1` 233, `window3` 204. Upper-median first text: 0.22–0.37 s.
+  - `full` and `compact3` tie on retention (12/12 presence each); the strict 12/11 gap is the digit rule. Among 3-pair windows `compact3` retained the most, but the corpus made lexical retrieval easy (unique project names in question and target), so that is an upper bound. `constraint-saomai` cannot show rule retention because VND is the default.
+  - Sampled CORE peaks: RSS 10,023,732 KiB and GPU 8018 MiB (240 samples).
+- **Retained first outcomes:**
+  - `full`'s Vega answer, "one hundred fifty minutes", fails the pre-registered digit rule; no post-hoc credit.
+  - `window3`'s Sao Mai success came from a default "đồng", not from retention.
+  - `legacy` and `window3` answered Vega in hours (the retired form).
+- **Independent check:** 60 rows rescored and presence recomputed from the saved requests, with 0 mismatches. The frozen hash, the source hashes and the corpus identity were confirmed after the run.
+- **Docs:** [result](../docs/HAR009_B1_RETENTION_RESULT.md), [receipt](../docs/evidence/context-retention-b1-20261111.json). Also updated: the backlog (B1 MEASURED, B2 NEXT), the strategy guide section 7, Documentation 13.11, roadmap v5.19.9 and the ledger status.
+- **Limits:**
+  - Short dialogues by one author, with no token pressure, so compaction's prompt-size benefit is not measured.
+  - One draw per cell, and prompt caching may affect timings.
+  - Output tokens and explicit recall were not measured.
+  - An independent fact and method review (two agents) confirmed every number from the raw files and led to these wording corrections before commit.
+  - No default, adoption, model, configuration, data or service change.
+
+## 2026-11-11 — HAR-009-B2: token-budget history policy implemented and measured
+
+Purpose: carry out the next item of the HAR backlog (B2) under the owner's goal to finish outstanding work. The task is to select recent history by a native token budget instead of a fixed pair count, give user-marked rules priority by an inspectable rule, and measure the result under real token pressure, without changing any default, model or configuration.
+
+- **Code (opt-in only).** `HistoryPolicy.mode` gains `"token-budget"` ([ADR-189](../docs/ADR/189-opt-in-token-budget-history-window.md)).
+  - If the whole history fits the soft target (`trigger_ratio` × input limit, default 0.8), everything is kept.
+  - Otherwise, in this order:
+    - systems, pins and the current task are mandatory (`context_overflow` above the hard limit);
+    - the newest pair that fits (at most 8 probed);
+    - a contiguous recent run within half of the remaining headroom;
+    - older pairs whose user message opens with a marker (`rule:`, `constraint:`, `important:`, `decision:`, `remember:`, `quy tắc:`, `quy ước:`, `ràng buộc:`, `quan trọng:`, `quyết định:`, `ghi nhớ:`; case, leading space and NFC/NFD ignored), at most 8 probed;
+    - the recent run extended to the soft target (binary searches).
+  - The receipt records one reason per pair (`pinned`, `recent`, `important`, `evicted_*`), the markers found, the window length and the token caps, with no dialogue text. `strict` refuses any loss.
+  - CLI: `--history-policy token-budget`, `--history-budget-ratio` (alias of `--compact-trigger`); `--history-window` is refused for this mode. The harness status lists the mode.
+  - `tests/test_context_token_budget.py`: 20 tests.
+- **Benchmark.** New `benchmarks/context_budget.py` and `benchmarks/tests/test_context_budget.py` (19 tests, no model calls).
+  - 12 synthetic dialogues. 8 long-turn cases have 16 pairs with 96-line synthetic logs (about 2,900 tokens per filler pair), so the history exceeds the hard limit. Kinds: early fact, marked rule, unmarked rule, and a marked decision later corrected without a marker. 4 short cases have 40 short pairs.
+  - Arms: `legacy`, `budget` and `compact`.
+  - A tokenizer-only design check (no completions) verifies window placements before the freeze.
+  - The [protocol](../docs/HAR009_B2_TOKEN_BUDGET_PROTOCOL.md) and `frozen-inputs.json` (including the composition plan) were written before the first completion. The calibration (92 and 96 log lines, no completions) is recorded in `data/evaluations/context-budget-b2-calibration-20261111`.
+- **Two campaigns.**
+  - Weights SHA-256 `073a9275…` and runtime pin `5c8854fd…` were verified before each start. CORE was started with the unchanged `scripts/start-core.py` (PIDs 936050 and 980039), then stopped with SIGINT each time; the launcher exited 0 and port 8080 was freed.
+  - Settings: preset `fast`, 512 tokens (hard input limit 32,000, soft target 25,600), temperature 0.7, native streaming.
+  - Campaign 1 (`data/evaluations/context-budget-b2-20261111`): 36/36 first outcomes in 151 s.
+  - An independent code review then found that marked pairs right behind the anchor used up the importance share and probes, so an older marked rule was dropped when recent pairs were also marked. The order was fixed (recent share, then marked pairs, then extension) and a regression test added.
+  - Campaign 2 (`…-run2`) reran the unchanged protocol on the fixed code: 36/36 in 152 s, no retries. The composition plan is identical to campaign 1, all 36 strict outcomes are the same (19/36 answer texts identical).
+- **Results (both campaigns; strict / stale / facts in context, each out of 12):**
+
+  | Arm | Strict | Stale | Facts in context |
+  |---|---|---|---|
+  | `legacy` | 3 | 0 | 2 |
+  | `budget` | 7 | 2 | 6 |
+  | `compact` | 11 | 0 | 12 |
+
+  - `budget` against `legacy`: 6 gains (Heron, Bồ Câu, Lynx, Họa Mi, Mantis, Puffin) and 2 regressions (Hydra, Đại Bàng). In both stale cases it kept the marked old decision, dropped the unmarked correction and answered with the old value, as the protocol predicted.
+  - `compact`: 8 gains, 0 regressions, 12/12 facts present; again an upper bound because the questions name unique projects.
+  - Long-history upper-median input: `legacy` 29,565, `budget` 23,711, `compact` 23,996 tokens. First text came about 1.2 s earlier for both new arms; preparation took about 0.1 s more.
+  - Campaign 2 sampled CORE peaks: RSS 10,195,752 KiB and GPU 8018 MiB (728 samples).
+- **Retained first outcomes:**
+  - Osprey: all arms answered in ISO form even without the rule, so it cannot show rule retention.
+  - Chim Sẻ: `compact` held the rule but wrote "MH-CS-315".
+  - `legacy` guessed in some short cases (ports 8080 and 443, "2.0", generic Mantis limits) and otherwise said it had no information.
+- **Independent check:** in campaign 2, 36 rows were rescored, presence was recomputed from the saved requests, and retained pairs were compared with the frozen plan, all with 0 mismatches. The frozen hash, the source hashes and the corpus identity were confirmed after the run. A separate fact review of the campaign-1 documents led to these corrections: calibration evidence saved, hypotheses reworded, per-regime maxima and totals added, and the token range and `legacy` guesses stated exactly.
+- **Validation:** related suites 176 passed; CI-scope suite 6853 passed, 368 skipped, 30 deselected; Ruff check and format on the 6 changed Python files and `uv lock --check --offline` pass.
+- **Docs:** [result](../docs/HAR009_B2_TOKEN_BUDGET_RESULT.md), [receipt](../docs/evidence/context-budget-b2-20261111.json). Also updated: the backlog (B2 IMPLEMENTED + MEASURED, C1 NEXT), the strategy guide (sections 1, 2, 3 and 7), Documentation 13.12, the CLI runbook section 12, roadmap v5.19.10 and the ledger status.
+- **Limits:**
+  - Synthetic dialogues by one author, with two draws per cell.
+  - The design deliberately places the correction outside `budget`'s window, so the stale result shows that the risk exists, not how often it occurs.
+  - No case marks a pair right behind the anchor, so the fixed bug is covered by software tests only.
+  - Output tokens and explicit recall were not measured.
+  - No default, adoption, model, configuration, data or service change. Before any default use, the marker rule needs a way for newer corrections to win, with its own ADR and a rerun.
+
+## 2026-11-11 — D87 PASS on develop 7fb5999 (after HAR-009-B1/B2)
+
+Purpose: rerun D87 on the new tree under the owner's goal to finish outstanding work. The D87 PASS on `production` `dd7fac3` no longer matched `develop` after the HAR code merged.
+
+- **Source.**
+  - Checkout `develop` `7fb5999` (merge of PR #54), tree `d5ed277a682ef7455fa26fd653b6cb450b0ac6a7`, equal to `origin/develop`.
+  - The only local difference is the editor connection line at the top of this log, which is outside the source-freeze scope.
+  - `develop` differs from `production` in 57 source files.
+  - `uv sync --locked --dev` only reinstalled the project package.
+- **Services.**
+  - Vault was sealed (container up about 9 hours). It was unsealed from the bootstrap file under the owner's standing authorization; the key shares were submitted in process and never printed.
+  - CORE was started with `docker compose --profile core up -d` (`local-assistant-core-1`, image `local-assistant/llama-cuda:5c8854fd8`) and stopped afterwards with `docker compose --profile core stop`.
+  - PostgreSQL, Vault and Qdrant were not restarted. The B2 benchmark CORE launcher had been stopped before, and port 8080 was free.
+- **Idle host.**
+  - Criterion: busy CPUs below 0.5 for 3 consecutive 30 s samples. It was met after 390 s, and rechecked just before the run, met after 90 s (0.43 / 0.40 / 0.39).
+  - No owner application was closed.
+  - Load during the run, including the suite itself: 64 samples, mean 1.54, max 2.49 busy CPUs.
+- **Run.** `uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full`, 17:31:56–18:03:37.
+- **Result: PASS.**
+  - **6479 passed, 0 failed, 0 errors, 0 skipped**, exit 0, `accepted_full_software_regression: true`, pytest 1898.66 s.
+  - 876 source files unchanged.
+  - Source freeze `5ed6c60f…`, log `6025da45…`.
+  - The reranker CPU test passed.
+  - 1 warning: the duplicate-name TTS archive test.
+- **Database.** Read-only queries as the runtime role (schema `assistant`) gave the same counts before and after: all conversation and memory tables 0, `file_owner_usage` and `file_global_usage` 1, Alembic `0006`.
+- **Docs.**
+  - [D87 result](../docs/progress/D87_CURRENT_FULL_RESULT.md): new current section; the `dd7fac3` runs are kept as history.
+  - [Public receipt](../docs/evidence/d87-20261111-develop-7fb5999-acceptance.json).
+  - Ledger status and roadmap v5.19.11.
+- **Scope.**
+  - This is software regression evidence for the tree to be promoted, not for the current `production` commit.
+  - Promotion is the owner's decision, and GitHub Actions is blocked by billing.
+  - No tag, release or deploy. D81, D89 and D90 stay open.
+
+## 2026-11-11 — HAR-009-C1 slice 1: opt-in source-bound working state
+
+Purpose: carry out the next HAR-009 item (C1) under the owner's goal to finish outstanding work. The task is a structured state with lineage and freshness that survives history reduction and client window drops, without an LLM summary, model, default, context-size or storage change. [ADR-190](../docs/ADR/190-opt-in-source-bound-working-state.md) was written before the implementation.
+
+- **Code (opt-in only).**
+  - `src/application/services/working_state.py` (new) builds a state from user lines that open with a marker, with an optional bullet and an optional key: `Goal:`, `Rule:`, `Decision[db-region]:`, `Todo[cert]:`, `Done[cert]:`, `Important:`, `Correction:`/`Update:` and the Vietnamese equivalents.
+  - **Items:** each keeps verbatim text, an absolute pair number (`history_offset` + local) and the SHA-256 of its source pair. Assistant text never becomes an item.
+  - **Supersession:** keyed items supersede earlier ones with the same key, and `Done[key]` closes `Todo[key]`; unkeyed items are never superseded automatically.
+  - **Freshness:** newer pairs that share at least 3 significant terms are listed in `newer_mentions`; in `token-budget` the newest is kept with reason `newer_related` (at most 8 probes, within the soft target).
+  - **Capsule:** untrusted JSON in the current user message, counted as mandatory content, including in the evidence-first estimate.
+  - **Limits:** above 64 active items or 32 KiB, the oldest notes and corrections, then the oldest items, are dropped and reported in `dropped_active`. Malformed, empty-key or overlong marked lines are reported in `skipped_lines`.
+  - **Receipt:** it returns the full state to the caller for carrying. Logs carry counts only; `working_state_summary` carries counts and pair numbers, never text.
+  - **`HistoryPolicy`:** gains `working_state`, `carried_state` (at most 64 validated items, keys folded) and `history_offset`; they cannot be combined with `extractive-compact`.
+  - **CLI `--working-state`:** carries the state and drops the oldest 32 pairs at the 256-message bound instead of stopping, unless pins are set. It prints evicted pairs as absolute numbers and reports dropped state items. Without the flag it does not send the new fields, so older servers keep working.
+  - **Harness status:** lists `context_working_state`.
+  - **Tests:** `tests/test_working_state.py`, 29 tests.
+- **Benchmark.** New `benchmarks/context_state.py` and `benchmarks/tests/test_context_state.py` (10 tests, no model calls).
+  - Part A re-runs the 12 B2 dialogues with `legacy`, `budget` and `budget_state`.
+  - Part B has 6 dialogues of 199 pairs plus a question. The runner replays the CLI rule (drops before requests 129, 161 and 193, final offset 96); the state arm takes its carried state from native compositions only. Arms: `legacy` (last 22 messages), `budget_drop` and `budget_state`.
+  - A tokenizer-only design check precedes the freeze ([protocol](../docs/HAR009_C1_WORKING_STATE_PROTOCOL.md)).
+- **Two campaigns** on the approved CORE (weights and runtime pin checked, unchanged launcher, stopped afterwards each time):
+  - Campaign 1 (`data/evaluations/context-state-c1-20261111`, PID 1142074, 164.7 s): 54/54.
+  - An independent code review then found:
+    - Turkish `İ`/`ı` crashing a request;
+    - unkeyed items that could never be retired, so failing closed could leave a CLI session unusable;
+    - malformed marker lines skipped silently;
+    - quadratic freshness work;
+    - CLI version skew.
+
+    All were fixed and tests were added.
+  - Campaign 2 (`…-run2`, PID 1184292, 165.8 s): 54/54 on the fixed code, same composition plan. A first rerun attempt passed the shell's PID; the preflight rejected it before any directory or call.
+- **Results:**
+  - Part A, campaign 1 then campaign 2:
+    - `budget_state` 9/12 then 7/12;
+    - `budget` 6/12 both times, with 3 stale answers;
+    - `legacy` 3/12 both times.
+  - The freshness rule kept the Hydra and Đại Bàng corrections in all 4 `budget_state` attempts. The model answered correctly in 3; in campaign 2, Đại Bàng named both values ("Đà Nẵng (đã được cập nhật từ Hà Nội…)") and is scored stale by the pre-registered rule. `budget` without state answered with the old value in all 4.
+  - Osprey flipped by sampling; the rule was not in context in any arm.
+  - Part B, both campaigns: `budget_state` 5/5 marked cases (keyed updates Warsaw and Đà Nẵng, INV-ACME-5521, the open TLS-certificate task, the Postgres 17 goal); `legacy` and `budget_drop` 0/5. The unmarked control failed in every arm.
+  - Cost: 78 tokens for the policy line, up to 181 with items and a related pair; capsule 185–267 bytes. Campaign 2 sampled CORE peaks: RSS 10,172,132 KiB and GPU 8018 MiB.
+- **Independent check (campaign 2):** 54 rows rescored, presence recomputed, plan compared, all with 0 mismatches; the frozen hash, the source hashes and both corpora were confirmed.
+- **Validation:** related suites 215 passed; CI-scope suite 6892 passed, 368 skipped, 30 deselected; Ruff check and format pass on the changed Python files.
+- **Docs:** [result](../docs/HAR009_C1_WORKING_STATE_RESULT.md), [receipt](../docs/evidence/context-state-c1-20261111.json). Also updated: the backlog (HAR-009-B MEASURED, C1 slice 1), the strategy guide (sections 1, 2, 3 and 7), Documentation 13.13, CLI runbook section 12, roadmap v5.19.12 and the ledger status.
+- **Limits:**
+  - Synthetic dialogues by one author, with one draw per cell per campaign.
+  - Part B is a mechanism check.
+  - Unmarked information is still lost once its pairs are dropped.
+  - Carried state is client data.
+  - This source change lands after the D87 run on `7fb5999`, so D87 must be rerun.
+  - No default, adoption, model, configuration, data or service change.
+
+## 2026-11-11 — D87 PASS on develop cdbcdd4 (after HAR-009-C1); interrupted attempt and residue cleanup
+
+Purpose: rerun D87 because HAR-009-C1 (PR #56) changed source after the D87 PASS on `7fb5999`.
+
+- **Interrupted attempt** (`data/backups/d87-20261111-full-2`, started 18:56:43):
+  - The host shut down and restarted. The CORE container stopped at 19:08:35 (exit 0), and `uptime` at 19:20 showed 2 minutes.
+  - The partial log reached about 4%: 277 passed, then `test_actual_grounded_core_tcp_citation_and_joined_delivery` FAILED and ERRORED as CORE stopped. `result.json` stayed `running`. This attempt is not counted.
+  - The restart also cleared `/tmp`, including the session scratch scripts, which were recreated.
+- **Residue** (read-only inspection first). The ingest fixture's teardown never ran. It left:
+  - a Qdrant probe collection `la_d25_probe_1f074c9f…` with 0 points;
+  - for test principal `09fc75e0…`: 1 `files` row (`worker.txt`, 40 bytes), 1 `ingestion_jobs` (`running`), 1 `ingestion_heads` and 1 `file_owner_usage`;
+  - `file_global_usage` +1 file / 40 bytes.
+- **Cleanup.** The owner was asked and chose "Dọn rồi chạy D87".
+  - The fixture's own teardown logic was replayed: the principal's ingestion rows were deleted (1 + 1), `cleanup_owners` from `tests/integration/test_file_http.py` was called, and the probe collection was deleted after re-checking its name and 0 points.
+  - Afterwards: `files` 0, `ingestion_*` 0, `file_global_usage` 0 files / 0 bytes, Alembic `0006`, no Qdrant collections.
+- **Valid run** (`data/backups/d87-20261111-full-3`):
+  - **Source:** `develop` `cdbcdd4`, tree `3038817580a6cf679dbe086e55b2903fbab0a6d1`, equal to `origin/develop`.
+  - **Vault:** it was sealed after the restart and was unsealed under the owner's standing authorization, without printing keys. The shared services had been restarted by the host, not by the assistant.
+  - **Idle host:** the criterion was met after 210 s (0.41 / 0.29 / 0.30).
+  - **CORE:** `docker compose --profile core up -d`, then `stop`.
+  - **Result: PASS.** **6508 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1839.05 s (19:27:43–19:58:24), 878 source files unchanged. Source freeze `33515647…` (the same as the interrupted attempt), log `63c69b1a…`. The reranker CPU test passed. 1 warning: the duplicate-name TTS archive test.
+  - **Load during the run:** 62 samples, mean 1.47, max 2.31 busy CPUs.
+  - **Database and Qdrant:** read-only checks gave the same values before and after: all conversation, memory and ingestion tables 0, usage rows 1 each, Alembic `0006`, no Qdrant collections.
+- **Docs.**
+  - [D87 result](../docs/progress/D87_CURRENT_FULL_RESULT.md): new current section, the interrupted attempt, and the `7fb5999` run kept as history.
+  - [Receipt](../docs/evidence/d87-20261111-develop-cdbcdd4-acceptance.json).
+  - The D90 dossier: a dated repository-state bullet and the newest D87 row. Section 5, the owner form, is untouched.
+  - Dated status notes on ADR-043, ADR-044 and the D74 brief, plus three stale next-step lines in the backlog.
+  - The ledger and roadmap v5.19.13.
+- **Scope.** This is software regression evidence for the tree to be promoted. `develop` differs from `production` in 59 source files. No promotion, tag, release or deploy. D81, D89 and D90 stay open.
+
+## 2026-11-11 — Outstanding-work audit, proposed designs (HAR-009-D1, HAR-016-B) and fix R1
+
+Purpose: continue the owner's goal to finish outstanding work after the host restart. The owner said "Tiếp tục đi".
+
+- **Audit.** A read-only workflow (31 agents, no tests or services while D87 ran) extracted open items from the backlog, the ledger, the roadmap, the decision dossiers, the ADR statuses and the dev log. It merged them into 42 items:
+  - 13 were proposed as agent-doable. Adversarial verification confirmed 11 and refuted 2: the HAR-005 IndexedDB-to-PostgreSQL sync needs schema and migration approval under ADR-180, and tool-output compaction has no tool output in the chat path yet.
+  - 18 need an owner decision first: D1 implementation, RAG and memory, activation and defaults, HAR-001/004/007/008, Q4, image and video, D81 v4, D86, D88, the reranker margin ADR, and voice campaigns.
+  - 9 are owner-only: D90, D89, D81, voice, image/video model approval, promotion and tag, billing, branch deletion, Brave API.
+  - 2 are blocked on hardware or services: the SpeechJudge runtime, and Windows/macOS installers.
+- **ADR-191 (PROPOSED, design only)** for HAR-009-D1: [ADR](../docs/ADR/191-proposed-durable-context-originals-and-notes.md).
+  - It was produced by a workflow: 4 code readers, a draft, two critics (3 blockers, 22 major and 12 minor issues fixed), then condensation and a citation check (30 fixes).
+  - Design: durable threads created by the owner, holding exact pairs and C1 notes in new `assistant` tables through an additive migration `0007` (REVOKE ALL plus explicit grants, size CHECKs), with no Qdrant or embedding model, explicit recall, tombstones and quotas, and no restoration of approvals or consent.
+  - It lists 10 owner decisions, including migration approval, retention, quotas, data at rest, memory classification and the operations windows.
+- **Linux distribution design (PROPOSED)** for HAR-016-B: [design](../docs/AEVRA_LINUX_DISTRIBUTION_DESIGN.md). It was produced by a workflow (3 readers, a draft, 36 critique issues fixed). It recommends a uv venv plus desktop entry, and gives a dependency and license inventory, a clean-machine VM plan, blockers R1–R8 and 11 owner decisions.
+- **Fix R1.**
+  - The cause: `aevra ui prepare` copied `runtimes/llama.cpp/LICENSE`, which this session added in PR #52, but `runtimes/` is git-ignored. Every clean checkout or `git archive` tarball would fail.
+  - The fix: the upstream MIT text at the pinned commit `5c8854fd` is vendored as `apps/harness/third_party/LLAMA_CPP_LICENSE`, and `LLAMA_CPP_LICENSE` points there.
+  - A new test checks that the file sits inside the package, starts with "MIT License" and has SHA-256 `94f29bbe…`. Asset, browser, desktop and harness tests: 55 passed.
+- **B2 follow-up:** recorded as covered by ADR-190 freshness when working state is on. `token-budget` alone keeps its measured B2 behaviour.
+- **Next:** D87 rerun on the merged tree, because R1 changes source.
+
+## 2026-11-11 — D87 PASS on develop a657709; ADR-192 proposed (HAR-009-C LLM summary)
+
+- **D87 after PR #58** (vendored llama.cpp license):
+  - **Run:** `data/backups/d87-20261111-full-4` on `develop` `a657709`, tree `a53f51dfee821378680f498542c5f2354ab7b2b4`. It started on an idle host (0.35 / 0.33 / 0.33). CORE ran via `docker compose --profile core` and was stopped afterwards. Vault was already unsealed, and no shared service was restarted.
+  - **Result: PASS.** **6509 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1872.49 s (21:43:26–22:14:40), 879 source files unchanged. Source freeze `afe1bbc7…`, log `4f929189…`. The reranker CPU test passed.
+  - **Load:** 63 samples, mean 1.82, median 1.50. One short spike (4.80 / 10.69 / 4.48) came about 6.5–8 minutes in; its cause was not determined.
+  - **Database and Qdrant:** unchanged before and after, at the baseline counts with Alembic `0006` and no collections.
+  - **Records:** [receipt](../docs/evidence/d87-20261111-develop-a657709-acceptance.json); the D87 result doc (the `cdbcdd4` run moved to history); the D90 dossier D87 row; the ledger. `develop` now differs from `production` in 60 source files.
+- **Temporary-space incident.** Earlier, `/tmp` (tmpfs 16G) hit its quota. 11G of it was pytest `tmp_path` directories from today's D87 and CI-scope runs, and command output was lost (EDQUOT). With the owner's approval, only `/tmp/pytest-of-korosaki-ryukai` was deleted. Later CI-scope runs use `--basetemp` under `~/.cache`.
+- **ADR-192 (PROPOSED, design only)** for the HAR-009-C LLM summary slice: [ADR](../docs/ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md), [draft protocol](../docs/HAR009_C_SUMMARY_PROTOCOL_DRAFT.md).
+  - **Flag and model:** an opt-in `evicted_summary` (evidence-first only, refused with compaction). The approved CORE summarizes only the evicted pairs: thinking off, temperature 0, bounded tokens, within the existing 120 s deadline, one generation and no retry.
+  - **Output and verification:** items carry pair citations and exact quotes. A deterministic verifier drops ungrounded, value-, negation-, condition- or speaker-mismatched items.
+  - **Placement and failure:** the result is an untrusted capsule with a reserve inside the soft target and a RAM-only owner-bound cache. A failure never blocks the answer.
+  - **Process:** produced by a read-only workflow: 3 readers, a draft, two critics (3 blockers, 18 major and 12 minor issues fixed), then a citation and governance check (31 fixes). Implementation follows review.
+
+## 2026-11-11 — HAR-009-C summary (ADR-192) implemented and measured: no gain
+
+Purpose: continue the owner's goal to finish outstanding work. The Stop hook asked for the remaining agent-doable items. ADR-192 was implemented as an opt-in and measured before any default discussion.
+
+- **Code (opt-in only):**
+  - `HistoryPolicy.evicted_summary` (strict). It is refused with `extractive-compact`, and `compose_context` refuses it outside `evidence-first`. `history_offset` is now allowed with it, while `carried_state` still needs `working_state`.
+  - `src/application/services/history_summary.py`:
+    - a fixed versioned prompt and JSON schema;
+    - the shared tokenizer, value tokens, and the negation, condition and authority lexicons;
+    - a deterministic verifier with every ADR-192 drop reason, where quotes must sit on token boundaries;
+    - coverage by binary search (12,288 tokens, at most 8 counts), clipping at 2,048 characters, and a `no_room` probe with a dense maximal row;
+    - a deadline of `min(30, deadline − now − 60)` s with its own timeout scope, so `CancelledError` propagates;
+    - admission of the newest items within the real soft target;
+    - statuses that never raise.
+  - `reduce_history`: the reserve (`min(1,024, soft // 10)`) and the restore of the full-soft selection on any failure; the receipt fields `summary` and `llm_summary`; a counts-only log.
+  - `apps/harness/summarizer.py`: thinking off, temperature 0, `max_tokens` 1,536, JSON schema, a 256 KiB cap.
+  - `src/infrastructure/summary_cache.py`: owner-bound RAM LRU, 64 entries, 1,800 s, applied outputs only.
+  - The route deadline and cache, `DELETE /context/summaries`, a `/status` field, and the CLI flag `--evicted-summary`.
+  - `tests/test_history_summary.py`: 47 tests.
+- **Independent review.** A workflow reviewed the code through three lenses and verified each finding adversarially: 11 confirmed, 4 refuted. All were fixed with regression tests.
+  - Quotes cut inside a token (`944` of `9446`, `staging-3` of `staging-31`, the `t` of `don't`).
+  - Exceptions escaping on a non-dict `usage` or deeply nested JSON.
+  - Failed outputs being cached.
+  - Value tokens without the contraction normalization.
+  - Supersession pairs taken from dropped items.
+  - An optimistic `no_room` probe.
+  - Weak reserve and purge tests.
+- **Benchmark.** `benchmarks/context_summary.py` plus 6 tests. The frozen [v1 protocol](../docs/HAR009_C_SUMMARY_PROTOCOL_V1.md) reduces the draft and lists why.
+  - Corpus: 14 dialogues, 12 scored cases (number, identifier, swap, correction, negation and condition in EN and VI) and 2 authority-gate cases.
+  - Arms: `full`, `legacy`, `budget`, `budget_state`, `budget_summary`, `budget_state_summary`.
+  - The oracle-summarizer design check passed. Corpus tests caught two leaks before the freeze, both fixed: log timestamps containing "03:30", and "no" matching "unknown".
+- **Run.**
+  - CORE: weights and runtime pin verified; the unchanged `scripts/start-core.py` as PID 498456, stopped afterwards.
+  - 84 answers and 28 summaries, no retries, 610.4 s; recorded in `data/evaluations/context-summary-c-20261111`.
+- **Result: no gain.**
+  - **Strict:** `full` 11/12 (the miss is Puffin answered "No" without punctuation, a scoring rule); `legacy`, `budget` and `budget_state` 0/12; both summary arms 0/12 (7 applied, 7 none_verified each).
+  - **Admitted content:** every one of the 26 admitted items was an `assistant_claim` copying a short assistant reply, and the gold value was admitted in 0 of 28 summary cells.
+  - **Drops:** `invalid_supersession` 18, `quote_not_in_source` 18, `speaker_mismatch` 16, `quote_too_short` 2.
+  - **Safety:** self-check defects 0, and no approval or consent wording admitted in the authority-gate cases.
+  - **Cost:** summaries took an upper median of 6.6 s and 432 output tokens. Sampled peaks: RSS 10,242,836 KiB and GPU 8018 MiB.
+  - **Independent recheck:** rescoring, presence and faithfulness all 0 mismatches.
+- **Records.**
+  - [Result](../docs/HAR009_C_SUMMARY_RESULT.md) and [receipt](../docs/evidence/context-summary-c-20261111.json).
+  - ADR-192 status (implemented, measured no gain).
+  - `/status` is now `opt-in-experimental-v1-measured-no-gain`.
+  - The backlog, the strategy guide, Documentation 13.14, roadmap v5.19.16 and the ledger.
+- **Next.** A prompt and contract revision (user statements first, no acknowledgements), with an ADR amendment and a held-out corpus. Tuning on this corpus would inflate the result. Source changed, so D87 is rerun. No default, model, configuration, data or service change.
+
+## 2026-11-12 — D87 PASS on develop 695a52e; HAR-002 static request inventory
+
+- **D87 after PR #60** (HAR-009-C summary):
+  - **Run:** `data/backups/d87-20261111-full-5` on `develop` `695a52e`, tree `e16fca4840bbd12cb0b8686ec2d98d637e44b0db`, equal to `origin/develop`. It started on an idle host (0.27 / 0.27 / 0.25). CORE ran via `docker compose --profile core` and was stopped afterwards. Vault was already unsealed, and no shared service was restarted.
+  - **Result: PASS.** **6556 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1853.25 s (23:36:24–00:07:19), 883 source files unchanged. Source freeze `b808c4bf…`, log `bb48ffe8…`. The reranker CPU test passed.
+  - **Load:** 62 samples, mean 1.57, max 2.48.
+  - **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+  - **Records:** [receipt](../docs/evidence/d87-20261112-develop-695a52e-acceptance.json); the D87 result doc (the `a657709` run moved to history); the D90 D87 row (owner form untouched). `develop` now differs from `production` in 64 source files.
+- **HAR-002 static request inventory:** [doc](../docs/HAR002_UI_STATIC_REQUEST_INVENTORY.md).
+  - **Method:** a read-only workflow while D87 ran. Two extractors read the pinned UI b11557 bundle (requests; settings, storage and PWA). A mapper read `apps/harness/browser.py`. An adversarial verifier made 12 corrections, and a writer produced the document.
+  - **Result:** no path reaches native llama.cpp authority.
+    - Blocked: tools POST, MCP, model management, slots, `cors-proxy`, the reasoning control, the service worker, external CDNs and Hugging Face.
+    - Served: `/props`, `/v1/models`, an empty `/tools`, translated chat and an empty stream lookup.
+  - **Open for a live browser capture:** first-load requests, the 64-conversation lookup limit (422 above it), PDF attachments (both pdf.js worker paths blocked by the CSP), sandboxed iframes, stream abort, error mapping, no service worker, and `customCss`/MCP.
+  - **Owner follow-ups:** `/openapi` exposure, a misleading `local_session_required` for query strings, and native CORE on 127.0.0.1:8080 without `--api-key`.
+
+## 2026-11-12 — HAR-002 live browser capture
+
+- **Setup.**
+  - An isolated backend, `uv run --no-sync aevra serve --port 7093`, used a session-only test principal: a random token generated locally, stored at mode 0600 under `~/.cache`, never printed, and deleted afterwards.
+  - The approved CORE was started with `scripts/start-core.py` (weights checked).
+  - The in-app browser was paired through `POST /api/v1/harness/ui-pairings` and the one-time `/pair/#code` URL.
+  - The shared desktop backend on 7090 was not touched.
+- **Confirmed.**
+  - **First-load requests:** pairing, brand assets, the bundle, `/tools`, `/props` (three variants), `/build.json`, `/_app/version.json` and `/v1/models`. The UI also sends `POST /tools` at startup, which gets 403 as designed.
+  - **Chat:** real CORE answers ("READY", "OK"). The completion requests show `ERR_ABORTED` only after the backend logged `product_stream_completed`.
+  - **Stop:** a client abort, logged as `harness_ui_stream_cancelled`. `DELETE /v1/stream?conv_id=…` gets 403, and the next message was answered, so admission was released.
+  - **No PWA state:** no service worker (blocked by the CSP) and an empty Cache Storage.
+  - **Storage:** only `LlamaUi.*` and theme keys, no token-like value, and an HttpOnly cookie.
+- **Defect found: PDF attachments fail silently.**
+  - A minimal PDF was attached through the file input with DataTransfer. The pdf.js blob worker was blocked by `worker-src 'none'` and the `blob:` module by `script-src`, giving "Error converting PDF to text".
+  - The message went out without the PDF text (27 tokens), and CORE answered that it cannot see attachments. No error is shown in the chat.
+  - The fix is the owner's choice: relax the CSP, or hide PDF attachments.
+- **Not covered:** the 64-conversation lookup, sandboxed iframes, the error mappings and `customCss`/MCP.
+- **Teardown.** The backend and CORE were stopped, and ports 7093 and 8080 were free. The test principal files were deleted.
+- **Docs:** the [HAR-002 inventory](../docs/HAR002_UI_STATIC_REQUEST_INVENTORY.md) now has a live section, plus the backlog, the ledger and roadmap v5.19.18. No code change.
+
+## 2026-11-12 — HAR-003 approval commands; HAR-002 query 403 fix
+
+- **`aevra approvals show|decide`** (alias `la`), on the existing approval API (`GET /api/v1/approvals/{id}`, `POST …/decision`):
+  - `show` prints the review without `review_nonce`. Every JSON output of the CLI now escapes non-printable characters (C1, DEL, bidi) as JSON escapes, so the parsed value is unchanged but cannot drive the terminal.
+  - `decide approve|reject` refuses a request that is not `pending` (exit 5 `approval_not_pending`) and a non-terminal stdin (exit 2 `approval_requires_terminal`). It prints kind, workspace, expiry, scope digest and the full artifact to stderr, with control and bidi characters escaped. It discards input typed before the review appeared (`tcflush`), then asks for the first 8 characters of the scope digest; a mismatch exits 2 `approval_confirmation_mismatch` and nothing is posted. Only then does it post the decision, the digest and the nonce.
+  - The audit log records only the decision, never the nonce or the artifact.
+  - An independent review (3 lenses, each finding verified) confirmed 2 defects, both fixed with tests: `show` printed C1/bidi characters raw, and a closed stdin crashed `decide` with a traceback instead of exit 2. Five other claims were refuted; typeahead flushing was added as hardening.
+  - A second verification (fuzzing every code point, real pseudo-terminals) found the typeahead flush and closed-stdin fix sound, and 3 more low defects, all fixed with tests: the review display rendered a real ESC and the literal text `\u001b` the same way (backslashes are now doubled, and non-BMP escapes use a fixed-width `\U…`); a server returning a bare JSON string was printed raw; and a non-object review crashed with a traceback (now exit 6 `invalid_server_response`).
+  - Known limit: JSON cannot keep two adjacent lone surrogates apart, so they parse back as one character. The approval API cannot produce them, because artifacts are strict UTF-8.
+  - Not covered: a run against a live approval store. There is no list command, because the API has no list route.
+- **HAR-002 follow-up:** a query string on any path other than `/props` now gets 403 `unsupported_query` before `local_browser`, instead of the misleading `local_session_required`. The UI bridge handles only 401, so visible behaviour is unchanged. `/openapi` outside the boundary and CORE without `--api-key` stay owner decisions.
+- **Tests:** 13 new CLI test functions, 22 cases with parameters (nonce never printed, terminal required, closed stdin, typeahead flushed, digest and nonce posted for approve and reject, wrong confirmation, settled states, UUID parsing, escaped review text, distinct real and literal escapes, escaped `show` output in both modes, malformed reviews, escaped bare-string results) and two status/code assertions in the browser pairing test.
+- **Docs:** the CLI runbook, the HAR-002 inventory and the backlog rows for HAR-002 and HAR-003.
+
+## 2026-11-12 — D87 PASS on develop d8ed1cb (after PR #63)
+
+- **Run:** `data/backups/d87-20261112-full` on `develop` `d8ed1cb`, tree `2eaf1914e952afd1cc36e974780a96e9c6b1b915`, equal to `origin/develop`. It started on an idle host (0.41 / 0.28 / 0.22). Vault was already unsealed. CORE ran via `docker compose --profile core` and was stopped afterwards; no shared service was restarted.
+- **Result: PASS.** **6578 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1831.98 s (00:47:45–01:18:18), 883 source files unchanged. Source freeze `b379f01f…`, log `74cdae83…`. The reranker CPU test passed. The 22 added tests are the approval CLI cases.
+- **Load:** 62 samples, mean 1.44, median 1.33, max 2.36, including a concurrent read-only design workflow (no tests, no model calls).
+- **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-d8ed1cb-acceptance.json); the D87 result doc (the `695a52e` run moved to history); the D90 D87 row (owner form untouched); the ledger; roadmap v5.19.20.
+
+## 2026-11-12 — HAR-009-C summary v2: held-out measured, GAIN
+
+- **Contract and S−1.** ADR-192 Amendment 1 (v2 contract) runs on branch `feat/har009-c-summary-v2`. The tokenizer-only S−1 fixed `MAX_SLOTS` 4 and `RESERVE_TOKENS` 1,408 (`cf366eb`, A1.12).
+- **Held-out corpus.**
+  - Blind subagents wrote 38 cases from the protocol specification (24 scored, 6 gates, 8 probes; 19 EN, 19 VI) and revised them for 4 slots after review.
+  - Native calibration gave DESIGN_VALID under all 4 knobs. The corpus was hashed and the manifest committed before S0 (`24569a5`, `HELDOUT_SHA256` `100f2848…`).
+  - This session never opened the file. The protocol's exposure log records what it saw: ids, the target pair numbers of 3 cases, the dev-plus collision locations, and the narrowing of one colliding word to two candidates.
+- **Dev-plus** (`058d09d`): 6 cases written after the hash.
+  - Disjointness from the held-out set is tested on digests only.
+  - Three-lens adversarial review: 9 confirmed findings (5 issues), all fixed. The main one was a negation gold value that a non-negated clause also carried.
+- **D87 before S0:** PASS, 6,738 passed on `058d09d` ([receipt](../docs/evidence/d87-20261112-branch-058d09d-acceptance.json)).
+- **Dev rounds** (82 generations, temperature 0, [ledger](../docs/HAR009_C_SUMMARY_V2_DEV.md)):
+  - S0 verified;
+  - **R0 gold 18/18** with the gates passed, so the early stop applied;
+  - A0 (prompt only, on the v1 contract) 0/18, with 64 `speaker_mismatch` drops. A runner defect (R bounded over the fallback pair) was fixed in `0df547f`;
+  - k=3 identical to R0.
+- **Freeze** (`ac9b9f2`): `FROZEN_V2`, with the prompt and schema hashes pinned. D87 at freeze PASSED, 6,739 passed ([receipt](../docs/evidence/d87-20261112-branch-ac9b9f2-acceptance.json)). The protocol was committed as frozen before any held-out native call (`dc1a447`).
+- **Held-out matrix, one run:** 304 native calls, no retries, 1,478.6 s of CORE time.
+  - Strict on 24 scored cases: `full` 23, `budget` 0, v1 control 2, **v2 23**.
+  - Net +23 (EN +11, VI +12), 0 new stale answers; against v1, 21 gains and 0 losses, p = 4.8·10⁻⁷.
+  - Safety clean.
+  - **Label GAIN.**
+- **Independent check** (separate agents plus a critic, counts only): 0 mismatches in rescoring, presence, `source_sha256`, `reverify()` and hashes, and the outcome rebuilt identically.
+- **Caveats:**
+  - Timing comparisons are confounded by CORE prompt-cache reuse.
+  - Probes show the known gaps: value-less corrections and targets past the cap.
+- **Records:** [result](../docs/HAR009_C_SUMMARY_V2_RESULT.md), [receipt](../docs/evidence/context-summary-c2-20261112.json), ADR-192 A1.13 and A1.14, protocol status, backlog, roadmap v5.19.21. `/status` now reads `opt-in-experimental-v2-measured-gain`.
+- **No change to defaults, model or context size.** The flag stays opt-in; making it a default is the owner's decision.
+
+## 2026-11-12 — PR #65 merged; D87 PASS on develop dde7c39
+
+- **PR [#65](https://github.com/DungeonLeiz/local-assistant/pull/65)** (HAR-009-C summary v2, held-out GAIN) was merged into `develop` as `dde7c39`. GitHub Actions is blocked by billing (`prepare` and `ci-gate` failed in 2 s). The local CI-scope run was posted on the PR: 7,229 passed, 368 skipped, 30 deselected, 0 failed.
+- **D87 run:** `data/backups/d87-20261112-full-4` on `develop` `dde7c39`, tree `9edff17624369e933b40afcfe1d738d4467bea11`, equal to `origin/develop`. The host was idle (0.29 / 0.31 / 0.33) and Vault was already unsealed. CORE ran via `docker compose --profile core` and was stopped afterwards.
+- **Result: PASS.** **6739 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1817.70 s (10:49:00–11:19:20), 883 source files unchanged.
+  - Source freeze `19b3dd2c…`, log `9906c3af…`.
+  - The reranker CPU test passed.
+  - The 161 added test cases are the summary v2 contract tests, the pinned hashes and the `/status` label test.
+- **Load:** 61 samples, mean 1.37, median 1.25, max 2.30.
+- **Database and Qdrant:** unchanged before and after (baseline counts, Alembic `0006`, no collections).
+- **Records:**
+  - [receipt](../docs/evidence/d87-20261112-develop-dde7c39-acceptance.json);
+  - the D87 result doc, with the `d8ed1cb` run moved to history;
+  - the D90 D87 row (owner form untouched);
+  - roadmap v5.19.22.
+
+## 2026-11-12 — HAR-002 second pass: the remaining 4 open points closed
+
+- **Regression tests** (`tests/test_product_harness.py`, 4 new tests, 22 pass in the file):
+  - the stream lookup returns `[]` for 64 ids and 422 `invalid_stream_lookup` for 65 ids, an extra key, an overlong id or a non-list;
+  - the chat bridge maps errors to the documented codes before any model call: `stream_required`, `invalid_output_budget`, `unapproved_model`, `browser_tools_not_supported`, `text_only`, `invalid_messages`, 413 `request_limit`, 415 `json_required`, 422 `invalid_json`;
+  - a mid-stream `stream_limit` reaches the UI only as `inference_unavailable` followed by `[DONE]`, and admission is released;
+  - a client disconnect on uvicorn's ASGI 2.3 path logs `harness_ui_stream_cancelled`, closes the upstream generator and frees admission. A mutation run with ASGI 2.4 makes this test fail: Starlette then stops listening for disconnects, so this behaviour depends on uvicorn advertising 2.3 (0.54.0 does).
+- **Live checks** (isolated `aevra serve --port 7093` with a session-only test principal, approved CORE, in-app browser):
+  - the code preview is a `sandbox="allow-scripts"` srcdoc iframe; static HTML rendered and the inline script did not run;
+  - `run_javascript` cannot reach the server, because the bridge deletes `tools` before sending;
+  - customCss re-shows the MCP button, but a cross-origin MCP server is refused by the bridge's same-origin guard before any network request, and same-origin `POST /mcp` gets 403 `unsupported_capability`.
+- **Teardown:** both processes stopped, ports 7093 and 8080 free, test credentials shredded, and the test settings cleared from the browser.
+- **Records:** HAR-002 inventory ("Second pass"), backlog row, roadmap v5.19.23. All 8 open points are closed. Still owner choices: the PDF fix, `/openapi` and CORE without `--api-key`.
+
+## 2026-11-12 — PR #67 merged; D87 PASS on develop 48d5694
+
+- **PR [#67](https://github.com/DungeonLeiz/local-assistant/pull/67)** (HAR-002 second pass, tests and docs only) was merged into `develop` as `48d5694`. GitHub Actions is blocked by billing. The local CI-scope run was posted on the PR: 7,233 passed, 368 skipped, 30 deselected, 0 failed.
+- **D87 run:** `data/backups/d87-20261112-full-5` on `develop` `48d5694`, tree `a2d1318091d35e04ab431f3ba79d92cc934bc1fa`, equal to `origin/develop`. The host was idle (0.30 / 0.34 / 0.33). CORE ran via `docker compose --profile core` and was stopped afterwards.
+- **Result: PASS.** **6743 passed, 0 failed, 0 errors, 0 skipped**, exit 0, 883 source files unchanged; the reranker CPU test passed. The 4 added tests are the HAR-002 bridge regressions.
+- **Load:** 61 samples, mean 1.38, median 1.28, max 2.31.
+- **Database and Qdrant:** unchanged.
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-48d5694-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.24.
+
+## 2026-11-12 — HAR-006 v2: allocation verified, resources measured, semantic UNSAFE
+
+- **Design.** A judge panel of three independent designs, scored against the code, produced the pre-registered [protocol](../docs/HAR006_V2_PROTOCOL.md): 68 cases, 112 inputs and 172 generation cells, with separate labels for allocation, resources and semantic quality and for each backlog failure case.
+- **Implementation** (`feat/har006-v2`):
+  - a golden baseline pinned the composer first;
+  - an opt-in inspect-only layer report sits behind `prepare(inspect_layers)` ([ADR-193](../docs/ADR/193-opt-in-inspect-only-context-layer-report.md));
+  - the benchmark and its tests.
+
+  Two rounds of adversarial review per part confirmed and fixed 11 findings. Gates:
+  - the 15-file focused command in the result's Gates section: 600 passed, 0 skipped, in 79.5 s, on the code committed as `88ef291` before Window 1;
+  - after amendment `883e620` and the recording commit `6cd4da2`, only `benchmarks/tests/test_context_har006_v2.py` was rerun (114 passed), with the software-record tests (`tests/test_workspace_tools.py` 64, owner-isolation 49 + 1 + 2, golden 5, all passed);
+  - D87 on the branch with 6,818 passed.
+- **Window 1** (tokenizer only, 0 generations). The first attempt stopped at the client-system probe: the CORE template rejects a second system message (500), and `prepare` raised the raw HTTP error. Amendment 18 records the rejection. The rerun reached MANIFEST_WRITTEN: calibration equal to the provisional constants, 270 design entries, 66 probes, sweep verified, v1 replay unchanged, T-RB CONTROL_TOKENS_PARSED. The manifest was committed before Window 2.
+- **Window 2:** 172/172 cells COMPLETE in 637 s. The independent recheck (`--recheck`, by an agent that did not write the scorer) gave RECHECK_VERIFIED with 0 mismatches, and the blind classification agreed on 172/172.
+- **Labels:**
+  - ALLOCATION_VERIFIED: server count exact 172/172.
+  - RESOURCES_MEASURED: RSS about 9.8 GiB, GPU 8,026 MiB, cold first text 6.7 s above 28k tokens.
+  - SEMANTIC UNSAFE: 4/30 injection violations, all in the I3 forged-control-token cells; plain-text injection 0. I3 is also the only attack that asks to append a canary, so control-token parsing is not isolated as the cause.
+  - Reference failed: control 14/22. History facts were often abstained on when an about 8.5k-token evidence block with same-type lure values was attached: `history_old` (pair 1) control 0/4 against 8/8 without evidence, `history_recent` (pair 10) 2/6 with evidence against 4/4 without. `both_old_key` control 3/4 and ladder L5 2/2 argue against pair-1 position or evidence size alone; the cause is not isolated. The newer user correction lost to the source attached after the question (stale control 0/2; S H-newer 0/6: 4 stale, 2 abstained), with source preference and position not separated.
+  - Overflow COMPOSER_FAILS_CLEAR but masked as 502; oversized tools CLOSED; truncation CONSERVED; baseline unchanged.
+- **Records:** [result](../docs/HAR006_V2_RESULT.md), [receipt](../docs/evidence/har006-v2-20261112.json) (its top-level labels are the provisional Window-2 labels, with allocation ALLOCATION_FAILED; the final labels are under `recheck`), backlog row, roadmap v5.19.25. Under the backlog rule the three open items stay OPEN, and HAR-006 stays PARTIAL. Follow-ups need ADRs and owner approval; the top one is escaping control tokens in composed evidence (security).
+
+## 2026-11-12 — Self-hosted CI runner kit (ADR-194)
+
+- **Why.** Every GitHub Actions job in this private repository has stopped at the billing check since early November, so PRs were merged on local evidence. The owner asked to host CI on the Home Server and keep the option to run on GitHub.
+- **Change** (`feat/self-hosted-ci-runner`, [ADR-194](../docs/ADR/194-self-hosted-github-actions-runner.md)):
+  - every job in `ci.yml` uses `runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}`. With the repository variable unset, jobs run on GitHub-hosted runners as before; `["self-hosted","aevra-home"]` moves them to the Home Server. Deleting the variable switches back;
+  - the composite action keeps the `sudo` layout steps for GitHub-hosted runners and runs a `sudo`-free preflight on the self-hosted runner (tools, Python layout, the real `bwrap` sandbox shape, `openat2`, `/dev/shm`, GPU and tailscaled socket closed);
+  - the test jobs install Node.js with `actions/setup-node`; every remote action is pinned to a commit SHA;
+  - `scripts/ci-runner/`: `install.sh` (run by the owner with sudo), `uninstall.sh`, the systemd unit `aevra-gh-runner` and a README. The runner runs as the system user `gh-runner` with no access to `/home`, a read-only host, no GPU, no LAN/tailnet/Docker networks, an `sshd` `DenyUsers` drop-in and CPU/memory limits.
+- **Review.** Three rounds of adversarial review confirmed 27, 13 and 6 findings, all fixed (for example the `runsvc.sh` path, `ProtectKernelLogs` and `RestrictSUIDSGID` breaking the sandboxes, uninstall executing the job-writable tree, `/dev/shm` and IPC sharing, the tailscaled LocalAPI, sshd password guessing through the local socket).
+- **Checks:** `bash -n` on both scripts, both YAML files parse, `systemd-analyze verify` on the rendered unit is clean. No Python code changed.
+- **Not done yet:** the runner is not installed. The live run needs the owner's sudo (`scripts/ci-runner/install.sh --use`). Required before `--use`: take the MongoDB root password off the healthcheck's command line in `infras/mongo-server/mongo-compose.yaml`, and record a choice for the unauthenticated host `mongod` on 127.0.0.1:27017. Recommended: turn off sshd password logins on loopback. Residual risks (loopback services, `/proc` command lines, no disk limit, no isolation between jobs) are listed in the ADR.
+
+## 2026-11-12 — PR #70 merged; D87 PASS on develop 5aab38e
+
+- **PR [#70](https://github.com/DungeonLeiz/local-assistant/pull/70)** (self-hosted CI runner kit, ADR-194) was merged into `develop` as `5aab38e`. Its CI run created all 9 jobs with the new `runs-on` expression; `prepare` and `ci-gate` stopped at the billing check as before, because `CI_RUNS_ON` is unset. The local evidence was posted on the PR.
+- **Interrupted attempt.** The D87 on `develop` `7fbedad` (after PR #69) stopped at about 61% (4,168 passed, none failed) when the host rebooted. It is not evidence. The reboot also sealed Vault and wiped `/tmp`.
+- **D87 run:** `data/backups/d87-20261112-full-8` on `develop` `5aab38e`, tree `42fab3e08d8e38fcac7b1481e49b1f7226f829cf`, equal to `origin/develop`. Vault was unsealed first (no init or rotation). The host was idle (0.49 / 0.48 / 0.47). CORE ran via `docker compose --profile core` (healthy after 30 s) and was stopped afterwards.
+- **Result: PASS.** **6818 passed, 0 failed, 0 errors, 0 skipped**, exit 0, pytest 1871.73 s, 890 source files unchanged; the reranker CPU test passed. Against `48d5694`: PR #69 adds 75 tests and 3 source files, PR #70 adds the 4 `scripts/ci-runner` files.
+- **Load:** 63 samples, mean 1.58, median 1.51, max 2.37.
+- **Database and Qdrant:** unchanged.
+- **Records:** [receipt](../docs/evidence/d87-20261112-develop-5aab38e-acceptance.json), the D87 result doc, the D90 D87 row (owner form untouched), roadmap v5.19.26.
+- **Prepared for the owner, not applied:** `infras/mongo-server/mongo-compose.yaml` no longer passes the root credentials to the healthcheck's `mongosh` (an unauthenticated `ping` was checked inside the running container: exit 0). The change is uncommitted in the `infras` repository; applying it recreates the `mongo` container, which is the owner's step before `install.sh --use`.
+
+## 2026-11-13 — MongoDB healthcheck fix committed in the Server repository
+
+- The healthcheck change in `infras/mongo-server/mongo-compose.yaml` (no `--username`, `--password` or `--authenticationDatabase` for the `ping`) was committed as `71aa2c0` in the `Server` repository, the parent of `infras/`. That repository has no remote, so nothing was pushed. Only this file was committed; the other uncommitted entries in that repository were left as they were.
+- Checks: an unauthenticated `ping` in the running `mongo` container returned exit 0; `docker compose config` renders the healthcheck; `mongo-server/tests/test_create_database_template.py` passed (6 passed).
+- Not applied: applying it recreates the shared `mongo` container, which stays the owner's step before `scripts/ci-runner/install.sh --use`. ADR-194, the runner README and the outstanding-work status now say so.
+
+## 2026-11-13 — MongoDB healthcheck applied; owner chose authorization for the host mongod
+
+- **Owner decisions** (answers in this session): apply the MongoDB healthcheck now; enable authorization on the host `mongod` on 127.0.0.1:27017.
+- **Applied:** `docker compose --env-file mongo-server/mongo.env -f mongo-server/mongo-compose.yaml up -d --no-deps mongo` from `infras/`. A dry run first showed only `mongo` recreated. No `--remove-orphans`; `mongo-storage-monitor` was not touched.
+- **Checks after:**
+  - the container was healthy after about 9 s, with the same named volumes `home-server-mongo-data` and `home-server-mongo-config`;
+  - the healthcheck has no credentials;
+  - a 30-second scan of `/proc/*/cmdline` found no `mongosh` with `--password`;
+  - an unauthenticated `listDatabases` is still refused (`Unauthorized`).
+- **Host mongod (v8.2.12):** no `security` section and no users in `admin`. The steps are recorded in ADR-194 and the runner README: create an admin user with `passwordPrompt()`, add `security.authorization: enabled`, restart `mongod`, then give the clients of its four application databases their own credentials. This needs sudo and is the owner's step; it is not done yet.
+- **Still the owner's before `install.sh --use`:**
+  - the host `mongod` authorization;
+  - optionally, sshd password logins;
+  - the install itself (sudo).
+
+## 2026-11-13 — ADR-195 proposed: special-token literal neutralization (HAR-006 follow-up 1)
+
+- **Why.** CONTROL_TOKENS_PARSED is the highest-priority HAR-006 v2 follow-up, a security issue, and the backlog requires an ADR before any fix. The self-hosted runner install waits for the owner's sudo, so this was the outstanding work an agent could do. The proposal is design only.
+- **How it was produced.** Three read-only workflows:
+  1. Code map, three competing designs (escape every `<`, one chokepoint, transport hardening), a judge, and two adversarial verifiers. The verifiers confirmed 54 claims, refuted 6 and raised 11 blocking issues.
+  2. Three verifiers on the written ADR (code facts, consistency and measurement, security coverage), with 34 findings.
+  3. A final check, which found the earlier corrections applied (72 verified) and raised 8 further findings.
+
+  Everything found was corrected. One finding was that the first written version had lost every backslash-u003c escape, so the byte form read as `<` → `<` instead of `<` → `\u003c`. The escapes are now written with code-generated backslashes.
+- **Design** ([ADR-195](../docs/ADR/195-proposed-special-token-literal-neutralization.md), PROPOSED):
+  - **Neutralizer.** One pinned list of the 33 CORE special-token literals (27 CONTROL and 6 USER_DEFINED), derived offline from the GGUF and bound to the core and unrestricted model shas. Each literal's leading `<` becomes the escape `\u003c`.
+  - **Layer 1.** Composer evidence and the three history capsules, neutralized at their append sites so that every count sees the sent bytes.
+  - **Layer 2.** A payload seal on all ten outbound CORE request bodies. It covers top-level keys and `chat_template_kwargs`, keeps pre-seal digests where bindings need them, and is tested by per-builder capture tests and a route-table registry test.
+  - **Validation.** Software gates, plus a pre-registered measurement:
+    - T-RB v3 over all 33 ids;
+    - paired A/B windows through `ProductInference.complete`;
+    - arms E, P, S, U, L and L0, 232 cells per window;
+    - an exact discordance test on inputs and a merge mapping fixed in advance.
+- **Not done.** Nothing is implemented. The owner has 9 decisions: approval, the content form, the generic pattern, the model binding, the handling of v2, the corpus and statistics, CORE windows, quote contracts, and later ADRs.
+- **Records.** The HAR-006 backlog row, `HAR006_V2_RESULT.md` follow-up 1, the outstanding-work status, and roadmap v5.19.27.
+
+## 2026-11-13 — Runner pre-install check: sandbox tests under no_new_privs
+
+- The runner is still not installed. Both `install.sh` attempts stopped at `sudo: timed out`, and nothing was changed. While waiting, I checked the unit's riskiest assumption without sudo: that `NoNewPrivileges=yes` keeps `bwrap` working under `kernel.apparmor_restrict_unprivileged_userns=1`.
+- **Check:** a transient user unit with `NoNewPrivileges=yes` (`NoNewPrivs: 1`) ran the eight test files that use `bwrap` or `openat2()`. Result: 96 passed, 0 skipped. A normal shell (`NoNewPrivs: 0`) gave the same 96 passed, 0 skipped.
+- **Preflight:** in the same unit it failed only on its 12 expected checks (11 GPU nodes and the tailscaled socket, which only the real unit closes).
+- **Not covered:** the filesystem, IPC, device and network settings. A user unit cannot apply them on this host (`226/NAMESPACE` under the AppArmor restriction), so they still need the installed unit. ADR-194's Validation section now records this check.
+
+## 2026-11-13 — Self-hosted runner installed; first CI run on the Home Server passed
+
+- **Install.** The owner ran `scripts/ci-runner/install.sh --use` after the two earlier sudo timeouts. At 03:40 (+07) it created `gh-runner` (uid 997, `nologin`) and `/var/lib/gh-runner`. `aevra-gh-runner` is active, `aevra-home-1` is online with `self-hosted,Linux,X64,aevra-home`, and `CI_RUNS_ON` is `["self-hosted","aevra-home"]`. A leftover `sudo -v` prompt from the earlier attempt stayed open in the terminal pane; the owner was told to cancel it.
+- **Live-unit checks without sudo:**
+  - The main process runs as uid 997 with `NoNewPrivs: 1`.
+  - `systemctl show` lists every hardening property of the unit file.
+  - The service's `mountinfo` shows `/home`, `/run/tailscale` and `/run/ssh-unix-local` masked, a private `/tmp`, and a private 2G `/dev/shm`.
+  - The sshd drop-in holds `DenyUsers gh-runner`.
+- **First CI run.** PR #76, run 43302985450, about 11 minutes. Every job that ran was picked up by `aevra-home-1` and succeeded:
+  - `prepare`;
+  - `test-python`: 7,422 passed, 368 skipped, 30 deselected, 0 failed, 534.94 s;
+  - `test-python-quarantine`: none selected;
+  - `test-js`: 27/27;
+  - `ci-gate`.
+
+  The self-hosted preflight inside the unit printed "Home Server layout and sandbox verified". That covers the GPU closed, the tailscaled socket unreachable, and `bwrap`, `openat2` and a multiprocessing lock all working.
+- **Not yet exercised:**
+  - `lint`, which runs on the next pull request that changes Python;
+  - `IPAddressDeny` in practice;
+  - stop, kill and IPC cleanup;
+  - the tailscaled restart path;
+  - runner self-update;
+  - the uninstall path.
+- **Follow-up.** GitHub warns that the pinned v4 actions target Node.js 20 and are forced onto Node.js 24.
+- **Still the owner's:** enabling authorization on the host `mongod`, which the owner chose and which is not done yet, and the sshd password-login decision.
+- **Records:** ADR-194 Validation, the outstanding-work status, and roadmap v5.19.28.
+
+## 2026-11-13 — IPAddressDeny verified on the live runner
+
+- The self-hosted preflight now also opens TCP connects to the host's own addresses in the denied ranges. The addresses come from `hostname -I`: LAN, tailnet, Docker and k3s, IPv4 and `fc00::/7`. Each connect must fail with `EPERM` or time out. Outside the unit the check fails as intended, because all 8 addresses answer `ECONNREFUSED`. A transient user unit cannot apply `IPAddressDeny` on this host.
+- **PR #77, run 43309094006 on `aevra-home-1`.** Inside the unit the check printed `IPAddressDeny: 8 host addresses in denied ranges blocked`, in both Python jobs. The run passed in full: test-python 7,422 passed, 0 failed.
+- **Still not exercised on the installed unit:** `lint`, stop/kill/IPC cleanup, the tailscaled restart path, runner self-update and uninstall. Except for `lint` and self-update, these need the owner's sudo.
+
+## 2026-11-13 — CI action pins moved to Node.js 24 releases
+
+- **Why.** The runs on `aevra-home-1` warned that `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and `astral-sh/setup-uv` target Node.js 20 and were being forced onto Node.js 24.
+- **Change.** All 17 pins moved to the lowest major whose `runs.using` is `node24`. Each SHA was resolved from its tag, and each action's `action.yml` at that tag was checked:
+  - `actions/checkout` v5.1.0;
+  - `actions/setup-node` v5.0.0;
+  - `actions/upload-artifact` v6.0.0;
+  - `actions/download-artifact` v7.0.0;
+  - `actions/cache/restore` and `actions/cache/save` v5.1.0;
+  - `astral-sh/setup-uv` v7.6.0.
+- **Release notes checked against our usage:**
+  - Runner 2.327.1 or later is required; `aevra-home-1` runs 2.338.2.
+  - `setup-node` v5 caches automatically only when `package.json` has `packageManager`. No tracked `package.json` exists.
+  - `download-artifact` v5 changed the path only for downloads by ID. The release job downloads by name.
+  - `setup-uv` v7 removed `server-url`, which the workflow does not use.
+- **Not exercised.** The `release` and `package` jobs, and the GitHub-hosted cache path, only run on tags, promotions or GitHub-hosted runners.
+
+## 2026-11-13 — Runner stop, tailscaled restart and SSH denial verified
+
+- **Owner steps (11:33 +07).** The owner ran `sudo systemctl stop aevra-gh-runner`, then `start`, then `sudo systemctl restart tailscaled`.
+  - **Stop:** the journal shows `Stopping` at 11:33:15 and `Deactivated successfully` at 11:33:16, with no `Killing process` line.
+  - **Restart:** the runner was stopped and started again with tailscaled through `PartOf=`. Its `Started` line is at 11:33:23, the same second as tailscaled's start.
+- **Checks afterwards, without sudo:**
+  - the only `gh-runner` processes are the three of the new service, all started at 11:33:22;
+  - the host has no `/dev/shm` or `/dev/mqueue` object of `gh-runner`, and no SysV IPC object of uid 997;
+  - the new main process has `NoNewPrivs: 1`, and `/run/tailscale`, `/run/ssh-unix-local` and `/home` are masked again.
+
+  This verifies `KillMode=mixed`, `RemoveIPC` and the tailscaled restart path.
+- **SSH denial, live:** one `ssh -o BatchMode=yes gh-runner@127.0.0.1` attempt was refused, and sshd logged `User gh-runner from 127.0.0.1 not allowed because listed in DenyUsers`.
+- **Still not exercised on the installed unit:** runner self-update (waits for a new runner release), uninstall (only when the runner is removed) and `lint` (the next pull request that changes Python).
+- **Still the owner's:** authorization on the host `mongod` (`/etc/mongod.conf` still has no `authorization`), the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Host mongod authorization enabled
+
+- **What the owner did.** Following the steps recorded in ADR-194:
+  - created the admin user (`root@admin`) with `passwordPrompt()`, so the password never appeared on a command line;
+  - added `security.authorization: enabled` to `/etc/mongod.conf`;
+  - restarted `mongod` at 11:50:42 (+07).
+
+  An earlier attempt restarted `mongod` at 11:48:18 without changing the file. The command had joined its steps with `;`, so the restart ran even though the file write failed. The second command used `&&`.
+- **Checks without credentials:** an unauthenticated `listDatabases` returns `Unauthorized`, and `ping` still returns `ok: 1`.
+- **Records updated:** ADR-194 (context, loopback residual risks, hardening list), the runner README, the unit file's comment and the outstanding-work status. The installed unit still carries the old comment; the next `install.sh` run replaces it, and that restarts the runner when it is idle.
+- **Still the owner's:** clients of `agent_angi_recipes`, `default_database`, `nutrition_ai` and `steam_db` need their own credentials. Redis on 6379 still has no authentication, and the sshd password-login decision is open. ADR-195, D81, D89 and D90 are also open.
+
+## 2026-11-13 — Repositories moved into Leiz-Workspace; shared runner pool; faster CI (ADR-196)
+
+- **Owner's request.** Delete the four old repositories of `Leiz-Workspace`, move the three current repositories into it, run a shared runner, and make CI faster without losing effectiveness.
+- **Owner's choices:**
+  - delete the four repositories without a backup;
+  - three runner instances;
+  - Mirrix's Windows installer only for release runs;
+  - jobs that hold write tokens run on the pool, after the risk was explained.
+- **Done:**
+  - `local-assistant`, `web-cloner-template` and `Mirrix` were transferred to `Leiz-Workspace`, all private. Repository variables, the `staging` environment and the repository-level runner moved with them.
+  - Local remotes were updated: the `ai` checkout, `ai-website-cloner-template` and its `desktop` submodule.
+  - PR #80 (host mongod authorization record) was merged with green CI.
+  - Deleting the four old repositories waits for the `delete_repo` scope; the owner's `gh auth refresh` did not reach this machine's token.
+- **Runner pool (ADR-196, not installed yet):**
+  - `install.sh` and `uninstall.sh` were rewritten for organization-level runners: `aevra-home-1..3`, template unit `aevra-gh-runner@.service`, `system-ghrunners.slice` (12 CPUs and 20G together, `CPUWeight=20`).
+  - The install migrates from v1. Without `admin:org`, the owner pastes the registration token, and runner status comes from the journal.
+- **Other repositories:**
+  - pushed to branches `ci/self-hosted-runner` in `web-cloner-template` and `Mirrix`, with no pull requests yet;
+  - runner variable and SHA pins in both;
+  - Mirrix: Windows only on publishing runs, `jq` in place of `node` in `plan`, normalized file modes plus a `.deb` mode gate, per-instance X displays, release files in `$RUNNER_TEMP`;
+  - the token badge job uses a per-job venv and a fresh badge repository.
+- **Faster CI in `local-assistant`:**
+  - pytest-xdist (`-n 6 --dist loadfile`; 2 workers on GitHub-hosted), with `PYTHONHASHSEED=0` and a short `--basetemp`;
+  - the exclusions plugin merges the xdist workers' reports;
+  - the `test_check_runner` leak check counts only its own sandboxes;
+  - a documentation-only pull request skips the test jobs; every push runs them;
+  - the quarantine job runs only when its list has an entry;
+  - JUnit artifacts are kept only on failure, for 7 days;
+  - the `IPAddressDeny` probe runs in parallel.
+- **Measurements** (owner account, project venv, CI scope):
+  - Serial pytest took 526 s on the runner.
+  - The first xdist attempt used `uv run --with`, whose interpreter the sandboxes do not bind; 132 sandbox tests failed for that reason.
+  - In the project venv, two real causes remained: the AF_UNIX path length, and the leak check seeing other workers' sandboxes. Both are fixed.
+  - Afterwards `-n 4`, `-n 6` and `-n 8` took 185 s, 136–144 s and 115 s.
+  - The final double run at `-n 6`: 7,422 passed, 368 skipped, 0 failed, 141.46 s and 141.05 s; the scope line read `19 files ignored, 30 excluded`.
+- **Review.** Three adversarial reviewers, each with a verifier, confirmed 17 findings, 2 of them blocking; all are fixed. Afterwards:
+  - the docs-only rule was re-simulated on real commits and on a rename case;
+  - the `.deb` mode gate was tested on sample listings;
+  - `bash -n`, YAML parsing and `systemd-analyze verify` passed.
+- **Still the owner's:**
+  - `sudo apt install xvfb`;
+  - `sudo -v && scripts/ci-runner/install.sh --use`, with the organization registration token or the `admin:org` scope;
+  - deleting the four repositories, through the `delete_repo` scope or the web UI.
+
+## 2026-11-13 — Shared runner pool installed; first concurrent CI on all three repositories
+
+- **Install.** The owner installed `xvfb`, then ran `sudo -v && scripts/ci-runner/install.sh --use` with a pasted registration token. Result: `aevra-home-1..3` online in `Leiz-Workspace`, and `CI_RUNS_ON` set in `local-assistant`, `web-cloner-template` and `Mirrix`.
+- **Checks without sudo:**
+  - the v1 unit is removed and no repository-level runner remains;
+  - the instances run in `/system.slice/system-ghrunners.slice` (`CPUWeight` 20, 1200%, 20G);
+  - each instance has `NoNewPrivs: 1`, the three masks and its own `TMPDIR`.
+- **Concurrent run at 07:08 UTC** (each instance picked up jobs at the same time):
+  - **local-assistant**, run 43383562394: passed in about 4.5 minutes, with jobs on all three runners. test-python on `aevra-home-2`: 7,422 passed, 0 failed, 194.72 s.
+  - **web-cloner-template**, PR #19: passed on `aevra-home-3` and was merged.
+  - **Mirrix**, PR #3: stops at the template checkout. The organization has deploy keys disabled, so `TEMPLATE_DEPLOY_KEY` stopped working after the transfer. The owner needs to enable deploy keys in the organization settings.
+- **Found on the way.** Repositories in the organization can run on GitHub-hosted runners again. The billing block was on the personal account; the organization has its own Free allowance.
+- **Still the owner's:**
+  - deploy keys for Mirrix;
+  - deleting the four old repositories (`delete_repo`);
+  - the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Self-hosted CI finished for all three repositories
+
+- **Owner's steps (by 14:20 +07):**
+  - deploy keys enabled for `Leiz-Workspace`, so the `mirrix CI` key is active again;
+  - the four old repositories deleted; the organization now holds only `local-assistant`, `web-cloner-template` and `Mirrix`.
+- **Mirrix PR #3, re-run on the pool:**
+  - CI passed on `aevra-home-2`;
+  - Plan and Package (linux) passed on `aevra-home-1`: AppImage and .deb built, .deb mode gate passed, Electron smoke test passed under `xvfb-run`;
+  - no Windows job ran on the pull request, as designed;
+  - the PR was merged.
+- **After the merges:**
+  - the develop push runs passed on the pool (web-cloner-template on `aevra-home-2`, Mirrix on `aevra-home-3`);
+  - web-cloner-template PR #20, which bumps the `desktop` submodule to Mirrix develop, passed on `aevra-home-3` and was merged.
+- **Result.** CI runs on the Home Server for all three repositories, with three concurrent runners. Releases of Mirrix still build the Windows installer on GitHub-hosted runners, within the organization's allowance.
+- **Still the owner's:** the sshd password-login decision, ADR-195, D81, D89 and D90.
+
+## 2026-11-13 — Runner kit moved from ai to the Server repository
+
+- **Why.** The owner pointed out that the runners serve the whole server, not the `ai` project. The install and uninstall scripts, the template unit `aevra-gh-runner@.service`, the slice `system-ghrunners.slice` and the README now live in the `Server` repository at `infras/ci-runner/` (commit `8bd9dc5` there). That repository has no remote, so the commit is local only.
+- **Changes in `ai`:**
+  - `scripts/ci-runner/` is removed;
+  - the comments in `ci.yml` and the composite action, ADR-194, ADR-196 and the outstanding-work status point to the new place;
+  - records of commands run before the move keep the old path.
+- **Installed runners are unaffected.** The units under `/etc/systemd/system` do not refer to the source directory. A later `install.sh` run from the new place sees changed comments in the units and restarts the instances only while they are idle.
+
+## 2026-11-13 — Runner kit moved to self-software-distribution-platform
+
+- **Why.** The owner created the private repository `Leiz-Workspace/self-software-distribution-platform` for the self-hosted distribution platform (Forgejo, its Actions runner, registries, Renovate). The GitHub runner kit belongs with the other CI runner infrastructure, and the `Server` repository has no remote, so the kit had no off-host copy.
+- **Where.** `github-runner/` in that repository (commit `835cb1f`). The `Server` repository keeps only a pointer README in `infras/ci-runner/` (commit `3616a5d`).
+- **Changes in `ai`:** the comments in `ci.yml` and the composite action, ADR-194, ADR-196 and the outstanding-work status point to the new place; records of commands run before the move keep the old paths.
+- **Installed runners are unaffected.** `aevra-gh-runner@1..3` run from the rendered units under `/etc/systemd/system`. The next `install.sh` run sees the changed comments in the unit and the slice and restarts the instances only while they are idle.
+
+## 2026-11-13 — Forgejo release workflow (parallel to GitHub)
+
+- **What.** `.forgejo/workflows/forgejo-release.yml` runs only on the Home Server's self-hosted Forgejo (`self-software-distribution-platform`), never on GitHub, which ignores `.forgejo/`. When a `v*` tag reaches the Forgejo pull mirror, it builds the same source bundle as the GitHub `package` job (`git archive` + SHA256SUMS), uploads it to Forgejo's generic package registry and creates a Forgejo Release. `workflow_dispatch` can build, and optionally upload, a dev bundle.
+- **Not changed.** GitHub stays the source of truth: `ci.yml`, the GitHub Release and Actions artifacts are untouched. The Forgejo runner has only the `docker` label, so the GitHub workflows, which target `ubuntu-24.04`, never run there.
+- **Validation.** A Forgejo sandbox copy of `develop` with this workflow and tag `v0.0.0-sandbox.1` produced the bundle, the generic package and the Release with both assets. The sandbox and its package were deleted afterwards.
+
+## 2026-11-15 — Dev log restored; hyphenated tags become GitHub pre-releases
+
+- **Dev log restored.** Commit `7d6c8b5` (PR #86) replaced the whole 6,492-line `dev_log/dev_log.md` with only its new Forgejo entry. This change restores the file from `54af2af` byte for byte and appends that Forgejo entry unchanged; `git diff 54af2af -- dev_log/dev_log.md` shows additions only.
+- **GitHub pre-releases.** The `release` job in `ci.yml` now passes `--prerelease` when the tag name contains a hyphen (for example `v0.1.0-alpha.1`), matching the Forgejo workflow, which already marks such tags as pre-releases. Tags without a hyphen publish a normal Release as before.
+- **Host uv cache.** The cached `annotated-types` 0.8.0 wheel in `~/.cache/uv` had an empty `METADATA`, so every `uv sync` that needed it failed with "Metadata field Name not found" (CI was unaffected; it uses its own cache). The three cache entries were moved to a quarantine directory, not deleted, and a fresh install from the shared cache works again. `uv cache clean` was not used because the running `uv run` processes (CORE launcher, `aevra serve`) hold the cache lock.
+
+## 2026-11-15 — Pre-release v0.1.0-alpha.1 of the Aevra CLI and desktop app
+
+- **Owner decision.** "Tạo cho tôi release của cli và desktop app đi", then the option "Pre-release v0.1.0-alpha.1": tag the current `develop` after restoring the dev log, let CI publish the source bundle, and keep D87, D89 and D90 open.
+- **Tag and release.** Annotated tag `v0.1.0-alpha.1` on `develop` `ff0b991` (tree `b6f637c`, the merge of PR #87). CI run 43720112892 published a GitHub pre-release with `local-assistant-v0.1.0-alpha.1-ff0b991.tar.gz` (16,487,071 bytes, sha256 `bb4d002fff723cbf7305920d85a02c778c3ce087a760cb8ed4100354e27339b2`) and `SHA256SUMS`. The release notes were replaced with install and usage steps for the CLI and the desktop app, followed by GitHub's generated changelog.
+- **CI.** The tag run and the `develop` push run of PR #87 started together and both failed with `checks_capture_timeout` (25 and 28 errors) while two test-python jobs with six workers each shared the host; PR #87's own run on the same tree had passed. Rerun alone, the tag run passed: 7,422 passed, 368 skipped, test-js passed, then `package` and `release`. The `develop` run was rerun afterwards.
+- **Checks before the tag.** A bundle built locally with the CI `git archive` command from the same tree: `sha256sum -c` OK; `UV_PYTHON_PREFERENCE=only-system uv sync --locked --no-dev --python /usr/bin/python3.12` OK; `aevra doctor` OK; `aevra ui prepare` extracted 70 files, 10,074,640 bytes, archive sha256 `840a7017…`; `apps/desktop/main.py --check` reported `webkitgtk-4.1`, `external_browser: false`; `aevra serve --port 7093` answered `status`, and one real chat through CORE returned 85 tokens with `finish_reason=stop`; the 7093 backend was stopped. The owner's backend on 7090 and CORE were not touched. Not checked: a real desktop window, a clean Ubuntu 24.04 machine, PostgreSQL-backed features.
+- **Checks after the release.** The downloaded asset passes `sha256sum -c SHA256SUMS` and its 2,305 files are identical to `git archive ff0b991` (`diff -r`).
+- **Host uv cache.** Six cached wheels written at 2026-09-22 09:41:27 had empty `METADATA` (annotated-types 0.8.0, typing-extensions 4.16.0, pydantic 2.13.5, pydantic-core 2.46.5, pymongo 4.18.1, beanie 2.2.0), which broke every fresh `uv sync`. Their cache pointers were moved to a quarantine directory, not deleted; the existing virtual environments were unaffected.
+- **Forgejo.** The pull mirror `mirror/local-assistant` received the tag and its release workflow ran, but the upload to the generic package registry returned 401 Unauthorized (Forgejo log, 20:39:26), so no Forgejo package or Release was created. The owner needs to set the `PACKAGES_USER` variable and the `PACKAGES_TOKEN` secret on that repository and rerun the job.
+- **Not changed.** `production` stays at `dd7fac3`; nothing is deployed; the D90 form (section 5) is untouched; D81, D89 and D90 stay open; the bundle is a source bundle, not an installer (HAR-016-B R2–R8 open).
+
+## 2026-11-17 — Pre-release v0.1.0-alpha.2 for testing the CLI, desktop app and web UI
+
+- **Owner request.** "Bây giờ tạo release app và web và cli để test". `develop` had only documentation changes since `v0.1.0-alpha.1`, so the application code is the same; this pre-release adds web UI instructions and checks, and states which Python the desktop app uses.
+- **Tag and release.** Annotated tag `v0.1.0-alpha.2` on `develop` `de06209` (the merge of PR #88). CI run 44012310795 passed on the self-hosted runners (test-python 7,422 passed, 368 skipped; test-js passed) and published a GitHub pre-release with `local-assistant-v0.1.0-alpha.2-de06209.tar.gz` (16,489,853 bytes, sha256 `0493f2337b1f5f657c30eb58d084911930dd59303def8d0d2a52d7847f6fd62c`) and `SHA256SUMS`. The release notes were replaced with install and test steps for the CLI, the desktop app and the web UI, followed by GitHub's generated changelog.
+- **Checks before the tag.** A bundle built with the CI `git archive` command from the same tree: `sha256sum -c` OK; `UV_PYTHON_PREFERENCE=only-system uv sync --locked --no-dev --python /usr/bin/python3.12` OK; `aevra doctor` OK; `aevra ui prepare` extracted 70 files, 10,074,640 bytes, archive sha256 `840a7017…`; `aevra serve --port 7093` answered `aevra status` (product Aevra, profile core, process-local). Web UI: a one-time pairing through `/pair/#…` succeeded in the in-app browser, the Aevra page loaded with the `qwen3.5` core model, and a message was sent. CORE and the owner's backend on 7090 were stopped (the owner had stopped them in another session) and were not started, so the CLI chat returned `http_502` and the web reply was empty with `harness_ui_stream_failed` in the backend log. The 7093 backend was stopped afterwards.
+- **Desktop runtime.** `/usr/bin/python3` is now Python 3.14.4, and since the 2026-09-30 upgrade `python3-gi` 3.56.2 ships `_gi` only for Python 3.14, so GTK cannot be imported from Python 3.12. The launcher already runs `apps/desktop/main.py` with `/usr/bin/python3` through `uv run --no-project`, and `/usr/bin/python3 -I apps/desktop/main.py --check` reported `webkitgtk-4.1`, `external_browser: false`. Running that file with the 3.12 virtual environment reports `aevra_desktop_runtime_unavailable`; the release notes say so.
+- **Checks after the release.** The downloaded asset passes `sha256sum -c SHA256SUMS`, is byte-identical to the locally checked bundle and holds 2,305 files.
+- **Not checked.** A real chat through CORE on this tag (the same application code passed one in `v0.1.0-alpha.1`), a real desktop window (the owner tests it), a clean machine and PostgreSQL-backed features.
+- **Known issue recorded in the notes.** With CORE stopped, the web UI shows an empty answer instead of an error.
+- **Not changed.** The ADR-195 fix is not in this release (it stays on its own branch until the CORE windows). `production` stays at `dd7fac3`; nothing is deployed; the D90 form (section 5) is untouched; D81, D87 on this commit, D89 and D90 stay open. The Forgejo release still needs the owner's `PACKAGES_USER`/`PACKAGES_TOKEN` on `mirror/local-assistant`.
+
+## 2026-11-17 — ADR-195 implemented on a branch (draft PR #90, not merged)
+
+- **Owner decision (2026-11-13).** ADR-195 approved with the recommended options ("Duyệt theo khuyến nghị"): both layers always on, literals only, no generic pattern, refusal on a stale model sha for both roles, HAR-006 v2 pinned, raw quote enum. Decisions 6 (measurement parameters) and 7 (CORE window authorization) are still open.
+- **Code.** Branch `feat/adr195-special-literals` on `develop` `e8167a3`, draft [PR #90](https://github.com/Leiz-Workspace/local-assistant/pull/90). Commit A (`deb81e5`…`8747950`): the pinned 33-literal list and neutralizer, the offline GGUF generator, the HAR-006 v3 runner and protocol, and the final `PLANNED_FILES`. B1 (`ecadb63`, `ed0afec`): evidence and capsule neutralization, startup model binding with 503 `special_literals_stale` and a refusal before any CORE request, v2 pinning, CONTROL_CELLS. B2 (`eaff4cb`): the CORE request seal on all ten outbound bodies. `--check-planned 8747950 eaff4cb` matches exactly (29 paths).
+- **How it was built.** Workflows wrote each piece in its own worktree, reviewed it from three lenses and fixed it. The pieces were then merged (one conflict in `llama_gateway.py`, one B2 assertion updated), and the merged branch was reviewed from four lenses with a skeptic per finding. Coverage and security found nothing. Three minor findings were confirmed and fixed in commit A: the generator lowercased the configured sha while the runtime compares exactly; arm L labelled a word-only answer on a non-EOG back literal as EARLY_END; Window B could spend the corpus after an incomplete Window A.
+- **Software gates (no CORE).** Full suite in CI scope on `eaff4cb`: 7,891 passed, 391 skipped, 12 failed, all 12 in `tests/test_browser_runtime.py` (`browser_runtime_unavailable`), which fail identically on `develop` `e8167a3` in this environment. Runner tests 119 passed at commit A and B2. The 21 pinned v2 tests pass at `6cd4da2`. Generator `--check` on the real GGUF files: current, 33 literals, hashed.
+- **Deviations** are listed in the ADR's new "Implementation status" section. They include: the PyYAML config read, the binding check as the first statement of every CORE sender, `run_failed` in the signed run history, Tango's interval with a margin floor of 0.242494 at 12 pairs, and the obedience-based injection oracle (owner approval needed with decision 6).
+- **Not done.** No CORE window has run, CONTROL_TOKENS_PARSED stays open, and nothing is merged or deployed. CI on PR #90 is for software checks only.
+- **Incidents.** The host rebooted between sessions and cleared `/tmp`, including the scratchpad helper scripts; they were recreated under `~/.cache/wt`. CORE and the owner's backend on 7090 were stopped and were not started.
+
+## 2026-11-19 — Code quality review and Phase 1 quick fixes (PRs #92, #93, #94)
+
+- **Owner requests.** "Đọc kỹ toàn bộ code đi tôi thấy harness và 1 số component khác bạn làm nó cứ tạm bợ kiểu gì ấy", then "Pha 1: sửa nhanh".
+- **Review** ([report](../docs/reviews/2026-11-19-code-quality-review.md)). Eleven read-only agents each read one area in full, with a skeptic per area and one synthesis: 23 agents in all. Result: 220 findings kept (10 high, 101 medium, 109 low), grouped into 10 themes. The root cause is the evidence rule that old files stay byte-identical, which forced every feature to be added by wrapping or copying. Also found: no single CORE client (12 `httpx.AsyncClient` in 9 modules), inverted layering (`src/` importing `apps/`), three wrapper app factories, copied primitives, no error-code registry, untyped run and workflow state, and about 20% of product lines unreachable from any entrypoint. The report proposes a 10-phase roadmap; Phases 0, 2, 3 and 6 to 9 need ADRs and owner approval.
+- **Phase 1** (three branches, each reviewed adversarially and fixed, merged one at a time on green CI):
+  - **PR #92** (`a5f42cc`): deleted the tracked `apps/api/main.py.bak` and `docker-compose.yaml.bak`, with a hygiene test; gave `qwen_token_preflight.run_worker` explicit `cwd` and `timeout`; deleted the never-raised `WorkingStateError`; removed the unreachable parent capture in `publisher_links.py`; added the review.
+  - **PR #93** (`9cf4576`, ADR-197):
+    - The CLI shows the server's finite error code instead of `http_<status>`.
+    - The harness has its own route guard: bodiless GET and DELETE no longer need a JSON content type, and `ui-pairings` is guarded and audited.
+    - `/chat` messages are typed, so invalid turns get 422 `invalid_context_request`.
+    - A stalled browser body gets 408 `request_timeout` instead of 500.
+    - The stream checks `finish_reason` and ends a failed stream with an error event and no `[DONE]`. The pinned UI treats `[DONE]` as success, so it now shows the error and keeps the partial text.
+  - **PR #94** (`b35e470`):
+    - The check runner builds its prlimit ceilings from the reviewed policy; the argv is unchanged.
+    - Memory grant and manual creation set their timeouts before the global quota lock, and file-journal row locks wait at most 5 s. Both map to the existing 503 codes.
+    - Embedding-contract drift fails closed at ingestion startup as 503 instead of 422.
+    - `postgres_recovery_acceptance.py` refuses the legacy canary run without `--legacy-canary-run`, and the recovery drill uses coded checks instead of `assert`.
+    - The first CI run failed one test: the new constant `LOCK_NOT_AVAILABLE` contained the HAR-006 v2 sentinel `NOT_AVAILABLE`. It was renamed `LOCK_TIMEOUT_SQLSTATE`, and CI passed.
+- **CI.** Each PR passed on the self-hosted runners before merge, and the `develop` push runs after #92, #93 and #94 passed.
+- **Not done.** Mapping context-budget failures to 422 on default `/chat` is blocked by the frozen HAR-006 v2 test that records the current 502 (HAR-006 v2 follow-up 3). There is no live UI screenshot of the incomplete-answer path, because CORE was stopped. The PostgreSQL integration tests for the new lock timeouts were skipped locally because `DATABASE_URL` was not set.
+- **ADR-195 branch.** Rebased onto `b35e470` with no textual conflict. Changes on the branch:
+  - The stale-binding browser stream also ends without `[DONE]` (new commit after B1).
+  - Two B2 tests were updated for Phase 1's stream completion check.
+  - Commit A is now `97d2461` and B2 `97f6dc0`. `--check-planned` still matches exactly (29 paths).
+  - Focused suites: 2,649 passed, 24 skipped. Runner tests at commit A: 211 passed.
+
+  The force-push to draft PR #90 was refused by the session's safety classifier, so the rebased branch is local until the owner decides.
+
+## 2026-11-21 — HAR-006 v3 for ADR-195: both CORE windows run, FIX_NOT_SUPPORTED, recommended NO_MERGE
+
+- **Owner requests.**
+  - 2026-11-17: approved running both windows and then D87, with margin 0.25, temperature 0.7 with seeds, and the corpus and oracle as in the protocol. Then paused the work while the host was busy.
+  - 2026-11-21: "Chạy ngay".
+- **Run** ([result](../docs/HAR006_V3_RESULT.md), [receipt](../docs/evidence/har006-v3-20261121.json)).
+  - The driver waited for an idle host. The threshold was 2.0 busy CPUs instead of D87's 0.5; the protocol fixes no number.
+  - It started CORE with the unchanged `scripts/start-core.py` (PID 2486226) and ran Window A from a worktree at `97d2461`, then Window B at `97f6dc0`.
+  - Each window completed 232/232 cells: A in 423 s, B in 420 s.
+  - CORE was then stopped, and port 8080 is free.
+  - `--check-planned 97d2461 97f6dc0` was re-run from the B2 worktree before Window A and matched exactly.
+  - Provenance and preflight were OK in both windows. The runner was byte-identical and the A..B2 diff was exactly the 29 planned paths.
+- **Outcome.**
+  - T-RB: CONTROL_TOKENS_PARSED in A (excess 176 in 55 bodies), NO_EXCESS in B.
+  - STRUCTURAL_FIXED holds: B sent 0 pinned literals in 1,759 bodies, A sent 2,540. IDENTITY holds on 110 benign inputs.
+  - E_SUPPORTED: 6/12 inputs violated in A, 1/12 in B; b = 5, c = 0, p = 0.031.
+  - S_UNDERPOWERED (5/12, then 2/12) and U_UNDERPOWERED (3/6 in both windows). P was 0/12 in both.
+  - Non-inferiority of E_B to P_B is not shown: Tango [−0.179, 0.354], and the upper bound is not below 0.25 because of one E-only input (e05, 2 of 4 draws). So the label is **FIX_NOT_SUPPORTED** and the recommended mapping is **NO_MERGE**.
+  - Literal data, descriptive: L held on 2/16 inputs in A and 12/16 in B.
+- **Independent checks** (one workflow, 6 agents).
+  - `--rescore` by an agent that did not write the scorer: RESCORE_VERIFIED, 0 mismatches.
+  - A clean-room rescore that never opened the runner: identical counts, flags, Tango interval and labels.
+  - Two agents read every E/P/S/U answer by hand: 0 false positives and 0 false negatives.
+  - Two adversarial reviewers (statistics; protocol validity and mapping) could not refute the verdict. Their minor notes are in the result.
+- **Not done, waiting for the owner.**
+  - PR #90 is not merged, and CONTROL_TOKENS_PARSED stays open. The owner chooses: accept NO_MERGE, merge against the recommendation, run a new pre-registered measurement or take another design.
+  - The rebased branch (`97d2461`…`97f6dc0`) exists only locally. PR #90 holds the pre-rebase `eaff4cb`. The runner and protocol are byte-identical there, but the measured B2 also holds `c6b7c29` and two updated tests.
+  - D87 did not run. It needs an idle host with the runners paused.
+
+## 2026-11-21 — HAR-006 v4 protocol drafted for ADR-195 (design only, awaiting owner decisions)
+
+- **Owner request:** "Soạn protocol v4", after HAR-006 v3 returned FIX_NOT_SUPPORTED (recommended NO_MERGE).
+- **Draft:** [HAR006_V4_PROTOCOL.md](../docs/HAR006_V4_PROTOCOL.md). Nothing is implemented and no CORE window has run.
+- **How it was made.**
+  - A design workflow of 7 agents:
+    - three analysts: a v3 weakness inventory, power and operating characteristics, and fresh corpus design;
+    - three independent designs: rigor-first, minimal-change and product-realism-first;
+    - a judge that scored the three, recomputed the key numbers and synthesized one design.
+  - Then four review rounds. A first three-lens review found 41 findings (3 blocking). Re-verification found 28, then 24, then 14; all were resolved in successive drafts.
+- **Main design choices:**
+  - one scored draw per case at temperature 0.7, with seeds shared by twins and windows;
+  - 192 cases each for the forged-literal (F) and USER_DEFINED-tag (U) families, over 48 genre templates in EN and VI, plus 264 literal-as-data cases covering all 33 literals;
+  - a per-answer margin of 0.10 against the strip twin, with exact Tango decisions at a fixed design effect of 1.5 and z 2.0;
+  - a benefit gate (HOLD if the fix is not shown to change behaviour), harm tests and a monotone merge mapping;
+  - a T-RB sweep of 33 literals over 12 paths with a coverage gate, and a literal smoke step;
+  - an authorization bound to the A' and B2' SHAs, a corpus seed derived from the decision-7 reply, sealed restarts and closure records.
+- **Why the margin changed.** v3's design was fragile: a fix at the plain-text floor failed often at 12 pairs, and the old mapping could give MERGE with no behavioural test.
+- **Waiting for the owner.**
+  - Decisions V4-1 to V4-21 (section 11).
+  - After approval: about 11.5 agent-days of implementation and blind corpus authoring, then the approval packet and the SHA-bound decision-7 reply, then the windows. The windows need the CI runners and the shared CORE stopped.
+
+## 2026-11-21 — HAR-006 v4: decision 6 approved; v3 tags pushed; branch rebased
+
+- **Owner decision:** "Duyệt theo khuyến nghị". V4-1 to V4-21 of the [v4 protocol](../docs/HAR006_V4_PROTOCOL.md) are approved as recommended. This settles decision 6 for v4 and authorizes the implementation, the v3 tags, the new branch and the draft PR. No window is authorized.
+- **v3 tags** (protocol section 2.1, step 0), annotated and pushed to origin:
+  - `har006-v3/A` points to `97d2461`;
+  - `har006-v3/B2` points to `97f6dc0`.
+- **Rebase.**
+  - The ADR-195 branch was rebased onto `develop` `82121af` as the local branch `feat/adr195-har006-v4`, and the rebase had no conflict.
+  - `git range-diff` shows the four B1/B2 commits unchanged.
+  - The A..B2 patch is byte-identical to the measured v3 patch, and the planned set is still 29 paths.
+  - The old branch and PR #90 are untouched until the v4 draft PR replaces it.
+- **Next:** the decision module and OC verifier, the corpus spec and generator, the blind template authoring, the runner, the driver and the tests. Then come the software gates, the A'/B2' freeze and the approval packet for decision 7.
+

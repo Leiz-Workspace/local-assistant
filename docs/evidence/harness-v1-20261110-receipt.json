@@ -1,0 +1,129 @@
+{
+  "description": "Optional HAR v1 software, browser and live smoke receipt; not full regression, specialist qualification or release acceptance.",
+  "date": "2026-11-10",
+  "local_git_head": "33e2cef5e90ca3784a0996d4af417f7d6f1d75e5",
+  "working_tree_additions_not_committed_or_promoted": true,
+  "source_scope": "New CLI/harness/context/media-contract source, browser scripts, seven new test modules, new skill example and packaging files only.",
+  "component_source_sha256": {
+    "apps/cli/__init__.py": "2ec7395a949aa6a6399b5fb342142b855f896124326e8b45c01c1724be06cd69",
+    "apps/cli/__main__.py": "b11666ef42fcd154febe263f76e38685d9268f463f5e623cfd1a6b2581bbb9dd",
+    "apps/cli/client.py": "5e55618b0c46743a249079539692105227389df4d6a8bdfc7fdcd3969f9260c3",
+    "apps/cli/main.py": "e5d4ef1164acccab739edf92f4157864863e5352548fdd9c41dd71c9c5503db0",
+    "apps/harness/__init__.py": "68dbcf2fd5b15e5e3e1402e6d4e8d793a46f35c86041bce3db3cf10602f34a62",
+    "apps/harness/assets.py": "021b05b92b4e566078c047cff625e2b3eb9b7f5d2711a6a3b3dc78a9ff6a70a6",
+    "apps/harness/browser.py": "0a4d8640c927a9b95fbceda528ffa38a4e8941bb6f013035dc8aa025a7d9bb55",
+    "apps/harness/generation.py": "8d93a3b8ba8f704b25e64fe992592ce82b50e9057bfc2df4f9ad5035a05b82bd",
+    "apps/harness/inference.py": "80ac32866c2a1b26478cd8dd98a80ba67e58fb041a66a33d7ec6dd2581c87aeb",
+    "apps/harness/main.py": "0b3711fd03970c51a65ac57cba19e0705f5167b727413d3f6d0b491a54779397",
+    "apps/harness/routes.py": "cce28542ff9a35a3eb121aa23471c85d2adac8b9d181bd12f072090414232529",
+    "apps/harness/service.py": "36510534d00de180b1f51c7594aae0ddadf896257a459c36f8d1d9c914da666a",
+    "apps/harness/static/bridge.js": "47ab81a11dab35713ba8964f9072d1981fd5be314451e275ae8e025dcfe5b359",
+    "apps/harness/static/pair.html": "c41dfbfceb1f21ed2cd39460ac45a893108866e25043f1a2dec7dc40c8ad41eb",
+    "apps/harness/static/pair.js": "675e22040eec149c24fddda42663cd460c588b9703c0f33ee580632c650f9edf",
+    "configs/skills/repo-review.v1.json": "1ef232ca51bfcdfb1aeb393776ea653f32f8e3103d43053b19cec695aa0e5624",
+    "pyproject.toml": "2760c7c82cd157c0f8618f62ee64d836fbd46717395ca0bef9846dbd27d7230b",
+    "src/application/ports/media_generation.py": "ef6e6dc6ec48aa24fae6c2608923ecd8a66a6ad2760fe8c616738134aa6c23df",
+    "src/application/services/context_composer.py": "5570594f6e909da7c5812afbdcfda3302f8168d35d897d93bb52897cbc965d00",
+    "tests/test_product_assets.py": "2da3f4704d6bd2bd4157776a2d969cc7a67de8371879103a101245a14a99e8df",
+    "tests/test_product_browser_scripts.py": "c6346f23768410a78ac2b47052565532e3d59dc776c9d43e86730d38cb195b22",
+    "tests/test_product_cli.py": "6ae748dd3a08c2f0bed8e1e4e72a22577246dc62bfe43478b6d015da9017f1d0",
+    "tests/test_product_context.py": "c4e72acee1fa9adc173edd3b3b0bb3344950ec18aeb47212730aa415d8fd7f55",
+    "tests/test_product_generation.py": "9ca47e8bac382c6c58991dcc91d70c39259d0eb1e90bc0bcea46e9e1edeada1e",
+    "tests/test_product_harness.py": "692196608b96ca31de4f75f34a7a31cda23340e6266cec6f55ab50d23e33782b",
+    "tests/test_product_inference.py": "1ab60b24ea4b3e3cb9757545f9e8cefbca4b21ef3bbaa2a411d49f5ff22ae101",
+    "uv.lock": "17df8e96a8e24b3632ea702b64196bc1fb09e2a805bc4c0095b427013182dbba"
+  },
+  "checks": [
+    {
+      "name": "final_focused_and_related_with_route_audit",
+      "passed": 209,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 2.38
+    },
+    {
+      "name": "separate_auth_stateless_preset",
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 0.8
+    },
+    {
+      "name": "ruff_check_and_format",
+      "status": "PASS"
+    },
+    {
+      "name": "offline_wheel_entrypoint_and_owned_browser_assets",
+      "status": "PASS"
+    },
+    {
+      "name": "uv_lock_check_offline",
+      "status": "PASS"
+    },
+    {
+      "name": "final_offline_wheel_build",
+      "status": "PASS",
+      "path": "data/harness-local/dist-final/ai-0.1.0-py3-none-any.whl"
+    }
+  ],
+  "ui": {
+    "version": "b11557",
+    "source_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+    "archive_sha256": "840a7017ac2a774b109c32752d15b24ced86db373b556b0d85baa60e1b2e4ae2",
+    "files": 70,
+    "unpacked_bytes": 10074640,
+    "browser_render_and_fixture_chat": "VERIFIED",
+    "desktop_process_started": true,
+    "physical_native_window_acceptance": false,
+    "browser_render_and_real_core_reply": "VERIFIED_READY",
+    "screenshot": "docs/evidence/harness-v1-real-core-ui.png",
+    "screenshot_sha256": "dfd6876c66852492a5a221847a9d904b439cc21dd477dc2d2d57dcc02bf08eb8"
+  },
+  "final_live_skill_smoke": {
+    "model": "qwen3.5-9b-core",
+    "system_fingerprint": "b11557-5c8854fd8",
+    "state": "succeeded",
+    "context_priority": "strict",
+    "input_tokens": 806,
+    "usage": {
+      "completion_tokens": 86,
+      "prompt_tokens": 806,
+      "total_tokens": 892,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "included_evidence": 1,
+    "cli_command_elapsed_seconds": 1.56,
+    "synthetic_port_fact_present": true,
+    "restart_did_not_restore_installations": true
+  },
+  "final_live_stream_smoke": {
+    "description": "Final audited-source actual native SSE and verified UI smoke.",
+    "content": "STREAM-READY",
+    "done": true,
+    "native_choice_chunks": 5,
+    "verified_ui_response": true,
+    "generation_cli_exit": 6,
+    "generation_job_created": false
+  },
+  "retained_first_stream_validator": {
+    "status": "NOT_PASS",
+    "reason": "Caller concatenated a legal null delta as a string; original failure receipt retained separately."
+  },
+  "actual_generation": {
+    "image_backend": false,
+    "video_backend": false,
+    "weights_downloaded": false,
+    "quality_or_resource_benchmark": false
+  },
+  "full_regression_run": false,
+  "release": "NOT_RELEASED",
+  "earlier_focused_snapshot": {
+    "name": "focused_and_related",
+    "passed": 208,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 2.36
+  }
+}

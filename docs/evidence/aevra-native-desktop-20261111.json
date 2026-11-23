@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "product": "Aevra",
+  "date": "2026-11-11",
+  "native_renderer": "webkitgtk-4.1",
+  "external_browser": false,
+  "software_tests": {
+    "passed": 498,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 5.14,
+    "files": 41,
+    "new_tests": 36
+  },
+  "static_checks": {
+    "python_files": 18,
+    "descriptions_verified": true,
+    "ruff": true,
+    "format": true,
+    "offline_lock": true,
+    "offline_build": true,
+    "packaged_files_byte_verified": 23,
+    "entrypoints": [
+      "aevra",
+      "aevra-desktop",
+      "la"
+    ]
+  },
+  "brand": {
+    "schema_version": 1,
+    "product": "Aevra",
+    "source_files": {
+      "aevra-dragon-white.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436",
+      "aevra-dragon-white-1024.png": "c7e68f7cb5f58028268e15a88c2193082c7937f6d3c129d1a168b482fc8b5652"
+    },
+    "files": {
+      "favicon.ico": "fde75076ccfa501c9ae953d8cea69dc1b51cef39e9f21a3c07cd2ed1f845cdc5",
+      "icon.png": "d41e961db904941ede260f82c2331b92a6432eb11e0c52b3c0e3a9f99186ccd4",
+      "icon.svg": "31229fd66d2f6feace384bf34994d1ac1c48ee5ae04a4423faa65c217275c302",
+      "logo.png": "c7e68f7cb5f58028268e15a88c2193082c7937f6d3c129d1a168b482fc8b5652",
+      "logo.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436"
+    },
+    "derivatives": "Exact white dragon on a dark background for small icons; source logo bytes unchanged."
+  },
+  "upstream_ui": {
+    "version": "b11557",
+    "source_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+    "verified_unchanged_files": 70
+  },
+  "native_smoke": {
+    "ready": true,
+    "synthetic_backend": true,
+    "synthetic_chat_submitted": true,
+    "model_calls": 0,
+    "native_exit_code": 0,
+    "screenshot_sha256": "7525972d47ac77ee86b2fe6305fe2d57402ad53db3906f5d9061a572f3aac209"
+  },
+  "managed_backend": {
+    "product": "Aevra",
+    "backend_auto_started": true,
+    "owned_pid": 471903,
+    "owned_backend_exit_code": 143,
+    "model_calls": 0,
+    "external_browser": false,
+    "graceful_supervisor_signal": true
+  },
+  "source_sha256": {
+    "apps/branding/__init__.py": "acfc946cbdf2c57716c68ea2fefd6eb1bd387c460d698075583824cdd7c6681f",
+    "apps/branding/build.py": "69cf71b3e2e68f2deba98d2be4631b63965257ff15ff6ef6805e2cef0ac34206",
+    "apps/branding/identity.py": "3dff904d9a33bce35b2cb9c51b9e1e0e03d0e3fd1b8cb046c74978c0cb97603a",
+    "apps/desktop/__init__.py": "6fc9fd779d041850f469d0fe92bc8e400f792f811b7acf13ed521f4912d033f0",
+    "apps/desktop/main.py": "b29fff7961385ae996e5f23a3e0d8cc883843e28b4080b5e6c45be53ce472687",
+    "apps/desktop/runtime.py": "c8e3d17b43b5467cbcb6df09c8e45b10c55b0e8ec12b935367604c5b52a0537b",
+    "apps/desktop/launcher.py": "5305f331c8afa19966659f84e657233c9c0f127e54a3c25efc9469b591e8fe3d",
+    "apps/cli/main.py": "a45ebb772863dbf5ae0a08e6dcfb5954d1ccf18560d1ecd518a9dc57d09e1679",
+    "apps/cli/client.py": "bd207e0cd7e684d7a0cc3c3fe298093d6b8e8dfc9384d1703ebf02716713842c",
+    "apps/harness/browser.py": "ad2ef213c7ee48982248eb5055f40e40c10fcba6088445a5b1452c9eebd5455a",
+    "apps/harness/routes.py": "2370fbb383ef9e226a19fec7263f865bd5a07c4619baa5e4cf87efecb4b921ff",
+    "apps/harness/main.py": "752da711149d61a1354177db417cee940021d05113da86ce6dcd28d9b37dd147",
+    "tests/test_aevra_branding.py": "d80d211812d38ef54929eb68f0c1a63aaeb302a22dd32d7f4140cc0e5e3931aa",
+    "tests/test_aevra_desktop.py": "c4bcdc1d23b8e74590be170f80923aa3e483cac344d3d76831f22381f2dc50d7",
+    "tests/test_product_cli.py": "75e8dd338c44c9fed415971258ae5878b047561e1ae95eb910ccbb09b98defe5",
+    "tests/test_product_browser_scripts.py": "72493020d01f3658f1d4c4d293bd4251737a790af9f17e416f773a2e718624d5",
+    "benchmarks/aevra_desktop_smoke.py": "88964112bbfd67cfe410487a303977fd203a4cde711c4d4a03d636ab155b5ac4",
+    "benchmarks/tests/test_aevra_desktop_smoke.py": "089d6a96740af9bd559de491c00071a90772b3c1bc4e1ec6cee07667e51e082b",
+    "apps/harness/static/pair.html": "abc2dfd1a8b63cada3a8a2f7a4dcb01cf99c50f8226c70dd22e267eece131e30",
+    "apps/harness/static/pair.js": "2a2284a74077916decdc99269dd48cebfa24d4a288cdd8178aaaa284663a431d",
+    "apps/harness/static/bridge.js": "964e2d990bc685c409e14326dfcfbc4c3013fecd302fbb6ede3caaa4df1f1745",
+    "apps/harness/static/brand.js": "d442cc10c1850f3ccbb752f9eedf7d0010c4c30e923923b816adf3e38a711ec2",
+    "apps/harness/static/brand.css": "ca1d9da94f44ce65896b0a9bab25d95df83ebcd560913e1efb2db74519a32072",
+    "pyproject.toml": "2653a6cf8301c09baca31a89a40dded236853005a861566d97e50f507af3874e",
+    "uv.lock": "cca077ac6d71900e7a734f69976f29f8db228509b34fc59604e99f43f11b8e55",
+    "apps/branding/assets/logo.svg": "26755277d2671bda91497cb2d5fb1b958d3856c32f49aeae425a9d5cc2d9f436",
+    "apps/branding/assets/icon.svg": "31229fd66d2f6feace384bf34994d1ac1c48ee5ae04a4423faa65c217275c302",
+    "apps/branding/assets/favicon.ico": "fde75076ccfa501c9ae953d8cea69dc1b51cef39e9f21a3c07cd2ed1f845cdc5",
+    "apps/branding/assets/logo.png": "c7e68f7cb5f58028268e15a88c2193082c7937f6d3c129d1a168b482fc8b5652",
+    "apps/branding/assets/icon.png": "d41e961db904941ede260f82c2331b92a6432eb11e0c52b3c0e3a9f99186ccd4",
+    "apps/branding/assets/manifest.json": "92fd961bf23345569ac2cb59d4bf40a447c2676402d263488db06a0d9ded0cf6"
+  },
+  "ports_listening_after_qa": {
+    "8080": false,
+    "7090": false,
+    "7092": false,
+    "7093": false
+  },
+  "full_regression": false,
+  "release_qualified": false,
+  "model_changes": false
+}

@@ -1,0 +1,2636 @@
+{
+  "description": "HAR-008-L1 target-line pairing and retained ordering experiments; mechanical consistency verified, semantic/adoption qualification not established.",
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "adr": "185",
+  "model": "qwen3.5-9b-core",
+  "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "campaigns": {
+    "review": {
+      "summary": {
+        "expected_attempts": 48,
+        "completed_attempts": 48,
+        "complete_blocks": 12,
+        "arms": {
+          "generic_baseline": {
+            "attempts": 12,
+            "format": 12,
+            "value": 10,
+            "quote": 11,
+            "passed": 10,
+            "contract_failures": 0
+          },
+          "generic_skill": {
+            "attempts": 12,
+            "format": 12,
+            "value": 8,
+            "quote": 8,
+            "passed": 8,
+            "contract_failures": 0
+          },
+          "bound_baseline": {
+            "attempts": 12,
+            "format": 12,
+            "value": 8,
+            "quote": 8,
+            "passed": 8,
+            "contract_failures": 0
+          },
+          "bound_skill": {
+            "attempts": 12,
+            "format": 12,
+            "value": 8,
+            "quote": 9,
+            "passed": 8,
+            "contract_failures": 0
+          }
+        },
+        "comparisons": {
+          "generic_baseline_to_generic_skill": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 3
+          },
+          "bound_baseline_to_bound_skill": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 1
+          },
+          "generic_baseline_to_bound_baseline": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 3
+          },
+          "generic_skill_to_bound_skill": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 1
+          }
+        },
+        "status": "MEASUREMENT_COMPLETE",
+        "promotion": "NOT_QUALIFIED",
+        "reason": "Same-author controlled maintenance panel, one draw per arm/case; broader independent generalization and skill benefit remain unestablished.",
+        "categories": {
+          "review-caller": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "bound_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "bound_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            }
+          },
+          "review-control": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "bound_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "bound_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 3,
+              "passed": 2,
+              "contract_failures": 0
+            }
+          },
+          "review-defect": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 4,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            },
+            "bound_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            },
+            "bound_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            }
+          }
+        },
+        "resources": {
+          "status": "COMPLETE",
+          "measured_attempts": 48,
+          "sampled_peak_rss_kib": 9929108,
+          "sampled_peak_gpu_process_mib": 8018,
+          "limits": "Warm process RSS/allocation sampled every 0.2 seconds; not absolute peaks or per-model tensor consumption. TTFT is unobservable on this nonstreaming task API and needs the separate predeclared streaming replay."
+        },
+        "line_pair_invalid": {
+          "generic_baseline": 1,
+          "generic_skill": 0,
+          "bound_baseline": 0,
+          "bound_skill": 0
+        },
+        "cleanup_failures": 0,
+        "unidentified_submission": false,
+        "elapsed_seconds": 38.269
+      },
+      "corpus_sha256": "52d87227282e472859708a21c55b978a772e41d617a3cd912830e694010b16da",
+      "skill_sha256": {
+        "source-reader": "48820ef8b361b33381c2c58d496f520aef9c5db7a2763b3afea1b0b9895b6a15",
+        "repo-review": "1ef232ca51bfcdfb1aeb393776ea653f32f8e3103d43053b19cec695aa0e5624"
+      },
+      "source_files_sha256": {
+        "benchmarks/har008_review_pairs.py": "ca0904baa94c7109bb6b75eaf73bef51b7d05b4f495b6fb4eea0b3dc4c3b4645",
+        "benchmarks/harness_resources.py": "3c22aa2c1c9e147c7caade6bdf288c6547ce40c58604a888ba5ba123844dfb49",
+        "benchmarks/harness_stream_timing.py": "f8f3bed31dbf2c2b2328160ad2507b9b4bf7638cc25b7b83ce3e83ebf2ca64e7",
+        "benchmarks/har008_contract.py": "8d5a9984801aaaf20765927a451c9a92483bd7556710e9cb2ca2fe5c839a29b0",
+        "benchmarks/har008.py": "b50f3557ba34684b6628a9edf87d511e2c2d624b673a922768e3e3fe08169139",
+        "apps/harness/service.py": "f9c7577f375961f11db66c923e4cabcd8f18b17b717afc4575e444107ecee95a",
+        "apps/harness/inference.py": "8d0622bb1d4dafd6bb1e67493273a22e0ccd055154c22ddcad4f12aa2481c93d",
+        "apps/harness/routes.py": "0ed2cd9b4345a57e5d3bb5615b7bd4eb79cb38ccff5e6c6ae432e839eb9ebc11",
+        "src/application/services/context_composer.py": "c240f29bebbb046a71975223b42dd4fc5d9c7a45f3fb90d2c8304387f12f6e7d",
+        "src/application/services/source_output_contract.py": "c4da0510ce1aa4fd65dc5bf1719001d067455ddf8e84c62f90eeca87652f304d",
+        "src/application/services/review_output_contract.py": "2c0ba7647f2c9032d7f1aea6919693a5d8e2dd427a71463d4ad490fb39f39cdd",
+        "apps/cli/main.py": "8589cdc367368f96b160cfb4bafd9389f0a00b8525aadbc9879b66c6affea7bd",
+        "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+        "configs/llama-cpp-commit.txt": "c44dffe2f5df93448c3bfe956285e9e21f7faa9f51f709ea9da1b2e5874901ab"
+      },
+      "private_receipts_directory": "data/evaluations/20261111-har008-l1-review-v1",
+      "private_receipt_sha256": {
+        "01-request.json": "443fdcecd5fee0fafb96c97706b33b583fcd318330db32080dd1cf6fc946c460",
+        "01-resources.json": "a779ee7ddcdb6832501d84b1d211a73550869729e87645116a643c2a76a5e8ca",
+        "01-response.json": "ac2fc4bbd1504a137c3371baddedfdb86e6f7a0a95f1b67bc56f2caf5436a0c0",
+        "01-score.json": "9866612eb1691fcaae6a80a6b9221525c9509d31a11cb44747059f78725a0285",
+        "02-request.json": "548eccd0e621b3258c073e85aa18eb02d592173e7e46492b1ac85da0fef1d82f",
+        "02-resources.json": "6c9e01e2262da8853a0cf26bcced5554487b4ba601ba85e3fe53eecf7aeb6fb2",
+        "02-response.json": "5aeb67a9eb3a269b1773fbf50d5efd3c006ce2a39bc97e96a66f44fa654c427f",
+        "02-score.json": "2b176b538302596a27987f75df6c3fd915d81bd3d9515e0eeb4cb8c85d59adf7",
+        "03-request.json": "dd2671ebde0b093612f8234c4568121b3a8608af465e3466c190bef990e2eb96",
+        "03-resources.json": "b5d1e772f62e5a45553b670859353432fdadc677386c744a4e3321c16faf601b",
+        "03-response.json": "12846ad088cccb66986d60789b5cba10dc770a037a95711a7aa2ce0d8f8fdefb",
+        "03-score.json": "1f70b49aed885b8a99884534723714ffa3bfcd2fb4de2143ebb3dbcb74f4ceaf",
+        "04-request.json": "67dc7b015c501640376b4e7fa6d9fd5bcee87142bf14bedbfa87646d6dd4f35c",
+        "04-resources.json": "d9f32439bac2bd9ae3a5af8a258590fca6734908be0eaea449b2717daaa1495c",
+        "04-response.json": "1e2e580de5daa17e73f9ddf4f77b0b15a6c5530780588ec6ffd30550b6bd4fa6",
+        "04-score.json": "919844ece7e407dc4195a5d8ecf62823e823a506779adefb092f1a543c48316c",
+        "05-request.json": "0c5abe2560c9ca9b8481dbe26c217a9b8a276ac2c06297bc602bc3b1c2656f66",
+        "05-resources.json": "fa5cebbf9c11d4dd6a95befea087f113f211b3450ed92c0aab48576daf3ef6e6",
+        "05-response.json": "ca2e66bff488cd5b3f4d18b5d1782951b0f21033e0459690531d19ba2a293f68",
+        "05-score.json": "df25c0c41ce371da321ed8e9bfed8d5f93a1f96daffaed666257d5f87a19afcb",
+        "06-request.json": "5d2e759f24862bf403d6adf1592bf1b731671ec3e4fb54f3b531d38338ddec60",
+        "06-resources.json": "672a3834ec1b01fd390d74b441b1d0543b5ae0b7839904ca2283fc475feae622",
+        "06-response.json": "104fe3c34ec8dccdae6717bacf6a07f17dbc758c371ae039027cc097b7fee747",
+        "06-score.json": "593f40fc8a7ecb79e7afbec12532ed106e4e3f385448e84424133f1b4eaff0a4",
+        "07-request.json": "ed675463c534767507413a97a11d7cce70a5f8da05707195880b4bbca4e72155",
+        "07-resources.json": "e8235af509231169b4842c0148d9f85930f22c46a99a7c3ec8ee82e4c8476d80",
+        "07-response.json": "650b14838d0118ce61e1cd493ecd0d1b339ca8333e21edb744113ca78338a126",
+        "07-score.json": "56c7521ed777c65cf61477d9bcecc37c5aa6285ee2cd173c4b8d668efc2f015b",
+        "08-request.json": "da9e5d4558c09c65fecb3de5e611ae83f133331655db7343f2d483c03fa55c05",
+        "08-resources.json": "93cb1232c248a1a53bbc1613c2b20e35c79ce362784774cbda0368ec683e65e6",
+        "08-response.json": "090407de97ed34f5c22bf79e56d56e7c6f1a7e4cbe57073aa07f6b7580e17c03",
+        "08-score.json": "7a853a648679e88ca9fb38581f722ec82e786aa76cff93e453de350f8453cce4",
+        "09-request.json": "3944101dfc1753f2fd359bfb1bbc1e7f63f1a74c5cfd8812617b1bd0cda74e7f",
+        "09-resources.json": "2beac61d509eaeccf538bdbd20f9ced0565d11d6257c4f9856f71ab0494cd52c",
+        "09-response.json": "eae6a4802813284dae803b65981e45d046a6c040d6507fc79594bf396f303bfe",
+        "09-score.json": "43b13f2922c96ebf45f549ae4f91536a4c5aa456d3455d8e36f35b812a486754",
+        "10-request.json": "000815249574f3dbd3c65e67a5b6f01d74992ea35dab55e2db67e8ffaedf73c1",
+        "10-resources.json": "5314195c6922495b568510c0d980a8d26f13f752238a576b2aea33b9c7cd3862",
+        "10-response.json": "dff49e1f9da92f1fca8230dc6656d725889de818e7ce671ae1808aafbdfaf1c7",
+        "10-score.json": "495b541bd63ecb17c0d025af20694708ed88719f91d5f26ef7ebea7b74221416",
+        "11-request.json": "e0972bf8f38dfc05e2c598572d96af90c24dde24fe2c1798765c0b4e7d03fc00",
+        "11-resources.json": "92a8a10034967cc15ab5144d4845eefba78d81473d9e05aa4666e26c32b5d718",
+        "11-response.json": "d63753e30bee80612d79b4e2d69eefc2fea7796359f4a7040bf63362cd71d059",
+        "11-score.json": "ac7d57063aad1c01eacec7477d0183141e16bcfc64d23490edef02d6f1873576",
+        "12-request.json": "d8787826b6c3ef772d208564492e314e4e9d2f5beeef2554dc2f432621015b4d",
+        "12-resources.json": "8afa375ec852ec4611ad618845e24c7995d26ec275a2c081a06f6b6f03d1c1b4",
+        "12-response.json": "66ee1c404a852585aa53710aaf75f3d9cb7a8e13e5ed2aad5b4108f6ae21c293",
+        "12-score.json": "8ae07465fac092ef9a25a834db27546d624c0c75c7d55225ae9936c64e34004c",
+        "13-request.json": "b354cdcc145c4107a2ff16d94504e0a884ca25c390f298f78fdd3f0d7acdfcbe",
+        "13-resources.json": "c3ae5198ecf5129f973f3c10ebc03b329ebd975cfa69436e9c4d9a1396564735",
+        "13-response.json": "1438d92a0085e1ca32922d7712eab4133b42c62917353c6cebdc5b5d08cba187",
+        "13-score.json": "7b6ffdf8568bb5f7a4b3eafdb20dec57c5355197d8b3b80334f1ab479b65f5e2",
+        "14-request.json": "315ae7bf488dfead6a54f1fa6a68403fe1fd8d9fa49e471dd6a58eed22e40c57",
+        "14-resources.json": "f0af443358e57c1f11d73e6ce13070bb688d2958f71b2b9692d01026985c6845",
+        "14-response.json": "f7a86b30b1b4359efbda60aa2ee72ea3151cf759464229235319a5861329c600",
+        "14-score.json": "0b44a7d8687edb67174929d9d8264a6a036e42ddd05f85122000bd81e893bbf6",
+        "15-request.json": "e52762a16ec7a026ae9fe2a2c6f8d660a3c02808aab1c7ab086f662fd7219e05",
+        "15-resources.json": "d4b3c1ce59457506d503eed1d4eb445fa54eff231ebf55c33f05ad537ec65105",
+        "15-response.json": "253af761f1f36f8bfb3ff85f87ecb1ffdd87c705ac0d0b54f7cf9d81ba429fcc",
+        "15-score.json": "97c64614667adb2e127cfb6e931d0f658fc8f18011ca085312322c1d215d27c0",
+        "16-request.json": "0a1991875f905349dd88096da0c849fac57fc54a7849deba483f71d21c48cb06",
+        "16-resources.json": "f86b6c8074df89a588e353285d5201a8bab6c07ca1f248ec707e6e89cfe7059c",
+        "16-response.json": "aacc1ebbd35ed9a692d2cc0ceafd936451929bb118d3e57b2af8c7f2e5ca0ba8",
+        "16-score.json": "08feb98c5cd9b4a1726e566ea5c6fd2068ae3a9f0f305ebcb1868fd3fcaf1f61",
+        "17-request.json": "850e69a9e52b1e4d0686e8e1bc2d808b271b6e2e3ff1c0d76c13a5029abec11c",
+        "17-resources.json": "e55fed83ed05770d835190beb9ded5b9fc721a31998f3fdc67e4ae484c655152",
+        "17-response.json": "5043f1a5f3745cf55b282f324e392285056f83320848a3611351b49ab86adfa3",
+        "17-score.json": "7684eab94c760e6304db9350132f18d9a4d537b438a5b09f4f900dff200337e2",
+        "18-request.json": "d13f5a807c6a6f2d9e417eb78a881854d2c4eed80e5bd7d073586790523e4280",
+        "18-resources.json": "42d62f04a5a298f8085203d15be7d992e7d8baf540e2ac4723b2489fb7262714",
+        "18-response.json": "cc539343ddf4507f76f9d723c3bb875bb84090a97404db08564d6961d32ef10c",
+        "18-score.json": "837824606e174e4cbb88a029ce001be815aa948a68176f3935a159c8f0b54351",
+        "19-request.json": "fa5c6be3005a2247855ded024d890aa3a0096ca0e18a34e83c5d1c1d73c7a119",
+        "19-resources.json": "ddada48eaab997bbc58aa25f218339a063fe66af7f7b84ec02ce8052ab624bd0",
+        "19-response.json": "7000784883b3f9a7858aa7080426dc7a2f142586a4c5e67ae881d81e3548c652",
+        "19-score.json": "0c1d9496f2de247be86df1f0791c79eed8ecd75bbd5d2d724c4202364733de61",
+        "20-request.json": "9c6c0b00c8f4a650e33493c11a98c3783558ee31835dcd304e8a5ea7ab8e7e49",
+        "20-resources.json": "93768bdd387b0aab61f84662b3fad737a8e01d068650e0c75b0efda02e8bb6da",
+        "20-response.json": "c7fe93e8bc841322c5306f3ca6ed2bab7158e3a3b6fe2152e64daec3661c645e",
+        "20-score.json": "22da2299feb3becd31e60b62e7ce73a393662198bf20761f3e1b6374ee09d87d",
+        "21-request.json": "a0d906bc0949538f6b3236a84ca26a9bd68090b9115d95833963adcb0555f83f",
+        "21-resources.json": "0b45629c6220e291efa0928399a551a01ff387c3ae946619f202d8b9dc0bd95b",
+        "21-response.json": "c3ecf38172873b3d3c3a1937acf67145b0c8fac6a11c0bc29c64753efc16ef8d",
+        "21-score.json": "216889466c78176db75cc668524953bf9b9674a69f6e9601410c02ae0baf366c",
+        "22-request.json": "2c05fc58aea40039e96103cd1f0a427b550b465e012953223ab766715fe5a74a",
+        "22-resources.json": "b42d3529a9549ed44e3080f363aff2d559cb1b5c26fa82bc9f2792b33b844bad",
+        "22-response.json": "c78bf1dddb9df3004bf322123db23f04b64f850e49e7ce6bcbdbb32279e2b652",
+        "22-score.json": "497985827c3ff77c3e11ee2bd335014a3bf9fcece38f032b3708651715d2094a",
+        "23-request.json": "558631a7d76abb8d85cdfef20c148ba587a3e69276b6889104c9a0cd68755b14",
+        "23-resources.json": "761f1dc6244fd2653c3bc9cf5a89103feec177ba8a3ac123e7fd45cef9e58c00",
+        "23-response.json": "e6f55f072ded40cbdee9548e1012b13502cebe9f7943be7c22c518c66759a4d2",
+        "23-score.json": "6c5078ebf301fc711d36055a6661d8c0220e612657865e17bab2a8ff9f9cea40",
+        "24-request.json": "bcc6d8432a57e9d558f1ae86d460db4eb6959101846bd77992568e3f5e3fc983",
+        "24-resources.json": "1cea29a9de9f66c6ab320e96f9574d27f560e1312d23f9a480c951fe91afa68a",
+        "24-response.json": "4b2bd6c74aa44de5d7695bfc7d905530f97532d80b598223c404917293c6c72c",
+        "24-score.json": "b14b2876eb42111ed6f50c6bb11bc892310e76189cbf935ea8c365a2611ba571",
+        "25-request.json": "6cc0294609740b3684838b31820966b8f2a444154a47e1ecb7e6d672e4804d0a",
+        "25-resources.json": "88084528bf02d6d0e9e23684461ffd869b37e3c9b23debc06083e5b1fe5067a5",
+        "25-response.json": "c54e4174529d766e647c66f110e3e2543148ebabf6e5f8e246ae8f3cec17e6b7",
+        "25-score.json": "0580f2b8d8182b4a7e381ce1cf5a2a33068f9b82253196890f042f2c15053468",
+        "26-request.json": "a4b4129a039dd6dffe30d4e0faafab9cac3d15c1922fbe47dcceec436af790e0",
+        "26-resources.json": "d05d0b8c15b89630ddbe8e059a0e1b0524e80e2e644e9a0b8f846fe94711da1b",
+        "26-response.json": "3e88fadd6b5ba10b5da290091a3a592d630cbbdfbf22720d9030dd154278c12b",
+        "26-score.json": "5860a7382efef6777bacfde041277a4b0add83991b02c0cafe141fd39a790349",
+        "27-request.json": "c0d800bf587df6e8dc0bed57c2fdc1d44968e2618b937d6784396675f7a91290",
+        "27-resources.json": "020713552f688d029926d2777f573923210791a077dfc31a36cd0b0543b396c7",
+        "27-response.json": "c92d5dd6e3f3047fb18a6b600c20c48056a6b4b8f8fca933f114bb4fb4c391da",
+        "27-score.json": "7121fc6ba6a086e96c516e357a88c2afa789fea9e88a5a0776aae53f6e65a864",
+        "28-request.json": "57fb6d730f787dd2e7d86dbb81c7da1a928376845f6665be36f5d71e2647a503",
+        "28-resources.json": "8270d031d9b4dfc148ff9c225f001cbd8fa375796db224a646996e3a9ffcf70d",
+        "28-response.json": "a4fdd36c928739489e7c1d4972ea058555cbde272e627149bf9ab9363412a8c2",
+        "28-score.json": "76c288ffbb20b5ba91559d00b1bcbca4b62bdcae7a245fab4d559c135448fe38",
+        "29-request.json": "d8bfa8bcd9cd0020ba3fb2dccf8983f9c3a4106af21611ccc36a6a1b92c232a3",
+        "29-resources.json": "5a3f2f042c44be8debadf411743304c133808ec308a5f90794eaa9ea0b5683b1",
+        "29-response.json": "5806d982349a79f8eeaa0e849d0ad71dd1da9ab364daf37dcb1cdf3c78e9d3c5",
+        "29-score.json": "0eb38bfef46789bc13f07fe8200308d3a22a68dc157fd0b420a35e3b3e6b40bd",
+        "30-request.json": "311de9e270b89ffb0cfec64992c12af23eb7fafd482b93393f77b0479ab0a444",
+        "30-resources.json": "109133aa7508e70f83ed8b4888de1263ff7b978463d956d57eade27fa75abf00",
+        "30-response.json": "55daf4db09ab66c7c610e4c1c25cf72b49afcb8f18271107377f6ec5897d9435",
+        "30-score.json": "61b1af4b81eb9b45334c0f2dbb85dc9c1299efc5b306e2b33d920db818c99193",
+        "31-request.json": "34fce10275c07a9b71cf503058c76c7270ead408358b6102ac2d2ec82cfe296c",
+        "31-resources.json": "38f906171bc82954bcd6bfc2a9e5c93da4baa906f0fa5626d757b8c138f3213b",
+        "31-response.json": "ca522494936b9c5026405e0beb386122d7b525fc2c0ff93039e3449d70c53191",
+        "31-score.json": "1f2b68b38fc4563412d4a9c44d759423874015d947fdaa1d2981fe7860775881",
+        "32-request.json": "1b5fc395646828e613e5cefb93450af350e4dbfdf3b68bcfc66829242f997153",
+        "32-resources.json": "6e5f8a78a83356468e221cfc644f722ec9f2ba1ed32d999c28bd6074a2275553",
+        "32-response.json": "d7a0cd3eede35ae22c83c01e0ff2d0c99072bdea9dd97cf4ab0a3593e457ac3b",
+        "32-score.json": "cf61527b3f7375768199b2569eaf4e5979ec57e300a2dde07325c462515b3929",
+        "33-request.json": "b4b440e58b65b0b6709fc3b45fe4896c31b9c1cfa314de8d4bfebf8f2a27f355",
+        "33-resources.json": "2a51d42d76441a12693f55f7885beeed16706ad741f81a354b59134b6b04472b",
+        "33-response.json": "239d3658f0bf58b41e3e8e61abfe56c872c4f9f28fddd59842b16a618a0f4ff3",
+        "33-score.json": "9d41ef0fe622aa2570178cf32d57a315fa3a3d628ec05569be3f980dc62e72a1",
+        "34-request.json": "8b91f271849a24fb60cd9958ca79c472d268710464aa4ebada567484dfedbaa0",
+        "34-resources.json": "d5c643ef33135165086f7860c44f1610231dcc04f324b73e649196e6807e9890",
+        "34-response.json": "08b4c61e6c63a15ce8191ff26f70efe157812548979a1fd2b2180d82871a4c70",
+        "34-score.json": "19a46f9db7975d0635d9938cf9ff98ea03f304c6ef787e7b582b55d011009142",
+        "35-request.json": "65b42435bd3c6c4d49d5870838e96b5e062b59f55ebfd8c212d18c60872cd6d2",
+        "35-resources.json": "3aabc6d499ed710e12b55066b430d14205a90a77a64e081cfc0776f7d36b7ea7",
+        "35-response.json": "dade3caca744d14ff709737188509f1ffd627630c26f010b3b7793eb869f359e",
+        "35-score.json": "dac3831c92180475a44e1da674f0f0a84676310289bc7c1e830a4ff534e31262",
+        "36-request.json": "a03873c2a3b3cbd82e3da1da9c0a101288a0614d29e37e3cee6bc8c951618f30",
+        "36-resources.json": "70de566f8dcb14337ff100810bf112c485b9f993f4f85587d8e579395f90850b",
+        "36-response.json": "9d726f28549d985d154866ab462e61ed132ea05cd2177c0a2a684a330924dd63",
+        "36-score.json": "43cf9a2d12cb6bb66c2acf72cf10f5a3d550f79a821091db952a1b42c91209b0",
+        "37-request.json": "18a7a01f7ad1b601c32cdd2e91c7a81c936494245e7c39f5d9c22dab680363ad",
+        "37-resources.json": "463da4047226a374111945a49e7cf6ca525ec1cd61530257bf59365df2931874",
+        "37-response.json": "d7e1dca3744fe7430260962d6b5b6364e260d4b9ae12e4e0818b687a480e9d4a",
+        "37-score.json": "8c88766cb9172a2c233ceb1b897c5c9f10c8c95f3b823b864de4e781b3545340",
+        "38-request.json": "a9231c5b58a255f07d53ca080c35336b23db4ae734f3a1d12e3cf2088e01b1d3",
+        "38-resources.json": "f32d41125775a84737570ffa47ce97ecd2dc2f41c1d579df9a570956f8c46c80",
+        "38-response.json": "05a9b7e79b533afff97780b789c59b6fe3e63fc5add668e72f252c0a5d3e8f97",
+        "38-score.json": "4516f6d9a08a4665da0631aa3fdb07e75330dbc3cebe493dbd3264e4871857d7",
+        "39-request.json": "137f340d623aadfe59a9d1a9a8b61f48cf1e424b2526100929cb034525bfe1c2",
+        "39-resources.json": "b6d164391e320c42c3deef9bd134e8d646a87699d30bf1bf5f850ecca70f23fa",
+        "39-response.json": "cae8eef4643ffe94f88627cc46bd0e9e3cbda29669634979aecf88bb5e7d4996",
+        "39-score.json": "8d2775884e1ff29b5cf96384b49940a9d0ad3a6fd8387b72ee71d1c3ac4a3c50",
+        "40-request.json": "f16a97ff29b57fa5baf6c9380acd900c88f097f714109fb2a51d2455ceef50ac",
+        "40-resources.json": "318ffc275549ce315f36e7a8b66a2296395c277c5cdd4358a6635e96217e2089",
+        "40-response.json": "6aa29024f7f92abda2d322afe804c7b29547a99b7b6f8c2a234dfb8cb6c74f09",
+        "40-score.json": "1c345147349954ce996e963c0b52e923a5f1f921a7d214386fffe13d678abc08",
+        "41-request.json": "c44dec3c9c13fcce69d397ad3205612a70254a01408b137129665334df585a16",
+        "41-resources.json": "b4712fcabea077cf4d6e789e676d9f9882da42cddbb79746a201030a64a5d41b",
+        "41-response.json": "91a1e780e16a66ca01a9a53b44e494260c6ece37840068fb94ec1d159399a6c6",
+        "41-score.json": "8a2137d0491e9d386cf864d38272914c2c2cca70f6e97b6e50ba0955c9017698",
+        "42-request.json": "762eba406c74343e23851b62056da1f69f75f3d097974d5a9eed0e802440cc69",
+        "42-resources.json": "2e50d64b7ae5f99a2f20806a371cb5de320a7b4bebbcf3fb5ff8473c92354513",
+        "42-response.json": "345ad2d3850ea0dd68e9fefda40673ee7d00bf12df865fded76180d413e08a05",
+        "42-score.json": "34969697b0306e5fcdf50c9d02c9b149aa47844cef96e04105cef1a0c6c272e5",
+        "43-request.json": "e96545d1776f99e97bbc733233c83d142ca769e04b4be1804998a3aaf328f2b1",
+        "43-resources.json": "59c2d48ea922915dd26781651055f6d6563cde97506da94e88e846bbd04780fc",
+        "43-response.json": "14ca6035fdcd80b1085593ef02dc1698198982d8b35e4a41e8cc33ddc2534f67",
+        "43-score.json": "81dd460822f308fd889e648314deb401d69ba8d2c17fdd589a8bccfbd10d5cb5",
+        "44-request.json": "1a1e48cc5beb48bfb4cf2d3f76572196b9783afdd8c59f50560833b61b7d3438",
+        "44-resources.json": "7c1615ca6027f454ba7af17e3612e938e99def45d081a581deed1c46b2571624",
+        "44-response.json": "945109903eeb872b6fbf141e624df948551b6f256f0117e7918bb4e89cbeedd4",
+        "44-score.json": "8bdef0d2089b8e76ea607906703b614aef0b971084cf3354a26caf4ff2218eb9",
+        "45-request.json": "16d41bc2593dd4e0278988f0e523aa15a8e2e45e8089214d986a3908ba2ad0e5",
+        "45-resources.json": "16e09ae96092e728471a6739da99a52dc5999f4531e5b49f95a39b940684cdae",
+        "45-response.json": "a5e3dede244eaa67e02ae6395ef4377bfacca58f986ea7e400ef3aa068bd0ec2",
+        "45-score.json": "f065e4fff901eb9d68a8a4c12cd48be84d752dbd74a9f20907adfce9e103c85e",
+        "46-request.json": "1efc086858e69c25e5b1934bc72ba2bcedeff6affbbf60844378977ca2edcf6b",
+        "46-resources.json": "0ade15567e31f5ef4199a896dce468e0d3b565921282153fc715b23fdb455e42",
+        "46-response.json": "3b46092d13efc5ad23b99709f4188dbae7e8103cd181d968dc101b84f7ec573d",
+        "46-score.json": "b2a5612d7e0adb3779bf09d96b5bf1db457ff25e7df8b078bb0caac1a7f2c798",
+        "47-request.json": "f2b2d9df71803a6a47148c8a2a5681f62e9471bd20d52485ddde97fcd617df74",
+        "47-resources.json": "c153169b4dcd7a203e6042bcb46d86ec977db81506f88b8b5bf3fe93ba57c4f1",
+        "47-response.json": "b2971849b10b9d3699a079a907f29f60416143a82000f1ed8d417373a8456e8f",
+        "47-score.json": "d98b5c7425e59b6716fd2c54cdc402fd091e045fc308aecebea08c39d7ac113a",
+        "48-request.json": "ca810402010eb06d8ea989e9eb7b5ff2584c9ce8f2b1b71f9a3c8f725d5f9b9c",
+        "48-resources.json": "42edddafbb6948140185aa4f2eda06529339655f1318425f0212713a56c1d35d",
+        "48-response.json": "6e80553a6d39e8f9263bf9199f362fefe2b8dbf96caebe3c893d65c9b71b4bdf",
+        "48-score.json": "cc4f0bd2b9f4366b44fedfb36c734998cb76d897aeb513455542ff3a8481527d",
+        "frozen-inputs.json": "925d342b8c660a000d6cd7c8633902568c58075f46801dc7da0d640d41a6dfb1",
+        "source-snapshot.json": "fef0b9de6e04c088631fd27f40d2a7c6b4856bab77c36e9f096e62726a9096e6",
+        "summary.json": "77b840ff5d451c3df8f5307a8efdaeab6928f5b9073769a05c34d28fda1ea3d8"
+      },
+      "first_scores": [
+        {
+          "case_id": "review-capacity-equality",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.749398
+        },
+        {
+          "case_id": "review-capacity-equality",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.755327
+        },
+        {
+          "case_id": "review-capacity-equality",
+          "category": "review-defect",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.645797
+        },
+        {
+          "case_id": "review-capacity-equality",
+          "category": "review-defect",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751639
+        },
+        {
+          "case_id": "review-ranged-display-name",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.647885
+        },
+        {
+          "case_id": "review-ranged-display-name",
+          "category": "review-defect",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.642969
+        },
+        {
+          "case_id": "review-ranged-display-name",
+          "category": "review-defect",
+          "arm": "bound_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.74808
+        },
+        {
+          "case_id": "review-ranged-display-name",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.744585
+        },
+        {
+          "case_id": "review-inclusive-last",
+          "category": "review-defect",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751716
+        },
+        {
+          "case_id": "review-inclusive-last",
+          "category": "review-defect",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751917
+        },
+        {
+          "case_id": "review-inclusive-last",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.748672
+        },
+        {
+          "case_id": "review-inclusive-last",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750698
+        },
+        {
+          "case_id": "review-interruption-swallowed",
+          "category": "review-defect",
+          "arm": "bound_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751968
+        },
+        {
+          "case_id": "review-interruption-swallowed",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": true
+          },
+          "line_pair_valid": false,
+          "elapsed_seconds": 0.747832
+        },
+        {
+          "case_id": "review-interruption-swallowed",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.746602
+        },
+        {
+          "case_id": "review-interruption-swallowed",
+          "category": "review-defect",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750733
+        },
+        {
+          "case_id": "review-path-caller",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.74947
+        },
+        {
+          "case_id": "review-path-caller",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.749555
+        },
+        {
+          "case_id": "review-path-caller",
+          "category": "review-caller",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750552
+        },
+        {
+          "case_id": "review-path-caller",
+          "category": "review-caller",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856077
+        },
+        {
+          "case_id": "review-ranged-duration",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.846816
+        },
+        {
+          "case_id": "review-ranged-duration",
+          "category": "review-caller",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.846842
+        },
+        {
+          "case_id": "review-ranged-duration",
+          "category": "review-caller",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.849278
+        },
+        {
+          "case_id": "review-ranged-duration",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.852082
+        },
+        {
+          "case_id": "review-empty-label-caller",
+          "category": "review-caller",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.848134
+        },
+        {
+          "case_id": "review-empty-label-caller",
+          "category": "review-caller",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856489
+        },
+        {
+          "case_id": "review-empty-label-caller",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751078
+        },
+        {
+          "case_id": "review-empty-label-caller",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855103
+        },
+        {
+          "case_id": "review-bytes-caller",
+          "category": "review-caller",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855727
+        },
+        {
+          "case_id": "review-bytes-caller",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856771
+        },
+        {
+          "case_id": "review-bytes-caller",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.753288
+        },
+        {
+          "case_id": "review-bytes-caller",
+          "category": "review-caller",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.752204
+        },
+        {
+          "case_id": "review-safe-exception-scope",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750423
+        },
+        {
+          "case_id": "review-safe-exception-scope",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751529
+        },
+        {
+          "case_id": "review-safe-exception-scope",
+          "category": "review-control",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.749788
+        },
+        {
+          "case_id": "review-safe-exception-scope",
+          "category": "review-control",
+          "arm": "bound_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.748254
+        },
+        {
+          "case_id": "review-safe-explicit-none",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.644444
+        },
+        {
+          "case_id": "review-safe-explicit-none",
+          "category": "review-control",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.646813
+        },
+        {
+          "case_id": "review-safe-explicit-none",
+          "category": "review-control",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.645167
+        },
+        {
+          "case_id": "review-safe-explicit-none",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.645443
+        },
+        {
+          "case_id": "review-duplicate-false",
+          "category": "review-control",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.747876
+        },
+        {
+          "case_id": "review-duplicate-false",
+          "category": "review-control",
+          "arm": "bound_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.743187
+        },
+        {
+          "case_id": "review-duplicate-false",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.752063
+        },
+        {
+          "case_id": "review-duplicate-false",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.650175
+        },
+        {
+          "case_id": "review-ranged-duplicate-none",
+          "category": "review-control",
+          "arm": "bound_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.752251
+        },
+        {
+          "case_id": "review-ranged-duplicate-none",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.647366
+        },
+        {
+          "case_id": "review-ranged-duplicate-none",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.746639
+        },
+        {
+          "case_id": "review-ranged-duplicate-none",
+          "category": "review-control",
+          "arm": "bound_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.748805
+        }
+      ]
+    },
+    "order": {
+      "summary": {
+        "expected_attempts": 72,
+        "completed_attempts": 72,
+        "complete_blocks": 12,
+        "arms": {
+          "generic_baseline": {
+            "attempts": 12,
+            "format": 12,
+            "value": 8,
+            "quote": 6,
+            "passed": 6,
+            "contract_failures": 0
+          },
+          "generic_skill": {
+            "attempts": 12,
+            "format": 12,
+            "value": 7,
+            "quote": 8,
+            "passed": 7,
+            "contract_failures": 0
+          },
+          "value_baseline": {
+            "attempts": 12,
+            "format": 12,
+            "value": 11,
+            "quote": 11,
+            "passed": 11,
+            "contract_failures": 0
+          },
+          "value_skill": {
+            "attempts": 12,
+            "format": 12,
+            "value": 9,
+            "quote": 9,
+            "passed": 9,
+            "contract_failures": 0
+          },
+          "quote_baseline": {
+            "attempts": 12,
+            "format": 12,
+            "value": 10,
+            "quote": 10,
+            "passed": 10,
+            "contract_failures": 0
+          },
+          "quote_skill": {
+            "attempts": 12,
+            "format": 12,
+            "value": 7,
+            "quote": 7,
+            "passed": 7,
+            "contract_failures": 0
+          }
+        },
+        "comparisons": {
+          "generic_baseline_to_generic_skill": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 0
+          },
+          "value_baseline_to_value_skill": {
+            "pairs": 12,
+            "gains": 0,
+            "regressions": 2
+          },
+          "generic_baseline_to_value_baseline": {
+            "pairs": 12,
+            "gains": 5,
+            "regressions": 0
+          },
+          "generic_skill_to_value_skill": {
+            "pairs": 12,
+            "gains": 3,
+            "regressions": 1
+          },
+          "quote_baseline_to_quote_skill": {
+            "pairs": 12,
+            "gains": 0,
+            "regressions": 3
+          },
+          "generic_baseline_to_quote_baseline": {
+            "pairs": 12,
+            "gains": 5,
+            "regressions": 1
+          },
+          "generic_skill_to_quote_skill": {
+            "pairs": 12,
+            "gains": 3,
+            "regressions": 3
+          },
+          "value_baseline_to_quote_baseline": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 2
+          },
+          "value_skill_to_quote_skill": {
+            "pairs": 12,
+            "gains": 1,
+            "regressions": 3
+          }
+        },
+        "status": "MEASUREMENT_COMPLETE",
+        "promotion": "NOT_QUALIFIED",
+        "reason": "Same-author controlled maintenance panel, one draw per arm/case; broader independent generalization and skill benefit remain unestablished.",
+        "categories": {
+          "review-caller": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 3,
+              "passed": 2,
+              "contract_failures": 0
+            },
+            "value_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "value_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "quote_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "quote_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            }
+          },
+          "review-control": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "value_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "value_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "quote_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            },
+            "quote_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 1,
+              "quote": 1,
+              "passed": 1,
+              "contract_failures": 0
+            }
+          },
+          "review-defect": {
+            "generic_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 1,
+              "passed": 1,
+              "contract_failures": 0
+            },
+            "generic_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 1,
+              "quote": 1,
+              "passed": 1,
+              "contract_failures": 0
+            },
+            "value_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "value_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 3,
+              "quote": 3,
+              "passed": 3,
+              "contract_failures": 0
+            },
+            "quote_baseline": {
+              "attempts": 4,
+              "format": 4,
+              "value": 4,
+              "quote": 4,
+              "passed": 4,
+              "contract_failures": 0
+            },
+            "quote_skill": {
+              "attempts": 4,
+              "format": 4,
+              "value": 2,
+              "quote": 2,
+              "passed": 2,
+              "contract_failures": 0
+            }
+          }
+        },
+        "resources": {
+          "status": "COMPLETE",
+          "measured_attempts": 72,
+          "sampled_peak_rss_kib": 10048876,
+          "sampled_peak_gpu_process_mib": 8018,
+          "limits": "Warm process RSS/allocation sampled every 0.2 seconds; not absolute peaks or per-model tensor consumption. TTFT is unobservable on this nonstreaming task API and needs the separate predeclared streaming replay."
+        },
+        "line_pair_invalid": {
+          "generic_baseline": 2,
+          "generic_skill": 1,
+          "value_baseline": 0,
+          "value_skill": 0,
+          "quote_baseline": 0,
+          "quote_skill": 0
+        },
+        "cleanup_failures": 0,
+        "unidentified_submission": false,
+        "elapsed_seconds": 56.436
+      },
+      "corpus_sha256": "7e7159ed5cb566f778c9c688c07ec99e9bff6d1dbd5f5c7f1d54bdb547fd2f90",
+      "skill_sha256": {
+        "source-reader": "48820ef8b361b33381c2c58d496f520aef9c5db7a2763b3afea1b0b9895b6a15",
+        "repo-review": "1ef232ca51bfcdfb1aeb393776ea653f32f8e3103d43053b19cec695aa0e5624"
+      },
+      "source_files_sha256": {
+        "benchmarks/har008_review_order.py": "c42073515a9a76e3f46b32cacc6fd3caf5519e7226c7f33388e1286bea7ff83a",
+        "benchmarks/harness_resources.py": "3c22aa2c1c9e147c7caade6bdf288c6547ce40c58604a888ba5ba123844dfb49",
+        "benchmarks/harness_stream_timing.py": "f8f3bed31dbf2c2b2328160ad2507b9b4bf7638cc25b7b83ce3e83ebf2ca64e7",
+        "benchmarks/har008_contract.py": "8d5a9984801aaaf20765927a451c9a92483bd7556710e9cb2ca2fe5c839a29b0",
+        "benchmarks/har008.py": "b50f3557ba34684b6628a9edf87d511e2c2d624b673a922768e3e3fe08169139",
+        "apps/harness/service.py": "f9c7577f375961f11db66c923e4cabcd8f18b17b717afc4575e444107ecee95a",
+        "apps/harness/inference.py": "c6d36aa9c25ec8cd807edbb510a790eca207945c2a776d91c01e7a726df9e81f",
+        "apps/harness/routes.py": "59ee3c5af11a38ef2708e50759a9343c687bee34f4aa88b721b2aed13e9c1b66",
+        "src/application/services/context_composer.py": "51cc58af8c46541ff666b819630042d07a962d205bfe9d28413a63d8f2485b87",
+        "src/application/services/source_output_contract.py": "c4da0510ce1aa4fd65dc5bf1719001d067455ddf8e84c62f90eeca87652f304d",
+        "src/application/services/review_output_contract.py": "b81fab47853ec204c8478474a3ad5c7c56c680edfe618562485713d41542e283",
+        "apps/cli/main.py": "5a332c0d0383afd8b7f82fa0030b33ca11ff8e625656d38f4bd727756a50824a",
+        "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3",
+        "configs/llama-cpp-commit.txt": "c44dffe2f5df93448c3bfe956285e9e21f7faa9f51f709ea9da1b2e5874901ab"
+      },
+      "private_receipts_directory": "data/evaluations/20261111-har008-l1-order-v1",
+      "private_receipt_sha256": {
+        "01-request.json": "4da8fdc58d5472c00e83a14006869502225c7dcc7128e5f3f55f2fb65cef6e2e",
+        "01-resources.json": "0aea594ce89dbf2d67431fcadfccc6eab2e6b738e3ce4aca5b245c9e9e9a2ebe",
+        "01-response.json": "c4222ccfcf6dec697061acf06538d11f5bf4cf8b678c0a80c12054946f96baa0",
+        "01-score.json": "381ac06ef48982f34e63b7c66a2c14c7bac0eda895e684a9979d78fca25a93d1",
+        "02-request.json": "eaab9887fd3a14dc46a6ad763621cbbb2a4f48544a36a32d677287d954230985",
+        "02-resources.json": "488b89c86e2a295e9ba14e7e4c39d8aad8e60e501b5612558bcb9513bd12b3a6",
+        "02-response.json": "72ee6160bac4342d9989b86109c91e49207a06e8348121906f2906fe127e9f30",
+        "02-score.json": "14ac22fce0c8e7923837d2a4a0685bbc9d08455bc9728d4c89c50b97ead9a842",
+        "03-request.json": "d56932fa2cb82dac57610911e57f7b3b92b865d5776d9cfd6d46c613c71ab3cc",
+        "03-resources.json": "d36e2663b76e88eec500317b5e6df44c18d88c7b89a6399d9c7af9af389a66cc",
+        "03-response.json": "cf3fdbb1079d382cfe8e61581512422f580f97d800d42859118657269350567d",
+        "03-score.json": "8cd505bd13e4147a60bcaf3b38563204da67fbc8425933c3a450eae38193d572",
+        "04-request.json": "5518af097f9e3e60371a8c41c680aa2028330eb8f8ad270b71ff30913647b611",
+        "04-resources.json": "051d06a57ee2fc0a1617079390262eca0db4c0e5ee0c21b25fa0469517fc980b",
+        "04-response.json": "8ab2d4e4aef753f6dd3d8507e59fc1120106c98b86d40e039f47459ef9ccfb2e",
+        "04-score.json": "4829d4b4db67923403f350968d44b49d74e4436830f06b91853e4b56e9d5de19",
+        "05-request.json": "d754d610becb1a499caf8c2c015761033dcf255549c0a8674b0d5da5e1c05f23",
+        "05-resources.json": "e016af9f5f32fc14e636f386b8567f48f86821895d73d65d39c3055d235ca362",
+        "05-response.json": "63070105285bcc3545deafb782a181f9b1f2383d746719b7a55f1f54c9fb6e71",
+        "05-score.json": "bc0292dfdd4748689f0c7171efd7b159e8385aa4984ae60bc7bc23e95e12451d",
+        "06-request.json": "215e3cb04ebad87e48e9f7f472e03f1e183710f0dc9e91ed82cb2a0fd31fa4f5",
+        "06-resources.json": "b3c4fd3e4c26aa544b462be05e46abae902d9936375d4028ca8b19ea1bfe6a0d",
+        "06-response.json": "09e998a84e593d41e0f56f30896f8ecf2f8c135e51002604820fb920c1ba3abf",
+        "06-score.json": "40b0a790538c894831bf52c92452506eacd8785804449b4b10e95292bcb35c61",
+        "07-request.json": "0e55bdbae7b5ddd917f6426589c9fcd4c8e109695bcd1103f5c7754077161e53",
+        "07-resources.json": "8b28966035911f0199e1c65c934206019b57ab8243d72ff090c000e02e21affd",
+        "07-response.json": "dc7463ee9088af34005ca2aea1652306264f1daabbfdd5a98c9b8bb652ba6946",
+        "07-score.json": "cf1e427619b33a204afcb98e879f9c844d8924bffdd1df4d09c8fe48b8822b8e",
+        "08-request.json": "3793920968de7019bc4c35dee1e3cf43f0731b698ff9c7b2ec8f24bc59e259c1",
+        "08-resources.json": "0a3fdbf542383cdfb2dca812f3bb3e3cae9a847b4d8caae23cdeb874d1a463b1",
+        "08-response.json": "c04d0eac6e3f5ec5b72a73ae3563959c45b5058a45529803ef9a5d552059c8f5",
+        "08-score.json": "790c4a92bc0c7db19f982f85714288d4336243f28b7922370705b0f40b02c7e7",
+        "09-request.json": "f062e4f1f4881cae85c1f52e9e947d06c0825ff7b022af58fef6b3e3189d4fc3",
+        "09-resources.json": "d000bcdaf43c5557d241a8c723cb055338e75a32316422f91225bb65ea1fba5d",
+        "09-response.json": "0371523baebc6304c7d79317d5be1dbd9969baea9f093f6be4f7a8ab9834a144",
+        "09-score.json": "fdd679fed2776a14669a9538a1d4c9b73874fdf9a780888c6de35291614a40cb",
+        "10-request.json": "c0d551c6fa38044ef965fcf33900aca1f1176f3ed4dba3b074c0295ec83c9018",
+        "10-resources.json": "4633b4ac935171553e3827a65d8251f59a57acc57e9d3f4f4407679c314e5ccb",
+        "10-response.json": "326594aabe65f64b909f80b4cb01d27052fcf14d7c159445f8b312b2a75a3580",
+        "10-score.json": "e9671d899af203eb66bb19b53f6f740c4ef468f087a3ee2076ea1aa82632cfe4",
+        "11-request.json": "95c7599e5f7a095488ad351276df20afc519c018238d4c5c852dd7674e37cbc1",
+        "11-resources.json": "eb4f4651440af3dd269b4e4fda8c327ae16954e5fae397a43a1e9956209a1abd",
+        "11-response.json": "14e0cab3a5fd0e03a1252ebb62f1ee60248e7b3fc96f79c12ac45f6d60425d68",
+        "11-score.json": "f02c72179ca6d1b854788d1256c1b0cc84f3b536a39cf90c6f41218f115a13df",
+        "12-request.json": "e49b022faad812d25699e610e770a600bab06a0468581f51c29a8371d9903bd7",
+        "12-resources.json": "780115dcfb95808a5aaf2cf25ea7853e3c7ab53c16ab2cf7fb5c9fa569c866b3",
+        "12-response.json": "7d0612a6912707a4fae8f7dfa446596ad1d7680ab6b15673444867516721086a",
+        "12-score.json": "f24c9479ebcc6821c9f9622c16bf80cca241173d29d9964cc849b8332579a6e5",
+        "13-request.json": "669a47d6d319e17a8ecaa2228679bcd456ccc583eba460b3a4851147f3d818e6",
+        "13-resources.json": "3eba28549b4bfe7f4e2e89e854718608a87fdb8bf091bf73d79bdadff990d98d",
+        "13-response.json": "d62f2cccd4de9aa72ab6b6cd95404a5cf7110a4ee789c0638af289176d583b4c",
+        "13-score.json": "6c995cfdaed21b98f4686c0ec989c56ff62fbd11fb2dca745cabac429a6d0e31",
+        "14-request.json": "ddfdece9f9666e18980b2e739ede848926437deeaf9758c9bc7d0009250747ce",
+        "14-resources.json": "7c0d049916aba7928a426cd10c0dbb40ba0648fedfd80a9a12a3bb14920408da",
+        "14-response.json": "cec3d1ce9bf5d523779b9cb91eaa83988be704dd719c54b3b817b71f08aba407",
+        "14-score.json": "e0438dc341b9b8e0cb143edc691527e580e42da7ab3f850892a8bba7ed72cf0e",
+        "15-request.json": "556779205c39aeae3bd0ce84412c9c2e48e6c257737e9c7e32882d1976e709a2",
+        "15-resources.json": "3b37411ec7f685bd7e38b8f30bb0c9a91171864c8bb3dac6c4b8483a1bc0a953",
+        "15-response.json": "3161542f1d50fbf426149f298fb5ed3b47a76938b2a0e4cde44cde0044df33b5",
+        "15-score.json": "16e572a1d8b8217aee9d78153bb1a6d85c30b9e077ec1b99846976d032021ed8",
+        "16-request.json": "131dd9980afaf1c2c37dcb0449f142914bb9347bb7939141f3de5b31d59c29d7",
+        "16-resources.json": "d3375bf486dcaff2a5eba61cc9103706e4e5d704ce981b7223f500768b3bc535",
+        "16-response.json": "383bc08dcc8e5638158e115777c92c5bcf7952853c58ed51c2a61159b5de4944",
+        "16-score.json": "390da391ef8e2c1af4bf6a40c7e8fb5f5fa84be6a7e23b2fd0f9cc167f30bdce",
+        "17-request.json": "8d959b24cce137b8f1c1b9ad1803c08cc13aefc598a62947aea09736da1908d1",
+        "17-resources.json": "312ed7a2d2dba04544fc65e3cd822e4da9e0606cb4d04819c26a1d7984fbcf55",
+        "17-response.json": "d479d7cb03b3d243ade85cef8794c268cd9e248013d1637410e0e24f08548eaa",
+        "17-score.json": "20f1b6d480376b4c8b20dfa637d5525be3fbb391fcaa3da53b5336f7f31012e1",
+        "18-request.json": "7b0e7de52ef7b56714ca868ce787a81cdffb50b3f1b67ddb027f2b59cc2ad470",
+        "18-resources.json": "a20367de53a03f9eb15e0223c4b8c9445c79f31f072951a92daa759a622a830d",
+        "18-response.json": "d77b8d32ed20a58cbbb49d7bb842e15850d0c12e4ae70c1422993dc4fb12be4a",
+        "18-score.json": "ad4cd664c14ac36d2f66ecb37a1db93bd971e0bad838ffeb3be97f0c2a643b4f",
+        "19-request.json": "77e5fd5ef14f753655e5e2e12b8422caba08e44f3cba04c2f2b5695412ee9a13",
+        "19-resources.json": "477ee06c96f82e7b0fd2696862b2037a956abdfaab4c181e8fedd5d30b09105d",
+        "19-response.json": "5d687281cede8081d3aebb3e47b22fafcbb74bd7049aab8adb724b99c2ac6d5b",
+        "19-score.json": "cad6616db35ec9adec4480421b471b20f244625b22e17ca06cd7d5ea8eb85c4b",
+        "20-request.json": "7872253e368564d7aad61da424f7773216e7523e3f7ef7b063da235ff7c9faee",
+        "20-resources.json": "8feea2eb8e42556c4392f42dd0caa04e95662fcfc038b092090870e1db7bbd4d",
+        "20-response.json": "a297a1714649f39b64fdd976ee7ebeebf12610ba5d2f5c236c899dc31e51235d",
+        "20-score.json": "50a15edfcc8e24327e51e7719f23ae61ac5c97b1658cfb8c4525f63e8df2042c",
+        "21-request.json": "8233f471e9c2435f661a550ca87137f229ddca22211485c381c6931ffb79c068",
+        "21-resources.json": "61720a348571efade6b1d38e60e58dc2b8685c18964fe4838e03bf4259bf8ded",
+        "21-response.json": "e94fd14a70b3109e1a007d04a27cb519f82301947f325471c11a64ea93f87e84",
+        "21-score.json": "e89ac7fdf36364278ef9f0dd9a6da4de55f9306676add5076dd1c8c516f5e2e8",
+        "22-request.json": "133a50edfa5de00d0d4378ac7354c77ddee5760e9b7b1ba88baeb194d6c655e0",
+        "22-resources.json": "6a59aeb9257460fc64969590ed4a38b53827c60d476727bea243339c1ab99372",
+        "22-response.json": "0e0ad33b5414b4032ea1728629c48b2f2e055d4fee0db283cad7a4c73da4f562",
+        "22-score.json": "c8a8cde3ce88215ce445dc5cff2d24b75683e6a31b8592647c78542e1022bfbe",
+        "23-request.json": "66222830a77c078ec591b75c2e7b0d5867592964662013b5e7a796f41c31189b",
+        "23-resources.json": "3700a4c46bac8f8bc34d09582644062a151e9963e5886bd15c5c3b0b64a2c8f9",
+        "23-response.json": "d310c8231e9758493f1e47f64092d08a67a179ae9eba9984842d1778472b1041",
+        "23-score.json": "b622a64cb7cccd3cd0f533afa02f29aa392649745ec5916af7575fda75bb7299",
+        "24-request.json": "6acae933dd4b11b72a65d7192c1b1c5d4b707719bb64a378385784a881d7b1a2",
+        "24-resources.json": "7bd3f12911cdae8e8d033b6bce0341e6add3febd8ac6bf087f1044d79903bd68",
+        "24-response.json": "4b022e938586a8352593e1316eac16f0be95a90097299711f6ce48ffe54bf55a",
+        "24-score.json": "54b8e10bd8aff4b0cd7a6555f71b52691af09511a0062e7b1d8ed6145c06faaf",
+        "25-request.json": "c4101d72bc2c9ff026da5ee50d4b62614b3057c89063e070c1793d84b6796757",
+        "25-resources.json": "0c51b4ebdb4dc1954d26ffbd868fa2a9b9086cbdad51216fa9ec7245fc50dd7a",
+        "25-response.json": "749174ca7aa0ad717298dd375f13d942904ba9502d31a117133c18d6324a8b90",
+        "25-score.json": "c8ced6792214576c7bb9c956dd37fe82e0ab5a16174916b187660fb031b421a0",
+        "26-request.json": "c8368181d0aa5d4acce72c08d58a741be34fd98d591e1b11538bc5ef192e6a40",
+        "26-resources.json": "a064a3b66a3c915bba73d70869cdef93cd144b992e08fe234a74f8c884a4fb33",
+        "26-response.json": "97a55a4f34cdcc4dfe2a14120c9845874ac5d5ceb7eda119fe5c5894ddf6e4fc",
+        "26-score.json": "439ab533ce29dd3f5907c2ede134c261249171118f954a32e8bf9c7d3ec07e3c",
+        "27-request.json": "61691e01b9142d3b9b23ba3494da3eb795f3c8492cc75927ed963cea5b1c7e2f",
+        "27-resources.json": "f9df35982f814932e9c502dd8854720d896c3da6eb7f561e69346fcb0f802c78",
+        "27-response.json": "20ee4b3deecd8bff3599615227e9d9064f6387667f467aba1d1bcf9b77ef02ae",
+        "27-score.json": "4ab09d443e81849902babe914855d70b48fa37090fcc1372dbbea848ab5664d5",
+        "28-request.json": "eeb0173d696248a137851505b2ada3e8a81fd73f2680c92b4e111f0870b799f6",
+        "28-resources.json": "4dbb2dfc7a1a7b556b559cff09385282528f394dfd56e959127e4980099d6539",
+        "28-response.json": "e07b3d578731206e22c710437c3098cba339a21c654efcbe0fb13344889a577f",
+        "28-score.json": "2cb82a00eb8c1bf4553980550f5a001ada7c9a3bd35c87fabead1930c49ffc51",
+        "29-request.json": "0aae6721f0560563ff1c2fe73d693cf1f1deabdb9ecd3e176652fabb3352f7be",
+        "29-resources.json": "caca950738a2768fcdd26ee5c3894c64b1d4fbdc9eaab079aa21795fed8fce94",
+        "29-response.json": "8263488f238c1f593ac091a7d740d50c9af7f8c9a6d3b6eed5913a4553cd959d",
+        "29-score.json": "903c9ea052f73248b3108700a30d97610f45908a8fd5059a1fda7b734ef6ef88",
+        "30-request.json": "8905f18ffbfb0a73869d5522af29da91d259e27cbb60dae8616da45f7a0b2ccd",
+        "30-resources.json": "3959219c77829ac6600fe3cc470d089e68016111698157ecca3be17db2b6fc12",
+        "30-response.json": "43cc07d789cfd739e3d8b01a3866bafe2c16ae09dffbf5c180a15b8aff6f2ee1",
+        "30-score.json": "ef3f5de2ab68d53d5806a2a89bb2b983d088d349901c2d449759a6cebbb0a59d",
+        "31-request.json": "e87210703c3eadbcdfcab61c6f0031c49fe89bbe3409558c08cd52bc8dd35112",
+        "31-resources.json": "72cd11178364acad04cbd4ade1c7c9635d8eedf9d5b2ada2dc6f273768021b07",
+        "31-response.json": "c29e9e745fd5ae1347068efce80af2a595c7c30c53aee841ac9f081f831b3110",
+        "31-score.json": "f5d670f36a1d92302865a6fb46e337efbb4270b9e810eb0a88baf02b65145151",
+        "32-request.json": "1410897401603dbc3752247e55027b18cc727f5d76dbb03803d8f9eba1e61c23",
+        "32-resources.json": "a67e142074d36d807a3e4b356fe3a5a6149f83b0688a2bb402986301732dfde5",
+        "32-response.json": "aceb1f0f3976c39391def3888265bb2b350e73d0ce07c1add0bb407b2b30b750",
+        "32-score.json": "9d1b1d27b060b9ec10d29ebbda0f831151fee6c4105ca97dc1045a21d17e165a",
+        "33-request.json": "b43aabc37d7fb14a88d4ca2f06eacb75f1ff084b1d53015044cc96131d868fcc",
+        "33-resources.json": "b883065bd9b536ab989f25df3ea9ab4a5be9ac30a1d1fa163925d7a79a350882",
+        "33-response.json": "08f3ab27c544c75104ecafd7bcdb4f232af06185b94a2e3a2bfdff58bad7285a",
+        "33-score.json": "b178adf4e0b1a55386f40aeec18e1cadf930cad412db435baa9edc36d0bb4bf5",
+        "34-request.json": "187026220785e37f491b71e161f4fb3e7706838172a93932b846288231f35314",
+        "34-resources.json": "a6850d140f9cbb970366cd8b2e2764a8688077cbf9195cb720f0f094d646836f",
+        "34-response.json": "e7889bd8a430666254fd9421b043cf9d94aa00f9957ba692d8c56028abaa2aa9",
+        "34-score.json": "f07a986103dab23da7609f29a96070450baa26a03d7dcf2a07e338d686db4e24",
+        "35-request.json": "aebe41bef2ebeb1900fa4d78c53972f48f8dccf497315beadc4008cc95d0d4dd",
+        "35-resources.json": "fde5681289c732f985d6f8dfff985cd323671d0af38cc123e7a91b9d7e53ee89",
+        "35-response.json": "d8e73d1099254d4696e52b989c6e8f02700d6e6384940951d2c0c0509e06a27f",
+        "35-score.json": "b75aace2c0725d478ac5fe7929ed6a7f645068b31db56fcea5609d0e449495b1",
+        "36-request.json": "6360f161282363a3f71594f835b645f2efc42271dbc32f8710f615bea6beaa71",
+        "36-resources.json": "990e718d1129adc8a87b309cae4ef413b2bb94f33d919171f37e7c9b6c0ae36e",
+        "36-response.json": "e0f4d0ea2ca65db045032478a2dde0cdede55615a57852081b45f198ad79d9e2",
+        "36-score.json": "6a3c3525769e9db294176f95af034ed6dd5116ec08463b7d5046b962a7d7ba9c",
+        "37-request.json": "983add1eb89751e5cd50d1438d37ae88eac916354221e8db98a8e2973cbfc7bf",
+        "37-resources.json": "050206bc7744b6a244a1b6c9499d6f20d82e94ebc2c43518084b46fb96fea4c8",
+        "37-response.json": "0c9d7ca9f7a01119fc6a20c623fde7b04a5e7f4b2c99c0d57579189c43d9598e",
+        "37-score.json": "1f378b2ad2b5e916ea18561b5703efb36900863e6cada63be59713716e5ea7a9",
+        "38-request.json": "dc3790d395efd1ee542bb3fe2f3d376ba591741810220a723ccbd596bef777c5",
+        "38-resources.json": "804ab1f3f61566dabe14fb0faa8d617fc7dee04d7110491d027fc39843597b21",
+        "38-response.json": "a91ef8f8b35c6f5175c2a6aadb00f52c95b250dacb76ca26490f31fbc2668211",
+        "38-score.json": "36225d76ed7c0d9343c91e58cf78cffa7540204dcdfd489935f1bac7fbad7c1b",
+        "39-request.json": "4def33b51511d59e2dfca5e5dd7859377259e985c8b13fce264892e63cfddef2",
+        "39-resources.json": "c58b428a15b08d7c32a896f1ea938db3858309478b6ee01699442df0036919a7",
+        "39-response.json": "ccdc32ea3abfcb3b3d66133570cfacef800d2fd41db55cbe57d505e657d7f6b1",
+        "39-score.json": "7cb42bfd676422cd9075f64a1fc6fc11f151d2052c64f5483b36640e1a24335f",
+        "40-request.json": "75d82612fdcdc79887a28a32c32869faa37ef7c373b21710f5a0bb90a532f322",
+        "40-resources.json": "35ec5a3fbb4df9eaa1e49e7a6decec2d1c4781764f1110a3163740b54df393b9",
+        "40-response.json": "f0c1e50f8f18736bd7e8c076d6a2b01af9d806ef42dee4fea3fffa4b99c369bb",
+        "40-score.json": "5859a29b4d13122b336bbddf2a3eaec91044406e4ac6bb91aa8e41c0a5e68a1a",
+        "41-request.json": "26d1928c31e7d915defb749db54a46e9ef96d1b1d7f69a5313c95bed4768ee5f",
+        "41-resources.json": "e32f44c2bf4db8e01bff599f366dccceda41927dc6d73e06c466dd4d0361dfc3",
+        "41-response.json": "2cec24771533e2d635208e3716f23e0170392ecd51e3ea446d01b565b5d359b4",
+        "41-score.json": "0a77e53878868bea92289f3405152d772642b692d03b6d4eded3f8f72ab193f0",
+        "42-request.json": "cad794090f51c16a2a050081423f113ea79c7a9aa357bad40fa16f46697ff6d6",
+        "42-resources.json": "11e9e0dd97c3366a742652f6f79579a8f31ca6bce601c4b36d4311f338f6084b",
+        "42-response.json": "178eb02ba5cb81c751857f1c2a135c52e814e4aa98aa6bfdcb3e95f6966cbf34",
+        "42-score.json": "cd2ec354bd628191760bf603f07a4e85d921cd3ab99a922d0ba476a52b83b72f",
+        "43-request.json": "d62b5b655a32c227f56cf6d3447f7bd5738b231b073f6d760ba799a1eae93a3b",
+        "43-resources.json": "9ccdac3c4556e2066eb06c0bc8af183364fdfc2342e3c7994ddba5fa840d1192",
+        "43-response.json": "cdc18b389751b61a9aea7748244e7833ae38d3bd538e159bfbe53eb2f9dd683c",
+        "43-score.json": "afa8bc44c3be3ec7d84e6d39a31058e822985580b99f771f9be1956e421ac670",
+        "44-request.json": "895b126d0c7618b78083f9e6c228e3e5d854f7ad1c6e74a12978cb6dace072a3",
+        "44-resources.json": "7a54b117cbf262a2a1905ded18a910b939bb986fc7c4bf33a48f08d8ad256631",
+        "44-response.json": "dd0b2f5bc8ed85df915da7465fb34408e26848b2a5c1dd053634691196c71de4",
+        "44-score.json": "2800c49cdebbb93c202e64ae19392dbe23f18e758fa0b93e78867a6d2914ddee",
+        "45-request.json": "32b111f1b6ee34182e54a345ecba3689b730825f1da106ac91d66fba1e4b346a",
+        "45-resources.json": "7fb2b8896d49aabc2d8dd602744c9c11b26bb2f0a94f250ef33894bf6538f929",
+        "45-response.json": "a686fccb32b4812712de56b2d5904d7a0a7857893a6654b63f8f0cf4f0a91b11",
+        "45-score.json": "ce9b74f780529c495882e0c2eb2a0dd30413624ea1c44233bb96ac289dd68923",
+        "46-request.json": "b6f1e493bbe30d017d69e6386ff3ff20ed3fe839422ff0b2bd70b5370c246b6d",
+        "46-resources.json": "6d3aedab9806d6784319415d6edcde3f23ac61fb4998f1af7457fedc51889c8f",
+        "46-response.json": "9b406b9c0862eaab795867c7561f091d47e162ad92c228177fb5d185a660bc2f",
+        "46-score.json": "333cf0719ac7cc63249b227a25d949ea21791d2c8bdfeafb580c309cc8abb7af",
+        "47-request.json": "0903f8526e5d229ba3158220f3fb219d528ab7c692e814aee1ed3f8092593464",
+        "47-resources.json": "0864a2d1b6f4f449eb0f64e9718ac6ef4f227c4d19b21bdbab882a4b4bd3dfe2",
+        "47-response.json": "2e7b80509c9e65ccffa34d10456b3dfa21a6386d22f5b6ae0b8428c3022b5547",
+        "47-score.json": "e5993a3165c42b62757100a81dee23a80231882f7aa70d08b3f438038b08dabd",
+        "48-request.json": "2d542c6618502d2f1bce4045a5f11f30c3130974866b8dbcb37af6d268f117ae",
+        "48-resources.json": "40754e0eac9d46c9eb5f66078692bc3b553f6b8230a960091641356bb3b75781",
+        "48-response.json": "f2fd118fe257151d84c306c4e4bc46f59b1ec13ad9c6e09af93c78130d794dcf",
+        "48-score.json": "0d3bf357c81cf8f1e9f86b77d922275670adbe846bd138405a75c6af8b50c238",
+        "49-request.json": "a0024c6931bb7cc6443192fd7ae145044442c98248423b15cb94cd01dbb162f6",
+        "49-resources.json": "f2e37ef092df9b460d753af868888549d1d3d9861f637c01bf85f3fad9165ffb",
+        "49-response.json": "ea2c92b48a4b9b420e8408cd32babd58be4d95069057c7d03c191994bf18461e",
+        "49-score.json": "b90dc9c8705f756e58557af66e7ffadffcc2b11b9fd65a47d3f2b92511ace452",
+        "50-request.json": "f85a7872f13792d4c665fc3033a9c027c75a449db5b8ca4948e866c7cc624650",
+        "50-resources.json": "71b4d8614e0a24e53c4e04243701c0268d3432970f6dfc45a6be829d74f8f017",
+        "50-response.json": "f2ea48dfaf9ba206769bbe239ac9d43518598acc860c69c35d4e49d9e2e9b508",
+        "50-score.json": "22488fffb8e6b24f76c66633b917b553f0b691db7ecafa173c8c06a50ab7cd17",
+        "51-request.json": "fd6e978ac1f4d373f19391bfeb2deb00911fbbbfc4c873c594c575dd8c35b13b",
+        "51-resources.json": "ac92e7109fe35cf16cba924404051ca4203aa16a1d8619ff6c05ca3b9d2e32ed",
+        "51-response.json": "148cc7004edab11579ad6aac02e448991e6f3b0d3d81b5bdeffac68ee4a0b763",
+        "51-score.json": "267bfc3077f7d8f70c7e3bacbdb6ef1212350d63930a0e33fbd915f35c6f9500",
+        "52-request.json": "415b0f4b1183b49366e87107b8b76b5b4469cab2d058611fb2dc9a1eaea216df",
+        "52-resources.json": "224622bc9f4fb0bab3b4e731ada97e4790427a5c604a3857a3790c2a6fbe1cad",
+        "52-response.json": "08ece87a57db8106ff0d4504f42a518a7c05fa5734899b68bd7f2294dc6bbd0c",
+        "52-score.json": "c695b75ed5a9e17df35e4d9b336dc591486e855083a7699a3b652f20e9cfb982",
+        "53-request.json": "299b355ca2bf67c478487ba7c532afd40e5446e600c75cf4d50ffcc945dfdcb5",
+        "53-resources.json": "75adc7abe7e578c14c422eadfd65d70123fa9dfe50d057baf0b3b33644c9e67f",
+        "53-response.json": "0caed23ff5397d154fc5e5e2a809a6f5264cf7e721ab331f2c566cdd972435f2",
+        "53-score.json": "cf0de84253a7e04e7494b653842fa0486bf187a9bb5f9ea5c022b43af92660ce",
+        "54-request.json": "8a46fe85e522ef680d7bb5a1e9dcb351cef7a0e2109692494cc82931702f9de3",
+        "54-resources.json": "e0117001729ffa93d36e55863e0c0c34f13555d721266075c6cdc0469b747325",
+        "54-response.json": "a0c214fc3ff71d2bb4d4521f64a0cd1bbfcfca4902d5b2efdd8e09da8a449a8d",
+        "54-score.json": "b62b4fc47c11107e9804c7a33da74f83b6dc2fd11247946aa25fdd7fcd05d9f5",
+        "55-request.json": "736647464d20d74fc8d635b202053381e9ab4febc0617de27b00260308fa8647",
+        "55-resources.json": "2c4495ba800a4e808080c9aeeee47b5b27608ad2d21a8700dbb5137b467c5f04",
+        "55-response.json": "f0ae9a7566fecbf52a2c485343ccf37f86779c33ff4fcaf56246efa73dba4aed",
+        "55-score.json": "0cb003c60fc1b9a52b2420d81d77ec2bbb64cc30e8eaf5d810852003d30df5af",
+        "56-request.json": "918eb3c8427616cdbbd6e413ffb9425d6624b59a7941591689a91f016c815135",
+        "56-resources.json": "b80994c89c07d19e20c2a6f2f27c8054237cc444828cfad8b7394b2fd1471ed4",
+        "56-response.json": "e66b404a6ad4a320ee814606628a080fa1f0e0817801e16631172d9ff75e76a1",
+        "56-score.json": "71932453f3cc742021357b759f3f934c3a552653d22b170e0be04dda813211fc",
+        "57-request.json": "c99aa5122d4c687a3cd1a5538d560de16bd293196888f48d30ceb8b0ac7a6b16",
+        "57-resources.json": "8075fe491271b3929a225db9285f96dbfc1eff51691fc2131e51af88532ee834",
+        "57-response.json": "5ddf7bc7dda509368f18a96feba9f70d66997df1fea8f49ac1a80432f4128fad",
+        "57-score.json": "b152926eb20f578681d932e7e62ffdc4b79e5f3060d883dfdefbea489e9f6819",
+        "58-request.json": "d007795580f8480d265470f0991bc0df06d1f6e37eb1d7ef5c1479faee09bb8c",
+        "58-resources.json": "dab158cde4c13c801df6c5c9a23a16cfbd8c4cb5df938d359764157d960df7b2",
+        "58-response.json": "f90515a5fc44e19d7ede141fffc2fa4f8f1dcf4db049af998304eb3b0c37bdde",
+        "58-score.json": "59c8174c4cbe86a18fbe1f6b86af7d3329c6b7aefeb2623a4f865bc724c278ed",
+        "59-request.json": "fb6add45ef157988bbc02ec6fe2127fe83d78aa26f56f75e5312fe4cb4a6933b",
+        "59-resources.json": "c0dcbb2fd27fadf9e41e8e373f3e7c29c56b64b76f9c7ce5c3a2668b37d28bed",
+        "59-response.json": "08241a35401a7def5c226486bb3385296b7aa319c58c2ec20152166ea15f4096",
+        "59-score.json": "c5d388bd69b886e861d74924b0857ea5b65632676f50e311036b4f79b81be6f1",
+        "60-request.json": "ba13a4ac7f2bfe4ca9ed728a3c537d16947c4eaafd786bb72c953a572a35c52b",
+        "60-resources.json": "11971ef62a4485bdf1c041ad0ac5446b628403e2a9530fe2137bf521c782e098",
+        "60-response.json": "447414cea4fda9b876640116c061824a0adac564edeefdbbc2fea2cfff39001b",
+        "60-score.json": "00527b9ecd24cb8dbb51e9cd7d86ac9588139b8f597e8f7e45fb61b17c9cc84d",
+        "61-request.json": "4c6b549700e80629df39428688a1ba2c5a1b9fd2c530f56cd289479e8b40126e",
+        "61-resources.json": "b49fc42d5b603ffc9b90642c6009584463f7a21346ee912fe4da23a20a7e8bef",
+        "61-response.json": "2b3d6a62df11ce05c1c2e0cad245666055a01af838693307392ca9a6eccf6057",
+        "61-score.json": "4348173740326fb1dcda003d55715c8b9d3a046b1be2cf08dda944edfe5611f5",
+        "62-request.json": "1ea76203d467e4e706d4e4b352eabf72f8dda2dbe00df9049d555ebd9c230707",
+        "62-resources.json": "f9481bd96bdc74300c2467b2929b757bc842b00493cdc229bcc6e0c355abb946",
+        "62-response.json": "72c5450ae55f2206b465c283514df4b29b3139d92f46e005dcac232e68e34600",
+        "62-score.json": "dd2cad4cf275ad720736f868aa5555dca5325f69ab177edeff28d667601332c2",
+        "63-request.json": "da91638fb448ece3ae60cc4d0dd625ee562cb74742501e09aff5c894c0ddbfdb",
+        "63-resources.json": "d423c7ffbb2fa23cb6ec633bcf091db52dd3432a65427ca04d19e890cb787332",
+        "63-response.json": "5c21fc22de20051714892d535456ac7bb7c27c1d4e0f5a023af7749f96c55c7a",
+        "63-score.json": "2ac72a046ed168bad88b6ae604a2a9ad091d4023fff32065e714d0a495936e81",
+        "64-request.json": "1d46c29d33a6788e8ea02c1b109bdfe180f6a015a82a9022ed7533993b457948",
+        "64-resources.json": "08502161680c0f29c2e98a79a976ba22390fa96a5db290defa2190608aa82770",
+        "64-response.json": "d310a2fafa7a8020c038659dc16e7de9e82d35590a28d37854c316b75b994a13",
+        "64-score.json": "19be70b9865d438b5941cdc6d989c8f4167aa6117514e43878bc8c000482831f",
+        "65-request.json": "c28fd31bef805a002d8190e0d874f7019ecdaeb283abc0cc5e65b4fa8e692a40",
+        "65-resources.json": "729826d006246c8adc0e07a03ac682aa4518457d45375f354253a65cc7dcaa81",
+        "65-response.json": "5e6819160a6e26f7363f02616bdd6a6c31db8523f8c1461d8c87a9220764b159",
+        "65-score.json": "f2eac49581e02f75bd6502993f0651741e0fa287de29da28cd616a20f3583b57",
+        "66-request.json": "ed37cdb17a82bc7abf349b0c388c6a4487fd4d74d815bd35fe2e64a37b07c4b3",
+        "66-resources.json": "c7e94f5392ef3ac1a75a3fed568397b025ea0e9906abc80ab088df6fffd3cbe6",
+        "66-response.json": "e1a654715769b44af0b1aff12b08ab76439a5eb092235e467fe12b5f07e1c007",
+        "66-score.json": "1b139e5312211be75c75b9ccd95d318c9318c3b8270e68fe6c7225d532ba9789",
+        "67-request.json": "62da47418a144b1108a2837be87b5d1bb431778f35d8ad6854e27755740d005d",
+        "67-resources.json": "ef90aa6d5bd7d9a046c077a367cc6361f96f59a07f32bf1f172649d0b07c1443",
+        "67-response.json": "1c4908e2ff32e536b423c3591c680294d814a3e941c19ff45696c07e5a4b60d3",
+        "67-score.json": "1ec9cfbe525c01295743ed32797e211a351c83f658620c7b3abd6a0555fb0d34",
+        "68-request.json": "9874c7eaac461431da07c1af3a9897e74d40a49217874f63b7716c63b107feeb",
+        "68-resources.json": "b99b369f67e28da1fa814b17a171baff1f4e73b45e89dee689c6ac7c08e48a06",
+        "68-response.json": "51362e9c123b0fcf4e2401de191169ca6cae6aa36501d15e6f66f06cba2536e6",
+        "68-score.json": "c38aab269e702962901f6ab1fc127fb3769f9372b29c7a0c6aadd5ec82d774d4",
+        "69-request.json": "500ea9647a60c9b0916c37da420486d18df1e8f9ab13d29668610bcebeb1c109",
+        "69-resources.json": "9cec94ead92d7d0a72e183d6741c37d9a8e09a606f8e28b16720e814c5e8d6b6",
+        "69-response.json": "0bfc82f142276227e98ce204e98299d3db9e6265d8a5eafbe420709e9c0dc478",
+        "69-score.json": "a59a182d9dde3a1f6897261c31e3fad21ea41e5c121673533a3b3df141349440",
+        "70-request.json": "635d933e88b1912ab62be2b08f884593612f7da59ce10f4b8b9862f41642d4b0",
+        "70-resources.json": "42d243735224e645cbcd4390abdb67cc9d7b867276cafdb0eb42c5817a3f9f0f",
+        "70-response.json": "4c4372deea2a45e1d3d785a78331452e9c600eb141ed641dfc8cadfb84bab00e",
+        "70-score.json": "58e55dadd76b969b273e91bf2ca96cf75e1886c2c56ee890545cbf90de07881a",
+        "71-request.json": "a967234e7ee0d9c0ffe00eef674bacef431c7fc5ebb1e535a8617814f3f2c1af",
+        "71-resources.json": "bf6c1365c22bd690031366a734e2215394966e1da541ad17a55d53ebed33d227",
+        "71-response.json": "6a20ccf51fd14cadffd31c9ded79260bb8964c9c7fed2c1726f3db15a7691ff3",
+        "71-score.json": "edc26bb7e68c56503e5131dae44060650086c6217f164690015b5727fafb10ed",
+        "72-request.json": "c0bfdaed164f27be096c41fb84f0867874f232a5e3190e7bc2739f8426371d3b",
+        "72-resources.json": "c5429b71550601d2d7659bf54a86e3edbbc5098d8a2cc210211983ebc6062b88",
+        "72-response.json": "1adbfd409dbb0bd7dad9be282557d268dff127895abf353925f1c5ee37d58a2a",
+        "72-score.json": "1bc2337caa62bd1d2c10ada5daecee1ba9107ebaa1dadc51fce0d0b246607c28",
+        "frozen-inputs.json": "6e4815d95a5410bfb0a2e030ccda7ebed77550ca291035ced6a69f9ac176dacf",
+        "summary.json": "b26a820b3915d0ae72b1d1b0e99e7542518be80d007967c52edc16908ee77112"
+      },
+      "first_scores": [
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.645585
+        },
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.648517
+        },
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751632
+        },
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.749776
+        },
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.756807
+        },
+        {
+          "case_id": "review-order-01",
+          "category": "review-defect",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750906
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.63973
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "value_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.64104
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "value_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.647058
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.754132
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "quote_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.754436
+        },
+        {
+          "case_id": "review-order-02",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.648404
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.640184
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.747177
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.641457
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751423
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.648037
+        },
+        {
+          "case_id": "review-order-03",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.643907
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.75268
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.859447
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "quote_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.852047
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": true,
+            "quote": false
+          },
+          "line_pair_valid": false,
+          "elapsed_seconds": 0.856427
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.745725
+        },
+        {
+          "case_id": "review-order-04",
+          "category": "review-defect",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.759992
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.747617
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.749874
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.644814
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.744519
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.74371
+        },
+        {
+          "case_id": "review-order-05",
+          "category": "review-caller",
+          "arm": "value_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.748525
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855725
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.854705
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855827
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.858745
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.851857
+        },
+        {
+          "case_id": "review-order-06",
+          "category": "review-caller",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.853499
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.858404
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.85375
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.860816
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.854089
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856071
+        },
+        {
+          "case_id": "review-order-07",
+          "category": "review-caller",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855634
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "generic_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": true
+          },
+          "line_pair_valid": false,
+          "elapsed_seconds": 0.750237
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.751911
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.753705
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.750245
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856559
+        },
+        {
+          "case_id": "review-order-08",
+          "category": "review-caller",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.639749
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.536681
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.542489
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.646425
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "quote_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.639016
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.644564
+        },
+        {
+          "case_id": "review-order-09",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.539754
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "value_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.755102
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.754039
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "quote_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.85505
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.534756
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.53766
+        },
+        {
+          "case_id": "review-order-10",
+          "category": "review-control",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.644226
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.752928
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "quote_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.747517
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.640612
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.640908
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.643703
+        },
+        {
+          "case_id": "review-order-11",
+          "category": "review-control",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.75366
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "quote_skill",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.856753
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "generic_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": true,
+            "quote": false
+          },
+          "line_pair_valid": false,
+          "elapsed_seconds": 0.858198
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "generic_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.803343
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "value_baseline",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.744613
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "value_skill",
+          "score": {
+            "passed": true,
+            "format": true,
+            "value": true,
+            "quote": true
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.748001
+        },
+        {
+          "case_id": "review-order-12",
+          "category": "review-control",
+          "arm": "quote_baseline",
+          "score": {
+            "passed": false,
+            "format": true,
+            "value": false,
+            "quote": false
+          },
+          "line_pair_valid": true,
+          "elapsed_seconds": 0.855327
+        }
+      ]
+    }
+  },
+  "native_calls": 124,
+  "quality_calls": 120,
+  "excluded_development_calls": 4,
+  "independent_checks": {
+    "contract_schema_catalog_content_origins": 120,
+    "bound_line_pairs": 72,
+    "wire_pair_order_checks": 72,
+    "first_campaign_source_snapshot_matches": true,
+    "second_campaign_frozen_current_source_matches": true,
+    "resource_samples": {
+      "review": 241,
+      "order": 356
+    }
+  },
+  "software_validation": {
+    "passed": 389,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 4.63,
+    "related_files": 32,
+    "native_calls_in_pytest": 0,
+    "full_regression": false,
+    "prior_separate_invocation": {
+      "passed": 382,
+      "seconds": 4.59
+    },
+    "ruff_check": "PASS",
+    "ruff_format_files": 19,
+    "uv_lock_check_offline": "PASS",
+    "wheel_build_offline": "PASS",
+    "wheel_source_bytes_match": true,
+    "wheel_sha256": "54adae16b95a594693f3f9cc177224d5d04a98aa9c012655fce1a3edcdb49540"
+  },
+  "language_control": {
+    "cancelled_error_subclasses_exception": false
+  },
+  "historical_receipts_sha256": {
+    "docs/evidence/har008-paired-v1-20261110.json": "efd042d25b05c4f4b7510b72c2da4296e414e2bd6b4c89cb5016c10e40e085f8",
+    "docs/evidence/har008-output-contract-20261110.json": "23604d1a8a18266f9272358edff7492001d4b823db29fb407b989344721414e0",
+    "docs/evidence/har008-q2-maintenance-20261110.json": "66a528d7e68adf5330c1b55316a2ed1327d74d2d9d571b0a4be3a7888c072bb6"
+  },
+  "current_extra_source_sha256": {
+    "apps/harness/service.py": "f9c7577f375961f11db66c923e4cabcd8f18b17b717afc4575e444107ecee95a",
+    "apps/cli/main.py": "5a332c0d0383afd8b7f82fa0030b33ca11ff8e625656d38f4bd727756a50824a",
+    "tests/test_review_output_contract.py": "14a24e79186ef7dab2721ab0eb80bce252705953acec89d774743e9eff6a6189",
+    "benchmarks/tests/test_har008_review_pairs.py": "e15925a2c2a0bb4452ee9eb5bd96f09192b73717102d863fe48b811f5e978927",
+    "benchmarks/tests/test_har008_review_order.py": "54dd32d8dc4bc354ae85a119df1ea8c0d1adaca84b75544deab6e808bc2559f5"
+  },
+  "scope": {
+    "default_output": "text",
+    "automatic_activation": false,
+    "legacy_generic_contract_unchanged": true,
+    "legacy_gateway_and_browser_stream_unchanged": true,
+    "model_config_changed": false,
+    "new_weights_sdk": false,
+    "docker_vault_database_qdrant_changed": false,
+    "core_initially_absent": true,
+    "approved_existing_core_checksum_and_runtime_verified": true,
+    "owned_core_started_then_stopped": true,
+    "owned_probes_stopped": true,
+    "owned_runs_and_grants_empty": true,
+    "primary_desktop_restarted": false,
+    "commit": false,
+    "release": false
+  },
+  "disposition": "MECHANICS_VERIFIED_QUALITY_NOT_QUALIFIED"
+}

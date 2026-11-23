@@ -2,11 +2,11 @@
 
 **Purpose:** Define a concrete replacement workflow campaign after fixing the research caller, without discarding failed results or treating the previous approval as permission to retry.
 
-**Date:** 2026-11-03. **Status:** PROPOSED / NOT APPROVED / NOT EXECUTED. [Actual first campaign](../D74_VI_VOICE_CAMPAIGN_RESULT.md), [frozen recovery plan](../evidence/d74-adr155-proposed-workflow-recovery-20261103.json).
+**Date:** 2026-11-03. **Status:** PROPOSED / NOT APPROVED / NOT EXECUTED. [Actual first campaign](../progress/D74_VI_VOICE_CAMPAIGN_RESULT.md), [frozen recovery plan](../evidence/d74-adr155-proposed-workflow-recovery-20261103.json).
 
 ## Owner disposition — 2026-11-03
 
-The owner selected “Chờ nghe 24 clip” instead of approving recovery. [Decision receipt](../evidence/d74-owner-wait-listening-20261103.json) binds the exact proposed plan and retained listening artifacts. **OWNER DEFERRED PENDING LISTENING / NOT APPROVED / NOT EXECUTED.** Keep the recovery entry point locked; listening comments do not themselves authorize new inference or select a model. At that initial waiting decision, no new ratings had been submitted. The later [owner group feedback](../D74_OWNER_VOICE_FEEDBACK_20261103.md) now prefers Trúc Ly/Ngọc Huyền but reports mechanical prosody and incorrect date/time/Python/API reading. This is not a recovery approval or final voice/model acceptance; recovery remains locked, and the fixed Trúc Ly lane is unchanged.
+The owner selected “Chờ nghe 24 clip” instead of approving recovery. [Decision receipt](../evidence/d74-owner-wait-listening-20261103.json) binds the exact proposed plan and retained listening artifacts. **OWNER DEFERRED PENDING LISTENING / NOT APPROVED / NOT EXECUTED.** Keep the recovery entry point locked; listening comments do not themselves authorize new inference or select a model. At that initial waiting decision, no new ratings had been submitted. The later [owner group feedback](../progress/D74_OWNER_VOICE_FEEDBACK_20261103.md) now prefers Trúc Ly/Ngọc Huyền but reports mechanical prosody and incorrect date/time/Python/API reading. This is not a recovery approval or final voice/model acceptance; recovery remains locked, and the fixed Trúc Ly lane is unchanged.
 
 ## Context and decision requested
 
