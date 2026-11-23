@@ -8,7 +8,17 @@ from uuid import uuid4
 
 import pytest
 
+from src.application.services.special_literals import reset_binding_for_tests
+
 logger = logging.getLogger(__name__)
+
+
+@pytest.fixture(autouse=True)
+def unrecorded_special_literal_binding():
+    """Start and end every test unrecorded, because application startup records the model binding process-wide."""
+    reset_binding_for_tests()
+    yield
+    reset_binding_for_tests()
 
 
 @pytest.fixture

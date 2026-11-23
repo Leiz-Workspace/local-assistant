@@ -14,7 +14,9 @@ import httpx
 
 from apps.api.core.model_config import get_model_profile
 from src.application.services.profile_prompts import TEMPLATES
+from src.application.services.special_literals import require_current_binding
 from src.application.services.web_fetch_tasks import finish_owned, spawn_owned
+from src.infrastructure.inference.core_request_seal import seal_payload
 
 logger = logging.getLogger(__name__)
 MAX_WIRE = 262144
@@ -162,6 +164,19 @@ def matches_schema(value, schema):
     return kind == "boolean" and type(value) is bool
 
 
+def within_limits(value):
+    """Re-apply payload()'s size limits to a sealed body, which can be larger than the checked one."""
+    content = value["messages"][-1]["content"]
+    text = (
+        content
+        if type(content) is str
+        else "".join(part["text"] for part in content if part["type"] == "text")
+    )
+    return (
+        len(text.encode()) <= 524288 and len(json.dumps(value).encode()) <= 2 * 1048576
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class StructuredProfileResult:
     """Retain exact valid native content and independently parsed value with bounded first-observation metadata, never a repaired answer."""
@@ -170,6 +185,7 @@ class StructuredProfileResult:
     value: dict = field(repr=False)
     model_id: str
     schema_sha256: str
+    # Post-seal: the digest of the sealed bytes actually sent (ADR-195).
     request_sha256: str
     wire_sha256: str
     input_tokens: int
@@ -267,9 +283,15 @@ class StructuredProfileAdapter:
 
     async def complete(self, text, *, images=(), stream=False):
         """Own one spent native child and join its HTTP cleanup even when caller cancellation repeats or a backend suppresses cancellation."""
+        require_current_binding()
         if self.spent:
             raise StructuredProfileError("spent")
-        payload = self.payload(text, images, stream)
+        # Sealed here, not in payload(): CodingRequest.payload replaces messages afterwards.
+        payload, _ = seal_payload(
+            self.payload(text, images, stream), "structured_profile"
+        )
+        if not within_limits(payload):
+            raise StructuredProfileError("input")
         self.spent = True
         self.last_request = json.dumps(
             payload, ensure_ascii=False, separators=(",", ":")
@@ -294,6 +316,7 @@ class StructuredProfileAdapter:
 
     async def _complete_native(self, payload, images, stream):
         """Perform exactly one bounded native generation and preserve first bytes before strict validation without repair or fallback."""
+        require_current_binding()
         start, first, raw, pending = time.monotonic(), None, bytearray(), bytearray()
         events, done = [], False
         try:

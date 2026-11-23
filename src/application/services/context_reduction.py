@@ -19,6 +19,10 @@ from apps.api.runtime.presets import (
 )
 from src.application.ports.inference import InferenceFailure
 from src.application.services import history_summary
+from src.application.services.special_literals import (
+    neutralize,
+    require_current_binding,
+)
 from src.application.services.working_state import (
     StateItem,
     build_state,
@@ -148,6 +152,7 @@ def history_parts(messages):
 
 def mandatory_context(messages, policy):
     """Return only immutable systems, explicitly pinned pairs and the current task, with the working-state capsule if enabled."""
+    require_current_binding()
     systems, turns, current = history_parts(messages)
     if any(number > len(turns) for number in policy.pinned_turns):
         raise ContextError("pinned_turn_not_present")
@@ -160,7 +165,10 @@ def mandatory_context(messages, policy):
             )
         )
         if raw is not None:
-            current = {**current, "content": current["content"] + "\n" + raw}
+            current = {
+                **current,
+                "content": current["content"] + "\n" + neutralize(raw)[0],
+            }
     return (
         systems
         + [
@@ -359,6 +367,7 @@ async def reduce_history(
     summary_debug=False,
 ):
     """Fit pinned/current history, optionally offloading omitted pairs and retrieving exact relevant archived pairs."""
+    require_current_binding()
     policy = HistoryPolicy.model_validate(policy)
     systems, turns, current = history_parts(messages)
     mandatory_context(messages, policy)
@@ -387,13 +396,12 @@ async def reduce_history(
         chosen = keep if selected is None else selected
         last = dict(current)
         if state_raw is not None:
-            last["content"] += "\n" + state_raw
+            last["content"] += "\n" + neutralize(state_raw)[0]
         if summary_raw is not None:
-            last["content"] += "\n" + summary_raw
+            last["content"] += "\n" + neutralize(summary_raw)[0]
         if capsule is not None:
-            last["content"] += (
-                "\n" + encode(dict(untrusted_history_context=capsule)).decode()
-            )
+            context = encode(dict(untrusted_history_context=capsule)).decode()
+            last["content"] += "\n" + neutralize(context)[0]
         return (
             systems
             + [
@@ -649,11 +657,12 @@ async def reduce_history(
             capsule_bytes=len(state_raw.encode()) if state_raw is not None else 0,
         )
         LOGGER.info(
-            "working_state_applied active=%d carried=%d mentions=%d bytes=%d",
+            "working_state_applied active=%d carried=%d mentions=%d bytes=%d capsule_sent_bytes=%d",
             report["working_state_summary"]["active"],
             built["carried"],
             len(built["mentions"]),
             report["working_state_summary"]["capsule_bytes"],
+            len(neutralize(state_raw)[0].encode()) if state_raw is not None else 0,
         )
     LOGGER.info(
         "history_policy_applied mode=%s kept=%d evicted=%d extracts=%d tokens=%d",

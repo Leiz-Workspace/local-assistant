@@ -46,6 +46,7 @@ class ExtractBinding:
     adapter_fields: tuple
     source_modes: dict
     messages: list
+    # Pre-seal: the messages before the CORE request seal, not the bytes CORE receives (ADR-195).
     prompt_sha256: str
     units: tuple
 
@@ -148,6 +149,7 @@ def bind_sources(fields, hits):
             dict(role="system", content=TEMPLATES["core"]),
             dict(role="user", content=user),
         ]
+        # Pre-seal digest: the adapter seals a copy of these messages before sending (ADR-195).
         digest = hashlib.sha256(canonical(dict(messages=messages))).hexdigest()
     except (ValueError, McpError):
         raise StoragePolicyError("extract_source_unsupported", 422) from None
@@ -240,6 +242,7 @@ def publish_extraction(content, binding, provenance):
         extraction=dict(
             protocol=PROTOCOL,
             schema_sha256=provenance.schema_sha256,
+            # Pre-seal: equal to the binding digest, not a hash of the sent body (ADR-195).
             prompt_sha256=provenance.prompt_sha256,
         ),
     )
