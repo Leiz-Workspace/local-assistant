@@ -693,3 +693,6 @@ def main(argv=None):
     except (KeyboardInterrupt, EOFError):
         LOGGER.info("cli_interrupted")
         return 130
+
+if __name__ == "__main__":
+    raise SystemExit(main())
