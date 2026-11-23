@@ -166,6 +166,7 @@ class ProfilePromptRun:
                 dict(role="system", content=TEMPLATES[self.profile]),
                 dict(role="user", content=user),
             ]
+            # Pre-seal digest: the CORE request seal runs later, in the adapter (ADR-195).
             digest = hashlib.sha256(canonical(dict(messages=messages))).hexdigest()
             sources = tuple(
                 (s.source_id, hashlib.sha256(s.text.encode()).hexdigest())

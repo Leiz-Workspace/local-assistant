@@ -17,6 +17,10 @@ from apps.api.routes.chat import PRIVATE_HEADERS
 from apps.harness.service import HarnessError
 from src.application.services.skill_contract import SkillError
 from src.application.services.context_reduction import ContextError, HistoryPolicy
+from src.application.services.special_literals import (
+    SpecialLiteralsStale,
+    require_current_binding,
+)
 from src.application.ports.inference import InferenceFailure
 from src.infrastructure.summary_cache import BoundSummaryCache
 from src.application.services.review_output_contract import (
@@ -104,6 +108,9 @@ class HarnessRoute(APIRoute):
                 raise
             except (HarnessError, ContextError) as error:
                 status_code = error.status
+                raise
+            except SpecialLiteralsStale:
+                status_code = 503
                 raise
             except SkillError:
                 status_code = 409
@@ -259,6 +266,7 @@ async def start_run(body: RunInput, request: Request):
 async def chat(body: ChatInput, request: Request):
     """Complete CLI chat under the same CORE admission and context policy as specialist runs."""
     owner, service = await owner_service(request)
+    require_current_binding()
     options = dict(preset=body.preset, context_strategy=body.context_strategy)
     if body.history_policy is not None:
 
@@ -285,7 +293,7 @@ async def chat(body: ChatInput, request: Request):
                     [message.model_dump() for message in body.messages],
                     **options,
                 )
-    except ContextError:
+    except (ContextError, SpecialLiteralsStale):
         raise
     except InferenceFailure as error:
         if body.history_policy is not None:

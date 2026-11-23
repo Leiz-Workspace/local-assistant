@@ -7,6 +7,10 @@ import httpx
 
 from apps.api.core.model_config import get_model_profile
 from src.application.ports.inference import CompletionResult
+from src.application.services.special_literals import (
+    SpecialLiteralsStale,
+    require_current_binding,
+)
 from src.application.services.vision_chat_policy import (
     MAX_TOKENS,
     SCHEMA,
@@ -14,6 +18,10 @@ from src.application.services.vision_chat_policy import (
     model_messages,
     strict_json,
     validate_image,
+)
+from src.infrastructure.inference.core_request_seal import (
+    CoreRequestRejected,
+    seal_payload,
 )
 
 logger = logging.getLogger(__name__)
@@ -54,6 +62,7 @@ class CoreVisionChatAdapter:
 
     async def complete_image(self, *, image, question):
         """Verify current original CORE capabilities and validate one complete structured native image completion."""
+        require_current_binding()
         try:
             validate_image(image, image.source_sha256)
             messages = model_messages(question, image)
@@ -109,6 +118,7 @@ class CoreVisionChatAdapter:
                             ),
                         ),
                     )
+                    payload, _ = seal_payload(payload, "core_vision_chat")
                     reply = await bounded_reply(
                         client, "POST", "/v1/chat/completions", payload=payload
                     )
@@ -155,7 +165,7 @@ class CoreVisionChatAdapter:
                 "stop",
                 output_tokens=tokens,
             )
-        except ImageChatError:
+        except (ImageChatError, SpecialLiteralsStale, CoreRequestRejected):
             raise
         except asyncio.CancelledError:
             raise
