@@ -17,7 +17,9 @@ from src.application.services.document_chunks import (
 )
 from src.application.services.file_storage_policy import StoragePolicyError
 from src.application.services.ingestion_contract import (
+    digest,
     plan_ingestion,
+    validate_model_contract,
     validate_source_fence,
     validate_token_counts,
 )
@@ -200,6 +202,144 @@ def test_foreign_tampered_or_model_drift_inputs_fail_closed(field):
         plan_ingestion(*args)
 
 
+MODEL_DRIFT = {
+    "repository": ("candidate", "repository", "Qwen/Qwen3-Embedding-4B"),
+    "dimension": ("candidate", "dimension", 768),
+    "device": ("runtime", "device", "cuda"),
+    "max_tokens": ("runtime", "max_tokens", 1024),
+    "passage_prefix": ("runtime", "passage_prefix", "passage: "),
+    "distance": ("runtime", "distance", "Dot"),
+    "pooling": ("runtime", "pooling", "attention_mask_mean"),
+    "normalization": ("runtime", "normalization", "none"),
+    "use_cache": ("runtime", "use_cache", 0),
+    "weight_dtype": ("runtime", "weight_dtype", "float32"),
+    "intra_op_threads": ("runtime", "intra_op_threads", 4),
+    "inter_op_threads": ("runtime", "inter_op_threads", 2),
+    "batch_size": ("runtime", "batch_size", 8),
+    "query_prefix": ("runtime", "query_prefix", "Query:"),
+    "fingerprint": ("runtime", "fingerprint", "b" * 64),
+}
+
+
+def contract_error(selected, args=None):
+    """Plan with a selection and return the coded policy error it raises."""
+    row, owner, namespace, view, _ = args or sample()
+    with pytest.raises(StoragePolicyError) as caught:
+        plan_ingestion(row, owner, namespace, view, selected)
+    return caught.value
+
+
+@pytest.mark.parametrize("field", sorted(MODEL_DRIFT))
+def test_selected_model_drift_is_a_server_fault_not_client_input(field):
+    """Report every pinned model/runtime field that drifts as a 503 server contract mismatch."""
+    selected = sample()[4]
+    section, key, value = MODEL_DRIFT[field]
+    selected[section][key] = value
+    error = contract_error(selected)
+    assert (error.code, error.status_code) == (
+        "ingestion_model_contract_mismatch",
+        503,
+    )
+    with pytest.raises(StoragePolicyError, match="ingestion_model_contract_mismatch"):
+        validate_model_contract(selected)
+
+
+@pytest.mark.parametrize(
+    "fault",
+    ["no_runtime", "no_collection", "fingerprint_type", "packages", "vectors", "none"],
+)
+def test_malformed_selection_fails_closed_as_the_same_server_fault(fault):
+    """Treat a structurally broken selected configuration as server drift, never as 422 client input."""
+    selected = sample()[4]
+    if fault == "no_runtime":
+        del selected["runtime"]
+    elif fault == "no_collection":
+        del selected["collection"]
+    elif fault == "fingerprint_type":
+        selected["collection"]["model_fingerprint"] = 1024
+    elif fault == "packages":
+        selected["runtime"]["packages"]["torch"] = "foreign-version"
+    elif fault == "vectors":
+        selected["collection"]["create"]["vectors"]["dense"]["on_disk"] = False
+    else:
+        selected = None
+    error = contract_error(selected)
+    assert (error.code, error.status_code) == (
+        "ingestion_model_contract_mismatch",
+        503,
+    )
+
+
+def test_self_consistent_foreign_model_is_still_refused_by_the_pinned_literals():
+    """Keep the deliberate third pin: recomputed fingerprint and collection do not admit another repository."""
+    selected = sample()[4]
+    selected["candidate"]["repository"] = "Qwen/Qwen3-Embedding-4B"
+    fingerprint = digest(
+        dict(
+            profile=selected["candidate"],
+            format="official-safetensors-bf16-cpu",
+            pooling="last_attended_token_float32",
+            normalization="l2",
+            attention="sdpa",
+            use_cache=False,
+            runtime=selected["runtime"]["packages"],
+        )
+    )
+    selected["runtime"]["fingerprint"] = fingerprint
+    selected["collection"]["model_fingerprint"] = fingerprint
+    selected["collection"]["collection_name"] = f"la_chunks_{fingerprint}_v1"
+    assert contract_error(selected).code == "ingestion_model_contract_mismatch"
+
+
+def test_approved_selection_validates_once_to_its_fingerprint():
+    """Return the approved fingerprint so startup can validate the shipped selection before any resource."""
+    selected = sample()[4]
+    assert (
+        validate_model_contract(selected)
+        == selected["collection"]["model_fingerprint"]
+        == selected["runtime"]["fingerprint"]
+    )
+    assert plan_ingestion(*sample()).model_fingerprint == validate_model_contract(
+        selected
+    )
+
+
+@pytest.mark.parametrize(
+    "field", ["text", "access", "trust", "chunker", "max_bytes", "scope", "source"]
+)
+def test_genuine_client_input_faults_keep_their_422_code(field):
+    """Keep tampered or malformed source/projection input as 422 ingestion_input_invalid."""
+    row, owner, namespace, view, selected = sample()
+    if field == "text":
+        view["chunks"][0]["text"] = "tampered"
+    elif field == "access":
+        view["access"]["principal_id"] = str(UUID(int=99))
+    elif field == "trust":
+        view["content_trust"] = "trusted"
+    elif field == "chunker":
+        view["chunker"] = "foreign-version"
+    elif field == "max_bytes":
+        view["max_bytes"] = 128
+    elif field == "scope":
+        owner = str(owner)
+    else:
+        row["actual_sha256"] = "not-a-digest"
+        view["sha256"] = "not-a-digest"
+    error = contract_error(selected, (row, owner, namespace, view, selected))
+    assert (error.code, error.status_code) == ("ingestion_input_invalid", 422)
+
+
+def test_server_drift_is_reported_before_client_input_faults():
+    """Name the server fault first when both the selection and the request input are wrong."""
+    row, owner, namespace, view, selected = sample()
+    view["content_trust"] = "trusted"
+    selected["runtime"]["batch_size"] = 8
+    assert (
+        contract_error(selected, (row, owner, namespace, view, selected)).status_code
+        == 503
+    )
+
+
 @pytest.mark.parametrize(
     "field",
     ["owner", "namespace", "id", "state", "deleted_at", "actual_sha256", "missing"],
@@ -276,7 +416,9 @@ def test_private_worker_protocol_is_frozen_offline_and_credential_free(monkeypat
             "--frozen",
             "--script",
         ]
-        assert options["timeout"] == 90
+        assert set(options) == {"cwd", "env", "input", "timeout"}
+        assert options["cwd"] == adapter.ROOT and options["timeout"] == 90
+        assert command[5:] == [str(adapter.WORKER)]
         assert not any(
             name in options["env"]
             for name in ("VAULT_TOKEN", "DATABASE_URL", "HF_TOKEN", "HTTP_PROXY")
@@ -393,5 +535,153 @@ def test_timeout_kills_and_joins_owned_process_group(monkeypatch):
     monkeypatch.setattr(adapter.subprocess, "Popen", create)
     monkeypatch.setattr(adapter.os, "killpg", kill)
     with pytest.raises(adapter.subprocess.TimeoutExpired):
-        adapter.run_worker(["controlled"], env={}, input="private-marker")
+        adapter.run_worker(
+            ["controlled"], cwd=adapter.ROOT, env={}, input="private-marker", timeout=90
+        )
     assert events == ["timeout", "killed", "joined", "closed"]
+
+
+class RecordedChild:
+    """Simulate one owned worker and record how it was waited on and cleaned up."""
+
+    pid = 4321
+    returncode = 3
+
+    def __init__(self, events, failure=None):
+        """Keep a shared event ledger and an optional first-wait failure."""
+        self.events, self.failure = events, failure
+
+    def __enter__(self):
+        """Return the synthetic handle for the owned wait."""
+        return self
+
+    def __exit__(self, *args):
+        """Record that the owned handle was closed."""
+        self.events.append(("closed",))
+
+    def communicate(self, **kwargs):
+        """Record each wait, failing the first timed wait when configured."""
+        self.events.append(("communicate", kwargs))
+        if "timeout" in kwargs and self.failure is not None:
+            raise self.failure
+        return "private-stdout", "private-stderr"
+
+
+def test_run_worker_uses_exactly_the_callers_argv_cwd_env_and_timeout(
+    monkeypatch, tmp_path
+):
+    """Pass every caller value through instead of hard-coding cwd or the 90 s timeout."""
+    events, command, env = [], ["worker", "--flag"], {"PATH": "/usr/bin"}
+
+    def create(argv, **kwargs):
+        """Record the spawn request and return a child that exits normally."""
+        events.append(("spawn", argv, kwargs))
+        return RecordedChild(events)
+
+    monkeypatch.setattr(adapter.subprocess, "Popen", create)
+    monkeypatch.setattr(adapter.os, "killpg", lambda *args: events.append(("kill",)))
+    result = adapter.run_worker(
+        command, cwd=tmp_path, env=env, input="stdin-data", timeout=7.5
+    )
+    pipe = adapter.subprocess.PIPE
+    assert events == [
+        (
+            "spawn",
+            command,
+            dict(
+                cwd=tmp_path,
+                env=env,
+                stdin=pipe,
+                stdout=pipe,
+                stderr=pipe,
+                text=True,
+                start_new_session=True,
+            ),
+        ),
+        ("communicate", dict(input="stdin-data", timeout=7.5)),
+        ("closed",),
+    ]
+    assert (result.args, result.returncode, result.stdout, result.stderr) == (
+        command,
+        3,
+        "private-stdout",
+        "private-stderr",
+    )
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        dict(cwd="/", env={}, input="", timeout=90, check=False),
+        dict(cwd="/", env={}, input="", timeout=90, capture_output=True),
+        dict(cwd="/", env={}, input="", timeout=90, text=True),
+        dict(env={}, input="", timeout=90),
+        dict(cwd="/", env={}, input=""),
+    ],
+)
+def test_run_worker_rejects_unused_or_missing_options_before_spawning(
+    monkeypatch, options
+):
+    """Fail loudly on subprocess.run-style options instead of silently ignoring them."""
+    monkeypatch.setattr(
+        adapter.subprocess,
+        "Popen",
+        lambda *args, **kwargs: pytest.fail("worker must not spawn"),
+    )
+    with pytest.raises(TypeError):
+        adapter.run_worker(["controlled"], **options)
+
+
+@pytest.mark.parametrize("vanished", [False, True])
+def test_interrupted_wait_kills_and_joins_owned_process_group(monkeypatch, vanished):
+    """Treat caller interruption like a timeout and still join if the group already exited."""
+    events = []
+
+    def kill(pid, sig):
+        """Record the owned group kill, optionally after the group already exited."""
+        events.append(("kill", pid, sig))
+        if vanished:
+            raise ProcessLookupError(pid)
+
+    monkeypatch.setattr(
+        adapter.subprocess,
+        "Popen",
+        lambda *args, **kwargs: RecordedChild(events, KeyboardInterrupt()),
+    )
+    monkeypatch.setattr(adapter.os, "killpg", kill)
+    with pytest.raises(KeyboardInterrupt):
+        adapter.run_worker(["controlled"], cwd="/", env={}, input="", timeout=5)
+    assert events == [
+        ("communicate", dict(input="", timeout=5)),
+        ("kill", 4321, adapter.signal.SIGKILL),
+        ("communicate", {}),
+        ("closed",),
+    ]
+
+
+def test_run_worker_really_runs_in_cwd_and_honours_a_short_timeout(tmp_path):
+    """Run real children: one reports its cwd and stdin, one outlives the caller's timeout."""
+    import sys
+    import time
+
+    env = {"PATH": "/usr/bin:/bin"}
+    echo = "import os, sys; print(os.getcwd()); print(sys.stdin.read())"
+    result = adapter.run_worker(
+        [sys.executable, "-I", "-c", echo],
+        cwd=tmp_path,
+        env=env,
+        input="stdin-data",
+        timeout=30,
+    )
+    assert result.returncode == 0
+    assert result.stdout.splitlines() == [str(tmp_path.resolve()), "stdin-data"]
+    started = time.monotonic()
+    with pytest.raises(adapter.subprocess.TimeoutExpired):
+        adapter.run_worker(
+            [sys.executable, "-I", "-c", "import time; time.sleep(60)"],
+            cwd=tmp_path,
+            env=env,
+            input="",
+            timeout=0.5,
+        )
+    assert time.monotonic() - started < 20

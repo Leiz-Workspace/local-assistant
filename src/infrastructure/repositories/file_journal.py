@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import json
 import logging
+from contextlib import asynccontextmanager
 from dataclasses import asdict
 from uuid import UUID
 
 from sqlalchemy import text
+from sqlalchemy.exc import DBAPIError
 
 from src.application.services.file_storage_policy import (
     DEFAULT_POLICY,
@@ -26,6 +28,8 @@ from src.application.services.file_storage_policy import (
 )
 
 logger = logging.getLogger(__name__)
+LOCK_TIMEOUT = "SET LOCAL lock_timeout='5s'"
+LOCK_TIMEOUT_SQLSTATE = "55P03"
 VISIBLE = "state IN ('reserved','receiving','verifying','ready') AND deleted_at IS NULL"
 TERMINAL = frozenset({"deleted", "rejected", "interrupted"})
 SAFE_ERRORS = frozenset(
@@ -96,6 +100,19 @@ class PostgresFileJournal:
             if self.namespace_id is not None
             else ""
         )
+
+    @asynccontextmanager
+    async def _transaction(self):
+        """Bound row-lock waits of one short mutation and report an expired wait as an unavailable store."""
+        try:
+            async with self.sessions() as session, session.begin():
+                await session.execute(text(LOCK_TIMEOUT))
+                yield session
+        except DBAPIError as error:
+            if getattr(error.orig, "sqlstate", None) != LOCK_TIMEOUT_SQLSTATE:
+                raise
+            logger.warning("file_journal_lock_timeout")
+            raise StoragePolicyError("file_storage_unavailable", 503) from None
 
     async def _lock_usage(self, session, owner_id: UUID):
         """Lock global then owner counters, initializing an owner under the global lock."""
@@ -177,7 +194,7 @@ class PostgresFileJournal:
         )
         if canonical != plan:
             raise StoragePolicyError("invalid_reservation_plan", 422)
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             global_row, owner_row = await self._lock_usage(session, plan.owner_id)
             if plan.request_key is not None:
                 existing = (
@@ -317,7 +334,7 @@ class PostgresFileJournal:
         """Claim a live reservation after the service acquires its FS resource guard."""
         if not isinstance(lease_owner, UUID):
             raise StoragePolicyError("invalid_lease", 422)
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             policy = policy_from_snapshot(row["policy_snapshot"])
@@ -356,7 +373,7 @@ class PostgresFileJournal:
         """Renew only a live upload while preserving monotonic byte progress and wall deadline."""
         if type(received) is not int or received < 0:
             raise StoragePolicyError("invalid_progress", 422)
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             policy = policy_from_snapshot(row["policy_snapshot"])
@@ -392,7 +409,7 @@ class PostgresFileJournal:
 
     async def verifying(self, owner_id: UUID, file_id: UUID, lease_owner: UUID) -> dict:
         """Fence completed receiving before a bounded verifier inspects sealed bytes."""
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             await self._lock_file(session, owner_id, file_id)
             result = (
@@ -420,7 +437,7 @@ class PostgresFileJournal:
         self, owner_id: UUID, file_id: UUID, lease_owner: UUID, media_type: str
     ) -> dict:
         """Release only the upload slot after caller-verification and durable FS publication."""
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             validate_detected_media(row["display_name"], media_type)
@@ -475,7 +492,7 @@ class PostgresFileJournal:
             and not isinstance(lease_owner, UUID)
         ):
             raise StoragePolicyError("invalid_lease", 422)
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             if row["state"] in TERMINAL:
@@ -535,7 +552,7 @@ class PostgresFileJournal:
         self, owner_id: UUID, file_id: UUID, purge_token: UUID
     ) -> dict:
         """Release counters once after the caller proves every owned name/FD is gone."""
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             if row["purge_token"] != purge_token:
@@ -595,7 +612,7 @@ class PostgresFileJournal:
 
     async def note_purge_retry(self, owner_id, file_id, purge_token):
         """Rotate blocked cleanup behind older work without changing its quota or fencing token."""
-        async with self.sessions() as session, session.begin():
+        async with self._transaction() as session:
             await self._lock_usage(session, owner_id)
             row = await self._lock_file(session, owner_id, file_id)
             if row["state"] == "purging" and row["purge_token"] == purge_token:

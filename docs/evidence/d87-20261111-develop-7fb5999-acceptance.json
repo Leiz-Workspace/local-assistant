@@ -1,0 +1,127 @@
+{
+ "description": "Public receipt of D87 full software regression on the develop tree after HAR-009-B1/B2 (2026-11-11). Private directory not published; names and hashes only.",
+ "date": "2026-11-11",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; the ledger noted that the D87 PASS on production dd7fac3 no longer matched develop after the HAR code merged.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at 7fb5999 (merge of PR #54)",
+  "git_commit": "7fb599962a5c590c12ae61f5a59dfea53d1e2564",
+  "git_tree": "d5ed277a682ef7455fa26fd653b6cb450b0ac6a7",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "7fb5999"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "git_tree": "5f2653d7814672b73c7d6b982b7600e63e17cea2",
+   "source_files_different_in_freeze_paths": 57
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 876,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "5ed6c60f4a3323763010b469f98c3c8a1b1afdb7b7871649ff47218fd663260f"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full",
+ "command_cwd": "~/Workspace/Server/ai",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "environment_set_by_script_includes": [
+  "DATABASE_URL",
+  "LOCAL_ASSISTANT_LIVE_E2E=1",
+  "LOCAL_ASSISTANT_EMBEDDING_COMPARE_LIVE=1"
+ ],
+ "services": {
+  "PostgreSQL": "shared container, not restarted",
+  "Qdrant": "shared container, not restarted",
+  "Vault": {
+   "restarted": false,
+   "sealed_before_run": true,
+   "unsealed_by": "assistant from the bootstrap file under the owner's standing authorization; key shares submitted in process, never printed",
+   "credentials_read": "in memory through infras/scripts/vault_static_secret.py, as designed"
+  },
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "model": "qwen3.5-9b-core",
+   "endpoint": "127.0.0.1:8080",
+   "health": "OK",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  }
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs (from /proc/stat) below 0.5 for 3 consecutive 30 s samples",
+  "first_wait_seconds": 390,
+  "rechecked_right_before_run": {
+   "waited_seconds": 90,
+   "last_three_samples_busy_cores": [
+    0.43,
+    0.4,
+    0.39
+   ]
+  },
+  "processes_stopped_by_assistant": "none; no owner application was closed"
+ },
+ "load_during_run": {
+  "samples": 64,
+  "mean_busy_cores": 1.54,
+  "max_busy_cores": 2.49,
+  "note": "includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6479,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1898.66,
+  "wrapper_seconds": 1900.3,
+  "summary": "6479 passed, 1 warning in 1898.66s (0:31:38)",
+  "started_at_utc": "2026-11-11T10:31:56.850961+00:00",
+  "completed_at_utc": "2026-11-11T11:03:37.153858+00:00",
+  "log_sha256": "6025da45ec6fa20be1bdd51a3a9173ed6cff63c8760aa1d77c44c9ec22903c53",
+  "result_json_sha256": "44ca67a246b6eff7f558843563911d11372ee86f726a23ac9df04cc0147b0fda",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "tests/integration/test_reranker_live.py::test_actual_pinned_reranker_paired_comparison PASSED; per-round times are not in the log"
+ },
+ "database_before_and_after": {
+  "method": "read-only queries as the runtime role, schema assistant, before and after the run",
+  "database": "local_assistant",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6233 passed on 821 files, production dd7fac3 (tree 5f2653d), 2026-11-09; now history"
+ },
+ "scope": "Software regression evidence for the source tree d5ed277 of develop 7fb5999. It is not model quality, device acceptance, D89 or a release decision.",
+ "effect_on_promotion_and_D90": "If develop is promoted without further source changes, production's source tree will equal this tree. Promotion is not done: GitHub Actions is blocked by an account billing issue and promotion is the owner's decision. D90 still requires D87 on the exact commit to be tagged; docs-only commits do not change the source-freeze scope, and accepting that difference is the owner's decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "D60": "deferred",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directory": "data/backups/d87-20261111-full/"
+}

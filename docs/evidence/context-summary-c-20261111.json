@@ -1,0 +1,7104 @@
+{
+ "description": "Public receipt of the HAR-009-C summary v1 benchmark (ADR-192): 14 synthetic dialogues, six arms, first native outcomes only. Synthetic content only.",
+ "date": "2026-11-11",
+ "protocol": "docs/HAR009_C_SUMMARY_PROTOCOL_V1.md",
+ "adr": "docs/ADR/192-proposed-opt-in-llm-summary-of-evicted-history.md",
+ "status": "COMPLETE",
+ "model": {
+  "alias": "qwen3.5-9b-core",
+  "weights_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+  "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "launcher": "scripts/start-core.py (unchanged)"
+ },
+ "native_process": {
+  "pid": 498456,
+  "start_ticks": 1447371,
+  "rss_kib": 1296648,
+  "lifetime_hwm_kib": 8086832
+ },
+ "options": {
+  "preset": "fast",
+  "max_tokens": 512,
+  "temperature": 0.7,
+  "stream": true,
+  "retries": 0
+ },
+ "summary_options": {
+  "prompt_sha256": "297489311810443d45c68f2e7aec213d3cbb30e974644861195d6b0b51c36687",
+  "schema_sha256": "6baeaf7ee324b1d22415bb4a9169a88c7b4a613bbe4db8fc4ea1f95ced453a3e",
+  "generation": {
+   "temperature": 0,
+   "max_tokens": 1536,
+   "thinking": false
+  },
+  "deadline_seconds": 120,
+  "cache": null,
+  "reserve_tokens": 1024
+ },
+ "arms": [
+  {
+   "name": "full",
+   "history_policy": {
+    "window_turns": 120
+   }
+  },
+  {
+   "name": "legacy",
+   "history_policy": null
+  },
+  {
+   "name": "budget",
+   "history_policy": {
+    "mode": "token-budget"
+   }
+  },
+  {
+   "name": "budget_state",
+   "history_policy": {
+    "mode": "token-budget",
+    "working_state": true
+   }
+  },
+  {
+   "name": "budget_summary",
+   "history_policy": {
+    "mode": "token-budget",
+    "evicted_summary": true
+   }
+  },
+  {
+   "name": "budget_state_summary",
+   "history_policy": {
+    "mode": "token-budget",
+    "working_state": true,
+    "evicted_summary": true
+   }
+  }
+ ],
+ "source_sha256": {
+  "benchmarks/context_summary.py": "320eb4c7af6e9da4afaae26c114427b34f820d066f9c648712a7c306a500a6c9",
+  "benchmarks/context_budget.py": "b34c7d871bd0ca52ec3438223c52b6575fce4028691ade8bb7d34d4de422ac8e",
+  "benchmarks/context_retention.py": "e508d016abd404a01f25d2ec6832b1941553b2b80a322dece84b4f4494a58da6",
+  "benchmarks/harness_stream_timing.py": "f8f3bed31dbf2c2b2328160ad2507b9b4bf7638cc25b7b83ce3e83ebf2ca64e7",
+  "benchmarks/harness_resources.py": "3c22aa2c1c9e147c7caade6bdf288c6547ce40c58604a888ba5ba123844dfb49",
+  "src/application/services/history_summary.py": "3b051d6516f2406d4ba0c91f1f0a60879d7ffb16f523083e5be82484fa4a0ae1",
+  "src/application/services/context_reduction.py": "dfa64d95da423dcf8fa232a287ecb5594203471cde895fdc723c7f3285cda0f5",
+  "src/application/services/context_composer.py": "dd4f1987e05c971aca220fc42f9ec053affa73e0d650269ee2e2f41e794fc59b",
+  "src/application/services/working_state.py": "acde3fa2ede903d3fe4a47cd9ced29d0d40e22614479dc7b2e48e5c7120ded90",
+  "src/infrastructure/summary_cache.py": "f669c42acc231eb1bdd79c36b21ca74463cecb27393ef21bbf72a016370ef3b8",
+  "apps/harness/summarizer.py": "ca52c4920fb5e0af0b071eaf5edd57e4e852c9f7978e93a5ae98a8eea05f8212",
+  "apps/harness/inference.py": "7a6909ef69752cc8b7232fc59a71ebcf3b234ca98813cc124f5fccad9f934558",
+  "apps/api/services/llama_gateway.py": "c7d84baabdbd8baf688cace7a0fc8aec4f656f77b29b3e38e5282a488dbdadd3",
+  "apps/api/runtime/presets.py": "9c3e4836725c7f8d6b74b4d2e2b0da3ac1ed4f61fed9afacd09b3f66d87d8a69",
+  "configs/models.yaml": "5a11768ab9bb30b2ebb3b4db32d23bfabdb1ee9d5d1cc490d2f604074755cde3"
+ },
+ "frozen_inputs_sha256": "88908c65f9986c6d80312ade04e5d273036e598e6536afaab732a3b6fe755ff4",
+ "composition_plan": [
+  {
+   "case_id": "num-lynx",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26792,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "num-lynx",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26646,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-lynx",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23656,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-lynx",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23734,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-lynx",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23815,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1349
+   }
+  },
+  {
+   "case_id": "num-lynx",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23893,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1349
+   }
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26836,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26670,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23662,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23740,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23827,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1392
+   }
+  },
+  {
+   "case_id": "num-sonla",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23905,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1392
+   }
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26780,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26624,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23631,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23709,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23797,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1363
+   }
+  },
+  {
+   "case_id": "id-heron",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23875,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1363
+   }
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26827,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26657,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23660,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23738,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23827,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1386
+   }
+  },
+  {
+   "case_id": "id-cuulong",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23905,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1386
+   }
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26805,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26656,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23658,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23736,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23814,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1357
+   }
+  },
+  {
+   "case_id": "swap-osprey",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23892,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1357
+   }
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26819,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26659,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23661,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23739,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23812,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1374
+   }
+  },
+  {
+   "case_id": "swap-thaibinh",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23890,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1374
+   }
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26743,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26612,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23623,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23701,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23775,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1337
+   }
+  },
+  {
+   "case_id": "fix-mantis",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23853,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1337
+   }
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26836,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26679,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23674,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23752,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23829,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1377
+   }
+  },
+  {
+   "case_id": "fix-bachdang",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23907,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1377
+   }
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26792,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26651,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23653,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23731,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23810,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1351
+   }
+  },
+  {
+   "case_id": "neg-puffin",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23888,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1351
+   }
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26850,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26691,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23684,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23762,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23847,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1381
+   }
+  },
+  {
+   "case_id": "neg-camau",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23925,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1381
+   }
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26755,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26620,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23631,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23709,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23786,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1336
+   }
+  },
+  {
+   "case_id": "cond-falcon",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23864,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1336
+   }
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26815,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26660,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23661,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23739,
+   "present": false,
+   "summary": null
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23822,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1372
+   }
+  },
+  {
+   "case_id": "cond-phuquoc",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23900,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1372
+   }
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26760,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26627,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23636,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23714,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23781,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1340
+   }
+  },
+  {
+   "case_id": "auth-atlas",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23859,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1340
+   }
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "full",
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26821,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "legacy",
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 26664,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "budget",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23660,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "budget_state",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23738,
+   "present": true,
+   "summary": null
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "budget_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23815,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1374
+   }
+  },
+  {
+   "case_id": "auth-hoabinh",
+   "arm": "budget_state_summary",
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "input_tokens": 23893,
+   "present": true,
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "uncovered_pairs": [],
+    "clipped_pairs": [
+     8
+    ],
+    "pairs_lost_to_reserve": 0,
+    "summary_selection_soft": 24576,
+    "input_tokens": 1374
+   }
+  }
+ ],
+ "attempts": 84,
+ "native_calls": 84,
+ "retries": 0,
+ "campaign_wall_seconds": 610.4,
+ "summary": {
+  "by_arm": {
+   "full": {
+    "strict": 11,
+    "stale": 0,
+    "present": 12,
+    "by_kind": {
+     "number": "2/2",
+     "identifier": "2/2",
+     "swap": "2/2",
+     "correction": "2/2",
+     "negation": "1/2",
+     "condition": "2/2"
+    },
+    "summary_statuses": {},
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 26815,
+    "median_prepare_seconds": 0.059937,
+    "median_first_text_seconds": 5.700837,
+    "median_summary_seconds": null
+   },
+   "legacy": {
+    "strict": 0,
+    "stale": 0,
+    "present": 0,
+    "by_kind": {
+     "number": "0/2",
+     "identifier": "0/2",
+     "swap": "0/2",
+     "correction": "0/2",
+     "negation": "0/2",
+     "condition": "0/2"
+    },
+    "summary_statuses": {},
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 26657,
+    "median_prepare_seconds": 0.03913,
+    "median_first_text_seconds": 5.680506,
+    "median_summary_seconds": null
+   },
+   "budget": {
+    "strict": 0,
+    "stale": 0,
+    "present": 0,
+    "by_kind": {
+     "number": "0/2",
+     "identifier": "0/2",
+     "swap": "0/2",
+     "correction": "0/2",
+     "negation": "0/2",
+     "condition": "0/2"
+    },
+    "summary_statuses": {},
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 23660,
+    "median_prepare_seconds": 0.157776,
+    "median_first_text_seconds": 5.047969,
+    "median_summary_seconds": null
+   },
+   "budget_state": {
+    "strict": 0,
+    "stale": 0,
+    "present": 0,
+    "by_kind": {
+     "number": "0/2",
+     "identifier": "0/2",
+     "swap": "0/2",
+     "correction": "0/2",
+     "negation": "0/2",
+     "condition": "0/2"
+    },
+    "summary_statuses": {},
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 23738,
+    "median_prepare_seconds": 0.162319,
+    "median_first_text_seconds": 5.028129,
+    "median_summary_seconds": null
+   },
+   "budget_summary": {
+    "strict": 0,
+    "stale": 0,
+    "present": 0,
+    "by_kind": {
+     "number": "0/2",
+     "identifier": "0/2",
+     "swap": "0/2",
+     "correction": "0/2",
+     "negation": "0/2",
+     "condition": "0/2"
+    },
+    "summary_statuses": {
+     "applied": 7,
+     "none_verified": 7
+    },
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 23837,
+    "median_prepare_seconds": 4.431589,
+    "median_first_text_seconds": 4.715327,
+    "median_summary_seconds": 6.567763
+   },
+   "budget_state_summary": {
+    "strict": 0,
+    "stale": 0,
+    "present": 0,
+    "by_kind": {
+     "number": "0/2",
+     "identifier": "0/2",
+     "swap": "0/2",
+     "correction": "0/2",
+     "negation": "0/2",
+     "condition": "0/2"
+    },
+    "summary_statuses": {
+     "applied": 7,
+     "none_verified": 7
+    },
+    "gold_value_admitted": 0,
+    "forbidden_admitted": 0,
+    "self_check_defects": 0,
+    "median_input_tokens": 23915,
+    "median_prepare_seconds": 4.42868,
+    "median_first_text_seconds": 4.695599,
+    "median_summary_seconds": 6.350481
+   }
+  },
+  "paired": {
+   "full": {
+    "gains_vs_budget": [
+     "num-lynx",
+     "num-sonla",
+     "id-heron",
+     "id-cuulong",
+     "swap-osprey",
+     "swap-thaibinh",
+     "fix-mantis",
+     "fix-bachdang",
+     "neg-camau",
+     "cond-falcon",
+     "cond-phuquoc"
+    ],
+    "regressions_vs_budget": []
+   },
+   "legacy": {
+    "gains_vs_budget": [],
+    "regressions_vs_budget": []
+   },
+   "budget_state": {
+    "gains_vs_budget": [],
+    "regressions_vs_budget": []
+   },
+   "budget_summary": {
+    "gains_vs_budget": [],
+    "regressions_vs_budget": []
+   },
+   "budget_state_summary": {
+    "gains_vs_budget": [],
+    "regressions_vs_budget": []
+   }
+  }
+ },
+ "rows": [
+  {
+   "attempt": 1,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26792,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059196,
+   "first_text_seconds": 5.2864,
+   "total_seconds": 5.498858,
+   "answer": "The Lynx metrics agent listens on port 9464.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 1774932,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 2,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26646,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.038131,
+   "first_text_seconds": 5.531111,
+   "total_seconds": 5.731523,
+   "answer": "The Lynx metrics agent listens on port 9000.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 2996516,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 3,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23656,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.152389,
+   "first_text_seconds": 4.916549,
+   "total_seconds": 5.384659,
+   "answer": "The Lynx metrics agent does not have a specified listening port in the provided logs; it likely operates via a different communication mechanism or is not detailed in this context.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 4210532,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 4,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23734,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.161295,
+   "first_text_seconds": 4.922772,
+   "total_seconds": 5.122441,
+   "answer": "The Lynx metrics agent listens on port 9090.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 5329356,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 5,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23891,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 6.904941,
+   "first_text_seconds": 4.605647,
+   "total_seconds": 4.890081,
+   "answer": "The provided text does not contain information about the Lynx metrics agent or the port it listens on.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_too_short": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       2
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "How about 'Friday Table'?",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "How about 'Friday Table'?"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "A plain sans-serif keeps titles readable."
+     },
+     {
+      "index": 2,
+      "reason": "quote_too_short",
+      "text": "Understood."
+     }
+    ],
+    "output_tokens": 437,
+    "input_tokens": 1349,
+    "seconds": 6.567763,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 6753056,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 6,
+   "case_id": "num-lynx",
+   "kind": "number",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23969,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 6.720385,
+   "first_text_seconds": 4.642884,
+   "total_seconds": 4.857312,
+   "answer": "The Lynx metrics agent listens on port **22000**.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_too_short": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       2
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "How about 'Friday Table'?",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "How about 'Friday Table'?"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "A plain sans-serif keeps titles readable."
+     },
+     {
+      "index": 2,
+      "reason": "quote_too_short",
+      "text": "Understood."
+     }
+    ],
+    "output_tokens": 437,
+    "input_tokens": 1349,
+    "seconds": 6.369077,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 7930072,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 7,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26670,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.039053,
+   "first_text_seconds": 5.591093,
+   "total_seconds": 5.77945,
+   "answer": "Tôi không có thông tin về phòng họp của nhóm Sơn La.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9058344,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 8,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23662,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.159861,
+   "first_text_seconds": 5.029807,
+   "total_seconds": 5.201917,
+   "answer": "Nhóm Sơn La họp ở phòng 302.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9058352,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 9,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23740,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.164645,
+   "first_text_seconds": 6.333409,
+   "total_seconds": 6.504661,
+   "answer": "Nhóm Sơn La họp tại phòng 205.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10172792,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 30
+   }
+  },
+  {
+   "attempt": 10,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23837,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 3.730406,
+   "first_text_seconds": 4.695374,
+   "total_seconds": 4.965577,
+   "answer": "Tôi không có thông tin về địa điểm họp của nhóm Sơn La trong dữ liệu hiện có.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 1,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì.",
+      "pairs": [
+       8
+      ],
+      "quotes": [
+       "Đã nhận nhật ký lô 8; chưa cần làm gì."
+      ],
+      "newer_mentions": [
+       16,
+       15,
+       14
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Xanh lam thường dịu mắt hơn."
+     }
+    ],
+    "output_tokens": 193,
+    "input_tokens": 1392,
+    "seconds": 3.410308,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 1,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9925320,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 11,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23915,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 3.465792,
+   "first_text_seconds": 4.644871,
+   "total_seconds": 4.942575,
+   "answer": "Tôi không có thông tin về địa điểm họp của nhóm Sơn La trong các dữ liệu đã cung cấp.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 1,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì.",
+      "pairs": [
+       8
+      ],
+      "quotes": [
+       "Đã nhận nhật ký lô 8; chưa cần làm gì."
+      ],
+      "newer_mentions": [
+       16,
+       15,
+       14
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Xanh lam thường dịu mắt hơn."
+     }
+    ],
+    "output_tokens": 193,
+    "input_tokens": 1392,
+    "seconds": 3.143292,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 1,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9220932,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 12,
+   "case_id": "num-sonla",
+   "kind": "number",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26836,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059937,
+   "first_text_seconds": 5.685272,
+   "total_seconds": 5.929928,
+   "answer": "Nhóm Sơn La họp ở phòng 3.14 mỗi sáng thứ Hai.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9221800,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 13,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23631,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.15736,
+   "first_text_seconds": 4.948726,
+   "total_seconds": 5.118788,
+   "answer": "The provided logs do not contain a Heron release tag.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10178968,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 14,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23709,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.160152,
+   "first_text_seconds": 5.030534,
+   "total_seconds": 5.21693,
+   "answer": "The Heron release tag is not available in the provided logs.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10178976,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 15,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23910,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.376134,
+   "first_text_seconds": 4.726301,
+   "total_seconds": 4.884907,
+   "answer": "I have no information about the Heron release tag.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 5,
+    "dropped": {
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       1,
+       7
+      ],
+      "quotes": [
+       "Blue usually reads as calmer.",
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "How about 'Friday Table'?",
+      "pairs": [
+       2
+      ],
+      "quotes": [
+       "How about 'Friday Table'?"
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 3,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     }
+    ],
+    "output_tokens": 467,
+    "input_tokens": 1363,
+    "seconds": 7.037587,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 5,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9964000,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 16,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23988,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.130022,
+   "first_text_seconds": 4.692131,
+   "total_seconds": 4.863884,
+   "answer": "I do not have access to the Heron release tag.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 5,
+    "dropped": {
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       1,
+       7
+      ],
+      "quotes": [
+       "Blue usually reads as calmer.",
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "How about 'Friday Table'?",
+      "pairs": [
+       2
+      ],
+      "quotes": [
+       "How about 'Friday Table'?"
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 3,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     }
+    ],
+    "output_tokens": 467,
+    "input_tokens": 1363,
+    "seconds": 6.780322,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 5,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9276392,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 17,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26780,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059414,
+   "first_text_seconds": 5.682476,
+   "total_seconds": 5.940153,
+   "answer": "The Heron release tag is rel-2026.11-B7.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9281004,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 18,
+   "case_id": "id-heron",
+   "kind": "identifier",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26624,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.038321,
+   "first_text_seconds": 5.565307,
+   "total_seconds": 5.754243,
+   "answer": "The Heron release tag is not specified in the provided logs.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10242824,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 19,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23738,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.163431,
+   "first_text_seconds": 5.145547,
+   "total_seconds": 5.302965,
+   "answer": "Mã hợp đồng của dự án Cửu Long là CL.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10242836,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 20,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23734,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.587796,
+   "first_text_seconds": 4.715327,
+   "total_seconds": 4.944163,
+   "answer": "Mã hợp đồng của dự án Cửu Long không có trong dữ liệu hiện có.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 115,
+    "input_tokens": 1386,
+    "seconds": 2.284688,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9994464,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 21,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23812,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.445593,
+   "first_text_seconds": 4.654976,
+   "total_seconds": 4.98107,
+   "answer": "Mã hợp đồng của dự án Cửu Long không được cung cấp trong các nhật ký worker reports mà bạn đã gửi.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 115,
+    "input_tokens": 1386,
+    "seconds": 2.150521,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9286356,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 22,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26827,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.060252,
+   "first_text_seconds": 5.712697,
+   "total_seconds": 5.971581,
+   "answer": "Mã hợp đồng của dự án Cửu Long là HĐ-CL-0928.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9286368,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 23,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26657,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.039193,
+   "first_text_seconds": 5.686249,
+   "total_seconds": 5.988061,
+   "answer": "Không có thông tin về mã hợp đồng của dự án Cửu Long trong các dữ liệu đã cung cấp.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9283612,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 24,
+   "case_id": "id-cuulong",
+   "kind": "identifier",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23660,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.157719,
+   "first_text_seconds": 5.012172,
+   "total_seconds": 5.354878,
+   "answer": "Tôi không có thông tin về mã hợp đồng của dự án Cửu Long trong các dữ liệu hoặc ngữ cảnh hiện có.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9110320,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 25,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23899,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.374886,
+   "first_text_seconds": 4.735245,
+   "total_seconds": 4.922089,
+   "answer": "The Osprey database uses port 5432.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Blue usually reads as calmer."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Got it."
+     }
+    ],
+    "output_tokens": 472,
+    "input_tokens": 1357,
+    "seconds": 7.042668,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10073772,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 26,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23977,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.180455,
+   "first_text_seconds": 4.707192,
+   "total_seconds": 4.935335,
+   "answer": "The Osprey database port is not specified in the provided conversation or logs.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Blue usually reads as calmer."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Got it."
+     }
+    ],
+    "output_tokens": 472,
+    "input_tokens": 1357,
+    "seconds": 6.838745,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9284568,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 27,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26805,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.057817,
+   "first_text_seconds": 5.710437,
+   "total_seconds": 5.812988,
+   "answer": "Port 5434.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9292348,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 28,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26656,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.040347,
+   "first_text_seconds": 5.680506,
+   "total_seconds": 5.868579,
+   "answer": "The Osprey database uses port 5432.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9292348,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 29,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23658,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.157776,
+   "first_text_seconds": 5.059178,
+   "total_seconds": 5.244814,
+   "answer": "The Osprey database uses port 5432.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9133812,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 30,
+   "case_id": "swap-osprey",
+   "kind": "swap",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23736,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.160982,
+   "first_text_seconds": 5.028129,
+   "total_seconds": 5.214171,
+   "answer": "The Osprey database uses port 5432.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9128184,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 31,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23813,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.566788,
+   "first_text_seconds": 4.733126,
+   "total_seconds": 5.18483,
+   "answer": "Máy chủ Thái Bình không được đề cập trong các nhật ký worker reports đã cung cấp; do đó không thể xác định tầng chứa từ dữ liệu hiện có.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 115,
+    "input_tokens": 1374,
+    "seconds": 2.266225,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9998264,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 32,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26819,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059099,
+   "first_text_seconds": 5.700837,
+   "total_seconds": 5.844471,
+   "answer": "Máy chủ Thái Bình đặt ở tầng 9.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9287476,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 33,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26659,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.03913,
+   "first_text_seconds": 5.712268,
+   "total_seconds": 5.857274,
+   "answer": "Máy chủ Thái Bình đặt ở tầng 4.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9285328,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 34,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23661,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.159348,
+   "first_text_seconds": 5.046835,
+   "total_seconds": 5.330659,
+   "answer": "Không có thông tin cụ thể về tầng đặt máy chủ Thái Bình trong dữ liệu đã cung cấp.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9111776,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 35,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23739,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.164155,
+   "first_text_seconds": 5.02011,
+   "total_seconds": 5.178753,
+   "answer": "Máy chủ Thái Bình được đặt tại tầng 1.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10225768,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 36,
+   "case_id": "swap-thaibinh",
+   "kind": "swap",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23735,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.443664,
+   "first_text_seconds": 4.6433,
+   "total_seconds": 4.799731,
+   "answer": "Máy chủ Thái Bình được đặt ở tầng 6.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 115,
+    "input_tokens": 1374,
+    "seconds": 2.138481,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10065316,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 37,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26743,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059995,
+   "first_text_seconds": 5.680866,
+   "total_seconds": 5.839074,
+   "answer": "Mantis backups currently keep 21 daily copies.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10067724,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 38,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26612,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.03855,
+   "first_text_seconds": 5.654562,
+   "total_seconds": 5.799472,
+   "answer": "Mantis backups currently keep 7 daily copies.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10163952,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 39,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23623,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.156028,
+   "first_text_seconds": 5.153417,
+   "total_seconds": 5.381421,
+   "answer": "The logs do not specify the number of daily copies retained for Mantis backups.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10163960,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 40,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23701,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.155951,
+   "first_text_seconds": 4.968532,
+   "total_seconds": 5.225948,
+   "answer": "The provided logs do not contain information about Mantis backup retention policies or daily copy counts.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9983700,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 41,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23869,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 6.935913,
+   "first_text_seconds": 4.760181,
+   "total_seconds": 4.960872,
+   "answer": "The provided logs do not contain information about Mantis backup retention policies.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "quote_not_in_source": 2
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       1,
+       7
+      ],
+      "quotes": [
+       "Blue usually reads as calmer.",
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     },
+     {
+      "index": 4,
+      "reason": "quote_not_in_source",
+      "text": "Updated."
+     }
+    ],
+    "output_tokens": 432,
+    "input_tokens": 1337,
+    "seconds": 6.588056,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9783488,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 42,
+   "case_id": "fix-mantis",
+   "kind": "correction",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23947,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 6.700747,
+   "first_text_seconds": 4.714447,
+   "total_seconds": 4.956675,
+   "answer": "The provided logs do not contain information about Mantis backup policies or daily copy counts.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "quote_not_in_source": 2
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Blue usually reads as calmer.",
+      "pairs": [
+       1,
+       7
+      ],
+      "quotes": [
+       "Blue usually reads as calmer.",
+       "Blue usually reads as calmer."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     },
+     {
+      "index": 4,
+      "reason": "quote_not_in_source",
+      "text": "Updated."
+     }
+    ],
+    "output_tokens": 432,
+    "input_tokens": 1337,
+    "seconds": 6.350481,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9090124,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 43,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26679,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.039525,
+   "first_text_seconds": 5.626446,
+   "total_seconds": 5.928578,
+   "answer": "Thông tin hạn nộp báo cáo của dự án Bạch Đằng không có trong lịch sử hội thoại hiện tại.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10012168,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 44,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23674,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.164188,
+   "first_text_seconds": 5.106639,
+   "total_seconds": 5.643548,
+   "answer": "Hạn nộp báo cáo của dự án Bạch Đằng hiện là ngày [ngày cụ thể cần tra cứu từ dữ liệu dự án], vì thông tin này không có trong ngữ cảnh hiện tại.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10012176,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 45,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23752,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.164175,
+   "first_text_seconds": 4.983912,
+   "total_seconds": 5.440881,
+   "answer": "Tôi không thể xác định hạn nộp báo cáo cụ thể vì thông tin này không được cung cấp trong các nhật ký worker search mà bạn đã gửi trước đó.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10009636,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 46,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23921,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.447631,
+   "first_text_seconds": 4.77514,
+   "total_seconds": 5.073544,
+   "answer": "Tôi không có thông tin về hạn nộp báo cáo của dự án Bạch Đằng trong dữ liệu hiện có.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Phông không chân giúp tiêu đề dễ đọc.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "Phông không chân giúp tiêu đề dễ đọc."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Đã ghi lại lời nhắc cá nhân.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Đã ghi lại lời nhắc cá nhân."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Đã cập nhật.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "Đã cập nhật."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Thử dùng 'Chào cả nhà!'.",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Thử dùng 'Chào cả nhà!'."
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Xanh lam thường dịu mắt hơn."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã ghi."
+     }
+    ],
+    "output_tokens": 470,
+    "input_tokens": 1377,
+    "seconds": 7.097734,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9764516,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 47,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23999,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.191374,
+   "first_text_seconds": 4.731107,
+   "total_seconds": 5.044241,
+   "answer": "Tôi không có thông tin về hạn nộp báo cáo của dự án Bạch Đằng trong các dữ liệu hiện có.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "Phông không chân giúp tiêu đề dễ đọc.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "Phông không chân giúp tiêu đề dễ đọc."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Đã ghi lại lời nhắc cá nhân.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Đã ghi lại lời nhắc cá nhân."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Đã cập nhật.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "Đã cập nhật."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Thử dùng 'Chào cả nhà!'.",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Thử dùng 'Chào cả nhà!'."
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Xanh lam thường dịu mắt hơn."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã ghi."
+     }
+    ],
+    "output_tokens": 470,
+    "input_tokens": 1377,
+    "seconds": 6.836086,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9073796,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 48,
+   "case_id": "fix-bachdang",
+   "kind": "correction",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26836,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059991,
+   "first_text_seconds": 5.738794,
+   "total_seconds": 5.81277,
+   "answer": "Ngày 21.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9078212,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 49,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23653,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.156331,
+   "first_text_seconds": 4.997148,
+   "total_seconds": 5.012918,
+   "answer": "Yes",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10035520,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 50,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23731,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.153888,
+   "first_text_seconds": 5.054216,
+   "total_seconds": 5.069806,
+   "answer": "No",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10035524,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 51,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23727,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.567492,
+   "first_text_seconds": 4.728742,
+   "total_seconds": 4.745012,
+   "answer": "No",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "How about 'Friday Table'?"
+     }
+    ],
+    "output_tokens": 109,
+    "input_tokens": 1351,
+    "seconds": 2.261667,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9776180,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 23
+   }
+  },
+  {
+   "attempt": 52,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23805,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 2.346084,
+   "first_text_seconds": 4.69154,
+   "total_seconds": 4.706707,
+   "answer": "No",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 1,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "How about 'Friday Table'?"
+     }
+    ],
+    "output_tokens": 109,
+    "input_tokens": 1351,
+    "seconds": 2.035994,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9061828,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 23
+   }
+  },
+  {
+   "attempt": 53,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26792,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059813,
+   "first_text_seconds": 5.700767,
+   "total_seconds": 5.716128,
+   "answer": "No",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9061832,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 54,
+   "case_id": "neg-puffin",
+   "kind": "negation",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26651,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.03857,
+   "first_text_seconds": 5.624379,
+   "total_seconds": 5.639929,
+   "answer": "Yes",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10010744,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 55,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23762,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.164073,
+   "first_text_seconds": 5.122136,
+   "total_seconds": 5.153069,
+   "answer": "Chưa",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10095088,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 56,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23758,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 4.431589,
+   "first_text_seconds": 4.713363,
+   "total_seconds": 4.744403,
+   "answer": "Chưa",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì."
+     }
+    ],
+    "output_tokens": 249,
+    "input_tokens": 1381,
+    "seconds": 4.121029,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9842308,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 23
+   }
+  },
+  {
+   "attempt": 57,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23836,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 4.188349,
+   "first_text_seconds": 4.695599,
+   "total_seconds": 4.726385,
+   "answer": "Chưa",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì."
+     }
+    ],
+    "output_tokens": 249,
+    "input_tokens": 1381,
+    "seconds": 3.880336,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9137900,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 23
+   }
+  },
+  {
+   "attempt": 58,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26850,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.06087,
+   "first_text_seconds": 5.724825,
+   "total_seconds": 5.942631,
+   "answer": "Chưa, dịch vụ Cà Mau chưa được deploy lên máy chủ production.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9141464,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 59,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26691,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.040503,
+   "first_text_seconds": 5.683292,
+   "total_seconds": 5.715132,
+   "answer": "Chưa",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9141464,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 60,
+   "case_id": "neg-camau",
+   "kind": "negation",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23684,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.162339,
+   "first_text_seconds": 5.047969,
+   "total_seconds": 5.079197,
+   "answer": "Chưa",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8986868,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 61,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23705,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 3.646853,
+   "first_text_seconds": 4.678152,
+   "total_seconds": 5.116507,
+   "answer": "The Falcon cache may be restarted when the `--falcon-cache` flag is set in the worker configuration or when explicitly triggered by a system restart command.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "A plain sans-serif keeps titles readable."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Received the batch 8 log; no action is needed."
+     }
+    ],
+    "output_tokens": 189,
+    "input_tokens": 1336,
+    "seconds": 3.347673,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9143408,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 62,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23783,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 3.392844,
+   "first_text_seconds": 4.682117,
+   "total_seconds": 5.006511,
+   "answer": "The Falcon cache may be restarted if it becomes corrupted or unresponsive, as indicated by system logs or error messages.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "A plain sans-serif keeps titles readable."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Received the batch 8 log; no action is needed."
+     }
+    ],
+    "output_tokens": 189,
+    "input_tokens": 1336,
+    "seconds": 3.087303,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9142528,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 63,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26755,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.059264,
+   "first_text_seconds": 5.697036,
+   "total_seconds": 5.813603,
+   "answer": "Only when the job queue is empty.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9144008,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 64,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26620,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.03871,
+   "first_text_seconds": 5.720932,
+   "total_seconds": 5.981269,
+   "answer": "The Falcon cache may be restarted when it has been inactive for more than 5 minutes.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9144008,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 65,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23631,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.15607,
+   "first_text_seconds": 5.065356,
+   "total_seconds": 5.293639,
+   "answer": "The Falcon cache may be restarted when it has not been used for a while.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8979680,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 66,
+   "case_id": "cond-falcon",
+   "kind": "condition",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23709,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.162319,
+   "first_text_seconds": 5.022641,
+   "total_seconds": 5.250297,
+   "answer": "The Falcon cache may be restarted if it becomes corrupted or fails to function correctly.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10089888,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 67,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23813,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 4.42868,
+   "first_text_seconds": 4.770819,
+   "total_seconds": 5.12653,
+   "answer": "Chưa có thông tin cụ thể về thời gian khởi động lại bộ đệm Phú Quốc trong các nhật ký đã cung cấp.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì."
+     }
+    ],
+    "output_tokens": 247,
+    "input_tokens": 1372,
+    "seconds": 4.109792,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9753960,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 68,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26815,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.061259,
+   "first_text_seconds": 5.731296,
+   "total_seconds": 5.9336,
+   "answer": "Bộ đệm Phú Quốc chỉ được khởi động lại khi hàng đợi trống.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9050548,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 69,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 26660,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.03941,
+   "first_text_seconds": 5.691416,
+   "total_seconds": 5.921237,
+   "answer": "Tôi không có thông tin về lịch trình khởi động lại bộ đệm Phú Quốc.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9050548,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 70,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23661,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.159242,
+   "first_text_seconds": 5.09498,
+   "total_seconds": 5.632313,
+   "answer": "Tôi không thể trả lời câu hỏi này vì bạn chưa cung cấp thông tin về bộ đệm Phú Quốc hay lịch trình khởi động lại của nó trong các nhật ký hoặc ngữ cảnh hiện tại.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8892716,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 71,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23739,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.16084,
+   "first_text_seconds": 4.990713,
+   "total_seconds": 5.30527,
+   "answer": "Chưa có thời gian khởi động lại bộ đệm Phú Quốc được xác định trong các dữ liệu hiện có.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10009072,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 72,
+   "case_id": "cond-phuquoc",
+   "kind": "condition",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": false,
+   "stale": [],
+   "present": false,
+   "input_tokens": 23735,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 4.189059,
+   "first_text_seconds": 4.686407,
+   "total_seconds": 5.069482,
+   "answer": "Tôi không thể xác định thời gian khởi động lại bộ đệm Phú Quốc vì thông tin này không có trong dữ liệu bạn cung cấp.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 2,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Đã nhận nhật ký lô 8; chưa cần làm gì."
+     }
+    ],
+    "output_tokens": 247,
+    "input_tokens": 1372,
+    "seconds": 3.878688,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9916940,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 73,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26760,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.062028,
+   "first_text_seconds": 5.713505,
+   "total_seconds": 5.860325,
+   "answer": "You approved running the Atlas production database migration tonight.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9920736,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 74,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26627,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.039907,
+   "first_text_seconds": 5.757665,
+   "total_seconds": 5.988266,
+   "answer": "There is no information about an Atlas production database migration in the provided conversation history.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9920736,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 75,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23636,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.156925,
+   "first_text_seconds": 5.039775,
+   "total_seconds": 5.466703,
+   "answer": "No prior discussion about the Atlas production database migration was provided in the conversation history; only worker logs for batches 9 through 16 were shared.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8894664,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 27
+   }
+  },
+  {
+   "attempt": 76,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23714,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.167218,
+   "first_text_seconds": 4.995013,
+   "total_seconds": 5.224923,
+   "answer": "No prior conversation regarding the Atlas production database migration was found in the provided context.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 10006812,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 77,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23877,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 7.205518,
+   "first_text_seconds": 4.773061,
+   "total_seconds": 5.171486,
+   "answer": "No earlier discussion about the Atlas production database migration exists in the provided text; the only prior content involved worker logs and unrelated model-generated claims.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Blue usually reads as calmer."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     }
+    ],
+    "output_tokens": 452,
+    "input_tokens": 1340,
+    "seconds": 6.856288,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9758112,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 78,
+   "case_id": "auth-atlas",
+   "kind": "authority_gate",
+   "language": "en",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23955,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 6.935822,
+   "first_text_seconds": 4.734931,
+   "total_seconds": 5.133449,
+   "answer": "There is no prior discussion about the Atlas production database migration in the provided history; only unrelated worker logs and a few personal notes were mentioned.",
+   "summary": {
+    "status": "applied",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 4,
+    "dropped": {
+     "invalid_supersession": 1,
+     "quote_not_in_source": 1
+    },
+    "admitted_items": [
+     {
+      "kind": "assistant_claim",
+      "text": "A plain sans-serif keeps titles readable.",
+      "pairs": [
+       3
+      ],
+      "quotes": [
+       "A plain sans-serif keeps titles readable."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Noted as a personal reminder.",
+      "pairs": [
+       4
+      ],
+      "quotes": [
+       "Noted as a personal reminder."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "I have no information about the coffee machine.",
+      "pairs": [
+       5
+      ],
+      "quotes": [
+       "I have no information about the coffee machine."
+      ]
+     },
+     {
+      "kind": "assistant_claim",
+      "text": "Try 'Hello again, everyone!'",
+      "pairs": [
+       6
+      ],
+      "quotes": [
+       "Try 'Hello again, everyone!'"
+      ]
+     }
+    ],
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "invalid_supersession",
+      "text": "Blue usually reads as calmer."
+     },
+     {
+      "index": 1,
+      "reason": "quote_not_in_source",
+      "text": "Noted."
+     }
+    ],
+    "output_tokens": 452,
+    "input_tokens": 1340,
+    "seconds": 6.600308,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": true
+   },
+   "faithfulness": {
+    "admitted": 4,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9061168,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 25
+   }
+  },
+  {
+   "attempt": 79,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "legacy",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26664,
+   "retained_turns": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.040307,
+   "first_text_seconds": 5.636058,
+   "total_seconds": 6.025368,
+   "answer": "Tôi chưa được cung cấp bất kỳ thông tin nào về quá trình migration cơ sở dữ liệu Hòa Bình trong lịch sử trò chuyện này.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9931896,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  },
+  {
+   "attempt": 80,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "budget",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23660,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.1635,
+   "first_text_seconds": 5.135909,
+   "total_seconds": 5.786387,
+   "answer": "Chưa có thông tin nào được cung cấp về migration cơ sở dữ liệu Hòa Bình; các cuộc trò chuyện trước đó chỉ liên quan đến việc lưu trữ nhật ký worker assets của các lô từ 9 đến 16.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9931928,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 28
+   }
+  },
+  {
+   "attempt": 81,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "budget_state",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23738,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.16643,
+   "first_text_seconds": 5.008081,
+   "total_seconds": 5.33599,
+   "answer": "Chưa có thông tin nào về migration cơ sở dữ liệu Hòa Bình được đề cập trong cuộc trò chuyện này.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9927624,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 82,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "budget_summary",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23734,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 8.576732,
+   "first_text_seconds": 4.725728,
+   "total_seconds": 5.276522,
+   "answer": "Chưa có nội dung nào được ghi lại về migration cơ sở dữ liệu Hòa Bình; các thông tin trước đó chỉ là các log nhật ký worker (lô 9–16).",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 6
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "speaker_mismatch",
+      "text": "Đã ghi."
+     },
+     {
+      "index": 2,
+      "reason": "speaker_mismatch",
+      "text": "Xanh lam thường dịu mắt hơn."
+     },
+     {
+      "index": 3,
+      "reason": "speaker_mismatch",
+      "text": "Bạn có thể dùng tên 'Bàn Thứ Sáu'."
+     },
+     {
+      "index": 4,
+      "reason": "speaker_mismatch",
+      "text": "Phông không chân giúp tiêu đề dễ đọc."
+     },
+     {
+      "index": 5,
+      "reason": "speaker_mismatch",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 557,
+    "input_tokens": 1374,
+    "seconds": 8.248134,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 9680952,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 26
+   }
+  },
+  {
+   "attempt": 83,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "budget_state_summary",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 23812,
+   "retained_turns": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 8.35366,
+   "first_text_seconds": 4.687715,
+   "total_seconds": 4.972997,
+   "answer": "Chưa có nội dung nào về migration cơ sở dữ liệu Hòa Bình được đề cập trước đó.",
+   "summary": {
+    "status": "none_verified",
+    "covered_pairs": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "items_returned": 6,
+    "items_admitted": 0,
+    "dropped": {
+     "speaker_mismatch": 6
+    },
+    "admitted_items": null,
+    "debug_dropped": [
+     {
+      "index": 0,
+      "reason": "speaker_mismatch",
+      "text": "Tôi không có thông tin về máy pha cà phê."
+     },
+     {
+      "index": 1,
+      "reason": "speaker_mismatch",
+      "text": "Đã ghi."
+     },
+     {
+      "index": 2,
+      "reason": "speaker_mismatch",
+      "text": "Xanh lam thường dịu mắt hơn."
+     },
+     {
+      "index": 3,
+      "reason": "speaker_mismatch",
+      "text": "Bạn có thể dùng tên 'Bàn Thứ Sáu'."
+     },
+     {
+      "index": 4,
+      "reason": "speaker_mismatch",
+      "text": "Phông không chân giúp tiêu đề dễ đọc."
+     },
+     {
+      "index": 5,
+      "reason": "speaker_mismatch",
+      "text": "Đã ghi lại lời nhắc cá nhân."
+     }
+    ],
+    "output_tokens": 557,
+    "input_tokens": 1374,
+    "seconds": 8.047687,
+    "pairs_lost_to_reserve": 0,
+    "reserve_applied": false
+   },
+   "faithfulness": {
+    "admitted": 0,
+    "gold_value_admitted": false,
+    "forbidden_admitted": [],
+    "self_check_defects": 0
+   },
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8986348,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 24
+   }
+  },
+  {
+   "attempt": 84,
+   "case_id": "auth-hoabinh",
+   "kind": "authority_gate",
+   "language": "vi",
+   "arm": "full",
+   "status": "COMPLETE",
+   "strict": true,
+   "stale": [],
+   "present": true,
+   "input_tokens": 26821,
+   "retained_turns": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
+   "prepare_seconds": 0.060345,
+   "first_text_seconds": 5.716886,
+   "total_seconds": 5.932589,
+   "answer": "Bạn đã đồng ý chạy migration cơ sở dữ liệu Hòa Bình tối nay.",
+   "summary": null,
+   "faithfulness": null,
+   "resources": {
+    "status": "COMPLETE",
+    "sampled_peak_rss_kib": 8986356,
+    "sampled_peak_gpu_process_mib": 8018,
+    "samples": 29
+   }
+  }
+ ],
+ "resources": {
+  "rows": 84,
+  "sampler_status": "COMPLETE",
+  "total_samples": 2202,
+  "sampled_peak_rss_kib": 10242836,
+  "sampled_peak_gpu_process_mib": 8018,
+  "note": "Warm sampled process footprint at 0.2 s intervals, not request-only or absolute memory."
+ },
+ "independent_check": {
+  "frozen_sha256_matches": true,
+  "sources_unchanged_after_run": true,
+  "corpus_identical_to_code": true,
+  "rescored_rows": 84,
+  "rescoring_mismatches": 0,
+  "presence_mismatches": 0,
+  "faithfulness_mismatches": 0
+ },
+ "private_artifacts": {
+  "directory": "data/evaluations/context-summary-c-20261111 (git-ignored)",
+  "sha256": {
+   "frozen-inputs.json": "88908c65f9986c6d80312ade04e5d273036e598e6536afaab732a3b6fe755ff4",
+   "summary.json": "cd49f172984b73288ed8b775e83649b57451c0cd54542c638086f5408b7b2f95"
+  }
+ },
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false,
+  "model_or_config_changed": false
+ }
+}

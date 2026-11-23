@@ -25,6 +25,33 @@ from src.infrastructure.check_seccomp import thread_filter
 from src.infrastructure.checkpoint_storage import ancestor_identities
 
 logger = logging.getLogger(__name__)
+RESOURCE_FIELDS = (
+    "address_space_bytes",
+    "cpu_soft_seconds",
+    "cpu_hard_seconds",
+    "file_size_bytes",
+    "file_descriptors",
+    "threads",
+    "core_bytes",
+)
+
+
+def resource_arguments(policy):
+    """Derive the enforced prlimit ceilings from the reviewed execution policy so kernel limits cannot drift from it."""
+    values = [policy.get(name) for name in RESOURCE_FIELDS]
+    if (
+        any(type(value) is not int or value < 0 for value in values)
+        or policy["cpu_soft_seconds"] > policy["cpu_hard_seconds"]
+    ):
+        raise WorkspaceAccessError("checks_runner_policy_invalid", 503)
+    return [
+        f"--as={policy['address_space_bytes']}",
+        f"--cpu={policy['cpu_soft_seconds']}:{policy['cpu_hard_seconds']}",
+        f"--fsize={policy['file_size_bytes']}",
+        f"--nofile={policy['file_descriptors']}",
+        f"--nproc={policy['threads']}",
+        f"--core={policy['core_bytes']}",
+    ]
 
 
 class NativeChecks:
@@ -73,6 +100,7 @@ class NativeChecks:
         """Build only fixed namespace/resource/profile arguments after native private pin and affinity checks."""
         if self.policy != execution_policy(self.cpu):
             raise WorkspaceAccessError("checks_runner_policy_changed", 409)
+        limits = resource_arguments(self.policy)
         if (
             os.getuid() == 0
             or os.getuid() != os.geteuid()
@@ -160,12 +188,7 @@ class NativeChecks:
             str(filter_descriptor),
             "--",
             "/usr/bin/prlimit",
-            "--as=536870912",
-            "--cpu=2:3",
-            "--fsize=1048576",
-            "--nofile=64",
-            "--nproc=16",
-            "--core=0",
+            *limits,
             "--",
             *PROFILES[self.profile].argv,
         ]

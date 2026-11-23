@@ -6,15 +6,16 @@ import logging
 from html.parser import HTMLParser
 from urllib.parse import urljoin, urlsplit
 
+from src.application.ports.web_evidence import EvidenceResource, ObservedSource
+from src.application.ports.web_fetch import FetchedPage, PublicResponse
 from src.application.services.web_fetch_policy import (
     WebFetchError,
+    header_map,
+    public_address,
     public_url,
     representation,
 )
 from src.infrastructure.web_evidence_source import ObservedWebSource
-from src.application.ports.web_fetch import FetchedPage, PublicResponse
-from src.application.ports.web_evidence import EvidenceResource, ObservedSource
-from src.application.services.web_fetch_policy import header_map, public_address
 
 logger = logging.getLogger(__name__)
 
@@ -185,7 +186,7 @@ class PublisherSource:
         logger.info("publisher_source_initialized")
 
     async def read(self, url, mode):
-        """Read one explicit parent/child through unchanged evidence extraction and bind only its original parent response."""
+        """Read a parent as anchor-only evidence bound to its original response, or a child through unchanged evidence extraction."""
         if mode != "static":
             raise ValueError("publisher_static_only")
         parsed = urlsplit(url)
@@ -208,36 +209,20 @@ class PublisherSource:
             )
             self.parent_binding = binding
             return observation
-        capture = PublisherCapture(self.client, self.number, parent)
+        capture = PublisherCapture(self.client, self.number)
         observation = await ObservedWebSource(static_client=capture).read(url, mode)
-        if parent:
-            if (
-                capture.final != observation.page.final_url
-                or hashlib.sha256(capture.raw or b"").hexdigest()
-                != observation.page.body_sha256
-            ):
-                raise ValueError("publisher_parent_binding_changed")
-            child, sha, anchors = observed_link(capture.final, self.number, capture.raw)
-            self.parent_binding = (observation.page.final_url, child, sha, anchors)
         logger.info("publisher_original_source_read parent=%s", parent)
         return observation
 
 
 class PublisherCapture:
-    """Restrict every delegated redirect hop and temporarily retain only the single bounded parent body."""
+    """Restrict every delegated child redirect hop to the configured RFC full-text path."""
 
-    def __init__(self, client, number, parent):
-        """Initialize one per-read capture without a shared response or cross-owner mutable body."""
-        self.client, self.number, self.parent = client, number, parent
-        self.raw, self.final = None, None
+    def __init__(self, client, number):
+        """Bind one per-read capture to the accepted client and RFC number without retaining any body."""
+        self.client, self.number = client, number
 
     async def get(self, url):
-        """Validate publisher/path before the accepted transport performs DNS/TLS/body checks and retain the final parent only."""
-        rfc_url(url, self.number, parent=self.parent)
-        response = await self.client.get(url)
-        if self.parent and response.status == 200:
-            media, encoding = representation(response.headers)
-            if media != "text/html" or encoding not in {"utf-8", "utf8"}:
-                raise ValueError("publisher_parent_media_invalid")
-            self.raw, self.final = response.body, url
-        return response
+        """Validate publisher/path before the accepted transport performs DNS/TLS/body checks."""
+        rfc_url(url, self.number, parent=False)
+        return await self.client.get(url)

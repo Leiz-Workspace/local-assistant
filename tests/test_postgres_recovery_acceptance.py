@@ -84,3 +84,44 @@ def test_restore_rejects_acl_mismatch(tmp_path):
             archive, {"assistant.messages": "expected"}, "expected-acl"
         )
     assert drill.manifest["restore_verified"] is False
+
+
+@pytest.mark.parametrize(
+    "extra", [[], ["--execute-restart"], ["--consumer-url", "http://127.0.0.1:9/x"]]
+)
+def test_cli_refuses_the_legacy_canary_run_by_default(tmp_path, monkeypatch, extra):
+    """Follow ADR-123: without the explicit flag, touch neither Docker, the database nor the backup path."""
+    drill = Mock()
+    monkeypatch.setattr(recovery, "RecoveryAcceptance", drill)
+    directory = tmp_path / "backup"
+    assert recovery.main(["--backup-directory", str(directory), *extra]) == 2
+    drill.assert_not_called()
+    assert not directory.exists()
+
+
+@pytest.mark.parametrize("restart", [False, True])
+def test_explicit_legacy_flag_runs_the_superseded_drill(tmp_path, monkeypatch, restart):
+    """Run the old canary drill only when the operator names it, passing restart through unchanged."""
+    drill = Mock()
+    monkeypatch.setattr(recovery, "RecoveryAcceptance", drill)
+    directory = tmp_path / "backup"
+    arguments = ["--backup-directory", str(directory), "--legacy-canary-run"]
+    if restart:
+        arguments.append("--execute-restart")
+    assert recovery.main(arguments) == 0
+    drill.assert_called_once_with(directory)
+    drill.return_value.run.assert_called_once_with(
+        restart=restart,
+        consumer_url="http://127.0.0.1:8081/realms/master/.well-known/openid-configuration",
+    )
+
+
+def test_explicit_legacy_run_failure_still_returns_one(tmp_path, monkeypatch, caplog):
+    """Keep the sanitized failure exit code and audit event when the requested legacy run fails."""
+    drill = Mock()
+    drill.return_value.run.side_effect = RuntimeError("PRIVATE-DETAIL")
+    monkeypatch.setattr(recovery, "RecoveryAcceptance", drill)
+    arguments = ["--backup-directory", str(tmp_path / "b"), "--legacy-canary-run"]
+    assert recovery.main(arguments) == 1
+    assert "postgres_recovery_acceptance_failed type=RuntimeError" in caplog.text
+    assert "PRIVATE-DETAIL" not in caplog.text

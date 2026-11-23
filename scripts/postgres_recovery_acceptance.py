@@ -343,8 +343,8 @@ class RecoveryAcceptance:
             self.save_manifest()
 
 
-def main() -> int:
-    """Run the reviewed operator drill and emit only safe audit events."""
+def main(argv=None) -> int:
+    """Refuse the superseded canary drill unless explicitly requested, then run it and emit only safe audit events."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backup-directory", required=True, type=Path)
@@ -353,7 +353,18 @@ def main() -> int:
         "--consumer-url",
         default="http://127.0.0.1:8081/realms/master/.well-known/openid-configuration",
     )
-    arguments = parser.parse_args()
+    parser.add_argument(
+        "--legacy-canary-run",
+        action="store_true",
+        help=(
+            "Run the superseded drill that inserts a canary into original tables. "
+            "ADR-123 forbids it by default; import RecoveryAcceptance as a library instead."
+        ),
+    )
+    arguments = parser.parse_args(argv)
+    if not arguments.legacy_canary_run:
+        logger.error("postgres_recovery_acceptance_refused reason=legacy_canary_run")
+        return 2
     try:
         RecoveryAcceptance(arguments.backup_directory).run(
             restart=arguments.execute_restart, consumer_url=arguments.consumer_url

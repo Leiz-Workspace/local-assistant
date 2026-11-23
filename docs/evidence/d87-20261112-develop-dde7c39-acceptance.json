@@ -1,0 +1,107 @@
+{
+ "description": "Public receipt of D87 full software regression on develop dde7c39 after the HAR-009-C summary v2 merge (PR #65) (2026-11-12 local). Private directory not published; names and hashes only.",
+ "date": "2026-11-12",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; PR #65 (HAR-009-C summary v2, held-out GAIN, /status label) changed source after the D87 PASS on develop d8ed1cb.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at dde7c39 (merge of PR #65)",
+  "git_commit": "dde7c3978d170cd62ad05b96134199353f5c0b54",
+  "git_tree": "9edff17624369e933b40afcfe1d738d4467bea11",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "dde7c39"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "source_files_different_in_freeze_paths": 64
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 883,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "19b3dd2c888ac374354b4ea232f4be46b81b297f764924ea0a9759afac86f890"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261112-full-4",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": "already unsealed (no restart since the earlier unseal)",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  },
+  "shared_services": "not restarted"
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 90,
+  "last_three_samples_busy_cores": [
+   0.29,
+   0.31,
+   0.33
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 61,
+  "mean_busy_cores": 1.37,
+  "median_busy_cores": 1.25,
+  "max_busy_cores": 2.3,
+  "note": "includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6739,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1817.7,
+  "wrapper_seconds": 1819.24,
+  "summary": "6739 passed, 1 warning in 1817.70s (0:30:17)",
+  "started_at_utc": "2026-11-12T03:49:00.767624+00:00",
+  "completed_at_utc": "2026-11-12T04:19:20.011332+00:00",
+  "log_sha256": "9906c3afa288d347d4296ec7b03314a5c0a0851f0a3931396b9d9db0e95d34cf",
+  "result_json_sha256": "6baea3e048ce04ecbda1b6058cf4db8a28966e0a12ac674bc63be06552af2878",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6578 passed on 883 files, develop d8ed1cb (tree 2eaf191), 2026-11-12; now history. PR #65 adds 161 test cases in tests/ (summary v2 contract, pinned hashes, /status label) and no source file"
+ },
+ "scope": "Software regression evidence for the source tree 9edff17 of develop dde7c39. Not model quality, device acceptance, D89 or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directory": "data/backups/d87-20261112-full-4/"
+}

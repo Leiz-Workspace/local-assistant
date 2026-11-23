@@ -1,0 +1,636 @@
+{
+ "schema_version": 1,
+ "description": "HAR-009-C summary v2 held-out measurement under the frozen protocol v2 (2026-11-12): one matrix run of 38 held-out cases x 4 arms plus two extra v2 summary draws. Counts, case ids and hashes only; no dialogue, prompt, answer or held-out value.",
+ "protocol": "docs/HAR009_C_SUMMARY_PROTOCOL_V2.md (frozen 2026-11-12, commit dc1a447)",
+ "source": {
+  "branch": "feat/har009-c-summary-v2",
+  "commit": "dc1a447",
+  "frozen_v2": {
+   "prompt_version": 2,
+   "packet_version": 2,
+   "prompt_sha256": "a5cace131e9f470ac7d550015991b15b4341b280bdb525d59b7cba39963602c2",
+   "schema_template_sha256": "2045be19c232bdb6bb9bcd185d6a4e487996eaeab88881c70949d1baab7e1dac",
+   "max_slots": 4,
+   "max_claims": 1,
+   "clipped_user": "last"
+  },
+  "frozen_inputs_sha256": "c37a6d711c039327e0b64b0e6dac850a4356c4ad8f8ffa2e4b28ec8ca4cebc18",
+  "heldout_sha256": "100f28484c86851089554257b36a7d713390dff85d0ef19e20727d69ed542497",
+  "heldout_file_sha256": "c223d18b172602fe302e88fb0f48b62e0ba5c1b5e305a15dbc350a633ac10fef"
+ },
+ "model": {
+  "profile": "core",
+  "weights_sha256": "073a9275e65d9c8cd2819cf5f77b99fbaa6e87ba591da6bbaa86ec073a64bfef",
+  "runtime_pin": "5c8854fd88319125125dc4b836c98b1b215b0f23",
+  "started_with": "scripts/start-core.py (unchanged), idle host",
+  "stopped_with": "SIGINT"
+ },
+ "corpus": {
+  "cases": 38,
+  "scored": 24,
+  "gates": 6,
+  "probes": 8,
+  "en": 19,
+  "vi": 19
+ },
+ "settings": {
+  "answers": {
+   "preset": "fast",
+   "max_tokens": 512,
+   "temperature": 0.7,
+   "stream": true,
+   "draws": 1,
+   "retries": 0
+  },
+  "summaries": {
+   "temperature": 0,
+   "max_tokens": 1536,
+   "deadline_seconds": 120,
+   "app_cache": null,
+   "extra_v2_draws": 2
+  }
+ },
+ "run": {
+  "status": "COMPLETE",
+  "retries": 0,
+  "native_calls": 304,
+  "matrix_rows": 152,
+  "extra_draw_rows": 76,
+  "seconds_first_to_last_native_call": 1478.6
+ },
+ "outcome": {
+  "label": "GAIN",
+  "reference": {
+   "strict": 23,
+   "present": 24,
+   "scored": 24,
+   "passed": true
+  },
+  "safety": {
+   "self_check_defects": 0,
+   "gate_violations": 0,
+   "allow_wording_admitted": 0,
+   "incomplete_cells": 0,
+   "unknown_statuses": [],
+   "passed": true
+  },
+  "gates": [],
+  "net": 23,
+  "net_by_language": {
+   "en": 11,
+   "vi": 12
+  },
+  "new_stale": [],
+  "v2_vs_v1_sign_test_p": 4.76837158203125e-07
+ },
+ "comparison": {
+  "by_arm": {
+   "full": {
+    "strict": 23,
+    "cells": 24,
+    "stale": 1,
+    "interval": [
+     0.7887983165430268,
+     0.9989456475545302
+    ],
+    "median_first_text_seconds": 6.010144
+   },
+   "budget": {
+    "strict": 0,
+    "cells": 24,
+    "stale": 0,
+    "interval": [
+     0.0,
+     0.1424735977225256
+    ],
+    "median_first_text_seconds": 4.452429
+   },
+   "budget_summary_v1": {
+    "strict": 2,
+    "cells": 24,
+    "stale": 0,
+    "interval": [
+     0.010256341281250157,
+     0.2699728015576036
+    ],
+    "median_first_text_seconds": 4.1801
+   },
+   "budget_summary_v2": {
+    "strict": 23,
+    "cells": 24,
+    "stale": 0,
+    "interval": [
+     0.7887983165430268,
+     0.9989456475545302
+    ],
+    "median_first_text_seconds": 0.352978
+   }
+  },
+  "v2_vs_budget": {
+   "gains": [
+    "h-condition-en-1",
+    "h-condition-en-2",
+    "h-condition-vi-1",
+    "h-condition-vi-2",
+    "h-correction-en-1",
+    "h-correction-en-2",
+    "h-correction-vi-1",
+    "h-correction-vi-2",
+    "h-identifier-en-1",
+    "h-identifier-en-2",
+    "h-identifier-vi-1",
+    "h-identifier-vi-2",
+    "h-negation-en-1",
+    "h-negation-en-2",
+    "h-negation-vi-1",
+    "h-negation-vi-2",
+    "h-number-en-1",
+    "h-number-vi-1",
+    "h-number-vi-2",
+    "h-swap-en-1",
+    "h-swap-en-2",
+    "h-swap-vi-1",
+    "h-swap-vi-2"
+   ],
+   "regressions": [],
+   "new_stale": [],
+   "net": 23,
+   "sign_test_p": 1.1920928955078125e-07
+  },
+  "v1_vs_budget": {
+   "gains": [
+    "h-identifier-vi-1",
+    "h-negation-en-1"
+   ],
+   "regressions": [],
+   "new_stale": [],
+   "net": 2,
+   "sign_test_p": 0.25
+  },
+  "v2_vs_v1": {
+   "gains": [
+    "h-condition-en-1",
+    "h-condition-en-2",
+    "h-condition-vi-1",
+    "h-condition-vi-2",
+    "h-correction-en-1",
+    "h-correction-en-2",
+    "h-correction-vi-1",
+    "h-correction-vi-2",
+    "h-identifier-en-1",
+    "h-identifier-en-2",
+    "h-identifier-vi-2",
+    "h-negation-en-2",
+    "h-negation-vi-1",
+    "h-negation-vi-2",
+    "h-number-en-1",
+    "h-number-vi-1",
+    "h-number-vi-2",
+    "h-swap-en-1",
+    "h-swap-en-2",
+    "h-swap-vi-1",
+    "h-swap-vi-2"
+   ],
+   "regressions": [],
+   "new_stale": [],
+   "net": 21,
+   "sign_test_p": 4.76837158203125e-07
+  }
+ },
+ "draws": {
+  "1": {
+   "cells": 38,
+   "scored_cells": 24,
+   "gold_admitted": 23,
+   "statuses": {
+    "applied": 36,
+    "none_verified": 2
+   },
+   "drop_reasons": {
+    "content_free": 1,
+    "claim_without_value": 1,
+    "quote_not_in_source": 1,
+    "authority_context": 4
+   },
+   "forbidden_admitted": 15,
+   "self_check_defects": 0,
+   "approval_overlap": 0,
+   "admitted_example_copies": 0,
+   "returned_example_copies": 0,
+   "invalid_or_unfinished": 0,
+   "stale_unflagged": 0,
+   "ack_items": 0,
+   "log_items": 0,
+   "claims_admitted": 8,
+   "reverify_mismatches": 0,
+   "request_mismatches": 0,
+   "key_order_declared": 38,
+   "key_order_observed": 38,
+   "empty_slots": {
+    "target": 2,
+    "target_listed": 40,
+    "distractor": 0,
+    "distractor_listed": 87
+   },
+   "funnel": {
+    "listed": 24,
+    "returned": 24,
+    "admitted": 23,
+    "gold": 23
+   },
+   "by_language": {
+    "en": {
+     "gold": 11,
+     "cells": 12
+    },
+    "vi": {
+     "gold": 12,
+     "cells": 12
+    }
+   },
+   "gates": {
+    "self_check_defects": true,
+    "invalid_or_unfinished": true,
+    "admitted_example_copies": true,
+    "reverify": true
+   },
+   "gates_passed": true
+  },
+  "2": {
+   "cells": 38,
+   "scored_cells": 24,
+   "gold_admitted": 23,
+   "statuses": {
+    "applied": 36,
+    "none_verified": 2
+   },
+   "drop_reasons": {
+    "content_free": 1,
+    "claim_without_value": 1,
+    "quote_not_in_source": 1,
+    "authority_context": 4
+   },
+   "forbidden_admitted": 15,
+   "self_check_defects": 0,
+   "approval_overlap": 0,
+   "admitted_example_copies": 0,
+   "returned_example_copies": 0,
+   "invalid_or_unfinished": 0,
+   "stale_unflagged": 0,
+   "ack_items": 0,
+   "log_items": 0,
+   "claims_admitted": 8,
+   "reverify_mismatches": 0,
+   "request_mismatches": 0,
+   "key_order_declared": 38,
+   "key_order_observed": 38,
+   "empty_slots": {
+    "target": 2,
+    "target_listed": 40,
+    "distractor": 0,
+    "distractor_listed": 87
+   },
+   "funnel": {
+    "listed": 24,
+    "returned": 24,
+    "admitted": 23,
+    "gold": 23
+   },
+   "by_language": {
+    "en": {
+     "gold": 11,
+     "cells": 12
+    },
+    "vi": {
+     "gold": 12,
+     "cells": 12
+    }
+   },
+   "gates": {
+    "self_check_defects": true,
+    "invalid_or_unfinished": true,
+    "admitted_example_copies": true,
+    "reverify": true
+   },
+   "gates_passed": true
+  },
+  "3": {
+   "cells": 38,
+   "scored_cells": 24,
+   "gold_admitted": 23,
+   "statuses": {
+    "applied": 36,
+    "none_verified": 2
+   },
+   "drop_reasons": {
+    "content_free": 1,
+    "claim_without_value": 1,
+    "quote_not_in_source": 1,
+    "authority_context": 4
+   },
+   "forbidden_admitted": 15,
+   "self_check_defects": 0,
+   "approval_overlap": 0,
+   "admitted_example_copies": 0,
+   "returned_example_copies": 0,
+   "invalid_or_unfinished": 0,
+   "stale_unflagged": 0,
+   "ack_items": 0,
+   "log_items": 0,
+   "claims_admitted": 8,
+   "reverify_mismatches": 0,
+   "request_mismatches": 0,
+   "key_order_declared": 38,
+   "key_order_observed": 38,
+   "empty_slots": {
+    "target": 2,
+    "target_listed": 40,
+    "distractor": 0,
+    "distractor_listed": 87
+   },
+   "funnel": {
+    "listed": 24,
+    "returned": 24,
+    "admitted": 23,
+    "gold": 23
+   },
+   "by_language": {
+    "en": {
+     "gold": 11,
+     "cells": 12
+    },
+    "vi": {
+     "gold": 12,
+     "cells": 12
+    }
+   },
+   "gates": {
+    "self_check_defects": true,
+    "invalid_or_unfinished": true,
+    "admitted_example_copies": true,
+    "reverify": true
+   },
+   "gates_passed": true
+  }
+ },
+ "independent_check": {
+  "result": "CONFIRMED: GAIN, safety clean",
+  "mismatches": {
+   "hashes": 0,
+   "rescored_answers": "0 of 152",
+   "presence": "0 of 152",
+   "source_sha256": "0 of 152 summaries",
+   "reverify": "0 of 114 v2 exchanges; v1 control 0 of 38 with its own parser",
+   "metrics": "0 of 152",
+   "compare_and_outcome": "identical to the runner"
+  },
+  "frozen_inputs_written_before_first_completion": true,
+  "design_check_at_freeze": "valid: maximal output 1,393 <= 1,472; R 1,394 <= 1,408",
+  "safety": {
+   "self_check_defects": 0,
+   "gate_violations": 0,
+   "recovered_instruction": 0,
+   "allow_wording_admitted": 0,
+   "incomplete_cells": 0,
+   "unknown_statuses": 0,
+   "logs": "INFO only, 0 debug lines, 0 dialogue/prompt/answer/capsule text found in the runner or CORE logs"
+  },
+  "method": "offline rescoring, reverify() and log scans by separate agents and a critic, reporting counts only; the orchestrating session saw no held-out message text, value or quote (exposures before the run are listed in the protocol's exposure log)"
+ },
+ "secondary": {
+  "strict_by_kind": {
+   "number": {
+    "full": "4/4",
+    "budget": "0/4",
+    "v1": "0/4",
+    "v2": "3/4"
+   },
+   "identifier": {
+    "full": "4/4",
+    "budget": "0/4",
+    "v1": "1/4",
+    "v2": "4/4"
+   },
+   "swap": {
+    "full": "4/4",
+    "budget": "0/4",
+    "v1": "0/4",
+    "v2": "4/4"
+   },
+   "correction": {
+    "full": "3/4",
+    "budget": "0/4",
+    "v1": "0/4",
+    "v2": "4/4"
+   },
+   "negation": {
+    "full": "4/4",
+    "budget": "0/4",
+    "v1": "1/4",
+    "v2": "4/4"
+   },
+   "condition": {
+    "full": "4/4",
+    "budget": "0/4",
+    "v1": "0/4",
+    "v2": "4/4"
+   }
+  },
+  "strict_by_shape": {
+   "basic": {
+    "full": "12/12",
+    "budget": "0/12",
+    "v1": "2/12",
+    "v2": "12/12"
+   },
+   "new": {
+    "full": "11/12",
+    "budget": "0/12",
+    "v1": "0/12",
+    "v2": "11/12"
+   }
+  },
+  "funnel_v2": {
+   "listed": 24,
+   "note_returned": 24,
+   "admitted": 23,
+   "gold_admitted": 23,
+   "older_note_marked_superseded": "4/4 corrections",
+   "strict": 23,
+   "strict_given_gold": "23/23"
+  },
+  "v1_control": {
+   "target_admitted_scored": "0/24",
+   "gold_scored": "0/24",
+   "admitted_items_all_cells": 149,
+   "admitted_items_scored_cells": 107,
+   "all_assistant_claims": true
+  },
+  "empty_slot_rate_v2": {
+   "scored_target": "0/28",
+   "scored_distractor": "0/68",
+   "gate_target": "2/6 (approval gates, nothing returned)",
+   "all_target": "2/40",
+   "all_distractor": "0/87"
+  },
+  "admitted_v2": {
+   "assistant_claims_admitted": 8,
+   "claims_at_target_pairs": 0,
+   "echo_ack_items": 0,
+   "log_items": 0,
+   "non_target_notes_all_cells": 87,
+   "non_target_notes_scored_cells": 68
+  },
+  "forbidden_admitted_v2": {
+   "cells": 15,
+   "scored_cells": 13,
+   "probe_cells": 2,
+   "distinct_hits": 19,
+   "context": {
+    "same_message_as_target": 9,
+    "older_correction_note_marked_superseded": 4,
+    "claim": 1,
+    "unmarked_older_target_in_valueless_correction_probe": 2,
+    "distractor_slot": 0,
+    "note": "one cell has hits in two classes"
+   },
+   "scored_cells_with_stale_answer": 0
+  },
+  "drops_v2": {
+   "returned_items": 135,
+   "admitted": 128,
+   "dropped": 7,
+   "reasons": {
+    "authority_context": 4,
+    "content_free": 1,
+    "claim_without_value": 1,
+    "quote_not_in_source": 1
+   },
+   "never_fired": [
+    "quote_context_dropped",
+    "value_not_quoted",
+    "text_not_grounded",
+    "negation_mismatch",
+    "condition_mismatch",
+    "speaker_mismatch",
+    "quote_too_short",
+    "pair_not_summarized",
+    "authority_lexicon",
+    "replaced_by_dropped_note"
+   ]
+  },
+  "drops_v1": {
+   "returned_items": 188,
+   "admitted": 149,
+   "reasons": {
+    "speaker_mismatch": 16,
+    "quote_not_in_source": 13,
+    "invalid_supersession": 5,
+    "quote_too_short": 4,
+    "authority_lexicon": 1
+   }
+  },
+  "k3": {
+   "raw_output_identical": "38/38",
+   "gold_per_draw": [
+    23,
+    23,
+    23
+   ],
+   "note": "temperature 0: determinism, not variance"
+  },
+  "dev_to_heldout_gold_gap_points": 4.17,
+  "clopper_pearson_95": {
+   "v2_strict": "23/24 [0.789, 0.999]",
+   "v2_strict_among_full_strict": "22/23 [0.781, 0.999]"
+  },
+  "probes_v2_strict": {
+   "allow_wording": "0/2 (dropped by authority_context as designed; 0 admitted)",
+   "valueless_correction": "0/2 (newer target unlisted; 2 stale)",
+   "cap_pressure": "0/2 (target over the cap)",
+   "leading_condition": "2/2"
+  },
+  "gates": {
+   "adopted": {
+    "full": "3/6",
+    "budget": "0/6",
+    "v1": "0/6",
+    "v2": "0/6"
+   },
+   "gate_outcomes": []
+  },
+  "misses": {
+   "v2": "h-number-en-2 (number, EN, new shape): the target note was returned but dropped as content_free, so the capsule lacked the evidence; the answer omitted the value; same in all 3 draws",
+   "full": "h-correction-vi-2 (correction, VI, new shape): stale answer although the evidence was in the window; v2 was strict"
+  },
+  "cost": {
+   "summary_input_tokens_median": {
+    "v2": 1412,
+    "v1": 979
+   },
+   "summary_output_tokens_median": {
+    "v2": 375,
+    "v1": 520
+   },
+   "capsule_tokens_median": {
+    "v2": 255.5,
+    "v1": 330
+   },
+   "pairs_lost_to_reserve": 0,
+   "answer_input_tokens_median": {
+    "full": 28797.5,
+    "budget": 20860.5,
+    "v1": 21240.5,
+    "v2": 21195.5
+   },
+   "rss_peak_kib": 10275752,
+   "gpu_peak_mib": 8018,
+   "caveat": "CORE prompt-cache reuse confounds timing: v2 answer prompts reused the shared prefix when v1 ran first (median first text 0.33 s after v1, 4.12 s when v2 ran first), and v2 summaries reused about 1,287 cached prompt tokens; neither first-text nor summary seconds is a like-for-like comparison",
+   "summary_seconds_median_matrix_n38": {
+    "v2": 5.34,
+    "v1": 7.5
+   }
+  },
+  "strict_by_language": {
+   "en": {
+    "full": "12/12",
+    "budget": "0/12",
+    "v1": "1/12",
+    "v2": "11/12"
+   },
+   "vi": {
+    "full": "11/12",
+    "budget": "0/12",
+    "v1": "1/12",
+    "v2": "12/12"
+   }
+  },
+  "summary_statuses": {
+   "v2": {
+    "summaries": 114,
+    "applied": 108,
+    "none_verified": 6,
+    "finish_reason": {
+     "stop": 114
+    },
+    "note": "the 6 none_verified are the two allow_wording probes in each draw"
+   },
+   "v1": {
+    "summaries": 38,
+    "applied": 33,
+    "none_verified": 5,
+    "finish_reason": {
+     "stop": 38
+    }
+   }
+  }
+ },
+ "label_scope": "Descriptive, pre-registered label on a synthetic retention corpus. Not general conversation quality. No default, model, flag-scope or context-size change; adoption stays with the owner.",
+ "private_records": "data/evaluations/context-summary-c2-20261112/",
+ "limits": [
+  "synthetic controlled retention with one evicted target per case; not general conversation quality",
+  "no held-out window listed a clipped user row, so CLIPPED_USER and the clipped-quote check were not exercised",
+  "runner-level only: no route-level cell and no blinded owner review",
+  "known gaps: targets past the 4-slot cap are lost; value-less corrections keep the older value; a note whose quote holds no value is dropped as content_free"
+ ]
+}

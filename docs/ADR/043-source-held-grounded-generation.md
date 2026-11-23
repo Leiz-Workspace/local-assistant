@@ -5,6 +5,8 @@
 **Date:** 2026-10-19
 **Status:** Implementation in progress after D27 local evaluation PASS; actual D28 acceptance pending tests.
 
+**Status note — 2026-11-11:** this line is historical. D28 later passed as local opt-in (roadmap row D28: full 1334 + 2 new native-field tests PASS, actual CORE/TCP). The original status is kept unchanged.
+
 ## Context and scope
 
 D27 retains the approved dense path and defers production reranker adoption. D28 requires grounded generation and citations resolving to actual file/page/chunk spans. Reuse approved Qwen embedding/dense/source authorization and existing CORE/fast inference; no model/routing/precision change, new model download, database/schema/collection migration or conversation behavior change.

@@ -1,0 +1,107 @@
+{
+ "description": "Public receipt of D87 full software regression on develop 695a52e after the HAR-009-C summary (ADR-192) change (2026-11-12 local). Private directory not published; names and hashes only.",
+ "date": "2026-11-12",
+ "timezone": "Asia/Ho_Chi_Minh",
+ "status": "PASS",
+ "owner_request": "Goal to finish outstanding work; PR #60 (HAR-009-C summary) changed source after the D87 PASS on develop a657709.",
+ "runbook": "docs/progress/D87_FULL_REGRESSION_20261106_RUNBOOK.md",
+ "source": {
+  "checkout": "develop at 695a52e (merge of PR #60)",
+  "git_commit": "695a52e65d2154490cae7a7d00fe45ee6770463d",
+  "git_tree": "e16fca4840bbd12cb0b8686ec2d98d637e44b0db",
+  "tree_identical_to": {
+   "branch": "origin/develop",
+   "git_commit": "695a52e"
+  },
+  "production_at_run_time": {
+   "git_commit": "dd7fac3",
+   "source_files_different_in_freeze_paths": 64
+  },
+  "local_worktree_difference": "only the editor connection line at the top of dev_log/dev_log.md, outside the source-freeze scope",
+  "source_files": 883,
+  "source_bytes_unchanged": true,
+  "source_freeze_sha256": "b808c4bf9556712d542e661be81f54d2e5085d55fddea0683b4977c8f739cb7b"
+ },
+ "command": "uv run --no-sync python -m scripts.full_regression data/backups/d87-20261111-full-5",
+ "pytest_scope": "pytest tests (no benchmarks/tests, no exclusions)",
+ "services": {
+  "Vault": "already unsealed (no restart since the earlier unseal)",
+  "CORE": {
+   "started_with": "docker compose --profile core up -d",
+   "container": "local-assistant-core-1",
+   "image": "local-assistant/llama-cuda:5c8854fd8",
+   "stopped_after_run_with": "docker compose --profile core stop"
+  },
+  "shared_services": "not restarted"
+ },
+ "idle_wait": {
+  "criterion": "busy logical CPUs below 0.5 for 3 consecutive 30 s samples",
+  "waited_seconds": 90,
+  "last_three_samples_busy_cores": [
+   0.27,
+   0.27,
+   0.25
+  ],
+  "processes_stopped_by_assistant": "none"
+ },
+ "load_during_run": {
+  "samples": 62,
+  "mean_busy_cores": 1.57,
+  "median_busy_cores": 1.4449999999999998,
+  "max_busy_cores": 2.48,
+  "note": "includes the regression suite itself"
+ },
+ "result": {
+  "accepted_full_software_regression": true,
+  "status": "complete",
+  "passed": 6556,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "pytest_seconds": 1853.25,
+  "wrapper_seconds": 1854.85,
+  "summary": "6556 passed, 1 warning in 1853.25s (0:30:53)",
+  "started_at_utc": "2026-11-11T16:36:24.414743+00:00",
+  "completed_at_utc": "2026-11-11T17:07:19.269172+00:00",
+  "log_sha256": "bb48ffe8abed5edbd5ea4e77c45eec7282d3b932a23cf83ceff5737ada969e80",
+  "result_json_sha256": "093e8e4fd5e50112353c10f21d8857c723ebaf11d26fe5c79405a60fb632c767",
+  "warning": "UserWarning: Duplicate name: 'piper/voice.py' from the TTS archive test that deliberately builds a duplicate name",
+  "reranker_cpu_test": "test_actual_pinned_reranker_paired_comparison PASSED"
+ },
+ "database_and_qdrant": {
+  "method": "read-only queries as the runtime role (schema assistant) and a read-only Qdrant collection listing, before and after the run",
+  "row_counts": {
+   "conversations": 0,
+   "messages": 0,
+   "inference_runs": 0,
+   "files": 0,
+   "memories": 0,
+   "memory_consents": 0,
+   "memory_settings": 0,
+   "ingestion_jobs": 0,
+   "ingestion_heads": 0,
+   "file_owner_usage": 1,
+   "file_global_usage": 1
+  },
+  "alembic_revision": "0006",
+  "qdrant_collections_before_and_after": 0,
+  "same_before_and_after": true
+ },
+ "comparison": {
+  "previous_pass": "6509 passed on 879 files, develop a657709 (tree a53f51d), 2026-11-11; now history"
+ },
+ "scope": "Software regression evidence for the source tree e16fca4 of develop 695a52e. Not model quality, device acceptance, D89 or a release decision.",
+ "release_state": {
+  "tag": false,
+  "GitHub_release": false,
+  "deployed_to_home_server": false
+ },
+ "still_open": {
+  "D81": "OPEN",
+  "D89": "OPEN",
+  "D90": "OPEN",
+  "promotion": "owner decision; CI blocked by billing"
+ },
+ "private_result_directory": "data/backups/d87-20261111-full-5/"
+}

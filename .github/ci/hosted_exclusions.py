@@ -60,6 +60,10 @@ class HostedScope:
         self.quarantine_files, self.quarantine_nodes = split(load_entries(QUARANTINE))
         self.used = set()
         self.counts = {"excluded": 0, "quarantined": 0, "outside quarantine": 0}
+        # Under pytest-xdist the controller collects nothing; each worker collects the whole suite
+        # and reports its scope back (pytest_testnodedown), so the summary stays exact.
+        self.worker = hasattr(config, "workerinput")
+        self.reports = []
 
     def pytest_ignore_collect(self, collection_path, config):
         """Skip importing excluded files, since some contact local services at import time."""
@@ -96,6 +100,30 @@ class HostedScope:
             config.hook.pytest_deselected(items=dropped)
             items[:] = kept
 
+    def pytest_sessionfinish(self, session):
+        """On an xdist worker, hand this worker's scope to the controller."""
+        if self.worker:
+            session.config.workeroutput["hosted_scope"] = {
+                "used": sorted(self.used),
+                "counts": dict(self.counts),
+            }
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_testnodedown(self, node, error):
+        """On the xdist controller, collect each worker's scope."""
+        report = getattr(node, "workeroutput", {}).get("hosted_scope")
+        if report:
+            self.reports.append(report)
+
+    def merge_worker_reports(self):
+        """Every worker collects the whole suite, so all report the same scope; keep the union of entries and the largest counts."""
+        if self.worker or not self.reports:
+            return
+        for report in self.reports:
+            self.used.update(report["used"])
+            for name, count in report["counts"].items():
+                self.counts[name] = max(self.counts.get(name, 0), count)
+
     def unmatched(self, args):
         """Entries inside the requested paths whose file exists but matched nothing (absent files are expected on older revisions)."""
         entries = (
@@ -116,6 +144,7 @@ class HostedScope:
 
     def pytest_terminal_summary(self, terminalreporter):
         """Report exactly what was left out instead of implying full coverage."""
+        self.merge_worker_reports()
         ignored = len(self.used & self.excluded_files)
         terminalreporter.write_line(
             f"hosted-runner scope ({self.mode}): {ignored} files ignored, "

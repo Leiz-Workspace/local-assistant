@@ -1,4 +1,8 @@
-# Prepare a GitHub-hosted ubuntu-24.04 runner to run the Python suite like the Home Server.
+# Prepare the runner to run the Python suite like the Home Server.
+# On a GitHub-hosted ubuntu-24.04 runner this installs native tools and aligns the layout with sudo.
+# On the self-hosted Home Server runner (self-software-distribution-platform repository github-runner/, ADR-194/196) the host already has that
+# layout, the runner user has no sudo, and a preflight only verifies the prerequisites and the
+# sandbox the runner unit must allow. The calling job installs node with actions/setup-node first.
 name: Hosted Python environment
 description: Native tools, layout alignment, locked dependencies and pinned Ruff for the Local Assistant test suite.
 runs:
@@ -6,6 +10,7 @@ runs:
   steps:
     - name: Free runner disk
       # Check-runtime tests copy the Python stdlib into per-test capsules.
+      if: runner.environment == 'github-hosted'
       shell: bash
       run: |
         sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
@@ -13,13 +18,15 @@ runs:
 
     - name: Restore cached apt packages
       id: apt-cache
-      uses: actions/cache/restore@v4
+      if: runner.environment == 'github-hosted'
+      uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25  # v5.1.0
       with:
         path: ~/apt-debs
         key: apt-ubuntu-24.04-${{ hashFiles('.github/actions/hosted-python/action.yml') }}
         restore-keys: apt-ubuntu-24.04-
 
     - name: Install native tools
+      if: runner.environment == 'github-hosted'
       shell: bash
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -56,13 +63,14 @@ runs:
         du -sh "$HOME/apt-debs"
 
     - name: Save apt packages for later runs
-      if: steps.apt-cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
+      if: runner.environment == 'github-hosted' && steps.apt-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25  # v5.1.0
       with:
         path: ~/apt-debs
         key: apt-ubuntu-24.04-${{ hashFiles('.github/actions/hosted-python/action.yml') }}
 
     - name: Align the runner layout with the Home Server
+      if: runner.environment == 'github-hosted'
       shell: bash
       run: |
         # Workers use unprivileged user namespaces through bwrap.
@@ -79,10 +87,122 @@ runs:
             sudo ln -sfn "$(readlink -f "$lib")" "$lib"
           fi
         done
+
+    - name: Verify the self-hosted Home Server layout (no sudo)
+      if: runner.environment == 'self-hosted'
+      shell: bash
+      run: |
+        # The self-hosted runner reuses the host's own packages and layout; node comes from
+        # actions/setup-node in the calling job. Fail early, with a clear message, if a
+        # prerequisite is missing or the runner unit's sandbox (ADR-194) is wrong.
+        missing=0
+        for tool in bwrap ffmpeg ffprobe tesseract pdftotext soffice git node; do
+          if ! command -v "$tool" >/dev/null; then echo "::error::missing tool on the runner: $tool"; missing=1; fi
+        done
+        [ -x /usr/bin/python3.12 ] || { echo "::error::missing /usr/bin/python3.12"; missing=1; }
+        if [ -e /usr/lib/python3.12/config-3.12-x86_64-linux-gnu ]; then
+          echo "::error::/usr/lib/python3.12/config-3.12-x86_64-linux-gnu exists; check-runtime capsules expect the Home Server layout without it"
+          missing=1
+        fi
+        # The project sandbox shape: user, pid, net and mount namespaces with a fresh /proc. A unit
+        # directive that mounts over a path under /proc makes this fail with "Can't mount proc".
+        if ! err="$(bwrap --unshare-all --die-with-parent --ro-bind / / --proc /proc --dev /dev --tmpfs /tmp true 2>&1)"; then
+          echo "::error::bwrap cannot build the project sandbox for the runner user: ${err}"
+          missing=1
+        fi
+        # The workspace layer needs openat2(). A seccomp filter such as RestrictSUIDSGID=yes makes it
+        # fail with ENOSYS. The probe uses the system interpreter because it runs before uv sync.
+        if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c '
+        import ctypes, os, sys
+        class OpenHow(ctypes.Structure):
+            _fields_ = [("flags", ctypes.c_uint64), ("mode", ctypes.c_uint64), ("resolve", ctypes.c_uint64)]
+        libc = ctypes.CDLL(None, use_errno=True)
+        libc.syscall.restype = ctypes.c_long
+        root = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        # RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | RESOLVE_BENEATH, the workspace root flags.
+        how = OpenHow(os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC, 0, 0x02 | 0x04 | 0x08)
+        fd = libc.syscall(ctypes.c_long(437), ctypes.c_int(root), ctypes.c_char_p(b"usr"),
+                          ctypes.byref(how), ctypes.c_size_t(ctypes.sizeof(how)))
+        if fd < 0:
+            sys.exit("openat2: " + os.strerror(ctypes.get_errno()))
+        ' 2>&1)"; then
+          echo "::error::openat2() is unavailable to the runner; the workspace layer requires it: ${err}"
+          missing=1
+        fi
+        # multiprocessing locks are POSIX semaphores in /dev/shm, which the runner unit replaces with
+        # a private tmpfs (TemporaryFileSystem=/dev/shm, ADR-194).
+        if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c 'import multiprocessing; multiprocessing.Lock()' 2>&1)"; then
+          echo "::error::multiprocessing locks do not work for the runner; check /dev/shm in the runner unit: ${err}"
+          missing=1
+        fi
+        # The unit's DevicePolicy=closed keeps the GPU away from CI jobs. access(2), used by -r and
+        # -w, goes through the device cgroup, so this holds even for the 0666 /dev/nvidia* nodes.
+        for dev in /dev/nvidia* /dev/nvidia-caps/* /dev/dri/* /dev/kfd; do
+          if [ -c "$dev" ] && { [ -r "$dev" ] || [ -w "$dev" ]; }; then
+            echo "::error::$dev is accessible to CI jobs; the runner unit must set DevicePolicy=closed"
+            missing=1
+          fi
+        done
+        # tailscaled's LocalAPI socket lets job code reach tailnet peers through root tailscaled,
+        # outside the unit's IPAddressDeny. The unit hides /run/tailscale, and a tailscaled restart
+        # the runner did not follow drops that mask (ADR-194). This only reports a lost mask; it
+        # controls nothing, because code on a branch can change this step.
+        if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c '
+        import socket, sys
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            s.connect("/run/tailscale/tailscaled.sock")
+        except OSError:
+            sys.exit(0)
+        sys.exit("connect succeeded")
+        ' 2>&1)"; then
+          echo "::error::/run/tailscale/tailscaled.sock is reachable from CI jobs (${err}); the runner unit must hide /run/tailscale"
+          missing=1
+        fi
+        # The unit's IPAddressDeny drops this unit's packets to the LAN, tailnet, Docker and k3s
+        # ranges. Connect to the host's own addresses in those ranges: inside the unit the connect
+        # fails with EPERM (or times out); outside it the closed port refuses or something answers.
+        # Like the checks above, this only reports a lost setting and controls nothing.
+        if [ -x /usr/bin/python3.12 ] && ! err="$(/usr/bin/python3.12 -I -c '
+        import concurrent.futures, errno, ipaddress, socket, sys
+        denied = [ipaddress.ip_network(n) for n in ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "100.64.0.0/10", "fc00::/7")]
+        targets = [a for a in sys.argv[1:] if any(ipaddress.ip_address(a) in n for n in denied if n.version == ipaddress.ip_address(a).version)]
+        def probe(address):
+            s = socket.socket(socket.AF_INET6 if ":" in address else socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(2)
+            try:
+                s.connect((address, 9))
+                return f"{address} connected"
+            except (PermissionError, TimeoutError):
+                return None
+            except OSError as error:
+                if error.errno in (errno.EPERM, errno.EACCES):
+                    return None
+                return f"{address} {errno.errorcode.get(error.errno, error.errno)}"
+            finally:
+                s.close()
+        # All addresses at once: each blocked connect waits out its 2 s timeout.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, len(targets))) as pool:
+            reachable = [r for r in pool.map(probe, targets) if r]
+        if reachable:
+            sys.exit("; ".join(reachable))
+        print(f"IPAddressDeny: {len(targets)} host addresses in denied ranges blocked")
+        ' $(hostname -I 2>/dev/null) 2>&1)"; then
+          echo "::error::denied address ranges are reachable from CI jobs (${err}); the runner unit must set IPAddressDeny"
+          missing=1
+        else
+          echo "$err"
+        fi
+        [ "$missing" = 0 ]
+        echo "Runner $(id -un) on $(uname -r): Home Server layout and sandbox verified."
+
+    - name: Set the git identity used by the tests
+      shell: bash
+      run: |
         git config --global user.name "CI"
         git config --global user.email "ci@localhost"
 
-    - uses: astral-sh/setup-uv@v6
+    - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78  # v7.6.0
       with:
         version: "0.9.13"
 
@@ -92,8 +212,8 @@ runs:
       # set per step because setup-uv exports its own UV_CACHE_DIR.
       shell: bash
       env:
-        UV_CACHE_DIR: /home/runner/.cache/uv
         UV_PYTHON_PREFERENCE: only-system
       run: |
+        export UV_CACHE_DIR="$HOME/.cache/uv"
         uv sync --locked --dev --python /usr/bin/python3.12
         uv tool run "ruff@0.17.1" --version
