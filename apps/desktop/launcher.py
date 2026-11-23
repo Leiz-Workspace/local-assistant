@@ -225,3 +225,6 @@ def main(argv=None):
             str(args.auth_file),
         ]
     )
+
+if __name__ == "__main__":
+    raise SystemExit(main())
