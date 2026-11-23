@@ -24,6 +24,10 @@ if [[ ! -x "$root/.venv/bin/python" ]]; then
   exit 2
 fi
 cp -a "$root/apps" "$root/src" "$root/.venv" "$base/usr/lib/aevra/"
+# uv creates a private venv; normalize it for the unprivileged desktop user.
+find "$base/usr/lib/aevra/.venv" -type d -exec chmod 0755 {} +
+find "$base/usr/lib/aevra/.venv" -type f -exec chmod 0644 {} +
+find "$base/usr/lib/aevra/.venv/bin" -type f -exec chmod 0755 {} +
 mkdir -p "$base/usr/lib/aevra/data"
 cp -a "$root/data/ui" "$base/usr/lib/aevra/data/"
 mkdir -p "$base/usr/lib/aevra/apps/branding/assets"
@@ -41,6 +45,7 @@ Type=Application
 Name=Aevra
 Comment=Local Assistant desktop
 Exec=aevra-desktop
+Icon=/usr/lib/aevra/apps/branding/assets/icon.png
 Terminal=false
 Categories=Utility;
 DESKTOP
