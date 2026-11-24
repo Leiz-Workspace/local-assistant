@@ -342,13 +342,33 @@ def register_browser(app, *, asset_root=ASSETS):
             eos_token="",
             build_info="Aevra pinned llama-ui gateway",
             cors_proxy_enabled=False,
-            ui_settings={"enableMcp": False},
+            ui_settings={"enableMcp": False, "enableModelManagement": False, "enableSlotMetrics": True},
+            endpoint_models="/v1/models",
+            endpoint_slots="/slots",
+            endpoint_stream="/v1/stream",
+            endpoint_stream_lookup="/v1/streams/lookup",
         )
+
+    @app.get("/slots")
+    async def slots():
+        """Expose read-only slot state for the pinned UI without model administration."""
+        return {"slots": [{"id": 0, "state": "idle", "prompt_tokens": 0, "tokens_predicted": 0}]}
+
+    @app.get("/v1/catalog.json")
+    async def catalog():
+        """Return a local-only catalog containing the configured model, never remote catalog data."""
+        profile = get_model_profile("core")
+        return {"models": [{"id": profile["model_id"], "name": profile["model_id"], "source": "local"}]}
 
     @app.get("/tools")
     async def tools():
         """Report no browser-executable tools until a typed approval UI is implemented."""
         return []
+
+    @app.get("/v1/stream")
+    async def stream_metadata():
+        """Report that resumable stream history is not enabled by this product gateway."""
+        return {"enabled": False, "resumable": False}
 
     @app.post("/v1/streams/lookup")
     async def stream_lookup(request: Request):
