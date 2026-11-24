@@ -1,6 +1,15 @@
 /** Exchange one ephemeral pairing fragment for an HttpOnly same-origin session. */
 async function pairSession() {
-    const code = window.location.hash.slice(1);
+    const fragment = window.location.hash.slice(1);
+    const rawSearch = window.location.search || "";
+    const queryMatch = rawSearch.match(/[?&]code=([^&]+)/);
+    const query = queryMatch ? decodeURIComponent(queryMatch[1]) : "";
+    const code = fragment || query;
+    if (!code) {
+        document.getElementById("status").textContent = "Thiếu mã pairing. Hãy chạy lại aevra ui open hoặc aevra desktop.";
+        return;
+    }
+    // Remove the secret from browser history before the request; the local `code` variable remains available.
     window.history.replaceState(null, "", "/pair/");
     try {
         const response = await fetch("/ui/pairings", {
