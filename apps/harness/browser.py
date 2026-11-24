@@ -343,12 +343,10 @@ def register_browser(app, *, asset_root=ASSETS):
             build_info="Aevra pinned llama-ui gateway",
             cors_proxy_enabled=False,
             ui_settings={"enableMcp": False, "enableModelManagement": False, "enableSlotMetrics": True},
-            endpoint_props="/props",
             endpoint_models="/v1/models",
             endpoint_slots="/slots",
             endpoint_stream="/v1/stream",
             endpoint_stream_lookup="/v1/streams/lookup",
-            endpoint_control="/v1/chat/completions/control",
         )
 
     @app.get("/slots")
@@ -366,11 +364,6 @@ def register_browser(app, *, asset_root=ASSETS):
     async def tools():
         """Report no browser-executable tools until a typed approval UI is implemented."""
         return []
-
-    @app.post("/v1/chat/completions/control")
-    async def completion_control(request: Request):
-        """Reject UI control/model-management commands; chat remains available through the gateway."""
-        raise HTTPException(403, detail={"code": "unsupported_capability"})
 
     @app.get("/v1/stream")
     async def stream_metadata():
