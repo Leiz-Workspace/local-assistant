@@ -213,6 +213,9 @@ def register_browser(app, *, asset_root=ASSETS):
             public = {
                 "/pair/",
                 "/harness-pair.js",
+                "/aevra-app/",
+                "/aevra/app.js",
+                "/aevra/app.css",
                 "/harness-bridge.js",
                 "/ui/pairings",
             }
@@ -244,6 +247,21 @@ def register_browser(app, *, asset_root=ASSETS):
             getattr(request.state, "ui_owner", None),
         )
         return response
+
+    @app.get("/aevra-app/")
+    async def aevra_app():
+        """Serve the owned Aevra product UI after the same authenticated pairing flow."""
+        if not hasattr(Request, "__name__"):
+            raise HTTPException(404, detail={"code": "not_found"})
+        return FileResponse(STATIC / "aevra/index.html", media_type="text/html")
+
+    @app.get("/aevra/app.js")
+    async def aevra_app_js():
+        return FileResponse(STATIC / "aevra/app.js", media_type="text/javascript")
+
+    @app.get("/aevra/app.css")
+    async def aevra_app_css():
+        return FileResponse(STATIC / "aevra/app.css", media_type="text/css")
 
     @app.get("/pair/")
     async def pair_page():
