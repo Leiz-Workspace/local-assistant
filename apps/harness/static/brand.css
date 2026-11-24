@@ -16,3 +16,7 @@
 .aevra-card { padding:10px; border-radius:9px; background:color-mix(in srgb, CanvasText 7%, transparent); }
 .aevra-error { color:#b3261e; }
 #aevra-brand { pointer-events:none; }
+#aevra-sidebar-brand { display:flex; align-items:center; gap:9px; min-height:44px; padding:8px 12px; margin:4px 6px 12px; color:inherit; font:700 16px/1.2 system-ui,sans-serif; overflow:hidden; }
+#aevra-sidebar-brand img { width:30px; height:30px; object-fit:contain; flex:0 0 30px; }
+#aevra-sidebar-brand span { white-space:nowrap; opacity:1; }
+@media (max-width: 640px) { #aevra-sidebar-brand { margin-bottom:6px; } }

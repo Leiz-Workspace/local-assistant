@@ -90,12 +90,25 @@ function installProductShell() {
     document.body.append(toggle, panel);
 }
 
+function installSidebarBrand() {
+    if (document.getElementById("aevra-sidebar-brand")) return;
+    let nav;
+    try { nav = document.querySelector("nav") || document.querySelector("aside"); } catch { return; }
+    if (!nav || typeof nav.prepend !== "function") return;
+    const brand = el("div", {id: "aevra-sidebar-brand", "aria-label": "Aevra"});
+    const logo = el("img", {src: "/aevra/brand/logo.svg", alt: ""});
+    const name = el("span", {}, "Aevra");
+    brand.append(logo, name);
+    nav.prepend(brand);
+}
+
 function applyAevraBrand() {
     const current = document.title;
     const replaced = current.replace(/llama(?:\.cpp|-ui)/gi, "Aevra");
     const next = !replaced ? "Aevra" : /Aevra/.test(replaced) ? replaced : replaced + " · Aevra";
     if (next !== current) document.title = next;
     installProductShell();
+    installSidebarBrand();
 }
 
 function startAevraBrand() {
