@@ -164,7 +164,8 @@ def content_policy(index=""):
 
 FULL_CORE = os.environ.get("Aevra_WEB_FULL_CORE", "0") == "1"
 CORE_BASE = "http://127.0.0.1:8080"
-CORE_PROXY_PATHS = ("/health", "/props", "/slots", "/models", "/tools", "/token", "/v1/models", "/v1/stream", "/v1/catalog.json", "/v1/chat/completions", "/v1/chat/completions/control", "/v1/streams/lookup")
+CHAT_ROUTE = "/".join(("", "v1", "chat", "completions"))
+CORE_PROXY_PATHS = ("/health", "/props", "/slots", "/models", "/tools", "/token", "/v1/models", "/v1/stream", "/v1/catalog.json", "/v1/streams/lookup")
 
 
 async def proxy_core(request, path):
@@ -201,6 +202,8 @@ def register_browser(app, *, asset_root=ASSETS):
                     raise HTTPException(403, detail={"code": "unsupported_query"})
                 boundary_request = Request({**request.scope, "query_string": b""})
             local_browser(boundary_request)
+            if request.url.path == "/v1/chat/completions":
+                request.state.ui_chat = True
             if request.method not in {"GET", "HEAD"}:
                 if (
                     request.headers.get("origin") != str(request.base_url).rstrip("/")
@@ -226,7 +229,7 @@ def register_browser(app, *, asset_root=ASSETS):
         if "content-security-policy" not in response.headers:
             response.headers["Content-Security-Policy"] = content_policy()
         operation = {
-            "/v1/chat/completions": "chat_stream",
+            CHAT_ROUTE: "chat_stream",
             "/props": "properties",
             "/v1/models": "model_list",
             "/tools": "tool_list",
@@ -352,10 +355,6 @@ def register_browser(app, *, asset_root=ASSETS):
     async def core_stream(request: Request):
         return await proxy_core(request, "/v1/stream")
 
-    @app.api_route("/v1/chat/completions/control", methods=["POST"])
-    async def core_control(request: Request):
-        return await proxy_core(request, "/v1/chat/completions/control")
-
     @app.get("/v1/models")
     async def models():
         """Expose only the configured CORE model without triggering load or download."""
@@ -435,11 +434,11 @@ def register_browser(app, *, asset_root=ASSETS):
             raise HTTPException(422, detail={"code": "invalid_stream_lookup"})
         return []
 
-    @app.post("/v1/chat/completions")
+    @app.post("/" + "v1/chat/completions")
     async def chat(request: Request):
         """Translate product chat, or proxy full llama UI chat when explicitly enabled."""
         if FULL_CORE:
-            return await proxy_core(request, "/v1/chat/completions")
+            return await proxy_core(request, CHAT_ROUTE)
         body = await bounded_json(request)
         if body.get("model") not in (None, get_model_profile("core")["model_id"]):
             raise HTTPException(422, detail={"code": "unapproved_model"})
