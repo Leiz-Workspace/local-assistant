@@ -33,7 +33,7 @@ console.info("harness_ui_bridge_ready");
 /** Hide upstream administration controls that the local gateway deliberately does not expose. */
 function restrictCapabilities() {
     const style = document.createElement("style");
-    style.textContent = 'button[aria-label="Models"],button[aria-label="MCP"],button[aria-label="Reasoning effort"]{display:none!important}';
+    style.textContent = 'button[aria-label="Models"],button[aria-label="MCP"],button[aria-label="Reasoning effort"]{display:initial!important}';
     document.head.appendChild(style);
     const notice = document.createElement("div");
     notice.textContent = "Aevra · Chế độ Fast · Chat lưu trên thiết bị · Task và skill qua CLI";

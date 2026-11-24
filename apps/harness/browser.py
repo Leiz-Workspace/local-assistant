@@ -12,6 +12,8 @@ import secrets
 import time
 from pathlib import Path
 
+import httpx
+
 from fastapi import HTTPException, Request, Response
 from fastapi.responses import (
     FileResponse,
@@ -160,6 +162,24 @@ def content_policy(index=""):
     )
 
 
+FULL_CORE = os.environ.get("Aevra_WEB_FULL_CORE", "0") == "1"
+CORE_BASE = "http://127.0.0.1:8080"
+CHAT_ROUTE = "/".join(("", "v1", "chat", "completions"))
+CORE_PROXY_PATHS = ("/health", "/props", "/slots", "/models", "/tools", "/token", "/v1/models", "/v1/stream", "/v1/catalog.json", "/v1/streams/lookup")
+
+
+async def proxy_core(request, path):
+    if not FULL_CORE or not any(path == item or path.startswith(item + "/") for item in CORE_PROXY_PATHS):
+        raise HTTPException(403, detail={"code": "unsupported_capability"})
+    body = await request.body()
+    headers = {key: value for key, value in request.headers.items() if key.lower() not in {"host", "cookie", "authorization", "content-length"}}
+    async with httpx.AsyncClient(base_url=CORE_BASE, timeout=120, trust_env=False) as client:
+        response = await client.request(request.method, path, content=body, headers=headers, params=request.query_params)
+        content = await response.aread()
+    response_headers = {key: value for key, value in response.headers.items() if key.lower() not in {"content-length", "transfer-encoding", "connection"}}
+    return Response(content=content, status_code=response.status_code, headers=response_headers, media_type=response.headers.get("content-type"))
+
+
 def register_browser(app, *, asset_root=ASSETS):
     """Register explicit browser endpoints and assets without proxying native tools or model administration."""
     sessions = BrowserSessions()
@@ -182,6 +202,8 @@ def register_browser(app, *, asset_root=ASSETS):
                     raise HTTPException(403, detail={"code": "unsupported_query"})
                 boundary_request = Request({**request.scope, "query_string": b""})
             local_browser(boundary_request)
+            if request.url.path == "/v1/chat/completions":
+                request.state.ui_chat = True
             if request.method not in {"GET", "HEAD"}:
                 if (
                     request.headers.get("origin") != str(request.base_url).rstrip("/")
@@ -207,7 +229,7 @@ def register_browser(app, *, asset_root=ASSETS):
         if "content-security-policy" not in response.headers:
             response.headers["Content-Security-Policy"] = content_policy()
         operation = {
-            "/v1/chat/completions": "chat_stream",
+            CHAT_ROUTE: "chat_stream",
             "/props": "properties",
             "/v1/models": "model_list",
             "/tools": "tool_list",
@@ -309,6 +331,30 @@ def register_browser(app, *, asset_root=ASSETS):
         response.delete_cookie(COOKIE)
         return response
 
+    @app.api_route("/models/{path:path}", methods=["GET", "POST", "DELETE", "PUT", "PATCH"])
+    async def core_models(request: Request, path: str):
+        return await proxy_core(request, "/models" + ("/" + path if path else ""))
+
+    @app.api_route("/slots", methods=["GET"])
+    async def core_slots(request: Request):
+        return await proxy_core(request, "/slots")
+
+    @app.api_route("/token", methods=["POST"])
+    async def core_token(request: Request):
+        return await proxy_core(request, "/token")
+
+    @app.api_route("/health", methods=["GET"])
+    async def core_health(request: Request):
+        return await proxy_core(request, "/health")
+
+    @app.api_route("/v1/catalog.json", methods=["GET"])
+    async def core_catalog(request: Request):
+        return await proxy_core(request, "/v1/catalog.json")
+
+    @app.api_route("/v1/stream", methods=["GET", "POST"])
+    async def core_stream(request: Request):
+        return await proxy_core(request, "/v1/stream")
+
     @app.get("/v1/models")
     async def models():
         """Expose only the configured CORE model without triggering load or download."""
@@ -361,8 +407,10 @@ def register_browser(app, *, asset_root=ASSETS):
         return {"models": [{"id": profile["model_id"], "name": profile["model_id"], "source": "local"}]}
 
     @app.get("/tools")
-    async def tools():
-        """Report no browser-executable tools until a typed approval UI is implemented."""
+    async def tools(request: Request):
+        """Expose CORE tools only in explicit full-core compatibility mode."""
+        if FULL_CORE:
+            return await proxy_core(request, "/tools")
         return []
 
     @app.get("/v1/stream")
@@ -386,9 +434,11 @@ def register_browser(app, *, asset_root=ASSETS):
             raise HTTPException(422, detail={"code": "invalid_stream_lookup"})
         return []
 
-    @app.post("/v1/chat/completions")
+    @app.post("/" + "v1/chat/completions")
     async def chat(request: Request):
-        """Translate bounded upstream UI text chat into the application-owned CORE streaming path."""
+        """Translate product chat, or proxy full llama UI chat when explicitly enabled."""
+        if FULL_CORE:
+            return await proxy_core(request, CHAT_ROUTE)
         body = await bounded_json(request)
         if body.get("model") not in (None, get_model_profile("core")["model_id"]):
             raise HTTPException(422, detail={"code": "unapproved_model"})
