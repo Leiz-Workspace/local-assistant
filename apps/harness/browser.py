@@ -12,6 +12,8 @@ import secrets
 import time
 from pathlib import Path
 
+import httpx
+
 from fastapi import HTTPException, Request, Response
 from fastapi.responses import (
     FileResponse,
@@ -158,6 +160,23 @@ def content_policy(index=""):
         + " ".join(hashes)
         + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
     )
+
+
+FULL_CORE = os.environ.get("Aevra_WEB_FULL_CORE", "0") == "1"
+CORE_BASE = "http://127.0.0.1:8080"
+CORE_PROXY_PATHS = ("/health", "/props", "/slots", "/models", "/tools", "/token", "/v1/models", "/v1/stream", "/v1/catalog.json", "/v1/chat/completions", "/v1/chat/completions/control", "/v1/streams/lookup")
+
+
+async def proxy_core(request, path):
+    if not FULL_CORE or not any(path == item or path.startswith(item + "/") for item in CORE_PROXY_PATHS):
+        raise HTTPException(403, detail={"code": "unsupported_capability"})
+    body = await request.body()
+    headers = {key: value for key, value in request.headers.items() if key.lower() not in {"host", "cookie", "authorization", "content-length"}}
+    async with httpx.AsyncClient(base_url=CORE_BASE, timeout=120, trust_env=False) as client:
+        response = await client.request(request.method, path, content=body, headers=headers, params=request.query_params)
+        content = await response.aread()
+    response_headers = {key: value for key, value in response.headers.items() if key.lower() not in {"content-length", "transfer-encoding", "connection"}}
+    return Response(content=content, status_code=response.status_code, headers=response_headers, media_type=response.headers.get("content-type"))
 
 
 def register_browser(app, *, asset_root=ASSETS):
@@ -309,6 +328,34 @@ def register_browser(app, *, asset_root=ASSETS):
         response.delete_cookie(COOKIE)
         return response
 
+    @app.api_route("/models/{path:path}", methods=["GET", "POST", "DELETE", "PUT", "PATCH"])
+    async def core_models(request: Request, path: str):
+        return await proxy_core(request, "/models" + ("/" + path if path else ""))
+
+    @app.api_route("/slots", methods=["GET"])
+    async def core_slots(request: Request):
+        return await proxy_core(request, "/slots")
+
+    @app.api_route("/token", methods=["POST"])
+    async def core_token(request: Request):
+        return await proxy_core(request, "/token")
+
+    @app.api_route("/health", methods=["GET"])
+    async def core_health(request: Request):
+        return await proxy_core(request, "/health")
+
+    @app.api_route("/v1/catalog.json", methods=["GET"])
+    async def core_catalog(request: Request):
+        return await proxy_core(request, "/v1/catalog.json")
+
+    @app.api_route("/v1/stream", methods=["GET", "POST"])
+    async def core_stream(request: Request):
+        return await proxy_core(request, "/v1/stream")
+
+    @app.api_route("/v1/chat/completions/control", methods=["POST"])
+    async def core_control(request: Request):
+        return await proxy_core(request, "/v1/chat/completions/control")
+
     @app.get("/v1/models")
     async def models():
         """Expose only the configured CORE model without triggering load or download."""
@@ -361,8 +408,10 @@ def register_browser(app, *, asset_root=ASSETS):
         return {"models": [{"id": profile["model_id"], "name": profile["model_id"], "source": "local"}]}
 
     @app.get("/tools")
-    async def tools():
-        """Report no browser-executable tools until a typed approval UI is implemented."""
+    async def tools(request: Request):
+        """Expose CORE tools only in explicit full-core compatibility mode."""
+        if FULL_CORE:
+            return await proxy_core(request, "/tools")
         return []
 
     @app.get("/v1/stream")
@@ -388,7 +437,9 @@ def register_browser(app, *, asset_root=ASSETS):
 
     @app.post("/v1/chat/completions")
     async def chat(request: Request):
-        """Translate bounded upstream UI text chat into the application-owned CORE streaming path."""
+        """Translate product chat, or proxy full llama UI chat when explicitly enabled."""
+        if FULL_CORE:
+            return await proxy_core(request, "/v1/chat/completions")
         body = await bounded_json(request)
         if body.get("model") not in (None, get_model_profile("core")["model_id"]):
             raise HTTPException(422, detail={"code": "unapproved_model"})
