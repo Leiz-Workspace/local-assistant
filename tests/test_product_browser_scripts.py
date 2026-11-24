@@ -77,7 +77,7 @@ def test_pairing_scrubs_fragment_before_exchange():
       }
     };
     vm.runInNewContext(fs.readFileSync('apps/harness/static/pair.js', 'utf8'), context);
-    setImmediate(() => { assert.equal(observed[1], '/'); });
+    setImmediate(() => { assert.equal(observed[1], '/aevra-app/'); });
     """
     result = subprocess.run(
         [node, "-e", script], capture_output=True, timeout=5, check=False

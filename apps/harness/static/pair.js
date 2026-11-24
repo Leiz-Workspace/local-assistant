@@ -19,7 +19,7 @@ async function pairSession() {
         });
         if (!response.ok) throw new Error("pairing_failed");
         console.info("harness_session_paired");
-        window.location.replace("/");
+        window.location.replace("/aevra-app/");
     } catch {
         console.warn("harness_session_pairing_failed");
         document.getElementById("status").textContent = "Phiên kết nối không hợp lệ hoặc đã hết hạn. Hãy chạy lại aevra ui open hoặc aevra desktop.";
