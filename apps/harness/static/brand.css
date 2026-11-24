@@ -1,34 +1,18 @@
-/* Present the shared Aevra identity while retaining the upstream chat layout and contrast on either theme. */
-#aevra-brand {
-    position: fixed;
-    right: 14px;
-    bottom: 25px;
-    z-index: 30;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 12px 5px 7px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: CanvasText;
-    font: 600 17px/1.2 system-ui, sans-serif;
-    pointer-events: none;
-}
-#aevra-brand img { display: block; width: 32px; height: 32px; }
-@media (max-width: 640px) {
-    #aevra-brand { bottom: 22px; right: 8px; font-size: 14px; padding: 3px 8px 3px 4px; }
-    #aevra-brand img { width: 24px; height: 24px; }
-}
-button[aria-label="Expand navigation"], button[aria-label="Collapse navigation"] {
-    background-color: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    background-image: url("/aevra/brand/icon.svg") !important;
-    background-size: 28px 28px !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-}
-button[aria-label="Expand navigation"] svg, button[aria-label="Collapse navigation"] svg {
-    visibility: hidden;
-}
+/* Aevra product shell: supplements the pinned llama.cpp UI without rewriting it. */
+#aevra-product-toggle { position:fixed; right:16px; top:14px; z-index:100; width:36px; height:36px; border:1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius:50%; background:Canvas; color:CanvasText; font-weight:700; cursor:pointer; box-shadow:0 3px 12px #0003; }
+#aevra-product-shell { position:fixed; right:16px; top:58px; z-index:99; width:min(340px,calc(100vw - 32px)); max-height:calc(100vh - 78px); overflow:auto; padding:16px; border:1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius:16px; background:Canvas; color:CanvasText; box-shadow:0 12px 40px #0005; font:14px/1.45 system-ui,sans-serif; }
+#aevra-product-shell[hidden] { display:none; }
+.aevra-panel-header { display:flex; justify-content:space-between; align-items:center; font-size:18px; }
+.aevra-close { border:0; background:transparent; color:inherit; font-size:24px; cursor:pointer; }
+.aevra-panel-kicker,.aevra-muted { color:color-mix(in srgb, CanvasText 62%, transparent); }
+.aevra-panel-kicker { margin:4px 0 12px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+.aevra-product-nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+.aevra-product-nav button { border:1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius:9px; padding:8px; background:transparent; color:inherit; text-align:left; cursor:pointer; }
+.aevra-product-nav button:hover { background:color-mix(in srgb, CanvasText 8%, transparent); }
+.aevra-panel-section { margin-top:16px; }
+.aevra-panel-section h3 { margin:0 0 7px; font-size:14px; }
+.aevra-list { list-style:none; margin:0; padding:0; }
+.aevra-list li { padding:6px 0; border-bottom:1px solid color-mix(in srgb, CanvasText 10%, transparent); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.aevra-card { padding:10px; border-radius:9px; background:color-mix(in srgb, CanvasText 7%, transparent); }
+.aevra-error { color:#b3261e; }
+#aevra-brand { pointer-events:none; }
