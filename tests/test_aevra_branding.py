@@ -99,7 +99,9 @@ def test_web_brand_assets_pairing_and_original_assets_unchanged(product_client):
     pair(client, settings)
     response = client.get("/")
     assert response.status_code == 200 and "<title>Aevra</title>" in response.text
-    assert "/aevra/brand.js" in response.text
+    assert "/aevra/brand/icon.svg" in response.text
+    upstream = client.get("/index.html")
+    assert upstream.status_code == 200 and "/aevra/brand.js" in upstream.text
     assert client.get("/favicon-dark.svg").content == identity.resource("icon.svg")
     assert client.get("/favicon.ico").content == identity.resource("favicon.ico")
     assert client.get("/aevra/manifest.webmanifest").json()["name"] == "Aevra"

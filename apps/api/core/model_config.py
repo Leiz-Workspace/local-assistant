@@ -1,7 +1,9 @@
 """Read approved model profiles and their configured digests from configs/models.yaml."""
 
 import logging
+import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import yaml
 
@@ -41,16 +43,55 @@ def get_model_profile(profile: str) -> dict:
         if not 1 <= port <= 65535:
             raise ValueError("Invalid model port")
 
+        base_url = f"http://127.0.0.1:{port}"
+        if profile == "core" and os.environ.get("AEVRA_CORE_BASE_URL"):
+            candidate = os.environ["AEVRA_CORE_BASE_URL"].rstrip("/")
+            parsed = urlparse(candidate)
+            if (
+                parsed.scheme not in {"http", "https"}
+                or parsed.hostname not in ("127.0.0.1", "localhost", "::1")
+                or parsed.username
+                or parsed.password
+                or parsed.path not in {"", "/"}
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise ValueError("Invalid CORE base URL")
+            base_url = candidate
+
         return {
             "profile": profile,
             "model_id": name,
-            "base_url": f"http://127.0.0.1:{port}",
+            "base_url": base_url,
         }
 
     except KeyError as exc:
         raise ModelConfigError(f"Missing configuration key: {exc}") from exc
     except (ValueError, TypeError, yaml.YAMLError) as exc:
         raise ModelConfigError(f"Invalid model configuration: {exc}") from exc
+
+
+def get_model_catalog() -> list[dict]:
+    """Return every configured profile with its alias, base URL and review status, CORE first."""
+    if not CONFIG.is_file():
+        raise ModelConfigError("Model config file not found")
+    try:
+        with CONFIG.open(encoding="utf-8") as file:
+            data = yaml.safe_load(file)
+        names = sorted(data["models"], key=lambda name: (name != "core", name))
+        rows = []
+        for name in names:
+            status = data["models"][name].get("status", "approved")
+            if not isinstance(status, str) or not status:
+                raise ValueError("Invalid model status")
+            rows.append({**get_model_profile(name), "status": status})
+    except KeyError as exc:
+        raise ModelConfigError(f"Missing configuration key: {exc}") from exc
+    except (OSError, ValueError, TypeError, AttributeError, yaml.YAMLError) as exc:
+        raise ModelConfigError(f"Invalid model configuration: {exc}") from exc
+    if not rows or rows[0]["profile"] != "core":
+        raise ModelConfigError("Missing core profile")
+    return rows
 
 
 def get_model_digests() -> dict:

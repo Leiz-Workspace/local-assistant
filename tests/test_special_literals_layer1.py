@@ -1068,9 +1068,10 @@ def test_stale_raised_inside_inference_is_not_swallowed(
         )
         assert response.status_code == 200
         events = sse_events(response.text)
-        assert events[-1] == "[DONE]"
-        assert json.loads(events[-2])["error"]["code"] == "special_literals_stale"
-        assert len(events) == 2
+        # ADR-197: a failed stream ends with its error event and never sends [DONE].
+        assert "[DONE]" not in events
+        assert json.loads(events[-1])["error"]["code"] == "special_literals_stale"
+        assert len(events) == 1
     assert len(inference.calls) == 4
     assert audited_statuses(caplog, "/chat") == [503, 503]
 

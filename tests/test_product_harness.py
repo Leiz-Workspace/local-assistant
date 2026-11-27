@@ -197,6 +197,146 @@ def pair(client, settings):
     return code
 
 
+def test_auto_session_bootstrap_opens_root_without_pairing(product_client, monkeypatch):
+    """Allow the container UI to load first and establish its HttpOnly session automatically."""
+    client, _, _, _ = product_client
+    monkeypatch.setenv("ASSISTANT_WEB_AUTO_SESSION", "1")
+    assert client.get("/").status_code == 200
+    assert (
+        client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={}).status_code
+        == 403
+    )
+
+
+def test_auto_session_bootstrap_requires_single_local_principal(
+    product_client, monkeypatch
+):
+    """Bootstrap the browser cookie without exposing a bearer token to the product UI."""
+    client, _, settings, _ = product_client
+    monkeypatch.setenv("ASSISTANT_WEB_AUTO_SESSION", "1")
+    assert (
+        client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={}).status_code
+        == 403
+    )
+
+    single = settings["path"]
+    payload = json.loads(single.read_text())
+    single.write_text(json.dumps({"principals": payload["principals"][:1]}))
+    single.chmod(0o600)
+    response = client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={})
+    assert response.status_code == 200
+    assert "HttpOnly" in response.headers["set-cookie"]
+    assert client.get(PREFIX + "/status").status_code == 200
+
+
+def test_browser_calls_without_cookie_get_401_so_the_ui_can_rebootstrap(
+    product_client,
+):
+    """A browser POST always carries Origin; without a cookie it must get 401, not the CLI guard's 403."""
+    client, inference, _, _ = product_client
+    body = {"messages": [{"role": "user", "content": "Hi"}]}
+    response = client.post(PREFIX + "/chat", headers=UI_HEADERS, json=body)
+    assert response.status_code == 401
+    assert response.json()["detail"]["code"] == "ui_session_required"
+    assert inference.calls == []
+
+
+def test_bootstrap_replaces_the_presented_session(product_client, monkeypatch):
+    """Repeated bootstraps rotate one cookie instead of accumulating sessions."""
+    client, _, settings, _ = product_client
+    monkeypatch.setenv("ASSISTANT_WEB_AUTO_SESSION", "1")
+    payload = json.loads(settings["path"].read_text())
+    settings["path"].write_text(json.dumps({"principals": payload["principals"][:1]}))
+    settings["path"].chmod(0o600)
+    assert (
+        client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={}).status_code
+        == 200
+    )
+    first = client.cookies.get("assistant_harness_session")
+    assert (
+        client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={}).status_code
+        == 200
+    )
+    second = client.cookies.get("assistant_harness_session")
+    assert first != second
+    assert len(client.app.state.browser_sessions.sessions) == 1
+    client.cookies.set("assistant_harness_session", first)
+    assert client.get(PREFIX + "/status", headers=UI_HEADERS).status_code == 401
+
+
+def test_full_session_table_evicts_the_oldest_session():
+    """A full table must not lock the owner out of new sessions or pairings."""
+    from apps.harness.browser import BrowserSessions
+
+    now = [0.0]
+    sessions = BrowserSessions(clock=lambda: now[0])
+    owner = uuid4()
+    for _ in range(64):
+        sessions.create_session(owner, "digest")
+        now[0] += 1
+    oldest = min(row[2] for row in sessions.sessions.values())
+    sessions.create_session(owner, "digest")
+    assert len(sessions.sessions) == 64
+    assert oldest not in {row[2] for row in sessions.sessions.values()}
+    code = sessions.pairing(owner, "digest")
+    assert sessions.exchange(code)
+
+
+def test_cookie_session_mutations_accept_browser_origin_and_require_csrf(
+    product_client,
+):
+    """Browser POSTs always carry Origin; the cookie path must accept it while the bearer path keeps refusing it."""
+    client, inference, settings, _ = product_client
+    pair(client, settings)
+    body = {"messages": [{"role": "user", "content": "Hi"}]}
+    answered = client.post(PREFIX + "/chat", headers=UI_HEADERS, json=body)
+    assert answered.status_code == 200
+    assert answered.json()["result"]["choices"][0]["message"]["content"]
+    missing_marker = {"Origin": "http://127.0.0.1:7090"}
+    assert (
+        client.post(PREFIX + "/chat", headers=missing_marker, json=body).status_code
+        == 403
+    )
+    foreign = {"Origin": "https://example.com", "X-Harness-UI": "1"}
+    assert client.post(PREFIX + "/chat", headers=foreign, json=body).status_code == 403
+    assert len(inference.calls) == 1
+    client.cookies.clear()
+    bearer_with_origin = {**bearer(settings), "Origin": "http://127.0.0.1:7090"}
+    refused = client.post(PREFIX + "/chat", headers=bearer_with_origin, json=body)
+    assert refused.status_code == 403
+    assert refused.json()["detail"]["code"] == "local_access_required"
+
+
+def test_auto_session_bootstrap_is_disabled_by_default(product_client):
+    """Keep the compatibility pairing flow as the only mode unless explicitly enabled."""
+    client, _, _, _ = product_client
+    assert (
+        client.post("/ui/session/bootstrap", headers=UI_HEADERS, json={}).status_code
+        == 403
+    )
+
+
+def test_product_shell_serves_only_listed_modules(product_client):
+    """Shell modules are public static files; anything else under /aevra stays private or absent."""
+    client, _, settings, _ = product_client
+    for module in (
+        "/aevra/api.js",
+        "/aevra/store.js",
+        "/aevra/ui/composer.js",
+        "/aevra/app.css",
+    ):
+        response = client.get(module)
+        assert response.status_code == 200, module
+        assert response.headers["cache-control"] == "no-store"
+        assert response.headers["x-content-type-options"] == "nosniff"
+    assert client.get("/aevra/ui/missing.js").status_code == 401
+    assert client.get("/aevra/brand.js").status_code == 401
+    pair(client, settings)
+    assert client.get("/aevra/ui/missing.js").status_code == 404
+    assert client.get("/aevra/%2e%2e/routes.py").status_code == 404
+    assert client.get("/aevra/index.html").status_code == 404
+
+
 def test_api_owner_isolation_and_run_lifecycle(product_client):
     """Run a task through HTTP and prevent another principal from observing or cancelling it."""
     client, inference, settings, _ = product_client
@@ -286,11 +426,21 @@ def test_skill_api_exact_hash_review_and_cross_owner_install(product_client):
 def test_browser_pairing_cookie_acl_and_real_stream(product_client):
     """Keep app credentials out of assets and stream asynchronous chunks only after pairing."""
     client, inference, settings, _ = product_client
-    assert client.get("/").status_code == 401
+    shell = client.get("/")
+    assert shell.status_code == 200 and settings["tokens"][0] not in shell.text
+    assert client.get("/index.html").status_code == 401
+    assert client.get(PREFIX + "/status", headers=UI_HEADERS).status_code == 401
     code = pair(client, settings)
-    response = client.get("/")
+    response = client.get("/index.html")
     assert response.status_code == 200 and "harness-bridge.js" in response.text
     assert settings["tokens"][0] not in response.text
+    product = client.get("/")
+    assert product.status_code == 200 and "/aevra/app.js" in product.text
+    for module in ("/aevra/app.js", "/aevra/markdown.js", "/aevra/history.js"):
+        script = client.get(module)
+        assert script.status_code == 200
+        assert script.headers["content-type"].startswith("text/javascript")
+    assert "harness-bridge.js" not in product.text and "brand.js" not in product.text
     assert "worker-src 'none'" in response.headers["content-security-policy"]
     assert client.get("/props?autoload=false").status_code == 200
     escaped = client.get("/props?escape=1")
@@ -594,7 +744,8 @@ def test_browser_csrf_auth_revocation_and_asset_tampering(product_client):
     )
     assert client.post("/ui/logout", json={}).status_code == 403
     (assets / "index.html").write_text("tampered")
-    assert client.get("/").status_code == 404
+    assert client.get("/index.html").status_code == 404
+    assert client.get("/").status_code == 200
     settings["path"].write_text('{"principals":[]}')
     assert client.get("/props").status_code == 401
 

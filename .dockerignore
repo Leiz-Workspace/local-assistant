@@ -1,0 +1,9 @@
+# Allowlist: models/, data/ and other local state must never enter the build context.
+*
+!pyproject.toml
+!uv.lock
+!apps/
+!src/
+!configs/
+**/__pycache__
+**/*.pyc

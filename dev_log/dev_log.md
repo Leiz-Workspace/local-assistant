@@ -6627,3 +6627,30 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - The old branch and PR #90 are untouched until the v4 draft PR replaces it.
 - **Next:** the decision module and OC verifier, the corpus spec and generator, the blind template authoring, the runner, the driver and the tests. Then come the software gates, the A'/B2' freeze and the approval packet for decision 7.
 
+
+## 2026-11-26 — Aevra web UI parity (ADR-199), container web and Electron shell (ADR-198); not committed
+
+- **Owner request:** the Aevra UI may look different, but its architecture must be at least the pinned llama.cpp UI b11557. Missing items named by the owner: open/close sidebar, a `+` for files and skills in the composer, the context ring in the composer, a microphone, a reasoning selector and a model selector.
+- **Owner decision:** keep the automatic local session (`ASSISTANT_WEB_AUTO_SESSION=1`) as the default.
+- **Done on `feat/aevra-web-container-electron` (working tree only):**
+  - The product UI is rebuilt as plain ES modules without a build step ([spec](../docs/AEVRA_WEB_UI_SPEC.md), [ADR-199](../docs/ADR/199-aevra-ui-parity-architecture.md)):
+    - a collapsible sidebar (rail, Ctrl+B, mobile overlay) with search, pinned and recent conversations and per-conversation streaming state;
+    - a composer with the `+` menu (text/code files, skill, system message), reasoning preset, model list, context ring, microphone (disabled until approved) and send/stop;
+    - device-local IndexedDB history as a branching tree with edit, regenerate, version navigation, fork, raw view, export/import and delete-all;
+    - settings, themes and the workspace panels.
+  - New API: `POST /api/v1/harness/chat/stream` and `GET /api/v1/harness/models`; `ChatInput` accepts `attachments` and `skill`.
+  - The web app runs in a read-only container with host networking (`docker-compose.web.yaml`), and the Electron shell loads it ([ADR-198](../docs/ADR/198-aevra-container-electron-desktop.md)).
+  - Two review rounds found 53 and then 42 UI issues; re-verification left residuals, and these are fixed: keyboard focus after re-render, popover and dialog keyboard handling, editor discard confirmation, paste fallback, import validation, stream error codes and the signed-out state.
+- **Validation:**
+  - CI scope (`HOSTED_TEST_MODE=main`, `tests benchmarks/tests`, 6 workers): 8172 passed, 394 skipped, 0 failed.
+  - Node (`node --test tests/test_*.mjs`): 48 passed, including the new `tests/test_aevra_store.mjs`.
+  - Ruff check and format are clean on the changed Python files.
+  - Browser checks covered streaming, stop, regenerate and versions, edit and discard, raw view, attachments, popovers, dialogs and keyboard focus.
+  - The container served the shell and streamed 67 frames ending in `[DONE]`.
+  - The Electron shell loaded the container and rendered an answer.
+  - All of these used a fake CORE stub on a separate port. The owner's CORE was not contacted, and model quality was not measured.
+- **Waiting for the owner:**
+  - microphone dictation (needs an approved local ASR);
+  - image and PDF input;
+  - switching to the unrestricted profile (restarts the shared CORE).
+- **Not done:** no commit or PR yet.

@@ -1,17 +1,25 @@
 """Expose authenticated local run, context and exact-hash skill management contracts."""
 
 import asyncio
+import contextlib
 import hashlib
+import json
 import logging
 from typing import Literal
 from uuid import UUID, uuid4
 
+import anyio
+import httpx
 from fastapi import APIRouter, Request, Response, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from fastapi.exceptions import RequestValidationError
 from fastapi.routing import APIRoute
 
 from apps.api.core.conversation_auth import authenticate_principal
+from apps.api.core.model_config import ModelConfigError, get_model_catalog
+from apps.api.services.llama_gateway import GatewayError
+from apps.harness.inference import IncompleteCompletion
 from apps.api.routes.conversations import require_local_client
 from apps.api.routes.chat import PRIVATE_HEADERS
 from apps.harness.service import HarnessError
@@ -36,9 +44,16 @@ from src.application.services.workspace_tool_contracts import (
 
 LOGGER = logging.getLogger(__name__)
 REQUEST_LIMIT = 262144
+# Attachments are measured as the evidence bytes the composer receives, the same unit as its
+# 64 KiB per-source cap, so nothing the API accepts is later dropped as source_byte_limit.
+ATTACHMENT_BYTES = 65536
+ATTACHMENTS_TOTAL_BYTES = 196608
 # Routes whose bodies carry conversation text answer validation failures with a
 # finite code instead of FastAPI's default detail, which echoes the input.
-PRIVATE_VALIDATION = {"/api/v1/harness/chat": "invalid_context_request"}
+PRIVATE_VALIDATION = {
+    "/api/v1/harness/chat": "invalid_context_request",
+    "/api/v1/harness/chat/stream": "invalid_context_request",
+}
 
 
 def json_media(request):
@@ -56,8 +71,10 @@ class HarnessRoute(APIRoute):
 
         async def guarded(request: Request):
             """Reject non-local, unauthenticated, oversized or non-JSON bodies; bodiless requests need no media type."""
-            await require_local_client(request)
-            await authenticate_principal(request)
+            # Browser sessions were already checked for loopback, same-origin and CSRF.
+            if getattr(request.state, "ui_owner", None) is None:
+                await require_local_client(request)
+                await authenticate_principal(request)
             chunks, length = [], 0
             async for chunk in request.stream():
                 length += len(chunk)
@@ -80,10 +97,15 @@ class HarnessRoute(APIRoute):
 
             try:
                 response = await original(Request(request.scope, receive=replay))
-            except RequestValidationError:
+            except RequestValidationError as error:
                 code = PRIVATE_VALIDATION.get(self.path)
                 if code is None:
                     raise
+                if any(
+                    "attachment_too_large" in str(item.get("msg", ""))
+                    for item in error.errors()
+                ):
+                    code = "attachment_too_large"
                 LOGGER.warning("product_api_validation_failed code=%s", code)
                 raise ContextError(code) from None
             response.headers.update(PRIVATE_HEADERS)
@@ -206,6 +228,20 @@ class ChatMessage(Contract):
         return self
 
 
+class ChatAttachment(Contract):
+    """Carry one user-supplied text file that the composer treats as untrusted evidence."""
+
+    name: str = Field(min_length=1, max_length=256)
+    content: str = Field(min_length=1, max_length=65536)
+
+
+class ChatSkill(Contract):
+    """Name one exact owner-reviewed skill installation to apply to this chat turn."""
+
+    installation_id: UUID
+    workspace_id: UUID
+
+
 class ChatInput(Contract):
     """Accept bounded CLI conversation turns using the shared context composer."""
 
@@ -215,11 +251,25 @@ class ChatInput(Contract):
         "evidence-first"
     )
     history_policy: HistoryPolicy | None = None
+    attachments: list[ChatAttachment] = Field(default_factory=list, max_length=4)
+    skill: ChatSkill | None = None
+
+    @model_validator(mode="after")
+    def bound_attachments(self):
+        """Refuse attachments the composer would otherwise drop silently for size."""
+        sizes = [len(attachment_evidence(item)) for item in self.attachments]
+        if any(size > ATTACHMENT_BYTES for size in sizes) or (
+            sum(sizes) > ATTACHMENTS_TOTAL_BYTES
+        ):
+            raise ValueError("attachment_too_large")
+        return self
 
 
 async def owner_service(request):
     """Resolve the authenticated owner and the optional product coordinator."""
-    owner = await authenticate_principal(request)
+    owner = getattr(request.state, "ui_owner", None)
+    if owner is None:
+        owner = await authenticate_principal(request)
     service = getattr(request.app.state, "product_harness", None)
     if service is None:
         raise HarnessError("harness_unavailable", 503)
@@ -262,11 +312,13 @@ async def start_run(body: RunInput, request: Request):
     return service.start(owner, body)
 
 
-@router.post("/chat")
-async def chat(body: ChatInput, request: Request):
-    """Complete CLI chat under the same CORE admission and context policy as specialist runs."""
-    owner, service = await owner_service(request)
-    require_current_binding()
+def attachment_evidence(attachment):
+    """Encode one attachment as raw evidence bytes; the composer wraps and neutralizes it as untrusted."""
+    return f"Attached file: {attachment.name}\n\n{attachment.content}".encode("utf-8")
+
+
+def chat_options(body, owner, service):
+    """Build composer options shared by /chat and /chat/stream, resolving an exact skill grant."""
     options = dict(preset=body.preset, context_strategy=body.context_strategy)
     if body.history_policy is not None:
 
@@ -286,14 +338,44 @@ async def chat(body: ChatInput, request: Request):
                 summary_deadline=asyncio.get_running_loop().time() + 120,
                 summary_cache=BoundSummaryCache(service.summary_cache, owner),
             )
+    if body.attachments:
+        options["evidence"] = [attachment_evidence(item) for item in body.attachments]
+    installed = None
+    if body.skill is not None:
+        installed = service.installed(
+            owner, body.skill.workspace_id, body.skill.installation_id
+        )
+        options["skill"] = installed.manifest
+    return options, installed
+
+
+def authorize_skill(service, owner, body, installed):
+    """Re-check the exact grant around inference, as runs do, so a revoked skill fails closed."""
+    if installed is not None:
+        service.skills.authorize(
+            owner,
+            body.skill.workspace_id,
+            installed,
+            installed.manifest.permissions[0],
+        )
+
+
+@router.post("/chat")
+async def chat(body: ChatInput, request: Request):
+    """Complete CLI chat under the same CORE admission and context policy as specialist runs."""
+    owner, service = await owner_service(request)
+    require_current_binding()
+    options, installed = chat_options(body, owner, service)
     try:
         async with asyncio.timeout(120):
             async with service.admission:
+                authorize_skill(service, owner, body, installed)
                 result, context = await service.inference.complete(
                     [message.model_dump() for message in body.messages],
                     **options,
                 )
-    except (ContextError, SpecialLiteralsStale):
+                authorize_skill(service, owner, body, installed)
+    except (ContextError, SpecialLiteralsStale, SkillError):
         raise
     except InferenceFailure as error:
         if body.history_policy is not None:
@@ -305,8 +387,213 @@ async def chat(body: ChatInput, request: Request):
         raise HarnessError("inference_unavailable", 502) from None
     except Exception:
         raise HarnessError("inference_unavailable", 502) from None
-    LOGGER.info("product_cli_chat_completed owner_id=%s", owner)
+    LOGGER.info(
+        "product_cli_chat_completed owner_id=%s attachments=%d skill=%s",
+        owner,
+        len(body.attachments),
+        installed is not None,
+    )
     return dict(result=result, context=context)
+
+
+ADMISSION_SECONDS = 120
+STREAM_MESSAGES = {
+    "inference_unavailable": "Local inference could not complete.",
+    "context_overflow": "The input does not fit the model context.",
+    "incomplete_completion": "The answer stopped before it was complete.",
+    "special_literals_stale": "Local inference is refused for this model.",
+    "stream_limit": "The answer exceeded the stream size limit.",
+    "skill_operation_denied": "The skill is no longer authorized.",
+    "inference_busy": "Another request is still using the local model.",
+    "stream_timeout": "The answer took too long and was stopped.",
+}
+
+
+class ClosingStreamingResponse(StreamingResponse):
+    """Close the body iterator however the response ends, so admission and upstream never wait for GC."""
+
+    async def __call__(self, scope, receive, send):
+        """Run the normal response, then close the generator even after a cancelled send."""
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            with anyio.CancelScope(shield=True):
+                await self.body_iterator.aclose()
+
+
+def stream_error_code(error, policy, started=False):
+    """Map a stream failure to the same finite codes /chat uses, plus the stream-only ones.
+
+    Only failures before the first stream frame (composition and validation) can be the
+    client's history-policy fault; later faults come from CORE or the transport.
+    """
+    if isinstance(error, ContextError):
+        return error.code
+    if isinstance(error, SpecialLiteralsStale):
+        return "special_literals_stale"
+    if isinstance(error, SkillError):
+        return "skill_operation_denied"
+    if isinstance(error, IncompleteCompletion):
+        return "incomplete_completion"
+    if isinstance(error, GatewayError):
+        reason = str(error)
+        if reason in {"stream_limit", "stream_timeout"}:
+            return reason
+        if reason == "incomplete_stream":
+            return "incomplete_completion"
+        return "inference_unavailable"
+    if isinstance(error, TimeoutError):
+        return "stream_timeout"
+    if isinstance(error, InferenceFailure):
+        if policy:
+            return error.code
+        return (
+            "context_overflow"
+            if error.code == "context_overflow"
+            else "inference_unavailable"
+        )
+    if isinstance(error, ValueError) and str(error) == "strict_context_would_trim":
+        return "strict_context_would_trim"
+    # A non-JSON answer from CORE is a CORE fault, never the client's history policy.
+    if isinstance(error, json.JSONDecodeError):
+        return "inference_unavailable"
+    if isinstance(error, ValueError) and policy and not started:
+        return "invalid_context_request"
+    return "inference_unavailable"
+
+
+@router.post("/chat/stream")
+async def chat_stream(body: ChatInput, request: Request):
+    """Stream one chat turn with the /chat options; [DONE] only after a verified complete answer."""
+    owner, service = await owner_service(request)
+    require_current_binding()
+    options, installed = chat_options(body, owner, service)
+    messages = [message.model_dump() for message in body.messages]
+    policy = body.history_policy is not None
+
+    async def events():
+        """Hold admission for the whole stream; a disconnect cancels and releases it."""
+        acquired = started = False
+        try:
+            try:
+                async with asyncio.timeout(ADMISSION_SECONDS):
+                    await service.admission.acquire()
+            except TimeoutError:
+                code = "inference_busy"
+                LOGGER.warning("product_chat_stream_failed code=%s", code)
+                yield error_frame(code)
+                return
+            acquired = True
+            authorize_skill(service, owner, body, installed)
+            async with contextlib.aclosing(
+                service.inference.stream(messages, product=True, **options)
+            ) as chunks:
+                async for chunk in chunks:
+                    started = True
+                    if chunk == b"data: [DONE]\n\n":
+                        authorize_skill(service, owner, body, installed)
+                        LOGGER.info(
+                            "product_chat_stream_completed owner_id=%s attachments=%d skill=%s",
+                            owner,
+                            len(body.attachments),
+                            installed is not None,
+                        )
+                    yield chunk
+        except (asyncio.CancelledError, GeneratorExit):
+            LOGGER.info("product_chat_stream_cancelled owner_id=%s", owner)
+            raise
+        except Exception as error:
+            code = stream_error_code(error, policy, started)
+            LOGGER.warning("product_chat_stream_failed code=%s", code)
+            yield error_frame(code)
+        finally:
+            if acquired:
+                service.admission.release()
+
+    return ClosingStreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "private, no-store", "X-Accel-Buffering": "no"},
+    )
+
+
+def error_frame(code):
+    """Encode the closed error event; a failed stream never sends [DONE] after it."""
+    message = STREAM_MESSAGES.get(code, "The request could not complete.")
+    return (
+        "event: error\ndata: " + json.dumps({"code": code, "message": message}) + "\n\n"
+    ).encode()
+
+
+MODELS_PROBE_SECONDS = 1.5
+MODELS_RESPONSE_BYTES = 65536
+MODEL_REASONS = {
+    "core": "Approved CORE profile used by Aevra.",
+    "other": "Switching profiles restarts the shared CORE and needs owner approval.",
+}
+
+
+@router.get("/models")
+async def models(request: Request):
+    """List configured profiles and which alias CORE reports, without loading or switching models."""
+    owner, service = await owner_service(request)
+    try:
+        catalog = get_model_catalog()
+    except ModelConfigError:
+        raise HarnessError("model_config_unavailable", 503) from None
+    core = catalog[0]
+    online, loaded_ids = False, None
+    try:
+        # One bound for the whole probe: a slow-drip CORE cannot stretch it read by read.
+        async with asyncio.timeout(MODELS_PROBE_SECONDS):
+            async with httpx.AsyncClient(
+                base_url=core["base_url"],
+                transport=getattr(service.inference, "transport", None),
+                timeout=MODELS_PROBE_SECONDS,
+                trust_env=False,
+            ) as client:
+                async with client.stream("GET", "/v1/models") as response:
+                    response.raise_for_status()
+                    raw = bytearray()
+                    async for part in response.aiter_bytes():
+                        raw.extend(part)
+                        if len(raw) > MODELS_RESPONSE_BYTES:
+                            raise ValueError("models_response_too_large")
+        data = json.loads(bytes(raw)).get("data")
+        loaded_ids = {
+            item["id"]
+            for item in (data if isinstance(data, list) else [])
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
+        online = True
+    except (
+        httpx.HTTPError,
+        ValueError,
+        AttributeError,
+        TypeError,
+        TimeoutError,
+        RecursionError,
+    ):
+        online, loaded_ids = False, None
+    rows = [
+        dict(
+            profile=item["profile"],
+            id=item["model_id"],
+            status=item["status"],
+            selectable=item["profile"] == "core",
+            loaded=None if loaded_ids is None else item["model_id"] in loaded_ids,
+            online=online,
+            reason=MODEL_REASONS["core" if item["profile"] == "core" else "other"],
+        )
+        for item in catalog
+    ]
+    LOGGER.info(
+        "product_models_read owner_id=%s online=%s core_loaded=%s",
+        owner,
+        online,
+        rows[0]["loaded"],
+    )
+    return dict(active="core", models=rows)
 
 
 @router.get("/context/archives")

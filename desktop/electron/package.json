@@ -1,0 +1,33 @@
+{
+  "name": "aevra-desktop-electron",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aevra desktop shell",
+  "author": {
+    "name": "Aevra project",
+    "email": "maintainers@aevra.local"
+  },
+  "homepage": "https://github.com/Leiz-Workspace/local-assistant",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --linux deb"
+  },
+  "devDependencies": {
+    "electron": "39.2.6",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "com.aevra.desktop",
+    "productName": "Aevra",
+    "linux": {
+      "target": ["deb"],
+      "category": "Utility",
+      "executableName": "aevra-desktop",
+      "icon": "../../apps/branding/assets/icon.png",
+      "artifactName": "aevra-linux-amd64_v${version}-electron.${ext}"
+    },
+    "afterPack": "after-pack.cjs",
+    "files": ["main.cjs", "preload.cjs", "package.json", "after-pack.cjs"]
+  }
+}
