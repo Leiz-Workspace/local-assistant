@@ -6627,3 +6627,21 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - The old branch and PR #90 are untouched until the v4 draft PR replaces it.
 - **Next:** the decision module and OC verifier, the corpus spec and generator, the blind template authoring, the runner, the driver and the tests. Then come the software gates, the A'/B2' freeze and the approval packet for decision 7.
 
+## 2026-11-27 — ADR-200 drafted: model-proposed tool calls with host-owned execution (design only, awaiting owner decisions)
+
+- **Owner request:** "Draft a design", after asking which tools exist and whether the AI decides by itself when to use which tool. It does not: in the product, CORE never chooses tools. `seal_payload` rejects the `tools` key, and every run follows a plan written by the user or a skill.
+- **Draft:** [ADR-200](../docs/ADR/200-proposed-model-proposed-tool-calls.md). Nothing is implemented, no flag exists and no CORE call was made. Line numbers cite the PR #130 branch, so this should merge after PR #130.
+- **How it was made.**
+  - A design workflow: three code readers, three independent drafts (rigor-first, reuse-first and product-first) and a judge. Rigor-first is the base, with grafts from the other two.
+  - A three-lens adversarial review (code facts, security, consistency and evaluation) with an independent verifier confirmed 39 findings and refuted 1; all 39 are applied.
+  - A final check found 3 partial fixes and 12 inconsistencies introduced by the edits; all are resolved.
+- **Main design choices:**
+  - the model proposes once, before it sees any tool result, as host-schema JSON through `response_format`; there is no native tool calling and `seal_payload` is unchanged;
+  - only the five read-only `workspace.*` tools; writes are absent from the schema and refused by the router;
+  - an opt-in route `POST /api/v1/harness/runs/proposed` behind `ASSISTANT_TOOL_PROPOSALS=off|propose-only|auto-read`, default off;
+  - Phase 1a is propose-only; auto-read (Phase 1b) needs the pre-registered TPE-1 evaluation (88 items, three arms, gates G0-G7) to pass and the owner to approve;
+  - proposed-run answers render external links as inert text, and a deny list (D15) covers secret-like file names that the dot-prefix rule misses.
+- **Records conflict found (decision D2).** PR #90 (ADR-195) was merged on 2026-11-23 (`ba6fbcb`) and promoted to production through PR #110 and #112 (`a133ea6`). ADR-195, `docs/HAR006_V3_RESULT.md` and the HAR-006 backlog row still say it is not merged, and HAR-006 v4 still plans to close PR #90. The recommendation is to keep v4 and re-target it at production as merged.
+- **Waiting for the owner.**
+  - D1-D9 and D15 now; D10a-D10d and D11 before Phase E; D13 after Phase 1a; D12 and D14 after TPE-1.
+  - About 16-17 engineer-days until the Phase 1b decision, including one TPE-1 window of about 1 h of CORE time in a 1.5 h slot.
