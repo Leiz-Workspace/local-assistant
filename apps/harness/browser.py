@@ -186,7 +186,7 @@ def content_policy(index=""):
     return (
         "default-src 'none'; script-src 'self' "
         + " ".join(hashes)
-        + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+        + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; media-src 'self' blob:; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
     )
 
 
@@ -307,6 +307,8 @@ def register_browser(app, *, asset_root=ASSETS):
                     "/ui/pairings",
                     "/ui/session/bootstrap",
                     "/healthz",
+                    # Name and icon only; browsers fetch the manifest without cookies.
+                    "/aevra/manifest.webmanifest",
                 }
                 if (
                     request.url.path not in public
@@ -406,7 +408,7 @@ def register_browser(app, *, asset_root=ASSETS):
 
     @app.get("/aevra/manifest.webmanifest")
     async def app_manifest():
-        """Advertise Aevra's name and supplied icon without enabling service workers or claiming PWA installation."""
+        """Publish Aevra's name and icon (no user data) so browsers can label and install the app; no service worker."""
         return Response(
             json.dumps(
                 dict(

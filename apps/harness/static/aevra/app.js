@@ -161,7 +161,8 @@ async function copy(text) {
 
 async function refreshConversations() {
   state.conversations = await listConversations();
-  sidebar.render({ conversations: state.conversations, activeId: activeId(), panel: state.panel, streamingIds: new Set(state.streams.keys()) });
+  // The session screen shows no conversation, so none is highlighted until the user reconnects.
+  sidebar.render({ conversations: state.conversations, activeId: state.sessionLost ? null : activeId(), panel: state.panel, streamingIds: new Set(state.streams.keys()) });
 }
 
 function titleFrom(text) {
@@ -216,7 +217,10 @@ async function removeConversation(conversation) {
   const wasActive = activeId() === conversation.id;
   if (wasActive) state.active = null;
   await refreshConversations();
-  if (wasActive) navigate("#/");
+  // From a panel, stay on the panel; only the chat view moves to a new chat.
+  if (wasActive && !state.panel) navigate("#/");
+  // The deleted row held focus; keep the keyboard on the page heading instead of the body.
+  else if (!document.activeElement || document.activeElement === document.body) title.focus();
 }
 
 function showSettings(section) {
@@ -572,7 +576,8 @@ function showSessionRequired(message) {
     h("p", { text: message }),
     h("p", { class: "muted" }, "Nếu máy chủ tắt tự tạo phiên, chạy ", h("code", { text: "aevra ui open" }), " để mở phiên bằng token của owner. Lịch sử hội thoại vẫn nằm trên thiết bị này."),
     h("p", {}, h("button", { type: "button", class: "primary", text: "Kết nối lại", on: { click: () => reconnect() } }))));
-  sidebar.render({ panel: null });
+  // No conversation is open on this screen, so none is highlighted.
+  sidebar.render({ panel: null, activeId: null });
 }
 
 async function reconnect() {

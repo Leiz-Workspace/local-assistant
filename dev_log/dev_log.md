@@ -6692,3 +6692,22 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - No real CORE, so these are software and UI checks, not model measurements.
   - The full CI suite was not run locally, only the scopes above; CI runs on push.
   - The container and Electron shells were not smoke-tested again.
+
+## 2026-11-28 — Aevra web UI: manifest and the remaining checklist notes (PR #130)
+
+- **Owner request:** "SỬA ĐI", after the previous fix commit (`0350f08`, CI green) left C10 and the unverified checklist notes open.
+- **Fixed:**
+  - C10. The shell links `/aevra/manifest.webmanifest` and sets a theme colour, and the CSP adds `manifest-src 'self'`. The manifest route is now cookie-free, because browsers fetch manifests without credentials; it holds only a name, an icon and colours.
+  - An expired or missing skill review now returns 404 `review_required` ("Bản review đã hết hạn; hãy review lại.") instead of 409 `skill_operation_denied`. A shared `skill_error_reply` keeps the audit line's status equal to the response. For the CLI the exit category still follows the HTTP status: 404 `review_required` is exit 6, as already pinned in `tests/test_product_cli.py`.
+  - The `run_capacity` message names both limits, 8 runs per owner and 64 per server, finished runs included. It points to deleting old runs in Runs / Jobs.
+  - Escape in the sidebar search closes only the search and returns focus to Tìm kiếm. On mobile the overlay stays open.
+  - The session screen highlights no conversation, including after a row action while signed out.
+  - Deleting the open conversation from the sidebar while a panel is shown keeps the panel, and focus moves to the page heading.
+- **Review.** A two-lens adversarial review (security/contract and UI) with one verifier per lens found 6 issues: 4 real, 2 refuted.
+  - The real ones: the audit status mismatch (medium); the highlight coming back after a sidebar refresh on the session screen; focus left on the body after a delete; and the run_capacity text ignoring the 64-run server limit. All 4 are fixed.
+  - The refuted ones were the CLI exit code, which follows the existing tested status mapping, and a variant of the run_capacity point.
+- **Validation:**
+  - `node --test tests/test_*.mjs`: 68 passed.
+  - `uv run --no-sync python -m pytest $(grep -rl 'apps.harness' tests/*.py) -q -n 4`: 640 passed. It includes the new `test_expired_skill_review_asks_for_a_new_review`, which fails without the fix and also checks the audit status, and the extended `tests/test_aevra_branding.py` manifest checks.
+  - `ruff check` and `ruff format --check` pass on the changed Python files.
+  - Browser checks against the fake CORE stub covered the manifest (fetched without cookies, CSP), the new messages, logout and reconnect, delete from a panel, and mobile search Escape. A fresh tab showed no console messages.

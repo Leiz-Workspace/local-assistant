@@ -423,6 +423,41 @@ def test_skill_api_exact_hash_review_and_cross_owner_install(product_client):
     assert client.get(PREFIX + "/skills", headers=bearer(settings, 1)).json() == []
 
 
+def test_expired_skill_review_asks_for_a_new_review(product_client, caplog):
+    """An install after the review lifetime gets review_required, and the audit line logs the same status."""
+    caplog.set_level(logging.INFO, logger="apps.harness.routes")
+    client, _, settings, _ = product_client
+    registry = client.app.state.product_harness.skills
+    now = [1000.0]
+    registry.clock = lambda: now[0]
+    workspace = str(uuid4())
+    raw = Path("configs/skills/source-reader.v1.json").read_text()
+    review = client.post(
+        PREFIX + "/skills/reviews",
+        headers=bearer(settings),
+        json={"workspace_id": workspace, "manifest": raw},
+    ).json()
+    now[0] += review["expires_in_seconds"] + 1
+    expired = client.post(
+        PREFIX + "/skills/installations",
+        headers=bearer(settings),
+        json=dict(
+            workspace_id=workspace,
+            review_id=review["review_id"],
+            sha256=review["sha256"],
+        ),
+    )
+    assert expired.status_code == 404
+    assert expired.json() == {"detail": {"code": "review_required"}}
+    audit = [
+        record.getMessage()
+        for record in caplog.records
+        if "product_api_request" in record.getMessage()
+        and "/skills/installations" in record.getMessage()
+    ]
+    assert audit and audit[-1].endswith("status=404")
+
+
 def test_browser_pairing_cookie_acl_and_real_stream(product_client):
     """Keep app credentials out of assets and stream asynchronous chunks only after pairing."""
     client, inference, settings, _ = product_client

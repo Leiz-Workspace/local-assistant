@@ -96,10 +96,17 @@ def test_web_brand_assets_pairing_and_original_assets_unchanged(product_client):
     assert logo.content == identity.resource("logo.svg")
     assert client.get("/aevra/brand/not-registered.svg").status_code == 404
     assert client.get("/aevra/brand.js").status_code == 401
+    # Browsers fetch the manifest without cookies, so it must not need a session.
+    manifest = client.get("/aevra/manifest.webmanifest")
+    assert manifest.status_code == 200 and manifest.json()["name"] == "Aevra"
+    assert manifest.json()["icons"][0]["src"] == "/aevra/brand/icon.png"
+    assert client.get(manifest.json()["icons"][0]["src"]).status_code == 200
     pair(client, settings)
     response = client.get("/")
     assert response.status_code == 200 and "<title>Aevra</title>" in response.text
     assert "/aevra/brand/icon.svg" in response.text
+    assert '<link rel="manifest" href="/aevra/manifest.webmanifest">' in response.text
+    assert "manifest-src 'self'" in response.headers["content-security-policy"]
     upstream = client.get("/index.html")
     assert upstream.status_code == 200 and "/aevra/brand.js" in upstream.text
     assert client.get("/favicon-dark.svg").content == identity.resource("icon.svg")

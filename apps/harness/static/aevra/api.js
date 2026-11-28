@@ -16,7 +16,7 @@ export const ERRORS = {
   complete_history_pairs_required: "Lịch sử gửi lên không đủ cặp hỏi/đáp. Hãy bắt đầu chat mới.",
   context_archive_capacity: "Bộ nhớ archive đã đầy (16 archive). Xóa bớt archive trong Context hoặc đổi chính sách lịch sử.",
   context_archive_entry_too_large: "Phần hội thoại bị rút gọn quá lớn để lưu archive (128 KB). Hãy bắt đầu chat mới hoặc dùng Sliding window.",
-  run_capacity: "Đã đạt giới hạn số run đồng thời.",
+  run_capacity: "Đã đạt giới hạn run: mỗi người giữ tối đa 8 run (tính cả run đã xong), toàn máy chủ tối đa 64. Xóa bớt run cũ trong Runs / Jobs hoặc thử lại sau.",
   run_active: "Run đang chạy; hãy hủy trước khi xóa.",
   run_not_active: "Run đã kết thúc.",
   run_not_found: "Không tìm thấy run.",

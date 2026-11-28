@@ -24,9 +24,9 @@ Plain ES modules without a build step, all served same-origin from `apps/harness
 
 ## Layout and navigation
 
-- Sidebar: Chat mới (Ctrl/Cmd+Shift+O), Tìm kiếm (Ctrl/Cmd+K), conversation list grouped Đã ghim / Gần đây with a per-row menu (pin, rename, export JSON, delete), workspace tools, Cài đặt, Đăng xuất and connection status. Ctrl/Cmd+B toggles rail/expanded; the state persists. With "Luôn mở sidebar trên desktop" the sidebar stays open on desktop, the collapse button is hidden and Ctrl/Cmd+B does nothing; the saved rail state is not changed. On screens under 768 px the sidebar is an overlay that closes before a selection acts (so a dialog it opens returns focus to the menu button); Tìm kiếm keeps it open. Shortcut tooltips name Cmd on Apple platforms and Ctrl elsewhere.
+- Sidebar: Chat mới (Ctrl/Cmd+Shift+O), Tìm kiếm (Ctrl/Cmd+K), conversation list grouped Đã ghim / Gần đây with a per-row menu (pin, rename, export JSON, delete), workspace tools, Cài đặt, Đăng xuất and connection status. Ctrl/Cmd+B toggles rail/expanded; the state persists. With "Luôn mở sidebar trên desktop" the sidebar stays open on desktop, the collapse button is hidden and Ctrl/Cmd+B does nothing; the saved rail state is not changed. On screens under 768 px the sidebar is an overlay that closes before a selection acts (so a dialog it opens returns focus to the menu button); Tìm kiếm keeps it open, and Escape in the search field closes only the search and returns focus to Tìm kiếm. Shortcut tooltips name Cmd on Apple platforms and Ctrl elsewhere.
 - Topbar: conversation title, status, conversation menu. The status combines the web session with CORE readiness from the model probe on load and from each reply: "Đã kết nối · CORE sẵn sàng", "Web đã kết nối · CORE không phản hồi", or "Đã kết nối · local" while CORE readiness is unknown.
-- Panels replace the chat view in the same workspace area.
+- Panels replace the chat view in the same workspace area. Deleting the open conversation from the sidebar while a panel is shown keeps the panel. The session screen (after logout or a lost session) highlights no conversation.
 
 ## Composer
 
@@ -58,13 +58,13 @@ Conversations live in the browser's IndexedDB on this device only; they are neve
 
 ## Route and session contract
 
-- `/`, `/aevra-app/` and the shell modules are public static files without user data. Every data request needs the HttpOnly same-origin session cookie; browser requests without a valid cookie get `401 ui_session_required`.
+- `/`, `/aevra-app/`, the shell modules and `/aevra/manifest.webmanifest` are public files without user data. The shell links the manifest (name, icon, theme colour; no service worker) and the CSP allows it with `manifest-src 'self'`; browsers fetch manifests without cookies, which is why that route needs no session. Every data request needs the HttpOnly same-origin session cookie; browser requests without a valid cookie get `401 ui_session_required`.
 - With `ASSISTANT_WEB_AUTO_SESSION=1` the UI re-establishes the cookie on the first 401; otherwise it shows an in-app connect screen pointing to `aevra ui open`. Logout revokes the session and disables automatic re-creation until "Kết nối lại"; the signed-out state persists on the device across reloads and tabs.
 - Mutations require the same `Origin` and `X-Harness-UI: 1`. No bearer token is stored in browser JavaScript.
 
 ## UI states
 
-Every panel renders loading, empty, error/session-expired and success states. Destructive operations require a confirmation dialog.
+Every panel renders loading, empty, error/session-expired and success states. Destructive operations require a confirmation dialog. A skill install whose review is missing or expired returns `review_required` ("Bản review đã hết hạn; hãy review lại.") instead of the generic skill denial. The API audit line logs the same status the client receives. `run_capacity` explains both limits: 8 runs per owner and 64 per server, finished ones included, until they are deleted in Runs / Jobs.
 
 ## Test matrix
 

@@ -134,8 +134,8 @@ class HarnessRoute(APIRoute):
             except SpecialLiteralsStale:
                 status_code = 503
                 raise
-            except SkillError:
-                status_code = 409
+            except SkillError as error:
+                status_code = skill_error_reply(error)[1]
                 raise
             except RequestValidationError:
                 status_code = 422
@@ -310,6 +310,13 @@ async def start_run(body: RunInput, request: Request):
     """Start one admitted readonly task under the current bearer principal."""
     owner, service = await owner_service(request)
     return service.start(owner, body)
+
+
+def skill_error_reply(error):
+    """Return the public code and status for a skill registry rejection; a missing or expired review asks for a new one."""
+    if error.code in {"review_required", "review_expired"}:
+        return "review_required", 404
+    return "skill_operation_denied", 409
 
 
 def attachment_evidence(attachment):

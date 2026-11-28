@@ -27,7 +27,13 @@ export function createSidebar(handlers) {
     handlers.onNewChat();
     if (isMobile()) toggle(false);
   } } }, h("img", { src: "/aevra/brand/logo.svg", alt: "" }), h("strong", { class: "label", text: "Aevra" }));
-  const search = h("input", { type: "search", class: "sidebar-search", placeholder: "Tìm hội thoại…", "aria-label": "Tìm hội thoại", hidden: true, on: { input: () => { query = search.value.trim().toLowerCase(); renderList(); }, keydown: (event) => { if (event.key === "Escape") closeSearch(); } } });
+  const search = h("input", { type: "search", class: "sidebar-search", placeholder: "Tìm hội thoại…", "aria-label": "Tìm hội thoại", hidden: true, on: { input: () => { query = search.value.trim().toLowerCase(); renderList(); }, keydown: (event) => {
+    if (event.key !== "Escape") return;
+    // Escape closes only the search; on mobile the overlay stays open.
+    event.stopPropagation();
+    closeSearch();
+    searchButton.focus();
+  } } });
   const listHost = h("div", { class: "conversation-list" });
   // On mobile the overlay closes first, so a dialog opened by the button returns focus to a reachable control.
   const navButton = (name, label, glyph, onClick, extra = {}, closesOverlay = true) => h("button", { type: "button", class: "nav", title: label, "aria-label": label, on: { click: () => { if (closesOverlay && isMobile()) toggle(false); onClick(); } }, ...extra }, icon(glyph), h("span", { class: "label", text: label }));
