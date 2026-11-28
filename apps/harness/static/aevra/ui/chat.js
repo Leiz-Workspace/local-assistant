@@ -3,7 +3,10 @@ import { describe } from "../api.js";
 import { renderMarkdown } from "../markdown.js";
 import { settings } from "../settings.js";
 import { siblings } from "../tree.js";
-import { confirmDialog, formatDuration, h, icon } from "./dom.js";
+import { MOD_KEY, confirmDialog, formatDuration, h, icon } from "./dom.js";
+
+// Focus that was on a control which disappears after the action moves to the matching message action.
+const FOCUS_ALIAS = { "edit-save": "edit", "edit-cancel": "edit", editor: "edit", retry: "refresh" };
 
 function actionButton(name, label, onClick, extra = {}) {
   return h("button", { type: "button", class: "icon-button small", title: label, "aria-label": label, dataset: { act: name }, on: { click: onClick }, ...extra }, icon(name));
@@ -38,6 +41,8 @@ export function createChatView(handlers) {
   let streamingNodes = null;
   let pendingFocus = null;
   let pendingFrame = 0;
+  // The open inline editor; its text lives here, so any re-render restores it instead of dropping it.
+  let editing = null;
 
   scroller.addEventListener("scroll", () => {
     const distance = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
@@ -73,7 +78,7 @@ export function createChatView(handlers) {
     return h("article", { class: "message user", dataset: { id: message.id } },
       speaker("Bạn"),
       files.length ? h("div", { class: "message-files" }, files) : null,
-      h("div", { class: "bubble", text: message.content }),
+      editing?.id === message.id ? editorFor(message, busy) : h("div", { class: "bubble", text: message.content }),
       h("div", { class: "message-meta" },
         navigator(nodes, message),
         h("span", { class: "message-actions" },
@@ -83,30 +88,46 @@ export function createChatView(handlers) {
           actionButton("trash", "Xóa", () => handlers.onDelete(message.id), { disabled: busy }))));
   }
 
-  function openEditor(message, onSave, saveLabel) {
-    const article = list.querySelector(`[data-id="${CSS.escape(message.id)}"]`);
-    if (!article) return;
-    const cancel = async () => {
-      if (area.value !== message.content && !await confirmDialog({ title: "Bỏ thay đổi", message: "Bỏ nội dung vừa sửa?", confirmLabel: "Bỏ thay đổi", danger: true })) return;
-      handlers.onRerender();
-      list.querySelector(`[data-id="${CSS.escape(message.id)}"] [data-act="edit"]`)?.focus();
-    };
+  async function openEditor(message, onSave, saveLabel) {
+    if (editing?.id === message.id) {
+      list.querySelector('[data-act="editor"]')?.focus();
+      return;
+    }
+    if (editing && editing.value !== editing.original && !await confirmDialog({ title: "Bỏ thay đổi", message: "Bỏ nội dung đang sửa ở tin nhắn khác?", confirmLabel: "Bỏ thay đổi", danger: true })) return;
     rawViews.delete(message.id);
-    const area = h("textarea", { rows: Math.min(12, Math.max(3, message.content.split("\n").length)), "aria-label": "Sửa tin nhắn", value: message.content });
+    editing = { id: message.id, convId: message.convId, value: message.content, original: message.content, onSave, saveLabel, start: message.content.length, end: message.content.length, focus: true };
+    handlers.onRerender();
+  }
+
+  function editorFor(message, busy) {
+    const current = editing;
+    const remember = () => {
+      current.value = area.value;
+      current.start = area.selectionStart;
+      current.end = area.selectionEnd;
+    };
+    const area = h("textarea", { rows: Math.min(12, Math.max(3, current.value.split("\n").length)), "aria-label": "Sửa tin nhắn", dataset: { act: "editor" }, value: current.value, on: { input: remember, select: remember, keyup: remember, mouseup: remember } });
+    // Focus is on the editor or its Hủy button here; the re-render moves it to the message's edit action
+    // (or parks it on the title while that action is disabled).
+    const cancel = async () => {
+      if (current.value !== current.original && !await confirmDialog({ title: "Bỏ thay đổi", message: "Bỏ nội dung vừa sửa?", confirmLabel: "Bỏ thay đổi", danger: true })) return;
+      if (editing === current) editing = null;
+      handlers.onRerender();
+    };
     const kept = message.role === "user" ? [...(message.attachments || []).map((file) => file.name), ...(message.skill ? [`Skill ${message.skill.label || ""}`] : [])] : [];
     const editor = h("form", { class: "message-editor", on: { submit: (event) => {
       event.preventDefault();
       const text = area.value.trim();
-      if (text) onSave(text);
-    } } }, area, kept.length ? h("p", { class: "muted", text: `Giữ nguyên: ${kept.join(", ")}` }) : null, h("div", { class: "button-row" }, h("button", { type: "button", class: "secondary", text: "Hủy", on: { click: cancel } }), h("button", { type: "submit", class: "primary", text: saveLabel })));
-    const target = article.querySelector(":scope > .bubble, :scope > .answer");
-    if (!target) {
-      handlers.onRerender();
-      return;
-    }
-    target.replaceWith(editor);
-    area.focus();
-    area.setSelectionRange(area.value.length, area.value.length);
+      if (!text || busy) return;
+      // The editor closes only when the app accepts the edit; a refused edit keeps the text.
+      if (current.onSave(text) === false) return;
+      if (editing === current) editing = null;
+    } } },
+    area,
+    kept.length ? h("p", { class: "muted", text: `Giữ nguyên: ${kept.join(", ")}` }) : null,
+    h("div", { class: "button-row" },
+      h("button", { type: "button", class: "secondary", text: "Hủy", dataset: { act: "edit-cancel" }, on: { click: cancel } }),
+      h("button", { type: "submit", class: "primary", text: current.saveLabel, dataset: { act: "edit-save" }, disabled: busy, title: busy ? "Đợi câu trả lời hiện tại xong" : null })));
     area.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
@@ -117,6 +138,11 @@ export function createChatView(handlers) {
         cancel();
       }
     });
+    return editor;
+  }
+
+  function retryButton(message, busy) {
+    return h("button", { type: "button", class: "secondary", text: "Thử lại", dataset: { act: "retry" }, disabled: busy, on: { click: () => handlers.onRegenerate(message.id) } });
   }
 
   function reasoningBlock(message, streaming) {
@@ -127,14 +153,18 @@ export function createChatView(handlers) {
 
   function assistantMessage(nodes, message, busy, streaming) {
     const raw = rawViews.has(message.id) && !streaming;
-    const body = raw ? h("pre", { class: "raw answer", text: message.content }) : h("div", { class: "md answer", html: message.content ? renderMarkdown(message.content) : "" });
-    if (!raw) addCodeCopy(body, handlers.onCopy);
+    const editingThis = editing?.id === message.id && !streaming;
+    const body = editingThis ? editorFor(message, busy)
+      : raw ? h("pre", { class: "raw answer", text: message.content })
+        : h("div", { class: "md answer", html: message.content ? renderMarkdown(message.content) : "" });
+    if (!raw && !editingThis) addCodeCopy(body, handlers.onCopy);
     const notices = [];
     if (streaming && !message.content && !message.reasoning) notices.push(h("p", { class: "pending", text: "Aevra đang xử lý…" }));
-    if (message.status === "stopped") notices.push(h("p", { class: "note", text: "Đã dừng theo yêu cầu." }));
+    if (message.status === "stopped") notices.push(h("div", { class: "message-note" }, h("p", { class: "note", text: "Đã dừng theo yêu cầu." }), retryButton(message, busy)));
     if (message.edited) notices.push(h("p", { class: "note muted", text: "Đã sửa tay." }));
     if (message.omitted) notices.push(h("p", { class: "note", text: `Model không nhận được ${message.omitted} tệp đính kèm (vượt ngân sách context hoặc kích thước).` }));
-    if (message.status === "error") notices.push(h("div", { class: "message-error" }, h("p", { text: describe({ code: message.error }) }), h("button", { type: "button", class: "secondary", text: "Thử lại", disabled: busy, on: { click: () => handlers.onRegenerate(message.id) } })));
+    if (message.duplicates) notices.push(h("p", { class: "note muted", text: `${message.duplicates} tệp đính kèm trùng nội dung với tệp khác nên chỉ gửi cho model một lần.` }));
+    if (message.status === "error") notices.push(h("div", { class: "message-error" }, h("p", { text: describe({ code: message.error }) }), retryButton(message, busy)));
     const info = settings.showStats && !streaming && message.status === "done" ? stats(message) : "";
     const article = h("article", { class: `message assistant${streaming ? " streaming" : ""}`, dataset: { id: message.id }, "aria-busy": streaming ? "true" : null },
       speaker("Aevra"),
@@ -160,11 +190,13 @@ export function createChatView(handlers) {
       h("img", { src: "/aevra/brand/logo.svg", alt: "" }),
       h("h2", { text: conversation ? conversation.title : "Aevra" }),
       h("p", { text: "Local assistant · dữ liệu giữ trên máy của bạn." }),
-      h("p", { class: "muted", text: "Enter để gửi · Shift+Enter xuống dòng · nút + để thêm tệp, skill hoặc system message." }));
+      h("p", { class: "muted", text: `${settings.sendOnEnter ? "Enter để gửi · Shift+Enter xuống dòng" : `${MOD_KEY}+Enter để gửi · Enter xuống dòng`} · nút + để thêm tệp, skill hoặc system message.` }));
   }
 
   function render({ conversation, nodes, path, streamingId, busy, reveal = false }) {
     streamingNodes = null;
+    // An editor whose message was deleted from this conversation has nothing left to restore.
+    if (editing && conversation && editing.convId === conversation.id && !nodes.has(editing.id)) editing = null;
     if (reveal) follow = true;
     // Re-rendering replaces every message; remember which action had focus to restore it.
     const focused = list.contains(document.activeElement) ? document.activeElement : null;
@@ -187,13 +219,21 @@ export function createChatView(handlers) {
     if (focusKey) {
       const messages = [...list.querySelectorAll(".message")];
       const article = messages[focusKey.index] || messages.filter((item) => item.classList.contains(focusKey.role)).at(-1);
-      const exact = article?.querySelector(`[data-act="${focusKey.act}"]:not([disabled])`);
+      const alias = FOCUS_ALIAS[focusKey.act];
+      const exact = article?.querySelector(`[data-act="${focusKey.act}"]:not([disabled])`) || (alias ? article?.querySelector(`[data-act="${alias}"]:not([disabled])`) : null);
       const target = exact || (busy ? null : article?.querySelector(".message-actions button:not([disabled])"));
       if (target) target.focus({ preventScroll: true });
       else {
         pendingFocus = focusKey;
         title?.focus({ preventScroll: true });
       }
+    }
+    // Restore the open editor's caret, and focus it when it was just opened.
+    const area = editing ? list.querySelector('[data-act="editor"]') : null;
+    if (area && (editing.focus || document.activeElement === area)) {
+      if (editing.focus) area.focus({ preventScroll: true });
+      area.setSelectionRange(editing.start, editing.end);
+      editing.focus = false;
     }
   }
 
@@ -211,7 +251,8 @@ export function createChatView(handlers) {
         existing.querySelector("summary").textContent = message.content ? "Suy nghĩ" : "Đang suy nghĩ…";
         existing.querySelector(".md").innerHTML = renderMarkdown(message.reasoning);
       } else if (fresh) {
-        article.prepend(fresh);
+        // Keep the reading order of a full render: heading, reasoning, then the answer.
+        body.before(fresh);
       }
       if (message.content || message.reasoning) article.querySelector(".pending")?.remove();
       scrollToBottom();
@@ -223,5 +264,10 @@ export function createChatView(handlers) {
     toBottom.hidden = true;
   }
 
-  return { node, render, updateStreaming, scrollToBottom, resetFollow };
+  /** Drop the open editor for a deleted conversation, or any editor when no conversation is given. */
+  function discardEdit(convId) {
+    if (!convId || editing?.convId === convId) editing = null;
+  }
+
+  return { node, render, updateStreaming, scrollToBottom, resetFollow, discardEdit };
 }

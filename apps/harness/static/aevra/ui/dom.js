@@ -1,5 +1,8 @@
 /** Small DOM toolkit: safe element builder, toasts, dialogs, popovers and menus. */
 
+/** Name of the shortcut modifier shown in hints: Cmd on Apple platforms, Ctrl elsewhere (both work). */
+export const MOD_KEY = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgentData?.platform || navigator.platform || "") ? "Cmd" : "Ctrl";
+
 export function h(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs || {})) {
@@ -144,7 +147,14 @@ document.addEventListener("mousedown", (event) => {
   if (layer?.kind === "popover" && !layer.node.contains(event.target) && !layer.anchor?.contains(event.target)) closeTop();
 });
 
-export function popover(anchor, content, { placement = "top", className = "", role = "dialog", label = "" } = {}) {
+export function popover(anchor, content, { placement = "top", className = "", role = "dialog", label = "", toggle = true } = {}) {
+  // Activating the control that opened the top popover closes it, like a toggle. Follow-up menus
+  // opened after asynchronous work pass toggle: false and replace whatever is open instead.
+  const open = top();
+  if (toggle && open?.kind === "popover" && open.anchor === anchor) {
+    open.close();
+    return () => {};
+  }
   closePopovers();
   const node = h("div", { class: `popover ${className}`, role, "aria-label": label || null, tabindex: "-1" }, content);
   document.body.append(node);
@@ -152,9 +162,9 @@ export function popover(anchor, content, { placement = "top", className = "", ro
   const width = node.offsetWidth;
   const height = node.offsetHeight;
   const left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
-  const top = placement === "top" && rect.top - height - 8 > 8 ? rect.top - height - 8 : Math.min(rect.bottom + 8, window.innerHeight - height - 8);
+  const y = placement === "top" && rect.top - height - 8 > 8 ? rect.top - height - 8 : Math.min(rect.bottom + 8, window.innerHeight - height - 8);
   node.style.left = `${left}px`;
-  node.style.top = `${Math.max(8, top)}px`;
+  node.style.top = `${Math.max(8, y)}px`;
   anchor.setAttribute("aria-expanded", "true");
   const layer = {
     kind: "popover",
@@ -218,6 +228,8 @@ export function dialog({ title, body, actions = [], wide = false, initialFocus =
       restoreInert();
       overlay.remove();
       if (previous?.isConnected) previous.focus();
+      // The opener may be gone or hidden now (a closed mobile sidebar); never leave focus on the page body.
+      if (document.activeElement === document.body || !document.activeElement) document.getElementById("title")?.focus();
       resolve(value);
     };
     const titleId = `dialog-${Math.random().toString(36).slice(2)}`;

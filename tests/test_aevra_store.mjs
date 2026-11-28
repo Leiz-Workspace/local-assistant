@@ -41,11 +41,13 @@ test("rejects parent cycles and duplicate message ids", async () => {
 
 test("rejects an error field that is not an error code", () => rejects([user(), assistant({ error: "<img src=x>" })]));
 
+test("rejects a duplicate count outside 0..4", () => rejects([user(), assistant({ duplicates: 9 })]));
+
 test("carries known metadata and drops unknown fields", async () => {
   const before = (await store.listConversations()).length;
   const count = await store.importConversations(wrap([
     user({ skill: { installation_id: UUID, workspace_id: UUID, label: "Review" }, extra: "dropped" }),
-    assistant({ usage: { prompt_tokens: 3, completion_tokens: 2 }, timing: { totalMs: 12.5, firstTokenMs: null }, context: { input_tokens: 10, preset_selected: "fast" }, omitted: 1, edited: true, error: "stream_timeout" }),
+    assistant({ usage: { prompt_tokens: 3, completion_tokens: 2 }, timing: { totalMs: 12.5, firstTokenMs: null }, context: { input_tokens: 10, preset_selected: "fast" }, omitted: 1, duplicates: 2, edited: true, error: "stream_timeout" }),
   ]));
   assert.equal(count, 1);
   const list = await store.listConversations();
@@ -57,6 +59,7 @@ test("carries known metadata and drops unknown fields", async () => {
   assert.deepEqual(answer.timing, { totalMs: 12.5 });
   assert.deepEqual(answer.context, { input_tokens: 10 });
   assert.equal(answer.omitted, 1);
+  assert.equal(answer.duplicates, 2);
   assert.equal(answer.edited, true);
   assert.equal(answer.error, "stream_timeout");
   assert.equal(question.skill.label, "Review");

@@ -30,7 +30,7 @@ CLI ------------┘             │
 - The web container owns authentication/session cookies; local development may use a generated local principal, while production requires the configured auth file/secret volume.
 - The container connects to `core:8080` by service name; no browser route exposes CORE management by default.
 - Health endpoint: `/api/v1/health`; UI endpoint: `/`.
-- A `WEB_FULL_CORE=1` compatibility switch is developer-only and cannot be enabled by the normal release compose file.
+- A compatibility switch is developer-only and cannot be enabled by the normal release compose file. The variable that `apps/harness/browser.py:193` actually reads is `Aevra_WEB_FULL_CORE=1`, spelled exactly so (environment names are case-sensitive); `WEB_FULL_CORE` and `AEVRA_WEB_FULL_CORE` have no effect.
 
 ### Product UI
 

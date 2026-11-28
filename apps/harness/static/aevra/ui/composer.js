@@ -1,15 +1,10 @@
 /** Chat composer: attachments, skill, system message, reasoning, model, context ring, mic, send/stop. */
 import { api } from "../api.js";
+import { MAX_ATTACHMENTS, MAX_ATTACHMENTS_TOTAL, MAX_ATTACHMENT_BYTES, PASTE_FILE_NAME, attachedBytes, evidenceBytes, pastePlacement } from "../limits.js";
 import { PRESETS, labelOf, settings } from "../settings.js";
 import { formatBytes, h, icon, menu, popover, promptDialog, toast } from "./dom.js";
 import { loadModels } from "./panels.js";
 
-export const MAX_ATTACHMENTS = 4;
-// Byte limits mirror the server: each file's evidence ("Attached file: name" header plus text) and the total.
-export const MAX_ATTACHMENT_BYTES = 65536;
-export const MAX_ATTACHMENTS_TOTAL = 196608;
-const encoder = new TextEncoder();
-const evidenceBytes = (name, text) => encoder.encode(`Attached file: ${name}\n\n${text}`).length;
 const TEXT_EXTENSIONS = ["txt", "md", "markdown", "json", "jsonl", "csv", "tsv", "yaml", "yml", "toml", "ini", "cfg", "conf", "log", "xml", "html", "htm", "css", "scss", "js", "mjs", "cjs", "ts", "tsx", "jsx", "py", "rb", "go", "rs", "java", "kt", "c", "h", "cpp", "hpp", "cc", "cs", "php", "sh", "bash", "zsh", "sql", "swift", "dart", "lua", "r", "scala", "vue", "svelte", "tex", "rst", "adoc", "bib", "proto", "graphql", "gradle", "dockerfile", "makefile"];
 const ACCEPT = TEXT_EXTENSIONS.map((extension) => `.${extension}`).join(",") + ",text/*";
 
@@ -43,6 +38,9 @@ function ring(percent, level) {
 
 export function createComposer(handlers) {
   const state = { attachments: [], skill: null, busy: false, context: null, models: null, historyTokens: 0 };
+  // One unsent draft (text, files, skill) per conversation, so nothing follows the user into another chat.
+  const drafts = new Map();
+  let draftKey = null;
   const textarea = h("textarea", { rows: 1, placeholder: "Nhắn với Aevra…", "aria-label": "Tin nhắn", spellcheck: true });
   const chips = h("div", { class: "composer-chips" });
   const fileInput = h("input", { type: "file", multiple: true, accept: ACCEPT, hidden: true });
@@ -79,9 +77,12 @@ export function createComposer(handlers) {
     renderChips();
   }
 
+  /** Attach files to the draft that was open when they were chosen, even if the user switches chats while they load. */
   async function addFiles(files) {
+    const key = draftKey;
+    const listFor = () => (key === draftKey ? state.attachments : drafts.get(key)?.attachments || []);
     for (const file of files) {
-      if (state.attachments.length >= MAX_ATTACHMENTS) {
+      if (listFor().length >= MAX_ATTACHMENTS) {
         toast(`Tối đa ${MAX_ATTACHMENTS} tệp mỗi lượt.`, "error");
         break;
       }
@@ -104,14 +105,28 @@ export function createComposer(handlers) {
         toast(`${file.name}: vượt ${MAX_ATTACHMENT_BYTES / 1024} KB văn bản cho một tệp.`, "error");
         continue;
       }
-      const total = state.attachments.reduce((sum, attachment) => sum + evidenceBytes(attachment.name, attachment.content), 0);
-      if (total + bytes > MAX_ATTACHMENTS_TOTAL) {
+      // Reading is asynchronous, so check the target draft again after the await.
+      const list = listFor();
+      if (list.length >= MAX_ATTACHMENTS) {
+        toast(`Tối đa ${MAX_ATTACHMENTS} tệp mỗi lượt.`, "error");
+        break;
+      }
+      if (attachedBytes(list) + bytes > MAX_ATTACHMENTS_TOTAL) {
         toast(`${file.name}: tổng tệp đính kèm vượt ${MAX_ATTACHMENTS_TOTAL / 1024} KB.`, "error");
         continue;
       }
-      state.attachments.push({ id: crypto.randomUUID(), name, size: file.size, content: text });
+      attach(key, { id: crypto.randomUUID(), name, size: file.size, content: text });
     }
-    renderChips();
+    if (key === draftKey) renderChips();
+  }
+
+  function attach(key, attachment) {
+    if (key === draftKey) {
+      state.attachments.push(attachment);
+      return;
+    }
+    const stored = drafts.get(key) || { text: "", attachments: [], skill: null };
+    drafts.set(key, { ...stored, attachments: [...stored.attachments, attachment] });
   }
 
   async function chooseSkill() {
@@ -123,7 +138,7 @@ export function createComposer(handlers) {
       return;
     }
     if (!skills.length) {
-      menu(plusButton, [{ label: "Chưa có skill nào được cài", disabled: true }, { label: "Mở Skills để review và cài", icon: "skills", onSelect: () => handlers.openPanel("skills") }]);
+      menu(plusButton, [{ label: "Chưa có skill nào được cài", disabled: true }, { label: "Mở Skills để review và cài", icon: "skills", onSelect: () => handlers.openPanel("skills") }], { toggle: false });
       return;
     }
     menu(plusButton, skills.map((skill) => ({
@@ -136,7 +151,7 @@ export function createComposer(handlers) {
         renderChips();
         textarea.focus();
       },
-    })));
+    })), { toggle: false });
   }
 
   async function editSystemPrompt() {
@@ -169,6 +184,7 @@ export function createComposer(handlers) {
       state.models = null;
     }
     renderModel();
+    handlers.onModels?.(state.models);
   }
 
   function limit() {
@@ -223,10 +239,36 @@ export function createComposer(handlers) {
     const attachments = state.attachments.map(({ name, content, size }) => ({ name, content, size }));
     const accepted = handlers.onSend({ text, attachments, skill: state.skill ? { ...state.skill } : null });
     if (accepted === false) return;
+    // Files and the skill belong to the message just sent; only the system message stays.
     textarea.value = "";
     state.attachments = [];
+    state.skill = null;
     renderChips();
     resize();
+  }
+
+  function hasDraft() {
+    return Boolean(textarea.value || state.attachments.length || state.skill);
+  }
+
+  function restoreDraft(draft) {
+    textarea.value = draft?.text || "";
+    state.attachments = draft?.attachments || [];
+    state.skill = draft?.skill || null;
+    resize();
+    renderChips();
+  }
+
+  /** Switch the composer to another conversation's draft, keeping the current one for later. */
+  function useDraft(key) {
+    if (key === draftKey) return;
+    if (draftKey !== null) {
+      if (hasDraft()) drafts.set(draftKey, { text: textarea.value, attachments: state.attachments, skill: state.skill });
+      else drafts.delete(draftKey);
+    }
+    draftKey = key;
+    restoreDraft(drafts.get(key));
+    drafts.delete(key);
   }
 
   form.addEventListener("submit", (event) => {
@@ -252,17 +294,19 @@ export function createComposer(handlers) {
     const text = event.clipboardData?.getData("text/plain") || "";
     if (settings.pasteToFile > 0 && text.length > settings.pasteToFile) {
       event.preventDefault();
-      if (state.attachments.length >= MAX_ATTACHMENTS || evidenceBytes("van-ban-dan.txt", text) > MAX_ATTACHMENT_BYTES) {
-        // Too big for an attachment: paste it inline when it still fits one message.
-        if (encoder.encode(textarea.value + text).length <= 200000) {
-          document.execCommand("insertText", false, text);
-          toast("Không đính kèm được nên đã dán trực tiếp vào tin nhắn.");
-        } else {
-          toast("Văn bản dán quá lớn cho một tin nhắn. Hãy rút ngắn hoặc chia nhỏ.", "error");
-        }
-        return;
+      const placement = pastePlacement({ attachments: state.attachments, text, draft: textarea.value });
+      if (placement === "attach") {
+        // The text is already in memory and every limit was checked, so attach it at once.
+        state.attachments.push({ id: crypto.randomUUID(), name: PASTE_FILE_NAME, size: new TextEncoder().encode(text).length, content: text });
+        renderChips();
+      } else if (placement === "inline") {
+        // It cannot be attached (count, size or total limit): paste it inline while the message stays small enough.
+        document.execCommand("insertText", false, text);
+        if (handlers.exceedsTurn?.(textarea.value, state.attachments)) toast("Đã dán trực tiếp, nhưng tin nhắn và tệp đính kèm đang vượt giới hạn một lượt. Bỏ bớt tệp hoặc rút ngắn trước khi gửi.", "error");
+        else toast("Không đính kèm được nên đã dán trực tiếp vào tin nhắn.");
+      } else {
+        toast("Văn bản dán quá lớn cho một tin nhắn. Hãy rút ngắn hoặc chia nhỏ.", "error");
       }
-      addFiles([new File([text], "van-ban-dan.txt", { type: "text/plain" })]);
     }
   });
   fileInput.addEventListener("change", () => {
@@ -286,8 +330,17 @@ export function createComposer(handlers) {
       updateRing();
     },
   }))));
+  let modelClicks = 0;
   modelButton.addEventListener("click", async () => {
+    // Decide open or close now; the model probe below is asynchronous.
+    if (modelButton.getAttribute("aria-expanded") === "true") {
+      modelClicks += 1;
+      menu(modelButton, []);
+      return;
+    }
+    const click = ++modelClicks;
     await refreshModels();
+    if (click !== modelClicks) return;
     const models = state.models?.models || [];
     menu(modelButton, models.length ? models.map((model) => ({
       label: model.id,
@@ -295,7 +348,7 @@ export function createComposer(handlers) {
       icon: "cpu",
       checked: model.profile === state.models.active,
       disabled: !model.selectable,
-    })) : [{ label: "Không đọc được danh sách model", disabled: true }]);
+    })) : [{ label: "Không đọc được danh sách model", disabled: true }], { toggle: false });
   });
   ringButton.addEventListener("click", () => popover(ringButton, contextDetails(), { label: "Chi tiết context" }));
   micButton.addEventListener("click", () => popover(micButton, h("div", { class: "context-popover", "aria-label": "Nhập bằng giọng nói" }, h("h3", { text: "Nhập bằng giọng nói" }), h("p", { text: "Cần một bộ nhận dạng giọng nói chạy local. Aevra không gửi âm thanh ra dịch vụ bên ngoài, nên nút này chỉ bật sau khi owner duyệt ASR local." })), { label: "Nhập bằng giọng nói" }));
@@ -322,10 +375,28 @@ export function createComposer(handlers) {
       updateRing();
     },
     refreshModels,
-    setDraft(text) {
-      textarea.value = text;
-      resize();
-      textarea.focus();
+    useDraft,
+    /** Hand the current draft to a key without swapping, for a new chat that just got its conversation id. */
+    rekeyDraft(from, to) {
+      if (draftKey === from) draftKey = to;
+      else if (drafts.has(from)) {
+        drafts.set(to, drafts.get(from));
+        drafts.delete(from);
+      }
+    },
+    /** Prefill another conversation's draft, used when a fork opens with the forked question and its files. */
+    seedDraft(key, draft) {
+      const seeded = { text: draft.text || "", attachments: draft.attachments || [], skill: draft.skill || null };
+      if (key === draftKey) restoreDraft(seeded);
+      else drafts.set(key, seeded);
+    },
+    dropDraft(key) {
+      drafts.delete(key);
+      if (draftKey === key) draftKey = null;
+    },
+    clearDrafts() {
+      drafts.clear();
+      draftKey = null;
     },
   };
 }

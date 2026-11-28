@@ -175,6 +175,7 @@ function validMessage(message, convId) {
     && (message.error === undefined || message.error === null || (typeof message.error === "string" && ERROR_CODE.test(message.error)))
     && (message.edited === undefined || typeof message.edited === "boolean")
     && (message.omitted === undefined || (Number.isInteger(message.omitted) && message.omitted >= 0 && message.omitted <= 4))
+    && (message.duplicates === undefined || (Number.isInteger(message.duplicates) && message.duplicates >= 0 && message.duplicates <= 4))
     && numbers(message.usage, ["prompt_tokens", "completion_tokens", "total_tokens"])
     && numbers(message.timing, ["totalMs", "firstTokenMs", "generationMs"])
     && numbers(message.context, ["input_tokens", "input_limit", "context_size", "max_tokens"]);
@@ -209,10 +210,33 @@ function validConversation(source) {
 
 const pick = (value, keys) => (value && typeof value === "object" ? Object.fromEntries(keys.filter((key) => Number.isFinite(value[key])).map((key) => [key, value[key]])) : undefined);
 
+/** Write every record in one transaction over both stores, so a failure leaves nothing behind. */
+async function writeAll(conversations, messages) {
+  const db = await open();
+  if (!db) {
+    messages.forEach((message) => memory.messages.set(message.id, structuredClone(message)));
+    conversations.forEach((conversation) => memory.conversations.set(conversation.id, structuredClone(conversation)));
+    return;
+  }
+  let transaction;
+  try {
+    transaction = db.transaction(["conversations", "messages"], "readwrite");
+    const messageStore = transaction.objectStore("messages");
+    const conversationStore = transaction.objectStore("conversations");
+    messages.forEach((message) => messageStore.put(message));
+    conversations.forEach((conversation) => conversationStore.put(conversation));
+  } catch (error) {
+    try { transaction?.abort(); } catch { /* already finished */ }
+    throw error;
+  }
+  await done(transaction);
+}
+
 export async function importConversations(data) {
   if (data?.format !== "aevra-conversations" || data.version !== 1 || !Array.isArray(data.conversations)) throw new Error("invalid_import");
   if (data.conversations.length > 1000 || !data.conversations.every(validConversation)) throw new Error("invalid_import");
-  let count = 0;
+  const conversations = [];
+  const records = [];
   for (const source of data.conversations) {
     const ids = new Map(source.messages.map((message) => [message.id, newId()]));
     const convId = newId();
@@ -227,6 +251,7 @@ export async function importConversations(data) {
       ...(message.error ? { error: message.error } : {}),
       ...(message.edited ? { edited: true } : {}),
       ...(message.omitted ? { omitted: message.omitted } : {}),
+      ...(message.duplicates ? { duplicates: message.duplicates } : {}),
       ...(message.usage ? { usage: pick(message.usage, ["prompt_tokens", "completion_tokens", "total_tokens"]) } : {}),
       ...(message.timing ? { timing: pick(message.timing, ["totalMs", "firstTokenMs", "generationMs"]) } : {}),
       ...(message.context ? { context: pick(message.context, ["input_tokens", "input_limit", "context_size", "max_tokens"]) } : {}),
@@ -235,10 +260,14 @@ export async function importConversations(data) {
       parent: message.parent ? ids.get(message.parent) ?? null : null,
       children: message.children.map((child) => ids.get(child)).filter(Boolean),
     }));
-    await saveMessages(messages);
+    records.push(...messages);
     // Only known fields are kept; anything else in the file is ignored.
-    await saveConversation({ id: convId, title: String(source.title || "Hội thoại nhập").slice(0, 120), createdAt: source.createdAt ?? Date.now(), updatedAt: source.updatedAt ?? Date.now(), currNode: ids.get(source.currNode) ?? messages.at(-1)?.id ?? null, pinned: source.pinned === true, preset: source.preset || "fast", systemPrompt: source.systemPrompt || "" });
-    count += 1;
+    conversations.push({ id: convId, title: String(source.title || "Hội thoại nhập").slice(0, 120), createdAt: source.createdAt ?? Date.now(), updatedAt: source.updatedAt ?? Date.now(), currNode: ids.get(source.currNode) ?? messages.at(-1)?.id ?? null, pinned: source.pinned === true, preset: source.preset || "fast", systemPrompt: source.systemPrompt || "" });
   }
-  return count;
+  try {
+    await writeAll(conversations, records);
+  } catch {
+    throw new Error("import_storage_failed");
+  }
+  return conversations.length;
 }

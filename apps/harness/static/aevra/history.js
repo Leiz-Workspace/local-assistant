@@ -19,3 +19,28 @@ export function boundedHistory(messages, { maxMessages = MAX_MESSAGES, maxBytes 
   while (kept.length > 1 && kept[0].role !== "user") kept.shift();
   return kept;
 }
+
+/**
+ * Build the chat request from the active path: complete question/answer pairs, always ending with the
+ * current user turn. Returns null when that turn cannot fit; droppedPairs counts the pairs left out.
+ */
+export function buildRequest(path, system, maxBytes) {
+  const turns = [];
+  path.forEach((message, index) => {
+    if (message.role !== "user") return;
+    if (index === path.length - 1) {
+      turns.push({ role: "user", content: message.content });
+      return;
+    }
+    const answer = path[index + 1];
+    if (answer?.role === "assistant" && answer.content?.trim() && (answer.status === "done" || answer.status === "stopped")) {
+      turns.push({ role: "user", content: message.content }, { role: "assistant", content: answer.content });
+    }
+  });
+  const bounded = boundedHistory(turns, { maxMessages: system ? MAX_MESSAGES - 1 : MAX_MESSAGES, maxBytes });
+  if (!bounded.length || bounded[bounded.length - 1] !== turns[turns.length - 1]) return null;
+  return {
+    messages: system ? [{ role: "system", content: system }, ...bounded] : bounded,
+    droppedPairs: Math.ceil((turns.length - bounded.length) / 2),
+  };
+}

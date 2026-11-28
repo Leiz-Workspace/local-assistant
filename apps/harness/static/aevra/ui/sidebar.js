@@ -1,6 +1,6 @@
 /** Collapsible sidebar: conversations, search, workspace tools, settings and session. */
 import { settings } from "../settings.js";
-import { h, icon, menu } from "./dom.js";
+import { MOD_KEY, h, icon, menu } from "./dom.js";
 
 const KEY = "aevra-sidebar";
 const TOOLS = [["context", "Context", "context"], ["memory", "Memory", "memory"], ["skills", "Skills", "skills"], ["runs", "Runs / Jobs", "runs"], ["hooks", "Hooks / Plugins", "hooks"]];
@@ -20,7 +20,7 @@ export function createSidebar(handlers) {
 
   const toggleButton = h("button", { type: "button", class: "icon-button", on: { click: () => toggle() } }, icon("sidebar"));
   const logo = h("button", { type: "button", class: "brand", on: { click: () => {
-    if (!expanded) {
+    if (!isOpen()) {
       toggle(true);
       return;
     }
@@ -29,9 +29,10 @@ export function createSidebar(handlers) {
   } } }, h("img", { src: "/aevra/brand/logo.svg", alt: "" }), h("strong", { class: "label", text: "Aevra" }));
   const search = h("input", { type: "search", class: "sidebar-search", placeholder: "Tìm hội thoại…", "aria-label": "Tìm hội thoại", hidden: true, on: { input: () => { query = search.value.trim().toLowerCase(); renderList(); }, keydown: (event) => { if (event.key === "Escape") closeSearch(); } } });
   const listHost = h("div", { class: "conversation-list" });
-  const navButton = (name, label, glyph, onClick, extra = {}) => h("button", { type: "button", class: "nav", title: label, "aria-label": label, on: { click: () => { onClick(); if (isMobile()) toggle(false); } }, ...extra }, icon(glyph), h("span", { class: "label", text: label }));
-  const newChat = navButton("new", "Chat mới", "plus", () => handlers.onNewChat(), { title: "Chat mới (Ctrl+Shift+O)" });
-  const searchButton = navButton("search", "Tìm kiếm", "search", () => openSearch(), { title: "Tìm kiếm (Ctrl+K)" });
+  // On mobile the overlay closes first, so a dialog opened by the button returns focus to a reachable control.
+  const navButton = (name, label, glyph, onClick, extra = {}, closesOverlay = true) => h("button", { type: "button", class: "nav", title: label, "aria-label": label, on: { click: () => { if (closesOverlay && isMobile()) toggle(false); onClick(); } }, ...extra }, icon(glyph), h("span", { class: "label", text: label }));
+  const newChat = navButton("new", "Chat mới", "plus", () => handlers.onNewChat(), { title: `Chat mới (${MOD_KEY}+Shift+O)` });
+  const searchButton = navButton("search", "Tìm kiếm", "search", () => openSearch(), { title: `Tìm kiếm (${MOD_KEY}+K)` }, false);
   const tools = TOOLS.map(([name, label, glyph]) => navButton(name, label, glyph, () => handlers.onPanel(name), { dataset: { panel: name } }));
   const status = h("span", { class: "status-line label" });
   const settingsButton = navButton("settings", "Cài đặt", "settings", () => handlers.onSettings());
@@ -45,22 +46,31 @@ export function createSidebar(handlers) {
     h("div", { class: "sidebar-foot" }, settingsButton, logoutButton, status));
   const backdrop = h("div", { class: "sidebar-backdrop", hidden: true, on: { click: () => toggle(false) } });
 
+  // "Luôn mở sidebar trên desktop" pins the sidebar open there; the saved rail state is left untouched.
+  const pinnedOpen = () => settings.alwaysShowSidebar && !isMobile();
+  const isOpen = () => expanded || pinnedOpen();
+
   function apply() {
-    const open = expanded || (settings.alwaysShowSidebar && !isMobile());
+    const open = isOpen();
     // A hidden mobile overlay must not be reachable by Tab or assistive tech.
     node.inert = isMobile() && !open;
     document.body.classList.toggle("sidebar-collapsed", !open);
     document.body.classList.toggle("sidebar-open", open);
     backdrop.hidden = !(open && isMobile());
+    toggleButton.hidden = pinnedOpen();
     toggleButton.setAttribute("aria-expanded", String(open));
     toggleButton.setAttribute("aria-label", open ? "Thu gọn thanh bên" : "Mở thanh bên");
-    toggleButton.title = open ? "Thu gọn thanh bên (Ctrl+B)" : "Mở thanh bên (Ctrl+B)";
+    toggleButton.title = open ? `Thu gọn thanh bên (${MOD_KEY}+B)` : `Mở thanh bên (${MOD_KEY}+B)`;
     logo.setAttribute("aria-label", open ? "Chat mới" : "Mở thanh bên");
     logo.title = open ? "Aevra" : "Mở thanh bên";
     if (!open) closeSearch();
   }
 
   function toggle(force) {
+    if (pinnedOpen()) {
+      apply();
+      return;
+    }
     expanded = typeof force === "boolean" ? force : !expanded;
     if (!isMobile()) {
       try { localStorage.setItem(KEY, expanded ? "expanded" : "collapsed"); } catch { /* storage may be unavailable */ }

@@ -71,15 +71,19 @@ function payloadHtml(payload) {
   return `<ol class="transcript">${messages.map((message) => `<li><span class="chip">${esc(message?.role ?? "?")}</span><div>${esc(typeof message?.content === "string" ? message.content : JSON.stringify(message?.content))}</div></li>`).join("")}</ol>`;
 }
 
+function strategyHtml() {
+  const policy = settings.history ? labelOf(HISTORY, settings.history) : "";
+  return `Context: <strong>${esc(labelOf(STRATEGIES, settings.strategy))}</strong> · Lịch sử: <strong>${esc(policy || "giữ toàn bộ")}</strong>`;
+}
+
 async function renderContext(root, current) {
   const archives = await api("/context/archives");
   if (!current()) return;
-  const policy = settings.history ? labelOf(HISTORY, settings.history) : "";
   const hint = settings.history === "extractive-compact"
     ? "Chưa có archive. Archive được tạo khi hội thoại gần chạm giới hạn context và phần cũ bị rút gọn."
     : "Chưa có archive. Chỉ chính sách lịch sử Extractive compact (trong Cài đặt) lưu phần hội thoại bị rút gọn tại đây.";
   root.innerHTML = card("Context archives", archives.length ? `<ul class="rows">${archives.map(archiveRow).join("")}</ul>` : empty(hint))
-    + card("Chiến lược hiện tại", `<p>Context: <strong>${esc(labelOf(STRATEGIES, settings.strategy))}</strong> · Lịch sử: <strong>${esc(policy || "giữ toàn bộ")}</strong></p><p><button class="secondary" type="button" data-action="open-settings">Đổi trong Cài đặt</button></p>`);
+    + card("Chiến lược hiện tại", `<p data-strategy>${strategyHtml()}</p><p><button class="secondary" type="button" data-action="open-settings">Đổi trong Cài đặt</button></p>`);
 }
 
 async function renderMemory(root, current) {
@@ -219,7 +223,7 @@ export async function loadModels() {
     if (error.code === "session_required") throw error;
     const fallback = await request("/v1/models").catch(() => null);
     const id = fallback?.data?.[0]?.id;
-    return id ? { active: "core", models: [{ profile: "core", id, status: "approved", selectable: true, loaded: null, online: null, reason: "" }] } : { active: "core", models: [] };
+    return id ? { active: "core", fallback: true, models: [{ profile: "core", id, status: "approved", selectable: true, loaded: null, online: null, reason: "" }] } : { active: "core", fallback: true, models: [] };
   }
 }
 
@@ -235,6 +239,13 @@ async function renderHooks(root, current) {
 }
 
 const RENDERERS = { context: renderContext, memory: renderMemory, skills: renderSkills, runs: renderRuns, hooks: renderHooks };
+
+/** Update the parts of an open panel that show settings, in place so focus and other content stay put. */
+export function refreshSettingsViews(name, root) {
+  if (name !== active) return;
+  const strategy = root.querySelector("[data-strategy]");
+  if (strategy) strategy.innerHTML = strategyHtml();
+}
 
 export function stopPanels() {
   active = null;

@@ -6654,3 +6654,41 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - image and PDF input;
   - switching to the unrestricted profile (restarts the shared CORE).
 - **Not done:** no commit or PR yet.
+
+## 2026-11-28 — Aevra web UI: fixes for the bugs the feature checklist found (PR #130)
+
+- **Owner request:** "Fix in PR 130", after a 107-item test checklist for the web UI. Six agents tried to refute each suspected bug against the code: 12 were confirmed, 4 partly confirmed, none refuted. One was also seen in the browser.
+- **Fixed (C-numbers as in the checklist):**
+  - C1: each conversation, and the unsaved new chat, keeps its own unsent text, files and skill. The new chat also keeps its preset and system message. Files still loading go to the draft they were chosen in. Files and the skill are cleared after sending; a fork from a question carries its files and skill.
+  - C2: a long paste that cannot be attached, for example because it would exceed the 192 KB total, is pasted inline instead of dropped. The notice warns when the turn then exceeds the request limit. Decided by `limits.js` `pastePlacement`.
+  - C3: the history notice counts dropped question/answer pairs (`history.js` `buildRequest`). Duplicate attachments get their own notice, but only when the first copy was included (`classifyOmitted`).
+  - C4: the empty-chat hint follows the Enter-to-send setting; shortcut tooltips name Cmd on Apple platforms.
+  - C5: activating the control that opened a popover or menu closes it; follow-up menus opened after async work replace it.
+  - C6: a blank or invalid paste threshold keeps the saved value; only 0 turns conversion off.
+  - C7: with "Luôn mở sidebar trên desktop" the collapse button is hidden, and the saved rail state is no longer flipped.
+  - C8: the Context panel's strategy card refreshes in place; "Đổi trong Cài đặt" opens "Model và context".
+  - C9: the inline editor's text and caret survive every re-render. Refused edits keep the editor open. A deleted message or conversation drops its editor. Save, Ctrl+Enter, Hủy and Thử lại move focus to the message's edit or regenerate action.
+  - C11: the status chip reports CORE readiness from the model probe on load and after "Kết nối lại". The web-only fallback model list does not count as a probe.
+  - C12: the stopped notice has "Thử lại". C13: the streaming reasoning block is inserted before the answer, keeping the reading order.
+  - C14: import writes everything in one IndexedDB transaction. A storage failure imports nothing and has its own message.
+  - C15: the redesign plan names the real variable, `Aevra_WEB_FULL_CORE` (code unchanged).
+  - C16: on mobile, sidebar buttons close the overlay before acting, so dialogs return focus to the menu button. Search keeps the overlay open, which it previously closed at once. Dialogs fall back to the title when the opener cannot take focus.
+- **Not fixed:**
+  - C10, the missing manifest link on `/`. A link alone cannot make the app installable, because the CSP has no `manifest-src` and the manifest route needs a session. The spec does not promise install.
+  - The six checklist notes that were never verified, apart from "Đổi trong Cài đặt", which is covered by C8.
+- **Review.**
+  - Browser checks caught one regression from the C5 change: `top()` was used before a later local `const top` in `popover()`, which broke every popover. Fixed before review.
+  - A four-lens adversarial review with one verifier per lens found 19 issues: 14 real (1 medium), 5 refuted.
+  - The medium one was a C11 regression: the chip stayed "Chưa có phiên" after "Kết nối lại".
+  - The others: the async attach race, the paste/NUL handling, the inline over-limit warning, the new-chat preset and system message, fork files, stale editors, editor focus aliases, the model-pill toggle during its probe, the fallback model list, duplicate counting, and a weak boundary test. All 14 are fixed.
+- **Validation:**
+  - `node --test tests/test_*.mjs`: 68 passed, up from 48 before these fixes.
+    - New files: `tests/test_aevra_limits.mjs` and `tests/test_aevra_store_import.mjs`, the latter using an IndexedDB stand-in with transaction semantics.
+    - The import test fails 2 of 3 against the old `store.js`.
+  - `uv run --no-sync python -m pytest tests/test_product_harness.py tests/test_aevra_branding.py tests/test_aevra_desktop.py tests/test_electron_shell.py tests/test_harness_chat_stream.py -q`: 120 passed.
+  - Browser checks against the fake CORE stub on 127.0.0.1:7095 covered C1-C9, C11-C13, C16 and every review fix, at desktop and 375 px widths. A fresh tab showed no console errors.
+  - The Browser pane was hidden, so animation frames were emulated with timers for the streaming checks.
+- **Limitations:**
+  - No real CORE, so these are software and UI checks, not model measurements.
+  - The full CI suite was not run locally, only the scopes above; CI runs on push.
+  - The container and Electron shells were not smoke-tested again.

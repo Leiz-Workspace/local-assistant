@@ -1,5 +1,6 @@
 import { ApiError, api, bootstrapSession, describe, request, session, sessionMessage, streamChat } from "./api.js";
-import { MAX_BYTES, boundedHistory, byteSize } from "./history.js";
+import { MAX_BYTES, buildRequest, byteSize } from "./history.js";
+import { classifyOmitted } from "./limits.js";
 import { renderMarkdown } from "./markdown.js";
 import { downloadConversation, loadSettings, onSettings, openSettings, settings } from "./settings.js";
 import { deleteConversation, deleteMessages, exportConversations, listConversations, loadConversation, newId, saveConversation, saveMessages } from "./store.js";
@@ -7,7 +8,7 @@ import { addNode, latestLeaf, pathTo, removeSubtree, siblings, subtree } from ".
 import { createChatView } from "./ui/chat.js";
 import { createComposer, estimateTokens } from "./ui/composer.js";
 import { announce, confirmDialog, h, hasOpenDialog, icon, menu, promptDialog, toast } from "./ui/dom.js";
-import { PANELS, handlePanelAction, renderPanel, stopPanels } from "./ui/panels.js";
+import { PANELS, handlePanelAction, refreshSettingsViews, renderPanel, stopPanels } from "./ui/panels.js";
 import { createSidebar } from "./ui/sidebar.js";
 
 const DRAFT = "draft";
@@ -22,6 +23,8 @@ const state = {
   draftPreset: null,
   draftSystemPrompt: null,
 };
+// The status chip reports the web session and CORE readiness (true, false or null when not known yet).
+const connection = { web: false, core: null };
 
 loadSettings();
 
@@ -66,6 +69,19 @@ const composer = createComposer({
     else state.draftSystemPrompt = value;
   },
   openPanel: (name) => navigate(`#/panel/${name}`),
+  onModels: (models) => {
+    // The fallback list comes from the web process without probing CORE, so it says nothing about readiness.
+    if (!models || models.fallback) return;
+    const active = models.models?.find((model) => model.profile === models.active);
+    connection.web = true;
+    if (active?.online === false || active?.loaded === false) setCoreReady(false);
+    else if (active?.online === true) setCoreReady(true);
+    else showConnected();
+  },
+  exceedsTurn: (text, attachments) => {
+    const system = (state.active ? state.active.conversation.systemPrompt : state.draftSystemPrompt ?? settings.systemPrompt)?.trim() || "";
+    return envelopeBytes(system, attachments) + byteSize({ role: "user", content: text }) > MAX_BYTES;
+  },
 });
 
 const chatHost = h("section", { class: "chat-host" }, chatView.node, h("div", { class: "composer-dock" }, composer.node));
@@ -102,6 +118,23 @@ function setStatus(text, tone = "ok") {
   statusChip.textContent = text;
   statusChip.dataset.tone = tone;
   sidebar.setStatus(text, tone);
+}
+
+
+function showConnected() {
+  if (state.sessionLost || session.signedOut || !connection.web) return;
+  if (connection.core === false) setStatus("Web đã kết nối · CORE không phản hồi", "warn");
+  else setStatus(connection.core ? "Đã kết nối · CORE sẵn sàng" : "Đã kết nối · local");
+}
+
+function setCoreReady(ready) {
+  connection.core = ready;
+  showConnected();
+}
+
+function webConnected() {
+  connection.web = true;
+  showConnected();
 }
 
 /** Plain text of a reply for screen readers, taken from the rendered (escaped) Markdown. */
@@ -144,6 +177,8 @@ async function ensureConversation() {
   state.active = { conversation, nodes: new Map() };
   state.draftPreset = null;
   state.draftSystemPrompt = null;
+  // Anything typed while the new chat is being created now belongs to it.
+  composer.rekeyDraft(DRAFT, conversation.id);
   history.replaceState(null, "", `#/chat/${conversation.id}`);
   await refreshConversations();
   return state.active;
@@ -174,6 +209,8 @@ function forget(id) {
 async function removeConversation(conversation) {
   if (!await confirmDialog({ title: "Xóa hội thoại", message: `Xóa "${conversation.title}" khỏi thiết bị này? Không thể hoàn tác.`, confirmLabel: "Xóa", danger: true })) return;
   forget(conversation.id);
+  composer.dropDraft(conversation.id);
+  chatView.discardEdit(conversation.id);
   await deleteConversation(conversation.id);
   toast("Đã xóa hội thoại.");
   const wasActive = activeId() === conversation.id;
@@ -182,12 +219,17 @@ async function removeConversation(conversation) {
   if (wasActive) navigate("#/");
 }
 
-function showSettings() {
+function showSettings(section) {
   openSettings({
+    section,
     onBeforeDeleteAll: () => {
       state.conversations.forEach((conversation) => forget(conversation.id));
       state.streams.forEach((_, id) => forget(id));
       state.active = null;
+      state.draftPreset = null;
+      state.draftSystemPrompt = null;
+      composer.clearDrafts();
+      chatView.discardEdit();
       if (location.hash.startsWith("#/chat/")) history.replaceState(null, "", "#/");
     },
     onDataChanged: () => refreshConversations().then(() => route(true)),
@@ -219,6 +261,7 @@ function renderChat({ reveal = false } = {}) {
   const lastAssistant = [...path].reverse().find((message) => message.role === "assistant" && message.context);
   // A stopped answer has no usage frame; estimate its tokens because it is sent as history.
   const usage = lastAssistant?.usage || (lastAssistant ? { completion_tokens: estimateTokens(lastAssistant.content) } : null);
+  composer.useDraft(id || DRAFT);
   composer.setContext(lastAssistant?.context ? { ...lastAssistant.context, usage } : null, estimateTokens(path.map((message) => message.content).join("")));
   composer.setBusy(isBusy(id));
   composer.refresh();
@@ -231,25 +274,6 @@ function showChat({ reveal = false } = {}) {
   panelHost.hidden = true;
   chatHost.hidden = false;
   renderChat({ reveal });
-}
-
-/** Build the request: complete pairs, always ending with the current user turn; null when that turn cannot fit. */
-function requestMessages(path, system, maxBytes) {
-  const turns = [];
-  path.forEach((message, index) => {
-    if (message.role !== "user") return;
-    if (index === path.length - 1) {
-      turns.push({ role: "user", content: message.content });
-      return;
-    }
-    const answer = path[index + 1];
-    if (answer?.role === "assistant" && answer.content?.trim() && (answer.status === "done" || answer.status === "stopped")) {
-      turns.push({ role: "user", content: message.content }, { role: "assistant", content: answer.content });
-    }
-  });
-  const bounded = boundedHistory(turns, { maxMessages: system ? 255 : 256, maxBytes });
-  if (!bounded.length || bounded[bounded.length - 1] !== turns[turns.length - 1]) return null;
-  return { messages: system ? [{ role: "system", content: system }, ...bounded] : bounded, dropped: turns.length - bounded.length };
 }
 
 /** Bytes the request needs besides the history pairs: system message, attachments and envelope. */
@@ -290,9 +314,9 @@ async function generate(active, assistantId) {
   try {
     sidebar.render({ streamingIds: new Set(state.streams.keys()) });
     if (state.active === active && !state.panel) renderChat({ reveal: true });
-    const request = requestMessages(pathTo(nodes, user.id), system, MAX_BYTES - envelopeBytes(system, attachments));
+    const request = buildRequest(pathTo(nodes, user.id), system, MAX_BYTES - envelopeBytes(system, attachments));
     if (!request) throw new ApiError("request_limit", 413);
-    if (request.dropped > 0) toast(`Đã bỏ ${request.dropped} lượt cũ nhất khỏi ngữ cảnh gửi model để vừa giới hạn.`);
+    if (request.droppedPairs > 0) toast(`Đã bỏ ${request.droppedPairs} cặp hỏi/đáp cũ nhất khỏi ngữ cảnh gửi model để vừa giới hạn.`);
     const body = { messages: request.messages, preset: conversation.preset || settings.preset, context_strategy: settings.strategy };
     if (settings.history) body.history_policy = { mode: settings.history };
     if (attachments.length) body.attachments = attachments;
@@ -313,10 +337,12 @@ async function generate(active, assistantId) {
     });
     if (assistant.content.trim()) {
       assistant.status = "done";
-      setStatus("Đã kết nối · CORE sẵn sàng");
+      setCoreReady(true);
       if (state.active === active) announce(`Aevra trả lời: ${plain(assistant.content)}`);
-      const omitted = assistant.context?.omitted_evidence?.length || 0;
+      // Duplicates whose first copy was included reached the model once; the rest were left out.
+      const { omitted, duplicates } = classifyOmitted(assistant.context, attachments);
       if (omitted) assistant.omitted = omitted;
+      if (duplicates) assistant.duplicates = duplicates;
     } else {
       assistant.status = "error";
       assistant.error = "empty_answer";
@@ -328,7 +354,7 @@ async function generate(active, assistantId) {
     } else {
       assistant.status = "error";
       assistant.error = error?.code || "inference_unavailable";
-      if (assistant.error === "inference_unavailable") setStatus("Web đã kết nối · CORE không phản hồi", "warn");
+      if (assistant.error === "inference_unavailable") setCoreReady(false);
       if (assistant.error !== "session_required" && state.active === active) announce(describe(error));
     }
   } finally {
@@ -398,41 +424,48 @@ async function regenerate(assistantId) {
   }
 }
 
-async function editMessage(userId, text) {
+/** Edit a user turn into a sibling branch and regenerate; returns false when the edit is refused. */
+function editMessage(userId, text) {
   const active = state.active;
-  if (!active || isBusy(active.conversation.id)) return;
+  if (!active || isBusy(active.conversation.id)) return false;
   const { conversation, nodes } = active;
   const original = nodes.get(userId);
-  if (!original) return;
-  if (tooLarge(conversation.systemPrompt?.trim() || "", original.attachments || [], text)) return;
+  if (!original) return false;
+  if (tooLarge(conversation.systemPrompt?.trim() || "", original.attachments || [], text)) return false;
   state.pending.add(conversation.id);
-  try {
-    const now = Date.now();
-    const editedId = newId();
-    addNode(nodes, { ...original, id: editedId, children: [], content: text, createdAt: now });
-    const assistantId = newId();
-    addNode(nodes, { id: assistantId, convId: conversation.id, parent: editedId, children: [], role: "assistant", content: "", reasoning: "", status: "streaming", createdAt: now + 1 });
-    conversation.currNode = assistantId;
-    await saveMessages([nodes.get(editedId), nodes.get(assistantId)]);
-    await saveConversation(conversation);
-    await generate(active, assistantId);
-  } catch (error) {
-    toast(describe(error), "error");
-  } finally {
-    state.pending.delete(conversation.id);
-  }
+  (async () => {
+    try {
+      const now = Date.now();
+      const editedId = newId();
+      addNode(nodes, { ...original, id: editedId, children: [], content: text, createdAt: now });
+      const assistantId = newId();
+      addNode(nodes, { id: assistantId, convId: conversation.id, parent: editedId, children: [], role: "assistant", content: "", reasoning: "", status: "streaming", createdAt: now + 1 });
+      conversation.currNode = assistantId;
+      await saveMessages([nodes.get(editedId), nodes.get(assistantId)]);
+      await saveConversation(conversation);
+      await generate(active, assistantId);
+    } catch (error) {
+      toast(describe(error), "error");
+    } finally {
+      state.pending.delete(conversation.id);
+    }
+  })();
+  return true;
 }
 
-async function editAssistant(id, text) {
+/** Replace an answer's text locally; returns false when the edit is refused. */
+function editAssistant(id, text) {
   const active = state.active;
-  if (!active || isBusy(active.conversation.id)) return;
+  if (!active || isBusy(active.conversation.id)) return false;
   const message = active.nodes.get(id);
-  if (!message) return;
+  if (!message) return false;
   message.content = text;
   message.edited = true;
   if (message.status === "error") message.status = "done";
-  await saveMessages([message]);
-  renderChat();
+  saveMessages([message]).catch(() => toast("Không lưu được bản sửa trên thiết bị này.", "error")).finally(() => {
+    if (state.active === active && !state.panel) renderChat();
+  });
+  return true;
 }
 
 async function deleteMessage(id) {
@@ -465,8 +498,9 @@ async function forkFrom(id) {
   await saveConversation(conversation);
   await refreshConversations();
   toast("Đã tách thành hội thoại mới.");
+  // A fork from a question reopens it as the draft, with the same files and skill.
+  if (draft) composer.seedDraft(conversation.id, { text: draft, attachments: (target.attachments || []).map((file) => ({ ...file, id: newId() })), skill: target.skill ? { ...target.skill } : null });
   navigate(`#/chat/${conversation.id}`);
-  if (draft) window.setTimeout(() => composer.setDraft(draft), 0);
 }
 
 async function switchVersion(id, delta) {
@@ -549,6 +583,8 @@ async function reconnect() {
     return;
   }
   state.sessionLost = false;
+  showConnected();
+  composer.refreshModels();
   await route(true, { resume: true });
   title.focus();
 }
@@ -590,9 +626,8 @@ async function route(force = false, { resume = false } = {}) {
     if (force || activeId() !== value || state.panel || chatHost.hidden) await openConversation(value);
     composer.focus();
   } else {
+    // The new chat keeps its own preset and system message until it becomes a conversation.
     state.active = null;
-    state.draftPreset = null;
-    state.draftSystemPrompt = null;
     chatView.resetFollow();
     showChat();
     composer.focus();
@@ -602,7 +637,7 @@ async function route(force = false, { resume = false } = {}) {
 
 panelHost.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
-  if (button && state.panel) handlePanelAction(button, panelHost, { openSettings: () => showSettings() });
+  if (button && state.panel) handlePanelAction(button, panelHost, { openSettings: () => showSettings("model") });
 });
 
 conversationMenu.addEventListener("click", () => {
@@ -662,17 +697,18 @@ document.addEventListener("drop", (event) => {
 });
 
 session.onRequired = (message) => showSessionRequired(message);
-session.onConnected = () => setStatus("Đã kết nối · local");
+session.onConnected = () => webConnected();
 onSettings(() => {
   sidebar.apply();
-  if (!state.panel && !state.sessionLost) renderChat();
+  if (state.panel) refreshSettingsViews(state.panel, panelHost);
+  else if (!state.sessionLost) renderChat();
 });
 window.addEventListener("hashchange", () => route());
 
 async function checkStatus() {
   try {
     await api("/status");
-    setStatus("Đã kết nối · local");
+    webConnected();
   } catch (error) {
     if (error instanceof ApiError && error.code === "session_required") return;
     setStatus(error?.code === "network_unavailable" ? "Không kết nối được máy chủ" : `Máy chủ báo lỗi (${error?.code})`, "warn");

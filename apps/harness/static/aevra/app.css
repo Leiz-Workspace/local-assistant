@@ -137,6 +137,7 @@ select, textarea, input[type="text"], input[type="number"], input[type="search"]
 .message-error { border: 1px solid var(--danger-line); color: var(--danger); border-radius: 12px; padding: 10px 12px; display: grid; gap: 8px; justify-items: start; }
 .message-error p, .note, .pending { margin: 0; }
 .note { color: var(--warn); font-size: 13px; }
+.message-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .pending { color: var(--muted); font-style: italic; }
 .reasoning { border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; color: var(--muted); }
 .reasoning summary { cursor: pointer; font-size: 13px; }

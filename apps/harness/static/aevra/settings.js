@@ -1,4 +1,5 @@
 /** Device-local preferences and the settings dialog. */
+import { MAX_PASTE_THRESHOLD, parsePasteThreshold } from "./limits.js";
 import { confirmDialog, dialog, h, toast } from "./ui/dom.js";
 import { deleteAll, exportConversations, importConversations, listConversations, storage } from "./store.js";
 
@@ -128,13 +129,18 @@ export function downloadConversation(data, title) {
   download(`aevra-${safe}.json`, data);
 }
 
-export async function openSettings({ onDataChanged, onBeforeDeleteAll = () => {} }) {
+export async function openSettings({ onDataChanged, onBeforeDeleteAll = () => {}, section = "general" }) {
   const sections = {
     general: () => [
       field("Giao diện", select(THEMES, settings.theme, (value) => updateSettings({ theme: value }))),
       toggle("Enter để gửi", settings.sendOnEnter, (value) => updateSettings({ sendOnEnter: value }), "Tắt thì dùng Ctrl/Cmd+Enter để gửi."),
       toggle("Luôn mở sidebar trên desktop", settings.alwaysShowSidebar, (value) => updateSettings({ alwaysShowSidebar: value })),
-      field("Dán văn bản dài thành file (ký tự)", h("input", { type: "number", min: 0, max: 100000, value: settings.pasteToFile, on: { change: (event) => updateSettings({ pasteToFile: Math.max(0, Math.min(100000, Number.parseInt(event.target.value, 10) || 0)) }) } }), "0 để tắt. Văn bản dán dài hơn sẽ thành tệp đính kèm."),
+      field("Dán văn bản dài thành file (ký tự)", h("input", { type: "number", min: 0, max: MAX_PASTE_THRESHOLD, step: 1, value: settings.pasteToFile, on: { change: (event) => {
+        // A blank or invalid field keeps the saved value; the field always shows what is actually saved.
+        const value = parsePasteThreshold(event.target.value, settings.pasteToFile);
+        event.target.value = String(value);
+        updateSettings({ pasteToFile: value });
+      } } }), "0 để tắt. Văn bản dán dài hơn sẽ thành tệp đính kèm."),
     ],
     display: () => [
       toggle("Hiện thống kê sau mỗi câu trả lời", settings.showStats, (value) => updateSettings({ showStats: value })),
@@ -169,8 +175,11 @@ export async function openSettings({ onDataChanged, onBeforeDeleteAll = () => {}
           const count = await importConversations(JSON.parse(await chosen.text()));
           toast(`Đã nhập ${count} hội thoại.`);
           onDataChanged();
-        } catch {
-          toast("Tệp không đúng định dạng xuất của Aevra.", "error");
+        } catch (error) {
+          // The import is all or nothing, so a storage failure leaves no partial conversations behind.
+          toast(error?.message === "import_storage_failed"
+            ? "Không ghi được vào bộ nhớ trình duyệt (có thể đã hết dung lượng). Chưa nhập hội thoại nào."
+            : "Tệp không đúng định dạng xuất của Aevra.", "error");
         }
         file.value = "";
       } } });
@@ -206,6 +215,6 @@ export async function openSettings({ onDataChanged, onBeforeDeleteAll = () => {}
     nav.querySelectorAll("button").forEach((button) => button.setAttribute("aria-current", button.dataset.section === name ? "true" : "false"));
   };
   names.forEach(([name, label]) => nav.append(h("button", { type: "button", dataset: { section: name }, text: label, on: { click: () => show(name) } })));
-  show("general");
+  show(Object.hasOwn(sections, section) ? section : "general");
   await dialog({ title: "Cài đặt", body: h("div", { class: "settings" }, nav, content), wide: true });
 }
