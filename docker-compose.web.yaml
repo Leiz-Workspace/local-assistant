@@ -1,0 +1,39 @@
+name: aevra-web
+services:
+  aevra-web:
+    build:
+      context: .
+      dockerfile: docker/aevra-web.Dockerfile
+    image: local-assistant/aevra-web:local
+    # Host networking keeps the loopback-only trust boundary: the app binds 127.0.0.1 on the
+    # host, sees real loopback peers and reaches CORE on 127.0.0.1:8080.
+    network_mode: host
+    # The owner's uid lets the app open the owner-only (0600) principals file.
+    user: "${AEVRA_UID:-1000}:${AEVRA_GID:-1000}"
+    restart: "no"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      ASSISTANT_HARNESS_ENABLED: "1"
+      ASSISTANT_AUTH_FILE: /run/aevra/principals.json
+      ASSISTANT_WEB_AUTO_SESSION: "${AEVRA_WEB_AUTO_SESSION:-1}"
+      AEVRA_CORE_BASE_URL: "${AEVRA_CORE_BASE_URL:-http://127.0.0.1:8080}"
+      HOME: /tmp
+    volumes:
+      # Fail at start if the owner's principals file is missing instead of creating a directory.
+      - type: bind
+        source: "${AEVRA_PRINCIPALS_FILE:-${HOME}/.local/state/local-assistant/principals.json}"
+        target: /run/aevra/principals.json
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", ".venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7090/healthz', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 6

@@ -6627,3 +6627,87 @@ Purpose: continue the owner's goal to finish outstanding work. The Stop hook ask
   - The old branch and PR #90 are untouched until the v4 draft PR replaces it.
 - **Next:** the decision module and OC verifier, the corpus spec and generator, the blind template authoring, the runner, the driver and the tests. Then come the software gates, the A'/B2' freeze and the approval packet for decision 7.
 
+
+## 2026-11-26 — Aevra web UI parity (ADR-199), container web and Electron shell (ADR-198); not committed
+
+- **Owner request:** the Aevra UI may look different, but its architecture must be at least the pinned llama.cpp UI b11557. Missing items named by the owner: open/close sidebar, a `+` for files and skills in the composer, the context ring in the composer, a microphone, a reasoning selector and a model selector.
+- **Owner decision:** keep the automatic local session (`ASSISTANT_WEB_AUTO_SESSION=1`) as the default.
+- **Done on `feat/aevra-web-container-electron` (working tree only):**
+  - The product UI is rebuilt as plain ES modules without a build step ([spec](../docs/AEVRA_WEB_UI_SPEC.md), [ADR-199](../docs/ADR/199-aevra-ui-parity-architecture.md)):
+    - a collapsible sidebar (rail, Ctrl+B, mobile overlay) with search, pinned and recent conversations and per-conversation streaming state;
+    - a composer with the `+` menu (text/code files, skill, system message), reasoning preset, model list, context ring, microphone (disabled until approved) and send/stop;
+    - device-local IndexedDB history as a branching tree with edit, regenerate, version navigation, fork, raw view, export/import and delete-all;
+    - settings, themes and the workspace panels.
+  - New API: `POST /api/v1/harness/chat/stream` and `GET /api/v1/harness/models`; `ChatInput` accepts `attachments` and `skill`.
+  - The web app runs in a read-only container with host networking (`docker-compose.web.yaml`), and the Electron shell loads it ([ADR-198](../docs/ADR/198-aevra-container-electron-desktop.md)).
+  - Two review rounds found 53 and then 42 UI issues; re-verification left residuals, and these are fixed: keyboard focus after re-render, popover and dialog keyboard handling, editor discard confirmation, paste fallback, import validation, stream error codes and the signed-out state.
+- **Validation:**
+  - CI scope (`HOSTED_TEST_MODE=main`, `tests benchmarks/tests`, 6 workers): 8172 passed, 394 skipped, 0 failed.
+  - Node (`node --test tests/test_*.mjs`): 48 passed, including the new `tests/test_aevra_store.mjs`.
+  - Ruff check and format are clean on the changed Python files.
+  - Browser checks covered streaming, stop, regenerate and versions, edit and discard, raw view, attachments, popovers, dialogs and keyboard focus.
+  - The container served the shell and streamed 67 frames ending in `[DONE]`.
+  - The Electron shell loaded the container and rendered an answer.
+  - All of these used a fake CORE stub on a separate port. The owner's CORE was not contacted, and model quality was not measured.
+- **Waiting for the owner:**
+  - microphone dictation (needs an approved local ASR);
+  - image and PDF input;
+  - switching to the unrestricted profile (restarts the shared CORE).
+- **Not done:** no commit or PR yet.
+
+## 2026-11-28 — Aevra web UI: fixes for the bugs the feature checklist found (PR #130)
+
+- **Owner request:** "Fix in PR 130", after a 107-item test checklist for the web UI. Six agents tried to refute each suspected bug against the code: 12 were confirmed, 4 partly confirmed, none refuted. One was also seen in the browser.
+- **Fixed (C-numbers as in the checklist):**
+  - C1: each conversation, and the unsaved new chat, keeps its own unsent text, files and skill. The new chat also keeps its preset and system message. Files still loading go to the draft they were chosen in. Files and the skill are cleared after sending; a fork from a question carries its files and skill.
+  - C2: a long paste that cannot be attached, for example because it would exceed the 192 KB total, is pasted inline instead of dropped. The notice warns when the turn then exceeds the request limit. Decided by `limits.js` `pastePlacement`.
+  - C3: the history notice counts dropped question/answer pairs (`history.js` `buildRequest`). Duplicate attachments get their own notice, but only when the first copy was included (`classifyOmitted`).
+  - C4: the empty-chat hint follows the Enter-to-send setting; shortcut tooltips name Cmd on Apple platforms.
+  - C5: activating the control that opened a popover or menu closes it; follow-up menus opened after async work replace it.
+  - C6: a blank or invalid paste threshold keeps the saved value; only 0 turns conversion off.
+  - C7: with "Luôn mở sidebar trên desktop" the collapse button is hidden, and the saved rail state is no longer flipped.
+  - C8: the Context panel's strategy card refreshes in place; "Đổi trong Cài đặt" opens "Model và context".
+  - C9: the inline editor's text and caret survive every re-render. Refused edits keep the editor open. A deleted message or conversation drops its editor. Save, Ctrl+Enter, Hủy and Thử lại move focus to the message's edit or regenerate action.
+  - C11: the status chip reports CORE readiness from the model probe on load and after "Kết nối lại". The web-only fallback model list does not count as a probe.
+  - C12: the stopped notice has "Thử lại". C13: the streaming reasoning block is inserted before the answer, keeping the reading order.
+  - C14: import writes everything in one IndexedDB transaction. A storage failure imports nothing and has its own message.
+  - C15: the redesign plan names the real variable, `Aevra_WEB_FULL_CORE` (code unchanged).
+  - C16: on mobile, sidebar buttons close the overlay before acting, so dialogs return focus to the menu button. Search keeps the overlay open, which it previously closed at once. Dialogs fall back to the title when the opener cannot take focus.
+- **Not fixed:**
+  - C10, the missing manifest link on `/`. A link alone cannot make the app installable, because the CSP has no `manifest-src` and the manifest route needs a session. The spec does not promise install.
+  - The six checklist notes that were never verified, apart from "Đổi trong Cài đặt", which is covered by C8.
+- **Review.**
+  - Browser checks caught one regression from the C5 change: `top()` was used before a later local `const top` in `popover()`, which broke every popover. Fixed before review.
+  - A four-lens adversarial review with one verifier per lens found 19 issues: 14 real (1 medium), 5 refuted.
+  - The medium one was a C11 regression: the chip stayed "Chưa có phiên" after "Kết nối lại".
+  - The others: the async attach race, the paste/NUL handling, the inline over-limit warning, the new-chat preset and system message, fork files, stale editors, editor focus aliases, the model-pill toggle during its probe, the fallback model list, duplicate counting, and a weak boundary test. All 14 are fixed.
+- **Validation:**
+  - `node --test tests/test_*.mjs`: 68 passed, up from 48 before these fixes.
+    - New files: `tests/test_aevra_limits.mjs` and `tests/test_aevra_store_import.mjs`, the latter using an IndexedDB stand-in with transaction semantics.
+    - The import test fails 2 of 3 against the old `store.js`.
+  - `uv run --no-sync python -m pytest tests/test_product_harness.py tests/test_aevra_branding.py tests/test_aevra_desktop.py tests/test_electron_shell.py tests/test_harness_chat_stream.py -q`: 120 passed.
+  - Browser checks against the fake CORE stub on 127.0.0.1:7095 covered C1-C9, C11-C13, C16 and every review fix, at desktop and 375 px widths. A fresh tab showed no console errors.
+  - The Browser pane was hidden, so animation frames were emulated with timers for the streaming checks.
+- **Limitations:**
+  - No real CORE, so these are software and UI checks, not model measurements.
+  - The full CI suite was not run locally, only the scopes above; CI runs on push.
+  - The container and Electron shells were not smoke-tested again.
+
+## 2026-11-28 — Aevra web UI: manifest and the remaining checklist notes (PR #130)
+
+- **Owner request:** "SỬA ĐI", after the previous fix commit (`0350f08`, CI green) left C10 and the unverified checklist notes open.
+- **Fixed:**
+  - C10. The shell links `/aevra/manifest.webmanifest` and sets a theme colour, and the CSP adds `manifest-src 'self'`. The manifest route is now cookie-free, because browsers fetch manifests without credentials; it holds only a name, an icon and colours.
+  - An expired or missing skill review now returns 404 `review_required` ("Bản review đã hết hạn; hãy review lại.") instead of 409 `skill_operation_denied`. A shared `skill_error_reply` keeps the audit line's status equal to the response. For the CLI the exit category still follows the HTTP status: 404 `review_required` is exit 6, as already pinned in `tests/test_product_cli.py`.
+  - The `run_capacity` message names both limits, 8 runs per owner and 64 per server, finished runs included. It points to deleting old runs in Runs / Jobs.
+  - Escape in the sidebar search closes only the search and returns focus to Tìm kiếm. On mobile the overlay stays open.
+  - The session screen highlights no conversation, including after a row action while signed out.
+  - Deleting the open conversation from the sidebar while a panel is shown keeps the panel, and focus moves to the page heading.
+- **Review.** A two-lens adversarial review (security/contract and UI) with one verifier per lens found 6 issues: 4 real, 2 refuted.
+  - The real ones: the audit status mismatch (medium); the highlight coming back after a sidebar refresh on the session screen; focus left on the body after a delete; and the run_capacity text ignoring the 64-run server limit. All 4 are fixed.
+  - The refuted ones were the CLI exit code, which follows the existing tested status mapping, and a variant of the run_capacity point.
+- **Validation:**
+  - `node --test tests/test_*.mjs`: 68 passed.
+  - `uv run --no-sync python -m pytest $(grep -rl 'apps.harness' tests/*.py) -q -n 4`: 640 passed. It includes the new `test_expired_skill_review_asks_for_a_new_review`, which fails without the fix and also checks the audit status, and the extended `tests/test_aevra_branding.py` manifest checks.
+  - `ruff check` and `ruff format --check` pass on the changed Python files.
+  - Browser checks against the fake CORE stub covered the manifest (fetched without cookies, CSP), the new messages, logout and reconnect, delete from a panel, and mobile search Escape. A fresh tab showed no console messages.

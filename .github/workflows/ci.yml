@@ -244,6 +244,34 @@ jobs:
           if [ ${#files[@]} -eq 0 ]; then echo "No JavaScript tests in this revision."; exit 0; fi
           node --test "${files[@]}"
 
+  electron-package:
+    needs: ci-gate
+    if: >-
+      ${{ !cancelled() && needs.ci-gate.result == 'success' && github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444  # v5.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: desktop/electron/package-lock.json
+      - name: Build Electron Debian artifact
+        working-directory: desktop/electron
+        run: |
+          npm ci
+          npm run pack -- --publish never
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p ../../dist-electron
+          mv dist/aevra-linux-amd64_v*.deb "../../dist-electron/aevra-linux-amd64_v${version}-electron.deb"
+          sha256sum ../../dist-electron/*.deb > ../../dist-electron/SHA256SUMS-electron
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        with:
+          name: aevra-electron-${{ github.ref_name }}
+          path: dist-electron/
+          retention-days: 14
+
   ci-gate:
     if: always()
     needs: [prepare, lint, test-python, test-js]
@@ -317,8 +345,10 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   release:
-    needs: package
-    if: ${{ !cancelled() && needs.package.result == 'success' && startsWith(github.ref, 'refs/tags/v') }}
+    needs: [package, electron-package]
+    if: >-
+      ${{ !cancelled() && needs.package.result == 'success' && needs.electron-package.result == 'success' &&
+      startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-24.04"') }}
     environment:
       name: production
@@ -329,6 +359,11 @@ jobs:
         with:
           name: ${{ needs.package.outputs.name }}
           path: dist
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          pattern: aevra-electron-${{ github.ref_name }}
+          path: dist
+          merge-multiple: true
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}

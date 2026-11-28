@@ -1,89 +1,66 @@
-# Aevra — CLI, web và native desktop
+# Aevra — web container và Electron desktop
 
-**Mục đích:** Hướng dẫn dùng tên/logo Aevra và desktop Linux độc lập, phân biệt phần đã chạy thật với đóng gói/phạm vi còn thiếu. [ADR-188](ADR/188-aevra-brand-and-native-webkit-desktop.md).
+**Trạng thái:** Electron là target desktop mới; GTK/WebKitGTK là legacy trong thời gian chuyển tiếp. Web và desktop dùng cùng một Aevra product UI tại `/`; UI llama.cpp ghim sẵn chỉ còn là bề mặt tương thích.
 
-## 1. Tên và logo dùng chung
+## Kiến trúc
 
-- Tên sản phẩm, command chính và Python distribution: **Aevra / `aevra`**. Alias `la` vẫn được giữ cho các lệnh cũ.
-- Logo chính là rồng trắng owner cung cấp tại `aevra-logo-assets/aevra-dragon-white.svg`. Bản SVG và PNG gốc được copy nguyên byte vào `apps/branding/assets/`, có manifest SHA-256. Logo/icon giữ nền trong suốt, không thêm nền vuông hoặc đường viền; không vẽ lại logo. Mục Show Apps hiện dùng PNG trong suốt512px tại đường dẫn bất biến trong `hicolor/512x512/apps/`; shortcut ngoài Desktop đã đạt thì giữ SVG trong suốt. Source SVG/PNG gốc không thay đổi. Đã kiểm riêng hiển thị Show Apps với owner, không lấy preview GTK làm nghiệm thu thay thế.
-- CLI: `aevra logo` hiển thị bản ASCII dựng từ chính logo; interactive chat trên terminal hiển thị logo. `aevra --json logo` trả tên/path/hash của SVG, không chèn control sequences vào JSON.
-- Web: title, favicon, manifest, sidebar logo, badge và trang kết nối dùng Aevra. Upstream llama-ui b11557 vẫn giữ nguyên70files; wrapper chỉ thay response metadata/chrome bằng assets riêng. Nội dung chat và bundle gốc không bị thay chữ hàng loạt.
-- Desktop: titlebar, icon cửa sổ và launcher dùng cùng logo; nội dung chat tiếp tục dùng UI llama.cpp qua backend có xác thực.
-
-```bash
-uv sync --locked --dev
-uv run --no-sync aevra --help
-uv run --no-sync aevra logo
-uv run --no-sync aevra --json logo
+```text
+Browser ──┐
+Electron ─┼─> Aevra web container (host network, 127.0.0.1:7090) ─> CORE 127.0.0.1:8080
+CLI ──────┘
 ```
 
-Tên credential directory hiện có vẫn là `~/.local/state/local-assistant/`. Đổi thương hiệu không tự tạo lại identity, di chuyển secret, đổi alias model hoặc sửa database.
+Container dùng `network_mode: host` để giữ nguyên ranh giới chỉ-loopback của Aevra: app bind `127.0.0.1:7090` trên host, thấy đúng peer loopback và gọi CORE qua `127.0.0.1:8080`. Docker port publishing không được dùng vì peer sẽ là gateway của bridge và mọi request bị chặn. Container không khởi động, dừng hay đổi CORE dùng chung.
 
-## 2. Desktop hiện tại là gì?
+Container chạy bằng uid của chủ máy (`AEVRA_UID`/`AEVRA_GID`, mặc định `1000`) để mở được file principals `0600`, mount read-only; root filesystem read-only, `/tmp` là tmpfs, bỏ mọi capability và bật `no-new-privileges`. Build context là allowlist trong `.dockerignore` (`apps/`, `src/`, `configs/`, `pyproject.toml`, `uv.lock`), nên `models/` và `data/` không bao giờ vào image.
 
-**Ứng dụng GTK3 với WebKitGTK 4.1 nhúng**, chạy thành process/cửa sổ riêng. Không mở Brave, Chromium, Chrome hoặc tab trình duyệt; không có fallback sang các trình duyệt đó. Web vẫn có thể mở trong trình duyệt bằng `aevra ui open` khi muốn.
+Route:
 
-Đây là native application cho Linux hiện tại, **chưa là AppImage hay bộ cài Windows/macOS**. Nó cần checkout/package Python, uv và GTK/WebKit của hệ điều hành. CORE inference vẫn là service riêng; desktop có thể tự quản lý backend API của nó, không tự nạp model.
+- `/` — Aevra UI (shell tĩnh, không chứa dữ liệu);
+- `/healthz` — readiness đi qua cùng kiểm tra loopback như UI (Docker healthcheck và Electron dùng route này);
+- `/api/v1/harness/*` — chat, context, memory, skills, runs và generations, cần session.
 
-Host hiện tại đã có `/usr/bin/python3` + PyGObject3.56.2, GTK3.24 và WebKit2.52/API4.1. Không cài thêm OS packages hoặc tải framework/model trong lượt triển khai này. Native runtime được chạy qua uv với OS Python; Python environment của dự án không bị chèn system `dist-packages`.
+## Khởi động
 
-## 3. Mở ứng dụng
-
-Từ repo:
-
-```bash
-uv run --no-sync aevra desktop
-# Entry point riêng, tương đương:
-uv run --no-sync aevra-desktop
-```
-
-Trong menu ứng dụng Linux hiện tại đã có **Aevra**, qua launcher `~/.local/share/applications/io.aevra.Aevra.desktop`. Launcher dùng icon của dự án và không chứa token hoặc mã pairing. Nó còn phụ thuộc vị trí checkout hiện tại; di chuyển repo cần tạo lại launcher.
-
-Khi dùng port/identity riêng:
+Cần file principals do `aevra init` tạo tại `~/.local/state/local-assistant/principals.json` (hoặc đặt `AEVRA_PRINCIPALS_FILE`). Từ thư mục dự án:
 
 ```bash
-uv run --no-sync aevra --url http://127.0.0.1:7090 --token-file /ABSOLUTE/PRIVATE_TOKEN_FILE desktop --auth-file /ABSOLUTE/PRIVATE_PRINCIPALS_FILE
+docker compose -f docker-compose.web.yaml up -d --build aevra-web
 ```
 
-Luồng mở:
+Rồi mở `http://127.0.0.1:7090/`. Lệnh trên không cần chuẩn bị UI llama.cpp. CORE phải đang chạy để chat có câu trả lời; nếu chưa, UI báo "CORE không phản hồi" thay vì lỗi chung.
 
-1. Kiểm tra GTK/WebKit trước khi mint mã pairing hoặc khởi động backend.
-2. Nếu backend Aevra đã chạy và xác thực đúng, dùng lại; đóng cửa sổ sẽ không dừng backend đó.
-3. Nếu không có backend, kiểm tra token khớp auth file rồi khởi động harness thuộc app. Đóng/lỗi app sẽ dừng và join đúng process group do app tạo. Tự khởi động hiện chỉ hỗ trợ `127.0.0.1` với port không đặc quyền; không chiếm port hoặc thay backend đang có.
-4. Truyền nonce một lần qua stdin tới renderer; đổi sang cookie HttpOnly/SameSite theo flow cũ. Bearer token không đưa vào URL, JavaScript hoặc argv của renderer.
-5. Hiển thị cửa sổ Aevra. `aevra desktop` chờ tới lúc cửa sổ đóng; JSON kết quả trả sau khi cleanup.
+## Session
 
-Nếu báo `aevra_backend_restart_required`, backend trên port đó là process cũ/chưa có branding: cần dừng đúng process của bạn rồi chạy từ checkout mới. App không tự restart shared server. Nếu thiếu GTK/WebKit hoặc không có display, báo lỗi native; không âm thầm mở Brave.
+Với `ASSISTANT_WEB_AUTO_SESSION=1` (mặc định trong compose, tắt bằng `AEVRA_WEB_AUTO_SESSION=0`), UI tự tạo cookie HttpOnly/SameSite=strict khi gặp 401 đầu tiên, nên không cần mã pairing. Bearer không nằm trong URL, DOM, localStorage hay preload. Đăng xuất thu hồi session hiện tại; UI không tự tạo phiên mới cho tới khi bấm "Kết nối lại". Electron hiện cần auto-session vì chưa có đường pairing bằng token của owner.
 
-Để model trả lời thật, CORE phải sẵn sàng theo [inference documentation](DOCUMENTATION.md). App không tự tải/đổi/nạp/dừng CORE. Authentication, UI assets và inference readiness là ba điều kiện riêng.
+**Owner đã chấp nhận (2026-11-26):** giữ auto-session bật mặc định. Đánh đổi: auto-session cấp phiên owner cho bất kỳ tiến trình nào trên máy gọi được `127.0.0.1:7090` với header hợp lệ, kể cả tài khoản hệ điều hành khác. Trên máy chỉ một người dùng, rủi ro thấp; nếu máy có nhiều tài khoản, tắt auto-session và dùng `aevra ui open` (pairing tự động bằng token `0600` của owner).
 
-## 4. Dữ liệu local và giới hạn
+Khi tắt auto-session, UI hiện màn hình kết nối trong app và hướng dẫn chạy `aevra ui open`; flow `/pair/#code` vẫn là đường tương thích.
 
-- Desktop có storage riêng dưới `~/.local/state/aevra/desktop/`, quyền700, tách theo backend và credential hash; không dùng profile Brave. Profile có lock chống hai process ghi đồng thời.
-- IndexedDB/history trên thiết bị có thể lưu raw chat. Chưa đồng bộ PostgreSQL và không tự import lịch sử từ Brave. Xóa app/launcher không tuyên bố đã xóa mọi bản chat.
-- Cookie phiên server vẫn hết hạn sau30phút; backend restart mất session. Khi hết phiên, mở lại desktop để pair. Không lưu bearer trong WebKit; credential storage bị tắt, không cấu hình persistent cookie store.
-- Không có Python bridge hoặc native tools cấp cho trang. Navigation ra ngoài origin, popup, download tự động, file/script URLs và device permissions bị chặn. Existing backend/auth/CSRF/CSP checks vẫn áp dụng.
-- Context policy mới, task và skill vẫn qua CLI/API; UI controls nâng cao chưa được nối chỉ vì đổi logo hoặc chuyển native host.
-- Linux đã kiểm trên máy này; native installers/clean-machine matrix, Windows/macOS, accessibility/device acceptance và release gate tổng vẫn pending.
+## UI
 
-## 5. Kiểm chứng
+Kiến trúc UI và hợp đồng chi tiết ở [AEVRA_WEB_UI_SPEC.md](AEVRA_WEB_UI_SPEC.md) và [ADR-199](ADR/199-aevra-ui-parity-architecture.md). Tóm tắt: sidebar đóng/mở (rail icon, Ctrl/Cmd+B) với lịch sử hội thoại lưu trên thiết bị (IndexedDB), tìm kiếm, ghim, đổi tên, xuất JSON, xóa; khung chat có nút `+` (tệp văn bản/code, skill đã cài, system message), chọn mức reasoning, chọn model (chỉ CORE đã duyệt), vòng context, nút mic, Gửi/Dừng; câu trả lời stream có khối suy nghĩ, thống kê, sao chép/sửa/tạo lại/xóa và chuyển phiên bản. Mic, ảnh/PDF và đổi sang model unrestricted đang chờ owner duyệt.
 
-Bằng chứng GUI dùng **backend synthetic**, không gọi model: cửa sổ GTK/WebKit thật, title/sidebar/favicon/logo Aevra, nhập và nhận stream `fixture`, exit0. [Ảnh desktop thật](evidence/aevra-native-desktop-20261111.png) thể hiện rõ câu trả lời fixture; không quảng bá nó thành inference thực. Lượt đầu kiểm load UI, sau đó kiểm stream và bổ sung chế độ QA không chiếm keyboard focus; mọi quan sát cũ giữ riêng.
+## Electron desktop
 
-Đã chạy thực tế managed backend: start → authenticated status Aevra → stop/join; không chạy model hoặc thay service đang tồn tại. Khi chủ động SIGTERM owned uv group, outer uv exit143 là expected termination, không gọi đó là native-window exit0.
+Package tại `desktop/electron/`:
 
-Phần mềm được kiểm riêng với fixtures/doubles cho source logo hashes, build icon, response-only branding, API/CLI, native origin/profile/lock, initialization failure, stdin nonce/no raw logs, matching identity, owned cleanup và smoke orchestration. Kết quả final combined và hashes ở [receipt](evidence/aevra-native-desktop-20261111.json). Không phải full D87 hoặc nghiệm thu toàn dự án.
+```bash
+npm --prefix desktop/electron ci
+npm --prefix desktop/electron run pack -- --publish never
+```
 
-### Làm mới icon hệ thống — 2026-11-11
+Artifact `aevra-linux-amd64_v<version>-electron.deb`, package identity `aevra-desktop-electron` (không xung đột với gói GTK legacy `aevra-desktop`), dùng icon Aevra và `chrome-sandbox` 4755 root.
 
-Sau khi owner báo vẫn thấy icon cũ, cài lại SVG trong suốt vào `~/.local/share/icons/hicolor/scalable/apps/` với resource name riêng, cập nhật launcher bằng atomic replacement, chạy `gtk-update-icon-cache` và `update-desktop-database`. Gio/GTK xác nhận launcher resolve đúng resource mới và ảnh64px có alpha0 ở góc; [ảnh kiểm tra từ GTK](evidence/aevra-icon-theme-20261111.png) là preview nền xám, không phải file icon để cài. Không restart GNOME/session hoặc thay theme/favorites của owner.
+Electron chỉ nhận `AEVRA_WEB_URL` là origin loopback (mặc định `http://127.0.0.1:7090`, từ chối path/query/hash), mở cửa sổ ngay, chờ `/healthz`, rồi tải `/`. Khi web chưa chạy, cửa sổ hiện lệnh khởi động container và tự kết nối khi web sẵn sàng. Renderer dùng `contextIsolation`, `sandbox`, tắt `nodeIntegration`, chặn popup và navigation khác origin; chỉ cho ghi clipboard và tải về (xuất hội thoại, artifact) từ chính origin Aevra, mọi permission khác bị từ chối. Electron không quản lý container.
 
-### Lối tắt ngoài màn hình Desktop — 2026-11-11
+## Legacy GTK/WebKit
 
-Owner xác nhận viền còn ở biểu tượng trên desktop máy Ubuntu. Kiểm tra XDG desktop directory thấy trước đó chỉ có Steam, không có Aevra. Đã tạo `~/Desktop/Aevra.desktop` riêng qua CLI hiện có, executable/trusted và custom-icon trỏ đúng SVG trong suốt đã kiểm hash/alpha; menu entry giữ nguyên. `desktop-file-validate` và Gio/GTK resolution từ chính file Desktop PASS. Đây là kiểm cấu hình/bộ nạp icon; chưa có ảnh xác minh trực tiếp grid DING ngoài desktop. Không dùng ảnh preview menu để tuyên bố đã kiểm vị trí này.
+`apps/desktop/` và package `aevra-desktop` giữ lại để rollback trong giai đoạn chuyển tiếp, không dùng để đánh giá Electron.
 
-### Show Apps: owner xác nhận hoàn tất — 2026-11-11
+## Kiểm chứng và giới hạn
 
-Shortcut ngoài Desktop đã hết nền đen, nhưng owner xác nhận mục Aevra cũ trong Show Apps vẫn có nền sau các lượt thay file/cache, SVG trực tiếp và PNG. Mục tạm TEST Aevra có application ID mới và PNG trong suốt thì hiển thị đúng. Đã thay riêng mục đăng ký cũ bằng `io.aevra.Aevra.desktop`, đồng bộ native `APPLICATION_ID=io.aevra.Aevra`, dùng PNG512px bất biến giống nội dung ảnh TEST. Owner xác nhận **Aevra chính trong Show Apps đã hết ô đen**. Đã gỡ TEST và đưa entry cũ vào bằng chứng riêng; chỉ còn một Aevra hiển thị trong danh mục.
+Đã chạy thật: UI trên trình duyệt với CORE giả lập (chat, lỗi CORE + thử lại, Markdown, cả 7 panel với dữ liệu thật: archive, skill, run; logout/kết nối lại; mobile 375px), container build và chạy (`/` 200, `/healthz` 200, API không cookie 401, bootstrap, chat), và cửa sổ Electron ở trạng thái chờ lẫn đã kết nối vào container. Lần chụp Electron dùng binary dev nên chạy với OS sandbox tắt; gói `.deb` cài bằng quyền root mới có sandbox setuid.
 
-Đây là kết quả đối chiếu/khắc phục thực tế, không khẳng định đã chứng minh nguyên nhân nội bộ GNOME. API mở Show Apps tự động bị session từ chối; không bật unsafe mode, restart shell/session hoặc đổi theme/favorites. Profile/history/credentials/backend/model không đổi theo application ID mới.75 scoped tests PASS/0FAIL/0SKIP/1.11s; Ruff/format7files PASS, OS Python native dependency probe PASS. Các ảnh/receipts trước vẫn là lịch sử của source/registration cũ.
+Chưa có: chat với CORE/model thật, cài `.deb` trên máy sạch, streaming câu trả lời. Test UI/API không phải đo chất lượng model.

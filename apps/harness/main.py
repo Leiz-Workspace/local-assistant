@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from apps.harness.inference import ProductInference
 from apps.harness.generation import GenerationJobs
-from apps.harness.routes import router
+from apps.harness.routes import router, skill_error_reply
 from apps.harness.service import HarnessError, ProductHarness
 from src.application.services.skill_contract import SkillError
 from src.application.services.context_reduction import ContextError
@@ -102,11 +102,10 @@ def compose(base, *, inference=None, asset_root=None, history_dir=None):
 
     @app.exception_handler(SkillError)
     async def skill_error(request: Request, error):
-        """Preserve the original skill registry rejection as a bounded conflict response."""
-        LOGGER.warning("product_skill_operation_denied")
-        return JSONResponse(
-            {"detail": {"code": "skill_operation_denied"}}, status_code=409
-        )
+        """Map skill registry rejections to bounded codes; a missing or expired review asks for a new review."""
+        LOGGER.warning("product_skill_operation_denied code=%s", error.code)
+        code, status = skill_error_reply(error)
+        return JSONResponse({"detail": {"code": code}}, status_code=status)
 
     LOGGER.info("product_harness_composed")
     return app

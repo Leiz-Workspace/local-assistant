@@ -2,6 +2,7 @@
 
 import asyncio
 import base64
+import contextlib
 import hashlib
 import json
 import logging
@@ -19,14 +20,14 @@ from fastapi.responses import (
     FileResponse,
     HTMLResponse,
     JSONResponse,
-    StreamingResponse,
 )
 
 from apps.api.core.conversation_auth import load_principals
-from apps.api.core.model_config import get_model_profile
+from apps.api.core.model_config import ModelConfigError, get_model_profile
 from apps.api.voice_routes import local_browser
 from apps.harness.assets import ASSETS, PIN, VERSION
 from apps.harness.inference import IncompleteCompletion
+from apps.harness.routes import ClosingStreamingResponse
 from apps.branding.identity import brand_index, resource
 from src.application.services.special_literals import (
     SpecialLiteralsStale,
@@ -35,6 +36,18 @@ from src.application.services.special_literals import (
 
 LOGGER = logging.getLogger(__name__)
 STATIC = Path(__file__).with_name("static")
+PRODUCT_TYPES = {".js": "text/javascript", ".css": "text/css"}
+
+
+def product_assets(root=STATIC / "aevra"):
+    """List the product shell's own modules once; nothing outside that folder is served."""
+    return {
+        "/aevra/" + path.relative_to(root).as_posix(): path
+        for path in sorted(root.rglob("*"))
+        if path.suffix in PRODUCT_TYPES and path.is_file() and not path.is_symlink()
+    }
+
+
 COOKIE = "assistant_harness_session"
 BODY_SECONDS = 10
 SECURITY = {
@@ -83,15 +96,30 @@ class BrowserSessions:
         if not isinstance(code, str) or len(code) > 128:
             raise HTTPException(401, detail={"code": "pairing_required"})
         row = self.pairings.pop(hashlib.sha256(code.encode()).hexdigest(), None)
-        if row is None or len(self.sessions) >= 64:
+        if row is None:
             raise HTTPException(401, detail={"code": "pairing_required"})
+        return self.create_session(*row[:2])
+
+    def create_session(self, owner, digest):
+        """Issue a short-lived HttpOnly session for an already verified local principal binding."""
+        self.prune()
+        # Evict the session closest to expiry so repeated bootstraps cannot lock the owner out.
+        while len(self.sessions) >= 64:
+            del self.sessions[min(self.sessions, key=lambda key: self.sessions[key][2])]
         token = secrets.token_urlsafe(32)
         self.sessions[hashlib.sha256(token.encode()).hexdigest()] = (
-            *row[:2],
+            owner,
+            digest,
             self.clock() + 1800,
         )
         LOGGER.info("harness_browser_session_created")
         return token
+
+    def revoke(self, request):
+        """Forget the session behind the presented cookie, if any."""
+        self.sessions.pop(
+            hashlib.sha256(request.cookies.get(COOKIE, "").encode()).hexdigest(), None
+        )
 
     def owner(self, request):
         """Revalidate both cookie expiry and the original digest binding against current app authentication."""
@@ -158,76 +186,152 @@ def content_policy(index=""):
     return (
         "default-src 'none'; script-src 'self' "
         + " ".join(hashes)
-        + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+        + "; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; media-src 'self' blob:; worker-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
     )
 
 
 FULL_CORE = os.environ.get("Aevra_WEB_FULL_CORE", "0") == "1"
-CORE_BASE = "http://127.0.0.1:8080"
 CHAT_ROUTE = "/".join(("", "v1", "chat", "completions"))
-CORE_PROXY_PATHS = ("/health", "/props", "/slots", "/models", "/tools", "/token", "/v1/models", "/v1/stream", "/v1/catalog.json", "/v1/streams/lookup")
+UI_STREAM_SECONDS = 120
+CORE_PROXY_PATHS = (
+    "/health",
+    "/props",
+    "/slots",
+    "/models",
+    "/tools",
+    "/token",
+    "/v1/models",
+    "/v1/stream",
+    "/v1/catalog.json",
+    "/v1/streams/lookup",
+)
 
 
 async def proxy_core(request, path):
-    if not FULL_CORE or not any(path == item or path.startswith(item + "/") for item in CORE_PROXY_PATHS):
+    if not FULL_CORE or not any(
+        path == item or path.startswith(item + "/") for item in CORE_PROXY_PATHS
+    ):
         raise HTTPException(403, detail={"code": "unsupported_capability"})
+    try:
+        # Same loopback-validated CORE URL as product inference: one source of truth.
+        core_base = get_model_profile("core")["base_url"]
+    except ModelConfigError:
+        raise HTTPException(503, detail={"code": "inference_unavailable"}) from None
     body = await request.body()
-    headers = {key: value for key, value in request.headers.items() if key.lower() not in {"host", "cookie", "authorization", "content-length"}}
-    async with httpx.AsyncClient(base_url=CORE_BASE, timeout=120, trust_env=False) as client:
-        response = await client.request(request.method, path, content=body, headers=headers, params=request.query_params)
+    headers = {
+        key: value
+        for key, value in request.headers.items()
+        if key.lower() not in {"host", "cookie", "authorization", "content-length"}
+    }
+    async with httpx.AsyncClient(
+        base_url=core_base, timeout=120, trust_env=False
+    ) as client:
+        response = await client.request(
+            request.method,
+            path,
+            content=body,
+            headers=headers,
+            params=request.query_params,
+        )
         content = await response.aread()
-    response_headers = {key: value for key, value in response.headers.items() if key.lower() not in {"content-length", "transfer-encoding", "connection"}}
-    return Response(content=content, status_code=response.status_code, headers=response_headers, media_type=response.headers.get("content-type"))
+    response_headers = {
+        key: value
+        for key, value in response.headers.items()
+        if key.lower() not in {"content-length", "transfer-encoding", "connection"}
+    }
+    return Response(
+        content=content,
+        status_code=response.status_code,
+        headers=response_headers,
+        media_type=response.headers.get("content-type"),
+    )
 
 
 def register_browser(app, *, asset_root=ASSETS):
     """Register explicit browser endpoints and assets without proxying native tools or model administration."""
     sessions = BrowserSessions()
+    shell = product_assets()
     # The bearer-authenticated pairing route lives in the harness API router.
     app.state.browser_sessions = sessions
 
     @app.middleware("http")
     async def browser_boundary(request, call_next):
         """Keep browser policy separate from existing bearer routes and add restrictive response headers."""
-        if request.url.path.startswith(("/api/", "/docs", "/openapi")):
+        api_request = request.url.path.startswith("/api/v1/harness")
+        if (
+            request.url.path.startswith("/api/") and not api_request
+        ) or request.url.path.startswith(("/docs", "/openapi")):
             return await call_next(request)
         try:
-            boundary_request = request
-            if request.url.query and request.url.path != "/props":
-                raise HTTPException(403, detail={"code": "unsupported_query"})
-            if request.url.path == "/props" and request.url.query:
-                if any(
-                    key not in {"autoload", "model"} for key in request.query_params
-                ):
+            if api_request:
+                browser_call = (
+                    request.headers.get("x-harness-ui") == "1"
+                    and "authorization" not in request.headers
+                )
+                # Browser calls without a cookie get 401 so the UI can re-establish its session.
+                if request.cookies.get(COOKIE) or browser_call:
+                    local_browser(Request({**request.scope, "query_string": b""}))
+                    if request.method not in {"GET", "HEAD"} and (
+                        request.headers.get("origin")
+                        != str(request.base_url).rstrip("/")
+                        or request.headers.get("x-harness-ui") != "1"
+                    ):
+                        raise HTTPException(403, detail={"code": "ui_csrf_required"})
+                    request.state.ui_owner = sessions.owner(request)
+            else:
+                boundary_request = request
+                if request.url.query and request.url.path != "/props":
                     raise HTTPException(403, detail={"code": "unsupported_query"})
-                boundary_request = Request({**request.scope, "query_string": b""})
-            local_browser(boundary_request)
-            if request.url.path == "/v1/chat/completions":
-                request.state.ui_chat = True
-            if request.method not in {"GET", "HEAD"}:
+                if request.url.path == "/props" and request.url.query:
+                    if any(
+                        key not in {"autoload", "model"} for key in request.query_params
+                    ):
+                        raise HTTPException(403, detail={"code": "unsupported_query"})
+                    boundary_request = Request({**request.scope, "query_string": b""})
+                local_browser(boundary_request)
+                if request.url.path == "/v1/chat/completions":
+                    request.state.ui_chat = True
+                if request.method not in {"GET", "HEAD"}:
+                    if (
+                        request.headers.get("origin")
+                        != str(request.base_url).rstrip("/")
+                        or request.headers.get("x-harness-ui") != "1"
+                    ):
+                        raise HTTPException(403, detail={"code": "ui_csrf_required"})
+                public = {
+                    "/",
+                    "/pair/",
+                    "/harness-pair.js",
+                    "/aevra-app/",
+                    "/harness-bridge.js",
+                    "/ui/pairings",
+                    "/ui/session/bootstrap",
+                    "/healthz",
+                    # Name and icon only; browsers fetch the manifest without cookies.
+                    "/aevra/manifest.webmanifest",
+                }
                 if (
-                    request.headers.get("origin") != str(request.base_url).rstrip("/")
-                    or request.headers.get("x-harness-ui") != "1"
+                    request.url.path not in public
+                    and request.url.path not in shell
+                    and not request.url.path.startswith("/aevra/brand/")
                 ):
-                    raise HTTPException(403, detail={"code": "ui_csrf_required"})
-            public = {
-                "/pair/",
-                "/harness-pair.js",
-                "/aevra-app/",
-                "/aevra/app.js",
-                "/aevra/app.css",
-                "/harness-bridge.js",
-                "/ui/pairings",
-            }
-            if request.url.path not in public and not request.url.path.startswith(
-                "/aevra/brand/"
-            ):
-                request.state.ui_owner = sessions.owner(request)
+                    request.state.ui_owner = sessions.owner(request)
             response = await call_next(request)
         except HTTPException as error:
             response = JSONResponse(
                 {"detail": error.detail}, status_code=error.status_code
             )
+        if api_request:
+            if (
+                response.status_code >= 400
+                and getattr(request.state, "ui_owner", None) is None
+            ):
+                LOGGER.warning(
+                    "harness_browser_api_denied method=%s status=%d",
+                    request.method,
+                    response.status_code,
+                )
+            return response
         response.headers.update(SECURITY)
         if "content-security-policy" not in response.headers:
             response.headers["Content-Security-Policy"] = content_policy()
@@ -238,6 +342,7 @@ def register_browser(app, *, asset_root=ASSETS):
             "/tools": "tool_list",
             "/ui/pairings": "pairing_exchange",
             "/ui/logout": "session_logout",
+            "/ui/session/bootstrap": "session_bootstrap",
             "/v1/streams/lookup": "stream_lookup",
         }.get(request.url.path, "asset_or_denied")
         LOGGER.info(
@@ -248,20 +353,20 @@ def register_browser(app, *, asset_root=ASSETS):
         )
         return response
 
-    @app.get("/aevra-app/")
-    async def aevra_app():
-        """Serve the owned Aevra product UI after the same authenticated pairing flow."""
-        if not hasattr(Request, "__name__"):
-            raise HTTPException(404, detail={"code": "not_found"})
+    @app.get("/healthz")
+    async def web_health():
+        """Report that the Aevra web process is ready without probing or restarting CORE."""
+        return {"status": "ok", "service": "aevra-web"}
+
+    @app.get("/")
+    async def aevra_root():
+        """Serve the owned Aevra product UI, independent of the pinned compatibility bundle."""
         return FileResponse(STATIC / "aevra/index.html", media_type="text/html")
 
-    @app.get("/aevra/app.js")
-    async def aevra_app_js():
-        return FileResponse(STATIC / "aevra/app.js", media_type="text/javascript")
-
-    @app.get("/aevra/app.css")
-    async def aevra_app_css():
-        return FileResponse(STATIC / "aevra/app.css", media_type="text/css")
+    @app.get("/aevra-app/")
+    async def aevra_app():
+        """Serve the same static Aevra shell; every data request still needs a session."""
+        return FileResponse(STATIC / "aevra/index.html", media_type="text/html")
 
     @app.get("/pair/")
     async def pair_page():
@@ -303,7 +408,7 @@ def register_browser(app, *, asset_root=ASSETS):
 
     @app.get("/aevra/manifest.webmanifest")
     async def app_manifest():
-        """Advertise Aevra's name and supplied icon without enabling service workers or claiming PWA installation."""
+        """Publish Aevra's name and icon (no user data) so browsers can label and install the app; no service worker."""
         return Response(
             json.dumps(
                 dict(
@@ -326,6 +431,35 @@ def register_browser(app, *, asset_root=ASSETS):
             media_type="application/manifest+json",
         )
 
+    @app.get("/aevra/{asset:path}")
+    async def product_asset(asset: str):
+        """Serve one listed product-shell module; registered after the fixed /aevra routes."""
+        path = shell.get("/aevra/" + asset)
+        if path is None:
+            raise HTTPException(404, detail={"code": "not_found"})
+        return FileResponse(path, media_type=PRODUCT_TYPES[path.suffix])
+
+    @app.post("/ui/session/bootstrap")
+    async def bootstrap_session(request: Request):
+        """Create a browser session for the local web container without exposing a bearer token."""
+        if os.environ.get("ASSISTANT_WEB_AUTO_SESSION") != "1":
+            raise HTTPException(403, detail={"code": "auto_session_disabled"})
+        local_browser(request)
+        try:
+            principals = load_principals(Path(os.environ["ASSISTANT_AUTH_FILE"]))
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(503, detail={"code": "auth_unavailable"}) from None
+        if len(principals) != 1:
+            raise HTTPException(403, detail={"code": "single_local_principal_required"})
+        digest, owner = next(iter(principals.items()))
+        sessions.revoke(request)
+        token = sessions.create_session(owner, digest)
+        response = JSONResponse({"authenticated": True})
+        response.set_cookie(
+            COOKIE, token, httponly=True, samesite="strict", max_age=1800, path="/"
+        )
+        return response
+
     @app.post("/ui/pairings")
     async def exchange_pairing(request: Request):
         """Exchange one bootstrap nonce for a non-script-readable session cookie."""
@@ -342,14 +476,14 @@ def register_browser(app, *, asset_root=ASSETS):
     @app.post("/ui/logout")
     async def logout(request: Request):
         """Revoke the current UI session without altering shared API credentials."""
-        sessions.sessions.pop(
-            hashlib.sha256(request.cookies.get(COOKIE, "").encode()).hexdigest(), None
-        )
+        sessions.revoke(request)
         response = JSONResponse({"revoked": True})
         response.delete_cookie(COOKIE)
         return response
 
-    @app.api_route("/models/{path:path}", methods=["GET", "POST", "DELETE", "PUT", "PATCH"])
+    @app.api_route(
+        "/models/{path:path}", methods=["GET", "POST", "DELETE", "PUT", "PATCH"]
+    )
     async def core_models(request: Request, path: str):
         return await proxy_core(request, "/models" + ("/" + path if path else ""))
 
@@ -406,7 +540,11 @@ def register_browser(app, *, asset_root=ASSETS):
             eos_token="",
             build_info="Aevra pinned llama-ui gateway",
             cors_proxy_enabled=False,
-            ui_settings={"enableMcp": False, "enableModelManagement": False, "enableSlotMetrics": True},
+            ui_settings={
+                "enableMcp": False,
+                "enableModelManagement": False,
+                "enableSlotMetrics": True,
+            },
             endpoint_models="/v1/models",
             endpoint_slots="/slots",
             endpoint_stream="/v1/stream",
@@ -416,13 +554,25 @@ def register_browser(app, *, asset_root=ASSETS):
     @app.get("/slots")
     async def slots():
         """Expose read-only slot state for the pinned UI without model administration."""
-        return {"slots": [{"id": 0, "state": "idle", "prompt_tokens": 0, "tokens_predicted": 0}]}
+        return {
+            "slots": [
+                {"id": 0, "state": "idle", "prompt_tokens": 0, "tokens_predicted": 0}
+            ]
+        }
 
     @app.get("/v1/catalog.json")
     async def catalog():
         """Return a local-only catalog containing the configured model, never remote catalog data."""
         profile = get_model_profile("core")
-        return {"models": [{"id": profile["model_id"], "name": profile["model_id"], "source": "local"}]}
+        return {
+            "models": [
+                {
+                    "id": profile["model_id"],
+                    "name": profile["model_id"],
+                    "source": "local",
+                }
+            ]
+        }
 
     @app.get("/tools")
     async def tools(request: Request):
@@ -504,17 +654,25 @@ def register_browser(app, *, asset_root=ASSETS):
             # complete answer on [DONE]. A failed stream therefore ends right after
             # its error event: the UI then asks to resume, gets 403 and shows an error.
             service = request.app.state.product_harness
+            # One 120 s deadline for admission, preparation and every upstream read; it
+            # never spans a yield, so expiry always ends in an error frame.
+            deadline = asyncio.get_running_loop().time() + UI_STREAM_SECONDS
+            acquired = False
             try:
-                async with asyncio.timeout(120):
-                    async with service.admission:
-                        async for chunk in service.inference.stream(
-                            normalized, max_tokens=max_tokens
-                        ):
-                            yield chunk
+                async with asyncio.timeout_at(deadline):
+                    await service.admission.acquire()
+                acquired = True
+                async with contextlib.aclosing(
+                    service.inference.stream(
+                        normalized, max_tokens=max_tokens, deadline=deadline
+                    )
+                ) as chunks:
+                    async for chunk in chunks:
+                        yield chunk
             except IncompleteCompletion:
                 LOGGER.warning("harness_ui_stream_incomplete")
                 yield b'data: {"error":{"code":"incomplete_completion","message":"The answer stopped before it was complete."}}\n\n'
-            except asyncio.CancelledError:
+            except (asyncio.CancelledError, GeneratorExit):
                 LOGGER.info("harness_ui_stream_cancelled")
                 raise
             except SpecialLiteralsStale as error:
@@ -523,12 +681,14 @@ def register_browser(app, *, asset_root=ASSETS):
                     b'data: {"error":{"code":"special_literals_stale",'
                     b'"message":"Local inference is refused for this model."}}\n\n'
                 )
-                yield b"data: [DONE]\n\n"
             except Exception:
                 LOGGER.warning("harness_ui_stream_failed")
                 yield b'data: {"error":{"code":"inference_unavailable","message":"Local inference could not complete."}}\n\n'
+            finally:
+                if acquired:
+                    service.admission.release()
 
-        return StreamingResponse(
+        return ClosingStreamingResponse(
             events(),
             media_type="text/event-stream",
             headers={"X-Accel-Buffering": "no", **SECURITY},
